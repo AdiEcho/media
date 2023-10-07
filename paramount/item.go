@@ -9,6 +9,22 @@ import (
    "time"
 )
 
+type Item struct {
+   Air_Date_ISO string `json:"_airDateISO"`
+   Episode_Num string `json:"episodeNum"`
+   Label string
+   Media_Type string `json:"mediaType"`
+   Season_Num string `json:"seasonNum"`
+   Series_Title string `json:"seriesTitle"`
+}
+
+func (i Item) Series() (string, bool) {
+   if i.Media_Type == "Full Episode" {
+      return i.Series_Title, true
+   }
+   return "", false
+}
+
 func (i Item) Season() (int64, error) {
    return strconv.ParseInt(i.Season_Num, 10, 64)
 }
@@ -23,10 +39,6 @@ func (i Item) Date() (time.Time, error) {
 
 func (i Item) Title() string {
    return i.Label
-}
-
-func (i Item) Series() (string, bool) {
-   return i.Series_Title, true
 }
 
 func (at App_Token) Item(content_ID string) (*Item, error) {
@@ -58,12 +70,3 @@ func (at App_Token) Item(content_ID string) (*Item, error) {
    }
    return &video.Item_List[0], nil
 }
-
-type Item struct {
-   Series_Title string `json:"seriesTitle"`
-   Season_Num string `json:"seasonNum"`
-   Episode_Num string `json:"episodeNum"`
-   Label string
-   Air_Date_ISO string `json:"_airDateISO"`
-}
-
