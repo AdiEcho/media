@@ -3,7 +3,7 @@ module 154.pages.dev/media
 go 1.21.0
 
 require (
-	154.pages.dev/encoding v1.12.6
+	154.pages.dev/encoding v1.12.7
 	154.pages.dev/http v1.1.5
 	154.pages.dev/protobuf v1.0.2
 	154.pages.dev/widevine v1.1.4

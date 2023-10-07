@@ -5,6 +5,7 @@ import (
    "154.pages.dev/encoding/mp4"
    "154.pages.dev/http/option"
    "154.pages.dev/widevine"
+   "errors"
    "fmt"
    "net/http"
    "net/url"
@@ -27,14 +28,24 @@ func (s Stream) DASH_Get(items []dash.Representation, index int) error {
    if err != nil {
       return err
    }
-   file, err := os.Create(file_name + item.Ext())
+   file, err := func() (*os.File, error) {
+      ext, ok := item.Ext()
+      if !ok {
+         return nil, errors.New("extension")
+      }
+      return os.Create(file_name + ext)
+   }()
    if err != nil {
       return err
    }
    defer file.Close()
-   req, err := http.NewRequest(
-      "GET", item.Initialization(), nil,
-   )
+   req, err := func() (*http.Request, error) {
+      i, ok := item.Initialization()
+      if !ok {
+         return nil, errors.New("initialization")
+      }
+      return http.NewRequest("GET", i, nil)
+   }()
    if err != nil {
       return err
    }
@@ -68,8 +79,7 @@ func (s Stream) DASH_Get(items []dash.Representation, index int) error {
    if err != nil {
       return err
    }
-   f := option.Silent()
-   defer f()
+   option.Silent()
    media := item.Media()
    pro := option.Progress_Parts(len(media))
    for _, ref := range media {
