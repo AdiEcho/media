@@ -21,7 +21,7 @@ func hls_get[T hls.Mixed](str Stream, items []T, index int) error {
       return nil
    }
    item := items[index]
-   file_name, err := Name(str)
+   file_name, err := Name(str.Namer)
    if err != nil {
       return err
    }

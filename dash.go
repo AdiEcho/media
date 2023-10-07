@@ -12,6 +12,15 @@ import (
    "os"
 )
 
+type Stream struct {
+   Base *url.URL
+   Client_ID string
+   Info bool
+   Namer Namer
+   Poster widevine.Poster
+   Private_Key string
+}
+
 func (s Stream) DASH_Get(items []dash.Representation, index int) error {
    if s.Info {
       for i, item := range items {
@@ -24,7 +33,7 @@ func (s Stream) DASH_Get(items []dash.Representation, index int) error {
       return nil
    }
    item := items[index]
-   file_name, err := Name(s)
+   file_name, err := Name(s.Namer)
    if err != nil {
       return err
    }
@@ -99,13 +108,4 @@ func (s Stream) DASH_Get(items []dash.Representation, index int) error {
       }
    }
    return nil
-}
-
-type Stream struct {
-   Base *url.URL
-   Client_ID string
-   Info bool
-   Namer
-   Private_Key string
-   widevine.Poster
 }
