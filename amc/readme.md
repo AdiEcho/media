@@ -36,14 +36,15 @@ HTTP/2.0 200
 use an email like this:
 
 ~~~
-2023-09-09@mailsac.com
+2023-10-07@mailsac.com
 ~~~
 
 1. https://amcplus.com/create
 2. enter EMAIL
 3. enter PASSWORD
 4. click CREATE ACCOUNT
-5. click MONTHLY
+5. click MONTHLY WITH ADS
+6. click CONTINUE TO PAYMENT
 6. enter Name ON CARD
 7. enter CARD NUMBER
 8. enter EXPIRATION DATE

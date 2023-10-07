@@ -1,6 +1,7 @@
 package amc
 
 import (
+   "154.pages.dev/http/option"
    "154.pages.dev/media"
    "fmt"
    "os"
@@ -21,6 +22,8 @@ func Test_Content(t *testing.T) {
       }
       auth.Unmarshal(b)
    }
+   option.No_Location()
+   option.Trace()
    for _, test := range tests {
       con, err := auth.Content(test.address)
       if err != nil {
@@ -30,11 +33,11 @@ func Test_Content(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      format, err := media.Format(vid)
+      name, err := media.Name(vid)
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(format)
+      fmt.Println(name)
       time.Sleep(time.Second)
    }
 }

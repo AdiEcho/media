@@ -1,0 +1,1123 @@
+{
+ "data": {
+  "type": "page",
+  "properties": {
+   "pageType": "episode",
+   "ogpType": "video.episode",
+   "schemaType": "TVEpisode",
+   "description": "Watch Orphan Black Season , Episode 2 - Instinct. Sign up for a free trial and start streaming your favorite shows today.",
+   "title": "Watch Orphan Black Season , Episode 2 Online | AMC+",
+   "pageTitle": "Instinct",
+   "imageDesktop": "https://images.cds.amcn.com/amcn/amcplus/processed/episode_tms_EP016349650002_Orphan-Black_102__img_wide_16x9.jpg",
+   "videoId": "6337231242112",
+   "showName": "orphan-black",
+   "seasonName": "instinct",
+   "episodeNumber": 2,
+   "episodeName": "instinct",
+   "countryCode": "US",
+   "entitlements": [
+    "amcn-auth",
+    "ob-sub-amcplus-adtier"
+   ],
+   "id": "1011152",
+   "manifestType": "episode"
+  },
+  "children": [
+   {
+    "type": "detail",
+    "properties": {
+     "contentType": "episode",
+     "flagType": "video",
+     "layout": "detail",
+     "images": "https://images.cds.amcn.com/amcn/amcplus/processed/episode_tms_EP016349650002_Orphan-Black_102__img_wide_16x9.jpg",
+     "text": {
+      "showTitle": "Orphan Black",
+      "seasonEpisodeNumber": "S1, E2",
+      "title": "Instinct",
+      "description": "With a body in her car and nowhere to turn, Sarah is forced to continue her con.",
+      "videoNickname": "Full Episode",
+      "originalAirDate": "Original Air Date: April 6, 2013",
+      "tvContentRating": {
+       "title": "TV-MA"
+      }
+     },
+     "meta": {
+      "nid": 1011152,
+      "showEpisodesLink": "/shows/orphan-black--1010578",
+      "permalink": "/shows/orphan-black/episodes/season-1-instinct--1011152",
+      "alt": "Watch Orphan Black Season 1 Episode 2 | Stream Full Episodes",
+      "title": "Orphan Black Season 1 Episode 2 - Instinct",
+      "socials": [
+       "facebook",
+       "twitter",
+       "reddit",
+       "envelop"
+      ],
+      "unauthPlaybackStart": 0,
+      "unauthPlaybackEnd": 0,
+      "authPlaybackStart": 1673769600,
+      "authPlaybackEnd": 1768453140,
+      "schemaType": "TVEpisode"
+     }
+    }
+   },
+   {
+    "type": "video-player-ap",
+    "properties": {
+     "contentType": "episode",
+     "defaultOverlay": "downloadapp",
+     "overlayImageVisible": false,
+     "mobileApp": true,
+     "miniScreen": false,
+     "watchService": true,
+     "timeInvisible": 2000,
+     "autoPlayerCountdown": 30,
+     "runTime": 30000,
+     "kindOfCalcRunTime": "duration",
+     "controlBar": {
+      "extension": {
+       "exploreMore": true,
+       "controlTime": {
+        "time": 15,
+        "iconNameRewind": "rewind-player",
+        "iconNameForward": "forward-player"
+       }
+      }
+     },
+     "textContents": {
+      "onNow": "onNow",
+      "upNext": "upNextWithoutBg"
+     },
+     "linkCloseButton": "/shows/orphan-black/episodes--1010634",
+     "currentVideo": {
+      "images": {
+       "mobile": "https://images.cds.amcn.com/amcn/tve/amcn/BBCA_OB_102.jpg",
+       "desktop": "https://images.cds.amcn.com/amcn/amcplus/processed/episode_tms_EP016349650002_Orphan-Black_102__img_wide_16x9.jpg"
+      },
+      "text": {
+       "title": "Instinct",
+       "showTitle": "Orphan Black",
+       "seasonEpisodeNumber": "S1, E2",
+       "description": "With a body in her car and nowhere to turn, Sarah is forced to continue her con.",
+       "premiereLogin": {
+        "preTitle": "ONLY THE GOOD STUFF",
+        "title": "AMC+ is the new way to upgrade for exclusives, early access and ad-free.",
+        "description": "Get the new premium streaming bundle now.",
+        "btn1": "Get AMC+",
+        "amcPremiereLink": "https://www.amcplus.com/get-started",
+        "premiereSubscriber": "Still an AMC Premiere subscriber?",
+        "subscriberSignin": "Continue to sign in and watch",
+        "accountLink": "/tve",
+        "needHelp": "Need help?",
+        "helpCenter": "Vist our Help Center",
+        "helpCenterLink": "https://amc-customercare.zendesk.com/hc/en-us"
+       }
+      },
+      "meta": {
+       "nid": 1011152,
+       "permalink": "/shows/orphan-black/episodes/season-1-instinct--1011152",
+       "videoId": "6337231242112",
+       "restrictedAds": false,
+       "tvContentRating": "TV-MA",
+       "alt": "Watch Orphan Black Season 1 Episode 2 | Stream Full Episodes",
+       "title": "Orphan Black Season 1 Episode 2 - Instinct",
+       "channel": "amcn",
+       "creditPercent": 98,
+       "showName": "orphan-black",
+       "showTitle": "Orphan Black",
+       "showNid": 1010578,
+       "airdate": "2013-04-06T00:00:00.000Z",
+       "authPlaybackEnd": 1768453140,
+       "authPlaybackStart": 1673769600,
+       "unauthPlaybackEnd": 0,
+       "unauthPlaybackStart": 0,
+       "introEndTime": 124,
+       "introStartTime": 96,
+       "contentTitle": "Instinct | Season 1 | Episode 2",
+       "tvShow": "orphan-black",
+       "season": "01",
+       "episodeTitle": "02 - Instinct",
+       "episodeNumber": 2
+      },
+      "ready_overlay_buttons": {
+       "resume_button": {
+        "caption": "resume"
+       },
+       "restart_button": {
+        "caption": "restart"
+       }
+      }
+     },
+     "nextVideo": {
+      "text": {
+       "seasonEpisodeNumber": "S1, E3",
+       "title": "Variation Under Nature",
+       "showTitle": "Orphan Black"
+      },
+      "images": {
+       "mobile": "https://images.cds.amcn.com/amcn/tve/amcn/OrphanBlack-Episode3-Trailer.jpg",
+       "desktop": "https://images.cds.amcn.com/amcn/amcplus/processed/episode_tms_EP016349650003_Orphan-Black_103__img_wide_16x9.jpg"
+      },
+      "meta": {
+       "nid": 1011155,
+       "nextVideoLink": "/shows/orphan-black/episodes/season-1-variation-under-nature--1011155",
+       "title": "Orphan Black Season 1 Episode 3 - Variation Under Nature",
+       "alt": "Watch Orphan Black Season 1 Episode 3 | Stream Full Episodes"
+      }
+     },
+     "downloadApp": {
+      "title": {
+       "text": "Watch On The AMC+ App",
+       "typeface": "display-secondary-4",
+       "typefaceTablet": "display-secondary-4"
+      },
+      "image": "https://cdn.amcnetworks.com/amcplus/logos/app-icon@3x.png",
+      "devices": {
+       "android": {
+        "maybeLaterLink": "/shows/orphan-black--1010578"
+       },
+       "ios": {
+        "maybeLaterLink": "/shows/orphan-black/episodes/season-1-instinct--1011152"
+       }
+      }
+     },
+     "endCards": {
+      "title": "More from AMC+",
+      "data": [
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/mad-men--1002238"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH009357770000_mad-men-v2__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH009357770000_mad-men__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH009357770000_mad-men__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/mad-men--1002238",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/dark-winds--1053387"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH042755320000_dark-winds-S2__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH042755320000_dark-winds__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH042755320000_dark-winds__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/dark-winds--1053387",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/killing-eve--1010570"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH028831620000_killing-eve_S1__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH028831620000_killing-eve_S1__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH028831620000_killing-eve_S1__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/killing-eve--1010570",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/riviera--1002235"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH027242740000_riviera__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH027242740000_riviera__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH027242740000_riviera__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/riviera--1002235",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/happy-valley--1031145"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH019363300000_happy-valley__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH019363300000_happy-valley__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH019363300000_happy-valley__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/happy-valley--1031145",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/the-bridge--1029029"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_amcn_RLA232885_bridge-the-s2__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV001843460000_bridge__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV001843460000_bridge__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/the-bridge--1029029",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/gangs-of-london--1008571"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH035634110000_gangs-of-london-S2__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH035634110000_gangs-of-london-S2__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH035634110000_gangs-of-london-S2__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/gangs-of-london--1008571",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/turn-washington-s-spies--1002259"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH018234520000_turn-washingtons-spies__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH018234520000_turn-washingtons-spies__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH018234520000_turn-washingtons-spies__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/turn-washington-s-spies--1002259",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/the-north-water--1027250"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH039246090000_north-water-v3__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH039246090000_north-water__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH039246090000_north-water__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/the-north-water--1027250",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/the-terror--1002256"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH028884490000_terror__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH028884490000_terror__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH028884490000_terror__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/the-terror--1002256",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/hell-on-wheels--1002227"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH014662190000_hell-on-wheels__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH014662190000_hell-on-wheels__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH014662190000_hell-on-wheels__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/hell-on-wheels--1002227",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/that-dirty-black-bag--1052720"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH042178860000_that-dirty-black-bag_v2__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH042178860000_that-dirty-black-bag_v2__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH042178860000_that-dirty-black-bag_v2__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/that-dirty-black-bag--1052720",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/the-son--1002253"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH026285440000_son__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH026285440000_son__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH026285440000_son__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/the-son--1002253",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/broken-trail--1063814"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH015355210000_broken-trail__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH015355210000_brokentrail_s1__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH015355210000_brokentrail_s1__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/broken-trail--1063814",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/orphan-black--1010578"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH016349650000_orphan-black_S1__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH016349650000_orphan-black_S1__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH016349650000_orphan-black_S1__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/orphan-black--1010578",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/a-discovery-of-witches--1002207"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH030912420000_discovery-of-witches-s3__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH030912420000_discovery-of-witches-s3__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH030912420000_discovery-of-witches-s3__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/a-discovery-of-witches--1002207",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/mayfair-witches--1059404"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH045643060000_anne-rices-mayfair-witches__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH045643060000_anne-rices-mayfair-witches__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH045643060000_anne-rices-mayfair-witches__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/mayfair-witches--1059404",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/interview-with-the-vampire--1053259"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH043931170000_interview-with-the-vampire__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH043931170000_interview-with-the-vampire__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH043931170000_interview-with-the-vampire__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/interview-with-the-vampire--1053259",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/the-walking-dead-daryl-dixon--1060742"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/processed/series_tms_SH048017050000_walking-dead-daryl-dixon__img_poster_2x3_1.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH048017050000_walking-dead-daryl-dixon__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH048017050000_walking-dead-daryl-dixon__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/the-walking-dead-daryl-dixon--1060742",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       },
+       {
+        "type": "card",
+        "properties": {
+         "meta": {
+          "permalink": "/shows/the-walking-dead-dead-city--1060741"
+         },
+         "image": {
+          "images": {
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH047027920000_walking-dead-dead-city__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH047027920000_walking-dead-dead-city__img_wide_poster_16x9.jpg",
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/series_tms_SH047027920000_walking-dead-dead-city__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "analyticsObject": {
+          "clickthroughUrl": "/shows/the-walking-dead-dead-city--1060741",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         }
+        }
+       }
+      ],
+      "analyticsObject": {
+       "listMode": "swimlane",
+       "listTitle": "More from AMC+",
+       "listPosition": 2,
+       "contentEpisode": -1,
+       "contentSeason": -1,
+       "contentShow": "none",
+       "contentTitle": "none"
+      }
+     }
+    }
+   },
+   {
+    "type": "footer-ap",
+    "properties": {
+     "navItems": {
+      "footer-loggedIn": {
+       "followUs": {
+        "key": "follow-us",
+        "className": "footer-column social-media",
+        "title": {
+         "name": "FOLLOW AMC+",
+         "typography": "label-primary-md",
+         "className": "active-title"
+        },
+        "items": [
+         {
+          "icon": {
+           "iconName": "facebook",
+           "viewBox": "0 0 49 26",
+           "iconSize": 3
+          },
+          "permalink": "https://www.facebook.com/TheGoodStuffAMCPlus/",
+          "key": "facebook",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "icon": {
+           "iconName": "instagram",
+           "viewBox": "0 0 49 26",
+           "iconSize": 3
+          },
+          "permalink": "https://www.instagram.com/amcplus/",
+          "key": "instagram",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "icon": {
+           "iconName": "twitter",
+           "viewBox": "0 0 49 26",
+           "iconSize": 3
+          },
+          "permalink": "https://twitter.com/AMCPlus/",
+          "key": "twitter",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "icon": {
+           "iconName": "youtube",
+           "viewBox": "0 0 49 26",
+           "iconSize": 3
+          },
+          "permalink": "https://www.youtube.com/AMC/",
+          "key": "youtube",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         }
+        ]
+       },
+       "needHelp": {
+        "key": "need-help",
+        "className": "footer-column",
+        "title": {
+         "name": "NEED HELP?",
+         "typography": "label-primary-md",
+         "className": "active-title"
+        },
+        "items": [
+         {
+          "text": {
+           "typography": "body-1",
+           "title": "FAQs"
+          },
+          "permalink": "/faqs",
+          "key": "faqs",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-1",
+           "title": "Contact us"
+          },
+          "permalink": "http://support.amcplus.com/en/support/home",
+          "key": "contact-us",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         }
+        ]
+       },
+       "stayConnected": {
+        "key": "stay-connected",
+        "className": "footer-column",
+        "title": {
+         "name": "STAY CONNECTED",
+         "typography": "label-primary-md",
+         "className": "active-title"
+        },
+        "items": [
+         {
+          "text": {
+           "typography": "body-1",
+           "title": "Download our app"
+          },
+          "permalink": "action://downloadApp",
+          "key": "download-our-app",
+          "className": "no-desktop",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-1",
+           "title": "Ways to watch"
+          },
+          "permalink": "/ways-to-watch",
+          "key": "ways-to-watch",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         }
+        ]
+       },
+       "footer-copyright": {
+        "key": "footer-copyright",
+        "className": "footer-copyright",
+        "items": [
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Copyright &copy; 2010-2023 AMC Network Entertainment LLC. All rights reserved."
+          },
+          "key": "copyright",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         }
+        ]
+       },
+       "footer-bottom": {
+        "key": "footer-row",
+        "className": "footer-row",
+        "items": [
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Advertise"
+          },
+          "permalink": "https://www.amcnconnect.com/",
+          "key": "advertise",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Press"
+          },
+          "permalink": "https://www.amcnetworks.com/news/",
+          "key": "press",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Careers"
+          },
+          "permalink": "https://www.amcnetworks.com/careers/",
+          "key": "careers",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Privacy"
+          },
+          "permalink": "https://www.amcnetworks.com/privacy-policy/",
+          "key": "privacy",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Cookies"
+          },
+          "permalink": "https://www.amcnetworks.com/cookies/",
+          "key": "cookies",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Terms & Conditions"
+          },
+          "permalink": "https://www.amcnetworks.com/terms-of-use/",
+          "key": "terms&conditions",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Do Not Sell My Personal Information"
+          },
+          "key": "do-not-sell-my-personal-info",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         }
+        ]
+       }
+      },
+      "footer-guest": {
+       "followUs": {
+        "key": "follow-us",
+        "className": "footer-column social-media",
+        "title": {
+         "name": "FOLLOW AMC+",
+         "typography": "label-primary-md",
+         "className": "active-title"
+        },
+        "items": [
+         {
+          "icon": {
+           "iconName": "facebook",
+           "viewBox": "0 0 49 26",
+           "iconSize": 3
+          },
+          "permalink": "https://www.facebook.com/TheGoodStuffAMCPlus/",
+          "key": "facebook",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "icon": {
+           "iconName": "instagram",
+           "viewBox": "0 0 49 26",
+           "iconSize": 3
+          },
+          "permalink": "https://www.instagram.com/amcplus/",
+          "key": "instagram",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "icon": {
+           "iconName": "twitter",
+           "viewBox": "0 0 49 26",
+           "iconSize": 3
+          },
+          "permalink": "https://twitter.com/AMCPlus/",
+          "key": "twitter",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "icon": {
+           "iconName": "youtube",
+           "viewBox": "0 0 49 26",
+           "iconSize": 3
+          },
+          "permalink": "https://www.youtube.com/AMC/",
+          "key": "youtube",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         }
+        ]
+       },
+       "needHelp": {
+        "key": "need-help",
+        "className": "footer-column",
+        "title": {
+         "name": "NEED HELP?",
+         "typography": "label-primary-md",
+         "className": "active-title"
+        },
+        "items": [
+         {
+          "text": {
+           "typography": "body-1",
+           "title": "FAQs"
+          },
+          "permalink": "/faqs",
+          "key": "faqs",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-1",
+           "title": "Contact us"
+          },
+          "permalink": "http://support.amcplus.com/en/support/home",
+          "key": "contact-us",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         }
+        ]
+       },
+       "stayConnected": {
+        "key": "stay-connected",
+        "className": "footer-column",
+        "title": {
+         "name": "STAY CONNECTED",
+         "typography": "label-primary-md",
+         "className": "active-title"
+        },
+        "items": [
+         {
+          "text": {
+           "typography": "body-1",
+           "title": "Download our app"
+          },
+          "permalink": "action://downloadApp",
+          "key": "download-our-app",
+          "className": "no-desktop",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-1",
+           "title": "Ways to watch"
+          },
+          "permalink": "/ways-to-watch",
+          "key": "ways-to-watch",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         }
+        ]
+       },
+       "footer-copyright": {
+        "key": "footer-copyright",
+        "className": "footer-copyright",
+        "items": [
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Copyright &copy; 2010-2023 AMC Network Entertainment LLC. All rights reserved."
+          },
+          "key": "copyright",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         }
+        ]
+       },
+       "footer-bottom": {
+        "key": "footer-row",
+        "className": "footer-row",
+        "items": [
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Advertise"
+          },
+          "permalink": "https://www.amcnconnect.com/",
+          "key": "advertise",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Press"
+          },
+          "permalink": "https://www.amcnetworks.com/news/",
+          "key": "press",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Careers"
+          },
+          "permalink": "https://www.amcnetworks.com/careers/",
+          "key": "careers",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Privacy"
+          },
+          "permalink": "https://www.amcnetworks.com/privacy-policy/",
+          "key": "privacy",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Cookies"
+          },
+          "permalink": "https://www.amcnetworks.com/cookies/",
+          "key": "cookies",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Terms & Conditions"
+          },
+          "permalink": "https://www.amcnetworks.com/terms-of-use/",
+          "key": "terms&conditions",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         },
+         {
+          "text": {
+           "typography": "body-0",
+           "title": "Do Not Sell My Personal Information"
+          },
+          "key": "do-not-sell-my-personal-info",
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          }
+         }
+        ]
+       }
+      }
+     }
+    }
+   }
+  ]
+ },
+ "status": 200,
+ "success": true
+}

@@ -5,40 +5,38 @@ import (
    "154.pages.dev/media"
    "flag"
    "os"
+   "path/filepath"
 )
 
 type flags struct {
    address string
    email string
-   media.Stream
-   password string
    height int
+   password string
+   s media.Stream
 }
 
 func main() {
-   home, err := os.UserHomeDir()
+   home, err := func() (string, error) {
+      s, err := os.UserHomeDir()
+      if err != nil {
+         return "", err
+      }
+      return filepath.ToSlash(s) + "/widevine/", nil
+   }()
    if err != nil {
       panic(err)
    }
    var f flags
-   // a
    flag.StringVar(&f.address, "a", "", "address")
-   // e
+   flag.StringVar(&f.s.Client_ID, "client", home+"client_id.bin", "client ID")
    flag.StringVar(&f.email, "e", "", "email")
-   // h
    flag.IntVar(&f.height, "h", 1080, "maximum height")
-   // i
-   flag.BoolVar(&f.Info, "i", false, "information")
-   // p
+   flag.BoolVar(&f.s.Info, "i", false, "information")
+   flag.StringVar(&f.s.Private_Key, "key", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
-   // client
-   f.Client_ID = home + "/widevine/client_id.bin"
-   flag.StringVar(&f.Client_ID, "client", f.Client_ID, "client ID")
-   // key
-   f.Private_Key = home + "/widevine/private_key.pem"
-   flag.StringVar(&f.Private_Key, "key", f.Private_Key, "private key")
    flag.Parse()
-   // location needed for DASH file
+   option.No_Location()
    option.Verbose()
    if f.email != "" {
       err := f.login()

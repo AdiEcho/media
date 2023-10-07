@@ -6,12 +6,12 @@ import (
    "time"
 )
 
-func (v Video) Episode() (int64, error) {
-   return v.Meta.Episode_Number, nil
+func (v Video) Series() (string, bool) {
+   return v.Meta.Show_Title, true
 }
 
-func (v Video) Series() string {
-   return v.Meta.Show_Title
+func (v Video) Episode() (int64, error) {
+   return v.Meta.Episode_Number, nil
 }
 
 func (v Video) Title() string {

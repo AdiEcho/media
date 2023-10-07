@@ -10,21 +10,6 @@ import (
    "strings"
 )
 
-type Auth_ID struct {
-   Data struct {
-      Access_Token string
-      Refresh_Token string
-   }
-}
-
-func (a Auth_ID) Marshal() ([]byte, error) {
-   return json.MarshalIndent(a, "", " ")
-}
-
-func (a *Auth_ID) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, a)
-}
-
 func (a Auth_ID) Playback(ref string) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -39,23 +24,22 @@ func (a Auth_ID) Playback(ref string) (*Playback, error) {
       }
       s.Ad_Tags.Mode = "on-demand"
       s.Ad_Tags.URL = "-"
-      return json.MarshalIndent(s, "", " ")
+      return json.Marshal(s)
    }()
    if err != nil {
       return nil, err
    }
    req, err := http.NewRequest(
-      "POST", "https://gw.cds.amcn.com/playback-id/api/v1/playback/",
-      bytes.NewReader(body),
+      "POST", "https://gw.cds.amcn.com", bytes.NewReader(body),
    )
    if err != nil {
       return nil, err
    }
-   _, nID, found := strings.Cut(ref, "--")
-   if !found {
-      return nil, errors.New("nid not found")
+   _, nid, ok := strings.Cut(ref, "--")
+   if !ok {
+      return nil, errors.New("nid")
    }
-   req.URL.Path += nID
+   req.URL.Path = "/playback-id/api/v1/playback/" + nid
    req.Header = http.Header{
       "Authorization": {"Bearer " + a.Data.Access_Token},
       "Content-Type": {"application/json"},
@@ -100,14 +84,11 @@ func (a Auth_ID) Playback(ref string) (*Playback, error) {
 }
 
 func (a *Auth_ID) Refresh() error {
-   req, err := http.NewRequest(
-      "POST",
-      "https://gw.cds.amcn.com/auth-orchestration-id/api/v1/refresh",
-      nil,
-   )
+   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return err
    }
+   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
    req.Header.Set("Authorization", "Bearer " + a.Data.Refresh_Token)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -121,13 +102,11 @@ func (a *Auth_ID) Refresh() error {
 }
 
 func Unauth() (*Auth_ID, error) {
-   req, err := http.NewRequest(
-      "POST", "https://gw.cds.amcn.com/auth-orchestration-id/api/v1/unauth",
-      nil,
-   )
+   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return nil, err
    }
+   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
    req.Header = http.Header{
       "X-Amcn-Device-ID": {"-"},
       "X-Amcn-Language": {"en"},
@@ -159,12 +138,12 @@ func (a *Auth_ID) Login(email, password string) error {
       return err
    }
    req, err := http.NewRequest(
-      "POST", "https://gw.cds.amcn.com/auth-orchestration-id/api/v1/login",
-      bytes.NewReader(body),
+      "POST", "https://gw.cds.amcn.com", bytes.NewReader(body),
    )
    if err != nil {
       return err
    }
+   req.URL.Path = "/auth-orchestration-id/api/v1/login"
    req.Header = http.Header{
       "Authorization": {"Bearer " + a.Data.Access_Token},
       "Content-Type": {"application/json"},
@@ -232,9 +211,9 @@ func (Playback) Response_Body(b []byte) ([]byte, error) {
 }
 
 func (p Playback) Request_Header() http.Header {
-   h := make(http.Header)
-   h.Set("bcov-auth", p.h.Get("X-AMCN-BC-JWT"))
-   return h
+   return http.Header{
+      "bcov-auth": {p.h.Get("X-AMCN-BC-JWT")},
+   }
 }
 
 // This accepts full URL or path only.
@@ -283,4 +262,19 @@ func (a Auth_ID) Content(ref string) (*Content, error) {
 type Playback struct {
    h http.Header
    sources []Source
+}
+
+type Auth_ID struct {
+   Data struct {
+      Access_Token string
+      Refresh_Token string
+   }
+}
+
+func (a Auth_ID) Marshal() ([]byte, error) {
+   return json.Marshal(a)
+}
+
+func (a *Auth_ID) Unmarshal(text []byte) error {
+   return json.Unmarshal(text, a)
 }

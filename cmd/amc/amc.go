@@ -32,12 +32,12 @@ func (f flags) download() error {
       }
       os.WriteFile(home + "/amc/auth.json", b, 0666)
    }
-   if !f.Info {
+   if !f.s.Info {
       content, err := auth.Content(f.address)
       if err != nil {
          return err
       }
-      f.Namer, err = content.Video()
+      f.s.Namer, err = content.Video()
       if err != nil {
          return err
       }
@@ -46,7 +46,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   f.Poster = play
+   f.s.Poster = play
    res, err := http.Get(play.HTTP_DASH().Src)
    if err != nil {
       return err
@@ -68,13 +68,13 @@ func (f flags) download() error {
       index := slices.IndexFunc(reps, func(a dash.Representation) bool {
          return a.Height <= f.height
       })
-      err := f.DASH_Get(reps, index)
+      err := f.s.DASH_Get(reps, index)
       if err != nil {
          return err
       }
    }
    // audio
-   return f.DASH_Get(slices.DeleteFunc(reps, dash.Not(dash.Audio)), 0)
+   return f.s.DASH_Get(slices.DeleteFunc(reps, dash.Not(dash.Audio)), 0)
 }
 
 func (f flags) login() error {
