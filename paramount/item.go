@@ -10,6 +10,10 @@ import (
    "time"
 )
 
+func (i Item) Series() (string, bool) {
+   return i.Series_Title
+}
+
 func (at App_Token) Item(content_ID string) (*Item, error) {
    req, err := http.NewRequest("GET", "https://www.paramountplus.com", nil)
    if err != nil {
@@ -50,13 +54,6 @@ type Item struct {
 
 func (i Item) Date() (time.Time, error) {
    return time.Parse("2006-01-02T15:04:05-07:00", i.Air_Date_ISO)
-}
-
-// some items stupidly have the show and episode title combined:
-// paramountplus.com/shows/video/H87tz3NIw_Ymtcj4zZlWUivmzAPBnMYZ
-func (i Item) Series() string {
-   before, _, _ := strings.Cut(i.Series_Title, " - ")
-   return before
 }
 
 func (i Item) Season() (int64, error) {

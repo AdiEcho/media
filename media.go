@@ -8,17 +8,17 @@ import (
 )
 
 type Namer interface {
-   Series() string
-   Season() (int64, error)
-   Episode() (int64, error)
-   Title() string
    Date() (time.Time, error)
+   Episode() (int64, error)
+   Season() (int64, error)
+   Series() (string, bool)
+   Title() string
 }
 
 func Name(n Namer) (string, error) {
    var b []byte
    title := Clean(n.Title())
-   if series := n.Series(); series != "" {
+   if series, ok := n.Series(); ok {
       b = append(b, series...)
       b = append(b, " - S"...)
       {
@@ -48,39 +48,6 @@ func Name(n Namer) (string, error) {
          }
          b = d.AppendFormat(b, "2006")
       }
-   }
-   return string(b), nil
-}
-
-func Format(n Namer) (string, error) {
-   var b []byte
-   b = append(b, "series: "...)
-   b = append(b, n.Series()...)
-   b = append(b, "\nseason: "...)
-   {
-      s, err := n.Season()
-      if err != nil {
-         return "", err
-      }
-      b = strconv.AppendInt(b, s, 10)
-   }
-   b = append(b, "\nepisode: "...)
-   {
-      e, err := n.Episode()
-      if err != nil {
-         return "", err
-      }
-      b = strconv.AppendInt(b, e, 10)
-   }
-   b = append(b, "\ntitle: "...)
-   b = append(b, n.Title()...)
-   b = append(b, "\ndate: "...)
-   {
-      d, err := n.Date()
-      if err != nil {
-         return "", err
-      }
-      b = append(b, d.String()...)
    }
    return string(b), nil
 }
@@ -117,4 +84,3 @@ func User(name string) (map[string]string, error) {
    }
    return m, nil
 }
-

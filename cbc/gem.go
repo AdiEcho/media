@@ -7,6 +7,13 @@ import (
    "time"
 )
 
+func (m Metadata) Series() string {
+   if m.Part_Of_Series == nil {
+      return ""
+   }
+   return m.Part_Of_Series.Name
+}
+
 func New_Catalog_Gem(ref string) (*Catalog_Gem, error) {
    // you can also use `phone_android`, but it returns combined number and name:
    // 3. Beauty Hath Strange Power
@@ -56,13 +63,6 @@ type Metadata struct {
 
 func (m Metadata) Date() (time.Time, error) {
    return time.Parse("2006-01-02T15:04:05", m.Date_Created)
-}
-
-func (m Metadata) Series() string {
-   if m.Part_Of_Series == nil {
-      return ""
-   }
-   return m.Part_Of_Series.Name
 }
 
 func (m Metadata) Title() string {
