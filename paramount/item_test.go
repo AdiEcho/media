@@ -1,6 +1,7 @@
 package paramount
 
 import (
+   "154.pages.dev/http/option"
    "154.pages.dev/media"
    "fmt"
    "testing"
@@ -8,6 +9,8 @@ import (
 )
 
 func Test_Item(t *testing.T) {
+   option.No_Location()
+   option.Verbose()
    token, err := New_App_Token()
    if err != nil {
       t.Fatal(err)

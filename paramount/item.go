@@ -6,12 +6,27 @@ import (
    "net/http"
    "net/url"
    "strconv"
-   "strings"
    "time"
 )
 
+func (i Item) Season() (int64, error) {
+   return strconv.ParseInt(i.Season_Num, 10, 64)
+}
+
+func (i Item) Episode() (int64, error) {
+   return strconv.ParseInt(i.Episode_Num, 10, 64)
+}
+
+func (i Item) Date() (time.Time, error) {
+   return time.Parse("2006-01-02T15:04:05-07:00", i.Air_Date_ISO)
+}
+
+func (i Item) Title() string {
+   return i.Label
+}
+
 func (i Item) Series() (string, bool) {
-   return i.Series_Title
+   return i.Series_Title, true
 }
 
 func (at App_Token) Item(content_ID string) (*Item, error) {
@@ -52,18 +67,3 @@ type Item struct {
    Air_Date_ISO string `json:"_airDateISO"`
 }
 
-func (i Item) Date() (time.Time, error) {
-   return time.Parse("2006-01-02T15:04:05-07:00", i.Air_Date_ISO)
-}
-
-func (i Item) Season() (int64, error) {
-   return strconv.ParseInt(i.Season_Num, 10, 64)
-}
-
-func (i Item) Episode() (int64, error) {
-   return strconv.ParseInt(i.Episode_Num, 10, 64)
-}
-
-func (i Item) Title() string {
-   return i.Label
-}

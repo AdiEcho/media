@@ -22,9 +22,9 @@ func (Session) Request_Body(b []byte) ([]byte, error) {
 }
 
 func (s Session) Request_Header() http.Header {
-   h := make(http.Header)
-   h.Set("Authorization", "Bearer " + s.LS_Session)
-   return h
+   return http.Header{
+      "Authorization": {"Bearer " + s.LS_Session},
+   }
 }
 
 func (s Session) Request_URL() string {
@@ -204,4 +204,3 @@ func Downloadable(content_ID string) (string, error) {
    }
    return location(content_ID, query)
 }
-
