@@ -1,0 +1,995 @@
+{
+ "data": {
+  "children": [
+   {
+    "properties": {
+     "contentType": "movie",
+     "flagType": "video",
+     "images": "https://images.cds.amcn.com/amcn/amcplus/movie_amcn__nocebo__img_wide_16x9.jpg",
+     "layout": "detail",
+     "meta": {
+      "alt": "Watch Nocebo Online | Stream Full Movies",
+      "authPlaybackEnd": 2082776399,
+      "authPlaybackStart": 1677214800,
+      "nid": 1061554,
+      "permalink": "/movies/nocebo--1061554",
+      "schemaType": "Movie",
+      "socials": [
+       "facebook",
+       "twitter",
+       "reddit",
+       "envelop"
+      ],
+      "title": "Nocebo",
+      "unauthPlaybackEnd": 86400,
+      "unauthPlaybackStart": 0,
+      "videoCategory": "SVOD"
+     },
+     "text": {
+      "description": "A fashion designer (Eva Green) suffers from a mysterious illness that puzzles her doctors and husband until help arrives in the form of a Filipino nanny who uses traditional folk healing to reveal a horrifying truth.",
+      "productionYear": 2022,
+      "title": "Nocebo",
+      "tvContentRating": {
+       "title": "TV-MA"
+      },
+      "videoNickname": "On Demand Movie"
+     }
+    },
+    "type": "detail"
+   },
+   {
+    "properties": {
+     "autoPlayerCountdown": 30,
+     "contentType": "movie",
+     "controlBar": {
+      "extension": {
+       "controlTime": {
+        "iconNameForward": "forward-player",
+        "iconNameRewind": "rewind-player",
+        "time": 15
+       },
+       "exploreMore": true
+      }
+     },
+     "currentVideo": {
+      "images": {
+       "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_amcn__nocebo__img_wide_16x9.jpg"
+      },
+      "meta": {
+       "airdate": "2022-11-04T00:00:00.000Z",
+       "alt": "Watch Nocebo Online | Stream Full Movies",
+       "authPlaybackEnd": 2082776399,
+       "authPlaybackStart": 1677214800,
+       "channel": "amcn",
+       "contentTitle": "Nocebo",
+       "creditPercent": 95,
+       "nid": 1061554,
+       "permalink": "/movies/nocebo--1061554",
+       "restrictedAds": false,
+       "title": "Nocebo",
+       "tvContentRating": "TV-MA",
+       "unauthPlaybackEnd": 86400,
+       "unauthPlaybackStart": 0,
+       "videoCategory": "SVOD",
+       "videoId": "6319888932112"
+      },
+      "ready_overlay_buttons": {
+       "restart_button": {
+        "caption": "restart"
+       },
+       "resume_button": {
+        "caption": "resume"
+       }
+      },
+      "text": {
+       "description": "A fashion designer (Eva Green) suffers from a mysterious illness that puzzles her doctors and husband until help arrives in the form of a Filipino nanny who uses traditional folk healing to reveal a horrifying truth.",
+       "premiereLogin": {
+        "accountLink": "/tve",
+        "amcPremiereLink": "https://www.amcplus.com/get-started",
+        "btn1": "Get AMC+",
+        "description": "Get the new premium streaming bundle now.",
+        "helpCenter": "Vist our Help Center",
+        "helpCenterLink": "https://amc-customercare.zendesk.com/hc/en-us",
+        "needHelp": "Need help?",
+        "preTitle": "ONLY THE GOOD STUFF",
+        "premiereSubscriber": "Still an AMC Premiere subscriber?",
+        "subscriberSignin": "Continue to sign in and watch",
+        "title": "AMC+ is the new way to upgrade for exclusives, early access and ad-free."
+       },
+       "title": "Nocebo"
+      }
+     },
+     "defaultOverlay": "downloadapp",
+     "downloadApp": {
+      "devices": {
+       "android": {},
+       "ios": {
+        "maybeLaterLink": "/movies/nocebo--1061554"
+       }
+      },
+      "image": "https://cdn.amcnetworks.com/amcplus/logos/app-icon@3x.png",
+      "title": {
+       "text": "Watch On The AMC+ App",
+       "typeface": "display-secondary-4",
+       "typefaceTablet": "display-secondary-4"
+      }
+     },
+     "endCards": {
+      "analyticsObject": {
+       "contentEpisode": -1,
+       "contentSeason": -1,
+       "contentShow": "none",
+       "contentTitle": "none",
+       "listMode": "swimlane",
+       "listPosition": 2,
+       "listTitle": "More from AMC+"
+      },
+      "data": [
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/from-black--1062214",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_amcn_FTP70254_from-black__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_amcn_FTP70254_from-black__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_amcn_FTP70254_from-black__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/from-black--1062214"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/livid--1052541",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV003962820000_livid__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV003962820000_livid__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV003962820000_livid__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/livid--1052541"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/kids-vs-aliens--1062243",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/processed/movie_amcn_RLJ244943_kids-vs-aliens__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/processed/movie_amcn_RLJ244943_kids-vs-aliens__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/processed/movie_amcn_RLJ244943_kids-vs-aliens__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/kids-vs-aliens--1062243"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/stay-out-of-the-attic--1028256",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV016000120000_stay-out-of-the-f***king--attic__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV016000120000_stay-out-of-the-f***king--attic__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV016000120000_stay-out-of-the-f***king--attic__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/stay-out-of-the-attic--1028256"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/a-bronx-tale--1044138",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/processed/movie_tms_MV000375080000_bronx-tale__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/processed/movie_tms_MV000375080000_bronx-tale__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/processed/movie_tms_MV000375080000_bronx-tale__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/a-bronx-tale--1044138"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/sam-was-here--1028195",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV010025650000_sam-was-here__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV010025650000_sam-was-here__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV010025650000_sam-was-here__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/sam-was-here--1028195"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/the-beach-house--1027739",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV014287430000_beach-house__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV014287430000_beach-house__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV014287430000_beach-house__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/the-beach-house--1027739"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/leave--1061923",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_amcn_FTP67839_leave__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_amcn_FTP67839_leave__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_amcn_FTP67839_leave__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/leave--1061923"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/ghostbusters-1984--1044153",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/processed/movie_tms_MV000184850000_ghostbusters__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/processed/movie_tms_MV000184850000_ghostbusters__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/processed/movie_tms_MV000184850000_ghostbusters__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/ghostbusters-1984--1044153"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/the-dark-and-the-wicked--1027848",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movies_tms_MV014469030000_dark-and-the-wicked__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movies_tms_MV014469030000_dark-and-the-wicked__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movies_tms_MV014469030000_dark-and-the-wicked__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/the-dark-and-the-wicked--1027848"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/mayhem--1028079",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV010165930000_mayhem__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV010165930000_mayhem__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV010165930000_mayhem__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/mayhem--1028079"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/summer-of-84--1028270",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV011064700000_summer-of-84__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV011064700000_summer-of-84__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV011064700000_summer-of-84__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/summer-of-84--1028270"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/dangerous--1052831",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV017089140000_dangerous_v2__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV017089140000_dangerous_v2__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV017089140000_dangerous_v2__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/dangerous--1052831"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/the-fifth-element--1016317",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV000506130000_fifth-element__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV000506130000_fifth-element__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV000506130000_fifth-element__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/the-fifth-element--1016317"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/blood-vessel--1027771",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV013903140000_blood-vessel__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV013903140000_blood-vessel__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV013903140000_blood-vessel__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/blood-vessel--1027771"
+         }
+        },
+        "type": "card"
+       },
+       {
+        "properties": {
+         "analyticsObject": {
+          "clickthroughUrl": "/movies/great-white--1043898",
+          "contentEpisode": -1,
+          "contentSeason": -1,
+          "contentShow": "none",
+          "contentTitle": "none"
+         },
+         "image": {
+          "images": {
+           "desktop": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV016086380000_great-white__img_wide_poster_16x9.jpg",
+           "mobile": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV016086380000_great-white__img_poster_2x3.jpg",
+           "tablet": "https://images.cds.amcn.com/amcn/amcplus/movie_tms_MV016086380000_great-white__img_wide_poster_16x9.jpg"
+          }
+         },
+         "layout": "end-card-player-ap",
+         "meta": {
+          "permalink": "/movies/great-white--1043898"
+         }
+        },
+        "type": "card"
+       }
+      ],
+      "title": "More from AMC+"
+     },
+     "kindOfCalcRunTime": "duration",
+     "linkCloseButton": "/movies/nocebo--1061554",
+     "miniScreen": false,
+     "mobileApp": true,
+     "overlayImageVisible": false,
+     "runTime": 30000,
+     "textContents": {
+      "onNow": "onNow",
+      "upNext": "upNextWithoutBg"
+     },
+     "timeInvisible": 2000,
+     "watchService": true
+    },
+    "type": "video-player-ap"
+   },
+   {
+    "properties": {
+     "navItems": {
+      "footer-guest": {
+       "followUs": {
+        "className": "footer-column social-media",
+        "items": [
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "icon": {
+           "iconName": "facebook",
+           "iconSize": 3,
+           "viewBox": "0 0 49 26"
+          },
+          "key": "facebook",
+          "permalink": "https://www.facebook.com/TheGoodStuffAMCPlus/"
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "icon": {
+           "iconName": "instagram",
+           "iconSize": 3,
+           "viewBox": "0 0 49 26"
+          },
+          "key": "instagram",
+          "permalink": "https://www.instagram.com/amcplus/"
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "icon": {
+           "iconName": "twitter",
+           "iconSize": 3,
+           "viewBox": "0 0 49 26"
+          },
+          "key": "twitter",
+          "permalink": "https://twitter.com/AMCPlus/"
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "icon": {
+           "iconName": "youtube",
+           "iconSize": 3,
+           "viewBox": "0 0 49 26"
+          },
+          "key": "youtube",
+          "permalink": "https://www.youtube.com/AMC/"
+         }
+        ],
+        "key": "follow-us",
+        "title": {
+         "className": "active-title",
+         "name": "FOLLOW AMC+",
+         "typography": "label-primary-md"
+        }
+       },
+       "footer-bottom": {
+        "className": "footer-row",
+        "items": [
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "advertise",
+          "permalink": "https://www.amcnconnect.com/",
+          "text": {
+           "title": "Advertise",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "press",
+          "permalink": "https://www.amcnetworks.com/news/",
+          "text": {
+           "title": "Press",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "careers",
+          "permalink": "https://www.amcnetworks.com/careers/",
+          "text": {
+           "title": "Careers",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "privacy",
+          "permalink": "https://www.amcnetworks.com/privacy-policy/",
+          "text": {
+           "title": "Privacy",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "cookies",
+          "permalink": "https://www.amcnetworks.com/cookies/",
+          "text": {
+           "title": "Cookies",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "terms&conditions",
+          "permalink": "https://www.amcnetworks.com/terms-of-use/",
+          "text": {
+           "title": "Terms & Conditions",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "do-not-sell-my-personal-info",
+          "text": {
+           "title": "Do Not Sell My Personal Information",
+           "typography": "body-0"
+          }
+         }
+        ],
+        "key": "footer-row"
+       },
+       "footer-copyright": {
+        "className": "footer-copyright",
+        "items": [
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "copyright",
+          "text": {
+           "title": "Copyright &copy; 2010-2023 AMC Network Entertainment LLC. All rights reserved.",
+           "typography": "body-0"
+          }
+         }
+        ],
+        "key": "footer-copyright"
+       },
+       "needHelp": {
+        "className": "footer-column",
+        "items": [
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "faqs",
+          "permalink": "/faqs",
+          "text": {
+           "title": "FAQs",
+           "typography": "body-1"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "contact-us",
+          "permalink": "http://support.amcplus.com/en/support/home",
+          "text": {
+           "title": "Contact us",
+           "typography": "body-1"
+          }
+         }
+        ],
+        "key": "need-help",
+        "title": {
+         "className": "active-title",
+         "name": "NEED HELP?",
+         "typography": "label-primary-md"
+        }
+       },
+       "stayConnected": {
+        "className": "footer-column",
+        "items": [
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "className": "no-desktop",
+          "key": "download-our-app",
+          "permalink": "action://downloadApp",
+          "text": {
+           "title": "Download our app",
+           "typography": "body-1"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "ways-to-watch",
+          "permalink": "/ways-to-watch",
+          "text": {
+           "title": "Ways to watch",
+           "typography": "body-1"
+          }
+         }
+        ],
+        "key": "stay-connected",
+        "title": {
+         "className": "active-title",
+         "name": "STAY CONNECTED",
+         "typography": "label-primary-md"
+        }
+       }
+      },
+      "footer-loggedIn": {
+       "followUs": {
+        "className": "footer-column social-media",
+        "items": [
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "icon": {
+           "iconName": "facebook",
+           "iconSize": 3,
+           "viewBox": "0 0 49 26"
+          },
+          "key": "facebook",
+          "permalink": "https://www.facebook.com/TheGoodStuffAMCPlus/"
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "icon": {
+           "iconName": "instagram",
+           "iconSize": 3,
+           "viewBox": "0 0 49 26"
+          },
+          "key": "instagram",
+          "permalink": "https://www.instagram.com/amcplus/"
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "icon": {
+           "iconName": "twitter",
+           "iconSize": 3,
+           "viewBox": "0 0 49 26"
+          },
+          "key": "twitter",
+          "permalink": "https://twitter.com/AMCPlus/"
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "icon": {
+           "iconName": "youtube",
+           "iconSize": 3,
+           "viewBox": "0 0 49 26"
+          },
+          "key": "youtube",
+          "permalink": "https://www.youtube.com/AMC/"
+         }
+        ],
+        "key": "follow-us",
+        "title": {
+         "className": "active-title",
+         "name": "FOLLOW AMC+",
+         "typography": "label-primary-md"
+        }
+       },
+       "footer-bottom": {
+        "className": "footer-row",
+        "items": [
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "advertise",
+          "permalink": "https://www.amcnconnect.com/",
+          "text": {
+           "title": "Advertise",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "press",
+          "permalink": "https://www.amcnetworks.com/news/",
+          "text": {
+           "title": "Press",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "careers",
+          "permalink": "https://www.amcnetworks.com/careers/",
+          "text": {
+           "title": "Careers",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "privacy",
+          "permalink": "https://www.amcnetworks.com/privacy-policy/",
+          "text": {
+           "title": "Privacy",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "cookies",
+          "permalink": "https://www.amcnetworks.com/cookies/",
+          "text": {
+           "title": "Cookies",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "terms&conditions",
+          "permalink": "https://www.amcnetworks.com/terms-of-use/",
+          "text": {
+           "title": "Terms & Conditions",
+           "typography": "body-0"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "do-not-sell-my-personal-info",
+          "text": {
+           "title": "Do Not Sell My Personal Information",
+           "typography": "body-0"
+          }
+         }
+        ],
+        "key": "footer-row"
+       },
+       "footer-copyright": {
+        "className": "footer-copyright",
+        "items": [
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "copyright",
+          "text": {
+           "title": "Copyright &copy; 2010-2023 AMC Network Entertainment LLC. All rights reserved.",
+           "typography": "body-0"
+          }
+         }
+        ],
+        "key": "footer-copyright"
+       },
+       "needHelp": {
+        "className": "footer-column",
+        "items": [
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "faqs",
+          "permalink": "/faqs",
+          "text": {
+           "title": "FAQs",
+           "typography": "body-1"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "contact-us",
+          "permalink": "http://support.amcplus.com/en/support/home",
+          "text": {
+           "title": "Contact us",
+           "typography": "body-1"
+          }
+         }
+        ],
+        "key": "need-help",
+        "title": {
+         "className": "active-title",
+         "name": "NEED HELP?",
+         "typography": "label-primary-md"
+        }
+       },
+       "stayConnected": {
+        "className": "footer-column",
+        "items": [
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "className": "no-desktop",
+          "key": "download-our-app",
+          "permalink": "action://downloadApp",
+          "text": {
+           "title": "Download our app",
+           "typography": "body-1"
+          }
+         },
+         {
+          "analyticsObject": {
+           "navComponentName": "bottom_nav"
+          },
+          "key": "ways-to-watch",
+          "permalink": "/ways-to-watch",
+          "text": {
+           "title": "Ways to watch",
+           "typography": "body-1"
+          }
+         }
+        ],
+        "key": "stay-connected",
+        "title": {
+         "className": "active-title",
+         "name": "STAY CONNECTED",
+         "typography": "label-primary-md"
+        }
+       }
+      }
+     }
+    },
+    "type": "footer-ap"
+   }
+  ],
+  "properties": {
+   "countryCode": "US",
+   "description": "Watch Nocebo online now with AMC+. Sign up for a free trial and start streaming your favorite movies today.",
+   "entitlements": [
+    "amcn-auth",
+    "ob-sub-amcplus"
+   ],
+   "id": "1061554",
+   "imageDesktop": "https://images.cds.amcn.com/amcn/amcplus/movie_amcn__nocebo__img_wide_16x9.jpg",
+   "manifestType": "watch-movies",
+   "pageTitle": "Nocebo",
+   "pageType": "watch-movies",
+   "schemaType": "WebSite",
+   "title": "Watch Nocebo Online | AMC+",
+   "videoCategory": "SVOD",
+   "videoId": "6319888932112"
+  },
+  "type": "page"
+ },
+ "status": 200,
+ "success": true
+}
