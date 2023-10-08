@@ -6,22 +6,6 @@ import (
    "time"
 )
 
-func (v Video) Series() (string, bool) {
-   return v.Meta.Show_Title, true
-}
-
-func (v Video) Episode() (int64, error) {
-   return v.Meta.Episode_Number, nil
-}
-
-func (v Video) Title() string {
-   return v.Text.Title
-}
-
-func (v Video) Date() (time.Time, error) {
-   return time.Parse(time.RFC3339, v.Meta.Airdate)
-}
-
 func (c Content) Video() (*Video, error) {
    for _, child := range c.Data.Children {
       if child.Type == "video-player-ap" {
@@ -35,7 +19,7 @@ func (c Content) Video() (*Video, error) {
          return &s.Current_Video, nil
       }
    }
-   return nil, errors.New("video-player-ap not present")
+   return nil, errors.New("video-player-ap")
 }
 
 type Video struct {
@@ -52,4 +36,23 @@ type Video struct {
 
 func (v Video) Season() (int64, error) {
    return v.Meta.Season, nil
+}
+
+func (v Video) Episode() (int64, error) {
+   return v.Meta.Episode_Number, nil
+}
+
+func (v Video) Title() string {
+   return v.Text.Title
+}
+
+func (v Video) Date() (time.Time, error) {
+   return time.Parse(time.RFC3339, v.Meta.Airdate)
+}
+
+func (v Video) Series() (string, bool) {
+   if v.Meta.Show_Title != "" {
+      return v.Meta.Show_Title, true
+   }
+   return "", false
 }

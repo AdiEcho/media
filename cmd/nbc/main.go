@@ -7,21 +7,27 @@ import (
 )
 
 type flags struct {
-   bandwidth int64
    guid int64
+   bandwidth int64
    resolution string
    s media.Stream
+   trace bool
 }
 
 func main() {
    var f flags
    flag.Int64Var(&f.guid, "b", 0, "GUID")
+   flag.Int64Var(&f.bandwidth, "bandwidth", 8_299_999, "maximum bandwidth")
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.resolution, "r", "720", "resolution")
-   flag.Int64Var(&f.bandwidth, "bandwidth", 8_099_999, "maximum bandwidth")
+   flag.BoolVar(&f.trace, "t", false, "trace")
    flag.Parse()
    option.No_Location()
-   option.Verbose()
+   if f.trace {
+      option.Trace()
+   } else {
+      option.Verbose()
+   }
    if f.guid >= 1 {
       err := f.download()
       if err != nil {

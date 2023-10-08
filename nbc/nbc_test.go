@@ -8,10 +8,15 @@ import (
 )
 
 var guids = []int64{
-   // nbc.com/saturday-night-live/video/november-5-amy-schumer/9000258300
-   9000258300,
+   // episode
+   // nbc.com/the-irrational/video/dead-woman-walking/9000360354
+   9000360354,
+   // episode
    // nbc.com/pasion-de-gavilanes/video/una-verguenza/3760495
    3760495,
+   // movie
+   // nbc.com/john-wick/video/john-wick/3448375
+   3448375,
 }
 
 func Test_Meta(t *testing.T) {

@@ -23,7 +23,7 @@ func Test_Content(t *testing.T) {
       auth.Unmarshal(b)
    }
    option.No_Location()
-   option.Trace()
+   option.Verbose()
    for _, test := range tests {
       con, err := auth.Content(test.address)
       if err != nil {

@@ -13,11 +13,11 @@ func (f flags) download() error {
       return err
    }
    f.s.Namer = meta
-   video, err := meta.Video()
+   on, err := meta.On_Demand()
    if err != nil {
       return err
    }
-   master, err := f.s.HLS(video.Manifest_Path)
+   master, err := f.s.HLS(on.Manifest_Path)
    if err != nil {
       return err
    }

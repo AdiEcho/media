@@ -11,7 +11,37 @@ import (
    "time"
 )
 
-func (m Metadata) Video() (*Video, error) {
+func (m Metadata) Series() (string, bool) {
+   return m.Series_Short_Title, true
+}
+
+func (m Metadata) Title() string {
+   return m.Secondary_Title
+}
+
+func (m Metadata) Season() (int64, error) {
+   return m.Season_Number, nil
+}
+
+func (m Metadata) Episode() (int64, error) {
+   return m.Episode_Number, nil
+}
+
+func (m Metadata) Date() (time.Time, error) {
+   return time.Parse(time.RFC3339, m.Air_Date)
+}
+
+type Metadata struct {
+   Air_Date string `json:"airDate"`
+   Episode_Number int64 `json:"episodeNumber,string"`
+   MPX_Account_ID string `json:"mpxAccountId"`
+   MPX_GUID string `json:"mpxGuid"`
+   Season_Number int64 `json:"seasonNumber,string"`
+   Secondary_Title string `json:"secondaryTitle"`
+   Series_Short_Title string `json:"seriesShortTitle"`
+}
+
+func (m Metadata) On_Demand() (*On_Demand, error) {
    body, err := func() ([]byte, error) {
       var v video_request
       v.Device = "android"
@@ -39,11 +69,11 @@ func (m Metadata) Video() (*Video, error) {
       return nil, err
    }
    defer res.Body.Close()
-   vid := new(Video)
-   if err := json.NewDecoder(res.Body).Decode(vid); err != nil {
+   on := new(On_Demand)
+   if err := json.NewDecoder(res.Body).Decode(on); err != nil {
       return nil, err
    }
-   return vid, nil
+   return on, nil
 }
 
 const query = `
@@ -84,7 +114,7 @@ func graphQL_compact(s string) string {
    return strings.Join(f, " ")
 }
 
-type Video struct {
+type On_Demand struct {
    // this is only valid for one minute
    Manifest_Path string `json:"manifestPath"`
 }
@@ -108,35 +138,6 @@ type video_request struct {
    MPX struct {
       Account_ID string `json:"accountId"`
    } `json:"mpx"`
-}
-func (m Metadata) Title() string {
-   return m.Secondary_Title
-}
-
-func (m Metadata) Series() string {
-   return m.Series_Short_Title
-}
-
-func (m Metadata) Season() (int64, error) {
-   return m.Season_Number, nil
-}
-
-func (m Metadata) Episode() (int64, error) {
-   return m.Episode_Number, nil
-}
-
-func (m Metadata) Date() (time.Time, error) {
-   return time.Parse(time.RFC3339, m.Air_Date)
-}
-
-type Metadata struct {
-   MPX_Account_ID string `json:"mpxAccountId"`
-   MPX_GUID string `json:"mpxGuid"`
-   Series_Short_Title string `json:"seriesShortTitle"`
-   Season_Number int64 `json:"seasonNumber,string"`
-   Episode_Number int64 `json:"episodeNumber,string"`
-   Secondary_Title string `json:"secondaryTitle"`
-   Air_Date string `json:"airDate"`
 }
 
 func New_Metadata(guid int64) (*Metadata, error) {
@@ -172,7 +173,7 @@ func New_Metadata(guid int64) (*Metadata, error) {
       return nil, err
    }
    if page.Data.Bonanza_Page.Metadata == nil {
-      return nil, fmt.Errorf(".data.bonanzaPage.metadata is null")
+      return nil, fmt.Errorf(".data.bonanzaPage.metadata")
    }
    return page.Data.Bonanza_Page.Metadata, nil
 }
@@ -190,4 +191,3 @@ func authorization(b []byte) string {
    b = fmt.Appendf(b, "%x", hash.Sum(nil))
    return string(b)
 }
-
