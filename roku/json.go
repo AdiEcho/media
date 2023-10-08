@@ -1,41 +1,15 @@
 package roku
 
 import (
-   "bytes"
-   "encoding/json"
+   "154.pages.dev/encoding/json"
    "errors"
+   "io"
    "net/http"
-   "net/url"
-   "strings"
 )
 
-func (c Cross_Site) Playback(id string) (*Playback, error) {
-   body, err := func() ([]byte, error) {
-      m := map[string]string{
-         "mediaFormat": "mpeg-dash",
-         "providerId": "rokuavod",
-         "rokuId": id,
-      }
-      return json.MarshalIndent(m, "", " ")
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://therokuchannel.roku.com/api/v3/playback",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   // we could use Request.AddCookie, but we would need to call it after this,
-   // otherwise it would be clobbered
-   req.Header = http.Header{
-      "CSRF-Token": {c.token},
-      "Content-Type": {"application/json"},
-      "Cookie": {c.csrf().Raw},
-   }
-   res, err := http.DefaultClient.Do(req)
+func New_Cross_Site() (*Cross_Site, error) {
+   // this has smaller body than www.roku.com
+   res, err := http.Get("https://therokuchannel.roku.com")
    if err != nil {
       return nil, err
    }
@@ -43,52 +17,15 @@ func (c Cross_Site) Playback(id string) (*Playback, error) {
    if res.StatusCode != http.StatusOK {
       return nil, errors.New(res.Status)
    }
-   play := new(Playback)
-   if err := json.NewDecoder(res.Body).Decode(play); err != nil {
-      return nil, err
-   }
-   return play, nil
-}
-
-func New_Content(id string) (*Content, error) {
-   req, err := http.NewRequest(
-      "GET", "https://therokuchannel.roku.com/api/v2/homescreen/content", nil,
-   )
+   var site Cross_Site
+   site.cookies = res.Cookies()
+   text, err := io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
-   {
-      include := []string{
-         "episodeNumber",
-         "releaseDate",
-         "seasonNumber",
-         "series.title",
-         "title",
-         "viewOptions",
-      }
-      expand := url.URL{
-         Scheme: "https",
-         Host: "content.sr.roku.com",
-         Path: "/content/v1/roku-trc/" + id,
-         RawQuery: url.Values{
-            "expand": {"series"},
-            "include": {strings.Join(include, ",")},
-         }.Encode(),
-      }
-      homescreen := url.PathEscape(expand.String())
-      req.URL = req.URL.JoinPath(homescreen)
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
+   _, text = json.Cut(text, []byte("\tcsrf:"), nil)
+   if err := json.Unmarshal(text, &site.token); err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   var con Content
-   if err := json.NewDecoder(res.Body).Decode(&con.s); err != nil {
-      return nil, err
-   }
-   return &con, nil
+   return &site, nil
 }

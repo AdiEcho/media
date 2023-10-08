@@ -11,36 +11,6 @@ import (
    "time"
 )
 
-func (m Metadata) Series() (string, bool) {
-   return m.Series_Short_Title, true
-}
-
-func (m Metadata) Title() string {
-   return m.Secondary_Title
-}
-
-func (m Metadata) Season() (int64, error) {
-   return m.Season_Number, nil
-}
-
-func (m Metadata) Episode() (int64, error) {
-   return m.Episode_Number, nil
-}
-
-func (m Metadata) Date() (time.Time, error) {
-   return time.Parse(time.RFC3339, m.Air_Date)
-}
-
-type Metadata struct {
-   Air_Date string `json:"airDate"`
-   Episode_Number int64 `json:"episodeNumber,string"`
-   MPX_Account_ID string `json:"mpxAccountId"`
-   MPX_GUID string `json:"mpxGuid"`
-   Season_Number int64 `json:"seasonNumber,string"`
-   Secondary_Title string `json:"secondaryTitle"`
-   Series_Short_Title string `json:"seriesShortTitle"`
-}
-
 func (m Metadata) On_Demand() (*On_Demand, error) {
    body, err := func() ([]byte, error) {
       var v video_request
@@ -190,4 +160,34 @@ func authorization(b []byte) string {
    b = append(b, ",hash="...)
    b = fmt.Appendf(b, "%x", hash.Sum(nil))
    return string(b)
+}
+
+type Metadata struct {
+   Air_Date string `json:"airDate"`
+   Episode_Number *int64 `json:"episodeNumber,string"`
+   MPX_Account_ID string `json:"mpxAccountId"`
+   MPX_GUID string `json:"mpxGuid"`
+   Season_Number *int64 `json:"seasonNumber,string"`
+   Secondary_Title string `json:"secondaryTitle"`
+   Series_Short_Title *string `json:"seriesShortTitle"`
+}
+
+func (m Metadata) Date() (time.Time, error) {
+   return time.Parse(time.RFC3339, m.Air_Date)
+}
+
+func (m Metadata) Episode() (int64, error) {
+   return m.Episode_Number, nil
+}
+
+func (m Metadata) Season() (int64, error) {
+   return m.Season_Number, nil
+}
+
+func (m Metadata) Series() (string, bool) {
+   return m.Series_Short_Title, true
+}
+
+func (m Metadata) Title() string {
+   return m.Secondary_Title
 }
