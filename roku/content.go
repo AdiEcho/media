@@ -16,7 +16,7 @@ func New_Content(id string) (*Content, error) {
    if err != nil {
       return nil, err
    }
-   {
+   req.URL = func() *url.URL {
       include := []string{
          "episodeNumber",
          "releaseDate",
@@ -35,8 +35,8 @@ func New_Content(id string) (*Content, error) {
          }.Encode(),
       }
       homescreen := url.PathEscape(expand.String())
-      req.URL = req.URL.JoinPath(homescreen)
-   }
+      return req.URL.JoinPath(homescreen)
+   }()
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -52,12 +52,44 @@ func New_Content(id string) (*Content, error) {
    return &con, nil
 }
 
-func (c Content) Title() string {
-   return c.s.Title
+func (c Content) DASH() *Video {
+   for _, option := range c.s.View_Options {
+      for _, vid := range option.Media.Videos {
+         if vid.Video_Type == "DASH" {
+            return &vid
+         }
+      }
+   }
+   return nil
 }
 
-func (c Content) Series() string {
-   return c.s.Series.Title
+// we have to embed to prevent clobbering the interface
+type Content struct {
+   s struct {
+      Episode_Number int64 `json:"episodeNumber,string"`
+      Release_Date string `json:"releaseDate"` // 2007-01-01T000000Z
+      Season_Number int64 `json:"seasonNumber,string"`
+      Series *struct {
+         Title string
+      }
+      Title string
+      View_Options []struct {
+         Media struct {
+            Videos []Video
+         }
+      } `json:"viewOptions"`
+   }
+}
+
+func (c Content) Series() (string, bool) {
+   if c.s.Series != nil {
+      return c.s.Series.Title, true
+   }
+   return "", false
+}
+
+func (c Content) Title() string {
+   return c.s.Title
 }
 
 func (c Content) Season() (int64, error) {
@@ -70,32 +102,4 @@ func (c Content) Episode() (int64, error) {
 
 func (c Content) Date() (time.Time, error) {
    return time.Parse(time.RFC3339, c.s.Release_Date)
-}
-
-type Content struct {
-   s struct {
-      Series struct {
-         Title string
-      }
-      Season_Number int64 `json:"seasonNumber,string"`
-      Episode_Number int64 `json:"episodeNumber,string"`
-      Title string
-      Release_Date string `json:"releaseDate"` // 2007-01-01T000000Z
-      View_Options []struct {
-         Media struct {
-            Videos []Video
-         }
-      } `json:"viewOptions"`
-   }
-}
-
-func (c Content) DASH() *Video {
-   for _, option := range c.s.View_Options {
-      for _, vid := range option.Media.Videos {
-         if vid.Video_Type == "DASH" {
-            return &vid
-         }
-      }
-   }
-   return nil
 }
