@@ -1,7 +1,6 @@
 package nbc
 
 import (
-   "154.pages.dev/media"
    "fmt"
    "testing"
    "time"
@@ -13,11 +12,11 @@ func Test_Video(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      vid, err := meta.Video()
+      on, err := meta.On_Demand()
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%+v\n", vid)
+      fmt.Printf("%+v\n", on)
       time.Sleep(time.Second)
    }
 }
