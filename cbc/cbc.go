@@ -9,6 +9,61 @@ import (
    "strings"
 )
 
+func New_Catalog_Gem(ref string) (*Catalog_Gem, error) {
+   // you can also use `phone_android`, but it returns combined number and name:
+   // 3. Beauty Hath Strange Power
+   req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
+   if err != nil {
+      return nil, err
+   }
+   {
+      p, err := url.Parse(ref)
+      if err != nil {
+         return nil, err
+      }
+      req.URL.Path = "/ott/catalog/v2/gem/show" + p.Path
+   }
+   req.URL.RawQuery = "device=web"
+   res, err := new(http.Transport).RoundTrip(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   gem := new(Catalog_Gem)
+   if err := json.NewDecoder(res.Body).Decode(gem); err != nil {
+      return nil, err
+   }
+   return gem, nil
+}
+
+type Lineup_Item struct {
+   URL string
+   Formatted_ID_Media string `json:"formattedIdMedia"`
+}
+
+func (c Catalog_Gem) Item() *Lineup_Item {
+   for _, content := range c.Content {
+      for _, lineup := range content.Lineups {
+         for _, item := range lineup.Items {
+            if item.URL == c.Selected_URL {
+               return &item
+            }
+         }
+      }
+   }
+   return nil
+}
+
+type Catalog_Gem struct {
+   Content []struct {
+      Lineups []struct {
+         Items []Lineup_Item
+      }
+   }
+   Selected_URL string `json:"selectedUrl"`
+   Structured_Metadata Metadata `json:"structuredMetadata"`
+}
+
 func New_Token(username, password string) (*Token, error) {
    body := url.Values{
       "client_id": {"7f44c935-6542-4ce7-ae05-eb887809741c"},
@@ -62,6 +117,7 @@ func Read_Profile(name string) (*Profile, error) {
 type Profile struct {
    Claims_Token string `json:"claimsToken"`
 }
+
 func (t Token) Profile() (*Profile, error) {
    req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
    if err != nil {
@@ -134,4 +190,3 @@ var scope = []string{
    "https://rcmnb2cprod.onmicrosoft.com/84593b65-0ef6-4a72-891c-d351ddd50aab/toutv-profiling",
    "openid",
 }
-
