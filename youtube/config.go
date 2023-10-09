@@ -104,9 +104,8 @@ func (f Format) Encode(w io.Writer) error {
    if err != nil {
       return err
    }
+   option.Silent()
    pro := option.Progress_Length(f.Content_Length)
-   fn := option.Silent()
-   defer fn()
    var pos position
    for pos.i < f.Content_Length {
       val.Set("range", pos.String())
