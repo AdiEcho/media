@@ -2,10 +2,11 @@ package main
 
 import (
    "154.pages.dev/http/option"
-   "154.pages.dev/media"
    "154.pages.dev/media/paramount"
+   "154.pages.dev/stream"
    "flag"
    "os"
+   "path/filepath"
 )
 
 type flags struct {
@@ -15,35 +16,30 @@ type flags struct {
    dash_cenc bool
    height int
    lang string
-   media.Stream
+   s stream.Stream
 }
 
 func main() {
-   home, err := os.UserHomeDir()
+   home, err := func() (string, error) {
+      s, err := os.UserHomeDir()
+      if err != nil {
+         return "", err
+      }
+      return filepath.ToSlash(s) + "/widevine/", nil
+   }()
    if err != nil {
       panic(err)
    }
    var f flags
-   // b
    flag.StringVar(&f.content_ID, "b", "", "content ID")
-   // bandwidth
    flag.IntVar(&f.bandwidth, "bandwidth", 5_000_000, "maximum bandwidth")
-   // c
    flag.StringVar(&f.codec, "c", "mp4a", "audio codec")
-   // d
+   flag.StringVar(&f.s.Client_ID, "client", home+"client_id.bin", "client ID")
    flag.BoolVar(&f.dash_cenc, "d", false, "DASH_CENC")
-   // h
    flag.IntVar(&f.height, "h", 720, "maximum height")
-   // i
-   flag.BoolVar(&f.Info, "i", false, "information")
-   // language
+   flag.BoolVar(&f.s.Info, "i", false, "information")
+   flag.StringVar(&f.s.Private_Key, "key", home+"private_key.pem", "private key")
    flag.StringVar(&f.lang, "language", "en", "audio language")
-   // client
-   f.Client_ID = home + "/widevine/client_id.bin"
-   flag.StringVar(&f.Client_ID, "client", f.Client_ID, "client ID")
-   // key
-   f.Private_Key = home + "/widevine/private_key.pem"
-   flag.StringVar(&f.Private_Key, "key", f.Private_Key, "private key")
    flag.Parse()
    if f.content_ID != "" {
       option.No_Location()

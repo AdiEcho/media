@@ -1,7 +1,6 @@
 package gem
 
 import (
-   "154.pages.dev/media"
    "encoding/json"
    "fmt"
    "os"

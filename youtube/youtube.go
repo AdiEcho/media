@@ -1,7 +1,7 @@
 package youtube
 
 import (
-   "154.pages.dev/media"
+   "154.pages.dev/stream"
    "net/url"
    "strings"
    "time"
@@ -11,27 +11,27 @@ func (p Player) Name() string {
    var b strings.Builder
    b.WriteString(p.Video_Details.Author)
    b.WriteString(sep_big)
-   b.WriteString(media.Clean(p.Video_Details.Title))
+   b.WriteString(stream.Clean(p.Video_Details.Title))
    return b.String()
 }
 
 func (i Image) URL(id string) *url.URL {
-   var u url.URL
-   u.Scheme = "http"
-   u.Host = "i.ytimg.com"
-   {
-      var b strings.Builder
-      b.WriteString("/vi")
-      if strings.HasSuffix(i.Name, ".webp") {
-         b.WriteString("_webp")
-      }
-      b.WriteByte('/')
-      b.WriteString(id)
-      b.WriteByte('/')
-      b.WriteString(i.Name)
-      u.Path = b.String()
+   return &url.URL{
+      Scheme: "http",
+      Host: "i.ytimg.com",
+      Path: func() string {
+         var b strings.Builder
+         b.WriteString("/vi")
+         if strings.HasSuffix(i.Name, ".webp") {
+            b.WriteString("_webp")
+         }
+         b.WriteByte('/')
+         b.WriteString(id)
+         b.WriteByte('/')
+         b.WriteString(i.Name)
+         return b.String()
+      }(),
    }
-   return &u
 }
 
 type Image struct {

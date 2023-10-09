@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/encoding/hls"
    "154.pages.dev/media/cbc"
+   "154.pages.dev/stream/hls"
    "os"
    "slices"
    "strings"
@@ -26,7 +26,7 @@ func (f flags) download() error {
       }
       return false
    })
-   if err := f.HLS_Streams(master.Stream, index); err != nil {
+   if err := f.s.HLS_Streams(master.Stream, index); err != nil {
       return err
    }
    // audio
@@ -36,7 +36,7 @@ func (f flags) download() error {
    index = slices.IndexFunc(master.Media, func(a hls.Media) bool {
       return a.Name == f.name
    })
-   return f.HLS_Media(master.Media, index)
+   return f.s.HLS_Media(master.Media, index)
 }
 
 func (f *flags) master() (*hls.Master, error) {
@@ -56,8 +56,8 @@ func (f *flags) master() (*hls.Master, error) {
    if err != nil {
       return nil, err
    }
-   f.Namer = gem.Structured_Metadata
-   return f.HLS(media.URL)
+   f.s.Namer = gem.Structured_Metadata
+   return f.s.HLS(media.URL)
 }
 
 func (f flags) profile() error {

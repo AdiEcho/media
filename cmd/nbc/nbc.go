@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/encoding/hls"
    "154.pages.dev/media/nbc"
+   "154.pages.dev/stream/hls"
    "slices"
    "strings"
 )

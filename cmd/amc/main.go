@@ -2,7 +2,7 @@ package main
 
 import (
    "154.pages.dev/http/option"
-   "154.pages.dev/media"
+   "154.pages.dev/stream"
    "flag"
    "os"
    "path/filepath"
@@ -13,7 +13,7 @@ type flags struct {
    email string
    height int
    password string
-   s media.Stream
+   s stream.Stream
 }
 
 func main() {

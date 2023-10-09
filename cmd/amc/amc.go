@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/encoding/dash"
    "154.pages.dev/media/amc"
+   "154.pages.dev/stream/dash"
    "errors"
    "net/http"
    "os"

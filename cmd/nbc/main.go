@@ -2,7 +2,7 @@ package main
 
 import (
    "154.pages.dev/http/option"
-   "154.pages.dev/media"
+   "154.pages.dev/stream"
    "flag"
 )
 
@@ -10,7 +10,7 @@ type flags struct {
    guid int64
    bandwidth int64
    resolution string
-   s media.Stream
+   s stream.Stream
    trace bool
 }
 

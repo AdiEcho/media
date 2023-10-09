@@ -1,10 +1,10 @@
 package main
 
 import (
-   "154.pages.dev/encoding/dash"
    "154.pages.dev/http/option"
-   "154.pages.dev/media"
    "154.pages.dev/media/paramount"
+   "154.pages.dev/stream"
+   "154.pages.dev/stream/dash"
    "fmt"
    "io"
    "net/http"
@@ -23,18 +23,18 @@ func (f flags) dash(token *paramount.App_Token) error {
       return err
    }
    defer res.Body.Close()
-   f.Base = res.Request.URL
+   f.s.Base = res.Request.URL
    reps, err := dash.Representations(res.Body)
    if err != nil {
       return err
    }
-   if !f.Info {
+   if !f.s.Info {
       item, err := token.Item(f.content_ID)
       if err != nil {
          return err
       }
-      f.Namer = item
-      f.Poster, err = token.Session(f.content_ID)
+      f.s.Namer = item
+      f.s.Poster, err = token.Session(f.content_ID)
       if err != nil {
          return err
       }
@@ -51,7 +51,7 @@ func (f flags) dash(token *paramount.App_Token) error {
          }
          return false
       })
-      err := f.DASH_Get(reps, index)
+      err := f.s.DASH_Get(reps, index)
       if err != nil {
          return err
       }
@@ -64,7 +64,7 @@ func (f flags) dash(token *paramount.App_Token) error {
       }
       return false
    })
-   return f.DASH_Get(reps, index)
+   return f.s.DASH_Get(reps, index)
 }
 
 func (f flags) downloadable(token *paramount.App_Token) error {
@@ -76,11 +76,11 @@ func (f flags) downloadable(token *paramount.App_Token) error {
    if err != nil {
       return err
    }
-   if f.Info {
+   if f.s.Info {
       fmt.Println(ref)
       return nil
    }
-   name, err := media.Name(item)
+   name, err := stream.Name(item)
    if err != nil {
       return err
    }
@@ -100,4 +100,3 @@ func (f flags) downloadable(token *paramount.App_Token) error {
    }
    return nil
 }
-

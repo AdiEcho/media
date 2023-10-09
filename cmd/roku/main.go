@@ -2,8 +2,8 @@ package main
 
 import (
    "154.pages.dev/http/option"
-   "154.pages.dev/media"
    "154.pages.dev/media/roku"
+   "154.pages.dev/stream"
    "flag"
    "os"
 )
@@ -14,7 +14,7 @@ type flags struct {
    height int
    id string
    lang string
-   s media.Stream
+   s stream.Stream
    trace bool
 }
 
