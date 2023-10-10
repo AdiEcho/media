@@ -4,7 +4,7 @@ go 1.21.0
 
 require (
 	154.pages.dev/encoding v1.13.4
-	154.pages.dev/http v1.1.6
+	154.pages.dev/http v1.1.7
 	154.pages.dev/protobuf v1.0.2
 	154.pages.dev/stream v1.0.0
 	154.pages.dev/widevine v1.1.4
