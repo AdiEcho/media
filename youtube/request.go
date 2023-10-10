@@ -9,38 +9,6 @@ import (
    "strconv"
 )
 
-func (r Request) Search(query string) (*Search, error) {
-   body, err := func() ([]byte, error) {
-      var p parameters
-      p.Filter = new(filter)
-      p.Filter.Type = values["TYPE"]["Video"]
-      r.Params = p.Marshal()
-      r.Query = query
-      return json.MarshalIndent(r, "", " ")
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://www.youtube.com/youtubei/v1/search",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("X-Goog-API-Key", api_key)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   search := new(Search)
-   if err := json.NewDecoder(res.Body).Decode(search); err != nil {
-      return nil, err
-   }
-   return search, nil
-}
-
 type version struct {
    major int64
    minor int64

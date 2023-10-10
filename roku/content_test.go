@@ -2,20 +2,21 @@ package roku
 
 import (
    "154.pages.dev/http"
+   "154.pages.dev/stream"
    "fmt"
    "testing"
    "time"
 )
 
 func Test_Content(t *testing.T) {
-   option.No_Location()
-   option.Verbose()
+   http.No_Location()
+   http.Verbose()
    for _, test := range tests {
       con, err := New_Content(test.playback_ID)
       if err != nil {
          t.Fatal(err)
       }
-      name, err := media.Name(con)
+      name, err := stream.Name(con)
       if err != nil {
          t.Fatal(err)
       }

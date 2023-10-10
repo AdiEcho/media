@@ -125,32 +125,6 @@ func (p Player) Publish_Date() string {
    return p.Microformat.Player_Microformat_Renderer.Publish_Date
 }
 
-func (s Search) Items() []Item {
-   var items []Item
-   for _, sect := range s.Contents.Section_List_Renderer.Contents {
-      if sect.Item_Section_Renderer != nil {
-         for _, item := range sect.Item_Section_Renderer.Contents {
-            if item.Video_With_Context_Renderer != nil {
-               items = append(items, item)
-            }
-         }
-      }
-   }
-   return items
-}
-
-type Search struct {
-   Contents struct {
-      Section_List_Renderer struct {
-         Contents []struct {
-            Item_Section_Renderer *struct {
-               Contents []Item
-            } `json:"itemSectionRenderer"`
-         }
-      } `json:"sectionListRenderer"`
-   }
-}
-
 type Item struct {
    Video_With_Context_Renderer *struct {
       Video_ID string `json:"videoId"`

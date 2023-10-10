@@ -12,8 +12,8 @@ import (
 )
 
 func Test_Playback(t *testing.T) {
-   option.No_Location()
-   option.Trace()
+   http.No_Location()
+   http.Trace()
    site, err := New_Cross_Site()
    if err != nil {
       t.Fatal(err)

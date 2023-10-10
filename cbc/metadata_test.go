@@ -1,6 +1,7 @@
 package gem
 
 import (
+   "154.pages.dev/stream"
    "encoding/json"
    "fmt"
    "os"
@@ -24,13 +25,14 @@ func Test_Gem(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      enc.Encode(gem.Item())
-      name, err := media.Name(gem.Structured_Metadata)
+      item := gem.Item()
+      enc.Encode(item)
+      name, err := stream.Name(gem.Structured_Metadata)
       if err != nil {
          t.Fatal(err)
       }
       fmt.Println(name)
-      media, err := pro.Media(gem.Item())
+      media, err := pro.Media(item)
       if err != nil {
          t.Fatal(err)
       }

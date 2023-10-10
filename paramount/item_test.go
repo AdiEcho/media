@@ -2,14 +2,15 @@ package paramount
 
 import (
    "154.pages.dev/http"
+   "154.pages.dev/stream"
    "fmt"
    "testing"
    "time"
 )
 
 func Test_Item(t *testing.T) {
-   option.No_Location()
-   option.Verbose()
+   http.No_Location()
+   http.Verbose()
    token, err := New_App_Token()
    if err != nil {
       t.Fatal(err)
@@ -19,7 +20,7 @@ func Test_Item(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := media.Name(item)
+      name, err := stream.Name(item)
       if err != nil {
          t.Fatal(err)
       }

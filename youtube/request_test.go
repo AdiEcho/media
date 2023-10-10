@@ -69,23 +69,6 @@ func Test_Android_Embed(t *testing.T) {
    }
 }
 
-func Test_Search(t *testing.T) {
-   var req Request
-   req.Mobile_Web()
-   search, err := req.Search("oneohtrix point never along")
-   if err != nil {
-      t.Fatal(err)
-   }
-   enc := json.NewEncoder(os.Stdout)
-   enc.SetIndent("", " ")
-   if err := enc.Encode(search); err != nil {
-      t.Fatal(err)
-   }
-   for _, item := range search.Items() {
-      fmt.Println(item.Video_With_Context_Renderer)
-   }
-}
-
 var androids = []string{
    "H1BuwMTrtLQ", // content check
    "zv9NimPx3Es",
@@ -99,4 +82,3 @@ var android_checks = []string{
    "dqRZDebPIGs", // racy check
    "nGC3D_FkCmg", // content check
 }
-
