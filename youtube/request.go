@@ -6,26 +6,27 @@ import (
    "net/http"
    "net/url"
    "path"
-   "strconv"
 )
 
-type version struct {
-   major int64
-   minor int64
-   patch int64
+func (r *Request) Android() {
+   r.Content_Check_OK = true
+   r.Context.Client.Name = "ANDROID"
+   r.Context.Client.Version = android_youtube
 }
 
-var max_android = version{18, 22, 99}
-
-func (v version) String() string {
-   var b []byte
-   b = strconv.AppendInt(b, v.major, 10)
-   b = append(b, '.')
-   b = strconv.AppendInt(b, v.minor, 10)
-   b = append(b, '.')
-   b = strconv.AppendInt(b, v.patch, 10)
-   return string(b)
+func (r *Request) Android_Check() {
+   r.Content_Check_OK = true
+   r.Context.Client.Name = "ANDROID"
+   r.Context.Client.Version = android_youtube
+   r.Racy_Check_OK = true
 }
+
+func (r *Request) Android_Embed() {
+   r.Context.Client.Name = "ANDROID_EMBEDDED_PLAYER"
+   r.Context.Client.Version = android_youtube
+}
+
+const android_youtube = "18.39.41"
 
 const user_agent = "com.google.android.youtube/"
 
@@ -73,27 +74,9 @@ type Request struct {
    Video_ID string `json:"videoId,omitempty"`
 }
 
-func (r *Request) Android() {
-   r.Content_Check_OK = true
-   r.Context.Client.Name = "ANDROID"
-   r.Context.Client.Version = max_android.String()
-}
-
-func (r *Request) Android_Check() {
-   r.Content_Check_OK = true
-   r.Context.Client.Name = "ANDROID"
-   r.Context.Client.Version = max_android.String()
-   r.Racy_Check_OK = true
-}
-
 func (r *Request) Mobile_Web() {
    r.Context.Client.Name = "MWEB"
    r.Context.Client.Version = mweb_version
-}
-
-func (r *Request) Android_Embed() {
-   r.Context.Client.Name = "ANDROID_EMBEDDED_PLAYER"
-   r.Context.Client.Version = max_android.String()
 }
 
 func (r *Request) Set(s string) error {

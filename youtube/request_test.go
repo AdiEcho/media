@@ -1,8 +1,6 @@
 package youtube
 
 import (
-   "encoding/json"
-   "fmt"
    "os"
    "testing"
    "time"

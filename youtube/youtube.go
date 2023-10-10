@@ -124,14 +124,3 @@ func (p Player) Duration() time.Duration {
 func (p Player) Publish_Date() string {
    return p.Microformat.Player_Microformat_Renderer.Publish_Date
 }
-
-type Item struct {
-   Video_With_Context_Renderer *struct {
-      Video_ID string `json:"videoId"`
-      Headline struct {
-         Runs []struct {
-            Text string
-         }
-      }
-   } `json:"videoWithContextRenderer"`
-}
