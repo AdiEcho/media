@@ -1,6 +1,7 @@
 package gem
 
 import (
+   "154.pages.dev/http"
    "fmt"
    "os"
    "testing"
@@ -11,11 +12,11 @@ func Test_New_Profile(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   u, err := media.User(home + "/cbc/user.json")
+   u, err := http.User(home + "/cbc/user.json")
    if err != nil {
       t.Fatal(err)
    }
-   tok, err := New_Token(u["username"], u["password"])
+   tok, err := New_Token(u.Username, u.Password)
    if err != nil {
       t.Fatal(err)
    }
@@ -27,15 +28,21 @@ func Test_New_Profile(t *testing.T) {
 }
 
 func Test_Profile(t *testing.T) {
-   home, err := os.UserHomeDir()
+   home, err := func() (string, error) {
+      s, err := os.UserHomeDir()
+      if err != nil {
+         return "", err
+      }
+      return s + "/cbc/", nil
+   }()
    if err != nil {
       t.Fatal(err)
    }
-   u, err := media.User(home + "/cbc/user.json")
+   u, err := http.User(home + "user.json")
    if err != nil {
       t.Fatal(err)
    }
-   tok, err := New_Token(u["username"], u["password"])
+   tok, err := New_Token(u.Username, u.Password)
    if err != nil {
       t.Fatal(err)
    }
@@ -43,7 +50,7 @@ func Test_Profile(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   if err := pro.Write_File(home + "/cbc.json"); err != nil {
+   if err := pro.Write_File(home + "profile.json"); err != nil {
       t.Fatal(err)
    }
 }

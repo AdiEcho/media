@@ -3,22 +3,44 @@ package main
 import (
    "154.pages.dev/media/youtube"
    "fmt"
+   "net/http"
    "os"
    "slices"
    "strings"
+   option "154.pages.dev/http"
 )
 
-func (f flags) encode(form youtube.Format, name string) error {
-   ext, err := form.Ext()
-   if err != nil {
-      return err
-   }
-   file, err := os.Create(name + ext)
+func encode(f youtube.Format, name string) error {
+   file, err := func() (*os.File, error) {
+      ext, err := f.Ext()
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(name + ext)
+   }()
    if err != nil {
       return err
    }
    defer file.Close()
-   return form.Encode(file)
+   option.Silent()
+   pro := option.Progress_Length(f.Content_Length)
+   for _, byte_range := range f.Ranges() {
+      err := func() error {
+         res, err := http.Get(f.URL + byte_range)
+         if err != nil {
+            return err
+         }
+         defer res.Body.Close()
+         if _, err := file.ReadFrom(pro.Reader(res)); err != nil {
+            return err
+         }
+         return nil
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
 }
 
 func (f flags) do_refresh() error {
@@ -87,7 +109,7 @@ func (f flags) download() error {
          }
          return false
       })
-      err := f.encode(forms[index], play.Name())
+      err := encode(forms[index], play.Name())
       if err != nil {
          return err
       }
@@ -99,7 +121,7 @@ func (f flags) download() error {
          }
          return false
       })
-      return f.encode(forms[index], play.Name())
+      return encode(forms[index], play.Name())
    }
    return nil
 }

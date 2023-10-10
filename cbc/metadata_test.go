@@ -8,18 +8,12 @@ import (
    "time"
 )
 
-var links = []string{
-   "https://gem.cbc.ca/downton-abbey/s01e05",
-   "https://gem.cbc.ca/the-fall/s02e03",
-   "https://gem.cbc.ca/the-witch",
-}
-
 func Test_Gem(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   pro, err := Read_Profile(home + "/cbc.json")
+   pro, err := Read_Profile(home + "/cbc/profile.json")
    if err != nil {
       t.Fatal(err)
    }
@@ -43,4 +37,10 @@ func Test_Gem(t *testing.T) {
       enc.Encode(media)
       time.Sleep(time.Second)
    }
+}
+
+var links = []string{
+   "https://gem.cbc.ca/downton-abbey/s01e05",
+   "https://gem.cbc.ca/the-fall/s02e03",
+   "https://gem.cbc.ca/the-witch",
 }

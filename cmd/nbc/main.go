@@ -1,7 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/http/option"
+   "154.pages.dev/http"
    "154.pages.dev/stream"
    "flag"
 )
@@ -22,11 +22,11 @@ func main() {
    flag.StringVar(&f.resolution, "r", "720", "resolution")
    flag.BoolVar(&f.trace, "t", false, "trace")
    flag.Parse()
-   option.No_Location()
+   http.No_Location()
    if f.trace {
-      option.Trace()
+      http.Trace()
    } else {
-      option.Verbose()
+      http.Verbose()
    }
    if f.guid >= 1 {
       err := f.download()

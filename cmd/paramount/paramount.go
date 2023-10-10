@@ -1,7 +1,6 @@
 package main
 
 import (
-   "154.pages.dev/http/option"
    "154.pages.dev/media/paramount"
    "154.pages.dev/stream"
    "154.pages.dev/stream/dash"
@@ -11,6 +10,7 @@ import (
    "os"
    "slices"
    "strings"
+   option "154.pages.dev/http"
 )
 
 func (f flags) dash(token *paramount.App_Token) error {

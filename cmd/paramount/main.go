@@ -1,7 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/http/option"
+   "154.pages.dev/http"
    "154.pages.dev/media/paramount"
    "154.pages.dev/stream"
    "flag"
@@ -42,8 +42,8 @@ func main() {
    flag.StringVar(&f.lang, "language", "en", "audio language")
    flag.Parse()
    if f.content_ID != "" {
-      option.No_Location()
-      option.Verbose()
+      http.No_Location()
+      http.Verbose()
       token, err := paramount.New_App_Token()
       if err != nil {
          panic(err)

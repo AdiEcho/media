@@ -1,7 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/http/option"
+   "154.pages.dev/http"
    "154.pages.dev/media/youtube"
    "flag"
    "strings"
@@ -38,11 +38,11 @@ func main() {
    flag.StringVar(&f.video_t, "vt", "vp9", "video type")
    flag.BoolVar(&f.trace, "t", false, "trace")
    flag.Parse()
-   option.No_Location()
+   http.No_Location()
    if f.trace {
-      option.Trace()
+      http.Trace()
    } else {
-      option.Verbose()
+      http.Verbose()
    }
    if f.refresh {
       err := f.do_refresh()

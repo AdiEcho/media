@@ -1,7 +1,7 @@
 package roku
 
 import (
-   "154.pages.dev/http/option"
+   "154.pages.dev/http"
    "154.pages.dev/widevine"
    "encoding/base64"
    "encoding/hex"

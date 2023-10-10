@@ -1,7 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/http/option"
+   "154.pages.dev/http"
    "154.pages.dev/stream"
    "flag"
    "os"
@@ -36,8 +36,8 @@ func main() {
    flag.StringVar(&f.s.Private_Key, "key", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
    flag.Parse()
-   option.No_Location()
-   option.Verbose()
+   http.No_Location()
+   http.Verbose()
    if f.email != "" {
       err := f.login()
       if err != nil {

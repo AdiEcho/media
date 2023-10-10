@@ -1,7 +1,7 @@
 package amc
 
 import (
-   "154.pages.dev/http/option"
+   "154.pages.dev/http"
    "154.pages.dev/widevine"
    "encoding/base64"
    "fmt"
@@ -57,8 +57,8 @@ func Test_Key(t *testing.T) {
       }
       auth.Unmarshal(b)
    }
-   option.No_Location()
-   option.Verbose()
+   http.No_Location()
+   http.Verbose()
    play, err := auth.Playback(test.address)
    if err != nil {
       t.Fatal(err)

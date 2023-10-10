@@ -1,7 +1,7 @@
 package paramount
 
 import (
-   "154.pages.dev/http/option"
+   "154.pages.dev/http"
    "fmt"
    "testing"
    "time"

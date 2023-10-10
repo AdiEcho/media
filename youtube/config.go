@@ -15,7 +15,7 @@ func (f Format) Ranges() []string {
    var pos int64
    for pos < f.Content_Length {
       byte_range := func() string {
-         b := []byte("range=")
+         b := []byte("&range=")
          b = strconv.AppendInt(b, pos, 10)
          b = append(b, '-')
          b = strconv.AppendInt(b, pos+bytes-1, 10)

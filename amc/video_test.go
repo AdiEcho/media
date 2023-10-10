@@ -1,7 +1,7 @@
 package amc
 
 import (
-   "154.pages.dev/http/option"
+   "154.pages.dev/http"
    "154.pages.dev/stream"
    "fmt"
    "os"
@@ -10,28 +10,32 @@ import (
 )
 
 func Test_Login(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
    auth, err := Unauth()
    if err != nil {
       t.Fatal(err)
    }
-   u, err := media.User(home + "/amc/user.json")
+   home, err := func() (string, error) {
+      s, err := os.UserHomeDir()
+      if err != nil {
+         return "", err
+      }
+      return s + "/amc/", nil
+   }()
    if err != nil {
       t.Fatal(err)
    }
-   if err := auth.Login(u["username"], u["password"]); err != nil {
+   u, err := http.User(home + "user.json")
+   if err != nil {
       t.Fatal(err)
    }
-   {
-      b, err := auth.Marshal()
-      if err != nil {
-         t.Fatal(err)
-      }
-      os.WriteFile(home + "/amc/auth.json", b, 0666)
+   if err := auth.Login(u.Username, u.Password); err != nil {
+      t.Fatal(err)
    }
+   text, err := auth.Marshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile(home + "auth.json", text, 0666)
 }
 
 func Test_Content(t *testing.T) {
@@ -47,8 +51,8 @@ func Test_Content(t *testing.T) {
       }
       auth.Unmarshal(b)
    }
-   option.No_Location()
-   option.Verbose()
+   http.No_Location()
+   http.Verbose()
    for _, test := range tests {
       con, err := auth.Content(test.address)
       if err != nil {

@@ -1,7 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/http/option"
+   "154.pages.dev/http"
    "154.pages.dev/media/roku"
    "154.pages.dev/stream"
    "flag"
@@ -39,9 +39,9 @@ func main() {
    flag.BoolVar(&f.trace, "t", false, "trace")
    flag.Parse()
    if f.trace {
-      option.Trace()
+      http.Trace()
    } else {
-      option.Verbose()
+      http.Verbose()
    }
    if f.id != "" {
       content, err := roku.New_Content(f.id)
