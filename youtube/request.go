@@ -8,6 +8,21 @@ import (
    "path"
 )
 
+type Request struct {
+   Content_Check_OK bool `json:"contentCheckOk,omitempty"`
+   Context struct {
+      Client struct {
+         Android_SDK_Version int32 `json:"androidSdkVersion,omitempty"`
+         Name string `json:"clientName"`
+         Version string `json:"clientVersion"`
+      } `json:"client"`
+   } `json:"context"`
+   Params []byte `json:"params,omitempty"`
+   Query string `json:"query,omitempty"`
+   Racy_Check_OK bool `json:"racyCheckOk,omitempty"`
+   Video_ID string `json:"videoId,omitempty"`
+}
+
 func (r *Request) Android() {
    r.Content_Check_OK = true
    r.Context.Client.Name = "ANDROID"
@@ -57,21 +72,6 @@ func (r Request) Player(tok *Token) (*Player, error) {
       return nil, err
    }
    return play, nil
-}
-
-type Request struct {
-   Content_Check_OK bool `json:"contentCheckOk,omitempty"`
-   Context struct {
-      Client struct {
-         Android_SDK_Version int32 `json:"androidSdkVersion,omitempty"`
-         Name string `json:"clientName"`
-         Version string `json:"clientVersion"`
-      } `json:"client"`
-   } `json:"context"`
-   Params []byte `json:"params,omitempty"`
-   Query string `json:"query,omitempty"`
-   Racy_Check_OK bool `json:"racyCheckOk,omitempty"`
-   Video_ID string `json:"videoId,omitempty"`
 }
 
 func (r *Request) Mobile_Web() {
