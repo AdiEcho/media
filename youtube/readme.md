@@ -11,7 +11,7 @@
 
 Must use Android API 31 or higher.
 
-https://android.stackexchange.com/a/245551
+https://play.google.com/store/apps/details?id=com.google.android.youtube
 
 ## Device OAuth
 
