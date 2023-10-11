@@ -10,43 +10,26 @@ import (
 
 type Request struct {
    Content_Check_OK bool `json:"contentCheckOk,omitempty"`
+   Video_ID string `json:"videoId,omitempty"`
+   Racy_Check_OK bool `json:"racyCheckOk,omitempty"`
    Context struct {
       Client struct {
-         Android_SDK_Version int32 `json:"androidSdkVersion,omitempty"`
          Name string `json:"clientName"`
          Version string `json:"clientVersion"`
+         Android_SDK_Version int `json:"androidSdkVersion"`
+         // need this to get the correct:
+         // This video requires payment to watch
+         // instead of the invalid:
+         // This video can only be played on newer versions of Android or other
+         // supported devices.
+         OS_Version string `json:"osVersion"`
       } `json:"client"`
    } `json:"context"`
-   Params []byte `json:"params,omitempty"`
-   Query string `json:"query,omitempty"`
-   Racy_Check_OK bool `json:"racyCheckOk,omitempty"`
-   Video_ID string `json:"videoId,omitempty"`
 }
-
-func (r *Request) Android() {
-   r.Content_Check_OK = true
-   r.Context.Client.Name = "ANDROID"
-   r.Context.Client.Version = android_youtube
-}
-
-func (r *Request) Android_Check() {
-   r.Content_Check_OK = true
-   r.Context.Client.Name = "ANDROID"
-   r.Context.Client.Version = android_youtube
-   r.Racy_Check_OK = true
-}
-
-func (r *Request) Android_Embed() {
-   r.Context.Client.Name = "ANDROID_EMBEDDED_PLAYER"
-   r.Context.Client.Version = android_youtube
-}
-
-const android_youtube = "18.39.41"
-
-const user_agent = "com.google.android.youtube/"
 
 func (r Request) Player(tok *Token) (*Player, error) {
-   r.Context.Client.Android_SDK_Version = 99
+   r.Context.Client.Android_SDK_Version = 32
+   r.Context.Client.OS_Version = "12"
    body, err := json.MarshalIndent(r, "", " ")
    if err != nil {
       return nil, err
@@ -73,6 +56,28 @@ func (r Request) Player(tok *Token) (*Player, error) {
    }
    return play, nil
 }
+
+func (r *Request) Android() {
+   r.Content_Check_OK = true
+   r.Context.Client.Name = "ANDROID"
+   r.Context.Client.Version = android_youtube
+}
+
+func (r *Request) Android_Check() {
+   r.Content_Check_OK = true
+   r.Context.Client.Name = "ANDROID"
+   r.Context.Client.Version = android_youtube
+   r.Racy_Check_OK = true
+}
+
+func (r *Request) Android_Embed() {
+   r.Context.Client.Name = "ANDROID_EMBEDDED_PLAYER"
+   r.Context.Client.Version = android_youtube
+}
+
+const android_youtube = "18.39.41"
+
+const user_agent = "com.google.android.youtube/"
 
 func (r *Request) Mobile_Web() {
    r.Context.Client.Name = "MWEB"
