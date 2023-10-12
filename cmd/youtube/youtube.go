@@ -60,6 +60,7 @@ func (f flags) do_refresh() error {
    }
    return token.Write_File(home + "/youtube.json")
 }
+
 func (f flags) player() (*youtube.Player, error) {
    var token *youtube.Token
    switch f.request {

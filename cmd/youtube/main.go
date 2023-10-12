@@ -24,7 +24,7 @@ func main() {
    flag.Var(&f.r, "a", "address")
    flag.StringVar(&f.r.Video_ID, "b", "", "video ID")
    flag.StringVar(&f.audio_q, "aq", "AUDIO_QUALITY_MEDIUM", "audio quality")
-   flag.StringVar(&f.audio_t, "at", "opus", "audio type")
+   flag.StringVar(&f.audio_t, "ac", "opus", "audio codec")
    flag.BoolVar(&f.info, "i", false, "information")
    {
       var b strings.Builder
@@ -35,7 +35,7 @@ func main() {
    }
    flag.BoolVar(&f.refresh, "refresh", false, "create OAuth refresh token")
    flag.StringVar(&f.video_q, "vq", "1080p", "video quality")
-   flag.StringVar(&f.video_t, "vt", "vp9", "video type")
+   flag.StringVar(&f.video_t, "vc", "vp9", "video codec")
    flag.BoolVar(&f.trace, "t", false, "trace")
    flag.Parse()
    http.No_Location()
