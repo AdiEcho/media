@@ -9,22 +9,25 @@ import (
    "strings"
 )
 
-func New_Catalog_Gem(ref string) (*Catalog_Gem, error) {
+func New_Catalog_Gem(address string) (*Catalog_Gem, error) {
    // you can also use `phone_android`, but it returns combined number and name:
    // 3. Beauty Hath Strange Power
    req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
    if err != nil {
       return nil, err
    }
-   {
-      p, err := url.Parse(ref)
-      if err != nil {
-         return nil, err
-      }
-      req.URL.Path = "/ott/catalog/v2/gem/show" + p.Path
-   }
    req.URL.RawQuery = "device=web"
-   res, err := new(http.Transport).RoundTrip(req)
+   req.URL.Path, err = func() (string, error) {
+      p, err := url.Parse(address)
+      if err != nil {
+         return "", err
+      }
+      return "/ott/catalog/v2/gem/show" + p.Path, nil
+   }()
+   if err != nil {
+      return nil, err
+   }
+   res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
