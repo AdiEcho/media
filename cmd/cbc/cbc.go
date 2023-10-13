@@ -8,6 +8,27 @@ import (
    "strings"
 )
 
+func (f *flags) master() (*hls.Master, error) {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return nil, err
+   }
+   profile, err := gem.Read_Profile(home + "/cbc/profile.json")
+   if err != nil {
+      return nil, err
+   }
+   gem, err := gem.New_Catalog_Gem(f.address)
+   if err != nil {
+      return nil, err
+   }
+   media, err := profile.Media(gem.Item())
+   if err != nil {
+      return nil, err
+   }
+   f.s.Namer = gem.Structured_Metadata
+   return f.s.HLS(media.URL)
+}
+
 func (f flags) download() error {
    master, err := f.master()
    if err != nil {
@@ -37,27 +58,6 @@ func (f flags) download() error {
       return a.Name == f.name
    })
    return f.s.HLS_Media(master.Media, index)
-}
-
-func (f *flags) master() (*hls.Master, error) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return nil, err
-   }
-   profile, err := gem.Read_Profile(home + "/cbc/profile.json")
-   if err != nil {
-      return nil, err
-   }
-   gem, err := gem.New_Catalog_Gem(f.address)
-   if err != nil {
-      return nil, err
-   }
-   media, err := profile.Media(gem.Item())
-   if err != nil {
-      return nil, err
-   }
-   f.s.Namer = gem.Structured_Metadata
-   return f.s.HLS(media.URL)
 }
 
 func (f flags) profile() error {

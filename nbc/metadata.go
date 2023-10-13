@@ -47,45 +47,6 @@ func New_Metadata(guid int64) (*Metadata, error) {
    return page.Data.Bonanza_Page.Metadata, nil
 }
 
-func (m Metadata) Date() (time.Time, error) {
-   return time.Parse(time.RFC3339, m.Air_Date)
-}
-
-func (m Metadata) Title() string {
-   return m.Secondary_Title
-}
-
-type Metadata struct {
-   Air_Date string `json:"airDate"`
-   MPX_Account_ID string `json:"mpxAccountId"`
-   MPX_GUID string `json:"mpxGuid"`
-   Secondary_Title string `json:"secondaryTitle"`
-   Series_Short_Title *string `json:"seriesShortTitle"`
-   Season_Number *int64 `json:"seasonNumber,string"`
-   Episode_Number *int64 `json:"episodeNumber,string"`
-}
-
-func (m Metadata) Series() (string, bool) {
-   if m.Series_Short_Title != nil {
-      return *m.Series_Short_Title, true
-   }
-   return "", false
-}
-
-func (m Metadata) Season() (int64, error) {
-   if m.Season_Number != nil {
-      return *m.Season_Number, nil
-   }
-   return 0, errors.New("seasonNumber")
-}
-
-func (m Metadata) Episode() (int64, error) {
-   if m.Episode_Number != nil {
-      return *m.Episode_Number, nil
-   }
-   return 0, errors.New("episodeNumber")
-}
-
 func (m Metadata) On_Demand() (*On_Demand, error) {
    body, err := func() ([]byte, error) {
       var v video_request
@@ -119,4 +80,34 @@ func (m Metadata) On_Demand() (*On_Demand, error) {
       return nil, err
    }
    return on, nil
+}
+
+type Metadata struct {
+   Air_Date string `json:"airDate"`
+   MPX_Account_ID string `json:"mpxAccountId"`
+   MPX_GUID string `json:"mpxGuid"`
+   Secondary_Title string `json:"secondaryTitle"`
+   Series_Short_Title *string `json:"seriesShortTitle"`
+   Season_Number *int64 `json:"seasonNumber,string"`
+   Episode_Number *int64 `json:"episodeNumber,string"`
+}
+
+func (m Metadata) Series() string {
+   return *m.Series_Short_Title
+}
+
+func (m Metadata) Season() (int64, error) {
+   return *m.Season_Number, nil
+}
+
+func (m Metadata) Episode() (int64, error) {
+   return *m.Episode_Number, nil
+}
+
+func (m Metadata) Title() string {
+   return m.Secondary_Title
+}
+
+func (m Metadata) Date() (time.Time, error) {
+   return time.Parse(time.RFC3339, m.Air_Date)
 }

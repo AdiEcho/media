@@ -2,6 +2,7 @@ package main
 
 import (
    "154.pages.dev/media/nbc"
+   "154.pages.dev/stream"
    "154.pages.dev/stream/hls"
    "slices"
    "strings"
@@ -12,8 +13,16 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   f.s.Namer = meta
    on, err := meta.On_Demand()
+   if err != nil {
+      return err
+   }
+   f.s.Name, err = func() (string, error) {
+      if meta.Episode_Number != nil {
+         return stream.Episode(meta)
+      }
+      return stream.Film(meta)
+   }()
    if err != nil {
       return err
    }

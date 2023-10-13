@@ -1,18 +1,40 @@
 package youtube
 
 import (
-   "154.pages.dev/stream"
    "net/url"
    "strings"
    "time"
 )
 
-func (p Player) Name() string {
-   var b strings.Builder
-   b.WriteString(p.Video_Details.Author)
-   b.WriteString(sep_big)
-   b.WriteString(stream.Clean(p.Video_Details.Title))
-   return b.String()
+func (p Player) Title() string {
+   return p.Video_Details.Title
+}
+
+func (p Player) Author() string {
+   return p.Video_Details.Author
+}
+
+type Player struct {
+   Video_Details struct {
+      Author string
+      Length_Seconds int64 `json:"lengthSeconds,string"`
+      Short_Description string `json:"shortDescription"`
+      Title string
+      Video_ID string `json:"videoId"`
+      View_Count int64 `json:"viewCount,string"`
+   } `json:"videoDetails"`
+   Microformat struct {
+      Player_Microformat_Renderer struct {
+         Publish_Date string `json:"publishDate"`
+      } `json:"playerMicroformatRenderer"`
+   }
+   Playability_Status struct {
+      Status string
+      Reason string
+   } `json:"playabilityStatus"`
+   Streaming_Data struct {
+      Adaptive_Formats []Format `json:"adaptiveFormats"`
+   } `json:"streamingData"`
 }
 
 func (i Image) URL(id string) *url.URL {
@@ -89,29 +111,6 @@ var Images = []Image{
 }
 
 const sep_big = " - "
-
-type Player struct {
-   Microformat struct {
-      Player_Microformat_Renderer struct {
-         Publish_Date string `json:"publishDate"`
-      } `json:"playerMicroformatRenderer"`
-   }
-   Playability_Status struct {
-      Status string
-      Reason string
-   } `json:"playabilityStatus"`
-   Video_Details struct {
-      Author string
-      Length_Seconds int64 `json:"lengthSeconds,string"`
-      Short_Description string `json:"shortDescription"`
-      Title string
-      Video_ID string `json:"videoId"`
-      View_Count int64 `json:"viewCount,string"`
-   } `json:"videoDetails"`
-   Streaming_Data struct {
-      Adaptive_Formats []Format `json:"adaptiveFormats"`
-   } `json:"streamingData"`
-}
 
 func (p Player) Time() (time.Time, error) {
    return time.Parse(time.DateOnly, p.Publish_Date())
