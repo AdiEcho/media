@@ -1,15 +1,40 @@
 package gem
 
 import (
+   "154.pages.dev/http"
    "154.pages.dev/stream"
-   "encoding/json"
    "fmt"
    "os"
    "testing"
    "time"
 )
 
-func Test_Gem(t *testing.T) {
+var links = []string{
+   "https://gem.cbc.ca/downton-abbey/s01e05",
+   "https://gem.cbc.ca/the-fall/s02e03",
+   "https://gem.cbc.ca/the-witch",
+}
+
+func Test_Stream(t *testing.T) {
+   http.No_Location()
+   http.Verbose()
+   for _, link := range links {
+      gem, err := New_Catalog_Gem(link)
+      if err != nil {
+         t.Fatal(err)
+      }
+      item := gem.Item()
+      fmt.Printf("%+v\n", item)
+      name, err := stream.Film(gem.Structured_Metadata)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(name)
+      time.Sleep(time.Second)
+   }
+}
+
+func Test_Media(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -18,31 +43,16 @@ func Test_Gem(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   enc := json.NewEncoder(os.Stdout)
-   enc.SetIndent("", " ")
    for _, link := range links {
       gem, err := New_Catalog_Gem(link)
       if err != nil {
          t.Fatal(err)
       }
-      item := gem.Item()
-      enc.Encode(item)
-      name, err := stream.Film(gem.Structured_Metadata)
+      media, err := pro.Media(gem.Item())
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(name)
-      media, err := pro.Media(item)
-      if err != nil {
-         t.Fatal(err)
-      }
-      enc.Encode(media)
+      fmt.Printf("%+v\n", media)
       time.Sleep(time.Second)
    }
-}
-
-var links = []string{
-   "https://gem.cbc.ca/downton-abbey/s01e05",
-   "https://gem.cbc.ca/the-fall/s02e03",
-   "https://gem.cbc.ca/the-witch",
 }
