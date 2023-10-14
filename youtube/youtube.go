@@ -6,6 +6,12 @@ import (
    "time"
 )
 
+func (p Player) Time() (time.Time, error) {
+   return time.Parse(
+      time.RFC3339, p.Microformat.Player_Microformat_Renderer.Publish_Date,
+   )
+}
+
 func (p Player) Title() string {
    return p.Video_Details.Title
 }
@@ -110,16 +116,6 @@ var Images = []Image{
    {Width:1280, Height:720, Name:"maxres3.webp"},
 }
 
-const sep_big = " - "
-
-func (p Player) Time() (time.Time, error) {
-   return time.Parse(time.DateOnly, p.Publish_Date())
-}
-
 func (p Player) Duration() time.Duration {
    return time.Duration(p.Video_Details.Length_Seconds) * time.Second
-}
-
-func (p Player) Publish_Date() string {
-   return p.Microformat.Player_Microformat_Renderer.Publish_Date
 }

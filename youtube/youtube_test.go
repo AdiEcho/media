@@ -8,7 +8,28 @@ import (
    option "154.pages.dev/http"
 )
 
-func Test_Player(t *testing.T) {
+func Test_Player_Web(t *testing.T) {
+   var req Request
+   req.Mobile_Web()
+   req.Video_ID = androids[0]
+   option.No_Location()
+   option.Verbose()
+   for range [9]struct{}{} {
+      p, err := req.Player(nil)
+      if err != nil {
+         t.Fatal(err)
+      }
+      if _, err := p.Time(); err != nil {
+         t.Fatal(err)
+      }
+      if p.Video_Details.View_Count == 0 {
+         t.Fatal("viewCount")
+      }
+      time.Sleep(time.Second)
+   }
+}
+
+func Test_Player_Android(t *testing.T) {
    var req Request
    req.Android()
    req.Video_ID = androids[0]
