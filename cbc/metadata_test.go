@@ -27,7 +27,7 @@ func Test_Gem(t *testing.T) {
       }
       item := gem.Item()
       enc.Encode(item)
-      name, err := stream.Name(gem.Structured_Metadata)
+      name, err := stream.Film(gem.Structured_Metadata)
       if err != nil {
          t.Fatal(err)
       }

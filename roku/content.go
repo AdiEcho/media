@@ -66,13 +66,13 @@ func (c Content) DASH() *Video {
 // we have to embed to prevent clobbering the interface
 type Content struct {
    s struct {
-      Episode_Number int64 `json:"episodeNumber,string"`
-      Release_Date string `json:"releaseDate"` // 2007-01-01T000000Z
-      Season_Number int64 `json:"seasonNumber,string"`
       Series *struct {
          Title string
       }
+      Season_Number int64 `json:"seasonNumber,string"`
+      Episode_Number int64 `json:"episodeNumber,string"`
       Title string
+      Release_Date string `json:"releaseDate"` // 2007-01-01T000000Z
       View_Options []struct {
          Media struct {
             Videos []Video
@@ -81,15 +81,8 @@ type Content struct {
    }
 }
 
-func (c Content) Series() (string, bool) {
-   if c.s.Series != nil {
-      return c.s.Series.Title, true
-   }
-   return "", false
-}
-
-func (c Content) Title() string {
-   return c.s.Title
+func (c Content) Series() string {
+   return c.s.Series.Title
 }
 
 func (c Content) Season() (int64, error) {
@@ -98,6 +91,10 @@ func (c Content) Season() (int64, error) {
 
 func (c Content) Episode() (int64, error) {
    return c.s.Episode_Number, nil
+}
+
+func (c Content) Title() string {
+   return c.s.Title
 }
 
 func (c Content) Date() (time.Time, error) {

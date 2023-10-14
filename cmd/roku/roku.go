@@ -19,7 +19,9 @@ func (f flags) DASH(content *roku.Content) error {
       if err != nil {
          return err
       }
-      f.s.Namer = content
+      f.s.Name, err = func() (string, error) {
+         return stream.Film(content)
+      }()
    }
    res, err := http.Get(content.DASH().URL)
    if err != nil {

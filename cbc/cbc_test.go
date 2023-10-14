@@ -1,22 +1,32 @@
 package gem
 
 import (
-   "154.pages.dev/http"
+   "encoding/json"
    "fmt"
    "os"
    "testing"
 )
+
+func user(s string) (map[string]string, error) {
+   b, err := os.ReadFile(s)
+   if err != nil {
+      return nil, err
+   }
+   var m map[string]string
+   json.Unmarshal(b, &m)
+   return m, nil
+}
 
 func Test_New_Profile(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   u, err := http.User(home + "/cbc/user.json")
+   u, err := user(home + "/cbc/user.json")
    if err != nil {
       t.Fatal(err)
    }
-   tok, err := New_Token(u.Username, u.Password)
+   tok, err := New_Token(u["username"], u["password"])
    if err != nil {
       t.Fatal(err)
    }
@@ -28,21 +38,15 @@ func Test_New_Profile(t *testing.T) {
 }
 
 func Test_Profile(t *testing.T) {
-   home, err := func() (string, error) {
-      s, err := os.UserHomeDir()
-      if err != nil {
-         return "", err
-      }
-      return s + "/cbc/", nil
-   }()
+   home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   u, err := http.User(home + "user.json")
+   u, err := user(home + "/cbc/user.json")
    if err != nil {
       t.Fatal(err)
    }
-   tok, err := New_Token(u.Username, u.Password)
+   tok, err := New_Token(u["username"], u["password"])
    if err != nil {
       t.Fatal(err)
    }
@@ -50,7 +54,7 @@ func Test_Profile(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   if err := pro.Write_File(home + "profile.json"); err != nil {
+   if err := pro.Write_File(home + "/cbc/profile.json"); err != nil {
       t.Fatal(err)
    }
 }
