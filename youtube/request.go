@@ -8,6 +8,11 @@ import (
    "path"
 )
 
+const (
+   api_key = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+   mweb_version = "2.20231010.09.00"
+)
+
 type Request struct {
    Content_Check_OK bool `json:"contentCheckOk,omitempty"`
    Context struct {
@@ -100,7 +105,3 @@ func (r Request) String() string {
    return r.Video_ID
 }
 
-const (
-   api_key = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
-   mweb_version = "2.20230405.01.00"
-)
