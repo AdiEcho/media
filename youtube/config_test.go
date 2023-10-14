@@ -1,13 +1,15 @@
 package youtube
 
 import (
+   "154.pages.dev/http"
    "encoding/json"
-   "fmt"
    "os"
    "testing"
 )
 
 func Test_Config(t *testing.T) {
+   http.No_Location()
+   http.Verbose()
    con, err := new_config()
    if err != nil {
       t.Fatal(err)
@@ -15,15 +17,4 @@ func Test_Config(t *testing.T) {
    enc := json.NewEncoder(os.Stdout)
    enc.SetIndent("", " ")
    enc.Encode(con)
-}
-
-func Test_Format(t *testing.T) {
-   var r Request
-   r.Android()
-   r.Video_ID = androids[0]
-   play, err := r.Player(nil)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(play)
 }

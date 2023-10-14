@@ -8,6 +8,11 @@ import (
    "path"
 )
 
+const (
+   android_version = "18.39.41"
+   web_version = "2.20231012.01.05"
+)
+
 type Request struct {
    Content_Check_OK bool `json:"contentCheckOk,omitempty"`
    Context struct {
@@ -60,24 +65,24 @@ func (r Request) Player(tok *Token) (*Player, error) {
 func (r *Request) Android() {
    r.Content_Check_OK = true
    r.Context.Client.Client_Name = "ANDROID"
-   r.Context.Client.Client_Version = android_youtube
+   r.Context.Client.Client_Version = android_version
 }
 
 func (r *Request) Android_Check() {
    r.Content_Check_OK = true
    r.Context.Client.Client_Name = "ANDROID"
-   r.Context.Client.Client_Version = android_youtube
+   r.Context.Client.Client_Version = android_version
    r.Racy_Check_OK = true
 }
 
 func (r *Request) Android_Embed() {
    r.Context.Client.Client_Name = "ANDROID_EMBEDDED_PLAYER"
-   r.Context.Client.Client_Version = android_youtube
+   r.Context.Client.Client_Version = android_version
 }
 
-func (r *Request) Mobile_Web() {
-   r.Context.Client.Client_Name = "MWEB"
-   r.Context.Client.Client_Version = mweb_version
+func (r *Request) Web() {
+   r.Context.Client.Client_Name = "WEB"
+   r.Context.Client.Client_Version = web_version
 }
 
 func (r *Request) Set(s string) error {

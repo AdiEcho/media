@@ -117,12 +117,6 @@ type Token struct {
    Error string
    Refresh_Token string
 }
-const (
-   api_key = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
-   mweb_version = "2.20231010.09.00"
-)
-
-const android_youtube = "18.39.41"
 
 const user_agent = "com.google.android.youtube/"
 

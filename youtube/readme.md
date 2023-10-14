@@ -116,7 +116,3 @@ Is `sd1` always available? No:
 If `hq1` always available? Yes:
 
 http://i.ytimg.com/vi/hq2KgzKETBw/hq1.jpg
-
-## X-Goog-API-Key
-
-https://cloud.google.com/apis/docs/system-parameters

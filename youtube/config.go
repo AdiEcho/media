@@ -6,13 +6,13 @@ import (
    "net/http"
 )
 
+type config struct {
+   Innertube_Client_Name string
+   Innertube_Client_Version string
+}
+
 func new_config() (*config, error) {
-   req, err := http.NewRequest("GET", "https://m.youtube.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("User-Agent", "iPad")
-   res, err := http.DefaultClient.Do(req)
+   res, err := http.Get("https://www.youtube.com")
    if err != nil {
       return nil, err
    }
@@ -27,10 +27,4 @@ func new_config() (*config, error) {
       return nil, err
    }
    return con, nil
-}
-
-type config struct {
-   Innertube_API_Key string
-   Innertube_Client_Name string
-   Innertube_Client_Version string
 }
