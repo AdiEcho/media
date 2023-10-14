@@ -8,11 +8,6 @@ import (
    "path"
 )
 
-const (
-   api_key = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
-   mweb_version = "2.20231010.09.00"
-)
-
 type Request struct {
    Content_Check_OK bool `json:"contentCheckOk,omitempty"`
    Context struct {
@@ -80,10 +75,6 @@ func (r *Request) Android_Embed() {
    r.Context.Client.Client_Version = android_youtube
 }
 
-const android_youtube = "18.39.41"
-
-const user_agent = "com.google.android.youtube/"
-
 func (r *Request) Mobile_Web() {
    r.Context.Client.Client_Name = "MWEB"
    r.Context.Client.Client_Version = mweb_version
@@ -104,4 +95,3 @@ func (r *Request) Set(s string) error {
 func (r Request) String() string {
    return r.Video_ID
 }
-
