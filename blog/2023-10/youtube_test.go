@@ -1,16 +1,31 @@
 package youtube
 
 import (
-   "fmt"
-   "io"
-   "net/http"
-   "strings"
-   option "154.pages.dev/http"
+   "154.pages.dev/http"
+   "encoding/json"
+   "os"
    "testing"
+   "time"
 )
 
-const video_ID = "2ZcDwdXEVyI"
+var ids = []string{
+   "2ZcDwdXEVyI", // episode
+   "HPkDFc8hq5c", // film
+   "jNQXAC9IVRw", // video
+}
 
 func Test_Watch(t *testing.T) {
-   fmt.Println(video_ID)
+   enc := json.NewEncoder(os.Stdout)
+   enc.SetEscapeHTML(false)
+   enc.SetIndent("", " ")
+   http.No_Location()
+   http.Verbose()
+   for _, id := range ids {
+      c, err := contents(id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      enc.Encode(c)
+      time.Sleep(time.Second)
+   }
 }

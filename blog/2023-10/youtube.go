@@ -1,61 +1,91 @@
 package youtube
 
 import (
-   "fmt"
+   "154.pages.dev/encoding/json"
+   "errors"
    "io"
    "net/http"
    "strings"
-   option "154.pages.dev/http"
 )
 
-type watch struct {
-   Player_Overlays struct {
-      Player_Overlay_Renderer struct {
-         Autoplay struct {
-            Player_Overlay_Autoplay_Renderer struct {
-               Video_Title struct {
-                  Simple_Text string simpleText
-               } videoTitle
-            } playerOverlayAutoplayRenderer
-         }
-         Video_Details struct {
-            Player_Overlay_Video_Details_Renderer struct {
-               Title struct {
-                  Simple_Text string simpleText
-               }
-            } playerOverlayVideoDetailsRenderer
-         } videoDetails
-      } playerOverlayRenderer
-   } playerOverlays
+type content struct {
+   Video_Primary_Info_Renderer *struct {
+      Title value // The Family Secret
+   } `json:"videoPrimaryInfoRenderer,omitempty"`
+   Video_Secondary_Info_Renderer *struct {
+      Metadata_Row_Container struct {
+         Metadata_Row_Container_Renderer struct {
+            Rows []struct {
+               Metadata_Row_Renderer struct {
+                  Title value // Show
+                  Contents values // In The Heat Of The Night
+               } `json:"metadataRowRenderer"`
+            } `json:",omitempty"`
+         } `json:"metadataRowContainerRenderer"`
+      } `json:"metadataRowContainer"`
+   } `json:"videoSecondaryInfoRenderer,omitempty"`
 }
 
-func main() {
-   option.No_Location()
-   option.Verbose()
-   // /youtubei/v1/player is missing the name of the series. we can do
-   // /youtubei/v1/next but the web client is smaller response
-   res, err := http.Get("https://www.youtube.com/watch?v=2ZcDwdXEVyI")
+// /youtubei/v1/player is missing the name of the series. we can do
+// /youtubei/v1/next but the web client is smaller response
+func contents(video_ID string) ([]content, error) {
+   res, err := http.Get("https://www.youtube.com/watch?v=" + video_ID)
    if err != nil {
-      panic(err)
+      return nil, err
    }
    defer res.Body.Close()
    if res.StatusCode != http.StatusOK {
-      panic(res.Status)
+      return nil, errors.New(res.Status)
    }
-   text, err := func() (string, error) {
-      b, err := io.ReadAll(res.Body)
-      if err != nil {
-         return "", err
-      }
-      return string(b), nil
-   }()
+   text, err := io.ReadAll(res.Body)
    if err != nil {
-      panic(err)
+      return nil, err
    }
-   fmt.Println(len(text))
-   if strings.Contains(text, "In The Heat Of The Night") {
-      fmt.Println("pass")
-   } else {
-      fmt.Println("fail")
+   _, text = json.Cut(text, []byte(" ytInitialData ="), nil)
+   var s struct {
+      Contents struct {
+         Two_Column_Watch_Next_Results struct {
+            Results struct {
+               Results struct {
+                  Contents []content
+               }
+            }
+         } `json:"twoColumnWatchNextResults"`
+      }
    }
+   if err := json.Unmarshal(text, &s); err != nil {
+      return nil, err
+   }
+   return s.Contents.Two_Column_Watch_Next_Results.Results.Results.Contents, nil
+}
+
+type value struct {
+   Runs []struct {
+      Text string
+   } `json:",omitempty"`
+   Simple_Text string `json:"simpleText,omitempty"`
+}
+
+func (v value) String() string {
+   if v.Simple_Text != "" {
+      return v.Simple_Text
+   }
+   var b strings.Builder
+   for _, run := range v.Runs {
+      b.WriteString(run.Text)
+   }
+   return b.String()
+}
+
+type values []value
+
+func (v values) String() string {
+   var b strings.Builder
+   for _, s := range v {
+      if b.Len() >= 1 {
+         b.WriteString(", ")
+      }
+      b.WriteString(s.String())
+   }
+   return b.String()
 }

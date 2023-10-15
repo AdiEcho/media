@@ -23,10 +23,3 @@ aria-label="In The Heat Of The Night S2 E3 • The Family Secret 47 minutes"
 ~~~
 
 https://www.youtube.com/watch?v=2ZcDwdXEVyI
-
-~~~
-playerOverlays
-   playerOverlayRenderer
-      autoplay.playerOverlayAutoplayRenderer.videoTitle.simpleText = "In The Heat Of The Night";
-      videoDetails.playerOverlayVideoDetailsRenderer.title.simpleText = "The Family Secret";
-~~~
