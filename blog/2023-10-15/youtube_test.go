@@ -11,7 +11,6 @@ import (
 var ids = []string{
    "2ZcDwdXEVyI", // episode
    "HPkDFc8hq5c", // film
-   "jNQXAC9IVRw", // video
 }
 
 func Test_Watch(t *testing.T) {

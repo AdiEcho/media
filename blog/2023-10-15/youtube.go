@@ -26,6 +26,36 @@ type content struct {
    } `json:"videoSecondaryInfoRenderer,omitempty"`
 }
 
+type value struct {
+   Runs []struct {
+      Text string
+   } `json:",omitempty"`
+   Simple_Text string `json:"simpleText,omitempty"`
+}
+
+func (v value) String() string {
+   if v.Simple_Text != "" {
+      return v.Simple_Text
+   }
+   var b strings.Builder
+   for _, run := range v.Runs {
+      b.WriteString(run.Text)
+   }
+   return b.String()
+}
+
+type values []value
+
+func (v values) String() string {
+   var b strings.Builder
+   for _, s := range v {
+      if b.Len() >= 1 {
+         b.WriteString(", ")
+      }
+      b.WriteString(s.String())
+   }
+   return b.String()
+}
 // /youtubei/v1/player is missing the name of the series. we can do
 // /youtubei/v1/next but the web client is smaller response
 func contents(video_ID string) ([]content, error) {
@@ -57,35 +87,4 @@ func contents(video_ID string) ([]content, error) {
       return nil, err
    }
    return s.Contents.Two_Column_Watch_Next_Results.Results.Results.Contents, nil
-}
-
-type value struct {
-   Runs []struct {
-      Text string
-   } `json:",omitempty"`
-   Simple_Text string `json:"simpleText,omitempty"`
-}
-
-func (v value) String() string {
-   if v.Simple_Text != "" {
-      return v.Simple_Text
-   }
-   var b strings.Builder
-   for _, run := range v.Runs {
-      b.WriteString(run.Text)
-   }
-   return b.String()
-}
-
-type values []value
-
-func (v values) String() string {
-   var b strings.Builder
-   for _, s := range v {
-      if b.Len() >= 1 {
-         b.WriteString(", ")
-      }
-      b.WriteString(s.String())
-   }
-   return b.String()
 }
