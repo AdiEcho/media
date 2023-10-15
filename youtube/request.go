@@ -9,7 +9,7 @@ import (
 )
 
 const (
-   android_version = "18.39.41"
+   android_version = "18.40.33"
    web_version = "2.20231012.01.05"
 )
 
