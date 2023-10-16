@@ -8,8 +8,9 @@ import (
 )
 
 var ids = []string{
-   "2ZcDwdXEVyI", // episode
-   "HPkDFc8hq5c", // film
+   //"2ZcDwdXEVyI", // episode
+   "zZUUHthMeA4", // film
+   //"7KLCti7tOXE", // video
 }
 
 func Test_Watch(t *testing.T) {

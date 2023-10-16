@@ -8,66 +8,6 @@ import (
    "net/http"
 )
 
-func (c contents) String() string {
-   var b []byte
-   v, ok_show := c.show()
-   if ok_show {
-      b = fmt.Append(b, v.Metadata_Row_Renderer.Contents)
-   }
-   if v, ok := c.title(); ok {
-      if ok_show {
-         b = append(b, " • "...)
-      }
-      b = append(b, v...)
-   }
-   return string(b)
-}
-
-func (c contents) show() (*row, bool) {
-   for _, v := range c {
-      if v := v.Video_Secondary_Info_Renderer; v != nil {
-         for _, v := range v.
-         Metadata_Row_Container.
-         Metadata_Row_Container_Renderer.
-         Rows {
-            if v.Metadata_Row_Renderer.Title.String() == "Show" {
-               return &v, true
-            }
-         }
-      }
-   }
-   return nil, false
-}
-
-type row struct {
-   Metadata_Row_Renderer struct {
-      Title value // Show
-      Contents values // In The Heat Of The Night
-   } `json:"metadataRowRenderer"`
-}
-
-func (c contents) title() (string, bool) {
-   for _, v := range c {
-      if v := v.Video_Primary_Info_Renderer; v != nil {
-         return v.Title.String(), true
-      }
-   }
-   return "", false
-}
-
-type contents []struct {
-   Video_Primary_Info_Renderer *struct {
-      Title value // The Family Secret
-   } `json:"videoPrimaryInfoRenderer"`
-   Video_Secondary_Info_Renderer *struct {
-      Metadata_Row_Container struct {
-         Metadata_Row_Container_Renderer struct {
-            Rows []row
-         } `json:"metadataRowContainerRenderer"`
-      } `json:"metadataRowContainer"`
-   } `json:"videoSecondaryInfoRenderer"`
-}
-
 // /youtubei/v1/player is missing the name of the series. we can do
 // /youtubei/v1/next but the web client is smaller response
 func make_contents(video_ID string) (contents, error) {
@@ -128,6 +68,64 @@ func (v values) String() string {
          b = append(b, ", "...)
       }
       b = fmt.Append(b, val)
+   }
+   return string(b)
+}
+
+func (c contents) title() (string, bool) {
+   for _, v := range c {
+      if v := v.Video_Primary_Info_Renderer; v != nil {
+         return v.Title.String(), true
+      }
+   }
+   return "", false
+}
+
+func (c contents) show() (string, bool) {
+   for _, v := range c {
+      if v := v.Video_Secondary_Info_Renderer; v != nil {
+         for _, v := range v.
+         Metadata_Row_Container.
+         Metadata_Row_Container_Renderer.
+         Rows {
+            if v := v.Metadata_Row_Renderer; v.Title.String() == "Show" {
+               return v.Contents.String(), true
+            }
+         }
+      }
+   }
+   return "", false
+}
+
+type contents []struct {
+   Video_Primary_Info_Renderer *struct {
+      Title value // The Family Secret
+   } `json:"videoPrimaryInfoRenderer"`
+   Video_Secondary_Info_Renderer *struct {
+      Metadata_Row_Container struct {
+         Metadata_Row_Container_Renderer struct {
+            Rows []struct {
+               Metadata_Row_Renderer struct {
+                  Title value // Show
+                  Contents values // In The Heat Of The Night
+               } `json:"metadataRowRenderer"`
+            }
+         } `json:"metadataRowContainerRenderer"`
+      } `json:"metadataRowContainer"`
+   } `json:"videoSecondaryInfoRenderer"`
+}
+
+func (c contents) String() string {
+   var b []byte
+   v, ok_show := c.show()
+   if ok_show {
+      b = append(b, v...)
+   }
+   if v, ok := c.title(); ok {
+      if ok_show {
+         b = append(b, " • "...)
+      }
+      b = append(b, v...)
    }
    return string(b)
 }
