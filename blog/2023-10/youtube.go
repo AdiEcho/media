@@ -8,6 +8,21 @@ import (
    "net/http"
 )
 
+func (c contents) String() string {
+   var b []byte
+   v, ok_show := c.show()
+   if ok_show {
+      b = fmt.Append(b, v.Metadata_Row_Renderer.Contents)
+   }
+   if v, ok := c.title(); ok {
+      if ok_show {
+         b = append(b, " • "...)
+      }
+      b = append(b, v...)
+   }
+   return string(b)
+}
+
 func (c contents) show() (*row, bool) {
    for _, v := range c {
       if v := v.Video_Secondary_Info_Renderer; v != nil {
@@ -29,21 +44,6 @@ type row struct {
       Title value // Show
       Contents values // In The Heat Of The Night
    } `json:"metadataRowRenderer"`
-}
-
-func (c contents) String() string {
-   var b []byte
-   v, ok_show := c.show()
-   if ok_show {
-      b = fmt.Append(b, v.Metadata_Row_Renderer.Contents)
-   }
-   if v, ok := c.title(); ok {
-      if ok_show {
-         b = append(b, " • "...)
-      }
-      b = append(b, v...)
-   }
-   return string(b)
 }
 
 func (c contents) title() (string, bool) {

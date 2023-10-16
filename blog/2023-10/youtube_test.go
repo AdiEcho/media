@@ -20,9 +20,7 @@ func Test_Watch(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      v, ok := c.show()
-      fmt.Printf("%+v %v\n", v, ok)
-      fmt.Println(c.title())
+      fmt.Printf("%q\n", c)
       time.Sleep(time.Second)
    }
 }
