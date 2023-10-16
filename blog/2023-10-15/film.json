@@ -1,21 +1,3 @@
- "metadataRowContainer": {
-  "metadataRowContainerRenderer": {
-   "rows": [
-    {
-     "metadataRowRenderer": {
-      "title": {
-       "runs": [
-        {
-         "text": "Provider"
-        }
-       ]
-      },
-      "contents": [
-       {
-        "runs": [
-         {
-          "text": "Paramount",
-          "navigationEndpoint": {
            "clickTrackingParams": "CM4BEM2rARgBIhMIt4Th4JD5gQMVqJ_lBx04WgP6",
            "commandMetadata": {
             "webCommandMetadata": {
@@ -349,38 +331,3 @@
            },
            "browseEndpoint": {
             "browseId": "UClgRkhTL3_hImCAmdLfDE4g"
-           }
-          }
-         }
-        ]
-       },
-       {
-        "runs": [
-         {
-          "text": "Drama",
-          "navigationEndpoint": {
-           "clickTrackingParams": "CM4BEM2rARgBIhMIt4Th4JD5gQMVqJ_lBx04WgP6",
-           "commandMetadata": {
-            "webCommandMetadata": {
-             "url": "/channel/UClgRkhTL3_hImCAmdLfDE4g",
-             "webPageType": "WEB_PAGE_TYPE_CHANNEL",
-             "rootVe": 3611,
-             "apiUrl": "/youtubei/v1/browse"
-            }
-           },
-           "browseEndpoint": {
-            "browseId": "UClgRkhTL3_hImCAmdLfDE4g"
-           }
-          }
-         }
-        ]
-       }
-      ],
-      "trackingParams": "CM4BEM2rARgBIhMIt4Th4JD5gQMVqJ_lBx04WgP6"
-     }
-    }
-   ],
-   "collapsedItemCount": 2,
-   "trackingParams": "CM4BEM2rARgBIhMIt4Th4JD5gQMVqJ_lBx04WgP6"
-  }
- },

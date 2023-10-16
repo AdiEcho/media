@@ -1,21 +1,3 @@
- "metadataRowContainer": {
-  "metadataRowContainerRenderer": {
-   "rows": [
-    {
-     "metadataRowRenderer": {
-      "title": {
-       "runs": [
-        {
-         "text": "Provider"
-        }
-       ]
-      },
-      "contents": [
-       {
-        "runs": [
-         {
-          "text": "MGM",
-          "navigationEndpoint": {
            "clickTrackingParams": "CMABEM2rARgBIhMIptGG4JD5gQMVD8sWCR0l8QzR",
            "commandMetadata": {
             "webCommandMetadata": {
@@ -500,38 +482,3 @@
            },
            "browseEndpoint": {
             "browseId": "UCl8dMTqDrJQ0c8y23UBu4kQ"
-           }
-          }
-         }
-        ]
-       },
-       {
-        "runs": [
-         {
-          "text": "Action & Adventure",
-          "navigationEndpoint": {
-           "clickTrackingParams": "CMABEM2rARgBIhMIptGG4JD5gQMVD8sWCR0l8QzR",
-           "commandMetadata": {
-            "webCommandMetadata": {
-             "url": "/channel/UCl8dMTqDrJQ0c8y23UBu4kQ",
-             "webPageType": "WEB_PAGE_TYPE_CHANNEL",
-             "rootVe": 3611,
-             "apiUrl": "/youtubei/v1/browse"
-            }
-           },
-           "browseEndpoint": {
-            "browseId": "UCl8dMTqDrJQ0c8y23UBu4kQ"
-           }
-          }
-         }
-        ]
-       }
-      ],
-      "trackingParams": "CMABEM2rARgBIhMIptGG4JD5gQMVD8sWCR0l8QzR"
-     }
-    }
-   ],
-   "collapsedItemCount": 2,
-   "trackingParams": "CMABEM2rARgBIhMIptGG4JD5gQMVD8sWCR0l8QzR"
-  }
- },
