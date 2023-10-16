@@ -2,8 +2,7 @@ package youtube
 
 import (
    "154.pages.dev/http"
-   "encoding/json"
-   "os"
+   "fmt"
    "testing"
    "time"
 )
@@ -14,17 +13,16 @@ var ids = []string{
 }
 
 func Test_Watch(t *testing.T) {
-   enc := json.NewEncoder(os.Stdout)
-   enc.SetEscapeHTML(false)
-   enc.SetIndent("", " ")
    http.No_Location()
    http.Verbose()
    for _, id := range ids {
-      c, err := contents(id)
+      c, err := make_contents(id)
       if err != nil {
          t.Fatal(err)
       }
-      enc.Encode(c)
+      v, ok := c.show()
+      fmt.Printf("%+v %v\n", v, ok)
+      fmt.Println(c.title())
       time.Sleep(time.Second)
    }
 }
