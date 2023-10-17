@@ -8,6 +8,20 @@ import (
    "strings"
 )
 
+type contents []struct {
+   Video_Primary_Info_Renderer *struct {
+      Title value // The Family Secret
+   } `json:"videoPrimaryInfoRenderer"`
+   Video_Secondary_Info_Renderer *struct {
+      Metadata_Row_Container metadata_row_container `json:"metadataRowContainer"`
+      Owner struct {
+         Video_Owner_Renderer struct {
+            Title value
+         } `json:"videoOwnerRenderer"`
+      }
+   } `json:"videoSecondaryInfoRenderer"`
+}
+
 // /youtubei/v1/player is missing the name of the series. we can do
 // /youtubei/v1/next but the web client is smaller response
 func make_contents(video_ID string) (contents, error) {
@@ -42,23 +56,54 @@ func make_contents(video_ID string) (contents, error) {
 }
 
 func (c contents) String() string {
-   var s []string
+   var b strings.Builder
    date, date_ok := c.release_date()
+   show, show_ok := c.show()
    if !date_ok {
       if v, ok := c.owner(); ok {
-         s = append(s, v)
+         b.WriteString(v)
       }
    }
-   if v, ok := c.show(); ok {
-      s = append(s, v)
+   if show_ok {
+      b.WriteString(show)
+   }
+   if v, ok := c.season(); ok {
+      b.WriteByte(' ')
+      b.WriteString(v)
+   }
+   if v, ok := c.episode(); ok {
+      b.WriteByte(' ')
+      b.WriteString(v)
    }
    if v, ok := c.title(); ok {
-      s = append(s, v)
+      if b.Len() >= 1 {
+         b.WriteString(" - ")
+      }
+      b.WriteString(v)
    }
-   if date_ok {
-      s = append(s, date)
+   if !show_ok {
+      if date_ok {
+         b.WriteString(" - ")
+         b.WriteString(date)
+      }
    }
-   return strings.Join(s, " - ")
+   return b.String()
+}
+
+func (c contents) episode() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Episode")
+   }
+   return "", false
+}
+
+func (c contents) metadata_row_container() (*metadata_row_container, bool) {
+   for _, v := range c {
+      if v := v.Video_Secondary_Info_Renderer; v != nil {
+         return &v.Metadata_Row_Container, true
+      }
+   }
+   return nil, false
 }
 
 func (c contents) owner() (string, bool) {
@@ -70,6 +115,27 @@ func (c contents) owner() (string, bool) {
    return "", false
 }
 
+func (c contents) release_date() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Release date")
+   }
+   return "", false
+}
+
+func (c contents) season() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Season")
+   }
+   return "", false
+}
+
+func (c contents) show() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Show")
+   }
+   return "", false
+}
+
 func (c contents) title() (string, bool) {
    for _, v := range c {
       if v := v.Video_Primary_Info_Renderer; v != nil {
@@ -77,47 +143,6 @@ func (c contents) title() (string, bool) {
       }
    }
    return "", false
-}
-
-type contents []struct {
-   Video_Primary_Info_Renderer *struct {
-      Title value // The Family Secret
-   } `json:"videoPrimaryInfoRenderer"`
-   Video_Secondary_Info_Renderer *struct {
-      Metadata_Row_Container metadata_row_container `json:"metadataRowContainer"`
-      Owner struct {
-         Video_Owner_Renderer struct {
-            Title value
-         } `json:"videoOwnerRenderer"`
-      }
-   } `json:"videoSecondaryInfoRenderer"`
-}
-
-type value struct {
-   Runs []struct {
-      Text string
-   }
-   Simple_Text string `json:"simpleText"`
-}
-
-func (v values) String() string {
-   var b []byte
-   for _, val := range v {
-      if b != nil {
-         b = append(b, ", "...)
-      }
-      b = append(b, val.String()...)
-   }
-   return string(b)
-}
-
-func (c contents) metadata_row_container() (*metadata_row_container, bool) {
-   for _, v := range c {
-      if v := v.Video_Secondary_Info_Renderer; v != nil {
-         return &v.Metadata_Row_Container, true
-      }
-   }
-   return nil, false
 }
 
 type metadata_row_container struct {
@@ -140,6 +165,13 @@ func (m metadata_row_container) get(s string) (string, bool) {
    return "", false
 }
 
+type value struct {
+   Runs []struct {
+      Text string
+   }
+   Simple_Text string `json:"simpleText"`
+}
+
 func (v value) String() string {
    if v.Simple_Text != "" {
       return v.Simple_Text
@@ -153,16 +185,13 @@ func (v value) String() string {
 
 type values []value
 
-func (c contents) release_date() (string, bool) {
-   if v, ok := c.metadata_row_container(); ok {
-      return v.get("Release date")
+func (v values) String() string {
+   var b []byte
+   for _, val := range v {
+      if b != nil {
+         b = append(b, ", "...)
+      }
+      b = append(b, val.String()...)
    }
-   return "", false
-}
-
-func (c contents) show() (string, bool) {
-   if v, ok := c.metadata_row_container(); ok {
-      return v.get("Show")
-   }
-   return "", false
+   return string(b)
 }
