@@ -176,22 +176,22 @@ func (v value) String() string {
    if v.Simple_Text != "" {
       return v.Simple_Text
    }
-   var b []byte
+   var b strings.Builder
    for _, run := range v.Runs {
-      b = append(b, run.Text...)
+      b.WriteString(run.Text)
    }
-   return string(b)
+   return b.String()
 }
 
 type values []value
 
 func (v values) String() string {
-   var b []byte
+   var b strings.Builder
    for _, val := range v {
-      if b != nil {
-         b = append(b, ", "...)
+      if b.Len() >= 1 {
+         b.WriteString(", ")
       }
-      b = append(b, val.String()...)
+      b.WriteString(val.String())
    }
-   return string(b)
+   return b.String()
 }
