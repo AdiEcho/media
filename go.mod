@@ -3,8 +3,8 @@ module 154.pages.dev/media
 go 1.21.0
 
 require (
-	154.pages.dev/encoding v1.13.4
-	154.pages.dev/http v1.2.0
+	154.pages.dev/encoding v1.14.3
+	154.pages.dev/http v1.2.1
 	154.pages.dev/stream v1.0.3
 	154.pages.dev/widevine v1.1.4
 )
