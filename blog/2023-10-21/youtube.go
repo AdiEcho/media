@@ -13,7 +13,6 @@ import (
    "strings"
 )
 
-// LICENSE_STATUS_OK
 const video_ID = "HPkDFc8hq5c"
 
 func main() {
@@ -63,4 +62,3 @@ func main() {
    }
    os.Stdout.Write(res_body)
 }
-

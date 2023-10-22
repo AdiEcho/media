@@ -1,21 +1,5 @@
 # october 21 2023
 
-here is the request body:
-
-~~~
-{
-   "context": {
-      "client": {
-         "clientName": "WEB",
-         "clientVersion": "2.20231020.00.01"
-      }
-   },
-   "licenseRequest": "CAESvSsSKBImChAngKybMeRWdrTUyuBSqmRlEAEaELBZZSe8ljy8BD...",
-   "drmSystem": "DRM_SYSTEM_WIDEVINE",
-   "videoId": "HPkDFc8hq5c",
-   
-   "cpn": "AnTLBSgXxF2oIPGX",
-   "drmParams": "ChAxY2Y5MDMxNWNmMjFhYjk3EAkgAyoQQ05mMlRYblA3a0ZfUU5SRQ%3D%3D",
-   "sessionId": "fec67207f1bac0db"
-}
-~~~
+OK here is a proof of concept below. returns `LICENSE_STATUS_OK`. if you are
+interested I can continue work, but I would like to know your thoughts before I
+invest more time into it:
