@@ -46,8 +46,8 @@ func (f flags) download() error {
       return int(b.Bandwidth - a.Bandwidth)
    })
    index := slices.IndexFunc(master.Stream, func(a hls.Stream) bool {
-      if strings.HasSuffix(a.Resolution, f.resolution) {
-         return a.Bandwidth <= f.bandwidth
+      if strings.HasSuffix(a.Resolution, f.video_height) {
+         return a.Bandwidth <= f.video_rate
       }
       return false
    })
@@ -59,7 +59,7 @@ func (f flags) download() error {
       return a.Type != "AUDIO"
    })
    index = slices.IndexFunc(master.Media, func(a hls.Media) bool {
-      return a.Name == f.name
+      return a.Name == f.audio_name
    })
    return f.s.HLS_Media(master.Media, index)
 }
