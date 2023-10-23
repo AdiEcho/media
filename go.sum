@@ -1,11 +1,11 @@
-154.pages.dev/encoding v1.14.3 h1:6BwbaEj7j5SOBBN2B69AXVZ81yDJtNwZIXmgjiYpU0I=
-154.pages.dev/encoding v1.14.3/go.mod h1:KHWBwxsigaRVpDqFu8UgUcJzvEW3qJveq9YfVV90OiY=
+154.pages.dev/encoding v1.14.6 h1:M7gBXElAHHGAWG/W2vPxpxo203fmd+dF0nJAt0mthm8=
+154.pages.dev/encoding v1.14.6/go.mod h1:KHWBwxsigaRVpDqFu8UgUcJzvEW3qJveq9YfVV90OiY=
 154.pages.dev/http v1.2.2 h1:HYW96RyAaO9c1lVGpSZlIcc2tIrKj1ktkyvh4eTpRAI=
 154.pages.dev/http v1.2.2/go.mod h1:LS0M9GQvnzME6YmY9gX/hc/mY4HET872ugnRNBeds1A=
-154.pages.dev/protobuf v1.0.2 h1:YvHUJwl1sn21UspsCVnE2gN0stcSyACUrvJI+eta97M=
-154.pages.dev/protobuf v1.0.2/go.mod h1:NDDaN/avhls0mBQT6u7oJQMI1PWt11v7fD9bxAWubH4=
-154.pages.dev/stream v1.0.4 h1:mN3vjQtiod19VBfnenzIR3SnyYTr7jYc6ZpVWDkuJkQ=
-154.pages.dev/stream v1.0.4/go.mod h1:iU5ZW4x2tTmiSIT8fnrmOchOxwuLq1exjnlLiUmsT2w=
+154.pages.dev/protobuf v1.0.3 h1:fiCGyQU7gBAtxWBITbII8cwQ/VTbddovjGHFrtMSHEg=
+154.pages.dev/protobuf v1.0.3/go.mod h1:NDDaN/avhls0mBQT6u7oJQMI1PWt11v7fD9bxAWubH4=
+154.pages.dev/stream v1.0.5 h1:JRXV+wgxTLYKzc0gZi48meKaFIy/YdZxkgDGdHUN94M=
+154.pages.dev/stream v1.0.5/go.mod h1:RA7xR3ZJ+PDq4xdlPfnyBaARVLMIb667372EIn3Vw3E=
 154.pages.dev/widevine v1.1.4 h1:tMTIGE3BzKUu0oC9q3rZyUkm23awIwlaqc/fS8q3WIY=
 154.pages.dev/widevine v1.1.4/go.mod h1:wkEsvmSMoAPcZ/wB6hKlDO+0o8QxCLQi3lOn4tUDReU=
 github.com/Eyevinn/mp4ff v0.39.0 h1:WV2Omq57y1BvcVPayjyuiIK8/pF5Tb/H/cgPY+wFZMQ=
