@@ -31,6 +31,9 @@ func New_Metadata(guid int64) (*Metadata, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    var page struct {
       Data struct {
          Bonanza_Page struct {
@@ -75,6 +78,9 @@ func (m Metadata) On_Demand() (*On_Demand, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    on := new(On_Demand)
    if err := json.NewDecoder(res.Body).Decode(on); err != nil {
       return nil, err
