@@ -8,6 +8,18 @@ import (
    "time"
 )
 
+var secret_key = []byte("2b84a073ede61c766e4c0b3f1e656f7f")
+
+func authorization(b []byte) string {
+   now := time.Now().UnixMilli()
+   hash := hmac.New(sha256.New, secret_key)
+   fmt.Fprint(hash, now)
+   b = append(b, "NBC-Security key=android_nbcuniversal,version=2.4"...)
+   b = fmt.Append(b, ",time=", now)
+   b = fmt.Appendf(b, ",hash=%x", hash.Sum(nil))
+   return string(b)
+}
+
 const query = `
 query bonanzaPage(
    $app: NBCUBrands!
@@ -70,18 +82,4 @@ type video_request struct {
    MPX struct {
       Account_ID string `json:"accountId"`
    } `json:"mpx"`
-}
-
-var secret_key = []byte("2b84a073ede61c766e4c0b3f1e656f7f")
-
-func authorization(b []byte) string {
-   now := time.Now().UnixMilli()
-   hash := hmac.New(sha256.New, secret_key)
-   fmt.Fprint(hash, now)
-   b = append(b, "NBC-Security key=android_nbcuniversal,version=2.4"...)
-   b = append(b, ",time="...)
-   b = fmt.Append(b, now)
-   b = append(b, ",hash="...)
-   b = fmt.Appendf(b, "%x", hash.Sum(nil))
-   return string(b)
 }

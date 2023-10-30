@@ -32,3 +32,6 @@ https://github.com/httptoolkit/frida-android-unpinning
 - https://nbcapp.nbc.co/config/android/player/v11/prod/mobile.json
 - https://nbcapp.nbc.co/config/android/player/v12/prod/mobile.json
 - https://nbcapp.nbc.co/config/android/player/v13/prod/mobile.json
+- https://nbcapp.nbc.co/config/android/player/v14/prod/mobile.json
+- https://nbcapp.nbc.co/config/android/player/v15/prod/mobile.json
+- https://nbcapp.nbc.co/config/android/player/v16/prod/mobile.json
