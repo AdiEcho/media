@@ -12,8 +12,9 @@ app, you get:
 >
 > Please check your internet connection and try again.
 
-same error with system certificate. if we disable MITM Proxy it works. install
-Frida:
+same error with system certificate. if we disable MITM Proxy it works.
+
+## Frida install
 
 ~~~
 pip install frida-tools
@@ -29,26 +30,25 @@ for example:
 frida-server-16.0.0-android-x86.xz
 ~~~
 
-then push:
+## Frida run
+
+install app, then push server:
 
 ~~~
-adb root
-adb push server /data/app/frida-server
+adb push frida-server-16.0.0-android-x86 /data/app/frida-server
 adb shell chmod +x /data/app/frida-server
 adb shell /data/app/frida-server
 ~~~
 
-then start Frida:
+start MITM proxy, then start Frida:
 
 ~~~
-frida -U `
--l android/android-certificate-unpinning-fallback.js `
--l android/android-certificate-unpinning.js `
--l android/android-proxy-override.js `
--l android/android-system-certificate-injection.js `
--l config.js `
--l native-connect-hook.js `
--f com.nbcuni.nbc
+frida -U -f com.nbcuni.nbc -l frida-script.js
 ~~~
 
 https://github.com/httptoolkit/frida-interception-and-unpinning/issues/51
+
+~~~
+9.0.0 fail
+7.35.1 forced update
+~~~
