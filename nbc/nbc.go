@@ -10,6 +10,39 @@ import (
    "time"
 )
 
+const query = `
+query bonanzaPage(
+   $app: NBCUBrands!
+   $name: String!
+   $oneApp: Boolean
+   $platform: SupportedPlatforms!
+   $type: EntityPageType!
+   $userId: String!
+) {
+   bonanzaPage(
+      app: $app
+      name: $name
+      oneApp: $oneApp
+      platform: $platform
+      type: $type
+      userId: $userId
+   ) {
+      metadata {
+         ... on VideoPageData {
+            airDate
+            episodeNumber
+            mpxAccountId
+            mpxGuid
+            programmingType
+            seasonNumber
+            secondaryTitle
+            seriesShortTitle
+         }
+      }
+   }
+}
+`
+
 func New_Metadata(guid int64) (*Metadata, error) {
    body, err := func() ([]byte, error) {
       var p page_request
@@ -80,38 +113,6 @@ func (m Metadata) Title() string {
 func (m Metadata) Date() (time.Time, error) {
    return time.Parse(time.RFC3339, m.Air_Date)
 }
-
-const query = `
-query bonanzaPage(
-   $app: NBCUBrands!
-   $name: String!
-   $oneApp: Boolean
-   $platform: SupportedPlatforms!
-   $type: EntityPageType!
-   $userId: String!
-) {
-   bonanzaPage(
-      app: $app
-      name: $name
-      oneApp: $oneApp
-      platform: $platform
-      type: $type
-      userId: $userId
-   ) {
-      metadata {
-         ... on VideoPageData {
-            airDate
-            episodeNumber
-            mpxAccountId
-            mpxGuid
-            seasonNumber
-            secondaryTitle
-            seriesShortTitle
-         }
-      }
-   }
-}
-`
 
 // this is better than strings.Replace and strings.ReplaceAll
 func graphQL_compact(s string) string {

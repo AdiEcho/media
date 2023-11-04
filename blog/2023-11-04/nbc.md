@@ -120,57 +120,81 @@ you get:
 >
 > If the problem persists, please contact us and send us a note.
 
-here:
+if we enable, we get this:
+
+https://lemonade.nbc.com/v1/vod/2410887629/9000283422?platform=web&browser=other&programmingType=Full+Episode
+
+## browser
+
+if you change user agent:
 
 ~~~
-GET https://0b5f2c65670e498882d9cf4c89322cb4.mediatailor.us-east-2.amazonaws.com/v1/dash/7f34bf1814de6fddce84b1e6c296b7a70243b88f/oneapp-atp-dash-vod-2s-generic/prod/nbc/gLU/RcQ/9000283422/1698569087378-MEWw4/cmaf/mpeg_cenc_2sec/master_cmaf.mpd?aws.sessionId=bc6f0b49-2149-4e45-871a-859f0bbdd483 HTTP/2.0
-user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0
-accept: */*
-accept-language: en-US,en;q=0.5
-accept-encoding: gzip, deflate, br
-referer: https://www.nbc.com/
-origin: https://www.nbc.com
-sec-fetch-dest: empty
-sec-fetch-mode: cors
-sec-fetch-site: cross-site
-te: trailers
-content-length: 0
+general.useragent.override
 ~~~
 
-from:
+to:
 
 ~~~
-POST https://mt.ssai-oneapp.nbcuni.com/prod/nbc/gLU/RcQ/9000283422/1698569087378-MEWw4/cmaf/mpeg_cenc_2sec/master_cmaf.mpd?mt.config=oneapp-atp-dash-vod-2s-generic HTTP/2.0
-user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0
-accept: */*
-accept-language: en-US,en;q=0.5
-accept-encoding: gzip, deflate, br
-referer: https://www.nbc.com/
-content-type: application/json
-origin: https://www.nbc.com
-content-length: 1575
-sec-fetch-dest: empty
-sec-fetch-mode: cors
-sec-fetch-site: cross-site
-te: trailers
-
-{"reportingMode":"client","availSuppression":{"mode":"BEHIND_LIVE_EDGE","value":"00:00:00"},"playerParams":{"origin_domain":"vod-lf-oneapp2-prd.akamaized.net"},"adsParams":{"caid":"NBC_VOD_9000283422","mode":"on-demand","pvrn":"517362333","vprn":"940555295","vdur":"4067","vip":"72.181.23.38","sfid":"9244655","csid":"oneapp_desktop_computer_web_ondemand","crtp":"vast3ap","nw":"169843","prof":"169843%3Aoneapp_web_vod_mt_atp","metr":"1031","flag":"%2Bsltp%2Bemcr%2Bslcb%2Bsbid-fbad%2Baeti%2Bslif%2Bvicb%2Bamcb%2Bplay-uapl%2Bdtrd","resp":"vmap1","afid":"200265138","vcid":"-1","am_abrspec":"not_required","am_appv":"1.224.3","am_buildv":"1.224.3","am_cdn":"akamai","am_crmid":"-1","am_crmid_type":"mParticleId","am_pubid":"-1","am_playerv":"v3.0.5-v58.hotfix","am_sdkv":"2.12.1-peacock","_fw_player_height":"1080","_fw_player_width":"1920","am_pub":"nbcu","am_appname":"oneapp","am_programtype":"television","am_nielsen_genre":"","nielsen_device_group":"","nielsen_platform":"","tms_id":"","gc_id":"","_fw_h_user_agent":"Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64%3B%20rv%3A101.0)%20Gecko%2F20100101%20Firefox%2F101.0","_fw_app_bundle":"","_fw_nielsen_app_id":"PAD3C6E72-ED61-417F-A865-3AB63FDB6197","_fw_cdn_provider":"nbcu_akamai","_fw_vcid2":"-1","_fw_h_referer":"https%3A%2F%2Fwww.nbc.com%2Fsaturday-night-live%2Fvideo%2Foctober-21-bad-bunny%2F9000283422","_fw_coppa":"0","_fw_ae":"","am_bc":"0","mini":"false","am_sst":"fullEpisodePlayer","pl":"n%2Fa","bl_enabled":"false","am_brand":"nbc","enable_pabi":"false","_fw_content_language":"en","yo.nl":"none"}}
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Safari/605.1.15
 ~~~
 
-from:
+you get this instead:
+
+https://lemonade.nbc.com/v1/vod/2410887629/9000283422?platform=web&browser=safari&programmingType=Full+Episode
+
+but it doesnt help:
 
 ~~~
-GET /v1/vod/2410887629/9000283422?platform=web&browser=other&programmingType=Full%20Episode HTTP/1.1
-Host: lemonade.nbc.com
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0
-Accept: application/json
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate, br
-Origin: https://www.nbc.com
-Connection: keep-alive
-Referer: https://www.nbc.com/
-Sec-Fetch-Dest: empty
-Sec-Fetch-Mode: cors
-Sec-Fetch-Site: same-site
-content-length: 0
+#EXT-X-SESSION-KEY:
+   IV=0xfcf13caf41cb4ec7bcc918872de873b9,
+   KEYFORMAT="com.apple.streamingkeydelivery",
+   KEYFORMATVERSIONS="1",
+   METHOD=SAMPLE-AES,
+   URI="skd://fcf13caf41cb4ec7bcc918872de873b9"
+~~~
+
+## platform
+
+web:
+
+~~~json
+{
+  "playbackUrl": "https://vod-lf-oneapp2-prd.akamaized.net/prod/nbc/gLU/RcQ/9000283422/1698569087378-MEWw4/cmaf/mpeg_cenc_2sec/master_cmaf.mpd",
+  "type": "DASH"
+}
+~~~
+
+android:
+
+~~~json
+{
+  "playbackUrl": "https://vod-lf-oneapp2-prd.akamaized.net/prod/nbc/gLU/RcQ/9000283422/1698569087378-MEWw4/cmaf/mpeg_cenc/master_cmaf.mpd",
+  "type": "DASH"
+}
+~~~
+
+## programmingType
+
+if you provide an invalid value:
+
+https://lemonade.nbc.com/v1/vod/2410887629/9000283422?platform=web&browser=other&programmingType=Clips
+
+you get:
+
+~~~json
+{
+  "code": 400,
+  "error": "No AssetType/ProtectionScheme/Format Matches",
+  "message": "Bad Request",
+  "meta": {
+    "mpxUrl": "https://link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283422?formats=mpeg-dash&assetTypes=NONE,2SEC,VBW&restriction=108697384&sig=006546b8badb29ec17d8fb9f393733900635f73326b600a1a1736563726574",
+    "message": {
+      "title": "No AssetType/ProtectionScheme/Format Matches",
+      "description": "None of the available releases match the specified AssetType, ProtectionScheme, and/or Format preferences",
+      "isException": true,
+      "exception": "NoAssetTypeFormatMatches",
+      "responseCode": "412"
+    }
+  }
+}
 ~~~

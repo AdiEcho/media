@@ -16,23 +16,20 @@ func main() {
    req.Header = make(http.Header)
    req.URL = new(url.URL)
    req.URL.Host = "lemonade.nbc.com"
-   
    //pass
    req.URL.Path = "/v1/vod/2410887629/9000283422"
-   
    //lock
    //req.URL.Path = "/v1/vod/2410887629/9000283426"
-   
    req.URL.Scheme = "https"
    val := make(url.Values)
+   val["browser"] = []string{"other"}
+   // val["browser"] = []string{"safari"}
    //mpeg_cenc_2sec
-   //val["platform"] = []string{"web"}
-   
+   val["platform"] = []string{"web"}
    //mpeg_cenc
-   val["platform"] = []string{"android"}
-   
-   //val["browser"] = []string{"safari"}
+   //val["platform"] = []string{"android"}
    val["programmingType"] = []string{"Full Episode"}
+   //val["programmingType"] = []string{"Clips"}
    req.URL.RawQuery = val.Encode()
    res, err := new(http.Transport).RoundTrip(&req)
    if err != nil {
