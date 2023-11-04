@@ -5,10 +5,56 @@ import (
    "encoding/json"
    "errors"
    "net/http"
+   "net/url"
    "strconv"
    "strings"
    "time"
 )
+
+type On_Demand struct {
+   Playback_URL string `json:"playbackUrl"`
+}
+
+func (m Metadata) On_Demand() (*On_Demand, error) {
+   req, err := http.NewRequest("GET", "https://lemonade.nbc.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/v1/vod/")
+      b = strconv.AppendInt(b, m.MPX_Account_ID, 10)
+      b = append(b, '/')
+      b = strconv.AppendInt(b, m.MPX_GUID, 10)
+      return string(b)
+   }()
+   req.URL.RawQuery = url.Values{
+      "platform": {"web"},
+      "programmingType": {m.Programming_Type},
+   }.Encode()
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   video := new(On_Demand)
+   if err := json.NewDecoder(res.Body).Decode(video); err != nil {
+      return nil, err
+   }
+   return video, nil
+}
+type Metadata struct {
+   Air_Date string `json:"airDate"`
+   Episode_Number int64 `json:"episodeNumber,string"`
+   MPX_Account_ID int64 `json:"mpxAccountId,string"`
+   MPX_GUID int64 `json:"mpxGuid,string"`
+   Programming_Type string `json:"programmingType"`
+   Season_Number int64 `json:"seasonNumber,string"`
+   Secondary_Title string `json:"secondaryTitle"`
+   Series_Short_Title string `json:"seriesShortTitle"`
+}
 
 const query = `
 query bonanzaPage(
@@ -68,42 +114,29 @@ func New_Metadata(guid int64) (*Metadata, error) {
    if res.StatusCode != http.StatusOK {
       return nil, errors.New(res.Status)
    }
-   var page struct {
+   var s struct {
       Data struct {
          Bonanza_Page struct {
-            Metadata *Metadata
+            Metadata Metadata
          } `json:"bonanzaPage"`
       }
    }
-   if err := json.NewDecoder(res.Body).Decode(&page); err != nil {
+   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
       return nil, err
    }
-   if page.Data.Bonanza_Page.Metadata == nil {
-      return nil, errors.New(".data.bonanzaPage.metadata")
-   }
-   return page.Data.Bonanza_Page.Metadata, nil
-}
-
-type Metadata struct {
-   Air_Date string `json:"airDate"`
-   MPX_Account_ID string `json:"mpxAccountId"`
-   MPX_GUID string `json:"mpxGuid"`
-   Secondary_Title string `json:"secondaryTitle"`
-   Series_Short_Title *string `json:"seriesShortTitle"`
-   Season_Number *int64 `json:"seasonNumber,string"`
-   Episode_Number *int64 `json:"episodeNumber,string"`
+   return &s.Data.Bonanza_Page.Metadata, nil
 }
 
 func (m Metadata) Series() string {
-   return *m.Series_Short_Title
+   return m.Series_Short_Title
 }
 
 func (m Metadata) Season() (int64, error) {
-   return *m.Season_Number, nil
+   return m.Season_Number, nil
 }
 
 func (m Metadata) Episode() (int64, error) {
-   return *m.Episode_Number, nil
+   return m.Episode_Number, nil
 }
 
 func (m Metadata) Title() string {

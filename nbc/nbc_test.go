@@ -1,15 +1,45 @@
 package nbc
 
 import (
+   "154.pages.dev/http"
    "154.pages.dev/stream"
    "fmt"
    "testing"
    "time"
 )
 
+func Test_On_Demand(t *testing.T) {
+   http.No_Location()
+   http.Verbose()
+   for _, mpx_guid := range mpx_guids {
+      meta, err := New_Metadata(mpx_guid)
+      if err != nil {
+         t.Fatal(err)
+      }
+      video, err := meta.On_Demand()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", video)
+      time.Sleep(time.Second)
+   }
+}
+
+var mpx_guids = []int64 {
+   // episode locked
+   // nbc.com/saturday-night-live/video/october-28-nate-bargatze/9000283426
+   9000283426,
+   // episode unlocked
+   // nbc.com/saturday-night-live/video/october-21-bad-bunny/9000283422
+   9000283422,
+   // movie locked
+   // nbc.com/john-wick/video/john-wick/3448375
+   3448375,
+}
+
 func Test_Meta(t *testing.T) {
-   for _, guid := range guids {
-      meta, err := New_Metadata(guid)
+   for _, mpx_guid := range mpx_guids {
+      meta, err := New_Metadata(mpx_guid)
       if err != nil {
          t.Fatal(err)
       }
@@ -22,14 +52,3 @@ func Test_Meta(t *testing.T) {
    }
 }
 
-var guids = []int64{
-   // episode
-   // nbc.com/the-irrational/video/dead-woman-walking/9000360354
-   9000360354,
-   // episode
-   // nbc.com/pasion-de-gavilanes/video/una-verguenza/3760495
-   3760495,
-   // movie
-   // nbc.com/john-wick/video/john-wick/3448375
-   3448375,
-}
