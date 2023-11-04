@@ -36,7 +36,7 @@ HTTP/2.0 200
 use an email like this:
 
 ~~~
-2023-10-07@mailsac.com
+2023-11-04@mailsac.com
 ~~~
 
 1. https://amcplus.com/create
