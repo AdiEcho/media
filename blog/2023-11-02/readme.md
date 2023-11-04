@@ -27,7 +27,7 @@ https://github.com/frida/frida/releases
 for example:
 
 ~~~
-frida-server-16.0.0-android-x86.xz
+frida-server-16.1.4-android-x86.xz
 ~~~
 
 ## Frida run
@@ -35,7 +35,7 @@ frida-server-16.0.0-android-x86.xz
 install app, then push server:
 
 ~~~
-adb push frida-server-16.0.0-android-x86 /data/app/frida-server
+adb push frida-server-16.1.4-android-x86 /data/app/frida-server
 adb shell chmod +x /data/app/frida-server
 adb shell /data/app/frida-server
 ~~~
@@ -43,7 +43,10 @@ adb shell /data/app/frida-server
 start MITM proxy, then start Frida:
 
 ~~~
-frida -U -f com.nbcuni.nbc -l frida-script.js
+frida -U `
+-f com.nbcuni.nbc `
+-l config.js `
+-l android/android-certificate-unpinning.js
 ~~~
 
 https://github.com/httptoolkit/frida-interception-and-unpinning/issues/51
