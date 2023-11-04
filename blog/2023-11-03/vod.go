@@ -7,19 +7,32 @@ import (
    "os"
 )
 
+/*
+link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283422?formats=m3u
+link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283422?formats=mpeg-dash
+*/
 func main() {
    var req http.Request
    req.Header = make(http.Header)
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
    req.URL = new(url.URL)
    req.URL.Host = "lemonade.nbc.com"
+   
+   //pass
    req.URL.Path = "/v1/vod/2410887629/9000283422"
+   
+   //lock
+   //req.URL.Path = "/v1/vod/2410887629/9000283426"
+   
    req.URL.Scheme = "https"
    val := make(url.Values)
+   //mpeg_cenc_2sec
+   //val["platform"] = []string{"web"}
+   
+   //mpeg_cenc
+   val["platform"] = []string{"android"}
+   
+   //val["browser"] = []string{"safari"}
    val["programmingType"] = []string{"Full Episode"}
-   val["platform"] = []string{"web"}
-   //val["platform"] = []string{"android"}
    req.URL.RawQuery = val.Encode()
    res, err := new(http.Transport).RoundTrip(&req)
    if err != nil {
