@@ -153,6 +153,10 @@ but it doesnt help:
    URI="skd://fcf13caf41cb4ec7bcc918872de873b9"
 ~~~
 
+also value is optional:
+
+https://lemonade.nbc.com/v1/vod/2410887629/9000283422?platform=web&programmingType=Full+Episode
+
 ## platform
 
 web:
@@ -177,7 +181,7 @@ android:
 
 if you provide an invalid value:
 
-https://lemonade.nbc.com/v1/vod/2410887629/9000283422?platform=web&browser=other&programmingType=Clips
+https://lemonade.nbc.com/v1/vod/2410887629/9000283422?platform=web&programmingType=Clips
 
 you get:
 
@@ -198,3 +202,53 @@ you get:
   }
 }
 ~~~
+
+these all return the same thing:
+
+- http://link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283422?formats=mpeg-dash
+- http://link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283422?formats=mpeg-dash&assetTypes=2SEC
+- http://link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283422?formats=mpeg-dash&assetTypes=VBW
+
+here is another option:
+
+http://link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283422?formats=m3u
+
+but again its not usable:
+
+~~~
+#EXT-X-SESSION-KEY:
+   KEYFORMAT="com.apple.streamingkeydelivery",
+   KEYFORMATVERSIONS="1",
+   METHOD=SAMPLE-AES,IV=0xfcf13caf41cb4ec7bcc918872de873b9,
+   URI="skd://fcf13caf41cb4ec7bcc918872de873b9"
+~~~
+
+this option:
+
+http://link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283422
+
+fails:
+
+> Invalid URL
+
+regarding locked content:
+
+https://nbc.com/saturday-night-live/video/october-28-nate-bargatze/9000283426
+
+this fails:
+
+http://link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283426?formats=mpeg-dash
+
+~~~json
+{
+   "description": "This content requires a valid, unexpired auth token.",
+   "exception": "InvalidAuthToken",
+   "isException": true,
+   "responseCode": "403",
+   "title": "Invalid Token"
+}
+~~~
+
+this works:
+
+https://lemonade.nbc.com/v1/vod/2410887629/9000283426?platform=web&programmingType=Full+Episode
