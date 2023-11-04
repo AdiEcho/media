@@ -1,23 +1,84 @@
 package nbc
 
 import (
-   "crypto/hmac"
-   "crypto/sha256"
-   "fmt"
+   "bytes"
+   "encoding/json"
+   "errors"
+   "net/http"
+   "strconv"
    "strings"
    "time"
 )
 
-var secret_key = []byte("2b84a073ede61c766e4c0b3f1e656f7f")
+func New_Metadata(guid int64) (*Metadata, error) {
+   body, err := func() ([]byte, error) {
+      var p page_request
+      p.Variables.Name = strconv.FormatInt(guid, 10)
+      p.Query = graphQL_compact(query)
+      p.Variables.App = "nbc"
+      p.Variables.One_App = true
+      p.Variables.Platform = "android"
+      p.Variables.Type = "VIDEO"
+      return json.MarshalIndent(p, "", " ")
+   }()
+   if err != nil {
+      return nil, err
+   }
+   res, err := http.Post(
+      "https://friendship.nbc.co/v2/graphql", "application/json",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   var page struct {
+      Data struct {
+         Bonanza_Page struct {
+            Metadata *Metadata
+         } `json:"bonanzaPage"`
+      }
+   }
+   if err := json.NewDecoder(res.Body).Decode(&page); err != nil {
+      return nil, err
+   }
+   if page.Data.Bonanza_Page.Metadata == nil {
+      return nil, errors.New(".data.bonanzaPage.metadata")
+   }
+   return page.Data.Bonanza_Page.Metadata, nil
+}
 
-func authorization(b []byte) string {
-   now := time.Now().UnixMilli()
-   hash := hmac.New(sha256.New, secret_key)
-   fmt.Fprint(hash, now)
-   b = append(b, "NBC-Security key=android_nbcuniversal,version=2.4"...)
-   b = fmt.Append(b, ",time=", now)
-   b = fmt.Appendf(b, ",hash=%x", hash.Sum(nil))
-   return string(b)
+type Metadata struct {
+   Air_Date string `json:"airDate"`
+   MPX_Account_ID string `json:"mpxAccountId"`
+   MPX_GUID string `json:"mpxGuid"`
+   Secondary_Title string `json:"secondaryTitle"`
+   Series_Short_Title *string `json:"seriesShortTitle"`
+   Season_Number *int64 `json:"seasonNumber,string"`
+   Episode_Number *int64 `json:"episodeNumber,string"`
+}
+
+func (m Metadata) Series() string {
+   return *m.Series_Short_Title
+}
+
+func (m Metadata) Season() (int64, error) {
+   return *m.Season_Number, nil
+}
+
+func (m Metadata) Episode() (int64, error) {
+   return *m.Episode_Number, nil
+}
+
+func (m Metadata) Title() string {
+   return m.Secondary_Title
+}
+
+func (m Metadata) Date() (time.Time, error) {
+   return time.Parse(time.RFC3339, m.Air_Date)
 }
 
 const query = `
@@ -58,11 +119,6 @@ func graphQL_compact(s string) string {
    return strings.Join(f, " ")
 }
 
-type On_Demand struct {
-   // this is only valid for one minute
-   Manifest_Path string `json:"manifestPath"`
-}
-
 type page_request struct {
    Query string `json:"query"`
    Variables struct {
@@ -73,13 +129,4 @@ type page_request struct {
       Type string `json:"type"` // can be empty
       User_ID string `json:"userId"`
    } `json:"variables"`
-}
-
-type video_request struct {
-   Device string `json:"device"`
-   Device_ID string `json:"deviceId"`
-   External_Advertiser_ID string `json:"externalAdvertiserId"`
-   MPX struct {
-      Account_ID string `json:"accountId"`
-   } `json:"mpx"`
 }
