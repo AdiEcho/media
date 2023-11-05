@@ -96,6 +96,7 @@ at <anonymous> (frida/node_modules/frida-java-bridge/lib/class-factory.js:651)
 - https://github.com/54m4r174n/SSL-Pinning-Bypass-Automation/issues/2
 - https://github.com/Benson306/SSL-Bypass-Script/issues/2
 - https://github.com/fdciabdul/Frida-Multiple-Bypass/issues/1
+- https://github.com/httptoolkit/frida-interception-and-unpinning/issues/52
 - https://github.com/hunterxxx/Frida-Bypass-SSL-Pinning/issues/2
 - https://github.com/hyugogirubato/Frida-CodeShare/issues/1
 - https://github.com/vicsanjinez/ANTI-ROOT-AND-SSL-PINNING2/issues/1
