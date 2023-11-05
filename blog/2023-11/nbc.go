@@ -1,11 +1,19 @@
 package nbc
 
-import "net/http"
+import (
+   "net/http"
+   "net/url"
+)
 
 type Hello struct{}
 
 func (Hello) Request_URL() string {
-   return "https://drmproxy.digitalsvc.apps.nbcuni.com/drm-proxy/license/widevine"
+   var u url.URL
+   u.Host = "drmproxy.digitalsvc.apps.nbcuni.com"
+   u.Path = "/drm-proxy/license/widevine"
+   u.RawQuery = "device=web"
+   u.Scheme = "https"
+   return u.String()
 }
 
 func (Hello) Request_Header() http.Header {

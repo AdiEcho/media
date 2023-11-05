@@ -1,0 +1,1533 @@
+{
+ "machineTitle": "generetic",
+ "akamai": {
+  "assetUrl": "https://img.nbc.com",
+  "policy": "nbc_com"
+ },
+ "API": {
+  "park": {
+   "url": "https://api.nbc.com/v3.14",
+   "maxAge": 300000,
+   "timeout": 60000,
+   "debug": false
+  },
+  "nbc": {
+   "url": "https://api.nbc.com",
+   "timeout": 30000,
+   "debug": false,
+   "mvpdDefaultPlatform": "iOS2",
+   "port": 443
+  },
+  "park-v4": {
+   "url": "https://api.nbc.com/v4.28.0"
+  },
+  "geoServices": {
+   "url": "https://geolocation.digitalsvc.apps.nbcuni.com/geolocation",
+   "timeout": 30000
+  },
+  "tokenVerifier": {
+   "baseUrl": "https://tokenverifier.digitalsvc.apps.nbcuni.com/"
+  },
+  "emailVerify": {
+   "url": "https://ss.nbc.co/pontoon",
+   "timeout": 30000,
+   "debug": false,
+   "enabled": true
+  },
+  "broom": {
+   "baseUrl": "https://api.nbc.com",
+   "endpoint": "/sweeps/receive",
+   "proxyEndpoint": "/generetic/api/sweepstakes"
+  },
+  "algolia": {
+   "appId": "3NKVNTT7F3",
+   "apiKey": {
+    "availability": "c2df90d0ff616a2726139c671d6e6e8e"
+   },
+   "searchIndex": "prod_multi-brand-unified-web",
+   "seriesIndex": "prod_web-all-series-unified",
+   "datesIndex": "prod_single-events-dates",
+   "replayIndex": "prod_single-events-web-desc",
+   "singleEventsIndex": "prod_single-events-web-asc"
+  },
+  "friendship": {
+   "url": "https://friendship.nbc.co",
+   "appName": "nbc",
+   "maxAge": 300000,
+   "debug": false,
+   "launchDarkly": true,
+   "oneApp": true,
+   "defaultProfiles": [
+    "00000"
+   ]
+  },
+  "branchMetrics": {
+   "apiKey": "key_live_clvNTn0ILAmUSJwrqVDu3gebCriiIeNe",
+   "baseUrl": "https://nbc.app.link/"
+  },
+  "ads": {
+   "url": "https://adm.nbc.co/v1",
+   "maxAge": 1000,
+   "timeout": 30000,
+   "debug": false
+  },
+  "emailPreferences": {
+   "urlIterable": "https://api.iterable.com/api",
+   "urlSailthru": "https://api.sailthru.com",
+   "timeout": 30000,
+   "updateSubscriptionEndpoint": "/users/updateSubscriptions",
+   "brands": {
+    "Bravo App": {
+     "displayName": "Bravo",
+     "networkUrl": "https://www.bravotv.com/newsletter/unsubscribe",
+     "category": [
+      {
+       "id": "31025",
+       "name": "All"
+      },
+      {
+       "id": "35568",
+       "name": "recommendations",
+       "description": "bravoRecDesc"
+      },
+      {
+       "id": "35605",
+       "name": "favorites",
+       "description": "favoritesDesc"
+      },
+      {
+       "id": "37777",
+       "name": "Bravo Insider",
+       "description": "bravoInsiderDesc"
+      },
+      {
+       "id": "43364",
+       "name": "Bravo Updates",
+       "channelId": "36508"
+      }
+     ]
+    },
+    "E! App": {
+     "displayName": "E!",
+     "networkUrl": "https://www.eonline.com",
+     "supportEmail": "appsupport@eentertainment.com",
+     "category": [
+      {
+       "id": "31049",
+       "name": "All"
+      },
+      {
+       "id": "35592",
+       "name": "recommendations",
+       "description": "e!RecDesc"
+      },
+      {
+       "id": "35606",
+       "name": "favorites",
+       "description": "favoritesDesc"
+      },
+      {
+       "id": "43366",
+       "name": "E! Updates",
+       "channelId": "36510"
+      }
+     ]
+    },
+    "nbc.com": {
+     "displayName": "NBC",
+     "networkUrl": "/",
+     "category": [
+      {
+       "id": "31019",
+       "name": "All"
+      },
+      {
+       "id": "35562",
+       "name": "recommendations",
+       "description": "nbcRecDesc"
+      },
+      {
+       "id": "35607",
+       "name": "favorites",
+       "description": "favoritesDesc"
+      },
+      {
+       "id": "35608",
+       "name": "Sweepstakes",
+       "description": "nbcSweepDesc"
+      },
+      {
+       "id": "35609",
+       "name": "AGT",
+       "description": "nbcAgtDesc"
+      },
+      {
+       "id": "35610",
+       "name": "Voice",
+       "description": "nbcVoiceDesc"
+      },
+      {
+       "id": "35611",
+       "name": "SNL",
+       "description": "nbcSnlDesc"
+      },
+      {
+       "id": "43368",
+       "name": "NBC Updates",
+       "channelId": "36512"
+      }
+     ]
+    },
+    "Oxygen App": {
+     "displayName": "Oxygen",
+     "networkUrl": "https://www.oxygen.com/newsletter/unsubscribe",
+     "category": [
+      {
+       "id": "31031",
+       "name": "All"
+      },
+      {
+       "id": "35574",
+       "name": "recommendations",
+       "description": "oxygenRecDesc"
+      },
+      {
+       "id": "35612",
+       "name": "favorites",
+       "description": "oxygenFavoritesDesc"
+      },
+      {
+       "id": "43370",
+       "name": "Oxygen Updates",
+       "channelId": "36514"
+      }
+     ]
+    },
+    "Syfy App": {
+     "displayName": "SYFY",
+     "networkUrl": "https://www.syfy.com/",
+     "supportEmail": "feedback@syfy.com",
+     "category": [
+      {
+       "id": "31043",
+       "name": "All"
+      },
+      {
+       "id": "35586",
+       "name": "recommendations",
+       "description": "syfyRecDesc"
+      },
+      {
+       "id": "35613",
+       "name": "favorites",
+       "description": "favoritesDesc"
+      },
+      {
+       "id": "43372",
+       "name": "SYFY Updates",
+       "channelId": "36516"
+      }
+     ]
+    },
+    "Telemundo App": {
+     "displayName": "Telemundo",
+     "networkUrl": "https://www.telemundo.com/",
+     "supportEmail": "telemundo.unsubscribe@nbcuni.com",
+     "category": [
+      {
+       "id": "31055",
+       "name": "All"
+      },
+      {
+       "id": "35598",
+       "name": "recommendations",
+       "description": "telemundoRecDesc"
+      },
+      {
+       "id": "35614",
+       "name": "favorites",
+       "description": "favoritesDesc"
+      },
+      {
+       "id": "39284",
+       "name": "Telemundo Updates",
+       "channelId": "33874"
+      }
+     ]
+    },
+    "USA App": {
+     "displayName": "USA",
+     "networkUrl": "https://www.usanetwork.com/",
+     "supportEmail": "usawebmaster@nbcuni.com",
+     "category": [
+      {
+       "id": "31037",
+       "name": "All"
+      },
+      {
+       "id": "35580",
+       "name": "recommendations",
+       "description": "usaRecDesc"
+      },
+      {
+       "id": "35615",
+       "name": "favorites",
+       "description": "favoritesDesc"
+      },
+      {
+       "id": "43374",
+       "name": "USA Updates",
+       "channelId": "36518"
+      }
+     ]
+    },
+    "nbc-news": {
+     "displayName": "NBC News",
+     "networkUrl": "https://www.nbcnews.com/",
+     "isSailthruApi": true,
+     "category": [
+      {
+       "id": "1000",
+       "name": "All"
+      },
+      {
+       "id": "1001",
+       "variable": "sub_breaking",
+       "name": "nbcNewsOpt1",
+       "description": "nbcNewsOpt1Desc"
+      },
+      {
+       "id": "1002",
+       "variable": "sub_morningrundown",
+       "name": "nbcNewsOpt2",
+       "description": "nbcNewsOpt2Desc"
+      },
+      {
+       "id": "1004",
+       "variable": "sub_nightlynews",
+       "name": "nbcNewsOpt4",
+       "description": "nbcNewsOpt4Desc"
+      },
+      {
+       "id": "1005",
+       "variable": "sub_firstread",
+       "name": "nbcNewsOpt5",
+       "description": "nbcNewsOpt5Desc"
+      },
+      {
+       "id": "1006",
+       "variable": "sub_dateline",
+       "name": "nbcNewsOpt6",
+       "description": "nbcNewsOpt6Desc"
+      },
+      {
+       "id": "1008",
+       "variable": "sub_better",
+       "name": "nbcNewsOpt8",
+       "description": "nbcNewsOpt8Desc"
+      },
+      {
+       "id": "1009",
+       "variable": "sub_think",
+       "name": "nbcNewsOpt9",
+       "description": "nbcNewsOpt9Desc"
+      },
+      {
+       "id": "1011",
+       "variable": "sub_knowyourvalue",
+       "name": "nbcNewsOpt11",
+       "description": "nbcNewsOpt11Desc"
+      },
+      {
+       "id": "1012",
+       "variable": "sub_nbcnewsupdates",
+       "name": "nbcNewsOpt12",
+       "description": "nbcNewsOpt12Desc"
+      }
+     ]
+    }
+   }
+  },
+  "launchdarkly": {
+   "enabled": true,
+   "clientId": "5c251a4181619c1e9cb28c5d",
+   "sdkKey": "sdk-0e42c549-6560-4894-830b-a80820e4b4f7"
+  },
+  "conveyor": {
+   "url": "https://ss.nbc.co/conveyor/search",
+   "timeout": 5000
+  },
+  "amplitude": {
+   "url": "https://api.amplitude.com/identify",
+   "apiKey": "7405ac33aa0f79b74e68555f8e6c658e"
+  },
+  "playmaker": {
+   "streamUrl": "https://stream.nbcsports.com"
+  },
+  "primetime": {
+   "url": "https://streams.adobeprimetime.com",
+   "timeout": 10000
+  },
+  "maxMind": {
+   "url": "https://geoip.maxmind.com/geoip/v2.1/city/",
+   "accountId": "233436",
+   "licenseKey": "mTXkHb5EACouH9nA",
+   "timeout": 10000
+  },
+  "lemonade": {
+   "url": "https://lemonade.nbc.com/v1/record",
+   "urlLinear": "https://lemonade.nbc.com/v1/linear",
+   "urlVod": "https://lemonade.nbc.com/v1/vod",
+   "platform": "web",
+   "timeout": 10000
+  }
+ },
+ "cluster": {
+  "killTimeout": 10000
+ },
+ "express": {
+  "port": 80,
+  "host": "localhost",
+  "baseUrl": "",
+  "secureBaseUrl": ""
+ },
+ "app": {
+  "assetPath": "/generetic/",
+  "appName": "nbc",
+  "publicDir": "static",
+  "cookieDomain": ".nbc.com",
+  "processes": null,
+  "publicMaxAge": 86400000,
+  "cacheControl": {
+   "maxAge": 300,
+   "maxAgeExtended": 10800,
+   "staleIfError": 3600
+  },
+  "debug": false,
+  "imageConfigs": {
+   "card": {
+    "maxWidth": 480
+   },
+   "global": {
+    "maxWidth": 640
+   }
+  },
+  "fonts": [
+   "SourceSansProRegular",
+   "SourceSansProSemiBold",
+   "SourceSansProLight",
+   "SourceSansProExtraLight",
+   "MontserratRegular",
+   "MontserratBold"
+  ],
+  "favicon": "favicon.ico",
+  "appleTouchIcon": "/generetic/images/apple-touch-icon.png",
+  "name": "NBC.com",
+  "navigation": {
+   "shop": "https://www.nbcstore.com/?cid=nbc_global_nav_shop",
+   "app": "nbc",
+   "resetPasswordUrl": "/request-password",
+   "showsPath": "/shows/all/popular"
+  },
+  "menuQuickLinks": "menu-nbc-quick-links",
+  "menuQuickLinksMax": 7,
+  "menuCorporateLinks": "menu-nbc-global-corporate-links",
+  "defaultStream": "nbc",
+  "defaultStreamUnAuth": "nbc-news",
+  "performance": {
+   "debug": false
+  },
+  "socialMedia": {
+   "showDescription": false,
+   "description": "Share the Moment",
+   "displayTM": true,
+   "ogImage": "/generetic/images/nbc_logo_og.jpg",
+   "links": [
+    {
+     "name": "facebook",
+     "accountKey": "nbc"
+    },
+    {
+     "name": "twitter",
+     "accountKey": "nbc"
+    },
+    {
+     "name": "tumblr",
+     "accountKey": "nbctv"
+    },
+    {
+     "name": "pinterest",
+     "accountKey": "nbctv"
+    },
+    {
+     "name": "youtube",
+     "linkTitle": "YouTube",
+     "accountKey": "nbc"
+    },
+    {
+     "name": "instagram"
+    },
+    {
+     "name": "spotify"
+    },
+    {
+     "name": "snapchat"
+    },
+    {
+     "name": "vine"
+    }
+   ]
+  },
+  "skin": {
+   "whiteLogo": "/generetic/images/authhero/nbc-logo-white.png",
+   "brandBackgroundImage": "/generetic/images/authhero/identity_default_hero_bg.png",
+   "lightPrimaryColorKey": "oneapp-purply-blue",
+   "darkPrimaryColorKey": "oneapp-tristesse"
+  },
+  "emailPreferencesDefault": "nbc.com",
+  "domainName": "nbc",
+  "customCanonical": {
+   "usa": "https://www.usanetwork.com"
+  },
+  "customSEOName": "NBC",
+  "notifications": {
+   "displayTime": 60000
+  }
+ },
+ "omniture": {
+  "isDevelopmentMode": false,
+  "pagePrefix": ""
+ },
+ "adobeLaunch": {
+  "snippet": "//assets.adobedtm.com/a2ef59fba8e9/9c7a708dbcb2/launch-678397df18e0.min.js"
+ },
+ "conviva": {
+  "customerKey": "e12872de91aaca7a39095801bdf5f168d87912fa",
+  "gateWay": false,
+  "debug": false
+ },
+ "onetrust": {
+  "scriptUrl": "https://cdn.cookielaw.org/consent/ea571e64-7f5b-48d8-8d41-f96b1ddd4838/otSDKStub.js",
+  "cookieUrl": "https://cdn.cookielaw.org/opt-out/otCCPAiab.js",
+  "dataDomain": "ea571e64-7f5b-48d8-8d41-f96b1ddd4838"
+ },
+ "comscore": {
+  "c1": "2",
+  "c2": "6035083"
+ },
+ "moat": {
+  "partnerCode": "nbcussaivideo236498481430"
+ },
+ "nielsen": {
+  "debug": false,
+  "apid": "P27B8D04D-DDA7-456D-954F-7F032457B022"
+ },
+ "mParticle": {
+  "apiKey": "69dedba1e9714049b35bde9e2f9bf059",
+  "delay": 2000,
+  "isDevelopmentMode": false,
+  "planId": "nbcu_data_plan",
+  "v1SecureServiceUrl": "map.mp.nbc.com/webevents/v1/JS/",
+  "v2SecureServiceUrl": "map.mp.nbc.com/webevents/v2/JS/",
+  "v3SecureServiceUrl": "map.mp.nbc.com/webevents/v3/JS/",
+  "configUrl": "map.mp.nbc.com/tags/JS/v2/",
+  "identityUrl": "map.mp.nbc.com/identity/v1/",
+  "aliasUrl": "map.mp.nbc.com/webevents/v1/identity/",
+  "productName": "nbc.com",
+  "options": {
+   "registerGtm": false
+  }
+ },
+ "brightline": {
+  "scriptUrl": "//cdn-media.brightline.tv/sdk/gen2/webkit/media/js/brightline.webkit.sdk.2.1.3.js",
+  "config": {
+   "configId": "1022",
+   "applicationName": "NBC OneApp",
+   "sdkVersion": "2.1.3",
+   "mobileCarrier": "NA",
+   "deviceName": "desktop"
+  }
+ },
+ "log": {
+  "file": "",
+  "exceptionsFile": "",
+  "exitOnError": false,
+  "minimumLevel": "debug"
+ },
+ "fb": {
+  "siteName": "NBC",
+  "appId": "653521154659171",
+  "loginPermissions": [
+   "email"
+  ]
+ },
+ "twitter": {
+  "site": "@nbc",
+  "siteId": "26585095"
+ },
+ "platform": {
+  "country": "US",
+  "uri": "nbctve://",
+  "android": {
+   "name": "NBC",
+   "id": "com.nbcuni.nbc",
+   "alt": "android-app://com.nbcuni.nbc/nbctve"
+  },
+  "ios": {
+   "name": "NBC",
+   "smartBannerName": "apple-itunes-app",
+   "id": "442839435"
+  }
+ },
+ "platformSNL": {
+  "uri": "nbcsnl://",
+  "android": {
+   "name": "SNL",
+   "id": "com.nbcuni.nbc.snl",
+   "alt": "android-app://com.nbcuni.nbc/nbcsnl"
+  },
+  "ios": {
+   "name": "SNL",
+   "id": "949622036"
+  }
+ },
+ "permalinkBase": "https://www.nbc.com",
+ "videoPermalink": "http://www.nbc.com",
+ "maxShowsPerPage": 30,
+ "slideshowAutoPlaySpeed": 5000,
+ "ShowPage": {
+  "guestCalendar": [
+   "late-night-with-seth-meyers",
+   "last-call-with-carson-daly",
+   "a-little-late-with-lilly-singh"
+  ]
+ },
+ "AppPage": {
+  "appStoreiOS": "nbc_appstore_ios",
+  "appStoreAndroid": "nbc_appstore_android",
+  "activateLink": "/nbcuniversalfamily/activate?brand=nbc",
+  "amazonFireTV": "https://www.amazon.com/NBCUniversal-Media-LLC-NBC/dp/B018IOV40E/ref=sr_1_1?s=mobile-apps&ie=UTF8&qid=1456534299&sr=1-1&keywords=nbc+app",
+  "amazonEcho": "https://www.amazon.com/gp/help/customer/display.html?nodeId=201602060",
+  "appleTv": "https://itunes.apple.com/us/app/the-nbc-app-stream-tv-shows/id442839435?mt=8",
+  "androidTv": "https://play.google.com/store/apps/details?id=com.nbcuni.nbc.androidtv&hl=en_US",
+  "roku": "https://channelstore.roku.com/details/68669/nbc",
+  "xboxApp": "https://www.microsoft.com/en-us/p/nbc/9N613THZWJ8R?rtc=1&activetab=pivot:overviewtab",
+  "xclassTv": "https://www.xclasstv.com/",
+  "samsungSmart": "https://www.samsung.com/us/appstore/",
+  "vizioTv": "https://www.vizio.com/smartcast"
+ },
+ "VideoPage": {
+  "defaultOverlay": {
+   "image": "peacock-background.jpg"
+  },
+  "geoRestricted": {
+   "image": "peacock-background.jpg"
+  },
+  "mobilePlaybackBlocker": {
+   "image": "nbc-background.png"
+  },
+  "sports": {
+   "image": "NBCSports-Background.jpg"
+  },
+  "promo": {
+   "button": "Open the NBC app",
+   "copy": "To watch this episode, you'll need to<br> download the free NBC App.",
+   "copyLive": "To watch live stream, you’ll need to download the free NBC App.",
+   "copyUnsupported": "To watch full episodes, please visit NBC.com on your desktop computer.",
+   "icon": "images/apps/app_icon.png",
+   "appOverlayButton": "Continue on NBC.com",
+   "imageBackground": "images/peacock-background.jpg"
+  },
+  "notificationDelay": 800
+ },
+ "LivePage": {
+  "enabled": true,
+  "defaultWatchDuration": 30,
+  "promo": {
+   "userConfirmation": "Are you still there?",
+   "userConfirmationFailed": "Due to inactivity the playback has been stopped. To resume playback, reload the page.",
+   "streamingNotAvailable": "livePage.locationUnavailable",
+   "episodesCopy": "Go to Episodes page to watch full episodes.",
+   "episodesButton": "Go to full episodes",
+   "button": "GO TO THE NBC APP",
+   "userConfirmationButton": "Yes",
+   "copy": "To watch live stream, you’ll need to download the free NBC App.",
+   "icon": "images/apps/app_icon.png",
+   "concurrencyError": "The Live Stream for this account is already active on another device. To continue, please close out of the Live Stream on your other device and refresh this page.",
+   "imageBackground": "/generetic/images/peacock-background.jpg"
+  },
+  "player": {
+   "idleTime": 14400000,
+   "idleConfirmationTimeout": 120000,
+   "heartbeatAccount": "nbcutve,nbcunetworkbu",
+   "freewheel": {
+    "sfidMobile": 7003961,
+    "sfidDesktop": 7006030,
+    "fw_network": "169843",
+    "fw_prof": "169843:nbcu_bionic_linear_web",
+    "fw_afid": 200265138,
+    "fw_sdk_flag": "+sltp+emcr+slcb+nucr+sbid+fbad+aeti+slif-vicb+amcb+play-uapl+dtrd",
+    "fw_mvpd": "725bd42fc9c9394e790b9a73610da431",
+    "device_type": "desktop",
+    "dynamic_kv": "rdid=480bb2b7-0d63-5d12-bed9-f67ac6f124a6",
+    "resp": "vmap1",
+    "mode": "live",
+    "vdur": 600,
+    "metr": 1023,
+    "fw_sfid": "9244654",
+    "urlIpv4": "https://29773.v.fwmrm.net/ad/g/1?",
+    "urlIpv6": "https://29773.v.fwmrm.net/ad/g/1?"
+   }
+  }
+ },
+ "SignUpPage": {
+  "introKey": "vote",
+  "introText": "signInUp.signUpVote"
+ },
+ "AllEpisodesPage": {
+  "videos": {
+   "range": 6
+  }
+ },
+ "PhotoLandingPage": {
+  "galleries": {
+   "range": 12
+  }
+ },
+ "CreditDetailsPage": {
+  "clips": {
+   "range": 6
+  }
+ },
+ "GuestDetailsPage": {
+  "carousel": {
+   "range": 30
+  }
+ },
+ "GuestCalendar": {
+  "carousel": {
+   "range": 24
+  }
+ },
+ "MPS": {
+  "pathPrefix": "",
+  "disableAbDetect": false
+ },
+ "MPX": {
+  "pid": "jujdhC",
+  "contentPid": "NnzsPC",
+  "playerName": "xkaAQrhkr9IU",
+  "id": "2410887629",
+  "fwClipsSection": "oneapp_desktop_computer_web_ondemand",
+  "fwEpisodesSection": "oneapp_desktop_computer_web_ondemand",
+  "adPolicyId": "121497524",
+  "domain": "https://player.theplatform.com",
+  "fallbackSSID": {
+   "mobile": "9244643",
+   "desktop": "9244655"
+  },
+  "multiCDN": {
+   "ownerId": "2410887629",
+   "adPolicy": "123033577"
+  }
+ },
+ "HLS": {
+  "url": "https://cdn.jsdelivr.net/hls.js/latest/hls.min.js"
+ },
+ "zendesk": {
+  "url": "https://nbcdigital.zendesk.com/api/v2",
+  "username": "nbcd.dev.zendesk@nbcuni.com",
+  "token": null,
+  "proxyEndpoint": "/generetic/api/zendesk",
+  "customFields": {
+   "subject": 22730260,
+   "category": 21706324,
+   "show": 22730290,
+   "application": 21675704,
+   "request_type": 22744070
+  }
+ },
+ "timezone": "America/New_York",
+ "adobePass": {
+  "applicationId": "nbc",
+  "brandsToRequest": [
+   "nbcentertainment",
+   "bravo",
+   "cnbc",
+   "oxygen",
+   "e",
+   "telemundo",
+   "syfy",
+   "sprout",
+   "usa",
+   "msnbc",
+   "mun2",
+   "CSNCalifornia",
+   "CSNBayArea",
+   "CSNChicago",
+   "CSNPhiladelphia",
+   "CSNMidAtlantic",
+   "CSNNewEngland"
+  ],
+  "containerId": "contentAccessEnabler",
+  "instance": "prod",
+  "accessEnablerId": "accessEnabler",
+  "accessEnablerPath": "https://entitlement.auth.adobe.com/entitlement/v4/AccessEnabler.js",
+  "mvpdIFrameContainerId": "mvpd-dialog__iframe-container",
+  "mvpdIFrameId": "mvpdframe",
+  "requestorId": "nbcentertainment",
+  "numberOfFeaturedMvpds": 15,
+  "userNotAuthorizedErrorCode": "User not Authorized Error",
+  "apiPath": "https://api.auth.adobe.com",
+  "imageDomain": "https://mvpd-admin.nbcuni.com",
+  "accessEnablerStatement": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1Yzg2YjdkYy04NDI3LTRjNDUtOGQwZi1iNDkzYmE3MmQwYjQiLCJuYmYiOjE1Nzg3MDM2MzEsImlzcyI6ImF1dGguYWRvYmUuY29tIiwiaWF0IjoxNTc4NzAzNjMxfQ.QQKIsBhAjGQTMdAqRTqhcz2Cddr4Y2hEjnSiOeKKki4nLrkDOsjQMmqeTR0hSRarraxH54wBgLvsxI7LHwKMvr7G8QpynNAxylHlQD3yhN9tFhxt4KR5wW3as02B-W2TznK9bhNWPKIyHND95Uo2Mi6rEQoq8tM9O09WPWaanE5BX_-r6Llr6dPq5F0Lpx2QOn2xYRb1T4nFxdFTNoss8GBds8OvChTiKpXMLHegLTc1OS4H_1a8tO_37jDwSdJuZ8iTyRLV4kZ2cpL6OL5JPMObD4-HQiec_dfcYgMKPiIfP9ZqdXpec2SVaCLsWEk86ZYvD97hLIQrK5rrKd1y-A",
+  "deviceTypes": {
+   "roku": {
+    "key": "Roku",
+    "label": "Roku"
+   },
+   "androidtv": {
+    "key": "AndroidTV",
+    "label": "Android TV"
+   },
+   "appletv": {
+    "key": "appletv",
+    "label": "AppleTV"
+   },
+   "tvos": {
+    "key": "appletv",
+    "label": "tvOS"
+   },
+   "samsung": {
+    "key": "SamsungSmartTV",
+    "label": "Samsung TV"
+   },
+   "amazonfiretv": {
+    "key": "AmazonFireTV",
+    "label": "FireTV"
+   },
+   "amazon_fire_tv": {
+    "key": "AmazonFireTV",
+    "label": "FireTV"
+   },
+   "firetv": {
+    "key": "AmazonFireTV",
+    "label": "FireTV"
+   },
+   "nbcentertainmentxbox": {
+    "key": "xboxone",
+    "label": "Xbox One"
+   },
+   "xboxoneuwp": {
+    "key": "xboxone",
+    "label": "Xbox One"
+   },
+   "xboxone": {
+    "key": "xboxone",
+    "label": "Xbox One"
+   },
+   "xbox": {
+    "key": "xboxone",
+    "label": "Xbox One"
+   },
+   "vizio": {
+    "key": "VizioSmartTV",
+    "label": "Vizio"
+   }
+  },
+  "orgId": "A8AB776A5245B4220A490D44",
+  "mediaHeartbeatTrackingServer": "nbcume.hb.omtrdc.net",
+  "analyticsTrackingServer": "nbcume.sc.omtrdc.net",
+  "suiteId": "nbcutve"
+ },
+ "placeholders": {
+  "creditPeacock": "credit_peacock.jpg",
+  "errorPeacock": "error_peacock.jpg",
+  "tonightShowLogo": "tonight_show_logo.png"
+ },
+ "browserConfigBlacklist": [
+  "zendesk.token"
+ ],
+ "identity": {
+  "enabled": true,
+  "facebookAppId": "96799550818",
+  "facebookVersion": "v12.0",
+  "baseUrl": "https://id.nbc.com",
+  "version": "2023.1",
+  "identityFavoriteExpire": 86400,
+  "sessionTimeout": 31556926,
+  "googleClientId": "315056174082-jmacflau8157mo4v504rc5i6olofdn0n",
+  "googleClientType": "web_nbc",
+  "appleClientId": "com.nbcuni.nbc.portal.sso.oneapp",
+  "iframeBaseUrl": "https://www.usanetwork.com",
+  "defaultBrandSource": "nbcd_web",
+  "googleTapUrl": "https://accounts.google.com/gsi/client",
+  "googleTapClientId": "315056174082-jmacflau8157mo4v504rc5i6olofdn0n.apps.googleusercontent.com",
+  "allowableBrandsVPPABypass": {
+   "nbc-news": {
+    "isAllowedToBypassVPPA": true,
+    "pages": [
+     "/my-account",
+     "/email-preferences"
+    ]
+   }
+  },
+  "resetPasswordLink": "https://profile.id.nbcuni.com/forgot-password?brand=nbc",
+  "accountLink": "https://id.nbc.com/my-account?brand=nbc",
+  "emailPreferencesLink": "https://id.nbc.com/email-preferences?brand=nbc"
+ },
+ "facade": {
+  "baseUrl": "https://avow.nbc.com/",
+  "apikey": "13aa2b5d57db44f9972e9d5ddcec4f3cb8115b343987465d9f76f4c1bc479d12"
+ },
+ "msVideoIsSaved": 120000,
+ "bouncer": "https://bouncer.nbc.co/activation",
+ "vilynx": {
+  "isEnabled": {
+   "forBrandTiles": true,
+   "forBrandDLS": true,
+   "forEpisodes": true,
+   "forClips": true,
+   "forSeries": true,
+   "forMovies": true
+  },
+  "publicKey": "88d15ec969173072b02d1334b991ccea",
+  "serverUrl": "api.nbc.com/preview",
+  "scriptUrl": "https://static.nbc.com/prod/vpg.5.11.6.min.js",
+  "debug": false
+ },
+ "brands": {
+  "nbc": {
+   "brandDisplayTitle": "NBC",
+   "isWhiteLabel": true,
+   "isBackgroundAvailable": true,
+   "whiteBrandLogo": "/generetic/images/authhero/nbc-logo-white.png",
+   "brandLightPrimaryColor": "#302B63",
+   "brandBackgroundImage": "/generetic/images/authhero/identity_default_hero_bg.png",
+   "brandDarkPrimaryColor": "#0F0F1C",
+   "brandSource": "nbcd_web",
+   "priority": 1,
+   "brandIntake": "NBC_Entertainment",
+   "permalink": "https://www.nbc.com/",
+   "analyticsName": "nbc.com",
+   "geoServicesBrandKey": "nbc",
+   "networkName": "nbc",
+   "concurrencyAppId": "3439f201-f34e-4dd7-ab33-a40f27472628",
+   "cpcAccountName": "NBC",
+   "mapping": [
+    "nbc",
+    "nbcentertainment",
+    "nbcd_web"
+   ],
+   "primetimeAccessKey": "MzQzOWYyMDEtZjM0ZS00ZGQ3LWFiMzMtYTQwZjI3NDcyNjI4Og==",
+   "playmakerConfigUrl": "https://api-leap.nbcsports.com/feeds/assets/{PID}?application=NBCNews&format=nbc-player&platform=desktop",
+   "playmakerFWConfig": {
+    "csid": "oneapp_web_desktop_liveevent",
+    "sfid": "7090576",
+    "prof": "169843:oneapp_playmaker_web",
+    "afid": "140315314"
+   },
+   "nielsen": {
+    "mode": "dtvr",
+    "crossId2": "NBC",
+    "subbrand": "c05"
+   },
+   "livePlatformKey": "nbc_live",
+   "liveSecret": "a770853c271bf6217ee9b69746505f0e",
+   "adobePassBrandName": "nbcentertainment",
+   "fwConfig": {
+    "csid": "oneapp_desktop_computer_web_livelinear"
+   }
+  },
+  "bravo": {
+   "brandBackgroundImage": "/generetic/images/authhero/bravo-identity-art.jpeg",
+   "brandDisplayTitle": "Bravo",
+   "isWhiteLabel": true,
+   "isBackgroundAvailable": true,
+   "whiteBrandLogo": "/generetic/images/brands/bravo.png",
+   "brandLightPrimaryColor": "#679197",
+   "brandDarkPrimaryColor": "#30212e",
+   "brandSource": "bravo_oneapp",
+   "priority": 2,
+   "mParticleKey": "6375ebf21bc31f42a558c70738222fb4",
+   "brandIntake": "Bravo",
+   "permalink": "https://www.bravotv.com/",
+   "analyticsName": "bravotv.com",
+   "geoServicesBrandKey": "bravo",
+   "networkName": "bravo",
+   "cpcAccountName": "BRAVO_ONEAPP",
+   "mapping": [
+    "bravo"
+   ],
+   "primetimeAccessKey": "NjBlZDhjMDMtM2MwNi00OTVmLTk4MmUtNmE1ZjIxMmY5OGE4Og==",
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "Bravo",
+    "subbrand": "c02"
+   },
+   "livePlatformKey": "bravo_live",
+   "liveSecret": "62cd3f6d61ae63b3faf88caf98f0eabb",
+   "adobePassBrandName": "bravo",
+   "fwConfig": {
+    "csid": "oneapp_desktop_computer_web_livelinear"
+   }
+  },
+  "usa": {
+   "brandDisplayTitle": "USA",
+   "isWhiteLabel": true,
+   "isBackgroundAvailable": true,
+   "whiteBrandLogo": "/generetic/images/brands/usa.png",
+   "brandBackgroundImage": "/generetic/images/authhero/default-identity.jpg",
+   "brandLightPrimaryColor": "#F83837",
+   "brandDarkPrimaryColor": "#350300",
+   "brandSource": "usa_oneapp",
+   "priority": 3,
+   "mParticleKey": "65fcd39a399fa241b8b17f6b9a65dfcc",
+   "brandIntake": "USA_Network",
+   "permalink": "https://www.usanetwork.com/",
+   "analyticsName": "usanetwork.com",
+   "geoServicesBrandKey": "usa",
+   "networkName": "usa",
+   "cpcAccountName": "USA_ONEAPP",
+   "mapping": [
+    "usa"
+   ],
+   "primetimeAccessKey": "MGEwNTIzYzQtMDE5Zi00OTVhLThlZTgtNzgzZWQ2MmZkZmQzOg==",
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "USA Network",
+    "subbrand": "c07"
+   },
+   "livePlatformKey": "usa_live",
+   "liveSecret": "5650a3fb8aeb0f785634fe725ad54786",
+   "adobePassBrandName": "usa",
+   "fwConfig": {
+    "csid": "oneapp_desktop_computer_web_livelinear"
+   }
+  },
+  "syfy": {
+   "brandDisplayTitle": "SYFY",
+   "isWhiteLabel": true,
+   "isBackgroundAvailable": true,
+   "whiteBrandLogo": "/generetic/images/brands/syfy.png",
+   "brandBackgroundImage": "/generetic/images/authhero/default-identity.jpg",
+   "brandLightPrimaryColor": "#635762",
+   "brandDarkPrimaryColor": "#1e1f24",
+   "brandSource": "syfy_oneapp",
+   "priority": 4,
+   "mParticleKey": "2161253b9ecc6d44937f73a3639e56e0",
+   "brandIntake": "SyFy",
+   "permalink": "https://www.syfy.com/",
+   "analyticsName": "syfy.com",
+   "geoServicesBrandKey": "syfy",
+   "networkName": "syfy",
+   "cpcAccountName": "SYFY_ONEAPP",
+   "mapping": [
+    "syfy"
+   ],
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "Syfy",
+    "subbrand": "c06"
+   },
+   "livePlatformKey": "syfy_live",
+   "liveSecret": "873353f7906cd62a56b7a4e3e75b533d",
+   "adobePassBrandName": "syfy",
+   "fwConfig": {
+    "csid": "oneapp_desktop_computer_web_livelinear"
+   }
+  },
+  "e": {
+   "brandDisplayTitle": "E!",
+   "isWhiteLabel": true,
+   "isBackgroundAvailable": true,
+   "whiteBrandLogo": "/generetic/images/brands/e.png",
+   "brandBackgroundImage": "/generetic/images/authhero/e-identity-art.jpg",
+   "brandLightPrimaryColor": "#0089A8",
+   "brandDarkPrimaryColor": "#500053",
+   "brandSource": "e_oneapp",
+   "priority": 5,
+   "mParticleKey": "79595c5639547c42845053f12a099f4f",
+   "brandIntake": "E!_Entertainment",
+   "permalink": "https://www.eonline.com/",
+   "analyticsName": "eonline.com",
+   "geoServicesBrandKey": "e!",
+   "networkName": "e",
+   "cpcAccountName": "E_ONEAPP",
+   "mapping": [
+    "e",
+    "e!"
+   ],
+   "primetimeAccessKey": "MzQzOWYyMDEtZjM0ZS00ZGQ3LWFiMzMtYTQwZjI3NDcyNjI4Og==",
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "E!",
+    "subbrand": "c22"
+   },
+   "adobePassBrandName": "e",
+   "fwConfig": {
+    "csid": "oneapp_desktop_computer_web_livelinear"
+   },
+   "livePlatformKey": "e_live",
+   "liveSecret": "a3f751b4d9988707d64f80f261e4d972"
+  },
+  "oxygen": {
+   "brandDisplayTitle": "Oxygen",
+   "isWhiteLabel": true,
+   "isBackgroundAvailable": true,
+   "whiteBrandLogo": "/generetic/images/brands/oxygen.png",
+   "brandBackgroundImage": "/generetic/images/authhero/oxygen-identity-art.jpg",
+   "brandLightPrimaryColor": "#9A4BA0",
+   "brandDarkPrimaryColor": "#020218",
+   "brandSource": "oxygen_oneapp",
+   "priority": 6,
+   "mParticleKey": "d620848d0179124a8f10678231d2dbf3",
+   "brandIntake": "Oxygen_Media",
+   "permalink": "https://www.oxygen.com/",
+   "analyticsName": "oxygen.com",
+   "geoServicesBrandKey": "oxygen",
+   "networkName": "oxygen",
+   "cpcAccountName": "OXYGEN_ONEAPP",
+   "mapping": [
+    "oxygen"
+   ],
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "Oxygen",
+    "subbrand": "c19"
+   },
+   "adobePassBrandName": "oxygen",
+   "fwConfig": {
+    "csid": "oneapp_desktop_computer_web_livelinear"
+   },
+   "livePlatformKey": "oxygen_live",
+   "liveSecret": "6f4d06ad56153a3fc0568b97d78c90a1"
+  },
+  "universalKids": {
+   "brandDisplayTitle": "Universal Kids",
+   "isWhiteLabel": false,
+   "isBackgroundAvailable": false,
+   "whiteBrandLogo": "/generetic/images/brands/universal-kids.png",
+   "brandBackgroundImage": "/generetic/images/authhero/default-identity.jpg",
+   "brandLightPrimaryColor": "#468AAD",
+   "brandDarkPrimaryColor": "#28253E",
+   "brandSource": "universalkids_oneapp",
+   "priority": 7,
+   "permalink": "https://www.universalkids.com/",
+   "analyticsName": "universalkids.com",
+   "geoServicesBrandKey": "universalkids",
+   "livePlatformKey": "universalkids_oneapp_linear",
+   "networkName": "universal-kids",
+   "cpcAccountName": "UNIVERSALKIDS_ONEAPP",
+   "mapping": [
+    "universal-kids",
+    "universalKids",
+    "sprout"
+   ],
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "Universal Kids",
+    "subbrand": "c25"
+   }
+  },
+  "cnbc": {
+   "brandDisplayTitle": "CNBC",
+   "isWhiteLabel": false,
+   "isBackgroundAvailable": false,
+   "whiteBrandLogo": "/generetic/images/brands/cnbc.png",
+   "brandBackgroundImage": "/generetic/images/authhero/default-identity.jpg",
+   "brandLightPrimaryColor": "#6B7992",
+   "brandDarkPrimaryColor": "#1F1A27",
+   "brandSource": "cnbc_oneapp",
+   "priority": 8,
+   "brandIntake": "CNBC",
+   "permalink": "https://www.cnbc.com/",
+   "analyticsName": "cnbc.com",
+   "geoServicesAccessKey": "cnbc_oneapp_linear",
+   "geoServicesBrandKey": "cnbc",
+   "networkName": "cnbc",
+   "cpcAccountName": "CNBC_ONEAPP",
+   "mapping": [
+    "cnbc"
+   ],
+   "primetimeAccessKey": "NjM0NzAyNGItMzZmZS00NmNiLWJjYWEtODk0NzM1YTIzNjZlOg==",
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "CNBC",
+    "subbrand": "c14"
+   },
+   "livePlatformKey": "cnbc_live",
+   "liveSecret": "f9afa36b9be70005608ddfce66152b00",
+   "adobePassBrandName": "cnbc",
+   "fwConfig": {
+    "csid": "oneapp_desktop_computer_web_livelinear"
+   }
+  },
+  "cnbc-airport": {
+   "brandDisplayTitle": "CNBC AIRPORT",
+   "isWhiteLabel": false,
+   "isBackgroundAvailable": false,
+   "brandSource": "cnbcairport_oneapp",
+   "geoServicesBrandKey": "cnbc",
+   "livePlatformKey": "cnbc_live",
+   "networkName": "cnbc",
+   "cpcAccountName": "CNBCAIRPORT_ONEAPP_STAGE",
+   "mapping": [
+    "cnbc-airport"
+   ]
+  },
+  "msnbc": {
+   "brandDisplayTitle": "MSNBC",
+   "isWhiteLabel": false,
+   "isBackgroundAvailable": false,
+   "whiteBrandLogo": "/generetic/images/brands/msnbc.png",
+   "brandBackgroundImage": "/generetic/images/authhero/default-identity.jpg",
+   "brandLightPrimaryColor": "#4077d0",
+   "brandDarkPrimaryColor": "#2d094c",
+   "brandSource": "msnbc_oneapp",
+   "priority": 9,
+   "brandIntake": "MSNBC",
+   "permalink": "https://www.msnbc.com/",
+   "analyticsName": "msnbc.com",
+   "geoServicesBrandKey": "msnbc",
+   "networkName": "msnbc",
+   "cpcAccountName": "MSNBC_ONEAPP",
+   "mapping": [
+    "msnbc"
+   ],
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "MSNBC",
+    "subbrand": "c29"
+   },
+   "livePlatformKey": "msnbc_live",
+   "liveSecret": "af819a81bb8d2de065292f0fcca9984a",
+   "adobePassBrandName": "msnbc",
+   "fwConfig": {
+    "csid": "oneapp_desktop_computer_web_livelinear"
+   }
+  },
+  "telemundo": {
+   "brandDisplayTitle": "Telemundo",
+   "isWhiteLabel": true,
+   "isBackgroundAvailable": true,
+   "whiteBrandLogo": "/generetic/images/brands/telemundo.png",
+   "brandBackgroundImage": "/generetic/images/authhero/telemundo-identity-art.jpeg",
+   "brandLightPrimaryColor": "#CC0029",
+   "brandDarkPrimaryColor": "#000A38",
+   "brandSource": "telemundo_oneapp",
+   "priority": 10,
+   "brandIntake": "Telemundo_Networks",
+   "permalink": "https://www.telemundo.com/",
+   "analyticsName": "telemundo.com",
+   "geoServicesBrandKey": "telemundo",
+   "networkName": "telemundo",
+   "cpcAccountName": "TELEMUNDO_ONEAPP",
+   "mapping": [
+    "telemundo",
+    "tlmd"
+   ],
+   "nielsen": {
+    "mode": "dtvr",
+    "crossId2": "Telemundo",
+    "subbrand": "c26"
+   },
+   "fwConfig": {
+    "csid": "oneapp_desktop_computer_web_livelinear"
+   },
+   "livePlatformKey": "telemundo_live",
+   "liveSecret": "893801ceff2f774af3a968409c2f48bd",
+   "adobePassBrandName": "telemundo"
+  },
+  "universo": {
+   "brandDisplayTitle": "Universo",
+   "isWhiteLabel": false,
+   "isBackgroundAvailable": false,
+   "whiteBrandLogo": "/generetic/images/brands/universo.png",
+   "brandLightPrimaryColor": "#008094",
+   "brandDarkPrimaryColor": "#000D2F",
+   "brandSource": "universo_oneapp",
+   "priority": 11,
+   "brandIntake": "Universo",
+   "permalink": "http://www.nbcuniverso.com/",
+   "analyticsName": "nbcuniverso.com",
+   "geoServicesBrandKey": "nbcuniverso",
+   "networkName": "nbc-universo",
+   "cpcAccountName": "NBCUNIVERSO_ONEAPP",
+   "mapping": [
+    "universo",
+    "nbcuniverso",
+    "nbc-universo",
+    "mun2"
+   ],
+   "primetimeAccessKey": "NjBlZDhjMDMtM2MwNi00OTVmLTk4MmUtNmE1ZjIxMmY5OGE4Og==",
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "NBC Universo",
+    "subbrand": "c56"
+   },
+   "adobePassBrandName": "mun2",
+   "fwConfig": {
+    "csid": "oneapp_desktop_computer_web_livelinear"
+   },
+   "livePlatformKey": "universo_live",
+   "liveSecret": "c95b72f73e1860f9b7636e16b671a68d"
+  },
+  "nbcnews": {
+   "brandDisplayTitle": "NBC News",
+   "permalink": "http://www.nbcnews.com/",
+   "analyticsName": "nbcnews.com",
+   "geoServicesBrandKey": "nbcnews",
+   "livePlatformKey": "nbcnews",
+   "isFreeStream": true,
+   "mapping": [
+    "nbcnews",
+    "nbc-news",
+    "nbcnews-playmaker"
+   ],
+   "playmakerConfigUrl": "https://api-leap.nbcsports.com/feeds/assets/{PID}?application=NBCNews&format=nbc-player&platform=desktop",
+   "playmakerFWConfig": {
+    "csid": "oneapp_web_desktop_virtualchannel",
+    "sfid": "7006068",
+    "prof": "169843:oneapp_playmaker_web",
+    "afid": "137704898"
+   },
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "NBC News",
+    "subbrand": "c04"
+   }
+  },
+  "nbcsports": {
+   "brandDisplayTitle": "NBC Sports",
+   "permalink": "https://www.nbcsports.com/",
+   "analyticsName": "nbcsports.com",
+   "geoServicesBrandKey": "nbcsn",
+   "cpcAccountName": "NBCSN_ONEAPP",
+   "mapping": [
+    "nbcsports",
+    "nbc-sports",
+    "sports",
+    "nbcsn"
+   ],
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "NBC Sports",
+    "subbrand": "c18"
+   },
+   "livePlatformKey": "nbcsn_live",
+   "liveSecret": "d7d3536536c4669903a135f937a1fd87",
+   "vodSwitch": "https",
+   "whiteBrandLogo": "/generetic/images/brands/nbc-sports.png"
+  },
+  "golf": {
+   "brandDisplayTitle": "NBC Golf",
+   "permalink": "https://www.golfchannel.com/",
+   "analyticsName": "golfchannel.com",
+   "geoServicesBrandKey": "golf",
+   "mapping": [
+    "golf"
+   ],
+   "nielsen": {
+    "mode": "dcr",
+    "crossId2": "Golf Channel",
+    "subbrand": "c27"
+   },
+   "livePlatformKey": "golf_live",
+   "liveSecret": "6e6594b716db9d7ba041287a62dfa9f8",
+   "vodSwitch": "https"
+  },
+  "necn": {
+   "brandDisplayTitle": "NECN",
+   "permalink": "https://www.necn.com/",
+   "analyticsName": "necn.com",
+   "geoServicesBrandKey": "necn",
+   "mapping": [
+    "necn"
+   ],
+   "nielsen": {
+    "mode": "dtvr",
+    "crossId2": "NECN",
+    "subbrand": "c41"
+   },
+   "livePlatformKey": "necn_live",
+   "liveSecret": "9d096ed169a31150605c4939c30ee364"
+  },
+  "peacock": {
+   "brandDisplayTitle": "Peacock",
+   "networkName": "peacock",
+   "geoServicesBrandKey": "peacock",
+   "mapping": [
+    "peacock"
+   ]
+  },
+  "rsn-bay-area": {
+   "brandDisplayTitle": "NBC Sports Bay Area",
+   "geoServicesBrandKey": "nbcsbayarea",
+   "mapping": [
+    "rsn-bay-area"
+   ],
+   "nielsen": {
+    "subbrand": "c18"
+   },
+   "adobePassBrandName": "CSNBayArea",
+   "isRSN": true
+  },
+  "rsn-boston": {
+   "brandDisplayTitle": "NBC Sports Boston",
+   "geoServicesBrandKey": "nbcsboston",
+   "mapping": [
+    "rsn-boston"
+   ],
+   "nielsen": {
+    "subbrand": "c18"
+   },
+   "adobePassBrandName": "CSNNewEngland",
+   "isRSN": true
+  },
+  "rsn-california": {
+   "brandDisplayTitle": "NBC Sports California",
+   "geoServicesBrandKey": "nbcscalifornia",
+   "mapping": [
+    "rsn-california"
+   ],
+   "nielsen": {
+    "subbrand": "c18"
+   },
+   "adobePassBrandName": "CSNCalifornia",
+   "isRSN": true
+  },
+  "rsn-chicago": {
+   "brandDisplayTitle": "NBC Sports Chicago",
+   "geoServicesBrandKey": "nbcschicago",
+   "mapping": [
+    "rsn-chicago"
+   ],
+   "nielsen": {
+    "subbrand": "c18"
+   },
+   "adobePassBrandName": "CSNChicago",
+   "isRSN": true
+  },
+  "rsn-philadelphia": {
+   "brandDisplayTitle": "NBC Sports Philadelphia",
+   "geoServicesBrandKey": "nbcsphiladelphia",
+   "mapping": [
+    "rsn-philadelphia"
+   ],
+   "nielsen": {
+    "subbrand": "c18"
+   },
+   "adobePassBrandName": "CSNPhiladelphia",
+   "isRSN": true
+  },
+  "rsn-washington": {
+   "brandDisplayTitle": "NBC Sports Washington",
+   "geoServicesBrandKey": "nbcswashington",
+   "mapping": [
+    "rsn-washington"
+   ],
+   "nielsen": {
+    "subbrand": "c18"
+   },
+   "adobePassBrandName": "CSNMidAtlantic",
+   "isRSN": true
+  }
+ },
+ "agnosticProfile": {
+  "pages": [
+   "/my-account",
+   "/my-account/email-preferences",
+   "/email-preferences",
+   "/reset-password",
+   "/request-password",
+   "/reset-password/success"
+  ]
+ },
+ "peacock": {
+  "url": "https://www.peacocktv.com/?cid=20200101evergreenoneedi001&utm_source=nbc&utm_medium=oneapp_editorial_header_navlink&utm_campaign=20200101evergreen&utm_term=weblink&utm_content=navlink"
+ },
+ "logrocket": {
+  "appId": "ib0bnn/nbc-digital-prod"
+ },
+ "firebase": {
+  "config": {
+   "apiKey": "AIzaSyAPBTB2ps9BewjOhHV1YAZKS7OmYUUP9lk",
+   "authDomain": "one-app-web-prod.firebaseapp.com",
+   "projectId": "one-app-web-prod",
+   "storageBucket": "one-app-web-prod.appspot.com",
+   "messagingSenderId": "33681506417",
+   "appId": "1:33681506417:web:dd82f5180b41d9168a1bd0",
+   "measurementId": "G-V6EZWHKX2E"
+  },
+  "vapidKey": "BEZ1bxqNEjUq7HsY5Iz2x75QL3fsSL1gmNZuCIVH7nBPkMNasUxrtpPebcxqG7dm5q_P9dyMP9Ub3R3iLYX-oyg"
+ },
+ "iterable": {
+  "apiKey": "3b2cb84551564b9a88a33017ee681e77",
+  "baseUrl": "https://api.iterable.com",
+  "sdk": {
+   "apiKey": "b430c005896f442798b573f1aa12a988",
+   "jwtService": "https://www.nbc.com/iterable/token",
+   "packageDomain": "www.nbc.com",
+   "storageVersion": "1.2",
+   "idField": "email"
+  }
+ },
+ "coreVideo": {
+  "appName": "NBC Network App",
+  "debug": false,
+  "appIdentifier": "nbcu-web",
+  "drmProxyUrl": "https://drmproxy.digitalsvc.apps.nbcuni.com/drm-proxy/license",
+  "drmProxySecret": "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6",
+  "certificateUrl": "https://fp-keyos.licensekeyserver.com/cert/2b947879444b6f5b798514c48927a448.der",
+  "conviva": {
+   "isAnalyticsEnabled": true,
+   "enableAdInsights": true
+  },
+  "adobe": {
+   "isAnalyticsEnabled": true
+  },
+  "nielsen": {
+   "isAnalyticsEnabled": true,
+   "enableProduction": true,
+   "segB": "NBC Network App",
+   "sdkAppId": "D3408A74-93E2-4DF0-8C1E-14421F272028",
+   "cloudAppId": "D3408A74-93E2-4DF0-8C1E-14421F272028"
+  },
+  "comscore": {
+   "isAnalyticsEnabled": true
+  },
+  "mediaTailor": {
+   "host": "https://mt.ssai-oneapp.nbcuni.com",
+   "mtUrl": "https://mt.ssai-oneapp.nbcuni.com",
+   "debug": false
+  },
+  "openMeasurement": {
+   "isAnalyticsEnabled": true,
+   "debug": false,
+   "partnerName": "Nbcuni",
+   "omWebScript": "omweb-v1.js",
+   "omVerificationScript": "omid-validation-verification-script-v1.js"
+  },
+  "vac": {
+   "url": "https://video-ads-module.ad-tech.nbcuni.com/v1/freewheel-params",
+   "appName": "oneapp"
+  },
+  "timeSync": {
+   "url": "https://timesync.nbc.com",
+   "timeout": 1000
+  }
+ },
+ "datadog": {
+  "applicationId": "7d26c499-f987-44ce-9b2f-046bb7f80be2",
+  "clientToken": "pubfb177abe41fb48e923b2e25602f48386",
+  "service": "nbc.com"
+ },
+ "idmTrial": {
+  "url": "https://id.nbc.com",
+  "timeout": 30000,
+  "version": "2023.1",
+  "source": "nbcd_web",
+  "allowReset": false
+ }
+}
