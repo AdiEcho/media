@@ -325,12 +325,3 @@ def response(f: http.HTTPFlow) -> None:
    if f.request.path.startswith('/generetic/generated/chunks/12.ff734ba67f44a707e609.js'):
       f.response.text = open('2.js', 'r').read()
 ~~~
-
-examples:
-
-~~~
-hash=85487b2dbb1020c3585d43a40ee25545dc465ec4cc499cc1bd7420e4858c5ad8 
-function(t,n){return new d.HMAC.init(e,n).finalize(t)} 
-1699225330576widevine 
-Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6
-~~~
