@@ -20,16 +20,11 @@ type flags struct {
 }
 
 func main() {
-   home, err := func() (string, error) {
-      s, err := os.UserHomeDir()
-      if err != nil {
-         return "", err
-      }
-      return filepath.ToSlash(s) + "/widevine/", nil
-   }()
+   home, err := os.UserHomeDir()
    if err != nil {
       panic(err)
    }
+   home = filepath.ToSlash(home) + "/widevine/"
    var f flags
    flag.StringVar(&f.content_ID, "b", "", "content ID")
    flag.IntVar(&f.bandwidth, "bandwidth", 5_000_000, "maximum bandwidth")
