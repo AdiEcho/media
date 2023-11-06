@@ -4,13 +4,14 @@ import (
    "154.pages.dev/http"
    "154.pages.dev/widevine"
    "encoding/base64"
-   "encoding/json"
    "fmt"
    "os"
    "testing"
 )
 
-func Test_Post(t *testing.T) {
+const raw_pssh = "AAAAV3Bzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADcIARIQBVLkSEJlSk6BsyYAS+R74BoLYnV5ZHJta2V5b3MiEAVS5EhCZUpOgbMmAEvke+AqAkhE"
+
+func Test_License(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -33,19 +34,9 @@ func Test_Post(t *testing.T) {
    }
    http.No_Location()
    http.Verbose()
-   var hi Hello
-   {
-      b, err := os.ReadFile("nbc.json")
-      if err != nil {
-         t.Fatal(err)
-      }
-      json.Unmarshal(b, &hi)
-   }
-   key, err := mod.Key(hi)
+   key, err := mod.Key(Core)
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Println(key)
+   fmt.Printf("%x\n", key)
 }
-
-const raw_pssh = "AAAAV3Bzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADcIARIQBVLkSEJlSk6BsyYAS+R74BoLYnV5ZHJta2V5b3MiEAVS5EhCZUpOgbMmAEvke+AqAkhE"
