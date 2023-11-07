@@ -69,12 +69,27 @@ main branch:
 
 https://github.com/httptoolkit/frida-interception-and-unpinning
 
+install app, then push server:
+
+~~~
+adb root
+adb push frida-server-16.1.4-android-x86 /data/app/frida-server
+adb shell chmod +x /data/app/frida-server
+adb shell /data/app/frida-server
+~~~
+
+then:
+
 ~~~
 frida -U `
 -l config.js `
 -l android/android-certificate-unpinning.js `
 -f com.nbcuni.nbc
 ~~~
+
+note this version need at least Oreo:
+
+https://github.com/httptoolkit/frida-interception-and-unpinning/issues/52
 
 result:
 
@@ -100,14 +115,6 @@ at <anonymous> (frida/node_modules/frida-java-bridge/lib/class-factory.js:651)
 - https://github.com/hunterxxx/Frida-Bypass-SSL-Pinning/issues/2
 - https://github.com/hyugogirubato/Frida-CodeShare/issues/1
 - https://github.com/vicsanjinez/ANTI-ROOT-AND-SSL-PINNING2/issues/1
-
-install app, then push server:
-
-~~~
-adb push frida-server-16.1.4-android-x86 /data/app/frida-server
-adb shell chmod +x /data/app/frida-server
-adb shell /data/app/frida-server
-~~~
 
 https://httptoolkit.com/blog/android-reverse-engineering
 
@@ -276,8 +283,6 @@ this works:
 https://lemonade.nbc.com/v1/vod/2410887629/9000283426?platform=web&programmingType=Full+Episode
 
 ## license
-
-# NBC
 
 ~~~
 POST https://drmproxy.digitalsvc.apps.nbcuni.com/drm-proxy/license/widevine?time=1699126072315&hash=0df6ff2b81e42c3ec10d1c4946cebce7ddd631a4130841fd74ba5fa0c3d7c02a&device=web HTTP/2.0
