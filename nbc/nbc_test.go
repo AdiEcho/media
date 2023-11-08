@@ -26,9 +26,6 @@ func Test_On_Demand(t *testing.T) {
 }
 
 var mpx_guids = []int64 {
-   // episode locked
-   // nbc.com/saturday-night-live/video/october-28-nate-bargatze/9000283426
-   9000283426,
    // episode unlocked
    // nbc.com/saturday-night-live/video/october-21-bad-bunny/9000283422
    9000283422,

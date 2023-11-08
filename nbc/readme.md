@@ -84,6 +84,7 @@ then:
 frida -U `
 -l config.js `
 -l android/android-certificate-unpinning.js `
+-l android/android-certificate-unpinning-fallback.js `
 -f com.nbcuni.nbc
 ~~~
 
@@ -252,6 +253,10 @@ but again its not usable:
    URI="skd://fcf13caf41cb4ec7bcc918872de873b9"
 ~~~
 
+this works though:
+
+http://link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000359946?switch=HLSServiceSecure
+
 this option:
 
 http://link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283422
@@ -262,25 +267,33 @@ fails:
 
 regarding locked content:
 
-https://nbc.com/saturday-night-live/video/october-28-nate-bargatze/9000283426
-
-this fails:
-
-http://link.theplatform.com/s/NnzsPC/media/guid/2410887629/9000283426?formats=mpeg-dash
-
-~~~json
-{
-   "description": "This content requires a valid, unexpired auth token.",
-   "exception": "InvalidAuthToken",
-   "isException": true,
-   "responseCode": "403",
-   "title": "Invalid Token"
-}
-~~~
+https://nbc.com/john-wick/video/john-wick/3448375
 
 this works:
 
-https://lemonade.nbc.com/v1/vod/2410887629/9000283426?platform=web&programmingType=Full+Episode
+https://lemonade.nbc.com/v1/vod/2304992029/3448375?platform=web&programmingType=Movie
+
+these fail:
+
+~~~
+> curl link.theplatform.com/s/NnzsPC/media/guid/2304992029/3448375?formats=mpeg-dash
+{
+        "title": "Invalid Token",
+        "description": "This content requires a valid, unexpired auth token.",
+        "isException": true,
+        "exception": "InvalidAuthToken",
+        "responseCode": "403"
+}
+
+> curl link.theplatform.com/s/NnzsPC/media/guid/2304992029/3448375?switch=HLSServiceSecure
+{
+        "title": "Invalid Token",
+        "description": "This content requires a valid, unexpired auth token.",
+        "isException": true,
+        "exception": "InvalidAuthToken",
+        "responseCode": "403"
+}
+~~~
 
 ## license
 
