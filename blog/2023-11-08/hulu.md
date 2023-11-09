@@ -2,6 +2,8 @@
 
 https://hulu.com/watch/a75f279c-4156-4fb1-8371-d0ba15061009
 
+https://play.google.com/store/apps/details?id=com.hulu.livingroomplus
+
 ## Sign up
 
 If you cancel you lose access immediately

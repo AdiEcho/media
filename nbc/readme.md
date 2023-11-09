@@ -55,18 +55,6 @@ for example:
 frida-server-16.1.4-android-x86.xz
 ~~~
 
-then:
-
-https://github.com/httptoolkit/frida-interception-and-unpinning/tree/feddf62
-
-~~~
-frida -U -f com.nbcuni.nbc -l frida-script.js
-~~~
-
-app gets stuck on loading screen. what if we install user certificate? same
-result. what if we install system certificate? same result. next we can try
-main branch:
-
 https://github.com/httptoolkit/frida-interception-and-unpinning
 
 install app, then push server:
@@ -88,31 +76,13 @@ frida -U `
 -f com.nbcuni.nbc
 ~~~
 
-note this version need at least Oreo:
-
-https://github.com/httptoolkit/frida-interception-and-unpinning/issues/52
-
-result:
-
-~~~
-Error: Address(): argument types do not match any of:
-.overload('java.lang.String', 'int', 'javax.net.SocketFactory', 'javax.net.ssl.SSLSocketFactory', 'javax.net.ssl.HostnameVerifier', 'com.android.okhttp.CertificatePinner', 'com.android.okhttp.Authenticator', 'java.net.Proxy', 'java.util.List', 'java.util.List', 'java.net.ProxySelector')
-at X (frida/node_modules/frida-java-bridge/lib/class-factory.js:622)
-at value (frida/node_modules/frida-java-bridge/lib/class-factory.js:1141)
-at e (frida/node_modules/frida-java-bridge/lib/class-factory.js:606)
-at <anonymous> (D:\Desktop\frida-interception-and-unpinning-main\android\android-certificate-unpinning.js:170)
-at apply (native)
-at ne (frida/node_modules/frida-java-bridge/lib/class-factory.js:673)
-at <anonymous> (frida/node_modules/frida-java-bridge/lib/class-factory.js:651)
-~~~
-
 - <https://github.com/Frida-Modules-Repo/frida_multiple_unpinning.js/issues/1>
 - <https://github.com/Frida-Modules-Repo/ssl_unpinning.js/issues/1>
 - https://github.com/0xXyc/SSL-Certpinning-Bypass/issues/1
 - https://github.com/54m4r174n/SSL-Pinning-Bypass-Automation/issues/2
 - https://github.com/Benson306/SSL-Bypass-Script/issues/2
 - https://github.com/fdciabdul/Frida-Multiple-Bypass/issues/1
-- https://github.com/httptoolkit/frida-interception-and-unpinning/issues/52
+- https://github.com/httptoolkit/frida-interception-and-unpinning/issues/56
 - https://github.com/hunterxxx/Frida-Bypass-SSL-Pinning/issues/2
 - https://github.com/hyugogirubato/Frida-CodeShare/issues/1
 - https://github.com/vicsanjinez/ANTI-ROOT-AND-SSL-PINNING2/issues/1
