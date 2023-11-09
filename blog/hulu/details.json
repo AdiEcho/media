@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "id": "023c49bf-6a99-4c67-851c-4c9e7609cc1d",
+      "season_number": 1,
+      "season_short_display_name": "S1",
+      "episode_number": 3,
+      "rating": "TV14",
+      "premiere_date": "2004-11-30T12:00:00Z",
+      "eab": "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
+      "details_href": {
+        "type": "series",
+        "id": "ef39603f-eb90-4248-8237-f6168d7c1be1",
+        "params": {
+          "network_breadcrumb": "89b32639-57ec-4a16-8591-bcce221d786a"
+        }
+      },
+      "headline": "House",
+      "series_name": "House",
+      "episode_name": "Occam's Razor",
+      "description": "Dr. House and his team race to save a young man who may have not one, but two illnesses killing him.",
+      "type": "episode",
+      "availability_state": "available",
+      "startover": true,
+      "artwork": {
+        "panel": "https://img3.hulu.com/user/v3/artwork/023c49bf-6a99-4c67-851c-4c9e7609cc1d?base_image_bucket_name=image_manager&base_image=9e6abe5c-235a-4dd4-8d8a-c79eca4a8264",
+        "thumbnail": "https://img2.hulu.com/user/v3/artwork/ef39603f-eb90-4248-8237-f6168d7c1be1?base_image_bucket_name=image_manager&base_image=b0763d59-fe4a-4b30-9219-a7917dc630b8"
+      },
+      "location_requirement": "NONE"
+    }
+  ]
+}
