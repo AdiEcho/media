@@ -8,7 +8,7 @@ import (
    "testing"
 )
 
-const eab = "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326"
+const eab_id = "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326"
 
 func user_info() (map[string]string, error) {
    s, err := os.UserHomeDir()
@@ -35,7 +35,7 @@ func Test_Details(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   detail, err := auth.details(eab)
+   detail, err := auth.details(eab_id)
    if err != nil {
       t.Fatal(err)
    }

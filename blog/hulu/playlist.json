@@ -1,0 +1,69 @@
+{
+  "use_manifest_breaks": false,
+  "available_cdns": null,
+  "adstate": "RAYMOND",
+  "breaks": [],
+  "content_eab_id": "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
+  "transcripts_urls": {
+    "ttml": {
+      "en": "https://assetshuluimcom-a.akamaihd.net/captions_ttml/183/196861183_US_en_en.ttml"
+    },
+    "webvtt": {
+      "en": "https://assetshuluimcom-a.akamaihd.net/captions_webvtt/183/196861183_US_en_en.vtt"
+    },
+    "smi": {
+      "en": "https://assetshuluimcom-a.akamaihd.net/captions/183/196861183_US_en_en.smi"
+    }
+  },
+  "transcripts_encryption_key": "4878B22E76379B55C962B18DDBC188D82299F8F52E3E698D0FAF29A40ED64B21",
+  "video_metadata": {
+    "aspect_ratio": "16x9",
+    "end_credits_time": "00:43:42;12",
+    "frame_rate": 24,
+    "has_bug": "false",
+    "has_captions": true,
+    "has_network_pre_roll": false,
+    "interstitials": "[]",
+    "language": "en",
+    "length": 2657907,
+    "segments": "00:02:19;16,00:02:51;20,00:10:01;07,00:23:58;06,00:34:32;19",
+    "id": 294739917051,
+    "asset_id": 196861183,
+    "markers": [],
+    "transcripts_default_on": false,
+    "rating_bug_big": null,
+    "rating_bug_small": null
+  },
+  "transcripts_encryption_iv": "WA7hap7AGUkevuth",
+  "breakhash": ".zeJwDAAAAAAE",
+  "queried_cdns": null,
+  "transcripts_default_on": false,
+  "resume_position": 15000,
+  "recording_offset": -1000,
+  "initial_position": 15000,
+  "pause_ads": {
+    "minSecondsBetweenAds": 60,
+    "opportunityImpression": [
+      "https://t2.hulu.com/v3/revenue/assetimpression?beaconevent=assetimpression&packageid=2&planid=1&placementid=1358981&pod=-100&profile_id=252683275&bundle_id=262714326&contentid=023c49bf-6a99-4c67-851c-4c9e7609cc1d&asset_id=196861183&entity_id=023c49bf-6a99-4c67-851c-4c9e7609cc1d&userid=252683275&creativeid=102719366&ts=1699590752231&cpidentifier=thePlatform&r2={r2}&pagetype={pagetype}&device_product={device_product}&c_computerguid={c_computerguid}&app_version={app_version}&auth={auth}&c_app_version={c_app_version}&device_ad_id={device_ad_id}&siteversion={siteversion}&stream_type={stream_type}&c_distro={c_distro}&pageurl={pageurl}&fw_site_section={fw_site_section}&longitude={longitude}&c_device_fam={c_device_fam}&cpsessionid={cpsessionid}&c_userid={c_userid}&c1={c1}&sessionguid={sessionguid}&c2={c2}&userproductid={userproductid}&fullscreen={fullscreen}&alttextshown={alttextshown}&alttextintended={alttextintended}&device_platform={device_platform}&distroplatform={distroplatform}&computerguid={computerguid}&position={position}&region={region}&device_fam={device_fam}&c_device_product={c_device_product}&distro={distro}&device_model={device_model}&sitesessionid={sitesessionid}&latitude={latitude}&referrerurl={referrerurl}&duration={duration}&client={client}&seq={seq}&player={player}&cpreason={cpreason}&os={os}&device_man={device_man}&pagedesign={pagedesign}&deviceid={deviceid}&c_session={c_session}&c_os={c_os}&playermode={playermode}&c_distroplatform={c_distroplatform}&cpseq={cpseq}&c_device_model={c_device_model}&c_type={c_type}&visit={visit}&r1={r1}&c_player={c_player}"
+    ],
+    "creatives": []
+  },
+  "wv_server": "https://hulu.playback.edge.bamgrid.com/widevine-hulu/v1/hulu/vod/obtain-license-legacy/196861183?deejay_device_id=166&nonce=252683275&signature=1699626752_f3c9ce69a2fd1bf00e4657e89250473fd5a2423c",
+  "audio_tracks": [
+    {
+      "language": "en",
+      "role": "primary",
+      "codecs_string": "mp4a.40.5",
+      "channels": 2
+    }
+  ],
+  "mbr_manifest": "{\"version\":\"1.0.0\",\"cdn\":{\"cdn_order\":[\"da\",\"fa\"],\"reason\":\"MULTIPLE_CDN_SD\",\"error_message\":null},\"group_id\":1,\"mbr_error_message\":null,\"request_identifier\":null,\"abr_settings\":{},\"server_group_id\":2}",
+  "stream_url": "https://vodmanifest.hulustream.com/hulu/v1/dash/196861183/manifest.mpd?ad_cdns=fa&boundary_signaling=hulu_legacy&cdns=da&cluster=green&is_noah=0&pb_config=CAISIgogChcIgAoQ0AUiBEgyNjQqBEhJR0gyAzUuMhIFRklSU1QaDgoMCgUKA0FBQxIDT05FIh4KFwoIV0lERVZJTkUSB01PRFVMQVIaAkwzEgNPTkUqDAoEREFTSBABIAFYAzIbChQKBEZNUDQSDAoEQ0VOQxIEQ0VOQxIDT05FQAFQpgE%3D&qos=Cg0KBEgyNjQQhgMYoJwBCg0KBEgyNjUQjgIYoJwB&user_id=252683275&auth=1699677152_2129013e804bce80602f88b746b33618",
+  "thumbnail_endpoint": "https://ib.hulu.com",
+  "asset_playback_type": "VOD",
+  "sauron_id": "uI9sm7eAyJA=",
+  "view_ttl_millis": 120000,
+  "sauron_token": "sauron_token",
+  "sauron_token_ttl": 120,
+  "sauron_token_ttl_ms": 120000
+}
