@@ -3,63 +3,33 @@ package hulu
 import (
    "io"
    "net/http"
-   "net/http/httputil"
    "net/url"
-   "os"
    "strings"
 )
 
-type playlist_request struct {
-   Content_EAB_ID   string `json:"content_eab_id"`
-   Deejay_Device_ID int    `json:"deejay_device_id"`
-   Playback       struct {
-      Audio struct {
-         Codecs struct {
-            Selection_Mode string `json:"selection_mode"`
-            Values        []struct {
-               Type string `json:"type"`
-            } `json:"values"`
-         } `json:"codecs"`
-      } `json:"audio"`
-      DRM struct {
-         Selection_Mode string `json:"selection_mode"`
-         Values        []struct {
-            Security_Level string `json:"security_level"`
-            Type          string `json:"type"`
-            Version       string `json:"version"`
-         } `json:"values"`
-      } `json:"drm"`
-      Manifest struct {
-         Type string `json:"type"`
-      } `json:"manifest"`
-      Segments struct {
-         Selection_Mode string `json:"selection_mode"`
-         Values        []struct {
-            Encryption struct {
-               Mode string `json:"mode"`
-               Type string `json:"type"`
-            } `json:"encryption"`
-            Type string `json:"type"`
-         } `json:"values"`
-      } `json:"segments"`
-      Version int `json:"version"`
-      Video   struct {
-         Codecs struct {
-            Selection_Mode string `json:"selection_mode"`
-            Values        []struct {
-               Level   string `json:"level"`
-               Profile string `json:"profile"`
-               Type    string `json:"type"`
-            } `json:"values"`
-         } `json:"codecs"`
-      } `json:"video"`
-   } `json:"playback"`
-   Token          string `json:"token"`
-   Unencrypted    bool   `json:"unencrypted"`
-   Version        int    `json:"version"`
-}
-
-func main() {
+func (a authenticate) playlist(d deep_link) (*http.Response, error) {
+   var p playlist_request
+   p.Content_EAB_ID = d.EAB_ID
+   p.Deejay_Device_ID = 166
+   p.Token = a.Data.User_Token
+   p.Unencrypted = true
+   p.Version = 5012541
+   p.Playback.Audio.Codecs.Selection_Mode = "ONE"
+   //p.playback.audio.codecs.values[0].type = "AAC";
+   //p.playback.drm.selection_mode = "ONE";
+   //p.playback.drm.values[0].security_level = "L3";
+   //p.playback.drm.values[0].type = "WIDEVINE";
+   //p.playback.drm.values[0].version = "MODULAR";
+   //p.playback.manifest.type = "DASH";
+   //p.playback.segments.selection_mode = "ONE";
+   //p.playback.segments.values[0].encryption.mode = "CENC";
+   //p.playback.segments.values[0].encryption.type = "CENC";
+   //p.playback.segments.values[0].type = "FMP4";
+   //p.playback.version = 2;
+   //p.playback.video.codecs.selection_mode = "FIRST";
+   //p.playback.video.codecs.values[0].level = "5.2";
+   //p.playback.video.codecs.values[0].profile = "HIGH";
+   //p.playback.video.codecs.values[0].type = "H264";
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"
@@ -69,16 +39,7 @@ func main() {
    req.URL.Scheme = "https"
    req.URL.Host = "play.hulu.com"
    req.URL.Path = "/v6/playlist"
-   req.Body = io.NopCloser(req_body)
+   req.Body = io.NopCloser(strings.NewReader(playlist_body))
    req.Header["Content-Type"] = []string{"application/json"}
-   res, err := new(http.Transport).RoundTrip(&req)
-   if err != nil {
-      panic(err)
-   }
-   defer res.Body.Close()
-   res_body, err := httputil.DumpResponse(res, true)
-   if err != nil {
-      panic(err)
-   }
-   os.Stdout.Write(res_body)
+   return new(http.Transport).RoundTrip(&req)
 }
