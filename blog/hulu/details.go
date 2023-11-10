@@ -13,10 +13,10 @@ type details struct {
    }
 }
 
-func (a authenticate) details(eab string) (*details, error) {
+func (a authenticate) details(d deep_link) (*details, error) {
    body, err := func() ([]byte, error) {
       m := map[string][]string{
-         "eabs": {eab},
+         "eabs": {d.EAB_ID},
       }
       return json.Marshal(m)
    }()

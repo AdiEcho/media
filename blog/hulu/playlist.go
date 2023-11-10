@@ -60,9 +60,9 @@ type segment_value struct {
    Type string `json:"type"`
 }
 
-func (a authenticate) playlist(eab_id string) (*http.Response, error) {
+func (a authenticate) playlist(d deep_link) (*http.Response, error) {
    var p playlist_request
-   p.Content_EAB_ID = eab_id
+   p.Content_EAB_ID = d.EAB_ID
    p.Deejay_Device_ID = 166
    p.Token = a.Data.User_Token
    p.Unencrypted = true

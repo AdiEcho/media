@@ -17,7 +17,7 @@ func Test_Playlist(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   res, err := auth.playlist(eab_id)
+   res, err := auth.playlist(watch)
    if err != nil {
       t.Fatal(err)
    }
