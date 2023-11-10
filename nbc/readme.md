@@ -71,6 +71,9 @@ then:
 ~~~
 frida -U `
 -l config.js `
+-l native-connect-hook.js `
+-l android/android-proxy-override.js `
+-l android/android-system-certificate-injection.js `
 -l android/android-certificate-unpinning.js `
 -l android/android-certificate-unpinning-fallback.js `
 -f com.nbcuni.nbc
