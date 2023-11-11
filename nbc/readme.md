@@ -52,7 +52,7 @@ https://github.com/frida/frida/releases
 for example:
 
 ~~~
-frida-server-16.1.4-android-x86.xz
+frida-server-16.1.5-android-x86.xz
 ~~~
 
 https://github.com/httptoolkit/frida-interception-and-unpinning
@@ -61,7 +61,7 @@ install app, then push server:
 
 ~~~
 adb root
-adb push frida-server-16.1.4-android-x86 /data/app/frida-server
+adb push frida-server-16.1.5-android-x86 /data/app/frida-server
 adb shell chmod +x /data/app/frida-server
 adb shell /data/app/frida-server
 ~~~
@@ -71,11 +71,7 @@ then:
 ~~~
 frida -U `
 -l config.js `
--l native-connect-hook.js `
--l android/android-proxy-override.js `
--l android/android-system-certificate-injection.js `
 -l android/android-certificate-unpinning.js `
--l android/android-certificate-unpinning-fallback.js `
 -f com.nbcuni.nbc
 ~~~
 
