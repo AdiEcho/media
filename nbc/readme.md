@@ -75,18 +75,33 @@ frida -U `
 -f com.nbcuni.nbc
 ~~~
 
-- <https://github.com/Frida-Modules-Repo/frida_multiple_unpinning.js/issues/1>
-- <https://github.com/Frida-Modules-Repo/ssl_unpinning.js/issues/1>
-- https://github.com/0xXyc/SSL-Certpinning-Bypass/issues/1
-- https://github.com/54m4r174n/SSL-Pinning-Bypass-Automation/issues/2
-- https://github.com/Benson306/SSL-Bypass-Script/issues/2
-- https://github.com/fdciabdul/Frida-Multiple-Bypass/issues/1
-- https://github.com/httptoolkit/frida-interception-and-unpinning/issues/56
-- https://github.com/hunterxxx/Frida-Bypass-SSL-Pinning/issues/2
-- https://github.com/hyugogirubato/Frida-CodeShare/issues/1
-- https://github.com/vicsanjinez/ANTI-ROOT-AND-SSL-PINNING2/issues/1
+with MITM Proxy, app just gets stuck on loading screen. also, instead of my own
+script I tried this instead:
 
-https://httptoolkit.com/blog/android-reverse-engineering
+https://github.com/httptoolkit/httptoolkit-server/blob/8577f6a/src/interceptors/android/adb-commands.ts#L271-L294
+
+my device does not have `/apex`, which seems to simplify the process. but even
+still, MITM Proxy fails. I guess at this point its a MITM Proxy issue. I did
+notice that I was using an older MITM Proxy version 9, but trying version 10
+and even 8 didn't resolve the problem either. note I also tried using HTTP
+Toolkit certificate with MITM Proxy with no luck. here is something. I had idea
+to try older Frida, so I tried again with Frida 15.2.2. still failed, but a
+different error:
+
+~~~
+javax.net.ssl.SSLHandshakeException:
+java.security.cert.CertPathValidatorException: Trust anchor for certification
+path not found.
+at
+com.android.org.conscrypt.OpenSSLSocketImpl.startHandshake(OpenSSLSocketImpl.java:328)
+~~~
+
+- https://github.com/mitmproxy/android-unpinner/discussions/20
+- https://github.com/mitmproxy/mitmproxy/discussions/6477
+
+using HTTP Toolkit instead of MITM Proxy works.
+
+https://github.com/httptoolkit/frida-interception-and-unpinning/issues/56
 
 if you disable Widevine, and visit:
 

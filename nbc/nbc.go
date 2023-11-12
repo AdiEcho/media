@@ -45,6 +45,7 @@ func (m Metadata) On_Demand() (*On_Demand, error) {
    }
    return video, nil
 }
+
 type Metadata struct {
    Air_Date string `json:"airDate"`
    Episode_Number int64 `json:"episodeNumber,string"`
