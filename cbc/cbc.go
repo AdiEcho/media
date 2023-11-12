@@ -1,4 +1,4 @@
-package gem
+package cbc
 
 import (
    "encoding/json"
@@ -12,8 +12,8 @@ import (
 func New_Token(username, password string) (*Token, error) {
    address := func() string {
       var b strings.Builder
-      b.WriteString("https://rcmnb2cprod.b2clogin.com")
-      b.WriteString("/rcmnb2cprod.onmicrosoft.com")
+      b.WriteString("https://login.cbc.radio-canada.ca")
+      b.WriteString("/bef1b538-1950-4283-9b27-b096cbc18070")
       b.WriteString("/B2C_1A_ExternalClient_ROPC_Auth/oauth2/v2.0/token")
       return b.String()
    }()
@@ -28,11 +28,75 @@ func New_Token(username, password string) (*Token, error) {
       return nil, err
    }
    defer res.Body.Close()
-   tok := new(Token)
-   if err := json.NewDecoder(res.Body).Decode(tok); err != nil {
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   t := new(Token)
+   if err := json.NewDecoder(res.Body).Decode(t); err != nil {
       return nil, err
    }
-   return tok, nil
+   return t, nil
+}
+
+func New_Catalog_Gem(address string) (*Catalog_Gem, error) {
+   // you can also use `phone_android`, but it returns combined number and name:
+   // 3. Beauty Hath Strange Power
+   req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.RawQuery = "device=web"
+   req.URL.Path, err = func() (string, error) {
+      p, err := url.Parse(address)
+      if err != nil {
+         return "", err
+      }
+      return "/ott/catalog/v2/gem/show" + p.Path, nil
+   }()
+   if err != nil {
+      return nil, err
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   gem := new(Catalog_Gem)
+   if err := json.NewDecoder(res.Body).Decode(gem); err != nil {
+      return nil, err
+   }
+   return gem, nil
+}
+
+type Lineup_Item struct {
+   URL string
+   Formatted_ID_Media string `json:"formattedIdMedia"`
+}
+
+type Catalog_Gem struct {
+   Content []struct {
+      Lineups []struct {
+         Items []Lineup_Item
+      }
+   }
+   Selected_URL string `json:"selectedUrl"`
+   Structured_Metadata Metadata `json:"structuredMetadata"`
+}
+
+func (c Catalog_Gem) Item() *Lineup_Item {
+   for _, content := range c.Content {
+      for _, lineup := range content.Lineups {
+         for _, item := range lineup.Items {
+            if item.URL == c.Selected_URL {
+               return &item
+            }
+         }
+      }
+   }
+   return nil
 }
 
 const forwarded_for = "99.224.0.0"
@@ -74,6 +138,9 @@ func (t Token) Profile() (*Profile, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    pro := new(Profile)
    if err := json.NewDecoder(res.Body).Decode(pro); err != nil {
       return nil, err
@@ -111,6 +178,9 @@ func (p Profile) Media(item *Lineup_Item) (*Media, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    m := new(Media)
    if err := json.NewDecoder(res.Body).Decode(m); err != nil {
       return nil, err
@@ -131,62 +201,4 @@ var scope = []string{
    "https://rcmnb2cprod.onmicrosoft.com/84593b65-0ef6-4a72-891c-d351ddd50aab/subscriptions.write",
    "https://rcmnb2cprod.onmicrosoft.com/84593b65-0ef6-4a72-891c-d351ddd50aab/toutv-profiling",
    "openid",
-}
-
-func New_Catalog_Gem(address string) (*Catalog_Gem, error) {
-   // you can also use `phone_android`, but it returns combined number and name:
-   // 3. Beauty Hath Strange Power
-   req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.RawQuery = "device=web"
-   req.URL.Path, err = func() (string, error) {
-      p, err := url.Parse(address)
-      if err != nil {
-         return "", err
-      }
-      return "/ott/catalog/v2/gem/show" + p.Path, nil
-   }()
-   if err != nil {
-      return nil, err
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   gem := new(Catalog_Gem)
-   if err := json.NewDecoder(res.Body).Decode(gem); err != nil {
-      return nil, err
-   }
-   return gem, nil
-}
-
-type Lineup_Item struct {
-   URL string
-   Formatted_ID_Media string `json:"formattedIdMedia"`
-}
-
-func (c Catalog_Gem) Item() *Lineup_Item {
-   for _, content := range c.Content {
-      for _, lineup := range content.Lineups {
-         for _, item := range lineup.Items {
-            if item.URL == c.Selected_URL {
-               return &item
-            }
-         }
-      }
-   }
-   return nil
-}
-
-type Catalog_Gem struct {
-   Content []struct {
-      Lineups []struct {
-         Items []Lineup_Item
-      }
-   }
-   Selected_URL string `json:"selectedUrl"`
-   Structured_Metadata Metadata `json:"structuredMetadata"`
 }

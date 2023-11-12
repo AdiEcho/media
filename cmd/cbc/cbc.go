@@ -14,11 +14,11 @@ func (f *flags) master() (*hls.Master, error) {
    if err != nil {
       return nil, err
    }
-   profile, err := gem.Read_Profile(home + "/cbc/profile.json")
+   profile, err := cbc.Read_Profile(home + "/cbc/profile.json")
    if err != nil {
       return nil, err
    }
-   gem, err := gem.New_Catalog_Gem(f.address)
+   gem, err := cbc.New_Catalog_Gem(f.address)
    if err != nil {
       return nil, err
    }
@@ -65,7 +65,7 @@ func (f flags) download() error {
 }
 
 func (f flags) profile() error {
-   login, err := gem.New_Token(f.email, f.password)
+   login, err := cbc.New_Token(f.email, f.password)
    if err != nil {
       return err
    }

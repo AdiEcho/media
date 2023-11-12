@@ -1,7 +1,5 @@
 # CBC
 
-https://justwatch.com/ca/provider/cbc-gem
-
 ## Android client
 
 https://play.google.com/store/apps/details?id=ca.cbc.android.cbctv
