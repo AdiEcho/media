@@ -6,6 +6,64 @@ import (
    "net/http"
 )
 
+func (a authenticate) playlist(d deep_link) (*playlist, error) {
+   var p playlist_request
+   p.Content_EAB_ID = d.EAB_ID
+   p.Deejay_Device_ID = 166
+   p.Token = a.Data.User_Token
+   p.Unencrypted = true
+   p.Version = 5012541
+   p.Playback.Audio.Codecs.Selection_Mode = "ONE"
+   p.Playback.DRM.Selection_Mode = "ONE"
+   p.Playback.Manifest.Type = "DASH"
+   p.Playback.Version = 2
+   p.Playback.Segments.Selection_Mode = "ONE"
+   p.Playback.Video.Codecs.Selection_Mode = "FIRST"
+   p.Playback.Audio.Codecs.Values = []codec_value{
+      {
+         Type: "AAC",
+      },
+   }
+   p.Playback.Video.Codecs.Values = []codec_value{
+      {
+         Level: "5.2",
+         Profile: "HIGH",
+         Type: "H264",
+      },
+   }
+   p.Playback.DRM.Values = []drm_value{
+      {
+         Security_Level: "L3",
+         Type: "WIDEVINE",
+         Version: "MODULAR",
+      },
+   }
+   p.Playback.Segments.Values = func() []segment_value {
+      var s segment_value
+      s.Encryption.Mode = "CENC"
+      s.Encryption.Type = "CENC"
+      s.Type = "FMP4"
+      return []segment_value{s}
+   }()
+   body, err := json.Marshal(p)
+   if err != nil {
+      return nil, err
+   }
+   res, err := http.Post(
+      "https://play.hulu.com/v6/playlist", "application/json",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   play := new(playlist)
+   if err := json.NewDecoder(res.Body).Decode(play); err != nil {
+      return nil, err
+   }
+   return play, nil
+}
+
 type codec_value struct {
    Level   string `json:"level"`
    Profile string `json:"profile"`
@@ -60,51 +118,26 @@ type segment_value struct {
    Type string `json:"type"`
 }
 
-func (a authenticate) playlist(d deep_link) (*http.Response, error) {
-   var p playlist_request
-   p.Content_EAB_ID = d.EAB_ID
-   p.Deejay_Device_ID = 166
-   p.Token = a.Data.User_Token
-   p.Unencrypted = true
-   p.Version = 5012541
-   p.Playback.Audio.Codecs.Selection_Mode = "ONE"
-   p.Playback.DRM.Selection_Mode = "ONE"
-   p.Playback.Manifest.Type = "DASH"
-   p.Playback.Version = 2
-   p.Playback.Segments.Selection_Mode = "ONE"
-   p.Playback.Video.Codecs.Selection_Mode = "FIRST"
-   p.Playback.Audio.Codecs.Values = []codec_value{
-      {
-         Type: "AAC",
-      },
-   }
-   p.Playback.Video.Codecs.Values = []codec_value{
-      {
-         Level: "5.2",
-         Profile: "HIGH",
-         Type: "H264",
-      },
-   }
-   p.Playback.DRM.Values = []drm_value{
-      {
-         Security_Level: "L3",
-         Type: "WIDEVINE",
-         Version: "MODULAR",
-      },
-   }
-   p.Playback.Segments.Values = func() []segment_value {
-      var s segment_value
-      s.Encryption.Mode = "CENC"
-      s.Encryption.Type = "CENC"
-      s.Type = "FMP4"
-      return []segment_value{s}
-   }()
-   body, err := json.Marshal(p)
-   if err != nil {
-      return nil, err
-   }
-   return http.Post(
-      "https://play.hulu.com/v6/playlist", "application/json",
-      bytes.NewReader(body),
-   )
+type playlist struct {
+   Stream_URL string
+   WV_Server string
+}
+
+func (p playlist) Request_URL() string {
+   return p.WV_Server
+}
+
+func (playlist) Request_Body(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (playlist) Response_Body(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (playlist) Request_Header() http.Header {
+   h := make(http.Header)
+   // is this needed?
+   h["User-Agent"] = []string{"Widevine CDM v1.0"}
+   return h
 }
