@@ -155,7 +155,7 @@ but not all, since `Downloadable` is missing. We can download the APK and
 extract:
 
 ~~~
-googleplay -d com.cbs.app -v 211204029
+play -a com.cbs.app -v 211204029
 jadx com.cbs.app-211204029.apk
 ~~~
 

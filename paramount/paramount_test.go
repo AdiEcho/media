@@ -53,18 +53,18 @@ func Test_Media(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Println(ref)
-      res, err := http.Get(ref)
-      if err != nil {
-         t.Fatal(err)
-      }
-      if err := res.Body.Close(); err != nil {
-         t.Fatal(err)
-      }
-      if res.StatusCode != http.StatusOK {
-         if res.StatusCode != http.StatusFound {
-            t.Fatal(res)
+      func() {
+         res, err := http.Get(ref)
+         if err != nil {
+            t.Fatal(err)
          }
-      }
+         defer res.Body.Close()
+         if res.StatusCode != http.StatusOK {
+            if res.StatusCode != http.StatusFound {
+               t.Fatal(res)
+            }
+         }
+      }()
       time.Sleep(time.Second)
    }
 }
