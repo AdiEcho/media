@@ -11,7 +11,6 @@ import (
 type flags struct {
    guid int64
    bandwidth int
-   resolution string
    s stream.Stream
 }
 

@@ -6,6 +6,30 @@ import (
    "net/http"
 )
 
+type playlist struct {
+   Stream_URL string
+   WV_Server string
+}
+
+func (p playlist) Request_URL() string {
+   return p.WV_Server
+}
+
+func (playlist) Request_Body(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (playlist) Response_Body(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (playlist) Request_Header() http.Header {
+   h := make(http.Header)
+   // is this needed?
+   h["User-Agent"] = []string{"Widevine CDM v1.0"}
+   return h
+}
+
 func (a authenticate) playlist(d deep_link) (*playlist, error) {
    var p playlist_request
    p.Content_EAB_ID = d.EAB_ID
@@ -116,28 +140,4 @@ type segment_value struct {
       Type string `json:"type"`
    } `json:"encryption"`
    Type string `json:"type"`
-}
-
-type playlist struct {
-   Stream_URL string
-   WV_Server string
-}
-
-func (p playlist) Request_URL() string {
-   return p.WV_Server
-}
-
-func (playlist) Request_Body(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (playlist) Response_Body(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (playlist) Request_Header() http.Header {
-   h := make(http.Header)
-   // is this needed?
-   h["User-Agent"] = []string{"Widevine CDM v1.0"}
-   return h
 }

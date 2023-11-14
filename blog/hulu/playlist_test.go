@@ -3,15 +3,18 @@ package hulu
 import (
    "154.pages.dev/http"
    "154.pages.dev/widevine"
-   "encoding/base64"
    "fmt"
    "os"
    "testing"
 )
 
-const raw_pssh = ""
-
 func Test_License(t *testing.T) {
+   http.No_Location()
+   http.Verbose()
+   play, err := new_playlist()
+   if err != nil {
+      t.Fatal(err)
+   }
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -24,17 +27,8 @@ func Test_License(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   pssh, err := base64.StdEncoding.DecodeString(raw_pssh)
-   if err != nil {
-      t.Fatal(err)
-   }
-   mod, err := widevine.New_Module(private_key, client_ID, pssh)
-   if err != nil {
-      t.Fatal(err)
-   }
-   http.No_Location()
-   http.Verbose()
-   play, err := new_playlist()
+   // THIS IS NOT GOOD
+   mod, err := widevine.New_Module(private_key, client_ID, nil)
    if err != nil {
       t.Fatal(err)
    }
@@ -43,6 +37,16 @@ func Test_License(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
+}
+
+func Test_Playlist(t *testing.T) {
+   http.No_Location()
+   http.Verbose()
+   play, err := new_playlist()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", play)
 }
 
 func new_playlist() (*playlist, error) {
@@ -55,14 +59,4 @@ func new_playlist() (*playlist, error) {
       return nil, err
    }
    return auth.playlist(watch)
-}
-
-func Test_Playlist(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
-   play, err := new_playlist()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", play)
 }
