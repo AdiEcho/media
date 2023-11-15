@@ -3,20 +3,11 @@ package hulu
 import (
    "154.pages.dev/http"
    "154.pages.dev/widevine"
+   "encoding/hex"
    "fmt"
    "os"
    "testing"
 )
-
-func Test_Playlist(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
-   play, err := new_playlist()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", play)
-}
 
 func Test_License(t *testing.T) {
    http.No_Location()
@@ -37,8 +28,11 @@ func Test_License(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   // THIS IS NOT GOOD
-   mod, err := widevine.New_Module(private_key, client_ID, nil)
+   kid, err := hex.DecodeString(default_KID)
+   if err != nil {
+      t.Fatal(err)
+   }
+   mod, err := widevine.New_Module(private_key, client_ID, kid, nil)
    if err != nil {
       t.Fatal(err)
    }
@@ -49,12 +43,25 @@ func Test_License(t *testing.T) {
    fmt.Printf("%x\n", key)
 }
 
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+const default_KID = "21b82dc2ebb24d5aa9f8631f04726650"
+
+func Test_Playlist(t *testing.T) {
+   http.No_Location()
+   http.Verbose()
+   play, err := new_playlist()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", play)
+}
+
 func new_playlist() (*playlist, error) {
    m, err := user_info()
    if err != nil {
       return nil, err
    }
-   auth, err := living_room(m["username"], m["password"])
+   auth, err := Living_Room(m["username"], m["password"])
    if err != nil {
       return nil, err
    }

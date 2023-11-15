@@ -9,7 +9,7 @@ import (
 )
 
 // hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-var watch = deep_link{
+var watch = Deep_Link{
    "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
 }
 
@@ -34,13 +34,34 @@ func Test_Details(t *testing.T) {
    }
    http.No_Location()
    http.Verbose()
-   auth, err := living_room(m["username"], m["password"])
+   auth, err := Living_Room(m["username"], m["password"])
    if err != nil {
       t.Fatal(err)
    }
-   detail, err := auth.details(watch)
+   detail, err := auth.Details(watch)
    if err != nil {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", detail)
+}
+
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+const id = "023c49bf-6a99-4c67-851c-4c9e7609cc1d"
+
+func Test_Deep_Link(t *testing.T) {
+   m, err := user_info()
+   if err != nil {
+      t.Fatal(err)
+   }
+   http.No_Location()
+   http.Verbose()
+   auth, err := Living_Room(m["username"], m["password"])
+   if err != nil {
+      t.Fatal(err)
+   }
+   link, err := auth.Deep_Link(id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", link)
 }

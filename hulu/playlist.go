@@ -24,13 +24,10 @@ func (playlist) Response_Body(b []byte) ([]byte, error) {
 }
 
 func (playlist) Request_Header() http.Header {
-   h := make(http.Header)
-   // is this needed?
-   h["User-Agent"] = []string{"Widevine CDM v1.0"}
-   return h
+   return nil
 }
 
-func (a authenticate) playlist(d deep_link) (*playlist, error) {
+func (a Authenticate) playlist(d Deep_Link) (*playlist, error) {
    var p playlist_request
    p.Content_EAB_ID = d.EAB_ID
    p.Deejay_Device_ID = 166

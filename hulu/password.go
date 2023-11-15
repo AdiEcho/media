@@ -6,14 +6,13 @@ import (
    "net/url"
 )
 
-type authenticate struct {
+type Authenticate struct {
    Data struct {
       User_Token string
    }
 }
 
-// github.com/matthuisman/slyguy.addons/blob/master/slyguy.hulu/resources/lib/api.py
-func living_room(user, password string) (*authenticate, error) {
+func Living_Room(user, password string) (*Authenticate, error) {
    res, err := http.PostForm(
       "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
          "friendly_name": {"!"},
@@ -26,7 +25,7 @@ func living_room(user, password string) (*authenticate, error) {
       return nil, err
    }
    defer res.Body.Close()
-   auth := new(authenticate)
+   auth := new(Authenticate)
    if err := json.NewDecoder(res.Body).Decode(auth); err != nil {
       return nil, err
    }
