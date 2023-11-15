@@ -9,6 +9,9 @@ import (
    "testing"
 )
 
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+const default_KID = "21b82dc2ebb24d5aa9f8631f04726650"
+
 func Test_License(t *testing.T) {
    http.No_Location()
    http.Verbose()
@@ -43,9 +46,6 @@ func Test_License(t *testing.T) {
    fmt.Printf("%x\n", key)
 }
 
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-const default_KID = "21b82dc2ebb24d5aa9f8631f04726650"
-
 func Test_Playlist(t *testing.T) {
    http.No_Location()
    http.Verbose()
@@ -56,7 +56,7 @@ func Test_Playlist(t *testing.T) {
    fmt.Printf("%+v\n", play)
 }
 
-func new_playlist() (*playlist, error) {
+func new_playlist() (*Playlist, error) {
    m, err := user_info()
    if err != nil {
       return nil, err
@@ -65,5 +65,5 @@ func new_playlist() (*playlist, error) {
    if err != nil {
       return nil, err
    }
-   return auth.playlist(watch)
+   return auth.Playlist(watch)
 }

@@ -46,7 +46,7 @@ func Test_Details(t *testing.T) {
 }
 
 // hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-const id = "023c49bf-6a99-4c67-851c-4c9e7609cc1d"
+const watch_ID = "023c49bf-6a99-4c67-851c-4c9e7609cc1d"
 
 func Test_Deep_Link(t *testing.T) {
    m, err := user_info()
@@ -59,7 +59,7 @@ func Test_Deep_Link(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   link, err := auth.Deep_Link(id)
+   link, err := auth.Deep_Link(watch_ID)
    if err != nil {
       t.Fatal(err)
    }

@@ -6,28 +6,7 @@ import (
    "net/http"
 )
 
-type playlist struct {
-   Stream_URL string
-   WV_Server string
-}
-
-func (p playlist) Request_URL() string {
-   return p.WV_Server
-}
-
-func (playlist) Request_Body(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (playlist) Response_Body(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (playlist) Request_Header() http.Header {
-   return nil
-}
-
-func (a Authenticate) playlist(d Deep_Link) (*playlist, error) {
+func (a Authenticate) Playlist(d Deep_Link) (*Playlist, error) {
    var p playlist_request
    p.Content_EAB_ID = d.EAB_ID
    p.Deejay_Device_ID = 166
@@ -78,7 +57,7 @@ func (a Authenticate) playlist(d Deep_Link) (*playlist, error) {
       return nil, err
    }
    defer res.Body.Close()
-   play := new(playlist)
+   play := new(Playlist)
    if err := json.NewDecoder(res.Body).Decode(play); err != nil {
       return nil, err
    }
@@ -95,6 +74,27 @@ type drm_value struct {
    Security_Level string `json:"security_level"`
    Type          string `json:"type"`
    Version       string `json:"version"`
+}
+
+type Playlist struct {
+   Stream_URL string
+   WV_Server string
+}
+
+func (Playlist) Request_Body(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Playlist) Request_Header() http.Header {
+   return nil
+}
+
+func (p Playlist) Request_URL() string {
+   return p.WV_Server
+}
+
+func (Playlist) Response_Body(b []byte) ([]byte, error) {
+   return b, nil
 }
 
 type playlist_request struct {
