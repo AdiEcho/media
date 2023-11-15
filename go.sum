@@ -4,10 +4,10 @@
 154.pages.dev/http v1.2.2/go.mod h1:LS0M9GQvnzME6YmY9gX/hc/mY4HET872ugnRNBeds1A=
 154.pages.dev/protobuf v1.0.3 h1:fiCGyQU7gBAtxWBITbII8cwQ/VTbddovjGHFrtMSHEg=
 154.pages.dev/protobuf v1.0.3/go.mod h1:NDDaN/avhls0mBQT6u7oJQMI1PWt11v7fD9bxAWubH4=
-154.pages.dev/stream v1.0.9 h1:T3pCPefPiYV2EmN/aa6p5nDLmWqB1CrOFgfhW3rzBL8=
-154.pages.dev/stream v1.0.9/go.mod h1:G+dt7l/C9ICP2fUs7UsGyliAcHcqWt2jr507p+e8Abg=
-154.pages.dev/widevine v1.1.5 h1:ltSwbJQ/05Wlls+LS5KttRY81T6pqHh4Lot/OKVK0xw=
-154.pages.dev/widevine v1.1.5/go.mod h1:S5FBy69ws/IXgerKbuVlhG0V8vv0IJ1e2vDbaGv4CNs=
+154.pages.dev/stream v1.1.1 h1:SwMrNAajRnXWTIXtV8RicF18OfFsJmG/Pm7uma6E6XI=
+154.pages.dev/stream v1.1.1/go.mod h1:hxaK0AMu/JXuzsbuQlJHM84sCLkPQPVAiVgtHQhT2I0=
+154.pages.dev/widevine v1.1.6 h1:P2/U0DsXBb9xHvkeU9lLQ0pPtltWNSmt79rsOah6hHQ=
+154.pages.dev/widevine v1.1.6/go.mod h1:S5FBy69ws/IXgerKbuVlhG0V8vv0IJ1e2vDbaGv4CNs=
 github.com/Eyevinn/mp4ff v0.40.1 h1:7q/AtT2CFrZuYiR4PWB3nqsbG0nhyP9QAiX8iTId/+M=
 github.com/Eyevinn/mp4ff v0.40.1/go.mod h1:w/6GSa5ghZ1VavzJK6McQ2/flx8mKtcrKDr11SsEweA=
 github.com/chmike/cmac-go v1.1.0 h1:aF73ZAEx9N2WdQc93DOJ2fMsBDAGqUtuenjMJMb3kEI=

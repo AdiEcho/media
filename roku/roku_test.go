@@ -11,26 +11,6 @@ import (
    "time"
 )
 
-func Test_Playback(t *testing.T) {
-   http.No_Location()
-   http.Trace()
-   site, err := New_Cross_Site()
-   if err != nil {
-      t.Fatal(err)
-   }
-   enc := json.NewEncoder(os.Stdout)
-   enc.SetEscapeHTML(false)
-   enc.SetIndent("", " ")
-   for _, test := range tests {
-      play, err := site.Playback(test.playback_ID)
-      if err != nil {
-         t.Fatal(err)
-      }
-      enc.Encode(play)
-      time.Sleep(time.Second)
-   }
-}
-
 func Test_Post(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -50,7 +30,7 @@ func Test_Post(t *testing.T) {
          if err != nil {
             t.Fatal(err)
          }
-         mod, err := widevine.New_Module(private_key, client_ID, pssh)
+         mod, err := widevine.New_Module(private_key, client_ID, nil, pssh)
          if err != nil {
             t.Fatal(err)
          }
@@ -72,3 +52,23 @@ func Test_Post(t *testing.T) {
       }
    }
 }
+func Test_Playback(t *testing.T) {
+   http.No_Location()
+   http.Trace()
+   site, err := New_Cross_Site()
+   if err != nil {
+      t.Fatal(err)
+   }
+   enc := json.NewEncoder(os.Stdout)
+   enc.SetEscapeHTML(false)
+   enc.SetIndent("", " ")
+   for _, test := range tests {
+      play, err := site.Playback(test.playback_ID)
+      if err != nil {
+         t.Fatal(err)
+      }
+      enc.Encode(play)
+      time.Sleep(time.Second)
+   }
+}
+

@@ -5,8 +5,8 @@ go 1.21.0
 require (
 	154.pages.dev/encoding v1.14.9
 	154.pages.dev/http v1.2.2
-	154.pages.dev/stream v1.0.9
-	154.pages.dev/widevine v1.1.5
+	154.pages.dev/stream v1.1.1
+	154.pages.dev/widevine v1.1.6
 )
 
 require (

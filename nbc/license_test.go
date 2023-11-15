@@ -28,7 +28,7 @@ func Test_License(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   mod, err := widevine.New_Module(private_key, client_ID, pssh)
+   mod, err := widevine.New_Module(private_key, client_ID, nil, pssh)
    if err != nil {
       t.Fatal(err)
    }

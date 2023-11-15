@@ -9,24 +9,6 @@ import (
    "testing"
 )
 
-const (
-   episode = iota
-   movie
-)
-
-var tests = []struct {
-   address string
-   pssh string
-} {
-   // amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152
-   episode: {
-      address: "/shows/orphan-black/episodes/season-1-instinct--1011152",
-      pssh: "AAAAVnBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADYIARIQuC5UBJ1cQS2w6wxWli1eSxoNd2lkZXZpbmVfdGVzdCIIMTIzNDU2NzgyB2RlZmF1bHQ=",
-   },
-   // amcplus.com/movies/nocebo--1061554
-   movie: {address: "/movies/nocebo--1061554"},
-}
-
 func Test_Key(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -45,7 +27,7 @@ func Test_Key(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   mod, err := widevine.New_Module(private_key, client_ID, pssh)
+   mod, err := widevine.New_Module(private_key, client_ID, nil, pssh)
    if err != nil {
       t.Fatal(err)
    }
@@ -69,3 +51,21 @@ func Test_Key(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
+const (
+   episode = iota
+   movie
+)
+
+var tests = []struct {
+   address string
+   pssh string
+} {
+   // amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152
+   episode: {
+      address: "/shows/orphan-black/episodes/season-1-instinct--1011152",
+      pssh: "AAAAVnBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADYIARIQuC5UBJ1cQS2w6wxWli1eSxoNd2lkZXZpbmVfdGVzdCIIMTIzNDU2NzgyB2RlZmF1bHQ=",
+   },
+   // amcplus.com/movies/nocebo--1061554
+   movie: {address: "/movies/nocebo--1061554"},
+}
+

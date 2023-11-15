@@ -8,6 +8,16 @@ import (
    "testing"
 )
 
+func Test_Playlist(t *testing.T) {
+   http.No_Location()
+   http.Verbose()
+   play, err := new_playlist()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", play)
+}
+
 func Test_License(t *testing.T) {
    http.No_Location()
    http.Verbose()
@@ -37,16 +47,6 @@ func Test_License(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-func Test_Playlist(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
-   play, err := new_playlist()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", play)
 }
 
 func new_playlist() (*playlist, error) {
