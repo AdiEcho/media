@@ -3,10 +3,65 @@ package hulu
 import (
    "bytes"
    "encoding/json"
+   "errors"
    "net/http"
    "net/url"
    "path"
 )
+
+func (a Authenticate) Details(d Deep_Link) (*Details, error) {
+   body, err := func() ([]byte, error) {
+      m := map[string][]string{
+         "eabs": {d.EAB_ID},
+      }
+      return json.Marshal(m)
+   }()
+   if err != nil {
+      return nil, err
+   }
+   res, err := http.Post(
+      "https://guide.hulu.com/guide/details?user_token=" + a.Data.User_Token,
+      "application/json",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   var s struct {
+      Items []Details
+   }
+   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
+      return nil, err
+   }
+   if len(s.Items) == 0 {
+      return nil, errors.New("items length is zero")
+   }
+   return &s.Items[0], nil
+}
+
+func (d Details) Series() string {
+   return d.Series_Name
+}
+
+func (d Details) Title() string {
+   return d.Episode_Name
+}
+
+type Details struct {
+   Episode_Name string
+   Episode_Number int64
+   Season_Number int64
+   Series_Name string
+}
+
+func (d Details) Season() (int64, error) {
+   return d.Season_Number, nil
+}
+
+func (d Details) Episode() (int64, error) {
+   return d.Episode_Number, nil
+}
 
 func (a Authenticate) Playlist(d Deep_Link) (*Playlist, error) {
    var p playlist_request
@@ -139,32 +194,6 @@ type segment_value struct {
       Type string `json:"type"`
    } `json:"encryption"`
    Type string `json:"type"`
-}
-
-type Authenticate struct {
-   Data struct {
-      User_Token string
-   }
-}
-
-func Living_Room(user, password string) (*Authenticate, error) {
-   res, err := http.PostForm(
-      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
-         "friendly_name": {"!"},
-         "password": {password},
-         "serial_number": {"!"},
-         "user_email": {user},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   auth := new(Authenticate)
-   if err := json.NewDecoder(res.Body).Decode(auth); err != nil {
-      return nil, err
-   }
-   return auth, nil
 }
 
 type Deep_Link struct {
