@@ -2,6 +2,7 @@ package hulu
 
 import (
    "encoding/json"
+   "errors"
    "io"
    "net/http"
    "net/url"
@@ -29,6 +30,9 @@ func Living_Room(email, password string) (*Authenticate, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    var auth Authenticate
    auth.Raw, err = io.ReadAll(res.Body)
    if err != nil {

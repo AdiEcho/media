@@ -8,6 +8,20 @@ import (
    "testing"
 )
 
+func user_info() (map[string]string, error) {
+   s, err := os.UserHomeDir()
+   if err != nil {
+      return nil, err
+   }
+   b, err := os.ReadFile(s + "/hulu/password.json")
+   if err != nil {
+      return nil, err
+   }
+   var m map[string]string
+   json.Unmarshal(b, &m)
+   return m, nil
+}
+
 func Test_Deep_Link(t *testing.T) {
    m, err := user_info()
    if err != nil {
@@ -24,20 +38,6 @@ func Test_Deep_Link(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", link)
-}
-
-func user_info() (map[string]string, error) {
-   s, err := os.UserHomeDir()
-   if err != nil {
-      return nil, err
-   }
-   b, err := os.ReadFile(s + "/hulu.json")
-   if err != nil {
-      return nil, err
-   }
-   var m map[string]string
-   json.Unmarshal(b, &m)
-   return m, nil
 }
 
 // hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d

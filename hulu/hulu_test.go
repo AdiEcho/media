@@ -9,6 +9,29 @@ import (
    "testing"
 )
 
+func new_playlist() (*Playlist, error) {
+   m, err := user_info()
+   if err != nil {
+      return nil, err
+   }
+   auth, err := Living_Room(m["username"], m["password"])
+   if err != nil {
+      return nil, err
+   }
+   auth.Unmarshal()
+   return auth.Playlist(test_deep)
+}
+
+func Test_Playlist(t *testing.T) {
+   http.No_Location()
+   http.Verbose()
+   play, err := new_playlist()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", play)
+}
+
 func Test_Details(t *testing.T) {
    m, err := user_info()
    if err != nil {
@@ -29,9 +52,10 @@ func Test_Details(t *testing.T) {
 }
 
 // hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-var test_deep = Deep_Link{
+var test_deep = &Deep_Link{
    "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
 }
+
 // hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
 const default_KID = "21b82dc2ebb24d5aa9f8631f04726650"
 
@@ -67,26 +91,4 @@ func Test_License(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-func Test_Playlist(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
-   play, err := new_playlist()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", play)
-}
-
-func new_playlist() (*Playlist, error) {
-   m, err := user_info()
-   if err != nil {
-      return nil, err
-   }
-   auth, err := Living_Room(m["username"], m["password"])
-   if err != nil {
-      return nil, err
-   }
-   return auth.Playlist(test_deep)
 }

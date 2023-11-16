@@ -120,6 +120,9 @@ func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    play := new(Playlist)
    if err := json.NewDecoder(res.Body).Decode(play); err != nil {
       return nil, err
@@ -236,6 +239,9 @@ func (a Authenticate) Deep_Link(watch ID) (*Deep_Link, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    link := new(Deep_Link)
    if err := json.NewDecoder(res.Body).Decode(link); err != nil {
       return nil, err
