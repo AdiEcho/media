@@ -2,7 +2,7 @@ package main
 
 import (
    "154.pages.dev/http"
-   "154.pages.dev/media/nbc"
+   "154.pages.dev/media/hulu"
    "154.pages.dev/stream"
    "154.pages.dev/stream/dash"
    "flag"
@@ -13,8 +13,8 @@ import (
 )
 
 type flags struct {
-   guid int64
    bandwidth int
+   id hulu.ID
    s stream.Stream
 }
 
@@ -25,15 +25,15 @@ func main() {
    }
    home = filepath.ToSlash(home) + "/widevine/"
    var f flags
-   flag.Int64Var(&f.guid, "b", 0, "GUID")
    flag.IntVar(&f.bandwidth, "bandwidth", 6_999_999, "maximum bandwidth")
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Client_ID, "client", home+"client_id.bin", "client ID")
    flag.StringVar(&f.s.Private_Key, "key", home+"private_key.pem", "private key")
+   flag.Var(&f.id, "a", "address")
    flag.Parse()
    http.No_Location()
    http.Verbose()
-   if f.guid >= 1 {
+   if f.id.String() != "" {
       err := f.download()
       if err != nil {
          panic(err)
