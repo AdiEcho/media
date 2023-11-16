@@ -20,6 +20,7 @@ func Test_Details(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
+   auth.Unmarshal()
    detail, err := auth.Details(test_deep)
    if err != nil {
       t.Fatal(err)

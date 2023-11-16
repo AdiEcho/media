@@ -9,7 +9,7 @@ import (
    "path"
 )
 
-func (a Authenticate) Details(d Deep_Link) (*Details, error) {
+func (a Authenticate) Details(d *Deep_Link) (*Details, error) {
    body, err := func() ([]byte, error) {
       m := map[string][]string{
          "eabs": {d.EAB_ID},
@@ -19,15 +19,21 @@ func (a Authenticate) Details(d Deep_Link) (*Details, error) {
    if err != nil {
       return nil, err
    }
-   res, err := http.Post(
-      "https://guide.hulu.com/guide/details?user_token=" + a.Data.User_Token,
-      "application/json",
-      bytes.NewReader(body),
+   req, err := http.NewRequest(
+      "POST", "https://guide.hulu.com/guide/details", bytes.NewReader(body),
    )
    if err != nil {
       return nil, err
    }
+   req.URL.RawQuery = "user_token=" + a.Value.Data.User_Token
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    var s struct {
       Items []Details
    }
@@ -63,11 +69,11 @@ func (d Details) Episode() (int64, error) {
    return d.Episode_Number, nil
 }
 
-func (a Authenticate) Playlist(d Deep_Link) (*Playlist, error) {
+func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
    var p playlist_request
    p.Content_EAB_ID = d.EAB_ID
    p.Deejay_Device_ID = 166
-   p.Token = a.Data.User_Token
+   p.Token = a.Value.Data.User_Token
    p.Unencrypted = true
    p.Version = 5012541
    p.Playback.Audio.Codecs.Selection_Mode = "ONE"
@@ -223,7 +229,7 @@ func (a Authenticate) Deep_Link(watch ID) (*Deep_Link, error) {
    req.URL.RawQuery = url.Values{
       "id": {watch.s},
       "namespace": {"entity"},
-      "user_token": {a.Data.User_Token},
+      "user_token": {a.Value.Data.User_Token},
    }.Encode()
    res, err := http.DefaultClient.Do(req)
    if err != nil {
