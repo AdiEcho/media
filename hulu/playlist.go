@@ -7,24 +7,21 @@ import (
    "net/http"
 )
 
+type codec_value struct {
+   Level   string `json:"level,omitempty"`
+   Profile string `json:"profile,omitempty"`
+   Type    string `json:"type"`
+}
+
 func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
    var p playlist_request
    p.Content_EAB_ID = d.EAB_ID
-   p.Deejay_Device_ID = 166
-   p.Token = a.Value.Data.User_Token
    p.Unencrypted = true
+   p.Deejay_Device_ID = 166
    p.Version = 5012541
-   p.Playback.Audio.Codecs.Selection_Mode = "ONE"
-   p.Playback.DRM.Selection_Mode = "ONE"
-   p.Playback.Manifest.Type = "DASH"
+   p.Token = a.Value.Data.User_Token
    p.Playback.Version = 2
-   p.Playback.Segments.Selection_Mode = "ONE"
    p.Playback.Video.Codecs.Selection_Mode = "FIRST"
-   p.Playback.Audio.Codecs.Values = []codec_value{
-      {
-         Type: "AAC",
-      },
-   }
    p.Playback.Video.Codecs.Values = []codec_value{
       {
          Level: "5.2",
@@ -32,6 +29,13 @@ func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
          Type: "H264",
       },
    }
+   p.Playback.Audio.Codecs.Selection_Mode = "ONE"
+   p.Playback.Audio.Codecs.Values = []codec_value{
+      {
+         Type: "AAC",
+      },
+   }
+   p.Playback.DRM.Selection_Mode = "ONE"
    p.Playback.DRM.Values = []drm_value{
       {
          Security_Level: "L3",
@@ -39,6 +43,8 @@ func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
          Version: "MODULAR",
       },
    }
+   p.Playback.Manifest.Type = "DASH"
+   p.Playback.Segments.Selection_Mode = "ONE"
    p.Playback.Segments.Values = func() []segment_value {
       var s segment_value
       s.Encryption.Mode = "CENC"
@@ -46,7 +52,7 @@ func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
       s.Type = "FMP4"
       return []segment_value{s}
    }()
-   body, err := json.Marshal(p)
+   body, err := json.MarshalIndent(p, "", " ")
    if err != nil {
       return nil, err
    }
@@ -66,12 +72,6 @@ func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
       return nil, err
    }
    return play, nil
-}
-
-type codec_value struct {
-   Level   string `json:"level"`
-   Profile string `json:"profile"`
-   Type    string `json:"type"`
 }
 
 type drm_value struct {

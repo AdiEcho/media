@@ -15,6 +15,7 @@ type flags struct {
    id hulu.ID
    password string
    s stream.Stream
+   trace bool
 }
 
 func main() {
@@ -31,9 +32,14 @@ func main() {
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
+   flag.BoolVar(&f.trace, "t", false, "trace")
    flag.Parse()
    http.No_Location()
-   http.Verbose()
+   if f.trace {
+      http.Trace()
+   } else {
+      http.Verbose()
+   }
    switch {
    case f.password != "":
       err := f.authenticate()
