@@ -8,34 +8,30 @@ import (
 )
 
 type codec_value struct {
+   Height int `json:"height,omitempty"`
    Level   string `json:"level,omitempty"`
    Profile string `json:"profile,omitempty"`
    Type    string `json:"type"`
+   Width int `json:"width,omitempty"`
 }
 
 func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
    var p playlist_request
    p.Content_EAB_ID = d.EAB_ID
+   p.Playback.DRM.Selection_Mode = "ALL"
+   p.Playback.Segments.Selection_Mode = "ALL"
+   p.Playback.Audio.Codecs.Values = []codec_value{
+      {Type: "AAC"},
+      {Type: "EC3"},
+   }
+   p.Playback.Video.Codecs.Selection_Mode = "ALL"
+   p.Playback.Audio.Codecs.Selection_Mode = "ALL"
    p.Unencrypted = true
    p.Deejay_Device_ID = 166
    p.Version = 5012541
-   p.Token = a.Value.Data.User_Token
+   // this is required for 1080p:
    p.Playback.Version = 2
-   p.Playback.Video.Codecs.Selection_Mode = "FIRST"
-   p.Playback.Video.Codecs.Values = []codec_value{
-      {
-         Level: "5.2",
-         Profile: "HIGH",
-         Type: "H264",
-      },
-   }
-   p.Playback.Audio.Codecs.Selection_Mode = "ONE"
-   p.Playback.Audio.Codecs.Values = []codec_value{
-      {
-         Type: "AAC",
-      },
-   }
-   p.Playback.DRM.Selection_Mode = "ONE"
+   p.Playback.Manifest.Type = "DASH"
    p.Playback.DRM.Values = []drm_value{
       {
          Security_Level: "L3",
@@ -43,8 +39,15 @@ func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
          Version: "MODULAR",
       },
    }
-   p.Playback.Manifest.Type = "DASH"
-   p.Playback.Segments.Selection_Mode = "ONE"
+   p.Playback.Video.Codecs.Values = []codec_value{
+      {
+         Height: 9999,
+         Width: 9999,
+         Level: "5.2",
+         Profile: "HIGH",
+         Type: "H264",
+      },
+   }
    p.Playback.Segments.Values = func() []segment_value {
       var s segment_value
       s.Encryption.Mode = "CENC"
@@ -56,10 +59,17 @@ func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
    if err != nil {
       return nil, err
    }
-   res, err := http.Post(
-      "https://play.hulu.com/v6/playlist", "application/json",
-      bytes.NewReader(body),
+   req, err := http.NewRequest(
+      "POST", "https://play.hulu.com/v6/playlist", bytes.NewReader(body),
    )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "Authorization": {"Bearer " + a.Value.Data.User_Token},
+      "Content-Type": {"application/json"},
+   }
+   res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
@@ -104,7 +114,6 @@ func (Playlist) Response_Body(b []byte) ([]byte, error) {
 type playlist_request struct {
    Content_EAB_ID   string `json:"content_eab_id"`
    Deejay_Device_ID int    `json:"deejay_device_id"`
-   Token          string `json:"token"`
    Unencrypted    bool   `json:"unencrypted"`
    Version        int    `json:"version"`
    Playback       struct {

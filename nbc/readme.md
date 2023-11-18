@@ -52,7 +52,7 @@ https://github.com/frida/frida/releases
 for example:
 
 ~~~
-frida-server-16.1.5-android-x86.xz
+frida-server-16.1.7-android-x86.xz
 ~~~
 
 https://github.com/httptoolkit/frida-interception-and-unpinning
@@ -61,7 +61,7 @@ install app, then push server:
 
 ~~~
 adb root
-adb push frida-server-16.1.5-android-x86 /data/app/frida-server
+adb push frida-server-16.1.7-android-x86 /data/app/frida-server
 adb shell chmod +x /data/app/frida-server
 adb shell /data/app/frida-server
 ~~~

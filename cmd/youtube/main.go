@@ -26,13 +26,13 @@ func main() {
    flag.StringVar(&f.audio_q, "aq", "AUDIO_QUALITY_MEDIUM", "audio quality")
    flag.StringVar(&f.audio_t, "ac", "opus", "audio codec")
    flag.BoolVar(&f.info, "i", false, "information")
-   {
+   flag.IntVar(&f.request, "r", 0, func() string {
       var b strings.Builder
       b.WriteString("0: Android\n")
       b.WriteString("1: Android embed\n")
       b.WriteString("2: Android check")
-      flag.IntVar(&f.request, "r", 0, b.String())
-   }
+      return b.String()
+   }())
    flag.BoolVar(&f.refresh, "refresh", false, "create OAuth refresh token")
    flag.StringVar(&f.video_q, "vq", "1080p", "video quality")
    flag.StringVar(&f.video_t, "vc", "vp9", "video codec")

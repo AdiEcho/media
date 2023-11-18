@@ -46,6 +46,7 @@ func Living_Room(email, password string) (*Authenticate, error) {
 func (a *Authenticate) Unmarshal() error {
    return json.Unmarshal(a.Raw, &a.Value)
 }
+
 func (a Authenticate) Details(d *Deep_Link) (*Details, error) {
    body, err := func() ([]byte, error) {
       m := map[string][]string{
@@ -62,7 +63,7 @@ func (a Authenticate) Details(d *Deep_Link) (*Details, error) {
    if err != nil {
       return nil, err
    }
-   req.URL.RawQuery = "user_token=" + a.Value.Data.User_Token
+   req.Header.Set("Authorization", "Bearer " + a.Value.Data.User_Token)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -133,8 +134,8 @@ func (a Authenticate) Deep_Link(watch ID) (*Deep_Link, error) {
    req.URL.RawQuery = url.Values{
       "id": {watch.s},
       "namespace": {"entity"},
-      "user_token": {a.Value.Data.User_Token},
    }.Encode()
+   req.Header.Set("Authorization", "Bearer " + a.Value.Data.User_Token)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
