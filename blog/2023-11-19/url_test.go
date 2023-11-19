@@ -13,10 +13,6 @@ var tests = []string{
 
 func Test_URL(t *testing.T) {
    for _, test := range tests {
-      p, err := path(test)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(p)
+      fmt.Println(path(test))
    }
 }

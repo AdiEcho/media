@@ -1,11 +1,15 @@
 package url
 
-import "net/url"
+import "strings"
 
-func path(raw_URL string) (string, error) {
-   u, err := url.Parse(raw_URL)
-   if err != nil {
-      return "", err
+func path(s string) string {
+   _, after, found := strings.Cut(s, "://")
+   if found {
+      s = after // remove scheme
    }
-   return u.Path, nil
+   i := strings.IndexByte(s, '/')
+   if i >= 1 {
+      s = s[i:] // remove host
+   }
+   return s
 }
