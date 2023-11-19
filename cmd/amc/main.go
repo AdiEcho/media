@@ -14,30 +14,31 @@ type flags struct {
    height int
    password string
    s stream.Stream
+   trace bool
 }
 
 func main() {
-   home, err := func() (string, error) {
-      s, err := os.UserHomeDir()
-      if err != nil {
-         return "", err
-      }
-      return filepath.ToSlash(s) + "/widevine/", nil
-   }()
+   home, err := os.UserHomeDir()
    if err != nil {
       panic(err)
    }
+   home = filepath.ToSlash(home) + "/widevine/"
    var f flags
    flag.StringVar(&f.address, "a", "", "address")
-   flag.StringVar(&f.s.Client_ID, "client", home+"client_id.bin", "client ID")
+   flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
    flag.StringVar(&f.email, "e", "", "email")
    flag.IntVar(&f.height, "h", 1080, "maximum height")
    flag.BoolVar(&f.s.Info, "i", false, "information")
-   flag.StringVar(&f.s.Private_Key, "key", home+"private_key.pem", "private key")
+   flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
+   flag.BoolVar(&f.trace, "t", false, "trace")
    flag.Parse()
    http.No_Location()
-   http.Verbose()
+   if f.trace {
+      http.Trace()
+   } else {
+      http.Verbose()
+   }
    if f.email != "" {
       err := f.login()
       if err != nil {
