@@ -33,7 +33,6 @@ func main() {
    flag.StringVar(&f.password, "p", "", "password")
    flag.BoolVar(&f.trace, "t", false, "trace")
    flag.Parse()
-   http.No_Location()
    if f.trace {
       http.Trace()
    } else {

@@ -9,53 +9,19 @@
 
 ## TRY 7 DAYS FREE
 
-if you try to sign up using the web client without these:
-
-~~~
-google.com
-gstatic.com
-~~~
-
-you get this:
-
-> Please, confirm you are human
-
-can we automate the Android app sign up instead? For expired media, you always
-get:
-
-~~~
-HTTP/2.0 404 
-~~~
-
-For active media, you always get:
-
-~~~
-HTTP/2.0 200
-~~~
-
-use an email like this:
-
-~~~
-2023-11-04@mailsac.com
-~~~
-
-1. https://amcplus.com/create
-2. enter EMAIL
-3. enter PASSWORD
-4. click CREATE ACCOUNT
-5. click MONTHLY WITH ADS
-6. click CONTINUE TO PAYMENT
-6. enter Name ON CARD
-7. enter CARD NUMBER
-8. enter EXPIRATION DATE
-9. enter CVC
-10. enter POSTAL CODE
-11. click START FREE TRIAL
-12. click START WATCHING NOW
-13. click SETTINGS
-14. click Subscription
-15. click CANCEL
-16. click NO THANKS, CANCEL AMC+
+1. https://support.privacy.com/hc/articles/360012285094
+2. https://amcplus.com/create
+3. enter EMAIL
+4. enter PASSWORD
+5. click CREATE ACCOUNT
+6. click MONTHLY WITH ADS
+7. click CONTINUE TO PAYMENT
+8. enter Name ON CARD
+9. enter CARD NUMBER
+10. enter EXPIRATION DATE
+11. enter CVC
+12. enter POSTAL CODE
+13. click START FREE TRIAL
 
 ## Android client
 

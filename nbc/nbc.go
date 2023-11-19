@@ -121,9 +121,15 @@ func New_Metadata(guid int64) (*Metadata, error) {
             Metadata Metadata
          } `json:"bonanzaPage"`
       }
+      Errors []struct {
+         Message string
+      }
    }
    if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
       return nil, err
+   }
+   if len(s.Errors) >= 1 {
+      return nil, errors.New(s.Errors[0].Message)
    }
    return &s.Data.Bonanza_Page.Metadata, nil
 }
