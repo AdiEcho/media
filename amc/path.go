@@ -8,8 +8,34 @@ import (
    "strings"
 )
 
-// This accepts full URL or path only.
-func (a Auth_ID) Content(ref string) (*Content, error) {
+func (p Path) nid() (string, error) {
+   _, nid, found := strings.Cut(p.s, "--")
+   if !found {
+      return "", errors.New("nid")
+   }
+   return nid, nil
+}
+
+type Path struct {
+   s string
+}
+
+func (p Path) String() string {
+   return p.s
+}
+
+func (p *Path) Set(s string) error {
+   if _, after, found := strings.Cut(s, "://"); found {
+      s = after // remove scheme
+   }
+   if i := strings.IndexByte(s, '/'); i >= 1 {
+      s = s[i:] // remove host
+   }
+   p.s = s
+   return nil
+}
+
+func (a Auth_ID) Content(p Path) (*Content, error) {
    req, err := http.NewRequest("GET", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return nil, err
@@ -27,7 +53,7 @@ func (a Auth_ID) Content(ref string) (*Content, error) {
    // `/watch` to resolve this, but the resultant response will still be
    // missing `video-player-ap`.
    req.URL.Path, err = func() (string, error) {
-      u, err := url.Parse(ref)
+      u, err := url.Parse(p.s)
       if err != nil {
          return "", err
       }

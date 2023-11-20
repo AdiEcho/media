@@ -19,7 +19,7 @@ func new_next_data() (*next_data, error) {
    before := []byte(` id="__NEXT_DATA__" type="application/json">`)
    _, text = json.Cut(text, before, nil)
    next := new(next_data)
-   if err := json.Unmarshal(text, next); err != nil {
+   if err := json.Decode(text, next); err != nil {
       return nil, err
    }
    return next, nil

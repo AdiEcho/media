@@ -23,7 +23,7 @@ func new_config() (*config, error) {
    }
    _, text = json.Cut(text, []byte("\nytcfg.set("), nil)
    con := new(config)
-   if err := json.Unmarshal(text, con); err != nil {
+   if err := json.Decode(text, con); err != nil {
       return nil, err
    }
    return con, nil

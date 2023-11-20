@@ -78,7 +78,7 @@ func (a *Auth_ID) Unmarshal(text []byte) error {
    return json.Unmarshal(text, a)
 }
 
-func (a Auth_ID) Playback(ref string) (*Playback, error) {
+func (a Auth_ID) Playback(p Path) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Ad_Tags struct {
@@ -103,9 +103,9 @@ func (a Auth_ID) Playback(ref string) (*Playback, error) {
    if err != nil {
       return nil, err
    }
-   _, nid, ok := strings.Cut(ref, "--")
-   if !ok {
-      return nil, errors.New("nid")
+   nid, err := p.nid()
+   if err != nil {
+      return nil, err
    }
    req.URL.Path = "/playback-id/api/v1/playback/" + nid
    req.Header = http.Header{

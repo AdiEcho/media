@@ -24,7 +24,7 @@ func New_Cross_Site() (*Cross_Site, error) {
       return nil, err
    }
    _, text = json.Cut(text, []byte("\tcsrf:"), nil)
-   if err := json.Unmarshal(text, &site.token); err != nil {
+   if err := json.Decode(text, &site.token); err != nil {
       return nil, err
    }
    return &site, nil

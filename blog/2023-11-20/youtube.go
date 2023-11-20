@@ -49,7 +49,7 @@ func make_contents(video_ID string) (contents, error) {
          } `json:"twoColumnWatchNextResults"`
       }
    }
-   if err := json.Unmarshal(text, &s); err != nil {
+   if err := json.Decode(text, &s); err != nil {
       return nil, err
    }
    return s.Contents.Two_Column_Watch_Next_Results.Results.Results.Contents, nil

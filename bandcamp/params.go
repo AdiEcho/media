@@ -21,7 +21,7 @@ func New_Params(ref string) (*Params, error) {
    var p struct {
       Report_Params []byte `xml:"data-tou-report-params,attr"`
    }
-   if err := xml.Unmarshal(text, &p); err != nil {
+   if err := xml.Decode(text, &p); err != nil {
       return nil, err
    }
    param := new(Params)

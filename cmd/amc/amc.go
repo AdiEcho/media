@@ -34,7 +34,7 @@ func (f flags) download() error {
       os.WriteFile(home + "/amc/auth.json", b, 0666)
    }
    if !f.s.Info {
-      content, err := auth.Content(f.address)
+      content, err := auth.Content(f.path)
       if err != nil {
          return err
       }
@@ -47,7 +47,7 @@ func (f flags) download() error {
          return err
       }
    }
-   play, err := auth.Playback(f.address)
+   play, err := auth.Playback(f.path)
    if err != nil {
       return err
    }
