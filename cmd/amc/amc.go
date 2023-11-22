@@ -65,21 +65,17 @@ func (f flags) download() error {
       return err
    }
    // video
-   {
-      reps := slices.DeleteFunc(slices.Clone(reps), dash.Not(dash.Video))
-      slices.SortFunc(reps, func(a, b dash.Representation) int {
-         return b.Height - a.Height
-      })
-      index := slices.IndexFunc(reps, func(a dash.Representation) bool {
-         return a.Height <= f.height
-      })
-      err := f.s.DASH_Get(reps, index)
-      if err != nil {
-         return err
-      }
+   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
+      return r.Height <= f.height
+   })
+   if err := f.s.DASH_Get(reps, index); err != nil {
+      return err
    }
    // audio
-   return f.s.DASH_Get(slices.DeleteFunc(reps, dash.Not(dash.Audio)), 0)
+   reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
+      return !r.Audio()
+   })
+   return f.s.DASH_Get(reps, 0)
 }
 
 func (f flags) login() error {

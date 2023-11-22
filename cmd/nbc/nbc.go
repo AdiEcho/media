@@ -13,12 +13,12 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   reps, err := func() ([]dash.Representation, error) {
-      o, err := meta.On_Demand()
+   reps, err := func() ([]*dash.Representation, error) {
+      on, err := meta.On_Demand()
       if err != nil {
          return nil, err
       }
-      r, err := http.Get(o.Playback_URL)
+      r, err := http.Get(on.Playback_URL)
       if err != nil {
          return nil, err
       }
@@ -37,20 +37,15 @@ func (f flags) download() error {
       f.s.Poster = nbc.Core
    }
    // video
-   {
-      reps := slices.DeleteFunc(slices.Clone(reps), dash.Not(dash.Video))
-      slices.SortFunc(reps, func(a, b dash.Representation) int {
-         return b.Bandwidth - a.Bandwidth
-      })
-      index := slices.IndexFunc(reps, func(a dash.Representation) bool {
-         return a.Bandwidth <= f.bandwidth
-      })
-      err := f.s.DASH_Get(reps, index)
-      if err != nil {
-         return err
-      }
+   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
+      return r.Bandwidth <= f.bandwidth
+   })
+   if err := f.s.DASH_Get(reps, index); err != nil {
+      return err
    }
    // audio
-   reps = slices.DeleteFunc(reps, dash.Not(dash.Audio))
+   reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
+      return !r.Audio()
+   })
    return f.s.DASH_Get(reps, 0)
 }

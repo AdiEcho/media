@@ -7,7 +7,6 @@ import (
    "errors"
    "net/http"
    "slices"
-   "strings"
 )
 
 func (f flags) DASH(content *roku.Content) error {
@@ -39,23 +38,18 @@ func (f flags) DASH(content *roku.Content) error {
       return err
    }
    // video
-   {
-      reps := slices.DeleteFunc(slices.Clone(reps), dash.Not(dash.Video))
-      index := slices.IndexFunc(reps, func(r dash.Representation) bool {
-         if r.Bandwidth <= f.bandwidth {
-            return r.Height <= f.height
-         }
-         return false
-      })
-      err := f.s.DASH_Get(reps, index)
-      if err != nil {
-         return err
+   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
+      if r.Bandwidth <= f.bandwidth {
+         return r.Height <= f.height
       }
+      return false
+   })
+   if err := f.s.DASH_Get(reps, index); err != nil {
+      return err
    }
    // audio
-   reps = slices.DeleteFunc(reps, dash.Not(dash.Audio))
-   index := slices.IndexFunc(reps, func(r dash.Representation) bool {
-      return strings.Contains(r.Codecs, f.codec)
+   reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
+      return !r.Audio()
    })
-   return f.s.DASH_Get(reps, index)
+   return f.s.DASH_Get(reps, 0)
 }

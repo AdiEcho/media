@@ -8,6 +8,14 @@ import (
    "testing"
 )
 
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+var test_ID = ID{"023c49bf-6a99-4c67-851c-4c9e7609cc1d"}
+
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+var test_deep = &Deep_Link{
+   "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
+}
+
 func Test_Details(t *testing.T) {
    m, err := user_info()
    if err != nil {
@@ -57,12 +65,4 @@ func Test_Deep_Link(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", link)
-}
-
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-var test_ID = ID{"023c49bf-6a99-4c67-851c-4c9e7609cc1d"}
-
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-var test_deep = &Deep_Link{
-   "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
 }
