@@ -1,9 +1,9 @@
 package main
 
 import (
+   "154.pages.dev/dash"
    "154.pages.dev/media/hulu"
    "154.pages.dev/stream"
-   "154.pages.dev/stream/dash"
    "net/http"
    "os"
    "slices"
