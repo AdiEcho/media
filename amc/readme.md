@@ -5,7 +5,7 @@
 > This is the same air that they’re breathing in every part of the planet.\
 > Lets take care of this.
 >
-> [Nightmares on Wax (2018)](//youtube.com/watch?v=Vc-XzhnwpVc)
+> [Nightmares on Wax](//youtube.com/watch?v=Vc-XzhnwpVc) (2018)
 
 ## TRY 7 DAYS FREE
 
