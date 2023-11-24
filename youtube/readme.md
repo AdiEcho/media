@@ -1,12 +1,5 @@
 # YouTube
 
-> I’m wide awake\
-> I’m wide awake\
-> Wide awake\
-> I’m not sleeping
->
-> [U2 - Bad (1984)](//youtube.com/watch?v=0s30qw4XV_E)
-
 ## Android Studio
 
 Must use Android API 31 or higher.
