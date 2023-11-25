@@ -64,12 +64,21 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   // video
-   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-      return r.Height <= f.height
+   slices.SortFunc(reps, func(a, b *dash.Representation) int {
+      return b.Bandwidth - a.Bandwidth
    })
-   if err := f.s.DASH_Get(reps, index); err != nil {
-      return err
+   // video
+   {
+      reps := slices.Clone(reps)
+      reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
+         return !r.Video()
+      })
+      index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
+         return r.Height <= f.height
+      })
+      if err := f.s.DASH_Get(reps, index); err != nil {
+         return err
+      }
    }
    // audio
    reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {

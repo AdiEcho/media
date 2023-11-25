@@ -15,7 +15,6 @@ type flags struct {
    password string
    path amc.Path
    s stream.Stream
-   trace bool
 }
 
 func main() {
@@ -32,13 +31,8 @@ func main() {
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
-   flag.BoolVar(&f.trace, "t", false, "trace")
    flag.Parse()
-   if f.trace {
-      http.Trace()
-   } else {
-      http.Verbose()
-   }
+   http.Verbose()
    switch {
    case f.email != "":
       err := f.login()
