@@ -38,14 +38,21 @@ func (f flags) DASH(content *roku.Content) error {
       return err
    }
    // video
-   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-      if r.Bandwidth <= f.bandwidth {
-         return r.Height <= f.height
+   {
+      reps := slices.Clone(reps)
+      reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
+         return !r.Video()
+      })
+      index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
+         if r.Bandwidth <= f.bandwidth {
+            return r.Height <= f.height
+         }
+         return false
+      })
+      err := f.s.DASH_Get(reps, index)
+      if err != nil {
+         return err
       }
-      return false
-   })
-   if err := f.s.DASH_Get(reps, index); err != nil {
-      return err
    }
    // audio
    reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
