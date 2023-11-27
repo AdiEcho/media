@@ -5,6 +5,7 @@ import (
    "errors"
    "net/http"
    "net/url"
+   "strconv"
    "strings"
    "time"
 )
@@ -63,15 +64,17 @@ type Item struct {
    Label string
    Media_Type string `json:"mediaType"`
    Series_Title string `json:"seriesTitle"`
-   // these can be empty string, so we cannot use `,string`:
-   Season_Num json.Number `json:"seasonNum"`
-   Episode_Num json.Number `json:"episodeNum"`
+   // these can be empty string, so we cannot use these:
+   // int `json:",string"`
+   // json.Number
+   Episode_Num string `json:"episodeNum"`
+   Season_Num string `json:"seasonNum"`
 }
 
 func (i Item) Season() (int64, error) {
-   return i.Season_Num.Int64()
+   return strconv.ParseInt(i.Season_Num, 10, 64)
 }
 
 func (i Item) Episode() (int64, error) {
-   return i.Episode_Num.Int64()
+   return strconv.ParseInt(i.Episode_Num, 10, 64)
 }

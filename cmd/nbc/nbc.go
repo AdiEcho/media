@@ -36,16 +36,26 @@ func (f flags) download() error {
       }
       f.s.Poster = nbc.Core
    }
-   // video
-   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-      return r.Bandwidth <= f.bandwidth
+   slices.SortFunc(reps, func(a, b *dash.Representation) int {
+      return b.Bandwidth - a.Bandwidth
    })
-   if err := f.s.DASH_Get(reps, index); err != nil {
-      return err
+   // video
+   {
+      reps := slices.Clone(reps)
+      reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
+         return !r.Video()
+      })
+      index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
+         return r.Bandwidth <= f.bandwidth
+      })
+      err := f.s.DASH_Get(reps, index)
+      if err != nil {
+         return err
+      }
    }
    // audio
    reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
       return !r.Audio()
    })
-   return f.s.DASH_Get(reps, 0)
+   return f.s.DASH_Get(reps, 1)
 }

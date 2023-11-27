@@ -42,18 +42,31 @@ func (f flags) dash(token *paramount.App_Token) error {
          return err
       }
    }
-   // video
-   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-      if r.Height <= f.height {
-         return r.Bandwidth <= f.bandwidth
-      }
-      return false
+   slices.SortFunc(reps, func(a, b *dash.Representation) int {
+      return b.Bandwidth - a.Bandwidth
    })
-   if err := f.s.DASH_Get(reps, index); err != nil {
-      return err
+   // video
+   {
+      reps := slices.Clone(reps)
+      reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
+         return !r.Video()
+      })
+      index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
+         if r.Height <= f.height {
+            return r.Bandwidth <= f.bandwidth
+         }
+         return false
+      })
+      err := f.s.DASH_Get(reps, index)
+      if err != nil {
+         return err
+      }
    }
    // audio
-   index = slices.IndexFunc(reps, func(r *dash.Representation) bool {
+   reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
+      return !r.Audio()
+   })
+   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
       if strings.HasPrefix(r.Lang(), f.lang) {
          return strings.HasPrefix(r.Codecs, f.codec)
       }
