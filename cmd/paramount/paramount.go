@@ -67,8 +67,12 @@ func (f flags) dash(token *paramount.App_Token) error {
       return !r.Audio()
    })
    index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-      if strings.HasPrefix(r.Lang(), f.lang) {
-         return strings.HasPrefix(r.Codecs, f.codec)
+      if strings.HasPrefix(r.Codecs, f.codec) {
+         if role, ok := r.Role(); ok {
+            if role == f.role {
+               return true
+            }
+         }
       }
       return false
    })

@@ -15,7 +15,7 @@ type flags struct {
    content_ID string
    dash_cenc bool
    height int
-   lang string
+   role string
    s stream.Stream
 }
 
@@ -26,15 +26,15 @@ func main() {
    }
    home = filepath.ToSlash(home) + "/widevine/"
    var f flags
+   flag.StringVar(&f.codec, "ac", "mp4a", "audio codec")
+   flag.StringVar(&f.role, "ar", "main", "audio role")
    flag.StringVar(&f.content_ID, "b", "", "content ID")
-   flag.IntVar(&f.bandwidth, "bandwidth", 5_000_000, "maximum bandwidth")
-   flag.StringVar(&f.codec, "c", "mp4a", "audio codec")
-   flag.StringVar(&f.s.Client_ID, "client", home+"client_id.bin", "client ID")
+   flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
    flag.BoolVar(&f.dash_cenc, "d", false, "DASH_CENC")
-   flag.IntVar(&f.height, "h", 720, "maximum height")
    flag.BoolVar(&f.s.Info, "i", false, "information")
-   flag.StringVar(&f.s.Private_Key, "key", home+"private_key.pem", "private key")
-   flag.StringVar(&f.lang, "language", "en", "audio language")
+   flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
+   flag.IntVar(&f.bandwidth, "vb", 5_000_000, "video max bandwidth")
+   flag.IntVar(&f.height, "vh", 720, "video max height")
    flag.Parse()
    if f.content_ID != "" {
       http.No_Location()
