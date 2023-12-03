@@ -12,6 +12,36 @@ import (
    "strconv"
 )
 
+func location(content_ID string, query url.Values) (string, error) {
+   req, err := http.NewRequest("GET", "http://link.theplatform.com", nil)
+   if err != nil {
+      return "", err
+   }
+   req.URL.RawQuery = query.Encode()
+   req.URL.Path = func() string {
+      b := []byte("/s/")
+      b = append(b, cms_account_id...)
+      b = append(b, "/media/guid/"...)
+      b = strconv.AppendInt(b, aid, 10)
+      b = append(b, '/')
+      b = append(b, content_ID...)
+      return string(b)
+   }()
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return "", err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusFound {
+      var s struct {
+         Description string
+      }
+      json.NewDecoder(res.Body).Decode(&s)
+      return "", errors.New(s.Description)
+   }
+   return res.Header.Get("Location"), nil
+}
+
 type Session struct {
    URL string
    LS_Session string
@@ -155,33 +185,6 @@ func pad(b []byte) []byte {
 
 type App_Token struct {
    value string
-}
-
-func location(content_ID string, query url.Values) (string, error) {
-   req, err := http.NewRequest("GET", "http://link.theplatform.com", nil)
-   if err != nil {
-      return "", err
-   }
-   {
-      var b []byte
-      b = append(b, "/s/"...)
-      b = append(b, cms_account_id...)
-      b = append(b, "/media/guid/"...)
-      b = strconv.AppendInt(b, aid, 10)
-      b = append(b, '/')
-      b = append(b, content_ID...)
-      req.URL.Path = string(b)
-   }
-   req.URL.RawQuery = query.Encode()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return "", err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusFound {
-      return "", errors.New(res.Status)
-   }
-   return res.Header.Get("Location"), nil
 }
 
 const (
