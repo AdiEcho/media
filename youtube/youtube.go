@@ -11,6 +11,24 @@ import (
    "strings"
 )
 
+func (f Format) Ranges() []string {
+   const bytes = 10_000_000
+   var byte_ranges []string
+   var pos int64
+   for pos < f.Content_Length {
+      byte_range := func() string {
+         b := []byte("&range=")
+         b = strconv.AppendInt(b, pos, 10)
+         b = append(b, '-')
+         b = strconv.AppendInt(b, pos+bytes-1, 10)
+         return string(b)
+      }()
+      byte_ranges = append(byte_ranges, byte_range)
+      pos += bytes
+   }
+   return byte_ranges
+}
+
 // YouTube on TV
 const (
    client_ID =
@@ -119,24 +137,6 @@ type Token struct {
 }
 
 const user_agent = "com.google.android.youtube/"
-
-func (f Format) Ranges() []string {
-   const bytes = 10_000_000
-   var byte_ranges []string
-   var pos int64
-   for pos < f.Content_Length {
-      byte_range := func() string {
-         b := []byte("&range=")
-         b = strconv.AppendInt(b, pos, 10)
-         b = append(b, '-')
-         b = strconv.AppendInt(b, pos+bytes-1, 10)
-         return string(b)
-      }()
-      byte_ranges = append(byte_ranges, byte_range)
-      pos += bytes
-   }
-   return byte_ranges
-}
 
 type Format struct {
    Quality_Label string `json:"qualityLabel"`
