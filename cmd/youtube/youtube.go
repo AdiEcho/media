@@ -1,15 +1,51 @@
 package main
 
 import (
+   "154.pages.dev/log"
    "154.pages.dev/media/youtube"
    "154.pages.dev/stream"
    "fmt"
+   "log/slog"
    "net/http"
    "os"
    "slices"
    "strings"
-   option "154.pages.dev/http"
 )
+
+func encode(f youtube.Format, name string) error {
+   dst, err := func() (*os.File, error) {
+      ext, err := f.Ext()
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(name + ext)
+   }()
+   if err != nil {
+      return err
+   }
+   defer dst.Close()
+   log.Set_Transport(slog.LevelDebug)
+   ranges := f.Ranges()
+   src := log.New_Progress(len(ranges))
+   for _, byte_range := range ranges {
+      err := func() error {
+         res, err := http.Get(f.URL + byte_range)
+         if err != nil {
+            return err
+         }
+         defer res.Body.Close()
+         _, err = dst.ReadFrom(src.Reader(res))
+         if err != nil {
+            return err
+         }
+         return nil
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
 
 func (f flags) download() error {
    play, err := f.player()
@@ -31,8 +67,8 @@ func (f flags) download() error {
       fmt.Printf("%+v\n", play.Playability_Status)
       // need to do audio first, because URLs expire quickly
       index := slices.IndexFunc(forms, func(a youtube.Format) bool {
-         if a.Audio_Quality == f.audio_q {
-            return strings.Contains(a.MIME_Type, f.audio_t)
+         if a.Audio_Quality == f.a_quality {
+            return strings.Contains(a.MIME_Type, f.a_codec)
          }
          return false
       })
@@ -43,45 +79,12 @@ func (f flags) download() error {
       // video
       index = slices.IndexFunc(forms, func(a youtube.Format) bool {
          // 1080p60
-         if strings.HasPrefix(a.Quality_Label, f.video_q) {
-            return strings.Contains(a.MIME_Type, f.video_t)
+         if strings.HasPrefix(a.Quality_Label, f.v_quality) {
+            return strings.Contains(a.MIME_Type, f.v_codec)
          }
          return false
       })
       return encode(forms[index], stream.Format_Video(play))
-   }
-   return nil
-}
-
-func encode(f youtube.Format, name string) error {
-   file, err := func() (*os.File, error) {
-      ext, err := f.Ext()
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(name + ext)
-   }()
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   option.Silent()
-   pro := option.Progress_Length(f.Content_Length)
-   for _, byte_range := range f.Ranges() {
-      err := func() error {
-         res, err := http.Get(f.URL + byte_range)
-         if err != nil {
-            return err
-         }
-         defer res.Body.Close()
-         if _, err := file.ReadFrom(pro.Reader(res)); err != nil {
-            return err
-         }
-         return nil
-      }()
-      if err != nil {
-         return err
-      }
    }
    return nil
 }

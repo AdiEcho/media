@@ -1,7 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/http"
+   "154.pages.dev/log"
    "154.pages.dev/media/paramount"
    "154.pages.dev/stream"
    "flag"
@@ -11,12 +11,13 @@ import (
 
 type flags struct {
    bandwidth int
+   height int
    codec string
+   role string
    content_ID string
    dash_cenc bool
-   height int
-   role string
    s stream.Stream
+   h log.Handler
 }
 
 func main() {
@@ -33,12 +34,13 @@ func main() {
    flag.BoolVar(&f.dash_cenc, "d", false, "DASH_CENC")
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
+   flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
    flag.IntVar(&f.bandwidth, "vb", 5_000_000, "video max bandwidth")
    flag.IntVar(&f.height, "vh", 720, "video max height")
    flag.Parse()
+   log.Set_Handler(f.h)
+   log.Set_Transport(0)
    if f.content_ID != "" {
-      http.No_Location()
-      http.Verbose()
       token, err := paramount.New_App_Token()
       if err != nil {
          panic(err)

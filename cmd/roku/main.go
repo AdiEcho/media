@@ -1,21 +1,22 @@
 package main
 
 import (
-   "154.pages.dev/http"
+   "154.pages.dev/log"
    "154.pages.dev/media/roku"
    "154.pages.dev/stream"
    "flag"
    "os"
+   "path/filepath"
 )
 
 type flags struct {
+   s stream.Stream
+   id string
    bandwidth int
    codec string
    height int
-   id string
    lang string
-   s stream.Stream
-   trace bool
+   h log.Handler
 }
 
 func main() {
@@ -23,26 +24,20 @@ func main() {
    if err != nil {
       panic(err)
    }
+   home = filepath.ToSlash(home) + "/widevine/"
    var f flags
+   flag.StringVar(&f.codec, "ac", "mp4a", "audio codec")
+   flag.StringVar(&f.lang, "al", "en", "audio language")
    flag.StringVar(&f.id, "b", "", "ID")
-   flag.IntVar(&f.bandwidth, "bandwidth", 4_000_000, "maximum bandwidth")
-   flag.StringVar(&f.codec, "c", "mp4a", "audio codec")
-   flag.StringVar(
-      &f.s.Client_ID, "client", home + "/widevine/client_id.bin", "client ID",
-   )
-   flag.IntVar(&f.height, "h", 1080, "maximum height")
+   flag.StringVar(&f.s.Client_ID, "c", home + "client_id.bin", "client ID")
    flag.BoolVar(&f.s.Info, "i", false, "information")
-   flag.StringVar(
-      &f.s.Private_Key, "key", home + "/widevine/private_key.pem", "private key",
-   )
-   flag.StringVar(&f.lang, "language", "en", "audio language")
-   flag.BoolVar(&f.trace, "t", false, "trace")
+   flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
+   flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
+   flag.IntVar(&f.bandwidth, "vb", 4_000_000, "video max bandwidth")
+   flag.IntVar(&f.height, "vh", 1080, "video max height")
    flag.Parse()
-   if f.trace {
-      http.Trace()
-   } else {
-      http.Verbose()
-   }
+   log.Set_Handler(f.h)
+   log.Set_Transport(0)
    if f.id != "" {
       content, err := roku.New_Content(f.id)
       if err != nil {

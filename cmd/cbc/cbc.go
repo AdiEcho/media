@@ -1,9 +1,9 @@
 package main
 
 import (
+   "154.pages.dev/encoding/hls"
    "154.pages.dev/media/cbc"
    "154.pages.dev/stream"
-   "154.pages.dev/stream/hls"
    "os"
    "slices"
    "strings"
