@@ -1,7 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/http"
+   "154.pages.dev/log"
    "154.pages.dev/media/hulu"
    "154.pages.dev/stream"
    "flag"
@@ -12,10 +12,10 @@ import (
 type flags struct {
    bandwidth int
    email string
+   h log.Handler
    id hulu.ID
    password string
    s stream.Stream
-   trace bool
 }
 
 func main() {
@@ -32,14 +32,10 @@ func main() {
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
-   flag.BoolVar(&f.trace, "t", false, "trace")
+   flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
    flag.Parse()
-   http.No_Location()
-   if f.trace {
-      http.Trace()
-   } else {
-      http.Verbose()
-   }
+   log.Set_Handler(f.h)
+   log.Set_Transport(0)
    switch {
    case f.password != "":
       err := f.authenticate()

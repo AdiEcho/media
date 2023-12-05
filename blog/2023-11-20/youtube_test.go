@@ -1,7 +1,6 @@
 package youtube
 
 import (
-   "154.pages.dev/http"
    "fmt"
    "testing"
    "time"
@@ -14,8 +13,6 @@ var ids = []string{
 }
 
 func Test_Watch(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
    for _, id := range ids {
       c, err := make_contents(id)
       if err != nil {

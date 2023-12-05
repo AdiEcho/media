@@ -1,7 +1,6 @@
 package roku
 
 import (
-   "154.pages.dev/http"
    "154.pages.dev/widevine"
    "encoding/base64"
    "encoding/hex"
@@ -52,9 +51,8 @@ func Test_Post(t *testing.T) {
       }
    }
 }
+
 func Test_Playback(t *testing.T) {
-   http.No_Location()
-   http.Trace()
    site, err := New_Cross_Site()
    if err != nil {
       t.Fatal(err)

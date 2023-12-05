@@ -1,7 +1,6 @@
 package cbc
 
 import (
-   "154.pages.dev/http"
    "154.pages.dev/stream"
    "fmt"
    "os"
@@ -16,8 +15,6 @@ var links = []string{
 }
 
 func Test_Stream(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
    for _, link := range links {
       gem, err := New_Catalog_Gem(link)
       if err != nil {

@@ -1,7 +1,6 @@
 package youtube
 
 import (
-   "154.pages.dev/http"
    "testing"
    "time"
 )
@@ -10,8 +9,6 @@ func Test_Player_Android(t *testing.T) {
    var req Request
    req.Android()
    req.Video_ID = android_IDs[0]
-   http.No_Location()
-   http.Verbose()
    for range [9]struct{}{} {
       p, err := req.Player(nil)
       if err != nil {

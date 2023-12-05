@@ -5,7 +5,6 @@ go 1.21.0
 require (
 	154.pages.dev/dash v1.0.4
 	154.pages.dev/encoding v1.15.0
-	154.pages.dev/http v1.2.2
 	154.pages.dev/stream v1.1.4
 	154.pages.dev/widevine v1.1.6
 )

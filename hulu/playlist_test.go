@@ -1,7 +1,6 @@
 package hulu
 
 import (
-   "154.pages.dev/http"
    "154.pages.dev/widevine"
    "encoding/hex"
    "fmt"
@@ -13,8 +12,6 @@ import (
 const default_KID = "21b82dc2ebb24d5aa9f8631f04726650"
 
 func Test_License(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
    play, err := new_playlist()
    if err != nil {
       t.Fatal(err)
@@ -47,8 +44,6 @@ func Test_License(t *testing.T) {
 }
 
 func Test_Playlist(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
    play, err := new_playlist()
    if err != nil {
       t.Fatal(err)

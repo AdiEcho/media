@@ -1,7 +1,6 @@
 package amc
 
 import (
-   "154.pages.dev/http"
    "154.pages.dev/stream"
    "fmt"
    "os"
@@ -52,8 +51,6 @@ func Test_Content(t *testing.T) {
       }
       auth.Unmarshal(b)
    }
-   http.No_Location()
-   http.Verbose()
    for _, test := range tests {
       con, err := auth.Content(Path{test.path})
       if err != nil {

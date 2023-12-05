@@ -1,7 +1,6 @@
 package paramount
 
 import (
-   "154.pages.dev/http"
    "154.pages.dev/stream"
    "fmt"
    "testing"
@@ -9,8 +8,6 @@ import (
 )
 
 func Test_Item(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
    token, err := New_App_Token()
    if err != nil {
       t.Fatal(err)

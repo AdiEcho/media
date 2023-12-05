@@ -1,7 +1,6 @@
 package nbc
 
 import (
-   "154.pages.dev/http"
    "154.pages.dev/widevine"
    "encoding/base64"
    "fmt"
@@ -32,8 +31,6 @@ func Test_License(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   http.No_Location()
-   http.Verbose()
    key, err := mod.Key(Core)
    if err != nil {
       t.Fatal(err)

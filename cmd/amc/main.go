@@ -1,9 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/http"
    "154.pages.dev/media/amc"
    "154.pages.dev/stream"
+   "154.pages.dev/log"
    "flag"
    "os"
    "path/filepath"
@@ -15,6 +15,7 @@ type flags struct {
    password string
    path amc.Path
    s stream.Stream
+   h log.Handler
 }
 
 func main() {
@@ -31,8 +32,10 @@ func main() {
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
+   flag.TextVar(&f.h.Level, "v", f.h.Level, "log level")
    flag.Parse()
-   http.Verbose()
+   log.Set_Handler(f.h)
+   log.Set_Transport(0)
    switch {
    case f.email != "":
       err := f.login()

@@ -1,7 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/http"
+   "154.pages.dev/log"
    "154.pages.dev/stream"
    "flag"
    "os"
@@ -11,8 +11,8 @@ import (
 type flags struct {
    guid int64
    bandwidth int
+   h log.Handler
    s stream.Stream
-   trace bool
 }
 
 func main() {
@@ -27,14 +27,10 @@ func main() {
    flag.IntVar(&f.bandwidth, "bandwidth", 6_999_999, "maximum bandwidth")
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
-   flag.BoolVar(&f.trace, "t", false, "trace")
+   flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
    flag.Parse()
-   http.No_Location()
-   if f.trace {
-      http.Trace()
-   } else {
-      http.Verbose()
-   }
+   log.Set_Handler(f.h)
+   log.Set_Transport(0)
    if f.guid >= 1 {
       err := f.download()
       if err != nil {

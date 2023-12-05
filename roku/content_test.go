@@ -1,7 +1,6 @@
 package roku
 
 import (
-   "154.pages.dev/http"
    "154.pages.dev/stream"
    "fmt"
    "testing"
@@ -9,8 +8,6 @@ import (
 )
 
 func Test_Content(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
    for _, test := range tests {
       con, err := New_Content(test.playback_ID)
       if err != nil {

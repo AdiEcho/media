@@ -1,7 +1,6 @@
 package youtube
 
 import (
-   "154.pages.dev/http"
    "os"
    "testing"
    "time"
@@ -10,8 +9,6 @@ import (
 const web_ID = "HPkDFc8hq5c"
 
 func Test_Web(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
    req := Request{Video_ID: web_ID}
    req.Web()
    p, err := req.Player(nil)

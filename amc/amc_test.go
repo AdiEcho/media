@@ -1,7 +1,6 @@
 package amc
 
 import (
-   "154.pages.dev/http"
    "154.pages.dev/widevine"
    "encoding/base64"
    "encoding/json"
@@ -98,8 +97,6 @@ func Test_Key(t *testing.T) {
       }
       auth.Unmarshal(b)
    }
-   http.No_Location()
-   http.Verbose()
    play, err := auth.Playback(Path{test.path})
    if err != nil {
       t.Fatal(err)
@@ -110,4 +107,3 @@ func Test_Key(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
-

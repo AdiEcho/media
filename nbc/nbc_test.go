@@ -1,7 +1,6 @@
 package nbc
 
 import (
-   "154.pages.dev/http"
    "154.pages.dev/stream"
    "fmt"
    "testing"
@@ -9,8 +8,6 @@ import (
 )
 
 func Test_On_Demand(t *testing.T) {
-   http.No_Location()
-   http.Verbose()
    for _, mpx_guid := range mpx_guids {
       meta, err := New_Metadata(mpx_guid)
       if err != nil {

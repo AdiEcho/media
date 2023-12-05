@@ -1,7 +1,6 @@
 package hulu
 
 import (
-   "154.pages.dev/http"
    "encoding/json"
    "fmt"
    "os"
@@ -21,8 +20,6 @@ func Test_Details(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   http.No_Location()
-   http.Verbose()
    auth, err := Living_Room(m["username"], m["password"])
    if err != nil {
       t.Fatal(err)
@@ -54,8 +51,6 @@ func Test_Deep_Link(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   http.No_Location()
-   http.Verbose()
    auth, err := Living_Room(m["username"], m["password"])
    if err != nil {
       t.Fatal(err)
