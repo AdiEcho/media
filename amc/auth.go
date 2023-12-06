@@ -4,7 +4,6 @@ import (
    "bytes"
    "encoding/json"
    "errors"
-   "io"
    "net/http"
    "net/url"
    "strings"
@@ -120,29 +119,13 @@ func (a Auth_ID) Playback(p Path) (*Playback, error) {
    }
    defer res.Body.Close()
    if res.StatusCode != http.StatusOK {
-      b, err := io.ReadAll(res.Body)
-      if err != nil {
-         return nil, err
-      }
-      return nil, errors.New(string(b))
+      return nil, errors.New(res.Status)
    }
    var play Playback
-   {
-      // {"success":false,"status":400,"error":"Content not found"}
-      var s struct {
-         Data struct {
-            Playback_JSON_Data struct {
-               Sources []Source
-            } `json:"playbackJsonData"`
-         }
-      }
-      err := json.NewDecoder(res.Body).Decode(&s)
-      if err != nil {
-         return nil, err
-      }
-      play.sources = s.Data.Playback_JSON_Data.Sources
+   play.header = res.Header
+   if err := json.NewDecoder(res.Body).Decode(&play.body); err != nil {
+      return nil, err
    }
-   play.h = res.Header
    return &play, nil
 }
 

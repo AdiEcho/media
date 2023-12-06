@@ -1,0 +1,202 @@
+{
+  "success": true,
+  "status": 200,
+  "data": {
+    "playbackJsonData": {
+      "poster": "https://cf-images.us-east-1.prod.boltdns.net/v1/jit/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/main/1280x720/44m56s778ms/match/image.jpg",
+      "thumbnail": "https://cf-images.us-east-1.prod.boltdns.net/v1/jit/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/main/160x90/44m56s778ms/match/image.jpg",
+      "poster_sources": [
+        {
+          "src": "https://cf-images.us-east-1.prod.boltdns.net/v1/jit/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/main/1280x720/44m56s778ms/match/image.jpg"
+        }
+      ],
+      "thumbnail_sources": [
+        {
+          "src": "https://cf-images.us-east-1.prod.boltdns.net/v1/jit/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/main/160x90/44m56s778ms/match/image.jpg"
+        }
+      ],
+      "description": "Tensions rise when best friends spend one week together.",
+      "tags": [],
+      "cue_points": [
+        {
+          "id": "6286839899001",
+          "type": "AD",
+          "time": 0,
+          "force_stop": false
+        }
+      ],
+      "custom_fields": {
+        "active": "YES",
+        "ad_load": "Full Movie",
+        "advertising_type": "DAI",
+        "genre": "Suspense",
+        "parent_network": "IFCE",
+        "rating_tv_uncut": "TV-MA",
+        "restricted_ads": "NO",
+        "s3_captions_url": "s3://amcn-eve-parkinglot/EVE-STORE/AMCPlus/IFCU_QUEEN_OF_EARTH.scc",
+        "s3_video_url": "s3://amcn-eve-parkinglot/EVE-STORE/AMCPlus/IFCU_QUEEN_OF_EARTH.mp4",
+        "share_s_and_p_exclude": "YES",
+        "tms_movie_id": "MV007734720000",
+        "video_type": "Full Movie"
+      },
+      "account_id": "6245817279001",
+      "sources": [
+        {
+          "codecs": "avc1,mp4a",
+          "ext_x_version": "5",
+          "key_systems": {
+            "com.apple.fps.1_0": {
+              "certificate_url": "https://manifest.prod.boltdns.net/license/v1/fairplay_app_cert/6245817279001",
+              "key_request_url": "https://manifest.prod.boltdns.net/license/v1/fairplay/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/4a293bd9-24a6-4c64-8666-de20e9bbb93c?fastly_token=NjU3MDM3NzhfNzZkNGNmNTdiZmY0ODhiZDVjYjcxYmYwMDYyN2U2MzAyYjYzYjQyOTY4OWZmMWE4ZmE0OGJlNmYwNGNkMTI0ZA%3D%3D",
+              "key_request_urls": {
+                "audio": "https://manifest.prod.boltdns.net/license/v1/fairplay/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/ab37cd26-0c69-411e-8a92-69eeb8cfff92?fastly_token=NjU3MDM3NzhfMGE1OGE3NmQ0YjM1ZWJlNWM2MTYxMzUwNTE1Y2E0OGRkZGQ0YzdkZWNkNTZkODkzMjJiNDk2NTcwYjYzYjk2ZQ%3D%3D",
+                "hd": "https://manifest.prod.boltdns.net/license/v1/fairplay/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/97bbcf26-d22d-4a2e-890e-64bd87786e6a?fastly_token=NjU3MDM3NzhfMjYxZDliMjkyYjljMjE3NjM4Y2ExMWFhZWQ2NDc1MGYwZTM4NGFlNTg0MTBhOWI5Y2NmMmIwMmY4ODZhOTMxOA%3D%3D",
+                "sd": "https://manifest.prod.boltdns.net/license/v1/fairplay/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/bf1cb136-7240-40ca-a172-74f42572b0c2?fastly_token=NjU3MDM3NzhfNWJlM2I5ODM2OGE4YzU2MzdjYzMwNTQyZTY2ZDBjZGE3OTgwZWE0MzQwZGM3NTU0OTk2YTRhM2E4MzQ2YjQ2Nw%3D%3D",
+                "uhd": "https://manifest.prod.boltdns.net/license/v1/fairplay/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/10c53100-d29c-4935-9344-6d88546e55e5?fastly_token=NjU3MDM3NzhfZDFmZTZkNDUzYzJmODgyZjgxMzE0NDA2YzgwY2M2YTAyZWJkZWMwNTUwNGI1ZjY2YjkyZTNmY2EyYWVlZGI1MA%3D%3D"
+              }
+            }
+          },
+          "src": "http://ssaimanifest.prod.boltdns.net/playback/once/v1/hls/v5/fairplay/6245817279001/74263065-1285-4d00-842d-73a66554716a/69ee79fc-e9c5-4f59-92da-4a7e825284fd/master.m3u8?bc_token=NjU3MDM3NzhfMTU4ZWY1MWVhYmM2M2E0MjE1YzZlNDlkYWI3YWJlZTAzZDc0MDFhZTQ3MmYxYmRlYzk2YmJmMGFlMmI3NDRkZg%3D%3D&csid=svod_adtier_amcplus_web_vod&fw_did=-&idtype=gauid&prof=amcplus_bc_web&mode=on-demand&caid=IFCENT_SF30285&islat=0&width=0&height=0&usprivacy=1YY-&ae=-1&ipaddress=72.181.23.38&said=f716e9eb-9389-4931-8451-30b2d2798693&ua=Go-http-client%252F2.0",
+          "type": "application/x-mpegURL",
+          "vmap": "http://ssaimanifest.prod.boltdns.net/playback/once/v1/vmap/hls/v5/fairplay/6245817279001/74263065-1285-4d00-842d-73a66554716a/69ee79fc-e9c5-4f59-92da-4a7e825284fd/content.vmap?bc_token=NjU3MDM3NzhfNjhhYTAzYmY0NzlkZTYyYjJjMTgyYzI1OWZlZWRkMDI5MTRkOTI5YmE3NjBiMDZhNDZkZmExNzcxNjE0ZWIwNQ%3D%3D&csid=svod_adtier_amcplus_web_vod&fw_did=-&idtype=gauid&prof=amcplus_bc_web&mode=on-demand&caid=IFCENT_SF30285&islat=0&width=0&height=0&usprivacy=1YY-&ae=-1&ipaddress=72.181.23.38&said=f716e9eb-9389-4931-8451-30b2d2798693&ua=Go-http-client%252F2.0"
+        },
+        {
+          "codecs": "avc1,mp4a",
+          "ext_x_version": "5",
+          "key_systems": {
+            "com.apple.fps.1_0": {
+              "certificate_url": "https://manifest.prod.boltdns.net/license/v1/fairplay_app_cert/6245817279001",
+              "key_request_url": "https://manifest.prod.boltdns.net/license/v1/fairplay/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/4a293bd9-24a6-4c64-8666-de20e9bbb93c?fastly_token=NjU3MDM3NzhfNzZkNGNmNTdiZmY0ODhiZDVjYjcxYmYwMDYyN2U2MzAyYjYzYjQyOTY4OWZmMWE4ZmE0OGJlNmYwNGNkMTI0ZA%3D%3D",
+              "key_request_urls": {
+                "audio": "https://manifest.prod.boltdns.net/license/v1/fairplay/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/ab37cd26-0c69-411e-8a92-69eeb8cfff92?fastly_token=NjU3MDM3NzhfMGE1OGE3NmQ0YjM1ZWJlNWM2MTYxMzUwNTE1Y2E0OGRkZGQ0YzdkZWNkNTZkODkzMjJiNDk2NTcwYjYzYjk2ZQ%3D%3D",
+                "hd": "https://manifest.prod.boltdns.net/license/v1/fairplay/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/97bbcf26-d22d-4a2e-890e-64bd87786e6a?fastly_token=NjU3MDM3NzhfMjYxZDliMjkyYjljMjE3NjM4Y2ExMWFhZWQ2NDc1MGYwZTM4NGFlNTg0MTBhOWI5Y2NmMmIwMmY4ODZhOTMxOA%3D%3D",
+                "sd": "https://manifest.prod.boltdns.net/license/v1/fairplay/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/bf1cb136-7240-40ca-a172-74f42572b0c2?fastly_token=NjU3MDM3NzhfNWJlM2I5ODM2OGE4YzU2MzdjYzMwNTQyZTY2ZDBjZGE3OTgwZWE0MzQwZGM3NTU0OTk2YTRhM2E4MzQ2YjQ2Nw%3D%3D",
+                "uhd": "https://manifest.prod.boltdns.net/license/v1/fairplay/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/10c53100-d29c-4935-9344-6d88546e55e5?fastly_token=NjU3MDM3NzhfZDFmZTZkNDUzYzJmODgyZjgxMzE0NDA2YzgwY2M2YTAyZWJkZWMwNTUwNGI1ZjY2YjkyZTNmY2EyYWVlZGI1MA%3D%3D"
+              }
+            }
+          },
+          "src": "https://ssaimanifest.prod.boltdns.net/playback/once/v1/hls/v5/fairplay/6245817279001/74263065-1285-4d00-842d-73a66554716a/69ee79fc-e9c5-4f59-92da-4a7e825284fd/master.m3u8?bc_token=NjU3MDM3NzhfMTU4ZWY1MWVhYmM2M2E0MjE1YzZlNDlkYWI3YWJlZTAzZDc0MDFhZTQ3MmYxYmRlYzk2YmJmMGFlMmI3NDRkZg%3D%3D&csid=svod_adtier_amcplus_web_vod&fw_did=-&idtype=gauid&prof=amcplus_bc_web&mode=on-demand&caid=IFCENT_SF30285&islat=0&width=0&height=0&usprivacy=1YY-&ae=-1&ipaddress=72.181.23.38&said=f716e9eb-9389-4931-8451-30b2d2798693&ua=Go-http-client%252F2.0",
+          "type": "application/x-mpegURL",
+          "vmap": "https://ssaimanifest.prod.boltdns.net/playback/once/v1/vmap/hls/v5/fairplay/6245817279001/74263065-1285-4d00-842d-73a66554716a/69ee79fc-e9c5-4f59-92da-4a7e825284fd/content.vmap?bc_token=NjU3MDM3NzhfNjhhYTAzYmY0NzlkZTYyYjJjMTgyYzI1OWZlZWRkMDI5MTRkOTI5YmE3NjBiMDZhNDZkZmExNzcxNjE0ZWIwNQ%3D%3D&csid=svod_adtier_amcplus_web_vod&fw_did=-&idtype=gauid&prof=amcplus_bc_web&mode=on-demand&caid=IFCENT_SF30285&islat=0&width=0&height=0&usprivacy=1YY-&ae=-1&ipaddress=72.181.23.38&said=f716e9eb-9389-4931-8451-30b2d2798693&ua=Go-http-client%252F2.0"
+        },
+        {
+          "codecs": "avc1,mp4a",
+          "key_systems": {
+            "com.microsoft.playready": {
+              "license_url": "https://manifest.prod.boltdns.net/license/v1/cenc/playready/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/57161ece-b956-4351-ad7c-b7d1321d8b55?fastly_token=NjU3MDM3NzhfYzExYzA2YTQxMWRmMTRiNGM0MTFhYmMzYTg0Zjk0ZDI5ZTAyMzRhZjIwMGRmMGJjNzdhZDNiZmFiNWNkODY4NA%3D%3D"
+            },
+            "com.widevine.alpha": {
+              "license_url": "https://manifest.prod.boltdns.net/license/v1/cenc/widevine/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/57161ece-b956-4351-ad7c-b7d1321d8b55?fastly_token=NjU3MDM3NzhfMzEwYWViODlmMGFmZjVjMzNkYTI1MDdlNGRiODJmZTE5Zjc1ODBlZjdmZGJjNTMwMmM2YTE5ZjdkMDU0NmU3ZQ%3D%3D"
+            }
+          },
+          "profiles": "urn:mpeg:dash:profile:isoff-live:2011",
+          "src": "http://ssaimanifest.prod.boltdns.net/playback/once/v1/dash/live-timeline/bccenc/6245817279001/74263065-1285-4d00-842d-73a66554716a/69ee79fc-e9c5-4f59-92da-4a7e825284fd/manifest.mpd?bc_token=NjU3MDM3NzhfZTVmNTI4NDdjNzkzZjY0NDA5ZWFjN2U5NjAxOWY4OGViZmMzYTJhMGUxOTYzZTNiNDU3ZjZkOWExYTdiNTU0ZA%3D%3D",
+          "type": "application/dash+xml",
+          "vmap": "http://ssaimanifest.prod.boltdns.net/playback/once/v1/vmap/dash/live-timeline/bccenc/6245817279001/74263065-1285-4d00-842d-73a66554716a/69ee79fc-e9c5-4f59-92da-4a7e825284fd/content.vmap?bc_token=NjU3MDM3NzhfYjA5MzBmMjcyNzY2NGUwNTcwZWE3NGU1MzE2ZWIzNjBkODY4NjU0MzU5NTJhNjc3ZTEzZDJjNzM3MTYyMGZhNA%3D%3D&csid=svod_adtier_amcplus_web_vod&fw_did=-&idtype=gauid&prof=amcplus_bc_web&mode=on-demand&caid=IFCENT_SF30285&islat=0&width=0&height=0&usprivacy=1YY-&ae=-1&ipaddress=72.181.23.38&said=f716e9eb-9389-4931-8451-30b2d2798693&ua=Go-http-client%252F2.0"
+        },
+        {
+          "codecs": "avc1,mp4a",
+          "key_systems": {
+            "com.microsoft.playready": {
+              "license_url": "https://manifest.prod.boltdns.net/license/v1/cenc/playready/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/57161ece-b956-4351-ad7c-b7d1321d8b55?fastly_token=NjU3MDM3NzhfYzExYzA2YTQxMWRmMTRiNGM0MTFhYmMzYTg0Zjk0ZDI5ZTAyMzRhZjIwMGRmMGJjNzdhZDNiZmFiNWNkODY4NA%3D%3D"
+            },
+            "com.widevine.alpha": {
+              "license_url": "https://manifest.prod.boltdns.net/license/v1/cenc/widevine/6245817279001/69ee79fc-e9c5-4f59-92da-4a7e825284fd/57161ece-b956-4351-ad7c-b7d1321d8b55?fastly_token=NjU3MDM3NzhfMzEwYWViODlmMGFmZjVjMzNkYTI1MDdlNGRiODJmZTE5Zjc1ODBlZjdmZGJjNTMwMmM2YTE5ZjdkMDU0NmU3ZQ%3D%3D"
+            }
+          },
+          "profiles": "urn:mpeg:dash:profile:isoff-live:2011",
+          "src": "https://ssaimanifest.prod.boltdns.net/playback/once/v1/dash/live-timeline/bccenc/6245817279001/74263065-1285-4d00-842d-73a66554716a/69ee79fc-e9c5-4f59-92da-4a7e825284fd/manifest.mpd?bc_token=NjU3MDM3NzhfZTVmNTI4NDdjNzkzZjY0NDA5ZWFjN2U5NjAxOWY4OGViZmMzYTJhMGUxOTYzZTNiNDU3ZjZkOWExYTdiNTU0ZA%3D%3D",
+          "type": "application/dash+xml",
+          "vmap": "https://ssaimanifest.prod.boltdns.net/playback/once/v1/vmap/dash/live-timeline/bccenc/6245817279001/74263065-1285-4d00-842d-73a66554716a/69ee79fc-e9c5-4f59-92da-4a7e825284fd/content.vmap?bc_token=NjU3MDM3NzhfYjA5MzBmMjcyNzY2NGUwNTcwZWE3NGU1MzE2ZWIzNjBkODY4NjU0MzU5NTJhNjc3ZTEzZDJjNzM3MTYyMGZhNA%3D%3D&csid=svod_adtier_amcplus_web_vod&fw_did=-&idtype=gauid&prof=amcplus_bc_web&mode=on-demand&caid=IFCENT_SF30285&islat=0&width=0&height=0&usprivacy=1YY-&ae=-1&ipaddress=72.181.23.38&said=f716e9eb-9389-4931-8451-30b2d2798693&ua=Go-http-client%252F2.0"
+        }
+      ],
+      "name": "Queen of Earth",
+      "reference_id": "IFCENT_SF30285",
+      "long_description": "Elisabeth Moss (Mad Men) stars as a desperate woman caught in a terrifying downward spiral in this heart-stopping psychological thriller. Also stars Patrick Fugit.",
+      "duration": 5393557,
+      "economics": "AD_SUPPORTED",
+      "text_tracks": [],
+      "published_at": "2021-06-29T20:46:15.026Z",
+      "created_at": "2021-06-29T20:46:15.016Z",
+      "updated_at": "2022-11-02T16:43:55.475Z",
+      "offline_enabled": true,
+      "id": "6261589129001"
+    },
+    "adTag": {
+      "params": [
+        {
+          "key": "csid",
+          "value": "svod_adtier_amcplus_web_vod",
+          "macro": "{csid}"
+        },
+        {
+          "key": "_fw_did",
+          "value": "-",
+          "macro": "{fw_did}"
+        },
+        {
+          "key": "ad_id_type",
+          "value": "gauid",
+          "macro": "{idtype}"
+        },
+        {
+          "key": "prof",
+          "value": "amcplus_bc_web",
+          "macro": "{prof}"
+        },
+        {
+          "key": "mode",
+          "value": "on-demand",
+          "macro": "{mode}"
+        },
+        {
+          "key": "caid",
+          "value": "IFCENT_SF30285",
+          "macro": "{caid}"
+        },
+        {
+          "key": "_fw_is_lat",
+          "value": "0",
+          "macro": "{islat}"
+        },
+        {
+          "key": "_fw_player_width",
+          "value": "0",
+          "macro": "{width}"
+        },
+        {
+          "key": "_fw_player_height",
+          "value": "0",
+          "macro": "{height}"
+        },
+        {
+          "key": "_fw_us_privacy",
+          "value": "1YY-",
+          "macro": "{usprivacy}"
+        },
+        {
+          "key": "_fw_ae",
+          "value": "-1",
+          "macro": "{ae}"
+        },
+        {
+          "key": "vip",
+          "value": "72.181.23.38",
+          "macro": "{ipaddress}"
+        },
+        {
+          "key": "said",
+          "value": "f716e9eb-9389-4931-8451-30b2d2798693",
+          "macro": "{said}"
+        },
+        {
+          "key": "ua",
+          "value": "Go-http-client%252F2.0",
+          "macro": "{ua}"
+        }
+      ],
+      "macro_params_string": "csid=svod_adtier_amcplus_web_vod&fw_did=-&idtype=gauid&prof=amcplus_bc_web&mode=on-demand&caid=IFCENT_SF30285&islat=0&width=0&height=0&usprivacy=1YY-&ae=-1&ipaddress=72.181.23.38&said=f716e9eb-9389-4931-8451-30b2d2798693&ua=Go-http-client%252F2.0",
+      "key_params_string": "csid=svod_adtier_amcplus_web_vod&_fw_did=-&ad_id_type=gauid&prof=amcplus_bc_web&mode=on-demand&caid=IFCENT_SF30285&_fw_is_lat=0&_fw_player_width=0&_fw_player_height=0&_fw_us_privacy=1YY-&_fw_ae=-1&vip=72.181.23.38&said=f716e9eb-9389-4931-8451-30b2d2798693&ua=Go-http-client%252F2.0"
+    }
+  }
+}
