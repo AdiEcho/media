@@ -1,37 +1,40 @@
 package amc
 
 import (
-   "154.pages.dev/widevine"
-   "encoding/base64"
    "encoding/json"
    "fmt"
    "os"
    "testing"
 )
 
-func Test_Refresh(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   var auth Auth_ID
-   {
-      b, err := os.ReadFile(home + "/amc/auth.json")
+var path_tests = []string{
+   "http://amcplus.com/movies/nocebo--1061554",
+   "/movies/nocebo--1061554",
+   "amcplus.com/movies/nocebo--1061554",
+}
+
+func Test_Path(t *testing.T) {
+   for _, test := range path_tests {
+      var p Path
+      err := p.Set(test)
       if err != nil {
          t.Fatal(err)
       }
-      auth.Unmarshal(b)
+      fmt.Println(p)
    }
-   if err := auth.Refresh(); err != nil {
-      t.Fatal(err)
-   }
-   {
-      b, err := auth.Marshal()
-      if err != nil {
-         t.Fatal(err)
-      }
-      os.WriteFile(home + "/amc/auth.json", b, 0666)
-   }
+}
+
+var tests = []struct {
+   path string
+   pssh string
+} {
+   { // amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152
+      path: "/shows/orphan-black/episodes/season-1-instinct--1011152",
+      pssh: "AAAAVnBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADYIARIQuC5UBJ1cQS2w6wxWli1eSxoNd2lkZXZpbmVfdGVzdCIIMTIzNDU2NzgyB2RlZmF1bHQ=",
+   },
+   { // amcplus.com/movies/nocebo--1061554
+      path: "/movies/nocebo--1061554",
+   },
 }
 
 func user(s string) (map[string]string, error) {
@@ -42,68 +45,4 @@ func user(s string) (map[string]string, error) {
    var m map[string]string
    json.Unmarshal(b, &m)
    return m, nil
-}
-
-func Test_Login(t *testing.T) {
-   auth, err := Unauth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   u, err := user(home + "/amc/user.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   if err := auth.Login(u["username"], u["password"]); err != nil {
-      t.Fatal(err)
-   }
-   text, err := auth.Marshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile(home + "/amc/auth.json", text, 0666)
-}
-
-func Test_Key(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
-   if err != nil {
-      t.Fatal(err)
-   }
-   client_ID, err := os.ReadFile(home + "/widevine/client_id.bin")
-   if err != nil {
-      t.Fatal(err)
-   }
-   test := tests[0]
-   pssh, err := base64.StdEncoding.DecodeString(test.pssh)
-   if err != nil {
-      t.Fatal(err)
-   }
-   mod, err := widevine.New_Module(private_key, client_ID, nil, pssh)
-   if err != nil {
-      t.Fatal(err)
-   }
-   var auth Auth_ID
-   {
-      b, err := os.ReadFile(home + "/amc/auth.json")
-      if err != nil {
-         t.Fatal(err)
-      }
-      auth.Unmarshal(b)
-   }
-   play, err := auth.Playback(Path{test.path})
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := mod.Key(play)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
 }
