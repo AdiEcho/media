@@ -4,7 +4,6 @@ import (
    "154.pages.dev/encoding/dash"
    "154.pages.dev/media/amc"
    "154.pages.dev/stream"
-   "errors"
    "net/http"
    "os"
    "slices"
@@ -52,15 +51,18 @@ func (f flags) download() error {
       return err
    }
    f.s.Poster = play
-   res, err := http.Get(play.HTTP_DASH().Src)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
-   }
-   reps, err := dash.Representations(res.Body)
+   reps, err := func() ([]*dash.Representation, error) {
+      s, err := play.HTTP_DASH()
+      if err != nil {
+         return nil, err
+      }
+      r, err := http.Get(s.Src)
+      if err != nil {
+         return nil, err
+      }
+      defer r.Body.Close()
+      return dash.Representations(r.Body)
+   }()
    if err != nil {
       return err
    }

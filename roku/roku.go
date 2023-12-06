@@ -7,6 +7,10 @@ import (
    "net/http"
 )
 
+func (p Playback) Request_URL() (string, error) {
+   return p.DRM.Widevine.License_Server, nil
+}
+
 func (c Cross_Site) Playback(id string) (*Playback, error) {
    body, err := func() ([]byte, error) {
       m := map[string]string{
@@ -54,10 +58,6 @@ type Playback struct {
          License_Server string `json:"licenseServer"`
       }
    }
-}
-
-func (p Playback) Request_URL() string {
-   return p.DRM.Widevine.License_Server
 }
 
 func (Playback) Request_Header() http.Header {

@@ -57,8 +57,8 @@ func (s Session) Request_Header() http.Header {
    }
 }
 
-func (s Session) Request_URL() string {
-   return s.URL
+func (s Session) Request_URL() (string, error) {
+   return s.URL, nil
 }
 
 func (Session) Response_Body(b []byte) ([]byte, error) {

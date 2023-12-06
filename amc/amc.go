@@ -135,8 +135,6 @@ func (p Playback) Request_URL() (string, error) {
    return v.Key_Systems.Widevine.License_URL, nil
 }
 
-/////////////////////
-
 func (p Playback) HTTP_DASH() (*Source, error) {
    for _, s := range p.body.Data.Playback_JSON_Data.Sources {
       if strings.HasPrefix(s.Src, "http://") {
@@ -145,5 +143,5 @@ func (p Playback) HTTP_DASH() (*Source, error) {
          }
       }
    }
-   return nil, errors.New("HTTP_DASH")
+   return nil, errors.New(`"type":"application/dash+xml","src":"http://"`)
 }

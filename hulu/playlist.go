@@ -7,6 +7,10 @@ import (
    "net/http"
 )
 
+func (p Playlist) Request_URL() (string, error) {
+   return p.WV_Server, nil
+}
+
 type codec_value struct {
    Height int `json:"height,omitempty"`
    Level   string `json:"level,omitempty"`
@@ -101,10 +105,6 @@ func (Playlist) Request_Body(b []byte) ([]byte, error) {
 
 func (Playlist) Request_Header() http.Header {
    return nil
-}
-
-func (p Playlist) Request_URL() string {
-   return p.WV_Server
 }
 
 func (Playlist) Response_Body(b []byte) ([]byte, error) {
