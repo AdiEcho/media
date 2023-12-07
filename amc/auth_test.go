@@ -11,6 +11,25 @@ import (
    "time"
 )
 
+func Test_Login(t *testing.T) {
+   auth, err := Unauth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   u, err := user(home + "/amc/user.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   if err := auth.Login(u["username"], u["password"]); err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile(home + "/amc/auth.json", auth.Raw, 0666)
+}
+
 var tests = []struct {
    key_ID string
    u URL
@@ -23,7 +42,6 @@ var tests = []struct {
       u: URL{"/movies/nocebo--1061554", "1061554"},
    },
 }
-
 func Test_Key(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -46,16 +64,14 @@ func Test_Key(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var auth Auth_ID
-   {
-      b, err := os.ReadFile(home + "/amc/auth.json")
-      if err != nil {
-         t.Fatal(err)
-      }
-      auth.Unmarshal(b)
-   }
    log.Set_Handler(log.Handler{})
    log.Set_Transport(0)
+   var auth Auth_ID
+   auth.Raw, err = os.ReadFile(home + "/amc/auth.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   auth.Unmarshal()
    play, err := auth.Playback(test.u)
    if err != nil {
       t.Fatal(err)
@@ -68,18 +84,16 @@ func Test_Key(t *testing.T) {
 }
 
 func Test_Content(t *testing.T) {
-   var auth Auth_ID
-   {
-      s, err := os.UserHomeDir()
-      if err != nil {
-         t.Fatal(err)
-      }
-      b, err := os.ReadFile(s + "/amc/auth.json")
-      if err != nil {
-         t.Fatal(err)
-      }
-      auth.Unmarshal(b)
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
    }
+   var auth Auth_ID
+   auth.Raw, err = os.ReadFile(home + "/amc/auth.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   auth.Unmarshal()
    for _, test := range tests {
       con, err := auth.Content(test.u)
       if err != nil {
@@ -104,44 +118,14 @@ func Test_Refresh(t *testing.T) {
       t.Fatal(err)
    }
    var auth Auth_ID
-   {
-      b, err := os.ReadFile(home + "/amc/auth.json")
-      if err != nil {
-         t.Fatal(err)
-      }
-      auth.Unmarshal(b)
+   auth.Raw, err = os.ReadFile(home + "/amc/auth.json")
+   if err != nil {
+      t.Fatal(err)
    }
+   auth.Unmarshal()
    if err := auth.Refresh(); err != nil {
       t.Fatal(err)
    }
-   {
-      b, err := auth.Marshal()
-      if err != nil {
-         t.Fatal(err)
-      }
-      os.WriteFile(home + "/amc/auth.json", b, 0666)
-   }
+   os.WriteFile(home + "/amc/auth.json", auth.Raw, 0666)
 }
 
-func Test_Login(t *testing.T) {
-   auth, err := Unauth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   u, err := user(home + "/amc/user.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   if err := auth.Login(u["username"], u["password"]); err != nil {
-      t.Fatal(err)
-   }
-   text, err := auth.Marshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile(home + "/amc/auth.json", text, 0666)
-}

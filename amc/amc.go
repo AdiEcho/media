@@ -124,11 +124,9 @@ func (u URL) String() string {
 }
 
 // https://www.amcplus.com/movies/queen-of-earth--1026724
-// /movies/queen-of-earth--1026724
-// 1026724
 type URL struct {
-   path string
-   nid string
+   path string // /movies/queen-of-earth--1026724
+   nid string // 1026724
 }
 
 func (u *URL) Set(s string) error {
