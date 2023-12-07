@@ -9,29 +9,44 @@ import (
    "slices"
 )
 
+func (f flags) login() error {
+   raw, err := amc.Unauth()
+   if err != nil {
+      return err
+   }
+   auth, err := raw.Unmarshal()
+   if err != nil {
+      return err
+   }
+   raw, err = auth.Login(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(home + "/amc/auth.json", raw, 0666)
+}
+
 func (f flags) download() error {
    home, err := os.UserHomeDir()
    if err != nil {
       return err
    }
-   var auth amc.Auth_ID
-   {
-      b, err := os.ReadFile(home + "/amc/auth.json")
-      if err != nil {
-         return err
-      }
-      auth.Unmarshal(b)
-   }
-   if err := auth.Refresh(); err != nil {
+   raw, err := os.ReadFile(home + "/amc/auth.json")
+   if err != nil {
       return err
    }
-   {
-      b, err := auth.Marshal()
-      if err != nil {
-         return err
-      }
-      os.WriteFile(home + "/amc/auth.json", b, 0666)
+   auth, err := amc.Raw_Auth.Unmarshal(raw)
+   if err != nil {
+      return err
    }
+   raw, err = auth.Refresh()
+   if err != nil {
+      return err
+   }
+   os.WriteFile(home + "/amc/auth.json", raw, 0666)
    if !f.s.Info {
       content, err := auth.Content(f.address)
       if err != nil {
@@ -87,27 +102,5 @@ func (f flags) download() error {
       return !r.Audio()
    })
    return f.s.DASH_Get(reps, 0)
-}
-
-func (f flags) login() error {
-   auth, err := amc.Unauth()
-   if err != nil {
-      return err
-   }
-   if err := auth.Login(f.email, f.password); err != nil {
-      return err
-   }
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   {
-      b, err := auth.Marshal()
-      if err != nil {
-         return err
-      }
-      os.WriteFile(home + "/amc/auth.json", b, 0666)
-   }
-   return nil
 }
 

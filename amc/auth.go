@@ -8,7 +8,16 @@ import (
    "strings"
 )
 
-func Unauth() (*Auth_ID, error) {
+func (r Raw_Auth) Unmarshal() (*Auth, error) {
+   var a Auth
+   err := json.Unmarshal(r, &a)
+   if err != nil {
+      return nil, err
+   }
+   return &a, nil
+}
+
+func Unauth() (Raw_Auth, error) {
    req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return nil, err
@@ -26,15 +35,10 @@ func Unauth() (*Auth_ID, error) {
       return nil, err
    }
    defer res.Body.Close()
-   var auth Auth_ID
-   auth.Raw, err = io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &auth, nil
+   return io.ReadAll(res.Body)
 }
 
-func (a Auth_ID) Content(u URL) (*Content, error) {
+func (a Auth) Content(u URL) (*Content, error) {
    req, err := http.NewRequest("GET", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return nil, err
@@ -42,7 +46,7 @@ func (a Auth_ID) Content(u URL) (*Content, error) {
    // If you request once with headers, you can request again without any
    // headers for 10 minutes, but then headers are required again
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.Value.Data.Access_Token},
+      "Authorization": {"Bearer " + a.Data.Access_Token},
       "X-Amcn-Network": {"amcplus"},
       "X-Amcn-Platform": {"web"},
       "X-Amcn-Tenant": {"amcn"},
@@ -72,7 +76,7 @@ func (a Auth_ID) Content(u URL) (*Content, error) {
    return con, nil
 }
 
-func (a Auth_ID) Playback(u URL) (*Playback, error) {
+func (a Auth) Playback(u URL) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Ad_Tags struct {
@@ -99,7 +103,7 @@ func (a Auth_ID) Playback(u URL) (*Playback, error) {
    }
    req.URL.Path = "/playback-id/api/v1/playback/" + u.nid
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.Value.Data.Access_Token},
+      "Authorization": {"Bearer " + a.Data.Access_Token},
       "Content-Type": {"application/json"},
       "X-Amcn-Device-Ad-ID": {"-"},
       "X-Amcn-Language": {"en"},
@@ -122,47 +126,47 @@ func (a Auth_ID) Playback(u URL) (*Playback, error) {
    return &play, nil
 }
 
-func (a *Auth_ID) Unmarshal() error {
-   return json.Unmarshal(a.Raw, a.Value)
-}
-
-func (a *Auth_ID) Refresh() error {
+func (a Auth) Refresh() (Raw_Auth, error) {
    req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
-      return err
+      return nil, err
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
-   req.Header.Set("Authorization", "Bearer " + a.Value.Data.Refresh_Token)
+   req.Header.Set("Authorization", "Bearer " + a.Data.Refresh_Token)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer res.Body.Close()
-   a.Raw, err = io.ReadAll(res.Body)
-   if err != nil {
-      return err
-   }
-   a.Value = nil
-   return nil
+   return io.ReadAll(res.Body)
 }
 
-func (a *Auth_ID) Login(email, password string) error {
+type Auth struct {
+   Data struct {
+      Access_Token string
+      Refresh_Token string
+   }
+}
+
+type Raw_Auth []byte
+
+func (a Auth) Login(email, password string) (Raw_Auth, error) {
    body, err := json.Marshal(map[string]string{
       "email": email,
       "password": password,
    })
    if err != nil {
-      return err
+      return nil, err
    }
    req, err := http.NewRequest(
       "POST", "https://gw.cds.amcn.com", bytes.NewReader(body),
    )
    if err != nil {
-      return err
+      return nil, err
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/login"
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.Value.Data.Access_Token},
+      "Authorization": {"Bearer " + a.Data.Access_Token},
       "Content-Type": {"application/json"},
       "X-Amcn-Device-Ad-ID": {"-"},
       "X-Amcn-Device-ID": {"-"},
@@ -176,23 +180,8 @@ func (a *Auth_ID) Login(email, password string) error {
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer res.Body.Close()
-   a.Raw, err = io.ReadAll(res.Body)
-   if err != nil {
-      return err
-   }
-   a.Value = nil
-   return nil
-}
-
-type Auth_ID struct {
-   Raw []byte
-   Value *struct {
-      Data struct {
-         Access_Token string
-         Refresh_Token string
-      }
-   }
+   return io.ReadAll(res.Body)
 }
