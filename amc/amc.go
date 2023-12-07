@@ -44,33 +44,6 @@ func (c Content) Video() (*Video, error) {
    return nil, errors.New("video-player-ap")
 }
 
-type Path struct {
-   s string
-}
-
-func (p *Path) Set(s string) error {
-   if _, after, found := strings.Cut(s, "://"); found {
-      s = after // remove scheme
-   }
-   if i := strings.IndexByte(s, '/'); i >= 1 {
-      s = s[i:] // remove host
-   }
-   p.s = s
-   return nil
-}
-
-func (p Path) String() string {
-   return p.s
-}
-
-func (p Path) nid() (string, error) {
-   _, nid, found := strings.Cut(p.s, "--")
-   if !found {
-      return "", errors.New("nid")
-   }
-   return nid, nil
-}
-
 type Video struct {
    Meta struct {
       Show_Title string `json:"showTitle"`
@@ -144,4 +117,29 @@ func (p Playback) Request_URL() (string, error) {
       return "", err
    }
    return v.Key_Systems.Widevine.License_URL, nil
+}
+
+func (u URL) String() string {
+   return u.path
+}
+
+// https://www.amcplus.com/movies/queen-of-earth--1026724
+// /movies/queen-of-earth--1026724
+// 1026724
+type URL struct {
+   path string
+   nid string
+}
+
+func (u *URL) Set(s string) error {
+   var found bool
+   _, u.path, found = strings.Cut(s, "amcplus.com")
+   if !found {
+      return errors.New("amcplus.com")
+   }
+   _, u.nid, found = strings.Cut(s, "--")
+   if !found {
+      return errors.New("--")
+   }
+   return nil
 }
