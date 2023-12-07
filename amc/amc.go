@@ -8,6 +8,17 @@ import (
    "time"
 )
 
+func (p Playback) HTTP_DASH() (*Source, error) {
+   for _, s := range p.body.Data.Playback_JSON_Data.Sources {
+      if strings.HasPrefix(s.Src, "https://") {
+         if s.Type == "application/dash+xml" {
+            return &s, nil
+         }
+      }
+   }
+   return nil, errors.New("data.playbackJsonData.sources")
+}
+
 type Content struct {
    Data	struct {
       Children []struct {
@@ -133,15 +144,4 @@ func (p Playback) Request_URL() (string, error) {
       return "", err
    }
    return v.Key_Systems.Widevine.License_URL, nil
-}
-
-func (p Playback) HTTP_DASH() (*Source, error) {
-   for _, s := range p.body.Data.Playback_JSON_Data.Sources {
-      if strings.HasPrefix(s.Src, "http://") {
-         if s.Type == "application/dash+xml" {
-            return &s, nil
-         }
-      }
-   }
-   return nil, errors.New(`"type":"application/dash+xml","src":"http://"`)
 }
