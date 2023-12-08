@@ -8,9 +8,9 @@ type Player struct {
          Publish_Date string `json:"publishDate"`
       } `json:"playerMicroformatRenderer"`
    }
-   Playability_Status struct {
-      Reason string
+   Playability struct {
       Status string
+      Reason string
    } `json:"playabilityStatus"`
    Streaming_Data struct {
       Adaptive_Formats []Format `json:"adaptiveFormats"`
@@ -25,12 +25,9 @@ type Player struct {
    } `json:"videoDetails"`
 }
 
+// stream.Video
 func (p Player) Author() string {
    return p.Video_Details.Author
-}
-
-func (p Player) Duration() time.Duration {
-   return time.Duration(p.Video_Details.Length_Seconds) * time.Second
 }
 
 func (p Player) Time() (time.Time, error) {
@@ -39,6 +36,7 @@ func (p Player) Time() (time.Time, error) {
    )
 }
 
+// stream.Video
 func (p Player) Title() string {
    return p.Video_Details.Title
 }

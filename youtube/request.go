@@ -8,30 +8,6 @@ import (
    "path"
 )
 
-const (
-   android_version = "18.43.39"
-   web_version = "2.20231012.01.05"
-)
-
-type Request struct {
-   Content_Check_OK bool `json:"contentCheckOk,omitempty"`
-   Context struct {
-      Client struct {
-         Android_SDK_Version int `json:"androidSdkVersion"`
-         Client_Name string `json:"clientName"`
-         Client_Version string `json:"clientVersion"`
-         // need this to get the correct:
-         // This video requires payment to watch
-         // instead of the invalid:
-         // This video can only be played on newer versions of Android or other
-         // supported devices.
-         OS_Version string `json:"osVersion"`
-      } `json:"client"`
-   } `json:"context"`
-   Racy_Check_OK bool `json:"racyCheckOk,omitempty"`
-   Video_ID string `json:"videoId,omitempty"`
-}
-
 func (r Request) Player(tok *Token) (*Player, error) {
    r.Context.Client.Android_SDK_Version = 32
    r.Context.Client.OS_Version = "12"
@@ -60,6 +36,30 @@ func (r Request) Player(tok *Token) (*Player, error) {
       return nil, err
    }
    return play, nil
+}
+
+const (
+   android_version = "18.43.39"
+   web_version = "2.20231012.01.05"
+)
+
+type Request struct {
+   Content_Check_OK bool `json:"contentCheckOk,omitempty"`
+   Context struct {
+      Client struct {
+         Android_SDK_Version int `json:"androidSdkVersion"`
+         Client_Name string `json:"clientName"`
+         Client_Version string `json:"clientVersion"`
+         // need this to get the correct:
+         // This video requires payment to watch
+         // instead of the invalid:
+         // This video can only be played on newer versions of Android or other
+         // supported devices.
+         OS_Version string `json:"osVersion"`
+      } `json:"client"`
+   } `json:"context"`
+   Racy_Check_OK bool `json:"racyCheckOk,omitempty"`
+   Video_ID string `json:"videoId,omitempty"`
 }
 
 func (r *Request) Android() {

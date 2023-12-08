@@ -18,13 +18,10 @@ func Test_Web(t *testing.T) {
    if p.Author() == "" {
       t.Fatal("author")
    }
-   if p.Duration() <= 0 {
-      t.Fatal("duration")
-   }
-   if p.Playability_Status.Reason != "" {
+   if p.Playability.Reason != "" {
       t.Fatal("reason")
    }
-   if p.Playability_Status.Status != "OK" {
+   if p.Playability.Status != "OK" {
       t.Fatal("status")
    }
    if len(p.Streaming_Data.Adaptive_Formats) == 0 {
@@ -35,6 +32,9 @@ func Test_Web(t *testing.T) {
    }
    if p.Title() == "" {
       t.Fatal("title")
+   }
+   if p.Video_Details.Length_Seconds <= 0 {
+      t.Fatal("duration")
    }
    if p.Video_Details.Short_Description == "" {
       t.Fatal("shortDescription")
@@ -61,7 +61,7 @@ func Test_Android_Embed(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      if play.Playability_Status.Status != "OK" {
+      if play.Playability.Status != "OK" {
          t.Fatal(play)
       }
       time.Sleep(time.Second)
@@ -94,7 +94,7 @@ func Test_Android_Check(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      if play.Playability_Status.Status != "OK" {
+      if play.Playability.Status != "OK" {
          t.Fatal(play)
       }
       time.Sleep(time.Second)
@@ -115,7 +115,7 @@ func Test_Android(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      if play.Playability_Status.Status != "OK" {
+      if play.Playability.Status != "OK" {
          t.Fatal(play)
       }
       time.Sleep(time.Second)

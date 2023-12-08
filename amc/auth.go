@@ -3,6 +3,7 @@ package amc
 import (
    "bytes"
    "encoding/json"
+   "errors"
    "io"
    "net/http"
    "strings"
@@ -35,6 +36,9 @@ func Unauth() (Raw_Auth, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    return io.ReadAll(res.Body)
 }
 
@@ -69,6 +73,9 @@ func (a Auth) Content(u URL) (*Content, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    con := new(Content)
    if err := json.NewDecoder(res.Body).Decode(con); err != nil {
       return nil, err
@@ -118,6 +125,9 @@ func (a Auth) Playback(u URL) (*Playback, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    var play Playback
    play.header = res.Header
    if err := json.NewDecoder(res.Body).Decode(&play.body); err != nil {
@@ -138,6 +148,9 @@ func (a Auth) Refresh() (Raw_Auth, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    return io.ReadAll(res.Body)
 }
 
@@ -183,5 +196,8 @@ func (a Auth) Login(email, password string) (Raw_Auth, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    return io.ReadAll(res.Body)
 }
