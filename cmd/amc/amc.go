@@ -103,4 +103,3 @@ func (f flags) download() error {
    })
    return f.s.DASH_Get(reps, 0)
 }
-
