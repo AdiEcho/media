@@ -24,10 +24,6 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   detail, err := auth.Details(deep)
-   if err != nil {
-      return err
-   }
    play, err := auth.Playlist(deep)
    if err != nil {
       return err
@@ -45,6 +41,10 @@ func (f flags) download() error {
       return err
    }
    if !f.s.Info {
+      detail, err := auth.Details(deep)
+      if err != nil {
+         return err
+      }
       f.s.Name, err = stream.Format_Episode(detail)
       if err != nil {
          return err
