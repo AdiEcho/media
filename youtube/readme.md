@@ -2,9 +2,12 @@
 
 ## Android Studio
 
-Must use Android API 31 or higher.
-
 https://play.google.com/store/apps/details?id=com.google.android.youtube
+
+Android API | result
+------------|-------
+31          | fail
+32          | pass
 
 ## Device OAuth
 
