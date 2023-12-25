@@ -4,8 +4,8 @@
 154.pages.dev/log v1.0.7/go.mod h1:K6mJGITyxwyDnXnoyRrsRuqR+TyokLCr4MpGleLSWsg=
 154.pages.dev/protobuf v1.0.3 h1:fiCGyQU7gBAtxWBITbII8cwQ/VTbddovjGHFrtMSHEg=
 154.pages.dev/protobuf v1.0.3/go.mod h1:NDDaN/avhls0mBQT6u7oJQMI1PWt11v7fD9bxAWubH4=
-154.pages.dev/sofia v1.0.0 h1:tik1SKA3rPQcJRTz3fS1MV1SQx97UF5LDOCuA1HRB6c=
-154.pages.dev/sofia v1.0.0/go.mod h1:42KjYiPl7Vy50qEETAFgjZrDdJyg1MpqiZh3JdxMEGY=
+154.pages.dev/sofia v1.0.1 h1:ougy9Ms2yEw9zdjL6SCKiG3VIoIHRn2veuTt5Ksz6nY=
+154.pages.dev/sofia v1.0.1/go.mod h1:42KjYiPl7Vy50qEETAFgjZrDdJyg1MpqiZh3JdxMEGY=
 154.pages.dev/stream v1.2.0 h1:/1EyeC4A3SMTRDgRh8J50wsy9jx/bU5R8L/bPEwHUlQ=
 154.pages.dev/stream v1.2.0/go.mod h1:dp91oIKigZH3deI/1QvcBSamPZ8wJ/M/to0aPTezU6U=
 154.pages.dev/widevine v1.1.7 h1:bz2qfHT47ZxD0RLAfPR2XY0STVr//9awU8gAXjUZyh8=
