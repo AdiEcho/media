@@ -3,31 +3,11 @@ package main
 import (
    "154.pages.dev/encoding/dash"
    "154.pages.dev/media/amc"
-   "154.pages.dev/stream"
+   //"154.pages.dev/stream"
    "net/http"
    "os"
    "slices"
 )
-
-func (f flags) login() error {
-   raw, err := amc.Unauth()
-   if err != nil {
-      return err
-   }
-   auth, err := raw.Unmarshal()
-   if err != nil {
-      return err
-   }
-   raw, err = auth.Login(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(home + "/amc/auth.json", raw, 0666)
-}
 
 func (f flags) download() error {
    home, err := os.UserHomeDir()
@@ -48,15 +28,15 @@ func (f flags) download() error {
    }
    os.WriteFile(home + "/amc/auth.json", raw, 0666)
    if !f.s.Info {
-      content, err := auth.Content(f.address)
+      //content, err := auth.Content(f.address)
       if err != nil {
          return err
       }
-      video, err := content.Video()
+      //video, err := content.Video()
       if err != nil {
          return err
       }
-      f.s.Name, err = stream.Format_Film(video)
+      //f.s.Name, err = stream.Format_Film(video)
       if err != nil {
          return err
       }
@@ -93,7 +73,7 @@ func (f flags) download() error {
       index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
          return r.Height <= f.height
       })
-      if err := f.s.DASH_Get(reps, index); err != nil {
+      if err := f.s.DASH_Sofia(reps, index); err != nil {
          return err
       }
    }
@@ -101,5 +81,25 @@ func (f flags) download() error {
    reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
       return !r.Audio()
    })
-   return f.s.DASH_Get(reps, 0)
+   return f.s.DASH_Sofia(reps, 0)
+}
+
+func (f flags) login() error {
+   raw, err := amc.Unauth()
+   if err != nil {
+      return err
+   }
+   auth, err := raw.Unmarshal()
+   if err != nil {
+      return err
+   }
+   raw, err = auth.Login(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(home + "/amc/auth.json", raw, 0666)
 }

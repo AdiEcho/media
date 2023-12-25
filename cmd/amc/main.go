@@ -2,7 +2,7 @@ package main
 
 import (
    "154.pages.dev/media/amc"
-   "154.pages.dev/stream"
+   "154.pages.dev/media/stream"
    "154.pages.dev/log"
    "flag"
    "os"
