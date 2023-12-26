@@ -63,7 +63,7 @@ func (f flags) download() error {
       index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
          return r.Bandwidth <= f.bandwidth
       })
-      err := f.s.DASH_Get(reps, index)
+      err := f.s.DASH_Sofia(reps, index)
       if err != nil {
          return err
       }
@@ -72,7 +72,7 @@ func (f flags) download() error {
    reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
       return !r.Audio()
    })
-   return f.s.DASH_Get(reps, 1)
+   return f.s.DASH_Sofia(reps, 1)
 }
 
 func (f flags) authenticate() error {

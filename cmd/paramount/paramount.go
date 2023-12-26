@@ -92,7 +92,7 @@ func (f flags) dash(token *paramount.App_Token) error {
          }
          return false
       })
-      err := f.s.DASH_Get(reps, index)
+      err := f.s.DASH_Sofia(reps, index)
       if err != nil {
          return err
       }
@@ -111,6 +111,5 @@ func (f flags) dash(token *paramount.App_Token) error {
       }
       return false
    })
-   return f.s.DASH_Get(reps, index)
+   return f.s.DASH_Sofia(reps, index)
 }
-

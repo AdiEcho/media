@@ -49,7 +49,7 @@ func (f flags) DASH(content *roku.Content) error {
          }
          return false
       })
-      err := f.s.DASH_Get(reps, index)
+      err := f.s.DASH_Sofia(reps, index)
       if err != nil {
          return err
       }
@@ -58,5 +58,5 @@ func (f flags) DASH(content *roku.Content) error {
    reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
       return !r.Audio()
    })
-   return f.s.DASH_Get(reps, 0)
+   return f.s.DASH_Sofia(reps, 0)
 }
