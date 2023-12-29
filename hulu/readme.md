@@ -2,6 +2,10 @@
 
 https://play.google.com/store/apps/details?id=com.hulu.livingroomplus
 
+first commit November 7 2023:
+
+https://github.com/3052/media/commit/d9f2a3a33681992057aa9973752b79e5f7c3b44d
+
 ## Sign up
 
 If you cancel you lose access immediately
