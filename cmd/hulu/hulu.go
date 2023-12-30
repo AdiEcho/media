@@ -7,6 +7,7 @@ import (
    "net/http"
    "os"
    "slices"
+   "strings"
 )
 
 func (f flags) download() error {
@@ -61,7 +62,7 @@ func (f flags) download() error {
          return !r.Video()
       })
       index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-         return r.Bandwidth <= f.bandwidth
+         return r.Bandwidth <= f.video_bandwidth
       })
       err := f.s.DASH_Sofia(reps, index)
       if err != nil {
@@ -72,7 +73,10 @@ func (f flags) download() error {
    reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
       return !r.Audio()
    })
-   return f.s.DASH_Sofia(reps, 1)
+   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
+      return strings.HasPrefix(r.Codecs, f.audio_codec)
+   })
+   return f.s.DASH_Sofia(reps, index)
 }
 
 func (f flags) authenticate() error {

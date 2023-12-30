@@ -10,12 +10,13 @@ import (
 )
 
 type flags struct {
-   bandwidth int
    email string
    h log.Handler
    id hulu.ID
    password string
    s stream.Stream
+   video_bandwidth int
+   audio_codec string
 }
 
 func main() {
@@ -26,13 +27,14 @@ func main() {
    home = filepath.ToSlash(home) + "/widevine/"
    var f flags
    flag.Var(&f.id, "a", "address")
-   flag.IntVar(&f.bandwidth, "b", 6_999_999, "maximum bandwidth")
+   flag.StringVar(&f.audio_codec, "ac", "mp4a", "audio codec")
    flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
    flag.StringVar(&f.email, "e", "", "email")
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
    flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
+   flag.IntVar(&f.video_bandwidth, "vb", 8_100_000, "video max bandwidth")
    flag.Parse()
    log.Set_Handler(f.h)
    log.Set_Transport(0)
