@@ -2,31 +2,50 @@
 
 <https://github.com/zerodytrash/YouTube-Internal-Clients/blob/main/results/working_clients.txt>
 
+## youtube.com/watch?v=2ZcDwdXEVyI
+
+796,024 bytes
+
 ## ANDROID
 
 25 bytes before show value
 
 2,076,578 bytes with prettyPrint=false
 
-## youtube.com/watch?v=2ZcDwdXEVyI
-
-796,024 bytes
-
-## IOS.json
+## IOS
 
 25 bytes before show value
 
 1,707,785 bytes with prettyPrint=false
 
-## TVHTML5\_CAST.json
+## ANDROID\_LITE
 
-25 bytes before show value
+old:
 
-16,948 bytes with prettyPrint=false
+~~~
+> play -a com.google.android.apps.youtube.mango -p 1
+updated on: Oct 19, 2021
+~~~
+
+## TVHTML5\_CAST
 
 missing season
 
-## ANDROID\_LITE.json
+## ANDROID\_VR
+
+dead:
+
+https://play.google.com/store/apps/details?id=com.google.android.apps.youtube.vr
+
+## TVHTML5
+
+27 bytes before show value
+
+355,687 bytes with prettyPrint=false
+
+919,280 bytes with prettyPrint=true
+
+## WEB
 
 ~~~
 "In The Heat Of The Night S2 E3 - The Family Secret"
@@ -40,8 +59,8 @@ episode OK
 
 title OK
 
-25 bytes before show value
+27 bytes before show value
 
-62,177 bytes with prettyPrint=false
+240,918 bytes with prettyPrint=false
 
-141,632 bytes with prettyPrint=true
+584,940 bytes with prettyPrint=true
