@@ -1,14 +1,16 @@
 package main
 
 import (
+   "fmt"
    "io"
    "net/http"
    "net/url"
+   "os"
    "strings"
-   "fmt"
+   "time"
 )
 
-func try() {
+func try(name, version string) error {
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"
@@ -17,42 +19,55 @@ func try() {
    req.URL = new(url.URL)
    req.URL.Host = "www.youtube.com"
    req.URL.Scheme = "https"
-   req.Body = io.NopCloser(body)
-   req.URL.RawQuery = "prettyPrint=false"
-   //pass:
-   //req.URL.Path = "/youtubei/v1/next"
-   //fail:
-   req.URL.Path = "/youtubei/v1/player"
-   var body = strings.NewReader(`
-   {
-      "videoId": "2ZcDwdXEVyI",
-      "context": {
-         "client": {
-            "clientName": "IOS",
-            "clientVersion": "17.33.2"
+   //req.URL.RawQuery = "prettyPrint=false"
+   req.URL.RawQuery = "prettyPrint=true"
+   req.URL.Path = "/youtubei/v1/next"
+   req.Body = func() io.ReadCloser {
+      s := fmt.Sprintf(`
+      {
+         "videoId": "2ZcDwdXEVyI",
+         "context": {
+            "client": {
+               "clientName": %q,
+               "clientVersion": %q
+            }
          }
       }
-   }
-   `)
+      `, name, version)
+      return io.NopCloser(strings.NewReader(s))
+   }()
    res, err := new(http.Transport).RoundTrip(&req)
    if err != nil {
-      panic(err)
+      return err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      fmt.Println(res.Status, name)
+      return nil
+   }
    body, err := io.ReadAll(res.Body)
    if err != nil {
-      panic(err)
+      return err
    }
    lower := strings.ToLower(string(body))
    if strings.Contains(lower, "in the heat of the night") {
-      fmt.Println("pass")
+      fmt.Println("pass", name, len(body))
+      os.WriteFile(name+".json", body, 0666)
    } else {
-      fmt.Println("fail")
+      fmt.Println("fail", name, len(body))
    }
-   fmt.Println(len(body)) //1706208
+   return nil
 }
 
 func main() {
+   for _, line := range strings.Split(clients, "\n") {
+      fields := strings.Split(line, ";")
+      err := try(fields[1], fields[2])
+      if err != nil {
+         panic(err)
+      }
+      time.Sleep(99*time.Millisecond)
+   }
 }
 
 const clients = `1;WEB;2.20220918

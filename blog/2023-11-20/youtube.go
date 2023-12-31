@@ -8,6 +8,27 @@ import (
    "strings"
 )
 
+func (c contents) show() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Show")
+   }
+   return "", false
+}
+
+func (c contents) season() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Season")
+   }
+   return "", false
+}
+
+func (c contents) episode() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Episode")
+   }
+   return "", false
+}
+
 // /youtubei/v1/player is missing the name of the series. we can do
 // /youtubei/v1/next with prettyPrint=false, but the web client is still a
 // smaller response
@@ -91,13 +112,6 @@ func (c contents) String() string {
    return b.String()
 }
 
-func (c contents) episode() (string, bool) {
-   if v, ok := c.metadata_row_container(); ok {
-      return v.get("Episode")
-   }
-   return "", false
-}
-
 func (c contents) metadata_row_container() (*metadata_row_container, bool) {
    for _, v := range c {
       if v := v.Video_Secondary_Info_Renderer; v != nil {
@@ -119,20 +133,6 @@ func (c contents) owner() (string, bool) {
 func (c contents) release_date() (string, bool) {
    if v, ok := c.metadata_row_container(); ok {
       return v.get("Release date")
-   }
-   return "", false
-}
-
-func (c contents) season() (string, bool) {
-   if v, ok := c.metadata_row_container(); ok {
-      return v.get("Season")
-   }
-   return "", false
-}
-
-func (c contents) show() (string, bool) {
-   if v, ok := c.metadata_row_container(); ok {
-      return v.get("Show")
    }
    return "", false
 }
