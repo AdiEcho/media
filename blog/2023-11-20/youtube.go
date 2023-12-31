@@ -9,7 +9,8 @@ import (
 )
 
 // /youtubei/v1/player is missing the name of the series. we can do
-// /youtubei/v1/next but the web client is smaller response
+// /youtubei/v1/next with prettyPrint=false, but the web client is still a
+// smaller response
 func make_contents(video_ID string) (contents, error) {
    res, err := http.Get("https://www.youtube.com/watch?v=" + video_ID)
    if err != nil {
