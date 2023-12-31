@@ -8,27 +8,6 @@ import (
    "strings"
 )
 
-func (c contents) show() (string, bool) {
-   if v, ok := c.metadata_row_container(); ok {
-      return v.get("Show")
-   }
-   return "", false
-}
-
-func (c contents) season() (string, bool) {
-   if v, ok := c.metadata_row_container(); ok {
-      return v.get("Season")
-   }
-   return "", false
-}
-
-func (c contents) episode() (string, bool) {
-   if v, ok := c.metadata_row_container(); ok {
-      return v.get("Episode")
-   }
-   return "", false
-}
-
 // /youtubei/v1/player is missing the name of the series. we can do
 // /youtubei/v1/next with prettyPrint=false, but the web client is still a
 // smaller response
@@ -61,6 +40,27 @@ func make_contents(video_ID string) (contents, error) {
       return nil, err
    }
    return s.Contents.Two_Column_Watch_Next_Results.Results.Results.Contents, nil
+}
+
+func (c contents) show() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Show")
+   }
+   return "", false
+}
+
+func (c contents) season() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Season")
+   }
+   return "", false
+}
+
+func (c contents) episode() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Episode")
+   }
+   return "", false
 }
 
 type contents []struct {

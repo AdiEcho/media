@@ -8,6 +8,11 @@ import (
    "path"
 )
 
+const (
+   android_version = "18.43.39"
+   web_version = "2.20231219.04.00"
+)
+
 func (r Request) Player(tok *Token) (*Player, error) {
    r.Context.Client.Android_SDK_Version = 32
    r.Context.Client.OS_Version = "12"
@@ -37,11 +42,6 @@ func (r Request) Player(tok *Token) (*Player, error) {
    }
    return play, nil
 }
-
-const (
-   android_version = "18.43.39"
-   web_version = "2.20231012.01.05"
-)
 
 type Request struct {
    Content_Check_OK bool `json:"contentCheckOk,omitempty"`
