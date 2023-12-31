@@ -8,20 +8,6 @@ import (
    "strings"
 )
 
-type contents []struct {
-   Video_Primary_Info_Renderer *struct {
-      Title value // The Family Secret
-   } `json:"videoPrimaryInfoRenderer"`
-   Video_Secondary_Info_Renderer *struct {
-      Metadata_Row_Container metadata_row_container `json:"metadataRowContainer"`
-      Owner struct {
-         Video_Owner_Renderer struct {
-            Title value
-         } `json:"videoOwnerRenderer"`
-      }
-   } `json:"videoSecondaryInfoRenderer"`
-}
-
 // /youtubei/v1/player is missing the name of the series. we can do
 // /youtubei/v1/next but the web client is smaller response
 func make_contents(video_ID string) (contents, error) {
@@ -53,6 +39,20 @@ func make_contents(video_ID string) (contents, error) {
       return nil, err
    }
    return s.Contents.Two_Column_Watch_Next_Results.Results.Results.Contents, nil
+}
+
+type contents []struct {
+   Video_Primary_Info_Renderer *struct {
+      Title value // The Family Secret
+   } `json:"videoPrimaryInfoRenderer"`
+   Video_Secondary_Info_Renderer *struct {
+      Metadata_Row_Container metadata_row_container `json:"metadataRowContainer"`
+      Owner struct {
+         Video_Owner_Renderer struct {
+            Title value
+         } `json:"videoOwnerRenderer"`
+      }
+   } `json:"videoSecondaryInfoRenderer"`
 }
 
 func (c contents) String() string {
