@@ -10,5 +10,5 @@ func Test_YouTube(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", con)
+   fmt.Println(con)
 }
