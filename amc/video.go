@@ -3,10 +3,11 @@ package amc
 import (
    "encoding/json"
    "errors"
+   "strconv"
    "time"
 )
 
-func (c Content) Video() (*Video, error) {
+func (v *Video) Unmarshal(c Content) error {
    for _, child := range c.Data.Children {
       if child.Type == "video-player-ap" {
          var s struct {
@@ -16,30 +17,40 @@ func (c Content) Video() (*Video, error) {
          if err != nil {
             return nil, err
          }
-         return &s.Current_Video, nil
+         *v = s.Current_Video
+         return nil
       }
    }
-   return nil, errors.New("video-player-ap")
+   return errors.New("video-player-ap")
+}
+
+func (v Video) Episode() (string, bool) {
+   if v.Meta.Episode_Number >= 1 {
+      return strconv.Itoa(v.Meta.Episode_Number), true
+   }
+   return "", false
+}
+
+func (Video) Owner() (string, bool) {
+   return "", false
 }
 
 type Video struct {
    Meta struct {
-      Show_Title string `json:"showTitle"`
-      Season int64 `json:",string"`
-      Episode_Number int64 `json:"episodeNumber"`
       Airdate string // 1996-01-01T00:00:00.000Z
+      Episode_Number int `json:"episodeNumber"`
+      Season int `json:",string"`
+      Show_Title string `json:"showTitle"`
    }
    Text struct {
       Title string
    }
 }
 
-func (v Video) Date() (time.Time, error) {
-   return time.Parse(time.RFC3339, v.Meta.Airdate)
-}
+///////////////////////////////////////////////
 
-func (v Video) Episode() (int64, error) {
-   return v.Meta.Episode_Number, nil
+func (v Video) Release_Date() (string, bool) {
+   return time.Parse(time.RFC3339, v.Meta.Airdate)
 }
 
 func (v Video) Season() (int64, error) {
@@ -53,3 +64,5 @@ func (v Video) Series() string {
 func (v Video) Title() string {
    return v.Text.Title
 }
+
+

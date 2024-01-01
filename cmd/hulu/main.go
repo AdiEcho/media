@@ -27,7 +27,7 @@ func main() {
    home = filepath.ToSlash(home) + "/widevine/"
    var f flags
    flag.Var(&f.id, "a", "address")
-   flag.StringVar(&f.audio_codec, "ac", "mp4a", "audio codec")
+   flag.StringVar(&f.audio_codec, "ac", "ec-3", "audio codec")
    flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
    flag.StringVar(&f.email, "e", "", "email")
    flag.BoolVar(&f.s.Info, "i", false, "information")
