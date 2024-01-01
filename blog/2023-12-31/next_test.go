@@ -1,6 +1,7 @@
 package youtube
 
 import (
+   "154.pages.dev/stream"
    "fmt"
    "testing"
    "time"
@@ -18,7 +19,7 @@ func Test_Watch(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%q\n", c)
+      fmt.Println(stream.Name(c))
       time.Sleep(time.Second)
    }
 }

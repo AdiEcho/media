@@ -46,10 +46,7 @@ func (f flags) download() error {
       if err != nil {
          return err
       }
-      f.s.Name, err = stream.Format_Episode(detail)
-      if err != nil {
-         return err
-      }
+      f.s.Name = stream.Name(detail)
       f.s.Poster = play
    }
    slices.SortFunc(reps, func(a, b *dash.Representation) int {
