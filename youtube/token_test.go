@@ -6,20 +6,31 @@ import (
    "time"
 )
 
+var check_ids = []string{
+   "Cr381pDsSsA", // racy check
+   "HsUATh_Nc2U", // racy check
+   "SZJvDhaSDnc", // racy check
+   "Tq92D6wQ1mg", // racy check
+   "dqRZDebPIGs", // racy check
+   "nGC3D_FkCmg", // content check
+}
+
 func Test_Android_Check(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   tok, err := Read_Token(home + "/youtube.json")
+   raw, err := os.ReadFile(home + "/youtube.json")
    if err != nil {
       t.Fatal(err)
    }
-   var req Request
-   req.Android_Check()
-   for _, check := range check_IDs {
-      req.Video_ID = check
-      play, err := req.Player(tok)
+   for _, check_id := range check_ids {
+      var play Player
+      var req Request
+      req.Android_Check(check_id)
+      var tok Token
+      tok.Unmarshal(raw)
+      err := play.Post(req, &tok)
       if err != nil {
          t.Fatal(err)
       }

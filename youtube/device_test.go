@@ -18,10 +18,12 @@ func Test_Code(t *testing.T) {
    )
    for range [9]bool{} {
       time.Sleep(9 * time.Second)
-      tok, err := code.Token()
+      raw, err := code.Token()
       if err != nil {
          t.Fatal(err)
       }
+      var tok Token
+      tok.Unmarshal(raw)
       fmt.Printf("%+v\n", tok)
       if tok.Access_Token != "" {
          break

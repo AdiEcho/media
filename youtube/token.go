@@ -2,9 +2,9 @@ package youtube
 
 import (
    "encoding/json"
+   "io"
    "net/http"
    "net/url"
-   "os"
 )
 
 // YouTube on TV
@@ -26,7 +26,7 @@ func (d Device_Code) Token() (Raw_Token, error) {
       },
    )
    if err != nil {
-      return err
+      return nil, err
    }
    defer res.Body.Close()
    return io.ReadAll(res.Body)
@@ -36,15 +36,10 @@ type Raw_Token []byte
 
 type Token struct {
    Access_Token string
-   Error string
    Refresh_Token string
 }
 
-func (t *Token) Refresh(r Raw_Token) error {
-   err := json.Unmarshal(r, t)
-   if err != nil {
-      return err
-   }
+func (t *Token) Refresh() error {
    res, err := http.PostForm(
       "https://oauth2.googleapis.com/token",
       url.Values{
@@ -59,4 +54,8 @@ func (t *Token) Refresh(r Raw_Token) error {
    }
    defer res.Body.Close()
    return json.NewDecoder(res.Body).Decode(t)
+}
+
+func (t *Token) Unmarshal(r Raw_Token) error {
+   return json.Unmarshal(r, t)
 }

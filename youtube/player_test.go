@@ -2,9 +2,11 @@ package youtube
 
 import "testing"
 
+const web_id = "HPkDFc8hq5c"
+
 func Test_Web(t *testing.T) {
    var r Request
-   r.Web(web_ID)
+   r.Web(web_id)
    var p Player
    err := p.Post(r, nil)
    if err != nil {
