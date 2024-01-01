@@ -26,8 +26,8 @@ func Test_Android_Check(t *testing.T) {
    }
    for _, check_id := range check_ids {
       var play Player
-      var req Request
-      req.Android_Check(check_id)
+      req := Request{Video_ID: check_id}
+      req.Android_Check()
       var tok Token
       tok.Unmarshal(raw)
       err := play.Post(req, &tok)

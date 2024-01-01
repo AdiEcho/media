@@ -5,8 +5,8 @@ import "testing"
 const web_id = "HPkDFc8hq5c"
 
 func Test_Web(t *testing.T) {
-   var r Request
-   r.Web(web_id)
+   r := Request{Video_ID: web_id}
+   r.Web()
    var p Player
    err := p.Post(r, nil)
    if err != nil {

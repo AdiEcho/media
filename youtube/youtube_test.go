@@ -7,44 +7,11 @@ import (
    "time"
 )
 
-var id_tests = []string{
-   "https://youtube.com/shorts/9Vsdft81Q6w",
-   "https://youtube.com/watch?v=XY-hOqcPGCY",
-}
-
-const image_test = "UpNXI3_ctAc"
-
-var embed_ids = []string{
-   "HtVdAasjOgU",
-   "WaOKSUlf4TM",
-}
-
-var android_ids = []string{
-   "H1BuwMTrtLQ", // content check
-   "zv9NimPx3Es",
-}
-
-func Test_Android_Embed(t *testing.T) {
-   for _, embed_id := range embed_ids {
-      var play Player
-      var req Request
-      req.Android_Embed(embed_id)
-      err := play.Post(req, nil)
-      if err != nil {
-         t.Fatal(err)
-      }
-      if play.Playability.Status != "OK" {
-         t.Fatal(play)
-      }
-      time.Sleep(time.Second)
-   }
-}
-
 func Test_Android(t *testing.T) {
    for _, android_id := range android_ids {
       var p Player
-      var r Request
-      r.Android(android_id)
+      r := Request{Video_ID: android_id}
+      r.Android()
       err := p.Post(r, nil)
       if err != nil {
          t.Fatal(err)
@@ -87,3 +54,36 @@ func Test_Image(t *testing.T) {
       time.Sleep(99 * time.Millisecond)
    }
 }
+var id_tests = []string{
+   "https://youtube.com/shorts/9Vsdft81Q6w",
+   "https://youtube.com/watch?v=XY-hOqcPGCY",
+}
+
+const image_test = "UpNXI3_ctAc"
+
+var embed_ids = []string{
+   "HtVdAasjOgU",
+   "WaOKSUlf4TM",
+}
+
+var android_ids = []string{
+   "H1BuwMTrtLQ", // content check
+   "zv9NimPx3Es",
+}
+
+func Test_Android_Embed(t *testing.T) {
+   for _, embed_id := range embed_ids {
+      var play Player
+      req := Request{Video_ID: embed_id}
+      req.Android_Embed()
+      err := play.Post(req, nil)
+      if err != nil {
+         t.Fatal(err)
+      }
+      if play.Playability.Status != "OK" {
+         t.Fatal(play)
+      }
+      time.Sleep(time.Second)
+   }
+}
+

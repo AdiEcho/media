@@ -12,24 +12,6 @@ import (
    "strings"
 )
 
-func (f flags) do_refresh() error {
-   code, err := youtube.New_Device_Code()
-   if err != nil {
-      return err
-   }
-   fmt.Println(code)
-   fmt.Scanln()
-   token, err := code.Token()
-   if err != nil {
-      return err
-   }
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   return token.Write_File(home + "/youtube.json")
-}
-
 func (f flags) player() (*youtube.Player, error) {
    var token *youtube.Token
    switch f.request {
@@ -43,15 +25,19 @@ func (f flags) player() (*youtube.Player, error) {
       if err != nil {
          return nil, err
       }
-      token, err = youtube.Read_Token(home + "/youtube.json")
+      raw, err := os.ReadFile(home + "/youtube.json")
       if err != nil {
          return nil, err
       }
+      token = new(youtube.Token)
+      token.Unmarshal(raw)
       if err := token.Refresh(); err != nil {
          return nil, err
       }
    }
-   return f.r.Player(token)
+   var play youtube.Player
+   play.Post(f.r, token)
+   return &play, nil
 }
 
 func (f flags) download() error {
@@ -134,3 +120,18 @@ func encode(f youtube.Format, name string) error {
    return nil
 }
 
+func (f flags) do_refresh() error {
+   var code youtube.Device_Code
+   code.Post()
+   fmt.Println(code)
+   fmt.Scanln()
+   raw, err := code.Token()
+   if err != nil {
+      return err
+   }
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(home+"/youtube.json", raw, 0666)
+}

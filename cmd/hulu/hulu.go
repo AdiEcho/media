@@ -36,7 +36,9 @@ func (f flags) download() error {
       }
       defer res.Body.Close()
       f.s.Base = res.Request.URL
-      return dash.Representations(res.Body)
+      var media dash.Media
+      media.Decode(res.Body)
+      return media.Representation("content-0")
    }()
    if err != nil {
       return err

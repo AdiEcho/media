@@ -125,33 +125,6 @@ type Request struct {
    Video_ID string `json:"videoId"`
 }
 
-func (r *Request) Web(video_id string) {
-   r.Context.Client.Client_Name = "WEB"
-   r.Context.Client.Client_Version = web_version
-   r.Video_ID = video_id
-}
-
-func (r *Request) Android_Embed(video_id string) {
-   r.Context.Client.Client_Name = "ANDROID_EMBEDDED_PLAYER"
-   r.Context.Client.Client_Version = android_version
-   r.Video_ID = video_id
-}
-
-func (r *Request) Android(video_id string) {
-   r.Content_Check_OK = true
-   r.Context.Client.Client_Name = "ANDROID"
-   r.Context.Client.Client_Version = android_version
-   r.Video_ID = video_id
-}
-
-func (r *Request) Android_Check(video_id string) {
-   r.Content_Check_OK = true
-   r.Context.Client.Client_Name = "ANDROID"
-   r.Context.Client.Client_Version = android_version
-   r.Racy_Check_OK = true
-   r.Video_ID = video_id
-}
-
 var Images = []Image{
    {Width:120, Height:90, Name:"default.jpg"},
    {Width:120, Height:90, Name:"1.jpg"},
@@ -217,4 +190,27 @@ func (i Image) String() string {
    b.WriteByte('/')
    b.WriteString(i.Name)
    return b.String()
+}
+
+func (r *Request) Web() {
+   r.Context.Client.Client_Name = "WEB"
+   r.Context.Client.Client_Version = web_version
+}
+
+func (r *Request) Android_Embed() {
+   r.Context.Client.Client_Name = "ANDROID_EMBEDDED_PLAYER"
+   r.Context.Client.Client_Version = android_version
+}
+
+func (r *Request) Android() {
+   r.Content_Check_OK = true
+   r.Context.Client.Client_Name = "ANDROID"
+   r.Context.Client.Client_Version = android_version
+}
+
+func (r *Request) Android_Check() {
+   r.Content_Check_OK = true
+   r.Context.Client.Client_Name = "ANDROID"
+   r.Context.Client.Client_Version = android_version
+   r.Racy_Check_OK = true
 }

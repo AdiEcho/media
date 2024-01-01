@@ -16,8 +16,8 @@ var video_ids = []string{
 
 func Test_Next(t *testing.T) {
    for _, video_id := range video_ids {
-      var req Request
-      req.Web(video_id)
+      req := Request{Video_ID: video_id}
+      req.Web()
       var con Contents
       err := con.Next(req)
       if err != nil {
