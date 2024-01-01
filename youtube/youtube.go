@@ -1,55 +1,77 @@
 package youtube
 
 import (
-   "encoding/json"
    "errors"
    "mime"
-   "net/http"
    "net/url"
-   "os"
+   "path"
    "strconv"
    "strings"
-   "time"
 )
 
-type Player struct {
-   Microformat struct {
-      Player_Microformat_Renderer struct {
-         Publish_Date string `json:"publishDate"`
-      } `json:"playerMicroformatRenderer"`
+const (
+   android_version = "18.43.39"
+   web_version = "2.20231219.04.00"
+)
+
+type Request struct {
+   Content_Check_OK bool `json:"contentCheckOk,omitempty"`
+   Context struct {
+      Client struct {
+         Android_SDK_Version int `json:"androidSdkVersion"`
+         Client_Name string `json:"clientName"`
+         Client_Version string `json:"clientVersion"`
+         // need this to get the correct:
+         // This video requires payment to watch
+         // instead of the invalid:
+         // This video can only be played on newer versions of Android or other
+         // supported devices.
+         OS_Version string `json:"osVersion"`
+      } `json:"client"`
+   } `json:"context"`
+   Racy_Check_OK bool `json:"racyCheckOk,omitempty"`
+   Video_ID string `json:"videoId,omitempty"`
+}
+
+func (r *Request) Android() {
+   r.Content_Check_OK = true
+   r.Context.Client.Client_Name = "ANDROID"
+   r.Context.Client.Client_Version = android_version
+}
+
+func (r *Request) Android_Check() {
+   r.Content_Check_OK = true
+   r.Context.Client.Client_Name = "ANDROID"
+   r.Context.Client.Client_Version = android_version
+   r.Racy_Check_OK = true
+}
+
+func (r *Request) Android_Embed() {
+   r.Context.Client.Client_Name = "ANDROID_EMBEDDED_PLAYER"
+   r.Context.Client.Client_Version = android_version
+}
+
+func (r *Request) Web() {
+   r.Context.Client.Client_Name = "WEB"
+   r.Context.Client.Client_Version = web_version
+}
+
+func (r *Request) Set(s string) error {
+   ref, err := url.Parse(s)
+   if err != nil {
+      return err
    }
-   Playability struct {
-      Status string
-      Reason string
-   } `json:"playabilityStatus"`
-   Streaming_Data struct {
-      Adaptive_Formats []Format `json:"adaptiveFormats"`
-   } `json:"streamingData"`
-   Video_Details struct {
-      Author string
-      Length_Seconds int64 `json:"lengthSeconds,string"`
-      Short_Description string `json:"shortDescription"`
-      Title string
-      Video_ID string `json:"videoId"`
-      View_Count int64 `json:"viewCount,string"`
-   } `json:"videoDetails"`
+   r.Video_ID = ref.Query().Get("v")
+   if r.Video_ID == "" {
+      r.Video_ID = path.Base(ref.Path)
+   }
+   return nil
 }
 
-// stream.Video
-func (p Player) Author() string {
-   return p.Video_Details.Author
+func (r Request) String() string {
+   return r.Video_ID
 }
 
-func (p Player) Time() (time.Time, error) {
-   return time.Parse(
-      time.RFC3339, p.Microformat.Player_Microformat_Renderer.Publish_Date,
-   )
-}
-
-// stream.Video
-func (p Player) Title() string {
-   return p.Video_Details.Title
-}
 func (f Format) Ranges() []string {
    const bytes = 10_000_000
    var byte_ranges []string
@@ -76,63 +98,6 @@ const (
    client_secret = "SboVhoG9s0rNafixCSGGKXAT"
 )
 
-func New_Device_Code() (*Device_Code, error) {
-   res, err := http.PostForm(
-      "https://oauth2.googleapis.com/device/code",
-      url.Values{
-         "client_id": {client_ID},
-         "scope": {"https://www.googleapis.com/auth/youtube"},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   code := new(Device_Code)
-   if err := json.NewDecoder(res.Body).Decode(code); err != nil {
-      return nil, err
-   }
-   return code, nil
-}
-
-func (t *Token) Refresh() error {
-   res, err := http.PostForm(
-      "https://oauth2.googleapis.com/token",
-      url.Values{
-         "client_id": {client_ID},
-         "client_secret": {client_secret},
-         "grant_type": {"refresh_token"},
-         "refresh_token": {t.Refresh_Token},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(t)
-}
-
-func (d Device_Code) Token() (*Token, error) {
-   res, err := http.PostForm(
-      "https://oauth2.googleapis.com/token",
-      url.Values{
-         "client_id": {client_ID},
-         "client_secret": {client_secret},
-         "device_code": {d.Device_Code},
-         "grant_type":  {"urn:ietf:params:oauth:grant-type:device_code"},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   tok := new(Token)
-   if err := json.NewDecoder(res.Body).Decode(tok); err != nil {
-      return nil, err
-   }
-   return tok, nil
-}
-
 func (d Device_Code) String() string {
    var b strings.Builder
    b.WriteString("1. Go to\n")
@@ -147,32 +112,6 @@ type Device_Code struct {
    Device_Code string
    User_Code string
    Verification_URL string
-}
-
-func Read_Token(name string) (*Token, error) {
-   text, err := os.ReadFile(name)
-   if err != nil {
-      return nil, err
-   }
-   tok := new(Token)
-   if err := json.Unmarshal(text, tok); err != nil {
-      return nil, err
-   }
-   return tok, nil
-}
-
-func (t Token) Write_File(name string) error {
-   text, err := json.Marshal(t)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(name, text, 0666)
-}
-
-type Token struct {
-   Access_Token string
-   Error string
-   Refresh_Token string
 }
 
 const user_agent = "com.google.android.youtube/"

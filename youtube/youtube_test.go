@@ -7,14 +7,54 @@ import (
    "time"
 )
 
-func Test_Player_Android(t *testing.T) {
+const web_ID = "HPkDFc8hq5c"
+
+var embed_IDs = []string{
+   "HtVdAasjOgU",
+   "WaOKSUlf4TM",
+}
+
+func Test_Android_Embed(t *testing.T) {
+   var req Request
+   req.Android_Embed()
+   for _, embed := range embed_IDs {
+      req.Video_ID = embed
+      play, err := req.Player(nil)
+      if err != nil {
+         t.Fatal(err)
+      }
+      if play.Playability.Status != "OK" {
+         t.Fatal(play)
+      }
+      time.Sleep(time.Second)
+   }
+}
+
+var check_IDs = []string{
+   "Cr381pDsSsA", // racy check
+   "HsUATh_Nc2U", // racy check
+   "SZJvDhaSDnc", // racy check
+   "Tq92D6wQ1mg", // racy check
+   "dqRZDebPIGs", // racy check
+   "nGC3D_FkCmg", // content check
+}
+
+var android_IDs = []string{
+   "H1BuwMTrtLQ", // content check
+   "zv9NimPx3Es",
+}
+
+func Test_Android(t *testing.T) {
    var req Request
    req.Android()
-   req.Video_ID = android_IDs[0]
-   for range [9]struct{}{} {
+   for _, android := range android_IDs {
+      req.Video_ID = android
       p, err := req.Player(nil)
       if err != nil {
          t.Fatal(err)
+      }
+      if p.Playability.Status != "OK" {
+         t.Fatal(p)
       }
       if len(p.Streaming_Data.Adaptive_Formats) == 0 {
          t.Fatal("adaptiveFormats")
@@ -23,32 +63,6 @@ func Test_Player_Android(t *testing.T) {
          t.Fatal("viewCount")
       }
       time.Sleep(time.Second)
-   }
-}
-
-const prompt = `1. Go to
-%v
-
-2. Enter this code
-%v
-`
-
-func Test_Code(t *testing.T) {
-   code, err := New_Device_Code()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf(prompt, code.Verification_URL, code.User_Code)
-   for range [9]bool{} {
-      time.Sleep(9 * time.Second)
-      tok, err := code.Token()
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", tok)
-      if tok.Access_Token != "" {
-         break
-      }
    }
 }
 
