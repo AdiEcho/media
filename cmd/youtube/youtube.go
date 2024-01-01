@@ -12,6 +12,48 @@ import (
    "strings"
 )
 
+func (f flags) do_refresh() error {
+   code, err := youtube.New_Device_Code()
+   if err != nil {
+      return err
+   }
+   fmt.Println(code)
+   fmt.Scanln()
+   token, err := code.Token()
+   if err != nil {
+      return err
+   }
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   return token.Write_File(home + "/youtube.json")
+}
+
+func (f flags) player() (*youtube.Player, error) {
+   var token *youtube.Token
+   switch f.request {
+   case 0:
+      f.r.Android()
+   case 1:
+      f.r.Android_Embed()
+   case 2:
+      f.r.Android_Check()
+      home, err := os.UserHomeDir()
+      if err != nil {
+         return nil, err
+      }
+      token, err = youtube.Read_Token(home + "/youtube.json")
+      if err != nil {
+         return nil, err
+      }
+      if err := token.Refresh(); err != nil {
+         return nil, err
+      }
+   }
+   return f.r.Player(token)
+}
+
 func (f flags) download() error {
    p, err := f.player()
    if err != nil {
@@ -57,30 +99,6 @@ func (f flags) download() error {
    return nil
 }
 
-func (f flags) player() (*youtube.Player, error) {
-   var token *youtube.Token
-   switch f.request {
-   case 0:
-      f.r.Android()
-   case 1:
-      f.r.Android_Embed()
-   case 2:
-      f.r.Android_Check()
-      home, err := os.UserHomeDir()
-      if err != nil {
-         return nil, err
-      }
-      token, err = youtube.Read_Token(home + "/youtube.json")
-      if err != nil {
-         return nil, err
-      }
-      if err := token.Refresh(); err != nil {
-         return nil, err
-      }
-   }
-   return f.r.Player(token)
-}
-
 func encode(f youtube.Format, name string) error {
    dst, err := func() (*os.File, error) {
       ext, err := f.Ext()
@@ -116,20 +134,3 @@ func encode(f youtube.Format, name string) error {
    return nil
 }
 
-func (f flags) do_refresh() error {
-   code, err := youtube.New_Device_Code()
-   if err != nil {
-      return err
-   }
-   fmt.Println(code)
-   fmt.Scanln()
-   token, err := code.Token()
-   if err != nil {
-      return err
-   }
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   return token.Write_File(home + "/youtube.json")
-}

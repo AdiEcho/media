@@ -3,9 +3,10 @@ package youtube
 import "testing"
 
 func Test_Web(t *testing.T) {
-   req := Request{Video_ID: web_ID}
-   req.Web()
-   p, err := req.Player(nil)
+   var r Request
+   r.Web(web_ID)
+   var p Player
+   err := p.Post(r, nil)
    if err != nil {
       t.Fatal(err)
    }

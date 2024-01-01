@@ -8,17 +8,17 @@ import (
 )
 
 // youtube.com/channel/UCuVPpxrm2VAgpH3Ktln4HXg
-var ids = []string{
+var video_ids = []string{
    "7KLCti7tOXE", // video
    "2ZcDwdXEVyI", // episode
    "PBcnZCa1dEk", // film
 }
 
 func Test_Next(t *testing.T) {
-   for _, id := range ids {
+   for _, video_id := range video_ids {
+      var req Request
+      req.Web(video_id)
       var con Contents
-      req := Request{Video_ID: id}
-      req.Web()
       err := con.Next(req)
       if err != nil {
          t.Fatal(err)

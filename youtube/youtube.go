@@ -14,48 +14,6 @@ const (
    web_version = "2.20231219.04.00"
 )
 
-type Request struct {
-   Content_Check_OK bool `json:"contentCheckOk,omitempty"`
-   Context struct {
-      Client struct {
-         Android_SDK_Version int `json:"androidSdkVersion"`
-         Client_Name string `json:"clientName"`
-         Client_Version string `json:"clientVersion"`
-         // need this to get the correct:
-         // This video requires payment to watch
-         // instead of the invalid:
-         // This video can only be played on newer versions of Android or other
-         // supported devices.
-         OS_Version string `json:"osVersion"`
-      } `json:"client"`
-   } `json:"context"`
-   Racy_Check_OK bool `json:"racyCheckOk,omitempty"`
-   Video_ID string `json:"videoId,omitempty"`
-}
-
-func (r *Request) Android() {
-   r.Content_Check_OK = true
-   r.Context.Client.Client_Name = "ANDROID"
-   r.Context.Client.Client_Version = android_version
-}
-
-func (r *Request) Android_Check() {
-   r.Content_Check_OK = true
-   r.Context.Client.Client_Name = "ANDROID"
-   r.Context.Client.Client_Version = android_version
-   r.Racy_Check_OK = true
-}
-
-func (r *Request) Android_Embed() {
-   r.Context.Client.Client_Name = "ANDROID_EMBEDDED_PLAYER"
-   r.Context.Client.Client_Version = android_version
-}
-
-func (r *Request) Web() {
-   r.Context.Client.Client_Name = "WEB"
-   r.Context.Client.Client_Version = web_version
-}
-
 func (r *Request) Set(s string) error {
    ref, err := url.Parse(s)
    if err != nil {
@@ -219,4 +177,50 @@ var Images = []Image{
    {Width:1280, Height:720, Name:"maxres1.webp"},
    {Width:1280, Height:720, Name:"maxres2.webp"},
    {Width:1280, Height:720, Name:"maxres3.webp"},
+}
+
+type Request struct {
+   Content_Check_OK bool `json:"contentCheckOk,omitempty"`
+   Context struct {
+      Client struct {
+         Android_SDK_Version int `json:"androidSdkVersion"`
+         Client_Name string `json:"clientName"`
+         Client_Version string `json:"clientVersion"`
+         // need this to get the correct:
+         // This video requires payment to watch
+         // instead of the invalid:
+         // This video can only be played on newer versions of Android or other
+         // supported devices.
+         OS_Version string `json:"osVersion"`
+      } `json:"client"`
+   } `json:"context"`
+   Racy_Check_OK bool `json:"racyCheckOk,omitempty"`
+   Video_ID string `json:"videoId"`
+}
+
+func (r *Request) Web(video_id string) {
+   r.Context.Client.Client_Name = "WEB"
+   r.Context.Client.Client_Version = web_version
+   r.Video_ID = video_id
+}
+
+func (r *Request) Android_Embed(video_id string) {
+   r.Context.Client.Client_Name = "ANDROID_EMBEDDED_PLAYER"
+   r.Context.Client.Client_Version = android_version
+   r.Video_ID = video_id
+}
+
+func (r *Request) Android(video_id string) {
+   r.Content_Check_OK = true
+   r.Context.Client.Client_Name = "ANDROID"
+   r.Context.Client.Client_Version = android_version
+   r.Video_ID = video_id
+}
+
+func (r *Request) Android_Check(video_id string) {
+   r.Content_Check_OK = true
+   r.Context.Client.Client_Name = "ANDROID"
+   r.Context.Client.Client_Version = android_version
+   r.Racy_Check_OK = true
+   r.Video_ID = video_id
 }
