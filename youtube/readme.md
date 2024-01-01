@@ -9,63 +9,17 @@ Android API | result
 31          | fail
 32          | pass
 
-## Device OAuth
-
-- https://datatracker.ietf.org/doc/html/rfc8628
-- https://developers.google.com/identity/sign-in/devices
-
-## GenyMotion
-
-https://genymotion.com/download
-
-When installing VirtualBox, unselect Python. This fails:
-
-~~~
-> adb install com.google.android.youtube-1537082816.apk
-Failure [INSTALL_FAILED_OLDER_SDK]
-~~~
-
-because of this:
-
-~~~
-sdkVersion:'26'
-~~~
-
-which means we need to use at least API Level 26 (Android 8). If you try to run
-YouTube on a base image, it will just crash, so Install Open GApps. Then click
-Restart now. If you have trouble at this point, you might need to End task:
-
-~~~
-C:\Program Files\Genymobile\Genymotion\tools\adb.exe
-~~~
-
-Download YouTube:
-
-https://play.google.com/store/apps/details?id=com.google.android.youtube
-
-I tried installing YouTube by dragging APK to home screen, but it would just
-crash when starting.
-
-Then install system certificate. Then start proxy:
-
-~~~
-mitmproxy
-~~~
-
-then set proxy:
-
-~~~
-adb shell settings put global http_proxy 192.168.56.1:8080
-~~~
-
-Note if you restart the device, you need to install system certificate again.
+Then install system certificate.
 
 ~~~
 adb shell am start -a android.intent.action.VIEW `
 -d https://www.youtube.com/watch?v=k5dX9sjXYVk
 ~~~
 
-https://support.genymotion.com/hc/articles/360002778137-How-to-connect
+## Device OAuth
+
+- https://datatracker.ietf.org/doc/html/rfc8628
+- https://developers.google.com/identity/sign-in/devices
 
 ## How to get `client_id` and `client_secret`
 
@@ -112,3 +66,29 @@ Is `sd1` always available? No:
 If `hq1` always available? Yes:
 
 http://i.ytimg.com/vi/hq2KgzKETBw/hq1.jpg
+
+## name
+
+episode:
+
+~~~html
+aria-label="In The Heat Of The Night S2 E3 • The Family Secret 47 minutes"
+~~~
+
+https://youtube.com/watch?v=2ZcDwdXEVyI
+
+film:
+
+~~~html
+aria-label="Gattaca by Drama • 1997 1 hour, 46 minutes" title="Gattaca">
+~~~
+
+https://youtube.com/watch?v=R9lZ8i8El4I
+
+video:
+
+~~~html
+aria-label="Sleepygirl 11 by Yagya (IS) - Topic 9,746 views 5 years ago 6 minutes, 15 seconds"
+~~~
+
+https://youtube.com/watch?v=7KLCti7tOXE
