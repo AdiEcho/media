@@ -44,21 +44,6 @@ func (at App_Token) Item(content_ID string) (*Item, error) {
    return &video.Item_List[0], nil
 }
 
-func (i Item) Series() (string, bool) {
-   if i.Media_Type == "Full Episode" {
-      return i.Series_Title, true
-   }
-   return "", false
-}
-
-func (i Item) Date() (time.Time, error) {
-   return time.Parse("2006-01-02T15:04:05-07:00", i.Air_Date_ISO)
-}
-
-func (i Item) Title() string {
-   return i.Label
-}
-
 type Item struct {
    Air_Date_ISO string `json:"_airDateISO"`
    Label string
@@ -71,10 +56,29 @@ type Item struct {
    Season_Num string `json:"seasonNum"`
 }
 
-func (i Item) Season() (int64, error) {
-   return strconv.ParseInt(i.Season_Num, 10, 64)
+func (i Item) Episode() (string, bool) {
+   return i.Episode_Num, i.Episode_Num != ""
 }
 
-func (i Item) Episode() (int64, error) {
-   return strconv.ParseInt(i.Episode_Num, 10, 64)
+func (Item) Owner() (string, bool) {
+   return "", false
+}
+
+func (i Item) Release_Date() (string, bool) {
+   return time.Parse("2006-01-02T15:04:05-07:00", i.Air_Date_ISO)
+}
+
+func (i Item) Series() (string, bool) {
+   if i.Media_Type == "Full Episode" {
+      return i.Series_Title, true
+   }
+   return "", false
+}
+
+func (i Item) Title() string {
+   return i.Label
+}
+
+func (i Item) Season() (int64, error) {
+   return strconv.ParseInt(i.Season_Num, 10, 64)
 }

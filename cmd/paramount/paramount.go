@@ -25,13 +25,7 @@ func (f flags) downloadable(token *paramount.App_Token) error {
       fmt.Println(ref)
       return nil
    }
-   dst, err := func() (*os.File, error) {
-      s, err := stream.Format_Film(item)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(s + ".mp4")
-   }()
+   dst, err := os.Create(stream.Name(item) + ".mp4")
    if err != nil {
       return err
    }

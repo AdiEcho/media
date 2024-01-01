@@ -1,0 +1,130 @@
+{
+  "action": "queryVideoFeed",
+  "itemList": [
+    {
+      "genre": "Action",
+      "status": "PREMIUM",
+      "_firstIngestDate": "12/07/22 02:46 EST",
+      "expired": false,
+      "showPageUrl": "movies/jack-reacher",
+      "cbsShowId": -1,
+      "primaryCategory": "1840599107915",
+      "primaryCategoryName": "AA Movies/Movies/Paramount",
+      "editDate": 1695434356000,
+      "_editDate": "09/22/23 21:59 EDT",
+      "_lastModifiedDate": "12/01/23 13:44 EST",
+      "ingestDate": 1670399210000,
+      "airDate": 1356076801000,
+      "description": "Ex-military investigator Jack Reacher leaps off the pages of Lee Child’s bestselling novel and onto the big screen in this explosive thriller. When an unspeakable crime is committed, all evidence points to the suspect in custody who offers up a single note in defense: “Get Jack Reacher!” The law has its limits, but Reacher does not when his fight for the truth pits him against an unexpected enemy with a skill for violence and a secret to keep.",
+      "shortDescription": "Investigator Jack Reacher leaps off the pages of Lee Child’s novel and onto the big screen in this thriller. When a horrible crime is committed, all evidence points to the suspect in custody who offers up a single note in defense: “Get Jack Reacher!”",
+      "pubDate": 1670399210000,
+      "label": "Jack Reacher",
+      "url": "movies/jack-reacher/xzUce3_6ljEEGyIu9rCpndUPhDgfZF1X",
+      "assetType": "DASH_CENC_HDR10",
+      "firstIngestDate": 1670399210000,
+      "category": "",
+      "topLevelCategory": "Entertainment",
+      "fullEpisode": true,
+      "exclusive": true,
+      "contentId": "xzUce3_6ljEEGyIu9rCpndUPhDgfZF1X",
+      "title": "Jack Reacher",
+      "_ingestDate": "09/22/23 21:59 EDT",
+      "episodeNum": "",
+      "_pubDate": "12/07/22 02:46 EST",
+      "seasonNum": "",
+      "brand": "Paramount",
+      "childContentId": "vhtJ1_ftGjATu50403yjbdz3XmxsXc31",
+      "sizzleId": "vhtJ1_ftGjATu50403yjbdz3XmxsXc31",
+      "seriesTitle": "Paramount+ Movies",
+      "_airDate": "12/21/12 03:00 EST",
+      "duration": 7824,
+      "lastModifiedDate": 1701456243000,
+      "rating": "pg-13",
+      "deviceType": "PC",
+      "thumbnail": "https://thumbnails.cbsig.net/CBS_Production_Entertainment_VMS/2021/04/22/1888537155963/JKRR_US_2012_SA_16x9_1920x1080_NB_2361642_1920x1080.jpg",
+      "amazonESTURL": "",
+      "itunesESTURL": "",
+      "expirationDate": 1735718340000,
+      "_expirationDate": "01/01/25 02:59 EST",
+      "_pubDateISO": "2022-12-06T23:46:50-08:00",
+      "_airDateISO": "2012-12-21T00:00:01-08:00",
+      "subscriptionLevel": "PAID",
+      "mediaAvailableDate": "2023-12-01T10:00:01-0800",
+      "mediaAvailableDateEpoch": 1701453601000,
+      "isLive": false,
+      "cmsAccountId": "dJ5BDC",
+      "appleWatchListShowKey": "SHOW_-1_Paramount+-Movies",
+      "isProtected": true,
+      "mediaType": "Movie",
+      "excludeNielsenTracking": false,
+      "endCreditsChapterTime": "02:05:31",
+      "thumbnailSet": [
+        {
+          "height": 1080,
+          "width": 1920,
+          "assetType": "Thumbnail",
+          "url": "https://thumbnails.cbsig.net/CBS_Production_Entertainment_VMS/2021/04/22/1888537155963/JKRR_US_2012_SA_16x9_1920x1080_NB_2361642_1920x1080.jpg"
+        }
+      ],
+      "downloadCountrySet": [
+        {
+          "code": "US",
+          "downloadable": true
+        }
+      ],
+      "regionalRatings": [
+        {
+          "region": "US",
+          "rating": "PG-13",
+          "disclaimer": null,
+          "secondaryDescriptors": null,
+          "subratings": null,
+          "consumerAdvice": null,
+          "ratingIcon": null
+        }
+      ],
+      "premiumFeatures": [
+        "HDR10",
+        "4kUHD",
+        "5.1",
+        "DVS Audio",
+        "Dolby Vision"
+      ],
+      "videoProperties": [
+        ""
+      ],
+      "externalId": "paramountstudios-34662-001-FTR",
+      "availableForProfileTypes": [
+        "ADULT"
+      ],
+      "playbackEvents": {
+        "endCreditChapterTimeMs": 7531000,
+        "previewStartTimeMs": null,
+        "previewEndTimeMs": null,
+        "openCreditEndTimeMs": null,
+        "openCreditStartTime": null
+      },
+      "embeddable": "false",
+      "copyright": "ViacomCBS Corp",
+      "addOns": [],
+      "isContentAccessibleInCAN": false,
+      "regionalAudioExcludeLanguages": [],
+      "regionalTextExcludeLanguages": [],
+      "tmsprogramID": "MV004005920000",
+      "tmsseriesID": "",
+      "thumbnailSheetSet": [
+        {
+          "height": 126,
+          "width": 29344,
+          "assetType": "ThumbSheet",
+          "url": "https://thumbnails.cbsig.net/CBS_Production_Entertainment_VMS/2021/04/22/1888537155963/Jack_Reacher_34662_001_FTR_VMASTER_M3497_ProRes_422_HQ_3840x2160_2398_5_1_2_0_16x9LB_engAU_engPT_80595231_2310162_vr_cs_224x126_60_131.jpg"
+        }
+      ],
+      "__FOR_TRACKING_ONLY_MEDIA_ID": 1889466435536
+    }
+  ],
+  "success": true,
+  "errors": null,
+  "itemCount": 1,
+  "resultSize": 1
+}
