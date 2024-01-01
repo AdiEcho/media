@@ -8,6 +8,13 @@ import (
    "strings"
 )
 
+func (c contents) Release_Date() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Release date")
+   }
+   return "", false
+}
+
 func (c contents) Title() (string, bool) {
    for _, v := range c {
       if v := v.Video_Primary_Info_Renderer; v != nil {
@@ -167,11 +174,4 @@ type metadata_row_container struct {
          } `json:"metadataRowRenderer"`
       }
    } `json:"metadataRowContainerRenderer"`
-}
-
-func (c contents) Release_Date() (string, bool) {
-   if v, ok := c.metadata_row_container(); ok {
-      return v.get("Release date")
-   }
-   return "", false
 }

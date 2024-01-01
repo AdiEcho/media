@@ -5,6 +5,8 @@ import (
    "encoding/json"
    "errors"
    "net/http"
+   "strconv"
+   "strings"
 )
 
 func (a Authenticate) Details(d *Deep_Link) (*Details, error) {
@@ -44,25 +46,48 @@ func (a Authenticate) Details(d *Deep_Link) (*Details, error) {
    return &s.Items[0], nil
 }
 
-func (d Details) Series() string {
-   return d.Series_Name
+func (Details) Owner() (string, bool) {
+   return "", false
 }
 
-func (d Details) Title() string {
-   return d.Episode_Name
+func (d Details) Episode() (string, bool) {
+   if d.Episode_Number >= 1 {
+      return strconv.Itoa(d.Episode_Number), true
+   }
+   return "", false
+}
+
+func (d Details) Season() (string, bool) {
+   if d.Season_Number >= 1 {
+      return strconv.Itoa(d.Season_Number), true
+   }
+   return "", false
+}
+
+func (d Details) Show() (string, bool) {
+   return d.Series_Name, d.Series_Name != ""
 }
 
 type Details struct {
    Episode_Name string
-   Episode_Number int64
-   Season_Number int64
+   Episode_Number int
+   Headline string
+   Premiere_Date string
+   Season_Number int
    Series_Name string
 }
 
-func (d Details) Season() (int64, error) {
-   return d.Season_Number, nil
+func (d Details) Title() (string, bool) {
+   if d.Episode_Name != "" {
+      return d.Episode_Name, true
+   }
+   return d.Headline, true
 }
 
-func (d Details) Episode() (int64, error) {
-   return d.Episode_Number, nil
+func (d Details) Release_Date() (string, bool) {
+   if d.Episode_Name != "" {
+      return "", false
+   }
+   year, _, _ := strings.Cut(d.Premiere_Date, "-")
+   return year, true
 }

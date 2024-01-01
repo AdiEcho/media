@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "startover": true,
+      "location_requirement": "NONE",
+      "id": "5add1b6c-04f2-4038-a925-35db3007d662",
+      "season_number": 2,
+      "season_short_display_name": "S2",
+      "episode_number": 10,
+      "rating": "TVMA",
+      "premiere_date": "2023-06-22T12:00:00Z",
+      "eab": "EAB::5add1b6c-04f2-4038-a925-35db3007d662::189666589::242438826",
+      "details_href": {
+        "type": "series",
+        "id": "05eb6a8e-90ed-4947-8c0b-e6536cbddd5f",
+        "params": {
+          "network_breadcrumb": "f812637b-6186-48e4-9b63-85167ba2cf17"
+        }
+      },
+      "headline": "The Bear",
+      "series_name": "The Bear",
+      "episode_name": "The Bear",
+      "description": "Friends & Family night at The Bear.",
+      "type": "episode",
+      "availability_state": "available",
+      "artwork": {
+        "panel": "https://img2.hulu.com/user/v3/artwork/5add1b6c-04f2-4038-a925-35db3007d662?base_image_bucket_name=image_manager&base_image=d72f4165-df3e-4091-a750-fb2dfeeedeb1",
+        "thumbnail": "https://img3.hulu.com/user/v3/artwork/05eb6a8e-90ed-4947-8c0b-e6536cbddd5f?base_image_bucket_name=image_manager&base_image=75900223-55e1-48c0-a364-95db90a1c77d"
+      }
+    }
+  ]
+}
