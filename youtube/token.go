@@ -7,6 +7,14 @@ import (
    "os"
 )
 
+// YouTube on TV
+const (
+   client_ID =
+      "861556708454-d6dlm3lh05idd8npek18k6be8ba3oc68" +
+      ".apps.googleusercontent.com"
+   client_secret = "SboVhoG9s0rNafixCSGGKXAT"
+)
+
 func (t *Token) Refresh() error {
    res, err := http.PostForm(
       "https://oauth2.googleapis.com/token",

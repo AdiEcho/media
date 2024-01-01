@@ -90,14 +90,6 @@ func (f Format) Ranges() []string {
    return byte_ranges
 }
 
-// YouTube on TV
-const (
-   client_ID =
-      "861556708454-d6dlm3lh05idd8npek18k6be8ba3oc68" +
-      ".apps.googleusercontent.com"
-   client_secret = "SboVhoG9s0rNafixCSGGKXAT"
-)
-
 func (d Device_Code) String() string {
    var b strings.Builder
    b.WriteString("1. Go to\n")
@@ -113,8 +105,6 @@ type Device_Code struct {
    User_Code string
    Verification_URL string
 }
-
-const user_agent = "com.google.android.youtube/"
 
 type Format struct {
    Quality_Label string `json:"qualityLabel"`

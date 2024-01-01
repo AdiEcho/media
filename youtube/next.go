@@ -8,76 +8,28 @@ import (
    "strings"
 )
 
-type contents []struct {
+type Contents []struct {
    Video_Primary_Info_Renderer *struct {
-      Title value // The Family Secret
+      Title Value // The Family Secret
    } `json:"videoPrimaryInfoRenderer"`
    Video_Secondary_Info_Renderer *struct {
-      Metadata_Row_Container metadata_row_container `json:"metadataRowContainer"`
+      Metadata_Row_Container Metadata_Row_Container `json:"metadataRowContainer"`
       Owner struct {
          Video_Owner_Renderer struct {
-            Title value
+            Title Value
          } `json:"videoOwnerRenderer"`
       }
    } `json:"videoSecondaryInfoRenderer"`
 }
 
-// /youtubei/v1/player is missing the name of the series
-func make_contents(videoId string) (contents, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         VideoId string `json:"videoId"`
-         Context struct {
-            Client struct {
-               ClientName string `json:"clientName"`
-               ClientVersion string `json:"clientVersion"`
-            } `json:"client"`
-         } `json:"context"`
-      }
-      s.VideoId = videoId
-      s.Context.Client.ClientName = "WEB"
-      s.Context.Client.ClientVersion = "2.20231219.04.00"
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   res, err := http.Post(
-      "https://www.youtube.com/youtubei/v1/next?prettyPrint=false" ,
-      "application/json", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   var s struct {
-      Contents struct {
-         Two_Column_Watch_Next_Results struct {
-            Results struct {
-               Results struct {
-                  Contents contents
-               }
-            }
-         } `json:"twoColumnWatchNextResults"`
-      }
-   }
-   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
-      return nil, err
-   }
-   return s.Contents.Two_Column_Watch_Next_Results.Results.Results.Contents, nil
-}
-
-func (c contents) Episode() (string, bool) {
+func (c Contents) Episode() (string, bool) {
    if v, ok := c.metadata_row_container(); ok {
       return v.get("Episode")
    }
    return "", false
 }
 
-func (c contents) Owner() (string, bool) {
+func (c Contents) Owner() (string, bool) {
    for _, v := range c {
       if v := v.Video_Secondary_Info_Renderer; v != nil {
          return v.Owner.Video_Owner_Renderer.Title.String(), true
@@ -86,28 +38,28 @@ func (c contents) Owner() (string, bool) {
    return "", false
 }
 
-func (c contents) Release_Date() (string, bool) {
+func (c Contents) Release_Date() (string, bool) {
    if v, ok := c.metadata_row_container(); ok {
       return v.get("Release date")
    }
    return "", false
 }
 
-func (c contents) Season() (string, bool) {
+func (c Contents) Season() (string, bool) {
    if v, ok := c.metadata_row_container(); ok {
       return v.get("Season")
    }
    return "", false
 }
 
-func (c contents) Show() (string, bool) {
+func (c Contents) Show() (string, bool) {
    if v, ok := c.metadata_row_container(); ok {
       return v.get("Show")
    }
    return "", false
 }
 
-func (c contents) Title() (string, bool) {
+func (c Contents) Title() (string, bool) {
    for _, v := range c {
       if v := v.Video_Primary_Info_Renderer; v != nil {
          return v.Title.String(), true
@@ -116,7 +68,42 @@ func (c contents) Title() (string, bool) {
    return "", false
 }
 
-func (c contents) metadata_row_container() (*metadata_row_container, bool) {
+// /youtubei/v1/player is missing the name of the series. use with WEB client.
+func (c *Contents) Next(r Request) error {
+   body, err := json.Marshal(r)
+   if err != nil {
+      return err
+   }
+   res, err := http.Post(
+      "https://www.youtube.com/youtubei/v1/next?prettyPrint=false" ,
+      "application/json", bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return errors.New(res.Status)
+   }
+   var s struct {
+      Contents struct {
+         Two_Column_Watch_Next_Results struct {
+            Results struct {
+               Results struct {
+                  Contents Contents
+               }
+            }
+         } `json:"twoColumnWatchNextResults"`
+      }
+   }
+   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
+      return err
+   }
+   *c = s.Contents.Two_Column_Watch_Next_Results.Results.Results.Contents
+   return nil
+}
+
+func (c Contents) metadata_row_container() (*Metadata_Row_Container, bool) {
    for _, v := range c {
       if v := v.Video_Secondary_Info_Renderer; v != nil {
          return &v.Metadata_Row_Container, true
@@ -125,18 +112,18 @@ func (c contents) metadata_row_container() (*metadata_row_container, bool) {
    return nil, false
 }
 
-type metadata_row_container struct {
+type Metadata_Row_Container struct {
    Metadata_Row_Container_Renderer struct {
       Rows []struct {
          Metadata_Row_Renderer struct {
-            Title value // Show
-            Contents values // In The Heat Of The Night
+            Title Value // Show
+            Contents Values // In The Heat Of The Night
          } `json:"metadataRowRenderer"`
       }
    } `json:"metadataRowContainerRenderer"`
 }
 
-func (m metadata_row_container) get(s string) (string, bool) {
+func (m Metadata_Row_Container) get(s string) (string, bool) {
    for _, v := range m.Metadata_Row_Container_Renderer.Rows {
       if v := v.Metadata_Row_Renderer; v.Title.String() == s {
          return v.Contents.String(), true
@@ -145,14 +132,14 @@ func (m metadata_row_container) get(s string) (string, bool) {
    return "", false
 }
 
-type value struct {
+type Value struct {
    Runs []struct {
       Text string
    }
    Simple_Text string `json:"simpleText"`
 }
 
-func (v value) String() string {
+func (v Value) String() string {
    if v.Simple_Text != "" {
       return v.Simple_Text
    }
@@ -163,9 +150,9 @@ func (v value) String() string {
    return b.String()
 }
 
-type values []value
+type Values []Value
 
-func (v values) String() string {
+func (v Values) String() string {
    var b strings.Builder
    for _, val := range v {
       if b.Len() >= 1 {

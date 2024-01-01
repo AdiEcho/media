@@ -6,7 +6,7 @@ import (
    "net/url"
 )
 
-func New_Device_Code() (*Device_Code, error) {
+func (d *Device_Code) Post() error {
    res, err := http.PostForm(
       "https://oauth2.googleapis.com/device/code",
       url.Values{
@@ -15,12 +15,8 @@ func New_Device_Code() (*Device_Code, error) {
       },
    )
    if err != nil {
-      return nil, err
+      return err
    }
    defer res.Body.Close()
-   code := new(Device_Code)
-   if err := json.NewDecoder(res.Body).Decode(code); err != nil {
-      return nil, err
-   }
-   return code, nil
+   return json.NewDecoder(res.Body).Decode(d)
 }

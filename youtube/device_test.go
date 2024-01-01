@@ -7,7 +7,8 @@ import (
 )
 
 func Test_Code(t *testing.T) {
-   code, err := New_Device_Code()
+   var code Device_Code
+   err := code.Post()
    if err != nil {
       t.Fatal(err)
    }

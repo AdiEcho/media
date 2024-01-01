@@ -7,19 +7,23 @@ import (
    "time"
 )
 
+// youtube.com/channel/UCuVPpxrm2VAgpH3Ktln4HXg
 var ids = []string{
-   "2ZcDwdXEVyI", // episode
    "7KLCti7tOXE", // video
-   "R9lZ8i8El4I", // film
+   "2ZcDwdXEVyI", // episode
+   "PBcnZCa1dEk", // film
 }
 
-func Test_Watch(t *testing.T) {
+func Test_Next(t *testing.T) {
    for _, id := range ids {
-      c, err := make_contents(id)
+      var con Contents
+      req := Request{Video_ID: id}
+      req.Web()
+      err := con.Next(req)
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(stream.Name(c))
-      time.Sleep(time.Second)
+      fmt.Println(stream.Name(con))
+      time.Sleep(99*time.Millisecond)
    }
 }

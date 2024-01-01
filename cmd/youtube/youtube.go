@@ -30,6 +30,9 @@ func (f flags) download() error {
          fmt.Println(form)
       }
    } else {
+      var content youtube.Contents
+      f.r.Web()
+      content.Next(f.r)
       // need to do audio first, because URLs expire quickly
       index := slices.IndexFunc(forms, func(a youtube.Format) bool {
          if a.Audio_Quality == f.a_quality {
@@ -37,7 +40,7 @@ func (f flags) download() error {
          }
          return false
       })
-      err := encode(forms[index], stream.Name(p))
+      err := encode(forms[index], stream.Name(content))
       if err != nil {
          return err
       }
@@ -49,7 +52,7 @@ func (f flags) download() error {
          }
          return false
       })
-      return encode(forms[index], stream.Name(p))
+      return encode(forms[index], stream.Name(content))
    }
    return nil
 }

@@ -11,20 +11,16 @@ type config struct {
    Innertube_Client_Version string
 }
 
-func new_config() (*config, error) {
+func (c *config) get() error {
    res, err := http.Get("https://www.youtube.com")
    if err != nil {
-      return nil, err
+      return err
    }
    defer res.Body.Close()
    text, err := io.ReadAll(res.Body)
    if err != nil {
-      return nil, err
+      return err
    }
    _, text = json.Cut(text, []byte("\nytcfg.set("), nil)
-   con := new(config)
-   if err := json.Decode(text, con); err != nil {
-      return nil, err
-   }
-   return con, nil
+   return json.Decode(text, c)
 }

@@ -7,7 +7,8 @@ import (
 )
 
 func Test_Config(t *testing.T) {
-   con, err := new_config()
+   var con config
+   err := con.get()
    if err != nil {
       t.Fatal(err)
    }

@@ -7,6 +7,8 @@ import (
    "time"
 )
 
+const user_agent = "com.google.android.youtube/"
+
 func (r Request) Player(tok *Token) (*Player, error) {
    r.Context.Client.Android_SDK_Version = 32
    r.Context.Client.OS_Version = "12"
