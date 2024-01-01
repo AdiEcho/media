@@ -24,6 +24,21 @@ func (v *Video) Unmarshal(c Content) error {
    return errors.New("video-player-ap")
 }
 
+func (Video) Owner() (string, bool) {
+   return "", false
+}
+
+func (v Video) Show() (string, bool) {
+   return v.Meta.Show_Title, v.Meta.Show_Title != ""
+}
+
+func (v Video) Season() (int64, error) {
+   if v.Meta.Season >= 1 {
+      return strconv.Itoa(v.Meta.Season), true
+   }
+   return "", false
+}
+
 func (v Video) Episode() (string, bool) {
    if v.Meta.Episode_Number >= 1 {
       return strconv.Itoa(v.Meta.Episode_Number), true
@@ -31,8 +46,8 @@ func (v Video) Episode() (string, bool) {
    return "", false
 }
 
-func (Video) Owner() (string, bool) {
-   return "", false
+func (v Video) Title() (string, bool) {
+   return v.Text.Title, true
 }
 
 type Video struct {
@@ -49,20 +64,17 @@ type Video struct {
 
 ///////////////////////////////////////////////
 
-func (v Video) Release_Date() (string, bool) {
+func (v Video) Year() (string, bool) {
+   
+   
+   
    return time.Parse(time.RFC3339, v.Meta.Airdate)
 }
 
-func (v Video) Season() (int64, error) {
-   return v.Meta.Season, nil
-}
 
-func (v Video) Series() string {
-   return v.Meta.Show_Title
-}
 
-func (v Video) Title() string {
-   return v.Text.Title
-}
+
+
+
 
 
