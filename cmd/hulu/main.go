@@ -34,7 +34,7 @@ func main() {
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
    flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
-   flag.IntVar(&f.video_bandwidth, "vb", 8_100_000, "video max bandwidth")
+   flag.IntVar(&f.video_bandwidth, "vb", 8_500_000, "video max bandwidth")
    flag.Parse()
    log.Set_Handler(f.h)
    log.Set_Transport(0)
