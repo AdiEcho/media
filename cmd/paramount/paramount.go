@@ -12,36 +12,6 @@ import (
    "strings"
 )
 
-func (f flags) downloadable(token *paramount.App_Token) error {
-   item, err := token.Item(f.content_ID)
-   if err != nil {
-      return err
-   }
-   ref, err := paramount.Downloadable(f.content_ID)
-   if err != nil {
-      return err
-   }
-   if f.s.Info {
-      fmt.Println(ref)
-      return nil
-   }
-   dst, err := os.Create(stream.Name(item) + ".mp4")
-   if err != nil {
-      return err
-   }
-   defer dst.Close()
-   res, err := http.Get(ref)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   src := log.New_Progress(1).Reader(res)
-   if _, err := dst.ReadFrom(src); err != nil {
-      return err
-   }
-   return nil
-}
-
 func (f flags) dash(token *paramount.App_Token) error {
    ref, err := paramount.DASH_CENC(f.content_ID)
    if err != nil {
@@ -53,23 +23,22 @@ func (f flags) dash(token *paramount.App_Token) error {
    }
    defer res.Body.Close()
    f.s.Base = res.Request.URL
-   reps, err := dash.Representations(res.Body)
-   if err != nil {
-      return err
-   }
    if !f.s.Info {
-      item, err := token.Item(f.content_ID)
-      if err != nil {
-         return err
-      }
-      f.s.Name, err = stream.Format_Film(item)
-      if err != nil {
-         return err
-      }
       f.s.Poster, err = token.Session(f.content_ID)
       if err != nil {
          return err
       }
+      item, err := token.Item(f.content_ID)
+      if err != nil {
+         return err
+      }
+      f.s.Name = stream.Name(item)
+   }
+   var media dash.Media
+   media.Decode(res.Body)
+   reps, err := media.Representation("0")
+   if err != nil {
+      return err
    }
    slices.SortFunc(reps, func(a, b *dash.Representation) int {
       return b.Bandwidth - a.Bandwidth
@@ -107,3 +76,33 @@ func (f flags) dash(token *paramount.App_Token) error {
    })
    return f.s.DASH_Sofia(reps, index)
 }
+func (f flags) downloadable(token *paramount.App_Token) error {
+   item, err := token.Item(f.content_ID)
+   if err != nil {
+      return err
+   }
+   ref, err := paramount.Downloadable(f.content_ID)
+   if err != nil {
+      return err
+   }
+   if f.s.Info {
+      fmt.Println(ref)
+      return nil
+   }
+   dst, err := os.Create(stream.Name(item) + ".mp4")
+   if err != nil {
+      return err
+   }
+   defer dst.Close()
+   res, err := http.Get(ref)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   src := log.New_Progress(1).Reader(res)
+   if _, err := dst.ReadFrom(src); err != nil {
+      return err
+   }
+   return nil
+}
+

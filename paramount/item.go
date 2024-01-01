@@ -5,9 +5,7 @@ import (
    "errors"
    "net/http"
    "net/url"
-   "strconv"
    "strings"
-   "time"
 )
 
 func (at App_Token) Item(content_ID string) (*Item, error) {
@@ -65,20 +63,24 @@ func (Item) Owner() (string, bool) {
 }
 
 func (i Item) Release_Date() (string, bool) {
-   return time.Parse("2006-01-02T15:04:05-07:00", i.Air_Date_ISO)
+   if i.Media_Type == "Movie" {
+      year, _, _ := strings.Cut(i.Air_Date_ISO, "-")
+      return year, true
+   }
+   return "", false
 }
 
-func (i Item) Series() (string, bool) {
+func (i Item) Season() (string, bool) {
+   return i.Season_Num, i.Season_Num != ""
+}
+
+func (i Item) Show() (string, bool) {
    if i.Media_Type == "Full Episode" {
       return i.Series_Title, true
    }
    return "", false
 }
 
-func (i Item) Title() string {
-   return i.Label
-}
-
-func (i Item) Season() (int64, error) {
-   return strconv.ParseInt(i.Season_Num, 10, 64)
+func (i Item) Title() (string, bool) {
+   return i.Label, true
 }

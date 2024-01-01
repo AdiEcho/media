@@ -36,10 +36,7 @@ func (f flags) download() error {
       if err != nil {
          return err
       }
-      f.s.Name, err = stream.Format_Film(video)
-      if err != nil {
-         return err
-      }
+      f.s.Name = stream.Name(video)
    }
    play, err := auth.Playback(f.address)
    if err != nil {

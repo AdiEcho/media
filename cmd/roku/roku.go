@@ -19,10 +19,7 @@ func (f flags) DASH(content *roku.Content) error {
       if err != nil {
          return err
       }
-      f.s.Name, err = stream.Format_Film(content)
-      if err != nil {
-         return err
-      }
+      f.s.Name = stream.Name(content)
    }
    res, err := http.Get(content.DASH().URL)
    if err != nil {
@@ -33,7 +30,9 @@ func (f flags) DASH(content *roku.Content) error {
       return errors.New(res.Status)
    }
    f.s.Base = res.Request.URL
-   reps, err := dash.Representations(res.Body)
+   var media dash.Media
+   media.Decode(res.Body)
+   reps, err := media.Representation("1")
    if err != nil {
       return err
    }

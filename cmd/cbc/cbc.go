@@ -26,7 +26,7 @@ func (f *flags) master() (*hls.Master, error) {
    if err != nil {
       return nil, err
    }
-   f.s.Name, err = stream.Format_Film(gem.Structured_Metadata)
+   f.s.Name, err = stream.Name(gem.Structured_Metadata)
    if err != nil {
       return nil, err
    }

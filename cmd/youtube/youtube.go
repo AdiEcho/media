@@ -37,7 +37,7 @@ func (f flags) download() error {
          }
          return false
       })
-      err := encode(forms[index], stream.Format_Video(p))
+      err := encode(forms[index], stream.Name(p))
       if err != nil {
          return err
       }
@@ -49,7 +49,7 @@ func (f flags) download() error {
          }
          return false
       })
-      return encode(forms[index], stream.Format_Video(p))
+      return encode(forms[index], stream.Name(p))
    }
    return nil
 }
