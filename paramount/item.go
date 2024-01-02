@@ -54,24 +54,8 @@ type Item struct {
    Season_Num string `json:"seasonNum"`
 }
 
-func (i Item) Episode() (string, bool) {
-   return i.Episode_Num, i.Episode_Num != ""
-}
-
 func (Item) Owner() (string, bool) {
    return "", false
-}
-
-func (i Item) Release_Date() (string, bool) {
-   if i.Media_Type == "Movie" {
-      year, _, _ := strings.Cut(i.Air_Date_ISO, "-")
-      return year, true
-   }
-   return "", false
-}
-
-func (i Item) Season() (string, bool) {
-   return i.Season_Num, i.Season_Num != ""
 }
 
 func (i Item) Show() (string, bool) {
@@ -81,6 +65,22 @@ func (i Item) Show() (string, bool) {
    return "", false
 }
 
+func (i Item) Season() (string, bool) {
+   return i.Season_Num, i.Season_Num != ""
+}
+
+func (i Item) Episode() (string, bool) {
+   return i.Episode_Num, i.Episode_Num != ""
+}
+
 func (i Item) Title() (string, bool) {
    return i.Label, true
+}
+
+func (i Item) Year() (string, bool) {
+   if i.Media_Type == "Movie" {
+      year, _, _ := strings.Cut(i.Air_Date_ISO, "-")
+      return year, true
+   }
+   return "", false
 }
