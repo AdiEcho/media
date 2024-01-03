@@ -8,6 +8,13 @@ import (
    "strings"
 )
 
+func (c Contents) Year() (string, bool) {
+   if v, ok := c.metadata_row_container(); ok {
+      return v.get("Release date")
+   }
+   return "", false
+}
+
 type Contents []struct {
    Video_Primary_Info_Renderer *struct {
       Title Value // The Family Secret
@@ -34,13 +41,6 @@ func (c Contents) Owner() (string, bool) {
       if v := v.Video_Secondary_Info_Renderer; v != nil {
          return v.Owner.Video_Owner_Renderer.Title.String(), true
       }
-   }
-   return "", false
-}
-
-func (c Contents) Release_Date() (string, bool) {
-   if v, ok := c.metadata_row_container(); ok {
-      return v.get("Release date")
    }
    return "", false
 }

@@ -9,6 +9,34 @@ import (
    "strings"
 )
 
+func (f Format) String() string {
+   var b []byte
+   b = append(b, "quality: "...)
+   if f.Quality_Label != "" {
+      b = append(b, f.Quality_Label...)
+   } else {
+      b = append(b, f.Audio_Quality...)
+   }
+   b = append(b, "\nbitrate: "...)
+   b = strconv.AppendInt(b, f.Bitrate, 10)
+   b = append(b, "\nsize: "...)
+   b = strconv.AppendInt(b, f.Content_Length, 10)
+   b = append(b, "\ntype: "...)
+   b = append(b, f.MIME_Type...)
+   return string(b)
+}
+
+type Format struct {
+   Audio_Quality string `json:"audioQuality"`
+   
+   Bitrate int64
+   Content_Length int64 `json:"contentLength,string"`
+   
+   MIME_Type string `json:"mimeType"`
+   Quality_Label string `json:"qualityLabel"`
+   URL string
+}
+
 const (
    android_version = "18.43.39"
    web_version = "2.20231219.04.00"
@@ -62,30 +90,6 @@ type Device_Code struct {
    Device_Code string
    User_Code string
    Verification_URL string
-}
-
-type Format struct {
-   Quality_Label string `json:"qualityLabel"`
-   Audio_Quality string `json:"audioQuality"`
-   Bitrate int64
-   Content_Length int64 `json:"contentLength,string"`
-   MIME_Type string `json:"mimeType"`
-   URL string
-}
-
-func (f Format) String() string {
-   var b []byte
-   b = append(b, "quality: "...)
-   if f.Quality_Label != "" {
-      b = append(b, f.Quality_Label...)
-   } else {
-      b = append(b, f.Audio_Quality...)
-   }
-   b = append(b, "\nbitrate: "...)
-   b = strconv.AppendInt(b, f.Bitrate, 10)
-   b = append(b, "\ntype: "...)
-   b = append(b, f.MIME_Type...)
-   return string(b)
 }
 
 func (f Format) Ext() (string, error) {
