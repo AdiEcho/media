@@ -33,7 +33,7 @@ func main() {
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
-   flag.IntVar(&f.bandwidth, "vb", 4_000_000, "video max bandwidth")
+   flag.IntVar(&f.bandwidth, "vb", 4_200_000, "video max bandwidth")
    flag.IntVar(&f.height, "vh", 1080, "video max height")
    flag.Parse()
    log.Set_Handler(f.h)

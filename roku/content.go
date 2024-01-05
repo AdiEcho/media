@@ -6,7 +6,6 @@ import (
    "net/http"
    "net/url"
    "strings"
-   "time"
 )
 
 func New_Content(id string) (*Content, error) {
@@ -63,14 +62,28 @@ func (c Content) DASH() *Video {
    return nil
 }
 
-// we have to embed to prevent clobbering the interface
+func (Content) Owner() (string, bool) {
+   return "", false
+}
+
+func (c Content) Season() (string, bool) {
+   return c.s.Season_Number, c.s.Season_Number != ""
+}
+
+func (c Content) Episode() (string, bool) {
+   return c.s.Episode_Number, c.s.Episode_Number != ""
+}
+
+func (c Content) Title() (string, bool) {
+   return c.s.Title, true
+}
+
+// we have to embed to prevent clobbering Namer.Title
 type Content struct {
    s struct {
       Series *struct {
          Title string
       }
-      Season_Number int64 `json:"seasonNumber,string"`
-      Episode_Number int64 `json:"episodeNumber,string"`
       Title string
       Release_Date string `json:"releaseDate"` // 2007-01-01T000000Z
       View_Options []struct {
@@ -78,25 +91,22 @@ type Content struct {
             Videos []Video
          }
       } `json:"viewOptions"`
+      Season_Number string `json:"seasonNumber"`
+      Episode_Number string `json:"episodeNumber"`
    }
 }
 
-func (c Content) Series() string {
-   return c.s.Series.Title
+func (c Content) Show() (string, bool) {
+   if c.s.Series != nil {
+      return c.s.Series.Title, true
+   }
+   return "", false
 }
 
-func (c Content) Season() (int64, error) {
-   return c.s.Season_Number, nil
-}
-
-func (c Content) Episode() (int64, error) {
-   return c.s.Episode_Number, nil
-}
-
-func (c Content) Title() string {
-   return c.s.Title
-}
-
-func (c Content) Date() (time.Time, error) {
-   return time.Parse(time.RFC3339, c.s.Release_Date)
+func (c Content) Year() (string, bool) {
+   if c.s.Series != nil {
+      return "", false
+   }
+   year, _, _ := strings.Cut(c.s.Release_Date, "-")
+   return year, true
 }
