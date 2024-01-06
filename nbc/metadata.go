@@ -6,19 +6,8 @@ import (
    "errors"
    "net/http"
    "strconv"
-   "time"
+   "strings"
 )
-
-type Metadata struct {
-   Air_Date string `json:"airDate"`
-   Episode_Number int64 `json:"episodeNumber,string"`
-   MPX_Account_ID int64 `json:"mpxAccountId,string"`
-   MPX_GUID int64 `json:"mpxGuid,string"`
-   Programming_Type string `json:"programmingType"`
-   Season_Number int64 `json:"seasonNumber,string"`
-   Secondary_Title string `json:"secondaryTitle"`
-   Series_Short_Title string `json:"seriesShortTitle"`
-}
 
 func New_Metadata(guid int64) (*Metadata, error) {
    body, err := func() ([]byte, error) {
@@ -64,22 +53,41 @@ func New_Metadata(guid int64) (*Metadata, error) {
    return &s.Data.Bonanza_Page.Metadata, nil
 }
 
-func (m Metadata) Series() string {
-   return m.Series_Short_Title
+type Metadata struct {
+   Air_Date string `json:"airDate"`
+   Episode_Number string `json:"episodeNumber"`
+   MPX_Account_ID int64 `json:"mpxAccountId,string"`
+   MPX_GUID int64 `json:"mpxGuid,string"`
+   Programming_Type string `json:"programmingType"`
+   Season_Number string `json:"seasonNumber"`
+   Secondary_Title string `json:"secondaryTitle"`
+   Series_Short_Title string `json:"seriesShortTitle"`
 }
 
-func (m Metadata) Season() (int64, error) {
-   return m.Season_Number, nil
+func (Metadata) Owner() (string, bool) {
+   return "", false
 }
 
-func (m Metadata) Episode() (int64, error) {
-   return m.Episode_Number, nil
+func (m Metadata) Season() (string, bool) {
+   return m.Season_Number, m.Season_Number != ""
 }
 
-func (m Metadata) Title() string {
-   return m.Secondary_Title
+func (m Metadata) Episode() (string, bool) {
+   return m.Episode_Number, m.Episode_Number != ""
 }
 
-func (m Metadata) Date() (time.Time, error) {
-   return time.Parse(time.RFC3339, m.Air_Date)
+func (m Metadata) Title() (string, bool) {
+   return m.Secondary_Title, true
+}
+
+func (m Metadata) Show() (string, bool) {
+   return m.Series_Short_Title, m.Series_Short_Title != ""
+}
+
+func (m Metadata) Year() (string, bool) {
+   if m.Series_Short_Title != "" {
+      return "", false
+   }
+   year, _, _ := strings.Cut(m.Air_Date, "-")
+   return year, true
 }

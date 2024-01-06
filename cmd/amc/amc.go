@@ -32,8 +32,10 @@ func (f flags) download() error {
       if err != nil {
          return err
       }
-      var video amc.Video
-      video.Unmarshal(content)
+      video, err := content.Video()
+      if err != nil {
+         return err
+      }
       f.s.Name = stream.Name(video)
    }
    play, err := auth.Playback(f.address)
@@ -51,7 +53,10 @@ func (f flags) download() error {
          return nil, err
       }
       defer r.Body.Close()
-      return dash.Representations(r.Body)
+      
+      var media dash.Media
+      media.Decode(r.Body)
+      return media.Representation("")
    }()
    if err != nil {
       return err

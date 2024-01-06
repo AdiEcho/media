@@ -37,7 +37,7 @@ func main() {
    flag.TextVar(&f.level, "v", f.level, "level")
    flag.Parse()
    log.Set_Transport(0)
-   log.Set_Handler(f.level)
+   log.Set_Logger(f.level)
    switch {
    case f.password != "":
       err := f.authenticate()

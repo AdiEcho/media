@@ -53,12 +53,3 @@ func Test_On_Demand(t *testing.T) {
       time.Sleep(time.Second)
    }
 }
-
-var mpx_guids = []int64 {
-   // episode unlocked
-   // nbc.com/saturday-night-live/video/october-21-bad-bunny/9000283422
-   9000283422,
-   // movie locked
-   // nbc.com/john-wick/video/john-wick/3448375
-   3448375,
-}

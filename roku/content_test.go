@@ -13,11 +13,7 @@ func Test_Content(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := stream.Format_Film(con)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(name)
+      fmt.Println(stream.Name(con))
       time.Sleep(time.Second)
    }
 }

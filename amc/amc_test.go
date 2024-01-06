@@ -1,7 +1,6 @@
 package amc
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/widevine"
    "encoding/hex"
    "encoding/json"
@@ -69,8 +68,6 @@ func Test_Key(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   log.Set_Handler(log.Handler{})
-   log.Set_Transport(0)
    raw, err := os.ReadFile(home + "/amc/auth.json")
    if err != nil {
       t.Fatal(err)
