@@ -4,10 +4,10 @@ import (
    "encoding/json"
    "errors"
    "strconv"
-   "time"
+   "strings"
 )
 
-func (v *Video) Unmarshal(c Content) error {
+func (c Content) Video() (*Video, error) {
    for _, child := range c.Data.Children {
       if child.Type == "video-player-ap" {
          var s struct {
@@ -17,22 +17,29 @@ func (v *Video) Unmarshal(c Content) error {
          if err != nil {
             return nil, err
          }
-         *v = s.Current_Video
-         return nil
+         return &s.Current_Video, nil
       }
    }
-   return errors.New("video-player-ap")
+   return nil, errors.New("video-player-ap")
+}
+
+type Video struct {
+   Meta struct {
+      Airdate string // 1996-01-01T00:00:00.000Z
+      Episode_Number int `json:"episodeNumber"`
+      Season int `json:",string"`
+      Show_Title string `json:"showTitle"`
+   }
+   Text struct {
+      Title string
+   }
 }
 
 func (Video) Owner() (string, bool) {
    return "", false
 }
 
-func (v Video) Show() (string, bool) {
-   return v.Meta.Show_Title, v.Meta.Show_Title != ""
-}
-
-func (v Video) Season() (int64, error) {
+func (v Video) Season() (string, bool) {
    if v.Meta.Season >= 1 {
       return strconv.Itoa(v.Meta.Season), true
    }
@@ -50,31 +57,14 @@ func (v Video) Title() (string, bool) {
    return v.Text.Title, true
 }
 
-type Video struct {
-   Meta struct {
-      Airdate string // 1996-01-01T00:00:00.000Z
-      Episode_Number int `json:"episodeNumber"`
-      Season int `json:",string"`
-      Show_Title string `json:"showTitle"`
-   }
-   Text struct {
-      Title string
-   }
+func (v Video) Show() (string, bool) {
+   return v.Meta.Show_Title, v.Meta.Show_Title != ""
 }
-
-///////////////////////////////////////////////
 
 func (v Video) Year() (string, bool) {
-   
-   
-   
-   return time.Parse(time.RFC3339, v.Meta.Airdate)
+   if v.Meta.Show_Title != "" {
+      return "", false
+   }
+   year, _, _ := strings.Cut(v.Meta.Airdate, "-")
+   return year, true
 }
-
-
-
-
-
-
-
-

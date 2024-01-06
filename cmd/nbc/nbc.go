@@ -24,7 +24,9 @@ func (f flags) download() error {
       }
       defer r.Body.Close()
       f.s.Base = r.Request.URL
-      return dash.Representations(r.Body)
+      var media dash.Media
+      media.Decode(r.Body)
+      return media.Representation("")
    }()
    if err != nil {
       return err

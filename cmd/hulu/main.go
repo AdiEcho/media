@@ -11,12 +11,12 @@ import (
 
 type flags struct {
    email string
-   h log.Handler
    id hulu.ID
    password string
    s stream.Stream
    video_bandwidth int
    audio_codec string
+   level log.Level
 }
 
 func main() {
@@ -33,11 +33,11 @@ func main() {
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
-   flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
    flag.IntVar(&f.video_bandwidth, "vb", 8_500_000, "video max bandwidth")
+   flag.TextVar(&f.level, "v", f.level, "level")
    flag.Parse()
-   log.Set_Handler(f.h)
    log.Set_Transport(0)
+   log.Set_Handler(f.level)
    switch {
    case f.password != "":
       err := f.authenticate()

@@ -46,7 +46,27 @@ func (a Authenticate) Details(d *Deep_Link) (*Details, error) {
    return &s.Items[0], nil
 }
 
+type Details struct {
+   Episode_Name string
+   Episode_Number int
+   Headline string
+   Premiere_Date string
+   Season_Number int
+   Series_Name string
+}
+
 func (Details) Owner() (string, bool) {
+   return "", false
+}
+
+func (d Details) Show() (string, bool) {
+   return d.Series_Name, d.Series_Name != ""
+}
+
+func (d Details) Season() (string, bool) {
+   if d.Season_Number >= 1 {
+      return strconv.Itoa(d.Season_Number), true
+   }
    return "", false
 }
 
@@ -57,26 +77,6 @@ func (d Details) Episode() (string, bool) {
    return "", false
 }
 
-func (d Details) Season() (string, bool) {
-   if d.Season_Number >= 1 {
-      return strconv.Itoa(d.Season_Number), true
-   }
-   return "", false
-}
-
-func (d Details) Show() (string, bool) {
-   return d.Series_Name, d.Series_Name != ""
-}
-
-type Details struct {
-   Episode_Name string
-   Episode_Number int
-   Headline string
-   Premiere_Date string
-   Season_Number int
-   Series_Name string
-}
-
 func (d Details) Title() (string, bool) {
    if d.Episode_Name != "" {
       return d.Episode_Name, true
@@ -84,7 +84,7 @@ func (d Details) Title() (string, bool) {
    return d.Headline, true
 }
 
-func (d Details) Release_Date() (string, bool) {
+func (d Details) Year() (string, bool) {
    if d.Episode_Name != "" {
       return "", false
    }

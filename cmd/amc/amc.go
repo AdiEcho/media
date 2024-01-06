@@ -32,10 +32,8 @@ func (f flags) download() error {
       if err != nil {
          return err
       }
-      video, err := content.Video()
-      if err != nil {
-         return err
-      }
+      var video amc.Video
+      video.Unmarshal(content)
       f.s.Name = stream.Name(video)
    }
    play, err := auth.Playback(f.address)

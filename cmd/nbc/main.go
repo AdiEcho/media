@@ -11,8 +11,8 @@ import (
 type flags struct {
    guid int64
    bandwidth int
-   h log.Handler
    s stream.Stream
+   level log.Level
 }
 
 func main() {
@@ -27,10 +27,10 @@ func main() {
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.IntVar(&f.bandwidth, "m", 6_999_999, "max video bandwidth")
-   flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
+   flag.TextVar(&f.level, "v", f.level, "level")
    flag.Parse()
-   log.Set_Handler(f.h)
    log.Set_Transport(0)
+   log.Set_Logger(f.level)
    if f.guid >= 1 {
       err := f.download()
       if err != nil {

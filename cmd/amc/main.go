@@ -15,7 +15,7 @@ type flags struct {
    password string
    address amc.URL
    s stream.Stream
-   h log.Handler
+   level log.Level
 }
 
 func main() {
@@ -32,10 +32,10 @@ func main() {
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
-   flag.TextVar(&f.h.Level, "v", f.h.Level, "log level")
+   flag.TextVar(&f.level, "v", f.level, "log level")
    flag.Parse()
-   log.Set_Handler(f.h)
    log.Set_Transport(0)
+   log.Set_Logger(f.level)
    switch {
    case f.email != "":
       err := f.login()

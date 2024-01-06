@@ -16,7 +16,7 @@ type flags struct {
    request int
    v_codec string
    v_quality string
-   h log.Handler
+   level log.Level
 }
 
 func main() {
@@ -34,12 +34,12 @@ func main() {
       flag.IntVar(&f.request, "r", 0, b.String())
    }
    flag.BoolVar(&f.refresh, "refresh", false, "create OAuth refresh token")
-   flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
    flag.StringVar(&f.v_codec, "vc", "vp9", "video codec")
    flag.StringVar(&f.v_quality, "vq", "1080p", "video quality")
+   flag.TextVar(&f.level, "v", f.level, "level")
    flag.Parse()
-   log.Set_Handler(f.h)
    log.Set_Transport(0)
+   log.Set_Logger(f.level)
    if f.refresh {
       err := f.do_refresh()
       if err != nil {
