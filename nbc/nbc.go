@@ -1,19 +1,17 @@
 package nbc
 
 import (
-   "bytes"
+   "crypto/hmac"
+   "crypto/sha256"
    "encoding/json"
    "errors"
+   "fmt"
    "net/http"
    "net/url"
    "strconv"
    "strings"
    "time"
 )
-
-type On_Demand struct {
-   Playback_URL string `json:"playbackUrl"`
-}
 
 func (m Metadata) On_Demand() (*On_Demand, error) {
    req, err := http.NewRequest("GET", "https://lemonade.nbc.com", nil)
@@ -46,15 +44,47 @@ func (m Metadata) On_Demand() (*On_Demand, error) {
    return video, nil
 }
 
-type Metadata struct {
-   Air_Date string `json:"airDate"`
-   Episode_Number int64 `json:"episodeNumber,string"`
-   MPX_Account_ID int64 `json:"mpxAccountId,string"`
-   MPX_GUID int64 `json:"mpxGuid,string"`
-   Programming_Type string `json:"programmingType"`
-   Season_Number int64 `json:"seasonNumber,string"`
-   Secondary_Title string `json:"secondaryTitle"`
-   Series_Short_Title string `json:"seriesShortTitle"`
+func (v Video) Request_URL() (string, error) {
+   t, h := func() (int64, []byte) {
+      h := hmac.New(sha256.New, []byte(v.DRM_Proxy_Secret))
+      t := time.Now().UnixMilli()
+      fmt.Fprint(h, t, "widevine")
+      return t, h.Sum(nil)
+   }()
+   b := []byte(v.DRM_Proxy_URL)
+   b = append(b, "/widevine"...)
+   b = fmt.Append(b, "?time=", t)
+   b = fmt.Appendf(b, "&hash=%x", h)
+   b = append(b, "&device=web"...)
+   return string(b), nil
+}
+
+type Video struct {
+   DRM_Proxy_Secret string
+   DRM_Proxy_URL string
+}
+
+var Core = Video{
+   "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6",
+   "https://drmproxy.digitalsvc.apps.nbcuni.com/drm-proxy/license",
+}
+
+func (Video) Request_Body(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Video) Request_Header() http.Header {
+   return http.Header{
+      "Content-Type": {"application/octet-stream"},
+   }
+}
+
+func (Video) Response_Body(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+type On_Demand struct {
+   Playback_URL string `json:"playbackUrl"`
 }
 
 const query = `
@@ -89,70 +119,6 @@ query bonanzaPage(
    }
 }
 `
-
-func New_Metadata(guid int64) (*Metadata, error) {
-   body, err := func() ([]byte, error) {
-      var p page_request
-      p.Variables.Name = strconv.FormatInt(guid, 10)
-      p.Query = graphQL_compact(query)
-      p.Variables.App = "nbc"
-      p.Variables.One_App = true
-      p.Variables.Platform = "android"
-      p.Variables.Type = "VIDEO"
-      return json.MarshalIndent(p, "", " ")
-   }()
-   if err != nil {
-      return nil, err
-   }
-   res, err := http.Post(
-      "https://friendship.nbc.co/v2/graphql", "application/json",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   var s struct {
-      Data struct {
-         Bonanza_Page struct {
-            Metadata Metadata
-         } `json:"bonanzaPage"`
-      }
-      Errors []struct {
-         Message string
-      }
-   }
-   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
-      return nil, err
-   }
-   if len(s.Errors) >= 1 {
-      return nil, errors.New(s.Errors[0].Message)
-   }
-   return &s.Data.Bonanza_Page.Metadata, nil
-}
-
-func (m Metadata) Series() string {
-   return m.Series_Short_Title
-}
-
-func (m Metadata) Season() (int64, error) {
-   return m.Season_Number, nil
-}
-
-func (m Metadata) Episode() (int64, error) {
-   return m.Episode_Number, nil
-}
-
-func (m Metadata) Title() string {
-   return m.Secondary_Title
-}
-
-func (m Metadata) Date() (time.Time, error) {
-   return time.Parse(time.RFC3339, m.Air_Date)
-}
 
 // this is better than strings.Replace and strings.ReplaceAll
 func graphQL_compact(s string) string {
