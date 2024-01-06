@@ -30,11 +30,8 @@ func (f flags) download() error {
       return err
    }
    if !f.s.Info {
-      f.s.Name, err = stream.Format_Episode(meta)
-      if err != nil {
-         return err
-      }
       f.s.Poster = nbc.Core
+      f.s.Name = stream.Name(meta)
    }
    slices.SortFunc(reps, func(a, b *dash.Representation) int {
       return b.Bandwidth - a.Bandwidth

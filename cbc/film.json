@@ -1,195 +1,50 @@
 {
- "title": "The Witch",
- "description": "New England, 1630: William and Katherine lead a devout Christian life, homesteading on the edge of an impassible wilderness, with five children. When their newborn son mysteriously vanishes and their crops fail, the family begins to turn on one another. In his debut feature, writer/director Robert Eggers painstakingly designs an authentic re-creation of New England - generations before the 1692 trials in Salem - evoking the alluring and terrifying power of the timeless witch myth. Told through the eyes of Thomasin, the teenage daughter (in a star making performance by Anya Taylor-Joy), and supported by haunting camera work and an ominous score, The Witch is a chilling portrait of a family unraveling within their own fears and anxieties, leaving them prey for an inescapable evil.",
- "images": {
-  "background": {
-   "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_films_the_witch_ott_background_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-   "size": "Normal"
-  },
-  "logo": {
-   "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_films_the_witch_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-   "size": "Bigger"
-  }
- },
- "selectedUrl": "the-witch/s01e01",
- "contentType": "Standalone",
- "requestedType": "Show",
- "recommendations": {
-  "items": [
-   {
-    "title": "Never Saw It Coming",
-    "infoTitle": "Mystery",
-    "description": "An opportunistic psychic must discover a way out when she finds herself in the middle of a murder case in a small town.",
-    "tier": "Member",
-    "images": {
-     "background": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_neversawitcoming_ott_background_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "card": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_neversawitcoming_ott_program_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "logo": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_neversawitcoming_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     }
-    },
-    "url": "never-saw-it-coming",
-    "type": "Show"
-   },
-   {
-    "title": "The Hollow Child",
-    "infoTitle": "Supernatural",
-    "description": "A troubled foster teen works to expose a dangerous supernatural impostor in her new family and rescue her foster sister.",
-    "tier": "Member",
-    "images": {
-     "background": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_films_the_hollow_child_ott_background_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "card": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_films_the_hollow_child_ott_program_v02.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "logo": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_films_the_hollow_child_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     }
-    },
-    "url": "the-hollow-child",
-    "type": "Show"
-   },
-   {
-    "title": "Cosmopolis",
-    "infoTitle": "Mystery",
-    "description": "Riding across Manhattan in a stretch limo in order to get a haircut, a 28-year-old billionaire asset manager's day devolves into an odyssey with a cast of characters that start to tear his world apart.",
-    "tier": "Member",
-    "images": {
-     "background": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_films_cosmopolis_ott_background_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "card": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_films_cosmopolis_ott_program_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "logo": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_films_cosmopolis_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     }
-    },
-    "url": "cosmopolis",
-    "type": "Show"
-   },
-   {
-    "title": "Falls Around Her",
-    "infoTitle": "Drama",
-    "description": "The hunted, the haunted and the hunting: A relentless pursuit to seek redemption through isolation.",
-    "tier": "Member",
-    "images": {
-     "background": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_fallsaroundher_ott_background_v02.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "card": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_fallsaroundher_ott_program_v02.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "logo": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_fallsaroundher_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     }
-    },
-    "url": "falls-around-her",
-    "type": "Show"
-   },
-   {
-    "title": "The Song of Names",
-    "infoTitle": "Period drama",
-    "description": "Thirty-five years after the disappearance of virtuoso violinist Dovidl Rapaport, his childhood best friend Martin Simmonds sets out on an intercontinental search to find him and learn why he left.",
-    "tier": "Member",
-    "images": {
-     "background": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thesongofnames_ott_background_v02.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "card": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thesongofnames_ott_program_v02.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "logo": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thesongofnames_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Bigger"
-     }
-    },
-    "url": "the-song-of-names",
-    "type": "Show"
-   }
-  ],
-  "cardImageType": "16x9"
- },
- "navigationFilters": [
-  {
-   "url": "category/film",
-   "title": "Films"
-  },
-  {
-   "url": "category/drama",
-   "title": "Drama"
-  },
-  {
-   "url": "category/suspense",
-   "title": "Suspense"
-  }
- ],
- "structuredMetadata": {
   "@type": "Movie",
   "countryOfOrigin": {
-   "@type": "Country",
-   "@context": "http://schema.org",
-   "name": "Canada"
+    "@type": "Country",
+    "@context": "http://schema.org",
+    "name": "Canada"
   },
   "duration": "PT1H32M",
   "actor": [
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "Anya Taylor-Joy"
-   },
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "Ralph Ineson"
-   },
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "Kate Dickie"
-   },
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "Julian Richings"
-   }
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "Anya Taylor-Joy"
+    },
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "Ralph Ineson"
+    },
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "Kate Dickie"
+    },
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "Julian Richings"
+    }
   ],
   "director": [
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "Robert Eggers"
-   }
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "Robert Eggers"
+    }
   ],
   "trailer": {
-   "@type": "VideoObject",
-   "@context": "http://schema.org"
+    "@type": "VideoObject",
+    "@context": "http://schema.org"
   },
   "abstract": "New England, 1630: William and Katherine lead a devout Christian life, homesteading on the edge of an impassible wilderness, with five children. When their newborn son mysteriously vanishes and their crops fail, the family begins to turn on one another. In his debut feature, writer/director Robert Eggers painstakingly designs an authentic re-creation of New England - generations before the 1692 trials in Salem - evoking the alluring and terrifying power of the timeless witch myth. Told through the eyes of Thomasin, the teenage daughter (in a star making performance by Anya Taylor-Joy), and supported by haunting camera work and an ominous score, The Witch is a chilling portrait of a family unraveling within their own fears and anxieties, leaving them prey for an inescapable evil.",
   "author": [],
   "producer": [],
   "contentRating": "14+",
   "genre": [
-   "Horreur"
+    "Horreur"
   ],
   "inLanguage": "en-CA",
   "datePublished": "2019-10-18T13:00:00Z",
@@ -198,100 +53,4 @@
   "name": "The Witch",
   "url": "https://gem.cbc.ca/the-witch",
   "image": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_films_the_witch_ott_background_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75"
- },
- "content": [
-  {
-   "lineups": [
-    {
-     "title": "Season 1",
-     "tier": "Member",
-     "seasonNumber": 1,
-     "url": "the-witch/s01",
-     "items": [
-      {
-       "idMedia": 165636,
-       "title": "1. The Witch",
-       "infoTitle": "2015",
-       "description": "New England, 1630: William and Katherine lead a devout Christian life, homesteading on the edge of an impassible wilderness, with five children. When their newborn son mysteriously vanishes and their crops fail, the family begins to turn on one another. In his debut feature, writer/director Robert Eggers painstakingly designs an authentic re-creation of New England - generations before the 1692 trials in Salem - evoking the alluring and terrifying power of the timeless witch myth. Told through the eyes of Thomasin, the teenage daughter (in a star making performance by Anya Taylor-Joy), and supported by haunting camera work and an ominous score, The Witch is a chilling portrait of a family unraveling within their own fears and anxieties, leaving them prey for an inescapable evil.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.radio-canada.ca/v1/synps-cbc/episode/perso/cbc_films_season_01e1017_thumbnail_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-witch/s01e01",
-       "callToActionTitle": "Watch",
-       "episodeNumber": 1,
-       "completionTime": 5259667,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Director(s)",
-          "peoples": "Robert Eggers"
-         },
-         {
-          "title": "Actor(s)",
-          "peoples": "Anya Taylor-Joy, Ralph Ineson, Kate Dickie, Julian Richings"
-         }
-        ],
-        "country": "Canada",
-        "airDate": "2019-10-18",
-        "availabilityDate": "2019-10-18",
-        "productionYear": 2015,
-        "copyright": "",
-        "duration": 5527,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "165636",
-       "uniqueIdentifier": "EPISODE2425217272",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      }
-     ]
-    }
-   ]
-  }
- ],
- "metadata": {
-  "credits": [
-   {
-    "title": "Director(s)",
-    "peoples": "Robert Eggers"
-   },
-   {
-    "title": "Actor(s)",
-    "peoples": "Anya Taylor-Joy, Ralph Ineson, Kate Dickie, Julian Richings"
-   }
-  ],
-  "country": "Canada",
-  "airDate": "2019-10-18",
-  "availabilityDate": "2019-10-18",
-  "productionYear": 2015,
-  "copyright": "",
-  "duration": 5527,
-  "rating": "14+"
- },
- "htmlMeta": {
-  "title": "The Witch | Films | CBC Gem",
-  "description": "New England, 1630: William and Katherine lead a devout Christian life, homesteading on the edge of an impassible wilderness, with five children. When their newborn son mysteriously vanishes and their crops fail, the family begins to turn on one another. In his debut feature, writer/director Robert Eggers painstakingly designs an authentic re-creation of New England - generations before the 1692 trials in Salem - evoking the alluring and terrifying power of the timeless witch myth. Told through the eyes of Thomasin, the teenage daughter (in a star making performance by Anya Taylor-Joy), and supported by haunting camera work and an ominous score, The Witch is a chilling portrait of a family unraveling within their own fears and anxieties, leaving them prey for an inescapable evil.",
-  "og:title": "The Witch | Films | CBC Gem",
-  "og:description": "New England, 1630: William and Katherine lead a devout Christian life, homesteading on the edge of an impassible wilderness, with five children. When their newborn son mysteriously vanishes and their crops fail, the family begins to turn on one another. In his debut feature, writer/director Robert Eggers painstakingly designs an authentic re-creation of New England - generations before the 1692 trials in Salem - evoking the alluring and terrifying power of the timeless witch myth. Told through the eyes of Thomasin, the teenage daughter (in a star making performance by Anya Taylor-Joy), and supported by haunting camera work and an ominous score, The Witch is a chilling portrait of a family unraveling within their own fears and anxieties, leaving them prey for an inescapable evil.",
-  "og:url": "https://gem.cbc.ca/the-witch",
-  "og:type": "video.tv_show",
-  "og:image": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_films_the_witch_ott_program_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-  "og:image.width": 1200,
-  "og:image.height": 630,
-  "apple-media-service-subscription-v2": {
-   "expires": 31536000,
-   "type": {
-    "availabilityType": "Free",
-    "tiers": "basic"
-   }
-  },
-  "apple-itunes-app": "app-id=422191503, app-argument=https://cbc.gem.ca"
- },
- "mandatoryAdsForAllUsers": false
 }

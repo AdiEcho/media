@@ -7,12 +7,28 @@ type Metadata struct {
       Name string // The Fall
    } `json:"partofSeries"`
    Part_Of_Season struct {
-      Season_Number int64 `json:"seasonNumber"`
+      Season_Number int `json:"seasonNumber"`
    } `json:"partofSeason"`
-   Episode_Number int64 `json:"episodeNumber"`
+   Episode_Number int `json:"episodeNumber"`
    Name string
    Date_Created string `json:"dateCreated"` // 2014-01-01T00:00:00
 }
+
+func (Metadata) Owner() (string, bool) {
+   return "", false
+}
+
+type Catalog_Gem struct {
+   Content []struct {
+      Lineups []struct {
+         Items []Lineup_Item
+      }
+   }
+   Selected_URL string `json:"selectedUrl"`
+   Structured_Metadata Metadata `json:"structuredMetadata"`
+}
+
+/////////////////////
 
 func (m Metadata) Series() string {
    return m.Part_Of_Series.Name

@@ -17,7 +17,7 @@ type flags struct {
    content_ID string
    dash_cenc bool
    s stream.Stream
-   h log.Handler
+   level log.Level
 }
 
 func main() {
@@ -34,12 +34,12 @@ func main() {
    flag.BoolVar(&f.dash_cenc, "d", false, "DASH_CENC")
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
-   flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
    flag.IntVar(&f.bandwidth, "vb", 5_000_000, "video max bandwidth")
    flag.IntVar(&f.height, "vh", 720, "video max height")
+   flag.TextVar(&f.level, "v", f.level, "level")
    flag.Parse()
-   log.Set_Handler(f.h)
    log.Set_Transport(0)
+   log.Set_Logger(f.level)
    if f.content_ID != "" {
       token, err := paramount.New_App_Token()
       if err != nil {

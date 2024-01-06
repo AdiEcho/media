@@ -1,1052 +1,123 @@
 {
- "title": "The Fall",
- "description": "THE FALL examines the lives of two hunters: one a serial killer that stalks his victims (Jamie Dornan) and the other a high-powered detective superintendent brought in to catch him (Gillian Anderson).",
- "images": {
-  "background": {
-   "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_thefall_ott_background_v02.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-   "size": "Normal"
-  },
-  "logo": {
-   "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_thefall_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-   "size": "Normal"
-  }
- },
- "selectedUrl": "the-fall/s02e03",
- "contentType": "Season",
- "requestedType": "Media",
- "recommendations": {
-  "items": [
-   {
-    "title": "How to Fail as a Popstar",
-    "infoTitle": "Drama | 1 season",
-    "description": "How to Fail as a Popstar follows Vivek, a queer brown boy from Edmonton as he tries (and fails) to achieve pop stardom, from the perspective of the now 40-something trans femme artist that boy became.",
-    "tier": "Member",
-    "images": {
-     "background": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_howtofailasapopstar_ott_background_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "card": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_howtofailasapopstar_ott_program_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "logo": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_howtofailasapopstar_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     }
-    },
-    "url": "how-to-fail-as-a-popstar",
-    "type": "Show"
-   },
-   {
-    "title": "Undercover",
-    "infoTitle": "Legal | 1 season",
-    "description": "Maya, a barrister in London, is at the very top of her profession. She is about to become the first black Director of Public Prosecutions.",
-    "tier": "Member",
-    "images": {
-     "background": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_undercover_ott_background_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "card": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_undercover_ott_program_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "logo": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_undercover_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     }
-    },
-    "url": "undercover",
-    "type": "Show"
-   },
-   {
-    "title": "The Tunnel",
-    "infoTitle": "Mystery | 3 seasons",
-    "description": "Set primarily in Folkestone and Calais where detectives Karl Roebuck and Elise Wassermann are called to investigate the death of a French politician. When a shocking discovery is made at the crime scene, the pair is forced into an uneasy partnership as they seek out a politically-motivated serial killer who draws them into his own personal agenda.",
-    "tier": "Member",
-    "images": {
-     "background": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_the_tunnel_ott_background_v03.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "card": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_the_tunnel_ott_program_v03.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "logo": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_the_tunnel_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     }
-    },
-    "url": "the-tunnel",
-    "type": "Show"
-   },
-   {
-    "title": "Top of the Lake: China Girl",
-    "infoTitle": "Mystery | 1 season",
-    "description": "Top of the Lake: China Girl is a crime mystery story that finds Detective Robin Griffin recently returned to Sydney, and trying to rebuild her life.",
-    "tier": "Member",
-    "images": {
-     "background": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_cbctv_top_of_the_lake_china_girl_ott_background_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "card": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_cbctv_top_of_the_lake_china_girl_ott_program_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "logo": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_cbctv_top_of_the_lake_china_girl_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     }
-    },
-    "url": "top-of-the-lake-china-girl",
-    "type": "Show"
-   },
-   {
-    "title": "Noughts + Crosses",
-    "infoTitle": "Sci-fi and Fantasy | 2 seasons",
-    "description": "Based on a popular YA series, Sephy and Callum's love blooms against a background of tension in this thought-provoking look at racism and prejudice in an alternate society.",
-    "tier": "Member",
-    "images": {
-     "background": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_noughts_and_crosses_ott_background_v02.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "card": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_noughts_and_crosses_ott_program_v03.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     },
-     "logo": {
-      "url": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_noughts_and_crosses_ott_logo_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-      "size": "Normal"
-     }
-    },
-    "url": "noughts-crosses",
-    "type": "Show"
-   }
-  ],
-  "cardImageType": "16x9"
- },
- "navigationFilters": [
-  {
-   "url": "category/shows",
-   "title": "Shows"
-  },
-  {
-   "url": "category/drama",
-   "title": "Drama"
-  }
- ],
- "structuredMetadata": {
   "@type": "TVEpisode",
   "countryOfOrigin": {
-   "@type": "Country",
-   "@context": "http://schema.org",
-   "name": "United Kingdom"
+    "@type": "Country",
+    "@context": "http://schema.org",
+    "name": "United Kingdom"
   },
   "episodeNumber": 3,
   "duration": "PT0H59M",
   "actor": [
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "Gillian Anderson"
-   },
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "Jamie Dornan"
-   },
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "John Lynch"
-   },
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "Aisling Franciosi"
-   },
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "Niamh McGrady"
-   },
-   {
-    "@type": "Person",
-    "@context": "http://schema.org",
-    "name": "Bronagh Waugh"
-   }
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "Gillian Anderson"
+    },
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "Jamie Dornan"
+    },
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "John Lynch"
+    },
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "Aisling Franciosi"
+    },
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "Niamh McGrady"
+    },
+    {
+      "@type": "Person",
+      "@context": "http://schema.org",
+      "name": "Bronagh Waugh"
+    }
   ],
   "partofSeries": {
-   "@type": "CreativeWorkSeries",
-   "startDate": "2023-02-15T14:00:00Z",
-   "abstract": "THE FALL examines the lives of two hunters: one a serial killer that stalks his victims (Jamie Dornan) and the other a high-powered detective superintendent brought in to catch him (Gillian Anderson).",
-   "author": [],
-   "contentRating": "14+",
-   "genre": [
-    "Drame"
-   ],
-   "inLanguage": "en-CA",
-   "datePublished": "2023-02-15T14:00:00Z",
-   "@context": "http://schema.org",
-   "name": "The Fall",
-   "url": "https://gem.cbc.ca/the-fall",
-   "image": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_thefall_ott_background_v02.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75"
+    "@type": "CreativeWorkSeries",
+    "startDate": "2023-02-15T14:00:00Z",
+    "abstract": "THE FALL examines the lives of two hunters: one a serial killer that stalks his victims (Jamie Dornan) and the other a high-powered detective superintendent brought in to catch him (Gillian Anderson).",
+    "author": [],
+    "contentRating": "14+",
+    "genre": [
+      "Drame"
+    ],
+    "inLanguage": "en-CA",
+    "datePublished": "2023-02-15T14:00:00Z",
+    "@context": "http://schema.org",
+    "name": "The Fall",
+    "url": "https://gem.cbc.ca/the-fall",
+    "image": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_thefall_ott_background_v02.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75"
   },
   "partofSeason": {
-   "@type": "CreativeWorkSeason",
-   "actor": [
-    {
-     "@type": "Person",
-     "@context": "http://schema.org",
-     "name": "Gillian Anderson"
-    },
-    {
-     "@type": "Person",
-     "@context": "http://schema.org",
-     "name": "Jamie Dornan"
-    },
-    {
-     "@type": "Person",
-     "@context": "http://schema.org",
-     "name": "John Lynch"
-    },
-    {
-     "@type": "Person",
-     "@context": "http://schema.org",
-     "name": "Aisling Franciosi"
-    },
-    {
-     "@type": "Person",
-     "@context": "http://schema.org",
-     "name": "Niamh McGrady"
-    },
-    {
-     "@type": "Person",
-     "@context": "http://schema.org",
-     "name": "Bronagh Waugh"
-    }
-   ],
-   "director": [],
-   "numberOfEpisodes": 6,
-   "seasonNumber": 2,
-   "startDate": "2023-02-15T14:00:00Z",
-   "abstract": "THE FALL examines the lives of two hunters: one a serial killer (Jamie Dornan) that stalks his victims and the other a high-powered detective superintendent (Gillian Anderson) brought in to catch him.",
-   "author": [],
-   "contentRating": "14+",
-   "inLanguage": "en-CA",
-   "datePublished": "2023-02-15T14:00:00Z",
-   "@context": "http://schema.org",
-   "name": "Season 2",
-   "url": "https://gem.cbc.ca/the-fall/s02",
-   "image": "https://images.gem.cbc.ca/v1/synps-cbc/season/perso/cbc_thefall_s02_ott_background_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75"
+    "@type": "CreativeWorkSeason",
+    "actor": [
+      {
+        "@type": "Person",
+        "@context": "http://schema.org",
+        "name": "Gillian Anderson"
+      },
+      {
+        "@type": "Person",
+        "@context": "http://schema.org",
+        "name": "Jamie Dornan"
+      },
+      {
+        "@type": "Person",
+        "@context": "http://schema.org",
+        "name": "John Lynch"
+      },
+      {
+        "@type": "Person",
+        "@context": "http://schema.org",
+        "name": "Aisling Franciosi"
+      },
+      {
+        "@type": "Person",
+        "@context": "http://schema.org",
+        "name": "Niamh McGrady"
+      },
+      {
+        "@type": "Person",
+        "@context": "http://schema.org",
+        "name": "Bronagh Waugh"
+      }
+    ],
+    "director": [],
+    "numberOfEpisodes": 6,
+    "seasonNumber": 2,
+    "startDate": "2023-02-15T14:00:00Z",
+    "abstract": "THE FALL examines the lives of two hunters: one a serial killer (Jamie Dornan) that stalks his victims and the other a high-powered detective superintendent (Gillian Anderson) brought in to catch him.",
+    "author": [],
+    "contentRating": "14+",
+    "inLanguage": "en-CA",
+    "datePublished": "2023-02-15T14:00:00Z",
+    "@context": "http://schema.org",
+    "name": "Season 2",
+    "url": "https://gem.cbc.ca/the-fall/s02",
+    "image": "https://images.gem.cbc.ca/v1/synps-cbc/season/perso/cbc_thefall_s02_ott_background_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75"
   },
   "abstract": "With the killer’s identity now known to the police, Gibson focuses her efforts into tracking down Paul Spector, putting his family under surveillance and lying in wait.",
   "producer": [
-   {
-    "@type": "Organization",
-    "@context": "http://schema.org",
-    "name": ""
-   }
+    {
+      "@type": "Organization",
+      "@context": "http://schema.org",
+      "name": ""
+    }
   ],
   "contentRating": "14+",
   "genre": [
-   "Drame"
+    "Drame"
   ],
   "inLanguage": "en-CA",
   "datePublished": "2023-02-15T05:00:00Z",
   "dateCreated": "2014-01-01T00:00:00",
   "@context": "http://schema.org",
   "name": "Beauty Hath Strange Power"
- },
- "content": [
-  {
-   "title": "Episodes",
-   "lineups": [
-    {
-     "title": "Season 1",
-     "tier": "Member",
-     "seasonNumber": 1,
-     "selectedTrailerUrl": "the-fall/s01b01",
-     "url": "the-fall/s01",
-     "items": [
-      {
-       "idMedia": 958129,
-       "title": "Trailer",
-       "description": "THE FALL examines the lives of two hunters: one a serial killer that stalks his victims (Jamie Dornan) and the other a high-powered detective superintendent brought in to catch him (Gillian Anderson).",
-       "tier": "Standard",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s01t01_thumbnail_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s01b01",
-       "callToActionTitle": "Trailer",
-       "episodeNumber": 1,
-       "completionTime": 88000,
-       "links": {
-        "next": "the-fall/s01e01",
-        "action": "Exit"
-       },
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-01-31",
-        "productionYear": 2016,
-        "copyright": "",
-        "duration": 98,
-        "rating": "14+"
-       },
-       "mediaType": "Trailer",
-       "formattedIdMedia": "958129",
-       "uniqueIdentifier": "EPISODE2425238072",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958162,
-       "title": "1. Dark Descent",
-       "description": "Gillian Anderson stars as DSI Stella Gibson in the first part of this gripping new investigative thriller. When a murder in Belfast remains unsolved, Gibson is brought in to catch the killer.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s01e01_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s01e01",
-       "callToActionTitle": "S1 | 1. Dark Descent",
-       "episodeNumber": 1,
-       "completionTime": 3516467,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2013,
-        "copyright": "",
-        "duration": 3551,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958162",
-       "uniqueIdentifier": "EPISODE2425238073",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958167,
-       "title": "2. Darkness Visible",
-       "description": "Gibson’s worst fears are realized as Spector’s murder spree in Belfast continues and a reckless decision has Gibson facing some very real consequences.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s01e02_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s01e02",
-       "callToActionTitle": "S1 | 2. Darkness Visible",
-       "episodeNumber": 2,
-       "completionTime": 3439333,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2013,
-        "copyright": "",
-        "duration": 3475,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958167",
-       "uniqueIdentifier": "EPISODE2425238075",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958165,
-       "title": "3. Insolence & Wine",
-       "description": "As Gibson takes control of the hunt for the serial killer striking against women in Belfast, the realization that his perfect kill is tainted pushes Spector into looking for his next victim.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s01e03_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s01e03",
-       "callToActionTitle": "S1 | 3. Insolence & Wine",
-       "episodeNumber": 3,
-       "completionTime": 3515200,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2013,
-        "copyright": "",
-        "duration": 3550,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958165",
-       "uniqueIdentifier": "EPISODE2425238077",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958166,
-       "title": "4. My Adventurous Song",
-       "description": "When Eastwood’s investigation into Olson’s murder throws open some uncomfortable truths for Burns, Gibson comes under increased pressure in her hunt for Belfast’s killer.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s01e04_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s01e04",
-       "callToActionTitle": "S1 | 4. My Adventurous Song",
-       "episodeNumber": 4,
-       "completionTime": 3434567,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2013,
-        "copyright": "",
-        "duration": 3469,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958166",
-       "uniqueIdentifier": "EPISODE2425238078",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958169,
-       "title": "5. The Vast Abyss",
-       "description": "The killer’s latest attack gives Gibson renewed impetus and as the net appears to be closing in, Spector makes a dramatic confession and a decision that binds his fate to Gibson.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s01e05_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s01e05",
-       "callToActionTitle": "S1 | 5. The Vast Abyss",
-       "episodeNumber": 5,
-       "completionTime": 3519433,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2013,
-        "copyright": "",
-        "duration": 3555,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958169",
-       "uniqueIdentifier": "EPISODE2425238079",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      }
-     ]
-    },
-    {
-     "title": "Season 2",
-     "tier": "Member",
-     "seasonNumber": 2,
-     "selectedTrailerUrl": "the-fall/s02b01",
-     "url": "the-fall/s02",
-     "items": [
-      {
-       "idMedia": 958185,
-       "title": "Trailer",
-       "description": "THE FALL examines the lives of two hunters: one a serial killer (Jamie Dornan) that stalks his victims and the other a high-powered detective superintendent (Gillian Anderson) brought in to catch him.",
-       "tier": "Standard",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s02t01_thumbnail_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s02b01",
-       "callToActionTitle": "Trailer",
-       "episodeNumber": 1,
-       "completionTime": 43000,
-       "links": {
-        "next": "the-fall/s02e01",
-        "action": "Exit"
-       },
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-01",
-        "productionYear": 2014,
-        "copyright": "",
-        "duration": 53,
-        "rating": "14+"
-       },
-       "mediaType": "Trailer",
-       "formattedIdMedia": "958185",
-       "uniqueIdentifier": "EPISODE2425238674",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958208,
-       "title": "1. These Troublesome Disguises",
-       "description": "Gillian Anderson and Jamie Dornan reprise their roles as DSI Stella Gibson and Paul Spector. Picking up where series one left off, Gibson continues her hunt for the killer who hides in plain sight.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s02e01_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s02e01",
-       "callToActionTitle": "S2 | 1. These Troublesome Disguises",
-       "episodeNumber": 1,
-       "completionTime": 3535000,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2014,
-        "copyright": "",
-        "duration": 3574,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958208",
-       "uniqueIdentifier": "EPISODE2425238268",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958205,
-       "title": "2. Night Darkens the Street",
-       "description": "DSI Stella Gibson realizes that her mistakes have led Paul Spector to Rose Stagg. Fearing for her safety, the police step up their investigation into the killer stalking Belfast’s streets.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s02e02_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s02e02",
-       "callToActionTitle": "S2 | 2. Night Darkens the Street",
-       "episodeNumber": 2,
-       "completionTime": 3517000,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2014,
-        "copyright": "",
-        "duration": 3557,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958205",
-       "uniqueIdentifier": "EPISODE2425238270",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958273,
-       "title": "3. Beauty Hath Strange Power",
-       "description": "With the killer’s identity now known to the police, Gibson focuses her efforts into tracking down Paul Spector, putting his family under surveillance and lying in wait.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s02e03_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s02e03",
-       "callToActionTitle": "S2 | 3. Beauty Hath Strange Power",
-       "episodeNumber": 3,
-       "completionTime": 3501000,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2014,
-        "copyright": "",
-        "duration": 3540,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958273",
-       "uniqueIdentifier": "EPISODE2425238271",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958275,
-       "title": "4. The Mind Is Its Own Place",
-       "description": "As Gibson comes to terms with the personal invasion Paul Spector made into her life, a shocking discovery proves that Spector is both a master manipulator and a frightening force to reckon with.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s02e04_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s02e04",
-       "callToActionTitle": "S2 | 4. The Mind Is Its Own Place",
-       "episodeNumber": 4,
-       "completionTime": 3550000,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2014,
-        "copyright": "",
-        "duration": 3558,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958275",
-       "uniqueIdentifier": "EPISODE2425238272",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958279,
-       "title": "5. The Perilous Edge of Battle",
-       "description": "As Gibson’s net tightens around Paul Spector, he decides to make a play for freedom. However, the past is catching up with him, leading to deadly consequences.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s02e05_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s02e05",
-       "callToActionTitle": "S2 | 5. The Perilous Edge of Battle",
-       "episodeNumber": 5,
-       "completionTime": 3460000,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2014,
-        "copyright": "",
-        "duration": 3500,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958279",
-       "uniqueIdentifier": "EPISODE2425238274",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958282,
-       "title": "6. What Is in Me Dark Illumine",
-       "description": "With Paul Spector in police custody, Gibson sets about building the charges against him. However, Spector is determined to maintain control and becomes psychologically ever more dangerous.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s02e06_thumbnail_v01.jpeg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s02e06",
-       "callToActionTitle": "S2 | 6. What Is in Me Dark Illumine",
-       "episodeNumber": 6,
-       "completionTime": 5350000,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2014,
-        "copyright": "",
-        "duration": 5389,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958282",
-       "uniqueIdentifier": "EPISODE2425238276",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      }
-     ]
-    },
-    {
-     "title": "Season 3",
-     "tier": "Member",
-     "seasonNumber": 3,
-     "selectedTrailerUrl": "the-fall/s03b01",
-     "url": "the-fall/s03",
-     "items": [
-      {
-       "idMedia": 958317,
-       "title": "Trailer",
-       "description": "Detective Superintendent Stella Gibson has arrested Spector, but will he survive the gunshot wounds sustained in police custody? Will he ever face justice?",
-       "tier": "Standard",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s03t01_thumbnail_v01.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s03b01",
-       "callToActionTitle": "Trailer",
-       "episodeNumber": 1,
-       "completionTime": 29000,
-       "links": {
-        "next": "the-fall/s03e01",
-        "action": "Exit"
-       },
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-06",
-        "productionYear": 2015,
-        "copyright": "",
-        "duration": 39,
-        "rating": "14+"
-       },
-       "mediaType": "Trailer",
-       "formattedIdMedia": "958317",
-       "uniqueIdentifier": "EPISODE2425238693",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958322,
-       "title": "1. Silence and Suffering",
-       "description": "Paul Spector is rushed to Belfast General Hospital where Dr. Joe O’Donnell, Nurse Kiera Sheridan and the staff engage in the blood soaked fight to keep him alive.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s03e01_thumbnail_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s03e01",
-       "callToActionTitle": "S3 | 1. Silence and Suffering",
-       "episodeNumber": 1,
-       "completionTime": 3520567,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2016,
-        "copyright": "",
-        "duration": 3553,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958322",
-       "uniqueIdentifier": "EPISODE2425238281",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958323,
-       "title": "2. His Troubled Thoughts",
-       "description": "Gibson and Burns are hauled over the coals by the Police Ombudsman and the Policing Executive for their conduct and handling of the case.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s03e02_thumbnail_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s03e02",
-       "callToActionTitle": "S3 | 2. His Troubled Thoughts",
-       "episodeNumber": 2,
-       "completionTime": 3518633,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2016,
-        "copyright": "",
-        "duration": 3552,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958323",
-       "uniqueIdentifier": "EPISODE2425238287",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958324,
-       "title": "3. The Gates of Light",
-       "description": "As Spector’s health stabilizes his legal team lead by Sean Healy move into action determined he’ll never stand trial. Gibson discovers evidence that there may be more victims.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s03e03_thumbnail_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s03e03",
-       "callToActionTitle": "S3 | 3. The Gates of Light",
-       "episodeNumber": 3,
-       "completionTime": 3518633,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2016,
-        "copyright": "",
-        "duration": 3552,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958324",
-       "uniqueIdentifier": "EPISODE2425238288",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958325,
-       "title": "4. The Hell Within Him",
-       "description": "Gibson comes face to face with the depths of Sally-Ann’s desperation while Burns has to confront his guilt at pursuing Sally-Ann as a conspirator rather than a witness.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s03e04_thumbnail_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s03e04",
-       "callToActionTitle": "S3 | 4. The Hell Within Him",
-       "episodeNumber": 4,
-       "completionTime": 3548567,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2016,
-        "copyright": "",
-        "duration": 3582,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958325",
-       "uniqueIdentifier": "EPISODE2425238289",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958326,
-       "title": "5. Wounds of Deadly Hate",
-       "description": "Spector meets other in-mates in the secure psychiatric facility. As Dr. Larson begins his assessment, Spector starts to open up about his past.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s03e05_thumbnail_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s03e05",
-       "callToActionTitle": "S3 | 5. Wounds of Deadly Hate",
-       "episodeNumber": 5,
-       "completionTime": 3510500,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2016,
-        "copyright": "",
-        "duration": 3543,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958326",
-       "uniqueIdentifier": "EPISODE2425238290",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      },
-      {
-       "idMedia": 958328,
-       "title": "6. Their Solitary Way",
-       "description": "Gibson and Anderson put fresh evidence to Spector with explosive results. Spector’s new found friendship in the secure psychiatric facility develops with devastating consequences.",
-       "tier": "Member",
-       "type": "Show",
-       "images": {
-        "card": {
-         "url": "https://images.gem.cbc.ca/v1/synps-cbc/episode/perso/cbc_thefall_s03e06_thumbnail_v01.png?impolicy=ott&im=Resize=(_Size_)&quality=75",
-         "size": "Normal"
-        }
-       },
-       "url": "the-fall/s03e06",
-       "callToActionTitle": "S3 | 6. Their Solitary Way",
-       "episodeNumber": 6,
-       "completionTime": 3530000,
-       "metadata": {
-        "credits": [
-         {
-          "title": "Actor(s)",
-          "peoples": "Gillian Anderson, Jamie Dornan, John Lynch, Aisling Franciosi, Niamh McGrady, Bronagh Waugh"
-         }
-        ],
-        "country": "United Kingdom",
-        "availabilityDate": "2023-02-15",
-        "productionYear": 2016,
-        "copyright": "",
-        "duration": 3563,
-        "rating": "14+"
-       },
-       "mediaType": "Episode",
-       "formattedIdMedia": "958328",
-       "uniqueIdentifier": "EPISODE2425238291",
-       "closedCaptionAvailable": false,
-       "videoDescriptionAvailable": false
-      }
-     ]
-    }
-   ],
-   "seasonTitle": "Season"
-  }
- ],
- "htmlMeta": {
-  "title": "Beauty Hath Strange Power 3 | The Fall | CBC Gem",
-  "description": "THE FALL examines the lives of two hunters: one a serial killer that stalks his victims (Jamie Dornan) and the other a high-powered detective superintendent brought in to catch him (Gillian Anderson).",
-  "og:title": "Beauty Hath Strange Power 3 | The Fall | CBC Gem",
-  "og:description": "THE FALL examines the lives of two hunters: one a serial killer that stalks his victims (Jamie Dornan) and the other a high-powered detective superintendent brought in to catch him (Gillian Anderson).",
-  "og:url": "https://gem.cbc.ca/the-fall",
-  "og:type": "video.tv_show",
-  "og:image": "https://images.gem.cbc.ca/v1/synps-cbc/show/perso/cbc_thefall_ott_program_v02.jpg?impolicy=ott&im=Resize=(_Size_)&quality=75",
-  "og:image.width": 1200,
-  "og:image.height": 630,
-  "apple-media-service-subscription-v2": {
-   "expires": 31536000,
-   "type": {
-    "availabilityType": "Free",
-    "tiers": "basic"
-   }
-  },
-  "apple-itunes-app": "app-id=422191503, app-argument=https://cbc.gem.ca"
- },
- "mandatoryAdsForAllUsers": false
 }

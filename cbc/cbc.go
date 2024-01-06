@@ -76,16 +76,6 @@ type Lineup_Item struct {
    Formatted_ID_Media string `json:"formattedIdMedia"`
 }
 
-type Catalog_Gem struct {
-   Content []struct {
-      Lineups []struct {
-         Items []Lineup_Item
-      }
-   }
-   Selected_URL string `json:"selectedUrl"`
-   Structured_Metadata Metadata `json:"structuredMetadata"`
-}
-
 func (c Catalog_Gem) Item() *Lineup_Item {
    for _, content := range c.Content {
       for _, lineup := range content.Lineups {

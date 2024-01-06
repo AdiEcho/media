@@ -16,7 +16,7 @@ type flags struct {
    codec string
    height int
    lang string
-   h log.Handler
+   level log.Level
 }
 
 func main() {
@@ -32,12 +32,12 @@ func main() {
    flag.StringVar(&f.s.Client_ID, "c", home + "client_id.bin", "client ID")
    flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
-   flag.TextVar(&f.h.Level, "v", f.h.Level, "level")
    flag.IntVar(&f.bandwidth, "vb", 4_200_000, "video max bandwidth")
    flag.IntVar(&f.height, "vh", 1080, "video max height")
+   flag.TextVar(&f.level, "v", f.level, "level")
    flag.Parse()
-   log.Set_Handler(f.h)
    log.Set_Transport(0)
+   log.Set_Logger(f.level)
    if f.id != "" {
       content, err := roku.New_Content(f.id)
       if err != nil {
