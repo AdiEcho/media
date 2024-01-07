@@ -45,8 +45,3 @@ go build
    https://discord.com/invite/WWq6rFb8Rf
    </dd>
 </dl>
-
-## Money
-
-Software is not licensed for commercial use. If you wish to purchase a
-commercial license, or for other business questions, contact me.
