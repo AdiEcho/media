@@ -9,6 +9,19 @@ import (
    "testing"
 )
 
+var tests = []struct {
+   key_ID string
+   u URL
+} {
+   { // amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152
+      key_ID: "bc791d3b444f4aca83de23f37aea4f78",
+      u: URL{"/shows/orphan-black/episodes/season-1-instinct--1011152", "1011152"},
+   },
+   { // amcplus.com/movies/nocebo--1061554
+      u: URL{"/movies/nocebo--1061554", "1061554"},
+   },
+}
+
 func Test_Login(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -31,19 +44,6 @@ func Test_Login(t *testing.T) {
       t.Fatal(err)
    }
    os.WriteFile(home + "/amc/auth.json", raw, 0666)
-}
-
-var tests = []struct {
-   key_ID string
-   u URL
-} {
-   { // amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152
-      key_ID: "bc791d3b444f4aca83de23f37aea4f78",
-      u: URL{"/shows/orphan-black/episodes/season-1-instinct--1011152", "1011152"},
-   },
-   { // amcplus.com/movies/nocebo--1061554
-      u: URL{"/movies/nocebo--1061554", "1061554"},
-   },
 }
 
 func Test_Key(t *testing.T) {
