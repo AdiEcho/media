@@ -9,6 +9,14 @@ import (
 )
 
 // hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+var test_ID = ID{"023c49bf-6a99-4c67-851c-4c9e7609cc1d"}
+
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+var test_deep = &Deep_Link{
+   "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
+}
+
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
 const default_KID = "21b82dc2ebb24d5aa9f8631f04726650"
 
 func Test_License(t *testing.T) {
@@ -63,9 +71,6 @@ func new_playlist() (*Playlist, error) {
    auth.Unmarshal()
    return auth.Playlist(test_deep)
 }
-
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-var test_ID = ID{"023c49bf-6a99-4c67-851c-4c9e7609cc1d"}
 
 func Test_Deep_Link(t *testing.T) {
    m, err := user_info()

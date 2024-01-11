@@ -24,11 +24,6 @@ func Test_Details(t *testing.T) {
    fmt.Printf("%+v\n", detail)
 }
 
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-var test_deep = &Deep_Link{
-   "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
-}
-
 func user_info() (map[string]string, error) {
    s, err := os.UserHomeDir()
    if err != nil {
