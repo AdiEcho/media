@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="doc2go">
+    <link href="../_/css/main.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../_/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="../_/icons/favicon.ico">
+    <title>youtube</title>
+</head>
+  <body>
+    <nav>
+        <a href="..">154.pages.dev/media</a>/youtube<a href="#pkg-index">Index</a>
+      </nav><main><h2 id="pkg-overview">package youtube</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/youtube&#34;</span></pre>
+<h3 id="pkg-index">Index</h3>
+<ul>
+  <li><a href="#pkg-variables">Variables</a></li><li>
+      <a href="#Contents">type Contents</a>
+      <ul>
+          <li><a href="#Contents.Episode">func (c Contents) Episode() (string, bool)</a></li>
+          <li><a href="#Contents.Next">func (c *Contents) Next(r Request) error</a></li>
+          <li><a href="#Contents.Owner">func (c Contents) Owner() (string, bool)</a></li>
+          <li><a href="#Contents.Season">func (c Contents) Season() (string, bool)</a></li>
+          <li><a href="#Contents.Show">func (c Contents) Show() (string, bool)</a></li>
+          <li><a href="#Contents.Title">func (c Contents) Title() (string, bool)</a></li>
+          <li><a href="#Contents.Year">func (c Contents) Year() (string, bool)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Device_Code">type Device_Code</a>
+      <ul>
+          <li><a href="#Device_Code.Post">func (d *Device_Code) Post() error</a></li>
+          <li><a href="#Device_Code.String">func (d Device_Code) String() string</a></li>
+          <li><a href="#Device_Code.Token">func (d Device_Code) Token() (Raw_Token, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Format">type Format</a>
+      <ul>
+          <li><a href="#Format.Ext">func (f Format) Ext() (string, error)</a></li>
+          <li><a href="#Format.Ranges">func (f Format) Ranges() []string</a></li>
+          <li><a href="#Format.String">func (f Format) String() string</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Image">type Image</a>
+      <ul>
+          <li><a href="#Image.String">func (i Image) String() string</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Metadata_Row_Container">type Metadata_Row_Container</a>
+      </li>
+  <li>
+      <a href="#Player">type Player</a>
+      <ul>
+          <li><a href="#Player.Author">func (p Player) Author() string</a></li>
+          <li><a href="#Player.Post">func (p *Player) Post(r Request, t *Token) error</a></li>
+          <li><a href="#Player.Time">func (p Player) Time() (time.Time, error)</a></li>
+          <li><a href="#Player.Title">func (p Player) Title() string</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Raw_Token">type Raw_Token</a>
+      </li>
+  <li>
+      <a href="#Request">type Request</a>
+      <ul>
+          <li><a href="#Request.Android">func (r *Request) Android()</a></li>
+          <li><a href="#Request.Android_Check">func (r *Request) Android_Check()</a></li>
+          <li><a href="#Request.Android_Embed">func (r *Request) Android_Embed()</a></li>
+          <li><a href="#Request.Set">func (r *Request) Set(s string) error</a></li>
+          <li><a href="#Request.String">func (r Request) String() string</a></li>
+          <li><a href="#Request.Web">func (r *Request) Web()</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Token">type Token</a>
+      <ul>
+          <li><a href="#Token.Refresh">func (t *Token) Refresh() error</a></li>
+          <li><a href="#Token.Unmarshal">func (t *Token) Unmarshal(r Raw_Token) error</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Value">type Value</a>
+      <ul>
+          <li><a href="#Value.String">func (v Value) String() string</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Values">type Values</a>
+      <ul>
+          <li><a href="#Values.String">func (v Values) String() string</a></li>
+          </ul>
+      </li>
+  </ul><h3 id="pkg-variables">Variables</h3>
+  <pre class="chroma"><span class="kd">var</span> <span id="Images"><span class="nx">Images</span></span> <span class="p">=</span> <span class="p">[]</span><a href="#Image"><span class="nx">Image</span></a><span class="p">{</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;default.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;1.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;2.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;3.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;default.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;1.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;2.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;3.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;mq1.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;mq2.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;mq3.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;mqdefault.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;mq1.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;mq2.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;mq3.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;mqdefault.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;0.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;hqdefault.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;hq1.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;hq2.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;hq3.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;0.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;hqdefault.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;hq1.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;hq2.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;hq3.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;sddefault.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;sd1.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;sd2.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;sd3.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;sddefault.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;sd1.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;sd2.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">640</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;sd3.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;hq720.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;maxresdefault.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;maxres1.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;maxres2.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;maxres3.jpg&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;hq720.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;maxresdefault.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;maxres1.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;maxres2.webp&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="nx">Width</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span> <span class="nx">Height</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;maxres3.webp&#34;</span><span class="p">},</span>
+<span class="p">}</span></pre>
+  <h3 id="pkg-types">Types</h3>
+  <h3 id="Contents">type Contents</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Contents</span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+	<span id="Contents.Video_Primary_Info_Renderer"><span class="nx">Video_Primary_Info_Renderer</span></span> <span class="o">*</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="Contents.Title"><span class="nx">Title</span></span> <a href="#Value"><span class="nx">Value</span></a> <span class="c1">// The Family Secret
+</span><span class="c1"></span>	<span class="p">}</span> <span class="s">`json:&#34;videoPrimaryInfoRenderer&#34;`</span>
+	<span id="Contents.Video_Secondary_Info_Renderer"><span class="nx">Video_Secondary_Info_Renderer</span></span> <span class="o">*</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="Contents.Metadata_Row_Container"><span class="nx">Metadata_Row_Container</span></span> <a href="#Metadata_Row_Container"><span class="nx">Metadata_Row_Container</span></a> <span class="s">`json:&#34;metadataRowContainer&#34;`</span>
+		<span id="Contents.Owner"><span class="nx">Owner</span></span>                  <span class="kd">struct</span> <span class="p">{</span>
+			<span id="Contents.Video_Owner_Renderer"><span class="nx">Video_Owner_Renderer</span></span> <span class="kd">struct</span> <span class="p">{</span>
+				<span id="Contents.Title"><span class="nx">Title</span></span> <a href="#Value"><span class="nx">Value</span></a>
+			<span class="p">}</span> <span class="s">`json:&#34;videoOwnerRenderer&#34;`</span>
+		<span class="p">}</span>
+	<span class="p">}</span> <span class="s">`json:&#34;videoSecondaryInfoRenderer&#34;`</span>
+<span class="p">}</span></pre>
+    <h4 id="Contents.Episode">func (Contents) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#Contents"><span class="nx">Contents</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="Contents.Next">func (*Contents) Next</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><a href="#Contents"><span class="nx">Contents</span></a><span class="p">)</span> <span class="nf">Next</span><span class="p">(</span><span class="nx">r</span> <a href="#Request"><span class="nx">Request</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <p>/youtubei/v1/player is missing the name of the series. use with WEB client.
+<h4 id="Contents.Owner">func (Contents) Owner</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#Contents"><span class="nx">Contents</span></a><span class="p">)</span> <span class="nf">Owner</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="Contents.Season">func (Contents) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#Contents"><span class="nx">Contents</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="Contents.Show">func (Contents) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#Contents"><span class="nx">Contents</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="Contents.Title">func (Contents) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#Contents"><span class="nx">Contents</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="Contents.Year">func (Contents) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#Contents"><span class="nx">Contents</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h3 id="Device_Code">type Device_Code</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Device_Code</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Device_Code.Device_Code"><span class="nx">Device_Code</span></span>      <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Device_Code.User_Code"><span class="nx">User_Code</span></span>        <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Device_Code.Verification_URL"><span class="nx">Verification_URL</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Device_Code.Post">func (*Device_Code) Post</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#Device_Code"><span class="nx">Device_Code</span></a><span class="p">)</span> <span class="nf">Post</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Device_Code.String">func (Device_Code) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#Device_Code"><span class="nx">Device_Code</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Device_Code.Token">func (Device_Code) Token</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#Device_Code"><span class="nx">Device_Code</span></a><span class="p">)</span> <span class="nf">Token</span><span class="p">()</span> <span class="p">(</span><a href="#Raw_Token"><span class="nx">Raw_Token</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="Format">type Format</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Format</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Format.Audio_Quality"><span class="nx">Audio_Quality</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;audioQuality&#34;`</span>
+
+	<span id="Format.Bitrate"><span class="nx">Bitrate</span></span>        <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>
+	<span id="Format.Content_Length"><span class="nx">Content_Length</span></span> <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a> <span class="s">`json:&#34;contentLength,string&#34;`</span>
+
+	<span id="Format.MIME_Type"><span class="nx">MIME_Type</span></span>     <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;mimeType&#34;`</span>
+	<span id="Format.Quality_Label"><span class="nx">Quality_Label</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;qualityLabel&#34;`</span>
+	<span id="Format.URL"><span class="nx">URL</span></span>           <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Format.Ext">func (Format) Ext</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <a href="#Format"><span class="nx">Format</span></a><span class="p">)</span> <span class="nf">Ext</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Format.Ranges">func (Format) Ranges</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <a href="#Format"><span class="nx">Format</span></a><span class="p">)</span> <span class="nf">Ranges</span><span class="p">()</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Format.String">func (Format) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <a href="#Format"><span class="nx">Format</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h3 id="Image">type Image</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Image</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Image.Height"><span class="nx">Height</span></span>   <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span id="Image.Name"><span class="nx">Name</span></span>     <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Image.Video_ID"><span class="nx">Video_ID</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Image.Width"><span class="nx">Width</span></span>    <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Image.String">func (Image) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <a href="#Image"><span class="nx">Image</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h3 id="Metadata_Row_Container">type Metadata_Row_Container</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Metadata_Row_Container</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Metadata_Row_Container.Metadata_Row_Container_Renderer"><span class="nx">Metadata_Row_Container_Renderer</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="Metadata_Row_Container.Rows"><span class="nx">Rows</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+			<span id="Metadata_Row_Container.Metadata_Row_Renderer"><span class="nx">Metadata_Row_Renderer</span></span> <span class="kd">struct</span> <span class="p">{</span>
+				<span id="Metadata_Row_Container.Title"><span class="nx">Title</span></span>    <a href="#Value"><span class="nx">Value</span></a>  <span class="c1">// Show
+</span><span class="c1"></span>				<span id="Metadata_Row_Container.Contents"><span class="nx">Contents</span></span> <a href="#Values"><span class="nx">Values</span></a> <span class="c1">// In The Heat Of The Night
+</span><span class="c1"></span>			<span class="p">}</span> <span class="s">`json:&#34;metadataRowRenderer&#34;`</span>
+		<span class="p">}</span>
+	<span class="p">}</span> <span class="s">`json:&#34;metadataRowContainerRenderer&#34;`</span>
+<span class="p">}</span></pre>
+    <h3 id="Player">type Player</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Player</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Player.Microformat"><span class="nx">Microformat</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="Player.Player_Microformat_Renderer"><span class="nx">Player_Microformat_Renderer</span></span> <span class="kd">struct</span> <span class="p">{</span>
+			<span id="Player.Publish_Date"><span class="nx">Publish_Date</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;publishDate&#34;`</span>
+		<span class="p">}</span> <span class="s">`json:&#34;playerMicroformatRenderer&#34;`</span>
+	<span class="p">}</span>
+	<span id="Player.Playability"><span class="nx">Playability</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="Player.Status"><span class="nx">Status</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="Player.Reason"><span class="nx">Reason</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span> <span class="s">`json:&#34;playabilityStatus&#34;`</span>
+	<span id="Player.Streaming_Data"><span class="nx">Streaming_Data</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="Player.Adaptive_Formats"><span class="nx">Adaptive_Formats</span></span> <span class="p">[]</span><a href="#Format"><span class="nx">Format</span></a> <span class="s">`json:&#34;adaptiveFormats&#34;`</span>
+	<span class="p">}</span> <span class="s">`json:&#34;streamingData&#34;`</span>
+	<span id="Player.Video_Details"><span class="nx">Video_Details</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="Player.Author"><span class="nx">Author</span></span>            <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="Player.Length_Seconds"><span class="nx">Length_Seconds</span></span>    <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>  <span class="s">`json:&#34;lengthSeconds,string&#34;`</span>
+		<span id="Player.Short_Description"><span class="nx">Short_Description</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;shortDescription&#34;`</span>
+		<span id="Player.Title"><span class="nx">Title</span></span>             <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="Player.Video_ID"><span class="nx">Video_ID</span></span>          <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;videoId&#34;`</span>
+		<span id="Player.View_Count"><span class="nx">View_Count</span></span>        <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>  <span class="s">`json:&#34;viewCount,string&#34;`</span>
+	<span class="p">}</span> <span class="s">`json:&#34;videoDetails&#34;`</span>
+<span class="p">}</span></pre>
+    <h4 id="Player.Author">func (Player) Author</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#Player"><span class="nx">Player</span></a><span class="p">)</span> <span class="nf">Author</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <p>stream.Video
+<h4 id="Player.Post">func (*Player) Post</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><a href="#Player"><span class="nx">Player</span></a><span class="p">)</span> <span class="nf">Post</span><span class="p">(</span><span class="nx">r</span> <a href="#Request"><span class="nx">Request</span></a><span class="p">,</span> <span class="nx">t</span> <span class="o">*</span><a href="#Token"><span class="nx">Token</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Player.Time">func (Player) Time</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#Player"><span class="nx">Player</span></a><span class="p">)</span> <span class="nf">Time</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/time"><span class="nx">time</span></a><span class="p">.</span><a href="https://pkg.go.dev/time#Time"><span class="nx">Time</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Player.Title">func (Player) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#Player"><span class="nx">Player</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <p>stream.Video
+<h3 id="Raw_Token">type Raw_Token</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Raw_Token</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a></pre>
+    <h3 id="Request">type Request</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Request</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Request.Content_Check_OK"><span class="nx">Content_Check_OK</span></span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a> <span class="s">`json:&#34;contentCheckOk,omitempty&#34;`</span>
+	<span id="Request.Context"><span class="nx">Context</span></span>          <span class="kd">struct</span> <span class="p">{</span>
+		<span id="Request.Client"><span class="nx">Client</span></span> <span class="kd">struct</span> <span class="p">{</span>
+			<span id="Request.Android_SDK_Version"><span class="nx">Android_SDK_Version</span></span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>    <span class="s">`json:&#34;androidSdkVersion&#34;`</span>
+			<span id="Request.Client_Name"><span class="nx">Client_Name</span></span>         <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;clientName&#34;`</span>
+			<span id="Request.Client_Version"><span class="nx">Client_Version</span></span>      <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;clientVersion&#34;`</span>
+			<span class="c1">// need this to get the correct:
+</span><span class="c1"></span>			<span class="c1">// This video requires payment to watch
+</span><span class="c1"></span>			<span class="c1">// instead of the invalid:
+</span><span class="c1"></span>			<span class="c1">// This video can only be played on newer versions of Android or other
+</span><span class="c1"></span>			<span class="c1">// supported devices.
+</span><span class="c1"></span>			<span id="Request.OS_Version"><span class="nx">OS_Version</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;osVersion&#34;`</span>
+		<span class="p">}</span> <span class="s">`json:&#34;client&#34;`</span>
+	<span class="p">}</span> <span class="s">`json:&#34;context&#34;`</span>
+	<span id="Request.Racy_Check_OK"><span class="nx">Racy_Check_OK</span></span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a>   <span class="s">`json:&#34;racyCheckOk,omitempty&#34;`</span>
+	<span id="Request.Video_ID"><span class="nx">Video_ID</span></span>      <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;videoId&#34;`</span>
+<span class="p">}</span></pre>
+    <h4 id="Request.Android">func (*Request) Android</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><a href="#Request"><span class="nx">Request</span></a><span class="p">)</span> <span class="nf">Android</span><span class="p">()</span></pre>
+  <h4 id="Request.Android_Check">func (*Request) Android_Check</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><a href="#Request"><span class="nx">Request</span></a><span class="p">)</span> <span class="nf">Android_Check</span><span class="p">()</span></pre>
+  <h4 id="Request.Android_Embed">func (*Request) Android_Embed</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><a href="#Request"><span class="nx">Request</span></a><span class="p">)</span> <span class="nf">Android_Embed</span><span class="p">()</span></pre>
+  <h4 id="Request.Set">func (*Request) Set</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><a href="#Request"><span class="nx">Request</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Request.String">func (Request) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <a href="#Request"><span class="nx">Request</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Request.Web">func (*Request) Web</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><a href="#Request"><span class="nx">Request</span></a><span class="p">)</span> <span class="nf">Web</span><span class="p">()</span></pre>
+  <h3 id="Token">type Token</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Token</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Token.Access_Token"><span class="nx">Access_Token</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Token.Refresh_Token"><span class="nx">Refresh_Token</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Token.Refresh">func (*Token) Refresh</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><a href="#Token"><span class="nx">Token</span></a><span class="p">)</span> <span class="nf">Refresh</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Token.Unmarshal">func (*Token) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><a href="#Token"><span class="nx">Token</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">r</span> <a href="#Raw_Token"><span class="nx">Raw_Token</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h3 id="Value">type Value</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Value</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Value.Runs"><span class="nx">Runs</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="Value.Text"><span class="nx">Text</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
+	<span id="Value.Simple_Text"><span class="nx">Simple_Text</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;simpleText&#34;`</span>
+<span class="p">}</span></pre>
+    <h4 id="Value.String">func (Value) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <a href="#Value"><span class="nx">Value</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h3 id="Values">type Values</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Values</span> <span class="p">[]</span><a href="#Value"><span class="nx">Value</span></a></pre>
+    <h4 id="Values.String">func (Values) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <a href="#Values"><span class="nx">Values</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  </main>
+    <hr>
+    <footer>
+      <small id="generated-by-footer">
+        Generated with <a href="https://abhinav.github.io/doc2go/">doc2go</a>
+      </small>
+    </footer>
+    <script src="../_/js/permalink.js"></script>
+  </body>
+</html>
