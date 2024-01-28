@@ -12,6 +12,56 @@ import (
    "strings"
 )
 
+func encode(f youtube.Format, name string) error {
+   dst, err := func() (*os.File, error) {
+      ext, err := f.Ext()
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(name + ext)
+   }()
+   if err != nil {
+      return err
+   }
+   defer dst.Close()
+   log.Set_Transport(slog.LevelDebug)
+   ranges := f.Ranges()
+   src := log.New_Progress(len(ranges))
+   for _, byte_range := range ranges {
+      err := func() error {
+         res, err := http.Get(f.URL + byte_range)
+         if err != nil {
+            return err
+         }
+         defer res.Body.Close()
+         _, err = dst.ReadFrom(src.Reader(res))
+         if err != nil {
+            return err
+         }
+         return nil
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
+
+func (f flags) do_refresh() error {
+   var code youtube.Device_Code
+   code.Post()
+   fmt.Println(code)
+   fmt.Scanln()
+   raw, err := code.Token()
+   if err != nil {
+      return err
+   }
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(home+"/youtube.json", raw, 0666)
+}
 func (f flags) player() (*youtube.Player, error) {
    var token *youtube.Token
    switch f.request {
@@ -83,55 +133,4 @@ func (f flags) download() error {
       return encode(forms[index], stream.Name(content))
    }
    return nil
-}
-
-func encode(f youtube.Format, name string) error {
-   dst, err := func() (*os.File, error) {
-      ext, err := f.Ext()
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(name + ext)
-   }()
-   if err != nil {
-      return err
-   }
-   defer dst.Close()
-   log.Set_Transport(slog.LevelDebug)
-   ranges := f.Ranges()
-   src := log.New_Progress(len(ranges))
-   for _, byte_range := range ranges {
-      err := func() error {
-         res, err := http.Get(f.URL + byte_range)
-         if err != nil {
-            return err
-         }
-         defer res.Body.Close()
-         _, err = dst.ReadFrom(src.Reader(res))
-         if err != nil {
-            return err
-         }
-         return nil
-      }()
-      if err != nil {
-         return err
-      }
-   }
-   return nil
-}
-
-func (f flags) do_refresh() error {
-   var code youtube.Device_Code
-   code.Post()
-   fmt.Println(code)
-   fmt.Scanln()
-   raw, err := code.Token()
-   if err != nil {
-      return err
-   }
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(home+"/youtube.json", raw, 0666)
 }
