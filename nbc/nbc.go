@@ -13,6 +13,23 @@ import (
    "time"
 )
 
+func Core() Video {
+   var v Video
+   v.DRM_Proxy_Secret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
+   v.DRM_Proxy_URL = func() string {
+      var b strings.Builder
+      b.WriteString("https://drmproxy.digitalsvc.apps.nbcuni.com")
+      b.WriteString("/drm-proxy/license")
+      return b.String()
+   }()
+   return v
+}
+
+type Video struct {
+   DRM_Proxy_URL string
+   DRM_Proxy_Secret string
+}
+
 func (m Metadata) On_Demand() (*On_Demand, error) {
    req, err := http.NewRequest("GET", "https://lemonade.nbc.com", nil)
    if err != nil {
@@ -57,16 +74,6 @@ func (v Video) Request_URL() (string, error) {
    b = fmt.Appendf(b, "&hash=%x", h)
    b = append(b, "&device=web"...)
    return string(b), nil
-}
-
-type Video struct {
-   DRM_Proxy_Secret string
-   DRM_Proxy_URL string
-}
-
-var Core = Video{
-   "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6",
-   "https://drmproxy.digitalsvc.apps.nbcuni.com/drm-proxy/license",
 }
 
 func (Video) Request_Body(b []byte) ([]byte, error) {
