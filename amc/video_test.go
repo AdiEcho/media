@@ -1,7 +1,7 @@
 package amc
 
 import (
-   "154.pages.dev/stream"
+   "154.pages.dev/rosso"
    "fmt"
    "os"
    "testing"

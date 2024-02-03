@@ -3,7 +3,7 @@ package main
 import (
    "154.pages.dev/log"
    "154.pages.dev/media/youtube"
-   "154.pages.dev/stream"
+   "154.pages.dev/rosso"
    "fmt"
    "log/slog"
    "net/http"
@@ -118,7 +118,7 @@ func (f flags) download() error {
          }
          return false
       })
-      err := encode(forms[index], stream.Name(content))
+      err := encode(forms[index], rosso.Name(content))
       if err != nil {
          return err
       }
@@ -130,7 +130,7 @@ func (f flags) download() error {
          }
          return false
       })
-      return encode(forms[index], stream.Name(content))
+      return encode(forms[index], rosso.Name(content))
    }
    return nil
 }

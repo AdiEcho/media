@@ -3,7 +3,7 @@ package main
 import (
    "154.pages.dev/encoding/dash"
    "154.pages.dev/media/nbc"
-   "154.pages.dev/stream"
+   "154.pages.dev/rosso"
    "net/http"
    "slices"
 )
@@ -33,7 +33,7 @@ func (f flags) download() error {
    }
    if !f.s.Info {
       f.s.Poster = nbc.Core
-      f.s.Name = stream.Name(meta)
+      f.s.Name = rosso.Name(meta)
    }
    slices.SortFunc(reps, func(a, b *dash.Representation) int {
       return b.Bandwidth - a.Bandwidth

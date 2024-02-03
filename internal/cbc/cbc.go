@@ -3,7 +3,7 @@ package main
 import (
    "154.pages.dev/encoding/hls"
    "154.pages.dev/media/cbc"
-   "154.pages.dev/stream"
+   "154.pages.dev/rosso"
    "os"
    "slices"
    "strings"
@@ -26,7 +26,7 @@ func (f *flags) master() (*hls.Master, error) {
    if err != nil {
       return nil, err
    }
-   f.s.Name = stream.Name(gem.Structured_Metadata)
+   f.s.Name = rosso.Name(gem.Structured_Metadata)
    return f.s.HLS(media.URL)
 }
 

@@ -2,7 +2,7 @@ package main
 
 import (
    "154.pages.dev/log"
-   "154.pages.dev/stream"
+   "154.pages.dev/rosso"
    "flag"
 )
 
@@ -11,7 +11,7 @@ type flags struct {
    audio_name string
    email string
    password string
-   s stream.Stream
+   s rosso.Stream
    video_height string
    video_rate int64
    level log.Level

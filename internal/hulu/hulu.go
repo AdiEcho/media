@@ -1,81 +1,57 @@
 package main
 
 import (
-   "154.pages.dev/encoding/dash"
+   "154.pages.dev/log"
    "154.pages.dev/media/hulu"
-   "154.pages.dev/stream"
-   "net/http"
+   "154.pages.dev/rosso"
+   "flag"
    "os"
-   "slices"
-   "strings"
+   "path/filepath"
 )
 
-func (f flags) download() error {
+type flags struct {
+   email string
+   id hulu.ID
+   password string
+   s rosso.Stream
+   video_bandwidth int
+   audio_codec string
+   level log.Level
+}
+
+func main() {
    home, err := os.UserHomeDir()
    if err != nil {
-      return err
+      panic(err)
    }
-   var auth hulu.Authenticate
-   auth.Raw, err = os.ReadFile(home + "/hulu/token.json")
-   if err != nil {
-      return err
-   }
-   auth.Unmarshal()
-   deep, err := auth.Deep_Link(f.id)
-   if err != nil {
-      return err
-   }
-   play, err := auth.Playlist(deep)
-   if err != nil {
-      return err
-   }
-   reps, err := func() ([]*dash.Representation, error) {
-      res, err := http.Get(play.Stream_URL)
+   home = filepath.ToSlash(home) + "/widevine/"
+   var f flags
+   flag.Var(&f.id, "a", "address")
+   flag.StringVar(&f.audio_codec, "ac", "ec-3", "audio codec")
+   flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
+   flag.StringVar(&f.email, "e", "", "email")
+   flag.BoolVar(&f.s.Info, "i", false, "information")
+   flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
+   flag.StringVar(&f.password, "p", "", "password")
+   flag.IntVar(&f.video_bandwidth, "vb", 8_500_000, "video max bandwidth")
+   flag.TextVar(&f.level, "v", f.level, "level")
+   flag.Parse()
+   log.Set_Transport(0)
+   log.Set_Logger(f.level)
+   switch {
+   case f.password != "":
+      err := f.authenticate()
       if err != nil {
-         return nil, err
+         panic(err)
       }
-      defer res.Body.Close()
-      f.s.Base = res.Request.URL
-      var media dash.Media
-      media.Decode(res.Body)
-      return media.Representation("content-0")
-   }()
-   if err != nil {
-      return err
-   }
-   if !f.s.Info {
-      detail, err := auth.Details(deep)
+   case f.id.String() != "":
+      err := f.download()
       if err != nil {
-         return err
+         panic(err)
       }
-      f.s.Name = stream.Name(detail)
-      f.s.Poster = play
+   default:
+      flag.Usage()
    }
-   slices.SortFunc(reps, func(a, b *dash.Representation) int {
-      return b.Bandwidth - a.Bandwidth
-   })
-   // video
-   {
-      reps := slices.Clone(reps)
-      reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
-         return !r.Video()
-      })
-      index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-         return r.Bandwidth <= f.video_bandwidth
-      })
-      err := f.s.DASH_Sofia(reps, index)
-      if err != nil {
-         return err
-      }
-   }
-   // audio
-   reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
-      return !r.Audio()
-   })
-   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-      return strings.HasPrefix(r.Codecs, f.audio_codec)
-   })
-   return f.s.DASH_Sofia(reps, index)
 }
 
 func (f flags) authenticate() error {
