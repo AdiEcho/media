@@ -8,10 +8,91 @@ import (
    "net/http"
    "net/url"
    "path"
+   "strconv"
+   "strings"
 )
 
-func (p Playlist) Request_URL() (string, error) {
-   return p.WV_Server, nil
+func (a Authenticate) Details(d *Deep_Link) (*Details, error) {
+   body, err := func() ([]byte, error) {
+      m := map[string][]string{
+         "eabs": {d.EAB_ID},
+      }
+      return json.Marshal(m)
+   }()
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://guide.hulu.com/guide/details", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("Authorization", "Bearer " + a.Value.Data.User_Token)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   var s struct {
+      Items []Details
+   }
+   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
+      return nil, err
+   }
+   if len(s.Items) == 0 {
+      return nil, errors.New("items length is zero")
+   }
+   return &s.Items[0], nil
+}
+
+type Details struct {
+   Episode_Name string
+   Episode_Number int
+   Headline string
+   Premiere_Date string
+   Season_Number int
+   Series_Name string
+}
+
+func (Details) Owner() (string, bool) {
+   return "", false
+}
+
+func (d Details) Show() (string, bool) {
+   return d.Series_Name, d.Series_Name != ""
+}
+
+func (d Details) Season() (string, bool) {
+   if d.Season_Number >= 1 {
+      return strconv.Itoa(d.Season_Number), true
+   }
+   return "", false
+}
+
+func (d Details) Episode() (string, bool) {
+   if d.Episode_Number >= 1 {
+      return strconv.Itoa(d.Episode_Number), true
+   }
+   return "", false
+}
+
+func (d Details) Title() (string, bool) {
+   if d.Episode_Name != "" {
+      return d.Episode_Name, true
+   }
+   return d.Headline, true
+}
+
+func (d Details) Year() (string, bool) {
+   if d.Episode_Name != "" {
+      return "", false
+   }
+   year, _, _ := strings.Cut(d.Premiere_Date, "-")
+   return year, true
 }
 
 type codec_value struct {
@@ -22,96 +103,10 @@ type codec_value struct {
    Width int `json:"width,omitempty"`
 }
 
-func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
-   var p playlist_request
-   p.Content_EAB_ID = d.EAB_ID
-   p.Playback.DRM.Selection_Mode = "ALL"
-   p.Playback.Segments.Selection_Mode = "ALL"
-   p.Playback.Audio.Codecs.Values = []codec_value{
-      {Type: "AAC"},
-      {Type: "EC3"},
-   }
-   p.Playback.Video.Codecs.Selection_Mode = "ALL"
-   p.Playback.Audio.Codecs.Selection_Mode = "ALL"
-   p.Unencrypted = true
-   p.Deejay_Device_ID = 166
-   p.Version = 5012541
-   // this is required for 1080p:
-   p.Playback.Version = 2
-   p.Playback.Manifest.Type = "DASH"
-   p.Playback.DRM.Values = []drm_value{
-      {
-         Security_Level: "L3",
-         Type: "WIDEVINE",
-         Version: "MODULAR",
-      },
-   }
-   p.Playback.Video.Codecs.Values = []codec_value{
-      {
-         Height: 9999,
-         Width: 9999,
-         Level: "5.2",
-         Profile: "HIGH",
-         Type: "H264",
-      },
-   }
-   p.Playback.Segments.Values = func() []segment_value {
-      var s segment_value
-      s.Encryption.Mode = "CENC"
-      s.Encryption.Type = "CENC"
-      s.Type = "FMP4"
-      return []segment_value{s}
-   }()
-   body, err := json.MarshalIndent(p, "", " ")
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://play.hulu.com/v6/playlist", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header = http.Header{
-      "Authorization": {"Bearer " + a.Value.Data.User_Token},
-      "Content-Type": {"application/json"},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   play := new(Playlist)
-   if err := json.NewDecoder(res.Body).Decode(play); err != nil {
-      return nil, err
-   }
-   return play, nil
-}
-
 type drm_value struct {
    Security_Level string `json:"security_level"`
    Type          string `json:"type"`
    Version       string `json:"version"`
-}
-
-type Playlist struct {
-   Stream_URL string
-   WV_Server string
-}
-
-func (Playlist) Request_Body(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Playlist) Request_Header() http.Header {
-   return nil
-}
-
-func (Playlist) Response_Body(b []byte) ([]byte, error) {
-   return b, nil
 }
 
 type playlist_request struct {

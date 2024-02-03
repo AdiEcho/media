@@ -12,11 +12,10 @@ import (
 type flags struct {
    email string
    id hulu.ID
-   password string
-   s rosso.Stream
-   video_bandwidth int
-   audio_codec string
    level log.Level
+   password string
+   representation string
+   s rosso.Stream
 }
 
 func main() {
@@ -27,14 +26,12 @@ func main() {
    home = filepath.ToSlash(home) + "/widevine/"
    var f flags
    flag.Var(&f.id, "a", "address")
-   flag.StringVar(&f.audio_codec, "ac", "ec-3", "audio codec")
-   flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
    flag.StringVar(&f.email, "e", "", "email")
    flag.BoolVar(&f.s.Info, "i", false, "information")
-   flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
-   flag.IntVar(&f.video_bandwidth, "vb", 8_500_000, "video max bandwidth")
    flag.TextVar(&f.level, "v", f.level, "level")
+   flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
+   flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
    flag.Parse()
    log.Set_Transport(0)
    log.Set_Logger(f.level)

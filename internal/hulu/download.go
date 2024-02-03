@@ -4,10 +4,9 @@ import (
    "154.pages.dev/encoding/dash"
    "154.pages.dev/media/hulu"
    "154.pages.dev/rosso"
+   "encoding/xml"
    "net/http"
    "os"
-   "slices"
-   "strings"
 )
 
 func (f flags) download() error {
@@ -37,49 +36,18 @@ func (f flags) download() error {
       f.s.Name = rosso.Name(detail)
       f.s.Poster = play
    }
-   
-   
-   
-   
-   
-   
-   reps, err := func() ([]*dash.Representation, error) {
+   var media dash.MPD
+   err = func() error {
       res, err := http.Get(play.Stream_URL)
       if err != nil {
-         return nil, err
+         return err
       }
       defer res.Body.Close()
       f.s.Base = res.Request.URL
-      var media dash.Media
-      media.Decode(res.Body)
-      return media.Representation("content-0")
+      return xml.NewDecoder(res.Body).Decode(&media)
    }()
    if err != nil {
       return err
    }
-   slices.SortFunc(reps, func(a, b *dash.Representation) int {
-      return b.Bandwidth - a.Bandwidth
-   })
-   // video
-   {
-      reps := slices.Clone(reps)
-      reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
-         return !r.Video()
-      })
-      index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-         return r.Bandwidth <= f.video_bandwidth
-      })
-      err := f.s.DASH_Sofia(reps, index)
-      if err != nil {
-         return err
-      }
-   }
-   // audio
-   reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
-      return !r.Audio()
-   })
-   index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-      return strings.HasPrefix(r.Codecs, f.audio_codec)
-   })
-   return f.s.DASH_Sofia(reps, index)
+   return f.s.DASH_Sofia(media, f.representation)
 }
