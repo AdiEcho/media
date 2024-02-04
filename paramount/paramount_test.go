@@ -13,7 +13,7 @@ import (
 var tests = []struct{
    asset func(string)(string,error) // Downloadable
    content int // Movie
-   content_ID string
+   content_id string
    key string
    pssh string
 }{
@@ -22,7 +22,7 @@ var tests = []struct{
       // SEAL Team Season 1 Episode 1: Tip of the Spear
       asset: DASH_CENC,
       content: episode,
-      content_ID: "rn1zyirVOPjCl8rxopWrhUmJEIs3GcKW",
+      content_id: "rn1zyirVOPjCl8rxopWrhUmJEIs3GcKW",
       key: "f335e480e47739dbcaae7b48faffc002",
       pssh: "AAAAWHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADgIARIQD3gqa9LyRm65UzN2yiD/XyIgcm4xenlpclZPUGpDbDhyeG9wV3JoVW1KRUlzM0djS1c4AQ==",
    }, {
@@ -30,14 +30,14 @@ var tests = []struct{
       // The SpongeBob Movie: Sponge on the Run
       asset: DASH_CENC,
       content: movie,
-      content_ID: "tQk_Qooh5wUlxQqzj_4LiBO2m4iMrcPD",
+      content_id: "tQk_Qooh5wUlxQqzj_4LiBO2m4iMrcPD",
    }, {
       // paramountplus.com/shows/video/YxlqOUdP1zZaIs7FGXCaS1dJi7gGzxG_
       // 60 Minutes Season 55 Episode 18: 1/15/2023: Star Power, Hide and Seek,
       // The Guru
       asset: Downloadable,
       content: episode,
-      content_ID: "YxlqOUdP1zZaIs7FGXCaS1dJi7gGzxG_",
+      content_id: "YxlqOUdP1zZaIs7FGXCaS1dJi7gGzxG_",
    },
 }
 
@@ -55,7 +55,7 @@ func Test_Post(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   client_ID, err := os.ReadFile(home + "/widevine/client_id.bin")
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
    if err != nil {
       t.Fatal(err)
    }
@@ -64,7 +64,7 @@ func Test_Post(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   mod, err := widevine.New_Module(private_key, client_ID, nil, pssh)
+   mod, err := widevine.New_Module(private_key, client_id, nil, pssh)
    if err != nil {
       t.Fatal(err)
    }
@@ -72,7 +72,7 @@ func Test_Post(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   sess, err := token.Session(test.content_ID)
+   sess, err := token.Session(test.content_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -91,7 +91,7 @@ func Test_Secrets(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      if _, err := token.Item(tests[0].content_ID); err != nil {
+      if _, err := token.Item(tests[0].content_id); err != nil {
          t.Fatal(err)
       }
       time.Sleep(99 * time.Millisecond)
@@ -100,7 +100,7 @@ func Test_Secrets(t *testing.T) {
 
 func Test_Media(t *testing.T) {
    for _, test := range tests {
-      ref, err := test.asset(test.content_ID)
+      ref, err := test.asset(test.content_id)
       if err != nil {
          t.Fatal(err)
       }

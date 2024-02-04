@@ -8,7 +8,7 @@ import (
    "strings"
 )
 
-func (at App_Token) Item(content_ID string) (*Item, error) {
+func (at App_Token) Item(content_id string) (*Item, error) {
    req, err := http.NewRequest("GET", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err
@@ -16,7 +16,7 @@ func (at App_Token) Item(content_ID string) (*Item, error) {
    req.URL.Path = func() string {
       var b strings.Builder
       b.WriteString("/apps-api/v2.0/androidphone/video/cid/")
-      b.WriteString(content_ID)
+      b.WriteString(content_id)
       b.WriteString(".json")
       return b.String()
    }()

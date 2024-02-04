@@ -35,7 +35,7 @@ func (Session) Response_Body(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (at App_Token) Session(content_ID string) (*Session, error) {
+func (at App_Token) Session(content_id string) (*Session, error) {
    req, err := http.NewRequest("GET", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err
@@ -57,7 +57,7 @@ func (at App_Token) Session(content_ID string) (*Session, error) {
    if err := json.NewDecoder(res.Body).Decode(sess); err != nil {
       return nil, err
    }
-   sess.URL += content_ID
+   sess.URL += content_id
    return sess, nil
 }
 
@@ -162,27 +162,27 @@ const (
    cms_account_id = "dJ5BDC"
 )
 
-func DASH_CENC(content_ID string) (string, error) {
+func DASH_CENC(content_id string) (string, error) {
    query := url.Values{
       "assetTypes": {"DASH_CENC"},
       "formats": {"MPEG-DASH"},
    }
-   return location(content_ID, query)
+   return location(content_id, query)
 }
 
-func Downloadable(content_ID string) (string, error) {
+func Downloadable(content_id string) (string, error) {
    query := url.Values{
       "assetTypes": {"Downloadable"},
       "formats": {"MPEG4"},
    }
-   return location(content_ID, query)
+   return location(content_id, query)
 }
 
 func use_last_response(*http.Request, []*http.Request) error {
    return http.ErrUseLastResponse
 }
 
-func location(content_ID string, query url.Values) (string, error) {
+func location(content_id string, query url.Values) (string, error) {
    req, err := http.NewRequest("GET", "http://link.theplatform.com", nil)
    if err != nil {
       return "", err
@@ -194,7 +194,7 @@ func location(content_ID string, query url.Values) (string, error) {
       b = append(b, "/media/guid/"...)
       b = strconv.AppendInt(b, aid, 10)
       b = append(b, '/')
-      b = append(b, content_ID...)
+      b = append(b, content_id...)
       return string(b)
    }()
    http.DefaultClient.CheckRedirect = use_last_response

@@ -24,7 +24,7 @@ func (t Track) Progressive() (*Media, error) {
    if err != nil {
       return nil, err
    }
-   req.URL.RawQuery = "client_id=" + client_ID
+   req.URL.RawQuery = "client_id=" + client_id
    res, err := new(http.Transport).RoundTrip(req)
    if err != nil {
       return nil, err
@@ -90,7 +90,7 @@ var Images = []Image{
    {Size: "t80x80"},
    {Size: "tx250"},
 }
-const client_ID = "iZIs9mchVcX5lhVRyQGGAYlNPVldzAoX"
+const client_id = "iZIs9mchVcX5lhVRyQGGAYlNPVldzAoX"
 
 type Track struct {
    ID int64
@@ -118,7 +118,7 @@ func Resolve(ref string) (*Track, error) {
       return nil, err
    }
    req.URL.RawQuery = url.Values{
-      "client_id": {client_ID},
+      "client_id": {client_id},
       "url": {ref},
    }.Encode()
    res, err := new(http.Transport).RoundTrip(req)
@@ -141,7 +141,7 @@ func New_Track(id int) (*Track, error) {
       return nil, err
    }
    req.URL.Path = "/tracks/" + strconv.Itoa(id)
-   req.URL.RawQuery = "client_id=" + client_ID
+   req.URL.RawQuery = "client_id=" + client_id
    res, err := new(http.Transport).RoundTrip(req)
    if err != nil {
       return nil, err

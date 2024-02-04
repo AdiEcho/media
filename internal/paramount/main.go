@@ -14,7 +14,7 @@ type flags struct {
    height int
    codec string
    role string
-   content_ID string
+   content_id string
    dash_cenc bool
    s stream.Stream
    level log.Level
@@ -29,7 +29,7 @@ func main() {
    var f flags
    flag.StringVar(&f.codec, "ac", "mp4a", "audio codec")
    flag.StringVar(&f.role, "ar", "main", "audio role")
-   flag.StringVar(&f.content_ID, "b", "", "content ID")
+   flag.StringVar(&f.content_id, "b", "", "content ID")
    flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
    flag.BoolVar(&f.dash_cenc, "d", false, "DASH_CENC")
    flag.BoolVar(&f.s.Info, "i", false, "information")
@@ -40,7 +40,7 @@ func main() {
    flag.Parse()
    log.Set_Transport(0)
    log.Set_Logger(f.level)
-   if f.content_ID != "" {
+   if f.content_id != "" {
       token, err := paramount.New_App_Token()
       if err != nil {
          panic(err)

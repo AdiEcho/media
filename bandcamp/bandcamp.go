@@ -83,10 +83,10 @@ var Images = []Image{
 }
 
 // Extension is optional.
-func (i Image) URL(art_ID int64) string {
+func (i Image) URL(art_id int64) string {
    var b []byte
    b = append(b, "http://f4.bcbits.com/img/a"...)
-   b = strconv.AppendInt(b, art_ID, 10)
+   b = strconv.AppendInt(b, art_id, 10)
    b = append(b, '_')
    b = strconv.AppendInt(b, i.ID, 10)
    return string(b)

@@ -10,11 +10,11 @@ import (
 )
 
 var tests = []struct {
-   key_ID string
+   key_id string
    u URL
 } {
    { // amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152
-      key_ID: "bc791d3b444f4aca83de23f37aea4f78",
+      key_id: "bc791d3b444f4aca83de23f37aea4f78",
       u: URL{"/shows/orphan-black/episodes/season-1-instinct--1011152", "1011152"},
    },
    { // amcplus.com/movies/nocebo--1061554
@@ -55,16 +55,16 @@ func Test_Key(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   client_ID, err := os.ReadFile(home + "/widevine/client_id.bin")
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
    if err != nil {
       t.Fatal(err)
    }
    test := tests[0]
-   key_ID, err := hex.DecodeString(test.key_ID)
+   key_id, err := hex.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
-   mod, err := widevine.New_Module(private_key, client_ID, key_ID, nil)
+   mod, err := widevine.New_Module(private_key, client_id, key_id, nil)
    if err != nil {
       t.Fatal(err)
    }

@@ -13,7 +13,7 @@ func Test_Item(t *testing.T) {
       t.Fatal(err)
    }
    for _, test := range tests {
-      item, err := token.Item(test.content_ID)
+      item, err := token.Item(test.content_id)
       if err != nil {
          t.Fatal(err)
       }

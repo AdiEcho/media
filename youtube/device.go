@@ -10,7 +10,7 @@ func (d *Device_Code) Post() error {
    res, err := http.PostForm(
       "https://oauth2.googleapis.com/device/code",
       url.Values{
-         "client_id": {client_ID},
+         "client_id": {client_id},
          "scope": {"https://www.googleapis.com/auth/youtube"},
       },
    )

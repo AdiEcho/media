@@ -19,7 +19,7 @@ func Test_Post(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   client_ID, err := os.ReadFile(home + "/widevine/client_id.bin")
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
    if err != nil {
       t.Fatal(err)
    }
@@ -29,7 +29,7 @@ func Test_Post(t *testing.T) {
          if err != nil {
             t.Fatal(err)
          }
-         mod, err := widevine.New_Module(private_key, client_ID, nil, pssh)
+         mod, err := widevine.New_Module(private_key, client_id, nil, pssh)
          if err != nil {
             t.Fatal(err)
          }
@@ -37,7 +37,7 @@ func Test_Post(t *testing.T) {
          if err != nil {
             t.Fatal(err)
          }
-         play, err := site.Playback(test.playback_ID)
+         play, err := site.Playback(test.playback_id)
          if err != nil {
             t.Fatal(err)
          }
@@ -61,7 +61,7 @@ func Test_Playback(t *testing.T) {
    enc.SetEscapeHTML(false)
    enc.SetIndent("", " ")
    for _, test := range tests {
-      play, err := site.Playback(test.playback_ID)
+      play, err := site.Playback(test.playback_id)
       if err != nil {
          t.Fatal(err)
       }

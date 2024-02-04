@@ -9,7 +9,7 @@ import (
 
 // YouTube on TV
 const (
-   client_ID =
+   client_id =
       "861556708454-d6dlm3lh05idd8npek18k6be8ba3oc68" +
       ".apps.googleusercontent.com"
    client_secret = "SboVhoG9s0rNafixCSGGKXAT"
@@ -19,7 +19,7 @@ func (d Device_Code) Token() (Raw_Token, error) {
    res, err := http.PostForm(
       "https://oauth2.googleapis.com/token",
       url.Values{
-         "client_id": {client_ID},
+         "client_id": {client_id},
          "client_secret": {client_secret},
          "device_code": {d.Device_Code},
          "grant_type":  {"urn:ietf:params:oauth:grant-type:device_code"},
@@ -43,7 +43,7 @@ func (t *Token) Refresh() error {
    res, err := http.PostForm(
       "https://oauth2.googleapis.com/token",
       url.Values{
-         "client_id": {client_ID},
+         "client_id": {client_id},
          "client_secret": {client_secret},
          "grant_type": {"refresh_token"},
          "refresh_token": {t.Refresh_Token},

@@ -20,7 +20,7 @@ func Test_License(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   client_ID, err := os.ReadFile(home + "/widevine/client_id.bin")
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
    if err != nil {
       t.Fatal(err)
    }
@@ -28,7 +28,7 @@ func Test_License(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   mod, err := widevine.New_Module(private_key, client_ID, nil, pssh)
+   mod, err := widevine.New_Module(private_key, client_id, nil, pssh)
    if err != nil {
       t.Fatal(err)
    }

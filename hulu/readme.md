@@ -10,7 +10,7 @@ https://github.com/3052/media/commit/d9f2a3a33681992057aa9973752b79e5f7c3b44d
 
 If you cancel you lose access immediately
 
-1. https://support.privacy.com/hc/articles/360012285094
+1. https://privacy.com
 2. https://signup.hulu.com/plans
 3. Hulu (With Ads)
 4. EMAIL

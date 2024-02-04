@@ -13,7 +13,7 @@ import (
 )
 
 func (f flags) dash(token *paramount.App_Token) error {
-   ref, err := paramount.DASH_CENC(f.content_ID)
+   ref, err := paramount.DASH_CENC(f.content_id)
    if err != nil {
       return err
    }
@@ -24,11 +24,11 @@ func (f flags) dash(token *paramount.App_Token) error {
    defer res.Body.Close()
    f.s.Base = res.Request.URL
    if !f.s.Info {
-      f.s.Poster, err = token.Session(f.content_ID)
+      f.s.Poster, err = token.Session(f.content_id)
       if err != nil {
          return err
       }
-      item, err := token.Item(f.content_ID)
+      item, err := token.Item(f.content_id)
       if err != nil {
          return err
       }
@@ -77,11 +77,11 @@ func (f flags) dash(token *paramount.App_Token) error {
    return f.s.DASH_Sofia(reps, index)
 }
 func (f flags) downloadable(token *paramount.App_Token) error {
-   item, err := token.Item(f.content_ID)
+   item, err := token.Item(f.content_id)
    if err != nil {
       return err
    }
-   ref, err := paramount.Downloadable(f.content_ID)
+   ref, err := paramount.Downloadable(f.content_id)
    if err != nil {
       return err
    }
