@@ -1,27 +1,22 @@
 package hulu
 
 import (
-   "encoding/json"
    "fmt"
    "os"
    "testing"
 )
 
-func Test_Details(t *testing.T) {
-   m, err := user_info()
+func new_auth() (*Authenticate, error) {
+   auth, err := Living_Room(
+      os.Getenv("hulu_username"), os.Getenv("hulu_password"),
+   )
    if err != nil {
-      t.Fatal(err)
+      return nil, err
    }
-   auth, err := Living_Room(m["username"], m["password"])
-   if err != nil {
-      t.Fatal(err)
+   if err := auth.Unmarshal(); err != nil {
+      return nil, err
    }
-   auth.Unmarshal()
-   detail, err := auth.Details(test_deep)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", detail)
+   return auth, nil
 }
 
 // hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
@@ -32,12 +27,20 @@ var test_deep = &Deep_Link{
    "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
 }
 
-func Test_Deep_Link(t *testing.T) {
-   m, err := user_info()
+func Test_Details(t *testing.T) {
+   auth, err := new_auth()
    if err != nil {
       t.Fatal(err)
    }
-   auth, err := Living_Room(m["username"], m["password"])
+   detail, err := auth.Details(test_deep)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", detail)
+}
+
+func Test_Deep_Link(t *testing.T) {
+   auth, err := new_auth()
    if err != nil {
       t.Fatal(err)
    }

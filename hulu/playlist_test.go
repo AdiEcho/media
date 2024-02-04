@@ -2,6 +2,7 @@ package hulu
 
 import (
    "154.pages.dev/widevine"
+   "encoding/hex"
    "fmt"
    "os"
    "testing"
@@ -32,7 +33,11 @@ func Test_License(t *testing.T) {
       t.Fatal(err)
    }
    module.Key_ID(client_id, kid)
-   play, err := new_playlist()
+   auth, err := new_auth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   play, err := auth.Playlist(test_deep)
    if err != nil {
       t.Fatal(err)
    }
@@ -41,17 +46,4 @@ func Test_License(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-func new_playlist() (*Playlist, error) {
-   m, err := user_info()
-   if err != nil {
-      return nil, err
-   }
-   auth, err := Living_Room(m["username"], m["password"])
-   if err != nil {
-      return nil, err
-   }
-   auth.Unmarshal()
-   return auth.Playlist(test_deep)
 }

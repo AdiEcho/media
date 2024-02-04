@@ -27,11 +27,11 @@ func main() {
    var f flags
    flag.Var(&f.id, "a", "address")
    flag.StringVar(&f.email, "e", "", "email")
-   flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.password, "p", "", "password")
    flag.TextVar(&f.level, "v", f.level, "level")
    flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
    flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
+   flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.Parse()
    log.Set_Transport(0)
    log.Set_Logger(f.level)
