@@ -9,7 +9,7 @@
 
 ## TRY 7 DAYS FREE
 
-1. https://support.privacy.com/hc/articles/360012285094
+1. https://privacy.com
 2. https://amcplus.com/create
 3. EMAIL
 4. PASSWORD
