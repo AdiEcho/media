@@ -29,19 +29,13 @@ go build
 ## Contact
 
 <dl>
-   <dt>
-   email
-   </dt>
-   <dd>
-   srpen6@gmail.com
-   </dd>
-   <dt>
-   Discord
-   </dt>
-   <dd>
-   srpen6
-   </dd>
-   <dd>
-   https://discord.com/invite/WWq6rFb8Rf
-   </dd>
+   <dt>email</dt>
+      <dd>srpen6@gmail.com</dd>
+   <dt>Discord</dt>
+      <dd>srpen6</dd>
+      <dd>https://discord.com/invite/WWq6rFb8Rf</dd>
+   <dt>PayPal</dt>
+      <dd>https://paypal.com/donate?hosted_button_id=UEJBQQTU3VYDY</dd>
+   <dt>Ethereum</dt>
+      <dd>0xB614Ff822c8Df557dd4714f80Cd280Bc3887390F</dd>
 </dl>
