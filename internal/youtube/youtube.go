@@ -22,9 +22,6 @@ func (f flags) download() error {
       "status", p.Playability.Status, "reason", p.Playability.Reason,
    )
    forms := p.Streaming_Data.Adaptive_Formats
-   slices.SortFunc(forms, func(a, b youtube.Format) int {
-      return int(b.Bitrate - a.Bitrate)
-   })
    if f.info {
       for i, form := range forms {
          if i >= 1 {
@@ -36,29 +33,11 @@ func (f flags) download() error {
       var content youtube.Contents
       f.r.Web()
       content.Next(f.r)
-      // need to do audio first, because URLs expire quickly
-      index := slices.IndexFunc(forms, func(a youtube.Format) bool {
-         if a.Audio_Quality == f.a_quality {
-            return strings.Contains(a.MIME_Type, f.a_codec)
-         }
-         return false
-      })
-      err := encode(forms[index], rosso.Name(content))
-      if err != nil {
-         return err
-      }
-      // video
-      index = slices.IndexFunc(forms, func(a youtube.Format) bool {
-         // 1080p60
-         if strings.HasPrefix(a.Quality_Label, f.v_quality) {
-            return strings.Contains(a.MIME_Type, f.v_codec)
-         }
-         return false
-      })
       return encode(forms[index], rosso.Name(content))
    }
    return nil
 }
+
 func encode(f youtube.Format, name string) error {
    dst, err := func() (*os.File, error) {
       ext, err := f.Ext()
@@ -71,9 +50,10 @@ func encode(f youtube.Format, name string) error {
       return err
    }
    defer dst.Close()
-   log.Set_Transport(slog.LevelDebug)
+   log.TransportDebug()
    ranges := f.Ranges()
-   src := log.New_Progress(len(ranges))
+   var meter log.ProgressMeter
+   meter.Set(len(ranges))
    for _, byte_range := range ranges {
       err := func() error {
          res, err := http.Get(f.URL + byte_range)
@@ -81,7 +61,7 @@ func encode(f youtube.Format, name string) error {
             return err
          }
          defer res.Body.Close()
-         _, err = dst.ReadFrom(src.Reader(res))
+         _, err = dst.ReadFrom(meter.Reader(res))
          if err != nil {
             return err
          }
@@ -109,6 +89,7 @@ func (f flags) do_refresh() error {
    }
    return os.WriteFile(home+"/youtube.json", raw, 0666)
 }
+
 func (f flags) player() (*youtube.Player, error) {
    var token *youtube.Token
    switch f.request {

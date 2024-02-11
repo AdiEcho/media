@@ -8,24 +8,16 @@ import (
 )
 
 type flags struct {
-   a_codec string
-   a_quality string
-   info bool
    refresh bool
    r youtube.Request
    request int
-   v_codec string
-   v_quality string
-   level log.Level
+   v log.Level
 }
 
 func main() {
    var f flags
    flag.Var(&f.r, "a", "address")
-   flag.StringVar(&f.a_codec, "ac", "opus", "audio codec")
-   flag.StringVar(&f.a_quality, "aq", "AUDIO_QUALITY_MEDIUM", "audio quality")
    flag.StringVar(&f.r.Video_ID, "b", "", "video ID")
-   flag.BoolVar(&f.info, "i", false, "information")
    {
       var b strings.Builder
       b.WriteString("0: Android\n")
@@ -34,23 +26,22 @@ func main() {
       flag.IntVar(&f.request, "r", 0, b.String())
    }
    flag.BoolVar(&f.refresh, "refresh", false, "create OAuth refresh token")
-   flag.StringVar(&f.v_codec, "vc", "vp9", "video codec")
-   flag.StringVar(&f.v_quality, "vq", "1080p", "video quality")
-   flag.TextVar(&f.level, "v", f.level, "level")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
-   log.Set_Transport(0)
-   log.Set_Logger(f.level)
-   if f.refresh {
-      err := f.do_refresh()
-      if err != nil {
-         panic(err)
-      }
-   } else if f.r.Video_ID != "" {
+   log.TransportInfo()
+   log.Handler(f.v)
+   switch {
+   case f.r.Video_ID != "":
       err := f.download()
       if err != nil {
          panic(err)
       }
-   } else {
+   case f.refresh:
+      err := f.do_refresh()
+      if err != nil {
+         panic(err)
+      }
+   default:
       flag.Usage()
    }
 }
