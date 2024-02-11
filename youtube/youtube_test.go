@@ -7,25 +7,24 @@ import (
    "time"
 )
 
-func TestAndroid(t *testing.T) {
-   for _, android_id := range android_ids {
-      var p Player
-      r := Request{VideoId: android_id}
-      r.Android()
-      err := p.Post(r, nil)
-      if err != nil {
-         t.Fatal(err)
-      }
-      if p.PlayabilityStatus.Status != "OK" {
-         t.Fatal(p)
-      }
-      if len(p.StreamingData.AdaptiveFormats) == 0 {
-         t.Fatal("adaptiveFormats")
-      }
-      if p.VideoDetails.ViewCount == 0 {
-         t.Fatal("viewCount")
-      }
-      time.Sleep(time.Second)
+func TestTemplate(t *testing.T) {
+   tmpl, err := new(template.Template).Parse(Template)
+   if err != nil {
+      t.Fatal(err)
+   }
+   file, err := os.Create("ignore.html")
+   if err != nil {
+      t.Fatal(err)
+   }
+   defer file.Close()
+   text, err := os.ReadFile("m3u8/desktop_master.m3u8")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var master MasterPlaylist
+   master.New(string(text))
+   if err := tmpl.Execute(file, master); err != nil {
+      t.Fatal(err)
    }
 }
 
@@ -39,6 +38,13 @@ func TestId(t *testing.T) {
       fmt.Println(req.VideoId)
    }
 }
+
+var id_tests = []string{
+   "https://youtube.com/shorts/9Vsdft81Q6w",
+   "https://youtube.com/watch?v=XY-hOqcPGCY",
+}
+
+const image_test = "UpNXI3_ctAc"
 
 func TestImage(t *testing.T) {
    for _, img := range Images {
@@ -54,36 +60,3 @@ func TestImage(t *testing.T) {
       time.Sleep(99 * time.Millisecond)
    }
 }
-var id_tests = []string{
-   "https://youtube.com/shorts/9Vsdft81Q6w",
-   "https://youtube.com/watch?v=XY-hOqcPGCY",
-}
-
-const image_test = "UpNXI3_ctAc"
-
-var embed_ids = []string{
-   "HtVdAasjOgU",
-   "WaOKSUlf4TM",
-}
-
-var android_ids = []string{
-   "H1BuwMTrtLQ", // content check
-   "zv9NimPx3Es",
-}
-
-func TestAndroidEmbed(t *testing.T) {
-   for _, embed_id := range embed_ids {
-      var play Player
-      req := Request{VideoId: embed_id}
-      req.AndroidEmbed()
-      err := play.Post(req, nil)
-      if err != nil {
-         t.Fatal(err)
-      }
-      if play.PlayabilityStatus.Status != "OK" {
-         t.Fatal(play)
-      }
-      time.Sleep(time.Second)
-   }
-}
-

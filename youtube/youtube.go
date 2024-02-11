@@ -194,11 +194,12 @@ func (f Format) Ext() (string, error) {
 }
 
 type Format struct {
-   AudioQuality string
+   Itag int
+   URL string
    ContentLength int64 `json:",string"`
+   
+   AudioQuality string
+   Bitrate int
    MimeType string
    QualityLabel string
-   URL string
-   
-   Bitrate int64
 }

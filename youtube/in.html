@@ -1,0 +1,34 @@
+<style>
+table {
+   border-collapse: collapse;
+   margin: 9px;
+}
+td {
+   border-style: solid;
+   border-width: thin;
+}
+td,
+th {
+   padding: 9px;
+}
+</style>
+<table>
+<tr>
+   <th>itag</th>
+   <th>audio quality</th>
+   <th>bitrate</th>
+   <th>content length</th>
+   <th>mime type</th>
+   <th>quality label</th>
+</tr>
+{{ range . -}}
+<tr>
+   <td>{{ .Itag }}</td>
+   <td>{{ .AudioQuality }}</td>
+   <td>{{ .Bitrate }}</td>
+   <td>{{ .ContentLength }}</td>
+   <td>{{ .MimeType }}</td>
+   <td>{{ .QualityLabel }}</td>
+</tr>
+{{ end -}}
+</table>

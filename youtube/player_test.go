@@ -2,6 +2,54 @@ package youtube
 
 import "testing"
 
+var embed_ids = []string{
+   "HtVdAasjOgU",
+   "WaOKSUlf4TM",
+}
+
+func TestAndroidEmbed(t *testing.T) {
+   req := Request{VideoId: embed_id}
+   req.AndroidEmbed()
+   for _, embed_id := range embed_ids {
+      var play Player
+      err := play.Post(req, nil)
+      if err != nil {
+         t.Fatal(err)
+      }
+      if play.PlayabilityStatus.Status != "OK" {
+         t.Fatal(play)
+      }
+      time.Sleep(time.Second)
+   }
+}
+
+var android_ids = []string{
+   "H1BuwMTrtLQ", // content check
+   "zv9NimPx3Es",
+}
+
+func TestAndroid(t *testing.T) {
+   r := Request{VideoId: android_id}
+   r.Android()
+   for _, android_id := range android_ids {
+      var p Player
+      err := p.Post(r, nil)
+      if err != nil {
+         t.Fatal(err)
+      }
+      if p.PlayabilityStatus.Status != "OK" {
+         t.Fatal(p)
+      }
+      if len(p.StreamingData.AdaptiveFormats) == 0 {
+         t.Fatal("adaptiveFormats")
+      }
+      if p.VideoDetails.ViewCount == 0 {
+         t.Fatal("viewCount")
+      }
+      time.Sleep(time.Second)
+   }
+}
+
 const web_id = "HPkDFc8hq5c"
 
 func TestWeb(t *testing.T) {
