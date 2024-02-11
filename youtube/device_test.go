@@ -6,8 +6,8 @@ import (
    "time"
 )
 
-func Test_Code(t *testing.T) {
-   var code Device_Code
+func TestCode(t *testing.T) {
+   var code DeviceCode
    err := code.Post()
    if err != nil {
       t.Fatal(err)
@@ -18,14 +18,15 @@ func Test_Code(t *testing.T) {
    )
    for range [9]bool{} {
       time.Sleep(9 * time.Second)
-      raw, err := code.Token()
+      token, err := code.Token()
       if err != nil {
          t.Fatal(err)
       }
-      var tok Token
-      tok.Unmarshal(raw)
-      fmt.Printf("%+v\n", tok)
-      if tok.Access_Token != "" {
+      if err := token.Unmarshal(); err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", token)
+      if token.Token.Access_Token != "" {
          break
       }
    }

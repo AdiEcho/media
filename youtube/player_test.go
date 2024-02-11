@@ -4,8 +4,8 @@ import "testing"
 
 const web_id = "HPkDFc8hq5c"
 
-func Test_Web(t *testing.T) {
-   r := Request{Video_ID: web_id}
+func TestWeb(t *testing.T) {
+   r := Request{VideoId: web_id}
    r.Web()
    var p Player
    err := p.Post(r, nil)
@@ -15,13 +15,13 @@ func Test_Web(t *testing.T) {
    if p.Author() == "" {
       t.Fatal("author")
    }
-   if p.Playability.Reason != "" {
+   if p.PlayabilityStatus.Reason != "" {
       t.Fatal("reason")
    }
-   if p.Playability.Status != "OK" {
+   if p.PlayabilityStatus.Status != "OK" {
       t.Fatal("status")
    }
-   if len(p.Streaming_Data.Adaptive_Formats) == 0 {
+   if len(p.StreamingData.AdaptiveFormats) == 0 {
       t.Fatal("adaptiveFormats")
    }
    if _, err := p.Time(); err != nil {
@@ -30,16 +30,16 @@ func Test_Web(t *testing.T) {
    if p.Title() == "" {
       t.Fatal("title")
    }
-   if p.Video_Details.Length_Seconds <= 0 {
+   if p.VideoDetails.LengthSeconds <= 0 {
       t.Fatal("duration")
    }
-   if p.Video_Details.Short_Description == "" {
+   if p.VideoDetails.ShortDescription == "" {
       t.Fatal("shortDescription")
    }
-   if p.Video_Details.Video_ID == "" {
+   if p.VideoDetails.VideoId == "" {
       t.Fatal("videoId")
    }
-   if p.Video_Details.View_Count <= 0 {
+   if p.VideoDetails.ViewCount <= 0 {
       t.Fatal("viewCount")
    }
 }

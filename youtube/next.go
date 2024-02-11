@@ -16,13 +16,13 @@ func (w WatchNext) Year() (string, bool) {
 
 type WatchNext []struct {
    VideoPrimaryInfoRenderer *struct {
-      Title Value // The Family Secret
+      Title Run // The Family Secret
    }
    VideoSecondaryInfoRenderer *struct {
       MetadataRowContainer MetadataRowContainer
       Owner struct {
          VideoOwnerRenderer struct {
-            Title Value
+            Title Run
          }
       }
    }
@@ -80,8 +80,8 @@ type MetadataRowContainer struct {
    MetadataRowContainerRenderer struct {
       Rows []struct {
          MetadataRowRenderer struct {
-            Title Value // Show
-            Contents Values // In The Heat Of The Night
+            Title Run // Show
+            Contents Runs // In The Heat Of The Night
          }
       }
    }
@@ -96,29 +96,29 @@ func (m MetadataRowContainer) get(s string) (string, bool) {
    return "", false
 }
 
-type Value struct {
+type Run struct {
    Runs []struct {
       Text string
    }
    SimpleText string
 }
 
-func (v Value) String() string {
-   if v.SimpleText != "" {
-      return v.SimpleText
+func (r Run) String() string {
+   if r.SimpleText != "" {
+      return r.SimpleText
    }
    var b strings.Builder
-   for _, run := range v.Runs {
-      b.WriteString(run.Text)
+   for _, each := range r.Runs {
+      b.WriteString(each.Text)
    }
    return b.String()
 }
 
-type Values []Value
+type Runs []Run
 
-func (v Values) String() string {
+func (r Runs) String() string {
    var b strings.Builder
-   for _, each := range v {
+   for _, each := range r {
       if b.Len() >= 1 {
          b.WriteString(", ")
       }

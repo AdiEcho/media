@@ -46,7 +46,7 @@ func (p Player) Title() string {
    return p.VideoDetails.Title
 }
 
-func (p *Player) Post(r Request, t *Token) error {
+func (p *Player) Post(r Request, o *OauthToken) error {
    r.Context.Client.AndroidSdkVersion = 32
    r.Context.Client.OsVersion = "12"
    body, err := json.Marshal(r)
@@ -61,8 +61,8 @@ func (p *Player) Post(r Request, t *Token) error {
       return err
    }
    req.Header.Set("User-Agent", user_agent + r.Context.Client.ClientVersion)
-   if t != nil {
-      req.Header.Set("Authorization", "Bearer " + t.AccessToken)
+   if o != nil {
+      req.Header.Set("Authorization", "Bearer " + o.Token.Access_Token)
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {

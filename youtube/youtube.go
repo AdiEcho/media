@@ -23,25 +23,6 @@ const (
    web_version = "2.20231219.04.00"
 )
 
-type Request struct {
-   ContentCheckOk bool `json:"contentCheckOk,omitempty"`
-   Context struct {
-      Client struct {
-         AndroidSdkVersion int `json:"androidSdkVersion"`
-         ClientName string `json:"clientName"`
-         ClientVersion string `json:"clientVersion"`
-         // need this to get the correct:
-         // This video requires payment to watch
-         // instead of the invalid:
-         // This video can only be played on newer versions of Android or other
-         // supported devices.
-         OsVersion string `json:"osVersion"`
-      } `json:"client"`
-   } `json:"context"`
-   RacyCheckOk bool `json:"racyCheckOk,omitempty"`
-   VideoId string `json:"videoId"`
-}
-
 func (r *Request) Set(s string) error {
    base, err := url.Parse(s)
    if err != nil {
@@ -62,7 +43,7 @@ func (f Format) Ranges() []string {
    const bytes = 10_000_000
    var byte_ranges []string
    var pos int64
-   for pos < f.Content_Length {
+   for pos < f.ContentLength {
       byte_range := func() string {
          b := []byte("&range=")
          b = strconv.AppendInt(b, pos, 10)
@@ -93,7 +74,7 @@ type DeviceCode struct {
 }
 
 func (f Format) Ext() (string, error) {
-   media, _, err := mime.ParseMediaType(f.MIME_Type)
+   media, _, err := mime.ParseMediaType(f.MimeType)
    if err != nil {
       return "", err
    }
@@ -107,7 +88,7 @@ func (f Format) Ext() (string, error) {
    case "video/webm":
       return ".webm", nil
    }
-   return "", errors.New(f.MIME_Type)
+   return "", errors.New(f.MimeType)
 }
 
 var Images = []Image{
@@ -178,24 +159,43 @@ func (i Image) String() string {
 }
 
 func (r *Request) Web() {
-   r.Context.Client.Client_Name = "WEB"
-   r.Context.Client.Client_Version = web_version
+   r.Context.Client.ClientName = "WEB"
+   r.Context.Client.ClientVersion = web_version
 }
 
 func (r *Request) AndroidEmbed() {
-   r.Context.Client.Client_Name = "ANDROID_EMBEDDED_PLAYER"
-   r.Context.Client.Client_Version = android_version
+   r.Context.Client.ClientName = "ANDROID_EMBEDDED_PLAYER"
+   r.Context.Client.ClientVersion = android_version
 }
 
 func (r *Request) Android() {
-   r.Content_Check_OK = true
-   r.Context.Client.Client_Name = "ANDROID"
-   r.Context.Client.Client_Version = android_version
+   r.ContentCheckOk = true
+   r.Context.Client.ClientName = "ANDROID"
+   r.Context.Client.ClientVersion = android_version
 }
 
 func (r *Request) AndroidCheck() {
-   r.Content_Check_OK = true
-   r.Context.Client.Client_Name = "ANDROID"
-   r.Context.Client.Client_Version = android_version
-   r.Racy_Check_OK = true
+   r.ContentCheckOk = true
+   r.Context.Client.ClientName = "ANDROID"
+   r.Context.Client.ClientVersion = android_version
+   r.RacyCheckOk = true
+}
+
+type Request struct {
+   ContentCheckOk bool `json:"contentCheckOk,omitempty"`
+   Context struct {
+      Client struct {
+         AndroidSdkVersion int `json:"androidSdkVersion"`
+         ClientName string `json:"clientName"`
+         ClientVersion string `json:"clientVersion"`
+         // need this to get the correct:
+         // This video requires payment to watch
+         // instead of the invalid:
+         // This video can only be played on newer versions of Android or other
+         // supported devices.
+         OsVersion string `json:"osVersion"`
+      } `json:"client"`
+   } `json:"context"`
+   RacyCheckOk bool `json:"racyCheckOk,omitempty"`
+   VideoId string `json:"videoId"`
 }

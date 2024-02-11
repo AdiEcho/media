@@ -15,26 +15,26 @@ var check_ids = []string{
    "nGC3D_FkCmg", // content check
 }
 
-func Test_Android_Check(t *testing.T) {
+func TestAndroidCheck(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   raw, err := os.ReadFile(home + "/youtube.json")
+   text, err := os.ReadFile(home + "/youtube.json")
    if err != nil {
       t.Fatal(err)
    }
    for _, check_id := range check_ids {
       var play Player
-      req := Request{Video_ID: check_id}
-      req.Android_Check()
-      var tok Token
-      tok.Unmarshal(raw)
-      err := play.Post(req, &tok)
+      req := Request{VideoId: check_id}
+      req.AndroidCheck()
+      token := OauthToken{Raw: text}
+      token.Unmarshal()
+      err := play.Post(req, &token)
       if err != nil {
          t.Fatal(err)
       }
-      if play.Playability.Status != "OK" {
+      if play.PlayabilityStatus.Status != "OK" {
          t.Fatal(play)
       }
       time.Sleep(time.Second)
