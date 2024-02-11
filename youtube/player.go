@@ -11,46 +11,44 @@ const user_agent = "com.google.android.youtube/"
 
 type Player struct {
    Microformat struct {
-      Player_Microformat_Renderer struct {
-         Publish_Date string `json:"publishDate"`
-      } `json:"playerMicroformatRenderer"`
+      PlayerMicroformatRenderer struct {
+         PublishDate string
+      }
    }
-   Playability struct {
+   PlayabilityStatus struct {
       Status string
       Reason string
-   } `json:"playabilityStatus"`
-   Streaming_Data struct {
-      Adaptive_Formats []Format `json:"adaptiveFormats"`
-   } `json:"streamingData"`
-   Video_Details struct {
+   }
+   StreamingData struct {
+      AdaptiveFormats []Format
+   }
+   VideoDetails struct {
       Author string
-      Length_Seconds int64 `json:"lengthSeconds,string"`
-      Short_Description string `json:"shortDescription"`
+      LengthSeconds int64 `json:",string"`
+      ShortDescription string
       Title string
-      Video_ID string `json:"videoId"`
-      View_Count int64 `json:"viewCount,string"`
-   } `json:"videoDetails"`
+      VideoId string
+      ViewCount int64 `json:",string"`
+   }
 }
 
-// stream.Video
 func (p Player) Author() string {
-   return p.Video_Details.Author
+   return p.VideoDetails.Author
 }
 
 func (p Player) Time() (time.Time, error) {
    return time.Parse(
-      time.RFC3339, p.Microformat.Player_Microformat_Renderer.Publish_Date,
+      time.RFC3339, p.Microformat.PlayerMicroformatRenderer.PublishDate,
    )
 }
 
-// stream.Video
 func (p Player) Title() string {
-   return p.Video_Details.Title
+   return p.VideoDetails.Title
 }
 
 func (p *Player) Post(r Request, t *Token) error {
-   r.Context.Client.Android_SDK_Version = 32
-   r.Context.Client.OS_Version = "12"
+   r.Context.Client.AndroidSdkVersion = 32
+   r.Context.Client.OsVersion = "12"
    body, err := json.Marshal(r)
    if err != nil {
       return err
@@ -62,9 +60,9 @@ func (p *Player) Post(r Request, t *Token) error {
    if err != nil {
       return err
    }
-   req.Header.Set("User-Agent", user_agent + r.Context.Client.Client_Version)
+   req.Header.Set("User-Agent", user_agent + r.Context.Client.ClientVersion)
    if t != nil {
-      req.Header.Set("Authorization", "Bearer " + t.Access_Token)
+      req.Header.Set("Authorization", "Bearer " + t.AccessToken)
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {

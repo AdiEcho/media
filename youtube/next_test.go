@@ -13,7 +13,7 @@ var video_ids = []string{
    "PBcnZCa1dEk", // film
 }
 
-func Test_Next(t *testing.T) {
+func TestNext(t *testing.T) {
    for _, video_id := range video_ids {
       req := Request{Video_ID: video_id}
       req.Web()

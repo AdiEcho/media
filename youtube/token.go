@@ -15,7 +15,7 @@ const (
    client_secret = "SboVhoG9s0rNafixCSGGKXAT"
 )
 
-func (d Device_Code) Token() (Raw_Token, error) {
+func (d DeviceCode) Token() (RawToken, error) {
    res, err := http.PostForm(
       "https://oauth2.googleapis.com/token",
       url.Values{
@@ -32,7 +32,7 @@ func (d Device_Code) Token() (Raw_Token, error) {
    return io.ReadAll(res.Body)
 }
 
-type Raw_Token []byte
+type RawToken []byte
 
 type Token struct {
    Access_Token string
@@ -56,6 +56,6 @@ func (t *Token) Refresh() error {
    return json.NewDecoder(res.Body).Decode(t)
 }
 
-func (t *Token) Unmarshal(r Raw_Token) error {
+func (t *Token) Unmarshal(r RawToken) error {
    return json.Unmarshal(r, t)
 }

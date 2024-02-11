@@ -3,7 +3,6 @@ package youtube
 import (
    "bytes"
    "encoding/json"
-   "errors"
    "net/http"
    "strings"
 )
@@ -29,8 +28,6 @@ type WatchNext []struct {
    }
 }
 
-//////////////////
-
 func (w WatchNext) Episode() (string, bool) {
    if v, ok := w.metadata_row_container(); ok {
       return v.get("Episode")
@@ -40,8 +37,8 @@ func (w WatchNext) Episode() (string, bool) {
 
 func (w WatchNext) Owner() (string, bool) {
    for _, v := range w {
-      if v := v.Video_Secondary_Info_Renderer; v != nil {
-         return v.Owner.Video_Owner_Renderer.Title.String(), true
+      if v := v.VideoSecondaryInfoRenderer; v != nil {
+         return v.Owner.VideoOwnerRenderer.Title.String(), true
       }
    }
    return "", false
@@ -63,7 +60,7 @@ func (w WatchNext) Show() (string, bool) {
 
 func (w WatchNext) Title() (string, bool) {
    for _, v := range w {
-      if v := v.Video_Primary_Info_Renderer; v != nil {
+      if v := v.VideoPrimaryInfoRenderer; v != nil {
          return v.Title.String(), true
       }
    }
@@ -72,7 +69,7 @@ func (w WatchNext) Title() (string, bool) {
 
 func (w WatchNext) metadata_row_container() (*MetadataRowContainer, bool) {
    for _, v := range w {
-      if v := v.Video_Secondary_Info_Renderer; v != nil {
+      if v := v.VideoSecondaryInfoRenderer; v != nil {
          return &v.MetadataRowContainer, true
       }
    }
@@ -80,19 +77,19 @@ func (w WatchNext) metadata_row_container() (*MetadataRowContainer, bool) {
 }
 
 type MetadataRowContainer struct {
-   Metadata_Row_Container_Renderer struct {
+   MetadataRowContainerRenderer struct {
       Rows []struct {
-         Metadata_Row_Renderer struct {
+         MetadataRowRenderer struct {
             Title Value // Show
             Contents Values // In The Heat Of The Night
-         } `json:"metadataRowRenderer"`
+         }
       }
-   } `json:"metadataRowContainerRenderer"`
+   }
 }
 
 func (m MetadataRowContainer) get(s string) (string, bool) {
-   for _, v := range m.Metadata_Row_Container_Renderer.Rows {
-      if v := v.Metadata_Row_Renderer; v.Title.String() == s {
+   for _, v := range m.MetadataRowContainerRenderer.Rows {
+      if v := v.MetadataRowRenderer; v.Title.String() == s {
          return v.Contents.String(), true
       }
    }
@@ -103,12 +100,12 @@ type Value struct {
    Runs []struct {
       Text string
    }
-   Simple_Text string `json:"simpleText"`
+   SimpleText string
 }
 
 func (v Value) String() string {
-   if v.Simple_Text != "" {
-      return v.Simple_Text
+   if v.SimpleText != "" {
+      return v.SimpleText
    }
    var b strings.Builder
    for _, run := range v.Runs {
@@ -121,11 +118,11 @@ type Values []Value
 
 func (v Values) String() string {
    var b strings.Builder
-   for _, val := range v {
+   for _, each := range v {
       if b.Len() >= 1 {
          b.WriteString(", ")
       }
-      b.WriteString(val.String())
+      b.WriteString(each.String())
    }
    return b.String()
 }
@@ -146,18 +143,18 @@ func (w *WatchNext) Next(r Request) error {
    defer res.Body.Close()
    var s struct {
       Contents struct {
-         Two_Column_Watch_Next_Results struct {
+         TwoColumnWatchNextResults struct {
             Results struct {
                Results struct {
                   Contents WatchNext
                }
             }
-         } `json:"twoColumnWatchNextResults"`
+         }
       }
    }
    if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
       return err
    }
-   *w = s.Contents.Two_Column_Watch_Next_Results.Results.Results.Contents
+   *w = s.Contents.TwoColumnWatchNextResults.Results.Results.Contents
    return nil
 }

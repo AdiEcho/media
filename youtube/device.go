@@ -6,7 +6,7 @@ import (
    "net/url"
 )
 
-func (d *Device_Code) Post() error {
+func (d *DeviceCode) Post() error {
    res, err := http.PostForm(
       "https://oauth2.googleapis.com/device/code",
       url.Values{
