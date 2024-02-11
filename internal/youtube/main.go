@@ -17,7 +17,7 @@ type flags struct {
 func main() {
    var f flags
    flag.Var(&f.r, "a", "address")
-   flag.StringVar(&f.r.Video_ID, "b", "", "video ID")
+   flag.StringVar(&f.r.VideoId, "b", "", "video ID")
    {
       var b strings.Builder
       b.WriteString("0: Android\n")
@@ -31,7 +31,7 @@ func main() {
    log.TransportInfo()
    log.Handler(f.v)
    switch {
-   case f.r.Video_ID != "":
+   case f.r.VideoId != "":
       err := f.download()
       if err != nil {
          panic(err)

@@ -8,8 +8,6 @@ import (
    "log/slog"
    "net/http"
    "os"
-   "slices"
-   "strings"
 )
 
 func (f flags) download() error {
@@ -17,10 +15,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   slog.Info(
-      "playability",
-      "status", p.Playability.Status, "reason", p.Playability.Reason,
-   )
+   slog.Info("playability", "status", p.PlayabilityStatus)
    forms := p.Streaming_Data.Adaptive_Formats
    if f.info {
       for i, form := range forms {

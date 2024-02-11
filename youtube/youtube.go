@@ -9,15 +9,6 @@ import (
    "strings"
 )
 
-type Format struct {
-   AudioQuality string
-   Bitrate int64
-   ContentLength int64 `json:",string"`
-   MimeType string
-   QualityLabel string
-   URL string
-}
-
 const (
    android_version = "18.43.39"
    web_version = "2.20231219.04.00"
@@ -39,24 +30,6 @@ func (r Request) String() string {
    return r.VideoId
 }
 
-func (f Format) Ranges() []string {
-   const bytes = 10_000_000
-   var byte_ranges []string
-   var pos int64
-   for pos < f.ContentLength {
-      byte_range := func() string {
-         b := []byte("&range=")
-         b = strconv.AppendInt(b, pos, 10)
-         b = append(b, '-')
-         b = strconv.AppendInt(b, pos+bytes-1, 10)
-         return string(b)
-      }()
-      byte_ranges = append(byte_ranges, byte_range)
-      pos += bytes
-   }
-   return byte_ranges
-}
-
 func (d DeviceCode) String() string {
    var b strings.Builder
    b.WriteString("1. Go to\n")
@@ -71,24 +44,6 @@ type DeviceCode struct {
    Device_Code string
    User_Code string
    Verification_URL string
-}
-
-func (f Format) Ext() (string, error) {
-   media, _, err := mime.ParseMediaType(f.MimeType)
-   if err != nil {
-      return "", err
-   }
-   switch media {
-   case "audio/mp4":
-      return ".m4a", nil
-   case "audio/webm":
-      return ".weba", nil
-   case "video/mp4":
-      return ".m4v", nil
-   case "video/webm":
-      return ".webm", nil
-   }
-   return "", errors.New(f.MimeType)
 }
 
 var Images = []Image{
@@ -198,4 +153,52 @@ type Request struct {
    } `json:"context"`
    RacyCheckOk bool `json:"racyCheckOk,omitempty"`
    VideoId string `json:"videoId"`
+}
+
+func (f Format) Ranges() []string {
+   const bytes = 10_000_000
+   var (
+      byte_ranges []string
+      pos int64
+   )
+   for pos < f.ContentLength {
+      byte_range := func() string {
+         b := []byte("&range=")
+         b = strconv.AppendInt(b, pos, 10)
+         b = append(b, '-')
+         b = strconv.AppendInt(b, pos+bytes-1, 10)
+         return string(b)
+      }()
+      byte_ranges = append(byte_ranges, byte_range)
+      pos += bytes
+   }
+   return byte_ranges
+}
+
+func (f Format) Ext() (string, error) {
+   media, _, err := mime.ParseMediaType(f.MimeType)
+   if err != nil {
+      return "", err
+   }
+   switch media {
+   case "audio/mp4":
+      return ".m4a", nil
+   case "audio/webm":
+      return ".weba", nil
+   case "video/mp4":
+      return ".m4v", nil
+   case "video/webm":
+      return ".webm", nil
+   }
+   return "", errors.New(f.MimeType)
+}
+
+type Format struct {
+   AudioQuality string
+   ContentLength int64 `json:",string"`
+   MimeType string
+   QualityLabel string
+   URL string
+   
+   Bitrate int64
 }

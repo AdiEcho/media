@@ -13,7 +13,7 @@ const (
    client_secret = "SboVhoG9s0rNafixCSGGKXAT"
 )
 
-func (d DeviceCode) Token() (*OauthToken, error) {
+func (d DeviceCode) Token() (*Token, error) {
    res, err := http.PostForm(
       "https://oauth2.googleapis.com/token", url.Values{
          "client_id": {client_id},
@@ -26,7 +26,7 @@ func (d DeviceCode) Token() (*OauthToken, error) {
       return nil, err
    }
    defer res.Body.Close()
-   var token OauthToken
+   var token Token
    token.Raw, err = io.ReadAll(res.Body)
    if err != nil {
       return nil, err
@@ -34,7 +34,7 @@ func (d DeviceCode) Token() (*OauthToken, error) {
    return &token, nil
 }
 
-type OauthToken struct {
+type Token struct {
    Raw []byte
    Token struct {
       Access_Token string
@@ -42,23 +42,23 @@ type OauthToken struct {
    }
 }
 
-func (o *OauthToken) Unmarshal() error {
-   return json.Unmarshal(o.Raw, &o.Token)
+func (t *Token) Unmarshal() error {
+   return json.Unmarshal(t.Raw, &t.Token)
 }
 
-func (o *OauthToken) Refresh() error {
+func (t *Token) Refresh() error {
    res, err := http.PostForm(
       "https://oauth2.googleapis.com/token",
       url.Values{
          "client_id": {client_id},
          "client_secret": {client_secret},
          "grant_type": {"refresh_token"},
-         "refresh_token": {o.Token.Refresh_Token},
+         "refresh_token": {t.Token.Refresh_Token},
       },
    )
    if err != nil {
       return err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(&o.Token)
+   return json.NewDecoder(res.Body).Decode(&t.Token)
 }

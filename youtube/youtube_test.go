@@ -7,42 +7,42 @@ import (
    "time"
 )
 
-func Test_Android(t *testing.T) {
+func TestAndroid(t *testing.T) {
    for _, android_id := range android_ids {
       var p Player
-      r := Request{Video_ID: android_id}
+      r := Request{VideoId: android_id}
       r.Android()
       err := p.Post(r, nil)
       if err != nil {
          t.Fatal(err)
       }
-      if p.Playability.Status != "OK" {
+      if p.PlayabilityStatus.Status != "OK" {
          t.Fatal(p)
       }
-      if len(p.Streaming_Data.Adaptive_Formats) == 0 {
+      if len(p.StreamingData.AdaptiveFormats) == 0 {
          t.Fatal("adaptiveFormats")
       }
-      if p.Video_Details.View_Count == 0 {
+      if p.VideoDetails.ViewCount == 0 {
          t.Fatal("viewCount")
       }
       time.Sleep(time.Second)
    }
 }
 
-func Test_ID(t *testing.T) {
+func TestId(t *testing.T) {
    for _, test := range id_tests {
       var req Request
       err := req.Set(test)
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(req.Video_ID)
+      fmt.Println(req.VideoId)
    }
 }
 
-func Test_Image(t *testing.T) {
+func TestImage(t *testing.T) {
    for _, img := range Images {
-      img.Video_ID = image_test
+      img.VideoId = image_test
       fmt.Println(img)
       res, err := http.Head(img.String())
       if err != nil {
@@ -71,16 +71,16 @@ var android_ids = []string{
    "zv9NimPx3Es",
 }
 
-func Test_Android_Embed(t *testing.T) {
+func TestAndroidEmbed(t *testing.T) {
    for _, embed_id := range embed_ids {
       var play Player
-      req := Request{Video_ID: embed_id}
-      req.Android_Embed()
+      req := Request{VideoId: embed_id}
+      req.AndroidEmbed()
       err := play.Post(req, nil)
       if err != nil {
          t.Fatal(err)
       }
-      if play.Playability.Status != "OK" {
+      if play.PlayabilityStatus.Status != "OK" {
          t.Fatal(play)
       }
       time.Sleep(time.Second)
