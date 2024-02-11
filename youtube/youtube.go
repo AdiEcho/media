@@ -1,6 +1,7 @@
 package youtube
 
 import (
+   "154.pages.dev/encoding"
    "errors"
    "mime"
    "net/url"
@@ -8,6 +9,60 @@ import (
    "strconv"
    "strings"
 )
+
+const Template = `<style>
+table {
+   border-collapse: collapse;
+   margin: 9px;
+}
+td {
+   border-style: solid;
+   border-width: thin;
+}
+td,
+th {
+   padding: 9px;
+}
+</style>
+<table>
+<tr>
+   <th>itag</th>
+   <th>quality label</th>
+   <th>rate</th>
+   <th>size</th>
+   <th>mime type</th>
+   <th>audio quality</th>
+</tr>
+{{ range .AdaptiveFormats -}}
+<tr>
+   <td>{{ .Itag }}</td>
+   <td>{{ .QualityLabel }}</td>
+   <td>{{ .Rate }}</td>
+   <td>{{ .Size }}</td>
+   <td>{{ .MimeType }}</td>
+   <td>{{ .AudioQuality }}</td>
+</tr>
+{{ end -}}
+</table>
+`
+
+func (f Format) Rate() encoding.Rate {
+   return encoding.Rate(f.Bitrate)
+}
+
+func (f Format) Size() encoding.Size {
+   return encoding.Size(f.ContentLength)
+}
+
+type Format struct {
+   Itag int
+   URL string
+   ContentLength int64 `json:",string"`
+   AudioQuality string
+   Bitrate int
+   MimeType string
+   QualityLabel string
+}
 
 const (
    android_version = "18.43.39"
@@ -191,15 +246,4 @@ func (f Format) Ext() (string, error) {
       return ".webm", nil
    }
    return "", errors.New(f.MimeType)
-}
-
-type Format struct {
-   Itag int
-   URL string
-   ContentLength int64 `json:",string"`
-   
-   AudioQuality string
-   Bitrate int
-   MimeType string
-   QualityLabel string
 }

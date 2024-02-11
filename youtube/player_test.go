@@ -1,27 +1,9 @@
 package youtube
 
-import "testing"
-
-var embed_ids = []string{
-   "HtVdAasjOgU",
-   "WaOKSUlf4TM",
-}
-
-func TestAndroidEmbed(t *testing.T) {
-   req := Request{VideoId: embed_id}
-   req.AndroidEmbed()
-   for _, embed_id := range embed_ids {
-      var play Player
-      err := play.Post(req, nil)
-      if err != nil {
-         t.Fatal(err)
-      }
-      if play.PlayabilityStatus.Status != "OK" {
-         t.Fatal(play)
-      }
-      time.Sleep(time.Second)
-   }
-}
+import (
+   "testing"
+   "time"
+)
 
 var android_ids = []string{
    "H1BuwMTrtLQ", // content check
@@ -29,11 +11,11 @@ var android_ids = []string{
 }
 
 func TestAndroid(t *testing.T) {
-   r := Request{VideoId: android_id}
-   r.Android()
    for _, android_id := range android_ids {
       var p Player
-      err := p.Post(r, nil)
+      req := Request{VideoId: android_id}
+      req.Android()
+      err := p.Post(req, nil)
       if err != nil {
          t.Fatal(err)
       }
@@ -45,6 +27,27 @@ func TestAndroid(t *testing.T) {
       }
       if p.VideoDetails.ViewCount == 0 {
          t.Fatal("viewCount")
+      }
+      time.Sleep(time.Second)
+   }
+}
+
+var embed_ids = []string{
+   "HtVdAasjOgU",
+   "WaOKSUlf4TM",
+}
+
+func TestAndroidEmbed(t *testing.T) {
+   for _, embed_id := range embed_ids {
+      var play Player
+      req := Request{VideoId: embed_id}
+      req.AndroidEmbed()
+      err := play.Post(req, nil)
+      if err != nil {
+         t.Fatal(err)
+      }
+      if play.PlayabilityStatus.Status != "OK" {
+         t.Fatal(play)
       }
       time.Sleep(time.Second)
    }

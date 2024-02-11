@@ -16,7 +16,7 @@ func (f flags) download() error {
       return err
    }
    slog.Info("playability", "status", p.PlayabilityStatus)
-   forms := p.Streaming_Data.Adaptive_Formats
+   forms := p.StreamingData.AdaptiveFormats
    if f.info {
       for i, form := range forms {
          if i >= 1 {
@@ -70,7 +70,7 @@ func encode(f youtube.Format, name string) error {
 }
 
 func (f flags) do_refresh() error {
-   var code youtube.Device_Code
+   var code youtube.DeviceCode
    code.Post()
    fmt.Println(code)
    fmt.Scanln()
@@ -91,9 +91,9 @@ func (f flags) player() (*youtube.Player, error) {
    case 0:
       f.r.Android()
    case 1:
-      f.r.Android_Embed()
+      f.r.AndroidEmbed()
    case 2:
-      f.r.Android_Check()
+      f.r.AndroidCheck()
       home, err := os.UserHomeDir()
       if err != nil {
          return nil, err

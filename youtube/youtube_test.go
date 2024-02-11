@@ -3,8 +3,10 @@ package youtube
 import (
    "fmt"
    "net/http"
+   "os"
    "testing"
    "time"
+   "text/template"
 )
 
 func TestTemplate(t *testing.T) {
@@ -12,18 +14,19 @@ func TestTemplate(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   file, err := os.Create("ignore.html")
+   var req Request
+   req.Android()
+   req.VideoId = android_ids[0]
+   var play Player
+   if err := play.Post(req, nil); err != nil {
+      t.Fatal(err)
+   }
+   file, err := os.Create(req.VideoId + ".html")
    if err != nil {
       t.Fatal(err)
    }
    defer file.Close()
-   text, err := os.ReadFile("m3u8/desktop_master.m3u8")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var master MasterPlaylist
-   master.New(string(text))
-   if err := tmpl.Execute(file, master); err != nil {
+   if err := tmpl.Execute(file, play.StreamingData); err != nil {
       t.Fatal(err)
    }
 }

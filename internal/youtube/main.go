@@ -8,8 +8,9 @@ import (
 )
 
 type flags struct {
-   refresh bool
+   itag int
    r youtube.Request
+   refresh bool
    request int
    v log.Level
 }
@@ -18,6 +19,7 @@ func main() {
    var f flags
    flag.Var(&f.r, "a", "address")
    flag.StringVar(&f.r.VideoId, "b", "", "video ID")
+   flag.IntVar(&f.itag, "i", 0, "itag")
    {
       var b strings.Builder
       b.WriteString("0: Android\n")
