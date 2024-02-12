@@ -10,49 +10,21 @@ import (
    "strings"
 )
 
-const Template = `<style>
-table {
-   border-collapse: collapse;
-   margin: 9px;
-}
-td {
-   border-style: solid;
-   border-width: thin;
-}
-td,
-th {
-   padding: 9px;
-}
-</style>
-<table>
-<tr>
-   <th>itag</th>
-   <th>quality label</th>
-   <th>rate</th>
-   <th>size</th>
-   <th>mime type</th>
-   <th>audio quality</th>
-</tr>
-{{ range . -}}
-<tr>
-   <td>{{ .Itag }}</td>
-   <td>{{ .QualityLabel }}</td>
-   <td>{{ .Rate }}</td>
-   <td>{{ .Size }}</td>
-   <td>{{ .MimeType }}</td>
-   <td>{{ .AudioQuality }}</td>
-</tr>
+const ModeLine = `
+{{- range $index, $_ := . -}}
+   {{ if $index }}
 {{ end -}}
-</table>
-`
-
-func (f Format) Rate() encoding.Rate {
-   return encoding.Rate(f.Bitrate)
-}
-
-func (f Format) Size() encoding.Size {
-   return encoding.Size(f.ContentLength)
-}
+itag = {{ .Itag }}
+{{ with .QualityLabel -}}
+label = {{ . }}
+{{ end -}}
+rate = {{ .Rate }}
+size = {{ .Size }}
+type = {{ .MimeType }}
+{{ with .AudioQuality -}}
+audio = {{ . }}
+{{ end -}}
+{{ end }}`
 
 type Format struct {
    Itag int
@@ -62,6 +34,14 @@ type Format struct {
    Bitrate int
    MimeType string
    QualityLabel string
+}
+
+func (f Format) Rate() encoding.Rate {
+   return encoding.Rate(f.Bitrate)
+}
+
+func (f Format) Size() encoding.Size {
+   return encoding.Size(f.ContentLength)
 }
 
 const (

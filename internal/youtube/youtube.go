@@ -19,7 +19,7 @@ func (f flags) loop() error {
    slog.Info("playability", "status", play.PlayabilityStatus)
    formats := play.StreamingData.AdaptiveFormats
    if len(f.itag) == 0 {
-      html, err := new(template.Template).Parse(youtube.Template)
+      html, err := new(template.Template).Parse(youtube.ModeLine)
       if err != nil {
          return err
       }

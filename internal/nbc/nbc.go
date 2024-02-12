@@ -9,16 +9,16 @@ import (
 )
 
 func (f flags) download() error {
-   meta, err := nbc.New_Metadata(f.guid)
+   meta, err := nbc.NewMetadata(f.guid)
    if err != nil {
       return err
    }
    reps, err := func() ([]*dash.Representation, error) {
-      on, err := meta.On_Demand()
+      on, err := meta.OnDemand()
       if err != nil {
          return nil, err
       }
-      r, err := http.Get(on.Playback_URL)
+      r, err := http.Get(on.PlaybackUrl)
       if err != nil {
          return nil, err
       }
@@ -35,26 +35,5 @@ func (f flags) download() error {
       f.s.Poster = nbc.Core
       f.s.Name = rosso.Name(meta)
    }
-   slices.SortFunc(reps, func(a, b *dash.Representation) int {
-      return b.Bandwidth - a.Bandwidth
-   })
-   // video
-   {
-      reps := slices.Clone(reps)
-      reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
-         return !r.Video()
-      })
-      index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-         return r.Bandwidth <= f.bandwidth
-      })
-      err := f.s.DASH_Sofia(reps, index)
-      if err != nil {
-         return err
-      }
-   }
-   // audio
-   reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
-      return !r.Audio()
-   })
-   return f.s.DASH_Sofia(reps, 1)
+   return f.s.DASH_Sofia(reps, index)
 }

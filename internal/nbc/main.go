@@ -10,9 +10,8 @@ import (
 
 type flags struct {
    guid int64
-   bandwidth int
-   s stream.Stream
-   level log.Level
+   h rosso.HttpStream
+   v log.Level
 }
 
 func main() {
@@ -23,9 +22,9 @@ func main() {
    home = filepath.ToSlash(home) + "/widevine/"
    var f flags
    flag.Int64Var(&f.guid, "b", 0, "GUID")
-   flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
-   flag.BoolVar(&f.s.Info, "i", false, "information")
-   flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
+   flag.StringVar(&f.h.Client_ID, "c", home+"client_id.bin", "client ID")
+   flag.BoolVar(&f.h.Info, "i", false, "information")
+   flag.StringVar(&f.h.Private_Key, "k", home+"private_key.pem", "private key")
    flag.IntVar(&f.bandwidth, "m", 6_999_999, "max video bandwidth")
    flag.TextVar(&f.level, "v", f.level, "level")
    flag.Parse()

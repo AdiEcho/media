@@ -9,8 +9,8 @@ import (
    "text/template"
 )
 
-func TestTemplate(t *testing.T) {
-   html, err := new(template.Template).Parse(Template)
+func TestModeLine(t *testing.T) {
+   out, err := new(template.Template).Parse(ModeLine)
    if err != nil {
       t.Fatal(err)
    }
@@ -21,12 +21,7 @@ func TestTemplate(t *testing.T) {
    if err := play.Post(req, nil); err != nil {
       t.Fatal(err)
    }
-   file, err := os.Create(req.VideoId + ".html")
-   if err != nil {
-      t.Fatal(err)
-   }
-   defer file.Close()
-   err = html.Execute(file, play.StreamingData.AdaptiveFormats)
+   err = out.Execute(os.Stdout, play.StreamingData.AdaptiveFormats)
    if err != nil {
       t.Fatal(err)
    }

@@ -19,7 +19,7 @@ func TestNext(t *testing.T) {
       req := Request{VideoId: video_id}
       req.Web()
       var next WatchNext
-      err := next.Next(req)
+      err := next.Post(req)
       if err != nil {
          t.Fatal(err)
       }
