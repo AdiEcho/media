@@ -10,7 +10,7 @@ import (
 )
 
 func TestTemplate(t *testing.T) {
-   tmpl, err := new(template.Template).Parse(Template)
+   html, err := new(template.Template).Parse(Template)
    if err != nil {
       t.Fatal(err)
    }
@@ -26,7 +26,8 @@ func TestTemplate(t *testing.T) {
       t.Fatal(err)
    }
    defer file.Close()
-   if err := tmpl.Execute(file, play.StreamingData); err != nil {
+   err = html.Execute(file, play.StreamingData.AdaptiveFormats)
+   if err != nil {
       t.Fatal(err)
    }
 }

@@ -8,55 +8,61 @@ import (
    "log/slog"
    "net/http"
    "os"
+   "text/template"
 )
 
-func (f flags) download() error {
-   p, err := f.player()
+func (f flags) loop() error {
+   play, err := f.player()
    if err != nil {
       return err
    }
-   slog.Info("playability", "status", p.PlayabilityStatus)
-   forms := p.StreamingData.AdaptiveFormats
-   if f.info {
-      for i, form := range forms {
-         if i >= 1 {
-            fmt.Println()
-         }
-         fmt.Println(form)
+   slog.Info("playability", "status", play.PlayabilityStatus)
+   formats := play.StreamingData.AdaptiveFormats
+   if len(f.itag) == 0 {
+      html, err := new(template.Template).Parse(youtube.Template)
+      if err != nil {
+         return err
       }
-   } else {
-      var content youtube.Contents
-      f.r.Web()
-      content.Next(f.r)
-      return encode(forms[index], rosso.Name(content))
+      return html.Execute(os.Stdout, formats)
+   }
+   var next youtube.WatchNext
+   f.r.Web()
+   if err := next.Post(f.r); err != nil {
+      return err
+   }
+   for _, format := range formats {
+      if _, ok := f.itag[format.Itag]; ok {
+         err := download(format, rosso.Name(next))
+         if err != nil {
+            return err
+         }
+      }
    }
    return nil
 }
 
-func encode(f youtube.Format, name string) error {
-   dst, err := func() (*os.File, error) {
-      ext, err := f.Ext()
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(name + ext)
-   }()
+func download(format youtube.Format, name string) error {
+   ext, err := format.Ext()
    if err != nil {
       return err
    }
-   defer dst.Close()
+   file, err := os.Create(name + ext)
+   if err != nil {
+      return err
+   }
+   defer file.Close()
    log.TransportDebug()
-   ranges := f.Ranges()
+   ranges := format.Ranges()
    var meter log.ProgressMeter
    meter.Set(len(ranges))
    for _, byte_range := range ranges {
       err := func() error {
-         res, err := http.Get(f.URL + byte_range)
+         res, err := http.Get(format.URL + byte_range)
          if err != nil {
             return err
          }
          defer res.Body.Close()
-         _, err = dst.ReadFrom(meter.Reader(res))
+         _, err = file.ReadFrom(meter.Reader(res))
          if err != nil {
             return err
          }
@@ -67,22 +73,6 @@ func encode(f youtube.Format, name string) error {
       }
    }
    return nil
-}
-
-func (f flags) do_refresh() error {
-   var code youtube.DeviceCode
-   code.Post()
-   fmt.Println(code)
-   fmt.Scanln()
-   raw, err := code.Token()
-   if err != nil {
-      return err
-   }
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(home+"/youtube.json", raw, 0666)
 }
 
 func (f flags) player() (*youtube.Player, error) {
@@ -98,12 +88,12 @@ func (f flags) player() (*youtube.Player, error) {
       if err != nil {
          return nil, err
       }
-      raw, err := os.ReadFile(home + "/youtube.json")
+      var token youtube.Token
+      token.Raw, err = os.ReadFile(home + "/youtube.json")
       if err != nil {
          return nil, err
       }
-      token = new(youtube.Token)
-      token.Unmarshal(raw)
+      token.Unmarshal()
       if err := token.Refresh(); err != nil {
          return nil, err
       }
@@ -111,4 +101,20 @@ func (f flags) player() (*youtube.Player, error) {
    var play youtube.Player
    play.Post(f.r, token)
    return &play, nil
+}
+
+func (f flags) do_refresh() error {
+   var code youtube.DeviceCode
+   code.Post()
+   fmt.Println(code)
+   fmt.Scanln()
+   token, err := code.Token()
+   if err != nil {
+      return err
+   }
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(home+"/youtube.json", token.Raw, 0666)
 }

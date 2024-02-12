@@ -33,7 +33,7 @@ th {
    <th>mime type</th>
    <th>audio quality</th>
 </tr>
-{{ range .AdaptiveFormats -}}
+{{ range . -}}
 <tr>
    <td>{{ .Itag }}</td>
    <td>{{ .QualityLabel }}</td>

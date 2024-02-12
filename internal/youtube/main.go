@@ -4,11 +4,12 @@ import (
    "154.pages.dev/log"
    "154.pages.dev/media/youtube"
    "flag"
+   "strconv"
    "strings"
 )
 
 type flags struct {
-   itag int
+   itag map[int]struct{}
    r youtube.Request
    refresh bool
    request int
@@ -17,9 +18,17 @@ type flags struct {
 
 func main() {
    var f flags
+   f.itag = make(map[int]struct{})
    flag.Var(&f.r, "a", "address")
    flag.StringVar(&f.r.VideoId, "b", "", "video ID")
-   flag.IntVar(&f.itag, "i", 0, "itag")
+   flag.Func("i", "itag", func(s string) error {
+      itag, err := strconv.Atoi(s)
+      if err != nil {
+         return err
+      }
+      f.itag[itag] = struct{}{}
+      return nil
+   })
    {
       var b strings.Builder
       b.WriteString("0: Android\n")
@@ -34,7 +43,7 @@ func main() {
    log.Handler(f.v)
    switch {
    case f.r.VideoId != "":
-      err := f.download()
+      err := f.loop()
       if err != nil {
          panic(err)
       }

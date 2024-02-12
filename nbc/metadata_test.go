@@ -22,9 +22,7 @@ func Test_Metadata(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(stream.Name(meta))
+      fmt.Println(rosso.Name(meta))
       time.Sleep(time.Second)
    }
 }
-
-

@@ -128,7 +128,7 @@ func (r Runs) String() string {
 }
 
 // /youtubei/v1/player is missing the name of the series. use with WEB client.
-func (w *WatchNext) Next(r Request) error {
+func (w *WatchNext) Post(r Request) error {
    body, err := json.Marshal(r)
    if err != nil {
       return err
