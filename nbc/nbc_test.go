@@ -11,7 +11,7 @@ import (
 
 const raw_pssh = "AAAAV3Bzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADcIARIQBVLkSEJlSk6BsyYAS+R74BoLYnV5ZHJta2V5b3MiEAVS5EhCZUpOgbMmAEvke+AqAkhE"
 
-func Test_License(t *testing.T) {
+func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -24,28 +24,35 @@ func Test_License(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   pssh, err := base64.StdEncoding.DecodeString(raw_pssh)
-   if err != nil {
-      t.Fatal(err)
-   }
-   mod, err := widevine.New_Module(private_key, client_id, nil, pssh)
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := mod.Key(Core)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
-}
-
-func Test_On_Demand(t *testing.T) {
-   for _, mpx_guid := range mpx_guids {
-      meta, err := New_Metadata(mpx_guid)
+   var pssh widevine.PSSH
+   {
+      b, err := base64.StdEncoding.DecodeString(raw_pssh)
       if err != nil {
          t.Fatal(err)
       }
-      video, err := meta.On_Demand()
+      if err := pssh.New(b); err != nil {
+         t.Fatal(err)
+      }
+   }
+   module, err := pssh.CDM(private_key, client_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   license, err := module.License(Core())
+   if err != nil {
+      t.Fatal(err)
+   }
+   key, ok := module.Key(license)
+   fmt.Printf("%x %v\n", key, ok)
+}
+
+func TestOnDemand(t *testing.T) {
+   for _, mpx_guid := range mpx_guids {
+      meta, err := NewMetadata(mpx_guid)
+      if err != nil {
+         t.Fatal(err)
+      }
+      video, err := meta.OnDemand()
       if err != nil {
          t.Fatal(err)
       }

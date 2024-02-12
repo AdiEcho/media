@@ -16,9 +16,9 @@ var mpx_guids = []int64 {
    4340781,
 }
 
-func Test_Metadata(t *testing.T) {
+func TestMetadata(t *testing.T) {
    for _, mpx_guid := range mpx_guids {
-      meta, err := New_Metadata(mpx_guid)
+      meta, err := NewMetadata(mpx_guid)
       if err != nil {
          t.Fatal(err)
       }

@@ -9,13 +9,13 @@ import (
    "strings"
 )
 
-func New_Metadata(guid int64) (*Metadata, error) {
+func NewMetadata(guid int64) (*Metadata, error) {
    body, err := func() ([]byte, error) {
       var p page_request
       p.Variables.Name = strconv.FormatInt(guid, 10)
-      p.Query = graphQL_compact(query)
+      p.Query = graphql_compact(query)
       p.Variables.App = "nbc"
-      p.Variables.One_App = true
+      p.Variables.OneApp = true
       p.Variables.Platform = "android"
       p.Variables.Type = "VIDEO"
       return json.MarshalIndent(p, "", " ")
@@ -36,9 +36,9 @@ func New_Metadata(guid int64) (*Metadata, error) {
    }
    var s struct {
       Data struct {
-         Bonanza_Page struct {
+         BonanzaPage struct {
             Metadata Metadata
-         } `json:"bonanzaPage"`
+         }
       }
       Errors []struct {
          Message string
@@ -50,18 +50,18 @@ func New_Metadata(guid int64) (*Metadata, error) {
    if len(s.Errors) >= 1 {
       return nil, errors.New(s.Errors[0].Message)
    }
-   return &s.Data.Bonanza_Page.Metadata, nil
+   return &s.Data.BonanzaPage.Metadata, nil
 }
 
 type Metadata struct {
-   Air_Date string `json:"airDate"`
-   Episode_Number string `json:"episodeNumber"`
-   MPX_Account_ID int64 `json:"mpxAccountId,string"`
-   MPX_GUID int64 `json:"mpxGuid,string"`
-   Programming_Type string `json:"programmingType"`
-   Season_Number string `json:"seasonNumber"`
-   Secondary_Title string `json:"secondaryTitle"`
-   Series_Short_Title string `json:"seriesShortTitle"`
+   AirDate string
+   EpisodeNumber string
+   MpxAccountId int64 `json:",string"`
+   MpxGuid int64 `json:",string"`
+   ProgrammingType string
+   SeasonNumber string
+   SecondaryTitle string
+   SeriesShortTitle string
 }
 
 func (Metadata) Owner() (string, bool) {
@@ -69,25 +69,25 @@ func (Metadata) Owner() (string, bool) {
 }
 
 func (m Metadata) Season() (string, bool) {
-   return m.Season_Number, m.Season_Number != ""
+   return m.SeasonNumber, m.SeasonNumber != ""
 }
 
 func (m Metadata) Episode() (string, bool) {
-   return m.Episode_Number, m.Episode_Number != ""
+   return m.EpisodeNumber, m.EpisodeNumber != ""
 }
 
 func (m Metadata) Title() (string, bool) {
-   return m.Secondary_Title, true
+   return m.SecondaryTitle, true
 }
 
 func (m Metadata) Show() (string, bool) {
-   return m.Series_Short_Title, m.Series_Short_Title != ""
+   return m.SeriesShortTitle, m.SeriesShortTitle != ""
 }
 
 func (m Metadata) Year() (string, bool) {
-   if m.Series_Short_Title != "" {
+   if m.SeriesShortTitle != "" {
       return "", false
    }
-   year, _, _ := strings.Cut(m.Air_Date, "-")
+   year, _, _ := strings.Cut(m.AirDate, "-")
    return year, true
 }
