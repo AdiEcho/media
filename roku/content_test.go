@@ -13,7 +13,7 @@ func Test_Content(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(stream.Name(con))
+      fmt.Println(rosso.Name(con))
       time.Sleep(time.Second)
    }
 }
