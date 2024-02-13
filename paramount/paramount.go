@@ -2,15 +2,56 @@ package paramount
 
 import (
    "crypto/aes"
-   "crypto/cipher"
-   "encoding/base64"
-   "encoding/hex"
    "encoding/json"
    "errors"
    "net/http"
    "net/url"
    "strconv"
+   "strings"
 )
+
+type Item struct {
+   AirDateIso string `json:"_airDateISO"`
+   Label string
+   MediaType string
+   SeriesTitle string
+   // these can be empty string, so we cannot use these:
+   // int `json:",string"`
+   // json.Number
+   EpisodeNum string
+   SeasonNum string
+}
+
+func (Item) Owner() (string, bool) {
+   return "", false
+}
+
+func (i Item) Show() (string, bool) {
+   if i.MediaType == "Full Episode" {
+      return i.SeriesTitle, true
+   }
+   return "", false
+}
+
+func (i Item) Season() (string, bool) {
+   return i.SeasonNum, i.SeasonNum != ""
+}
+
+func (i Item) Episode() (string, bool) {
+   return i.EpisodeNum, i.EpisodeNum != ""
+}
+
+func (i Item) Title() (string, bool) {
+   return i.Label, true
+}
+
+func (i Item) Year() (string, bool) {
+   if i.MediaType == "Movie" {
+      year, _, _ := strings.Cut(i.AirDateIso, "-")
+      return year, true
+   }
+   return "", false
+}
 
 type app_details struct {
    version string
@@ -65,35 +106,6 @@ var app_secrets = map[app_details]string{
    {"12.0.44", 211204450}: "7297a39a244189d6",
 }
 
-func NewAppToken() (*AppToken, error) {
-   app := app_details{"12.0.44", 211204450}
-   return app_token_with(app_secrets[app])
-}
-
-func app_token_with(app_secret string) (*AppToken, error) {
-   key, err := hex.DecodeString(secret_key)
-   if err != nil {
-      return nil, err
-   }
-   block, err := aes.NewCipher(key)
-   if err != nil {
-      return nil, err
-   }
-   var src []byte
-   src = append(src, '|')
-   src = append(src, app_secret...)
-   src = pad(src)
-   var iv [aes.BlockSize]byte
-   cipher.NewCBCEncrypter(block, iv[:]).CryptBlocks(src, src)
-   var dst []byte
-   dst = append(dst, 0, aes.BlockSize)
-   dst = append(dst, iv[:]...)
-   dst = append(dst, src...)
-   var token AppToken
-   token.value = base64.StdEncoding.EncodeToString(dst)
-   return &token, nil
-}
-
 const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
 
 func pad(b []byte) []byte {
@@ -102,10 +114,6 @@ func pad(b []byte) []byte {
       b = append(b, high)
    }
    return b
-}
-
-type AppToken struct {
-   value string
 }
 
 const (
@@ -165,51 +173,25 @@ func location(content_id string, query url.Values) (string, error) {
    return res.Header.Get("Location"), nil
 }
 
-type Session struct {
+type SessionToken struct {
    URL string
    LS_Session string
 }
 
-func (Session) RequestBody(b []byte) ([]byte, error) {
+func (SessionToken) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (s Session) RequestHeader() http.Header {
+func (s SessionToken) RequestHeader() http.Header {
    return http.Header{
       "Authorization": {"Bearer " + s.LS_Session},
    }
 }
 
-func (s Session) RequestUrl() (string, error) {
+func (s SessionToken) RequestUrl() (string, error) {
    return s.URL, nil
 }
 
-func (Session) ResponseBody(b []byte) ([]byte, error) {
+func (SessionToken) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
-}
-
-func (at AppToken) Session(content_id string) (*Session, error) {
-   req, err := http.NewRequest("GET", "https://www.paramountplus.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/apps-api/v3.0/androidphone/irdeto-control/anonymous-session-token.json"
-   req.URL.RawQuery = url.Values{
-      // this needs to be encoded
-      "at": {at.value},
-   }.Encode()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   sess := new(Session)
-   if err := json.NewDecoder(res.Body).Decode(sess); err != nil {
-      return nil, err
-   }
-   sess.URL += content_id
-   return sess, nil
 }
