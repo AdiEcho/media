@@ -12,12 +12,13 @@ import (
 )
 
 func TestItem(t *testing.T) {
-   token, err := NewAppToken()
+   var at AppToken
+   err := at.New()
    if err != nil {
       t.Fatal(err)
    }
    for _, test := range tests {
-      item, err := token.Item(path.Base(test.url))
+      item, err := at.Item(path.Base(test.url))
       if err != nil {
          t.Fatal(err)
       }
@@ -26,7 +27,7 @@ func TestItem(t *testing.T) {
    }
 }
 
-func TestPost(t *testing.T) {
+func TestWidevine(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -40,25 +41,33 @@ func TestPost(t *testing.T) {
       t.Fatal(err)
    }
    test := tests["episode cenc"]
-   pssh, err := base64.StdEncoding.DecodeString(test.pssh)
+   var protect widevine.PSSH
+   {
+      b, err := base64.StdEncoding.DecodeString(test.pssh)
+      if err != nil {
+         t.Fatal(err)
+      }
+      if err := protect.New(b); err != nil {
+         t.Fatal(err)
+      }
+   }
+   module, err := protect.CDM(private_key, client_id)
    if err != nil {
       t.Fatal(err)
    }
-   mod, err := widevine.NewModule(private_key, client_id, nil, pssh)
+   var at AppToken
+   if err := at.New(); err != nil {
+      t.Fatal(err)
+   }
+   session, err := at.Session(path.Base(test.url))
    if err != nil {
       t.Fatal(err)
    }
-   token, err := NewAppToken()
+   license, err := module.License(session)
    if err != nil {
       t.Fatal(err)
    }
-   sess, err := token.Session(path.Base(test.url))
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := mod.Key(sess)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
+   key, ok := module.Key(license)
+   fmt.Printf("%x %v\n", key, ok)
 }
+

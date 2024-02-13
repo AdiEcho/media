@@ -7,7 +7,7 @@ import (
    "net/http"
 )
 
-func (a Authenticate) Playlist(d *Deep_Link) (*Playlist, error) {
+func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    var p playlist_request
    p.Content_EAB_ID = d.EAB_ID
    p.Playback.DRM.Selection_Mode = "ALL"
@@ -81,18 +81,18 @@ type Playlist struct {
    WV_Server string
 }
 
-func (Playlist) Request_Body(b []byte) ([]byte, error) {
+func (Playlist) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Playlist) Response_Body(b []byte) ([]byte, error) {
+func (Playlist) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Playlist) Request_Header() (http.Header, bool) {
+func (Playlist) RequestHeader() (http.Header, bool) {
    return nil, false
 }
 
-func (p Playlist) Request_URL() (string, bool) {
+func (p Playlist) RequestUrl() (string, bool) {
    return p.WV_Server, true
 }

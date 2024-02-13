@@ -182,14 +182,14 @@ func (SessionToken) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (s SessionToken) RequestHeader() http.Header {
-   return http.Header{
-      "Authorization": {"Bearer " + s.LS_Session},
-   }
+func (s SessionToken) RequestHeader() (http.Header, bool) {
+   h := make(http.Header)
+   h.Set("authorization", "Bearer " + s.LS_Session)
+   return h, true
 }
 
-func (s SessionToken) RequestUrl() (string, error) {
-   return s.URL, nil
+func (s SessionToken) RequestUrl() (string, bool) {
+   return s.URL, true
 }
 
 func (SessionToken) ResponseBody(b []byte) ([]byte, error) {

@@ -12,7 +12,7 @@ import (
    "strings"
 )
 
-func (a Authenticate) Details(d *Deep_Link) (*Details, error) {
+func (a Authenticate) Details(d *DeepLink) (*Details, error) {
    body, err := func() ([]byte, error) {
       m := map[string][]string{
          "eabs": {d.EAB_ID},
@@ -159,7 +159,7 @@ type Authenticate struct {
    }
 }
 
-func Living_Room(email, password string) (*Authenticate, error) {
+func LivingRoom(email, password string) (*Authenticate, error) {
    res, err := http.PostForm(
       "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
          "friendly_name": {"!"},
@@ -187,7 +187,7 @@ func (a *Authenticate) Unmarshal() error {
    return json.Unmarshal(a.Raw, &a.Value)
 }
 
-type Deep_Link struct {
+type DeepLink struct {
    EAB_ID string
 }
 
@@ -205,7 +205,7 @@ func (i *ID) Set(s string) error {
    return nil
 }
 
-func (a Authenticate) Deep_Link(watch ID) (*Deep_Link, error) {
+func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
    req, err := http.NewRequest("GET", "https://discover.hulu.com", nil)
    if err != nil {
       return nil, err
@@ -224,7 +224,7 @@ func (a Authenticate) Deep_Link(watch ID) (*Deep_Link, error) {
    if res.StatusCode != http.StatusOK {
       return nil, errors.New(res.Status)
    }
-   link := new(Deep_Link)
+   link := new(DeepLink)
    if err := json.NewDecoder(res.Body).Decode(link); err != nil {
       return nil, err
    }

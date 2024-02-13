@@ -11,11 +11,12 @@ import (
 func TestSecrets(t *testing.T) {
    test := tests["episode cenc"]
    for _, secret := range app_secrets {
-      token, err := app_token_with(secret)
+      var at AppToken
+      err := at.with(secret)
       if err != nil {
          t.Fatal(err)
       }
-      if _, err := token.Item(path.Base(test.url)); err != nil {
+      if _, err := at.Item(path.Base(test.url)); err != nil {
          t.Fatal(err)
       }
       time.Sleep(99 * time.Millisecond)

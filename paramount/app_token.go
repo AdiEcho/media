@@ -46,14 +46,16 @@ func (at AppToken) Item(content_id string) (*Item, error) {
    return &video.ItemList[0], nil
 }
 
-func app_token_with(app_secret string) (AppToken, error) {
+type AppToken string
+
+func (at *AppToken) with(app_secret string) error {
    key, err := hex.DecodeString(secret_key)
    if err != nil {
-      return "", err
+      return err
    }
    block, err := aes.NewCipher(key)
    if err != nil {
-      return "", err
+      return err
    }
    var src []byte
    src = append(src, '|')
@@ -65,14 +67,13 @@ func app_token_with(app_secret string) (AppToken, error) {
    dst = append(dst, 0, aes.BlockSize)
    dst = append(dst, iv[:]...)
    dst = append(dst, src...)
-   return AppToken(base64.StdEncoding.EncodeToString(dst)), nil
+   *at = AppToken(base64.StdEncoding.EncodeToString(dst))
+   return nil
 }
 
-type AppToken string
-
-func NewAppToken() (AppToken, error) {
+func (at *AppToken) New() error {
    app := app_details{"12.0.44", 211204450}
-   return app_token_with(app_secrets[app])
+   return at.with(app_secrets[app])
 }
 
 func (at AppToken) Session(content_id string) (*SessionToken, error) {
