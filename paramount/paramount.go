@@ -12,55 +12,6 @@ import (
    "strconv"
 )
 
-type Session struct {
-   URL string
-   LS_Session string
-}
-
-func (Session) Request_Body(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (s Session) Request_Header() http.Header {
-   return http.Header{
-      "Authorization": {"Bearer " + s.LS_Session},
-   }
-}
-
-func (s Session) Request_URL() (string, error) {
-   return s.URL, nil
-}
-
-func (Session) Response_Body(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (at App_Token) Session(content_id string) (*Session, error) {
-   req, err := http.NewRequest("GET", "https://www.paramountplus.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/apps-api/v3.0/androidphone/irdeto-control/anonymous-session-token.json"
-   req.URL.RawQuery = url.Values{
-      // this needs to be encoded
-      "at": {at.value},
-   }.Encode()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   sess := new(Session)
-   if err := json.NewDecoder(res.Body).Decode(sess); err != nil {
-      return nil, err
-   }
-   sess.URL += content_id
-   return sess, nil
-}
-
 type app_details struct {
    version string
    code int
@@ -114,12 +65,12 @@ var app_secrets = map[app_details]string{
    {"12.0.44", 211204450}: "7297a39a244189d6",
 }
 
-func New_App_Token() (*App_Token, error) {
+func NewAppToken() (*AppToken, error) {
    app := app_details{"12.0.44", 211204450}
    return app_token_with(app_secrets[app])
 }
 
-func app_token_with(app_secret string) (*App_Token, error) {
+func app_token_with(app_secret string) (*AppToken, error) {
    key, err := hex.DecodeString(secret_key)
    if err != nil {
       return nil, err
@@ -138,7 +89,7 @@ func app_token_with(app_secret string) (*App_Token, error) {
    dst = append(dst, 0, aes.BlockSize)
    dst = append(dst, iv[:]...)
    dst = append(dst, src...)
-   var token App_Token
+   var token AppToken
    token.value = base64.StdEncoding.EncodeToString(dst)
    return &token, nil
 }
@@ -153,7 +104,7 @@ func pad(b []byte) []byte {
    return b
 }
 
-type App_Token struct {
+type AppToken struct {
    value string
 }
 
@@ -162,7 +113,7 @@ const (
    cms_account_id = "dJ5BDC"
 )
 
-func DASH_CENC(content_id string) (string, error) {
+func DashCenc(content_id string) (string, error) {
    query := url.Values{
       "assetTypes": {"DASH_CENC"},
       "formats": {"MPEG-DASH"},
@@ -212,4 +163,53 @@ func location(content_id string, query url.Values) (string, error) {
       return "", errors.New(s.Description)
    }
    return res.Header.Get("Location"), nil
+}
+
+type Session struct {
+   URL string
+   LS_Session string
+}
+
+func (Session) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (s Session) RequestHeader() http.Header {
+   return http.Header{
+      "Authorization": {"Bearer " + s.LS_Session},
+   }
+}
+
+func (s Session) RequestUrl() (string, error) {
+   return s.URL, nil
+}
+
+func (Session) ResponseBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (at AppToken) Session(content_id string) (*Session, error) {
+   req, err := http.NewRequest("GET", "https://www.paramountplus.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/apps-api/v3.0/androidphone/irdeto-control/anonymous-session-token.json"
+   req.URL.RawQuery = url.Values{
+      // this needs to be encoded
+      "at": {at.value},
+   }.Encode()
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   sess := new(Session)
+   if err := json.NewDecoder(res.Body).Decode(sess); err != nil {
+      return nil, err
+   }
+   sess.URL += content_id
+   return sess, nil
 }

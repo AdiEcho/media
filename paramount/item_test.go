@@ -7,8 +7,8 @@ import (
    "time"
 )
 
-func Test_Item(t *testing.T) {
-   token, err := New_App_Token()
+func TestItem(t *testing.T) {
+   token, err := NewAppToken()
    if err != nil {
       t.Fatal(err)
    }
@@ -17,7 +17,7 @@ func Test_Item(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(stream.Name(item))
+      fmt.Println(rosso.Name(item))
       time.Sleep(time.Second)
    }
 }

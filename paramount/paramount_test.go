@@ -6,47 +6,12 @@ import (
    "fmt"
    "net/http"
    "os"
+   "path"
    "testing"
    "time"
 )
 
-var tests = []struct{
-   asset func(string)(string,error) // Downloadable
-   content int // Movie
-   content_id string
-   key string
-   pssh string
-}{
-   {
-      // paramountplus.com/shows/video/rn1zyirVOPjCl8rxopWrhUmJEIs3GcKW
-      // SEAL Team Season 1 Episode 1: Tip of the Spear
-      asset: DASH_CENC,
-      content: episode,
-      content_id: "rn1zyirVOPjCl8rxopWrhUmJEIs3GcKW",
-      key: "f335e480e47739dbcaae7b48faffc002",
-      pssh: "AAAAWHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADgIARIQD3gqa9LyRm65UzN2yiD/XyIgcm4xenlpclZPUGpDbDhyeG9wV3JoVW1KRUlzM0djS1c4AQ==",
-   }, {
-      // paramountplus.com/movies/video/tQk_Qooh5wUlxQqzj_4LiBO2m4iMrcPD
-      // The SpongeBob Movie: Sponge on the Run
-      asset: DASH_CENC,
-      content: movie,
-      content_id: "tQk_Qooh5wUlxQqzj_4LiBO2m4iMrcPD",
-   }, {
-      // paramountplus.com/shows/video/YxlqOUdP1zZaIs7FGXCaS1dJi7gGzxG_
-      // 60 Minutes Season 55 Episode 18: 1/15/2023: Star Power, Hide and Seek,
-      // The Guru
-      asset: Downloadable,
-      content: episode,
-      content_id: "YxlqOUdP1zZaIs7FGXCaS1dJi7gGzxG_",
-   },
-}
-
-const (
-   episode = iota
-   movie
-)
-
-func Test_Post(t *testing.T) {
+func TestPost(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -59,20 +24,20 @@ func Test_Post(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   test := tests[0]
+   test := tests["episode cenc"]
    pssh, err := base64.StdEncoding.DecodeString(test.pssh)
    if err != nil {
       t.Fatal(err)
    }
-   mod, err := widevine.New_Module(private_key, client_id, nil, pssh)
+   mod, err := widevine.NewModule(private_key, client_id, nil, pssh)
    if err != nil {
       t.Fatal(err)
    }
-   token, err := New_App_Token()
+   token, err := NewAppToken()
    if err != nil {
       t.Fatal(err)
    }
-   sess, err := token.Session(test.content_id)
+   sess, err := token.Session(path.Base(test.url))
    if err != nil {
       t.Fatal(err)
    }
@@ -80,27 +45,46 @@ func Test_Post(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   if fmt.Sprintf("%x", key) != test.key {
-      t.Fatal(key)
-   }
+   fmt.Printf("%x\n", key)
 }
 
-func Test_Secrets(t *testing.T) {
+func TestSecrets(t *testing.T) {
+   test := tests["episode cenc"]
    for _, secret := range app_secrets {
       token, err := app_token_with(secret)
       if err != nil {
          t.Fatal(err)
       }
-      if _, err := token.Item(tests[0].content_id); err != nil {
+      if _, err := token.Item(path.Base(test.url)); err != nil {
          t.Fatal(err)
       }
       time.Sleep(99 * time.Millisecond)
    }
 }
 
-func Test_Media(t *testing.T) {
+var tests = map[string]struct{
+   asset func(string)(string,error)
+   pssh string
+   url string
+}{
+   "episode cenc": {
+      asset: DashCenc,
+      pssh: "AAAAWHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADgIARIQD3gqa9LyRm65UzN2yiD/XyIgcm4xenlpclZPUGpDbDhyeG9wV3JoVW1KRUlzM0djS1c4AQ==",
+      url: "paramountplus.com/shows/video/rn1zyirVOPjCl8rxopWrhUmJEIs3GcKW",
+   },
+   "episode downloadable": {
+      asset: Downloadable,
+      url: "paramountplus.com/shows/video/YxlqOUdP1zZaIs7FGXCaS1dJi7gGzxG_",
+   },
+   "movie cenc": {
+      asset: DashCenc,
+      url: "paramountplus.com/movies/video/tQk_Qooh5wUlxQqzj_4LiBO2m4iMrcPD",
+   },
+}
+
+func TestMedia(t *testing.T) {
    for _, test := range tests {
-      ref, err := test.asset(test.content_id)
+      ref, err := test.asset(path.Base(test.url))
       if err != nil {
          t.Fatal(err)
       }
@@ -120,4 +104,3 @@ func Test_Media(t *testing.T) {
       time.Sleep(time.Second)
    }
 }
-

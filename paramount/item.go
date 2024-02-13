@@ -8,7 +8,7 @@ import (
    "strings"
 )
 
-func (at App_Token) Item(content_id string) (*Item, error) {
+func (at AppToken) Item(content_id string) (*Item, error) {
    req, err := http.NewRequest("GET", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err
@@ -31,27 +31,27 @@ func (at App_Token) Item(content_id string) (*Item, error) {
       return nil, errors.New(res.Status)
    }
    var video struct {
-      Item_List []Item `json:"itemList"`
+      ItemList []Item
    }
    if err := json.NewDecoder(res.Body).Decode(&video); err != nil {
       return nil, err
    }
-   if len(video.Item_List) == 0 {
+   if len(video.ItemList) == 0 {
       return nil, errors.New("itemList length is zero")
    }
-   return &video.Item_List[0], nil
+   return &video.ItemList[0], nil
 }
 
 type Item struct {
-   Air_Date_ISO string `json:"_airDateISO"`
+   AirDateIso string `json:"_airDateISO"`
    Label string
-   Media_Type string `json:"mediaType"`
-   Series_Title string `json:"seriesTitle"`
+   MediaType string
+   SeriesTitle string
    // these can be empty string, so we cannot use these:
    // int `json:",string"`
    // json.Number
-   Episode_Num string `json:"episodeNum"`
-   Season_Num string `json:"seasonNum"`
+   EpisodeNum string
+   SeasonNum string
 }
 
 func (Item) Owner() (string, bool) {
@@ -59,18 +59,18 @@ func (Item) Owner() (string, bool) {
 }
 
 func (i Item) Show() (string, bool) {
-   if i.Media_Type == "Full Episode" {
-      return i.Series_Title, true
+   if i.MediaType == "Full Episode" {
+      return i.SeriesTitle, true
    }
    return "", false
 }
 
 func (i Item) Season() (string, bool) {
-   return i.Season_Num, i.Season_Num != ""
+   return i.SeasonNum, i.SeasonNum != ""
 }
 
 func (i Item) Episode() (string, bool) {
-   return i.Episode_Num, i.Episode_Num != ""
+   return i.EpisodeNum, i.EpisodeNum != ""
 }
 
 func (i Item) Title() (string, bool) {
@@ -78,8 +78,8 @@ func (i Item) Title() (string, bool) {
 }
 
 func (i Item) Year() (string, bool) {
-   if i.Media_Type == "Movie" {
-      year, _, _ := strings.Cut(i.Air_Date_ISO, "-")
+   if i.MediaType == "Movie" {
+      year, _, _ := strings.Cut(i.AirDateIso, "-")
       return year, true
    }
    return "", false
