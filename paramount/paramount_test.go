@@ -13,23 +13,19 @@ var tests = map[string]struct{
    pssh string
    url string
 }{
-   "episode cenc": {
+   "episode": {
       asset: DashCenc,
       pssh: "AAAAWHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADgIARIQD3gqa9LyRm65UzN2yiD/XyIgcm4xenlpclZPUGpDbDhyeG9wV3JoVW1KRUlzM0djS1c4AQ==",
       url: "paramountplus.com/shows/video/rn1zyirVOPjCl8rxopWrhUmJEIs3GcKW",
    },
-   "episode downloadable": {
-      asset: Downloadable,
-      url: "paramountplus.com/shows/video/YxlqOUdP1zZaIs7FGXCaS1dJi7gGzxG_",
-   },
-   "movie cenc": {
+   "movie": {
       asset: DashCenc,
       url: "paramountplus.com/movies/video/tQk_Qooh5wUlxQqzj_4LiBO2m4iMrcPD",
    },
 }
 
 func TestSecrets(t *testing.T) {
-   test := tests["episode cenc"]
+   test := tests["episode"]
    for _, secret := range app_secrets {
       var at AppToken
       err := at.with(secret)

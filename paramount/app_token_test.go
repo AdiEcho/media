@@ -40,7 +40,7 @@ func TestWidevine(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   test := tests["episode cenc"]
+   test := tests["episode"]
    var protect widevine.PSSH
    {
       b, err := base64.StdEncoding.DecodeString(test.pssh)

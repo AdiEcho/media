@@ -1,14 +1,6 @@
 # assetType
 
-We know that `Downloadable` is a valid value for `assetTypes`:
-
-~~~
-> curl -i link.theplatform.com/s/dJ5BDC/media/guid/2198311517/YxlqOUdP1zZaIs7FGXCaS1dJi7gGzxG_?assetTypes=Downloadable
-HTTP/1.1 302 Found
-Location: https://candownloads.cbsaavideo.com/vr/cbsnews/2023/01/05/2158351939508/0115_60minutes_full_1_1627388_5192.mp4?hdnea=st=1680441369~exp=1680700599~acl=/vr/cbsnews/2023/01/05/2158351939508/0115_60minutes_full_1_1627388_5192.mp4*~hmac=e2b1f173121395635d0e236efee7d78cfbf1d2f41c1264080250f4b42a30dd8b
-~~~
-
-because if you provide an invalid value, the request fails:
+if you provide an invalid value, the request fails:
 
 ~~~
 > curl -i link.theplatform.com/s/dJ5BDC/media/guid/2198311517/YxlqOUdP1zZaIs7FGXCaS1dJi7gGzxG_?assetTypes=invalid
@@ -151,8 +143,7 @@ we find some `assetType` values:
 "assetType":"Thumbnail"
 ~~~
 
-but not all, since `Downloadable` is missing. We can download the APK and
-extract:
+We can download the APK and extract:
 
 ~~~
 play -a com.cbs.app -v 211204029

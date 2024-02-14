@@ -1,54 +1,55 @@
 package main
 
 import (
-   "154.pages.dev/log"
+   "154.pages.dev/encoding/dash"
    "154.pages.dev/media/hulu"
    "154.pages.dev/rosso"
-   "flag"
+   "encoding/xml"
+   "net/http"
    "os"
-   "path/filepath"
 )
 
-type flags struct {
-   email string
-   id hulu.ID
-   level log.Level
-   password string
-   representation string
-   s rosso.Stream
-}
-
-func main() {
+func (f flags) download() error {
    home, err := os.UserHomeDir()
    if err != nil {
-      panic(err)
+      return err
    }
-   home = filepath.ToSlash(home) + "/widevine/"
-   var f flags
-   flag.Var(&f.id, "a", "address")
-   flag.StringVar(&f.email, "e", "", "email")
-   flag.StringVar(&f.password, "p", "", "password")
-   flag.TextVar(&f.level, "v", f.level, "level")
-   flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
-   flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
-   flag.BoolVar(&f.s.Info, "i", false, "information")
-   flag.Parse()
-   log.Set_Transport(0)
-   log.Set_Logger(f.level)
-   switch {
-   case f.password != "":
-      err := f.authenticate()
-      if err != nil {
-         panic(err)
-      }
-   case f.id.String() != "":
-      err := f.download()
-      if err != nil {
-         panic(err)
-      }
-   default:
-      flag.Usage()
+   var auth hulu.Authenticate
+   auth.Raw, err = os.ReadFile(home + "/hulu/token.json")
+   if err != nil {
+      return err
    }
+   auth.Unmarshal()
+   deep, err := auth.Deep_Link(f.id)
+   if err != nil {
+      return err
+   }
+   play, err := auth.Playlist(deep)
+   if err != nil {
+      return err
+   }
+   if !f.s.Info {
+      detail, err := auth.Details(deep)
+      if err != nil {
+         return err
+      }
+      f.s.Name = rosso.Name(detail)
+      f.s.Poster = play
+   }
+   var media dash.MPD
+   err = func() error {
+      res, err := http.Get(play.Stream_URL)
+      if err != nil {
+         return err
+      }
+      defer res.Body.Close()
+      f.s.Base = res.Request.URL
+      return xml.NewDecoder(res.Body).Decode(&media)
+   }()
+   if err != nil {
+      return err
+   }
+   return f.s.DASH_Sofia(media, f.representation)
 }
 
 func (f flags) authenticate() error {

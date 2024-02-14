@@ -129,14 +129,6 @@ func DashCenc(content_id string) (string, error) {
    return location(content_id, query)
 }
 
-func Downloadable(content_id string) (string, error) {
-   query := url.Values{
-      "assetTypes": {"Downloadable"},
-      "formats": {"MPEG4"},
-   }
-   return location(content_id, query)
-}
-
 func use_last_response(*http.Request, []*http.Request) error {
    return http.ErrUseLastResponse
 }
