@@ -2,57 +2,43 @@ package roku
 
 import (
    "encoding/json"
-   "errors"
    "net/http"
    "net/url"
    "strings"
 )
 
-func NewContent(id string) (*Content, error) {
-   req, err := http.NewRequest(
-      "GET", "https://therokuchannel.roku.com/api/v2/homescreen/content", nil,
-   )
+func (h *HomeScreen) New(id string) error {
+   var b strings.Builder
+   b.WriteString("https://therokuchannel.roku.com/api/v2/homescreen/content/")
+   b.WriteString(func() string {
+      var b strings.Builder
+      b.WriteString("https://content.sr.roku.com/content/v1/roku-trc/")
+      b.WriteString(id)
+      b.WriteByte('?')
+      b.WriteString("expand=series&")
+      b.WriteString("include=")
+      b.WriteString(func() string {
+         var b strings.Builder
+         b.WriteString("episodeNumber,")
+         b.WriteString("releaseDate,")
+         b.WriteString("seasonNumber,")
+         b.WriteString("series.title,")
+         b.WriteString("title,")
+         b.WriteString("viewOptions")
+         return url.PathEscape(b.String())
+      }())
+      return url.PathEscape(b.String())
+   }())
+   res, err := http.Get(b.String())
    if err != nil {
-      return nil, err
-   }
-   req.URL = func() *url.URL {
-      include := []string{
-         "episodeNumber",
-         "releaseDate",
-         "seasonNumber",
-         "series.title",
-         "title",
-         "viewOptions",
-      }
-      expand := url.URL{
-         Scheme: "https",
-         Host: "content.sr.roku.com",
-         Path: "/content/v1/roku-trc/" + id,
-         RawQuery: url.Values{
-            "expand": {"series"},
-            "include": {strings.Join(include, ",")},
-         }.Encode(),
-      }
-      homescreen := url.PathEscape(expand.String())
-      return req.URL.JoinPath(homescreen)
-   }()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
+      return err
    }
    defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   var con Content
-   if err := json.NewDecoder(res.Body).Decode(&con.s); err != nil {
-      return nil, err
-   }
-   return &con, nil
+   return json.NewDecoder(res.Body).Decode(&h.s)
 }
 
 // we have to embed to prevent clobbering Namer.Title
-type Content struct {
+type HomeScreen struct {
    s struct {
       Series *struct {
          Title string
@@ -69,23 +55,35 @@ type Content struct {
    }
 }
 
-func (c Content) Show() (string, bool) {
-   if c.s.Series != nil {
-      return c.s.Series.Title, true
+func (h HomeScreen) Show() (string, bool) {
+   if h.s.Series != nil {
+      return h.s.Series.Title, true
    }
    return "", false
 }
 
-func (c Content) Year() (string, bool) {
-   if c.s.Series != nil {
+func (h HomeScreen) Year() (string, bool) {
+   if h.s.Series != nil {
       return "", false
    }
-   year, _, _ := strings.Cut(c.s.ReleaseDate, "-")
+   year, _, _ := strings.Cut(h.s.ReleaseDate, "-")
    return year, true
 }
 
-func (c Content) DASH() *MediaVideo {
-   for _, option := range c.s.ViewOptions {
+func (HomeScreen) Owner() (string, bool) {
+   return "", false
+}
+
+func (h HomeScreen) Title() (string, bool) {
+   return h.s.Title, true
+}
+
+func (h HomeScreen) Season() (string, bool) {
+   return h.s.SeasonNumber, h.s.SeasonNumber != ""
+}
+
+func (h HomeScreen) DASH() *MediaVideo {
+   for _, option := range h.s.ViewOptions {
       for _, vid := range option.Media.Videos {
          if vid.VideoType == "DASH" {
             return &vid
@@ -95,18 +93,6 @@ func (c Content) DASH() *MediaVideo {
    return nil
 }
 
-func (Content) Owner() (string, bool) {
-   return "", false
-}
-
-func (c Content) Season() (string, bool) {
-   return c.s.SeasonNumber, c.s.SeasonNumber != ""
-}
-
-func (c Content) Episode() (string, bool) {
-   return c.s.EpisodeNumber, c.s.EpisodeNumber != ""
-}
-
-func (c Content) Title() (string, bool) {
-   return c.s.Title, true
+func (h HomeScreen) Episode() (string, bool) {
+   return h.s.EpisodeNumber, h.s.EpisodeNumber != ""
 }

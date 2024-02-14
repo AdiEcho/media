@@ -9,11 +9,12 @@ import (
 
 func TestContent(t *testing.T) {
    for _, test := range tests {
-      con, err := NewContent(test.playback_id)
+      var home HomeScreen
+      err := home.New(test.playback_id)
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(rosso.Name(con))
+      fmt.Println(rosso.Name(home))
       time.Sleep(time.Second)
    }
 }
