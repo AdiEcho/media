@@ -8,21 +8,6 @@ import (
    "time"
 )
 
-func TestSecrets(t *testing.T) {
-   test := tests["episode cenc"]
-   for _, secret := range app_secrets {
-      var at AppToken
-      err := at.with(secret)
-      if err != nil {
-         t.Fatal(err)
-      }
-      if _, err := at.Item(path.Base(test.url)); err != nil {
-         t.Fatal(err)
-      }
-      time.Sleep(99 * time.Millisecond)
-   }
-}
-
 var tests = map[string]struct{
    asset func(string)(string,error)
    pssh string
@@ -41,6 +26,21 @@ var tests = map[string]struct{
       asset: DashCenc,
       url: "paramountplus.com/movies/video/tQk_Qooh5wUlxQqzj_4LiBO2m4iMrcPD",
    },
+}
+
+func TestSecrets(t *testing.T) {
+   test := tests["episode cenc"]
+   for _, secret := range app_secrets {
+      var at AppToken
+      err := at.with(secret)
+      if err != nil {
+         t.Fatal(err)
+      }
+      if _, err := at.Item(path.Base(test.url)); err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(99 * time.Millisecond)
+   }
 }
 
 func TestMedia(t *testing.T) {

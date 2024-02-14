@@ -70,4 +70,3 @@ func TestWidevine(t *testing.T) {
    key, ok := module.Key(license)
    fmt.Printf("%x %v\n", key, ok)
 }
-

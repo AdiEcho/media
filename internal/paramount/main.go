@@ -10,14 +10,11 @@ import (
 )
 
 type flags struct {
-   bandwidth int
-   height int
-   codec string
-   role string
-   content_id string
    dash_cenc bool
-   s stream.Stream
-   level log.Level
+   dash_id string
+   h rosso.HttpStream
+   paramount_id string
+   v log.Level
 }
 
 func main() {
@@ -27,28 +24,25 @@ func main() {
    }
    home = filepath.ToSlash(home) + "/widevine/"
    var f flags
-   flag.StringVar(&f.codec, "ac", "mp4a", "audio codec")
-   flag.StringVar(&f.role, "ar", "main", "audio role")
-   flag.StringVar(&f.content_id, "b", "", "content ID")
-   flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
+   flag.StringVar(&f.paramount_id, "b", "", "Paramount ID")
+   flag.StringVar(&f.h.Client_ID, "c", home+"client_id.bin", "client ID")
    flag.BoolVar(&f.dash_cenc, "d", false, "DASH_CENC")
-   flag.BoolVar(&f.s.Info, "i", false, "information")
-   flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
-   flag.IntVar(&f.bandwidth, "vb", 5_000_000, "video max bandwidth")
-   flag.IntVar(&f.height, "vh", 720, "video max height")
-   flag.TextVar(&f.level, "v", f.level, "level")
+   flag.StringVar(&f.dash_id, "i", "", "DASH ID")
+   flag.StringVar(&f.h.Private_Key, "p", home+"private_key.pem", "private key")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
-   log.Set_Transport(0)
-   log.Set_Logger(f.level)
-   if f.content_id != "" {
-      token, err := paramount.New_App_Token()
+   log.TransportInfo()
+   log.Handler(f.v)
+   if f.paramount_id != "" {
+      var app paramount.AppToken
+      err := app.New()
       if err != nil {
          panic(err)
       }
       if f.dash_cenc {
-         err = f.dash(token)
+         err = f.dash(app)
       } else {
-         err = f.downloadable(token)
+         err = f.downloadable(app)
       }
       if err != nil {
          panic(err)
