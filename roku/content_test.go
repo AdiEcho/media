@@ -7,9 +7,9 @@ import (
    "time"
 )
 
-func Test_Content(t *testing.T) {
+func TestContent(t *testing.T) {
    for _, test := range tests {
-      con, err := New_Content(test.playback_id)
+      con, err := NewContent(test.playback_id)
       if err != nil {
          t.Fatal(err)
       }

@@ -1,11 +1,11 @@
-154.pages.dev/encoding v1.17.2 h1:UZw4rEsn2637U7cXFPjCeovRQsOPnUS7w4pDyMl6+Ro=
-154.pages.dev/encoding v1.17.2/go.mod h1:fTySlfwgtzBCCjzr+f4ncnWleN3AGgUilIWjGy2MPcw=
+154.pages.dev/encoding v1.17.6 h1:eWIfjSUzHGUs/n2dPl8oBV7tZZ0CGb1a5bhXycHaLQQ=
+154.pages.dev/encoding v1.17.6/go.mod h1:fTySlfwgtzBCCjzr+f4ncnWleN3AGgUilIWjGy2MPcw=
 154.pages.dev/log v1.1.7 h1:tvJLiSct4F0ouaFKmXj8wH78uxqicvXw8VOFbStSEe8=
 154.pages.dev/log v1.1.7/go.mod h1:3QMo1bhDwpnc5OO8e+ZVwVe1uEZCFuK7ZTEnHOYwvks=
 154.pages.dev/protobuf v1.1.3 h1:nC4uONauXDdeJw04dTK790XZHaMY8nmRMK9b1MlPsm8=
 154.pages.dev/protobuf v1.1.3/go.mod h1:SxW3gQj5yMXT+QHEd+8+XJ7gTDDSjfu53vkdyJ/9KlQ=
-154.pages.dev/rosso v1.3.8 h1:pyktef4D8deZFGRD+aFuh9ms36TSahSoC4Xg+kimVCk=
-154.pages.dev/rosso v1.3.8/go.mod h1:xhuAyiMDNf2QMNtHNMN96pmi7K/pRbrT8xZodnV039I=
+154.pages.dev/rosso v1.3.9 h1:EsJ6LXp/BR3c1xKbdc4YMYF45zTPnmc2uv0wrh7gxWQ=
+154.pages.dev/rosso v1.3.9/go.mod h1:76mbojo31D/WouidJ/eoeushA6PdcMzw+N3chBA+aMI=
 154.pages.dev/sofia v1.1.4 h1:vwuLc5murYFTArlqDgVXEOqkTyIYAJrMyjvpEYtWR44=
 154.pages.dev/sofia v1.1.4/go.mod h1:42KjYiPl7Vy50qEETAFgjZrDdJyg1MpqiZh3JdxMEGY=
 154.pages.dev/widevine v1.2.7 h1:6F7YXuBvOKFMcKPEbTmc/7+VzcuGqnxiPZ3QY/nzBkc=

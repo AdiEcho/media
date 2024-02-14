@@ -10,7 +10,7 @@ import (
    "time"
 )
 
-func Test_Post(t *testing.T) {
+func TestPost(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -29,11 +29,11 @@ func Test_Post(t *testing.T) {
          if err != nil {
             t.Fatal(err)
          }
-         mod, err := widevine.New_Module(private_key, client_id, nil, pssh)
+         mod, err := widevine.NewModule(private_key, client_id, nil, pssh)
          if err != nil {
             t.Fatal(err)
          }
-         site, err := New_Cross_Site()
+         site, err := NewCrossSite()
          if err != nil {
             t.Fatal(err)
          }
@@ -52,8 +52,8 @@ func Test_Post(t *testing.T) {
    }
 }
 
-func Test_Playback(t *testing.T) {
-   site, err := New_Cross_Site()
+func TestPlayback(t *testing.T) {
+   site, err := NewCrossSite()
    if err != nil {
       t.Fatal(err)
    }

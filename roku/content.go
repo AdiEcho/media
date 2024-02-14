@@ -8,7 +8,7 @@ import (
    "strings"
 )
 
-func New_Content(id string) (*Content, error) {
+func NewContent(id string) (*Content, error) {
    req, err := http.NewRequest(
       "GET", "https://therokuchannel.roku.com/api/v2/homescreen/content", nil,
    )
@@ -51,33 +51,6 @@ func New_Content(id string) (*Content, error) {
    return &con, nil
 }
 
-func (c Content) DASH() *Video {
-   for _, option := range c.s.View_Options {
-      for _, vid := range option.Media.Videos {
-         if vid.Video_Type == "DASH" {
-            return &vid
-         }
-      }
-   }
-   return nil
-}
-
-func (Content) Owner() (string, bool) {
-   return "", false
-}
-
-func (c Content) Season() (string, bool) {
-   return c.s.Season_Number, c.s.Season_Number != ""
-}
-
-func (c Content) Episode() (string, bool) {
-   return c.s.Episode_Number, c.s.Episode_Number != ""
-}
-
-func (c Content) Title() (string, bool) {
-   return c.s.Title, true
-}
-
 // we have to embed to prevent clobbering Namer.Title
 type Content struct {
    s struct {
@@ -85,14 +58,14 @@ type Content struct {
          Title string
       }
       Title string
-      Release_Date string `json:"releaseDate"` // 2007-01-01T000000Z
-      View_Options []struct {
+      ReleaseDate string // 2007-01-01T000000Z
+      ViewOptions []struct {
          Media struct {
-            Videos []Video
+            Videos []MediaVideo
          }
-      } `json:"viewOptions"`
-      Season_Number string `json:"seasonNumber"`
-      Episode_Number string `json:"episodeNumber"`
+      }
+      SeasonNumber string
+      EpisodeNumber string
    }
 }
 
@@ -107,6 +80,33 @@ func (c Content) Year() (string, bool) {
    if c.s.Series != nil {
       return "", false
    }
-   year, _, _ := strings.Cut(c.s.Release_Date, "-")
+   year, _, _ := strings.Cut(c.s.ReleaseDate, "-")
    return year, true
+}
+
+func (c Content) DASH() *MediaVideo {
+   for _, option := range c.s.ViewOptions {
+      for _, vid := range option.Media.Videos {
+         if vid.VideoType == "DASH" {
+            return &vid
+         }
+      }
+   }
+   return nil
+}
+
+func (Content) Owner() (string, bool) {
+   return "", false
+}
+
+func (c Content) Season() (string, bool) {
+   return c.s.SeasonNumber, c.s.SeasonNumber != ""
+}
+
+func (c Content) Episode() (string, bool) {
+   return c.s.EpisodeNumber, c.s.EpisodeNumber != ""
+}
+
+func (c Content) Title() (string, bool) {
+   return c.s.Title, true
 }

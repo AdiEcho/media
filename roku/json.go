@@ -7,7 +7,7 @@ import (
    "net/http"
 )
 
-func New_Cross_Site() (*Cross_Site, error) {
+func NewCrossSite() (*CrossSite, error) {
    // this has smaller body than www.roku.com
    res, err := http.Get("https://therokuchannel.roku.com")
    if err != nil {
@@ -17,7 +17,7 @@ func New_Cross_Site() (*Cross_Site, error) {
    if res.StatusCode != http.StatusOK {
       return nil, errors.New(res.Status)
    }
-   var site Cross_Site
+   var site CrossSite
    site.cookies = res.Cookies()
    text, err := io.ReadAll(res.Body)
    if err != nil {

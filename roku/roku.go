@@ -7,11 +7,11 @@ import (
    "net/http"
 )
 
-func (p Playback) Request_URL() (string, error) {
-   return p.DRM.Widevine.License_Server, nil
+func (p Playback) RequestUrl() (string, error) {
+   return p.DRM.Widevine.LicenseServer, nil
 }
 
-func (c Cross_Site) Playback(id string) (*Playback, error) {
+func (c CrossSite) Playback(id string) (*Playback, error) {
    body, err := func() ([]byte, error) {
       m := map[string]string{
          "mediaFormat": "mpeg-dash",
@@ -55,29 +55,29 @@ func (c Cross_Site) Playback(id string) (*Playback, error) {
 type Playback struct {
    DRM struct {
       Widevine struct {
-         License_Server string `json:"licenseServer"`
+         LicenseServer string
       }
    }
 }
 
-func (Playback) Request_Header() http.Header {
+func (Playback) RequestHeader() http.Header {
    return nil
 }
 
-func (Playback) Request_Body(b []byte) ([]byte, error) {
+func (Playback) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Playback) Response_Body(b []byte) ([]byte, error) {
+func (Playback) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-type Cross_Site struct {
+type CrossSite struct {
    cookies []*http.Cookie
    token string
 }
 
-func (c Cross_Site) csrf() *http.Cookie {
+func (c CrossSite) csrf() *http.Cookie {
    for _, cookie := range c.cookies {
       if cookie.Name == "_csrf" {
          return cookie
@@ -86,8 +86,8 @@ func (c Cross_Site) csrf() *http.Cookie {
    return nil
 }
 
-type Video struct {
-   DRM_Authentication *struct{} `json:"drmAuthentication"`
+type MediaVideo struct {
+   DrmAuthentication *struct{}
    URL string
-   Video_Type string `json:"videoType"`
+   VideoType string
 }

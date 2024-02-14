@@ -13,18 +13,21 @@ import (
 const ModeLine = `
 {{- range $index, $_ := . -}}
    {{ if $index }}
-{{ end -}}
 itag = {{ .Itag }}
-{{ with .QualityLabel -}}
+   {{ else -}}
+itag = {{ .Itag }}
+   {{ end -}}
+   {{ with .QualityLabel -}}
 label = {{ . }}
-{{ end -}}
+   {{ end -}}
 rate = {{ .Rate }}
 size = {{ .Size }}
 type = {{ .MimeType }}
-{{ with .AudioQuality -}}
+   {{ with .AudioQuality -}}
 audio = {{ . }}
+   {{ end -}}
 {{ end -}}
-{{ end }}`
+`
 
 type Format struct {
    Itag int
