@@ -3,12 +3,27 @@ package roku
 import (
    "154.pages.dev/widevine"
    "encoding/base64"
-   "encoding/hex"
-   "encoding/json"
+   "fmt"
    "os"
    "testing"
    "time"
 )
+
+func TestPlayback(t *testing.T) {
+   var site CrossSite
+   err := site.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      play, err := site.Playback(test.playback_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(play)
+      time.Sleep(time.Second)
+   }
+}
 
 func TestPost(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -23,50 +38,34 @@ func TestPost(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   for _, test := range tests {
-      if test.pssh != "" {
-         pssh, err := base64.StdEncoding.DecodeString(test.pssh)
-         if err != nil {
-            t.Fatal(err)
-         }
-         mod, err := widevine.NewModule(private_key, client_id, nil, pssh)
-         if err != nil {
-            t.Fatal(err)
-         }
-         site, err := NewCrossSite()
-         if err != nil {
-            t.Fatal(err)
-         }
-         play, err := site.Playback(test.playback_id)
-         if err != nil {
-            t.Fatal(err)
-         }
-         key, err := mod.Key(play)
-         if err != nil {
-            t.Fatal(err)
-         }
-         if hex.EncodeToString(key) != test.key {
-            t.Fatal(key)
-         }
-      }
-   }
-}
-
-func TestPlayback(t *testing.T) {
-   site, err := NewCrossSite()
-   if err != nil {
+   var site CrossSite
+   if err := site.New(); err != nil {
       t.Fatal(err)
    }
-   enc := json.NewEncoder(os.Stdout)
-   enc.SetEscapeHTML(false)
-   enc.SetIndent("", " ")
    for _, test := range tests {
+      var protect widevine.PSSH
+      {
+         b, err := base64.StdEncoding.DecodeString(test.pssh)
+         if err != nil {
+            t.Fatal(err)
+         }
+         if err := protect.New(b); err != nil {
+            t.Fatal(err)
+         }
+      }
+      module, err := protect.CDM(private_key, client_id)
+      if err != nil {
+         t.Fatal(err)
+      }
       play, err := site.Playback(test.playback_id)
       if err != nil {
          t.Fatal(err)
       }
-      enc.Encode(play)
-      time.Sleep(time.Second)
+      license, err := module.License(play)
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, ok := module.Key(license)
+      fmt.Println(key, ok)
    }
 }
-

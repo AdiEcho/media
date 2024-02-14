@@ -7,6 +7,8 @@ import (
    "strings"
 )
 
+// this has got to be the stupidest fucking URL construction I have ever seen,
+// but its what the server requires
 func (h *HomeScreen) New(id string) error {
    var b strings.Builder
    b.WriteString("https://therokuchannel.roku.com/api/v2/homescreen/content/")
@@ -79,20 +81,26 @@ func (h HomeScreen) Title() (string, bool) {
 }
 
 func (h HomeScreen) Season() (string, bool) {
-   return h.s.SeasonNumber, h.s.SeasonNumber != ""
-}
-
-func (h HomeScreen) DASH() *MediaVideo {
-   for _, option := range h.s.ViewOptions {
-      for _, vid := range option.Media.Videos {
-         if vid.VideoType == "DASH" {
-            return &vid
-         }
-      }
+   if sn := h.s.SeasonNumber; sn != "" {
+      return sn, true
    }
-   return nil
+   return "", false
 }
 
 func (h HomeScreen) Episode() (string, bool) {
-   return h.s.EpisodeNumber, h.s.EpisodeNumber != ""
+   if en := h.s.EpisodeNumber; en != "" {
+      return en, true
+   }
+   return "", false
+}
+
+func (h HomeScreen) DASH() (*MediaVideo, bool) {
+   for _, option := range h.s.ViewOptions {
+      for _, video := range option.Media.Videos {
+         if video.VideoType == "DASH" {
+            return &video, true
+         }
+      }
+   }
+   return nil, false
 }

@@ -7,8 +7,8 @@ import (
    "net/http"
 )
 
-func (p Playback) RequestUrl() (string, error) {
-   return p.DRM.Widevine.LicenseServer, nil
+func (p Playback) RequestUrl() (string, bool) {
+   return p.DRM.Widevine.LicenseServer, true
 }
 
 func (c CrossSite) Playback(id string) (*Playback, error) {
@@ -60,8 +60,8 @@ type Playback struct {
    }
 }
 
-func (Playback) RequestHeader() http.Header {
-   return nil
+func (Playback) RequestHeader() (http.Header, bool) {
+   return nil, false
 }
 
 func (Playback) RequestBody(b []byte) ([]byte, error) {
