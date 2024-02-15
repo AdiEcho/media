@@ -9,9 +9,9 @@ import (
 )
 
 type flags struct {
-   guid int64
    h rosso.HttpStream
    v log.Level
+   guid int64
 }
 
 func main() {

@@ -1,11 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/encoding/dash"
    "154.pages.dev/media/hulu"
-   "154.pages.dev/rosso"
-   "encoding/xml"
-   "net/http"
    "os"
 )
 
@@ -20,7 +16,7 @@ func (f flags) download() error {
       return err
    }
    auth.Unmarshal()
-   deep, err := auth.Deep_Link(f.id)
+   deep, err := auth.DeepLink(f.hulu_id)
    if err != nil {
       return err
    }
@@ -28,28 +24,19 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   if !f.s.Info {
+   if f.dash_id != "" {
       detail, err := auth.Details(deep)
       if err != nil {
          return err
       }
-      f.s.Name = rosso.Name(detail)
-      f.s.Poster = play
+      f.h.Name = detail
+      f.h.Poster = play
    }
-   var media dash.MPD
-   err = func() error {
-      res, err := http.Get(play.Stream_URL)
-      if err != nil {
-         return err
-      }
-      defer res.Body.Close()
-      f.s.Base = res.Request.URL
-      return xml.NewDecoder(res.Body).Decode(&media)
-   }()
+   media, err := f.h.DashMedia(play.Stream_URL)
    if err != nil {
       return err
    }
-   return f.s.DASH_Sofia(media, f.representation)
+   return f.h.DASH(media, f.dash_id)
 }
 
 func (f flags) authenticate() error {
@@ -58,7 +45,7 @@ func (f flags) authenticate() error {
       return err
    }
    name += "/hulu/token.json"
-   auth, err := hulu.Living_Room(f.email, f.password)
+   auth, err := hulu.LivingRoom(f.email, f.password)
    if err != nil {
       return err
    }

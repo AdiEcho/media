@@ -9,6 +9,22 @@ import (
    "time"
 )
 
+func TestOnDemand(t *testing.T) {
+   for _, mpx_guid := range mpx_guids {
+      var meta Metadata
+      err := meta.New(mpx_guid)
+      if err != nil {
+         t.Fatal(err)
+      }
+      video, err := meta.OnDemand()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", video)
+      time.Sleep(time.Second)
+   }
+}
+
 const raw_pssh = "AAAAV3Bzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADcIARIQBVLkSEJlSk6BsyYAS+R74BoLYnV5ZHJta2V5b3MiEAVS5EhCZUpOgbMmAEvke+AqAkhE"
 
 func TestLicense(t *testing.T) {
@@ -46,17 +62,3 @@ func TestLicense(t *testing.T) {
    fmt.Printf("%x %v\n", key, ok)
 }
 
-func TestOnDemand(t *testing.T) {
-   for _, mpx_guid := range mpx_guids {
-      meta, err := NewMetadata(mpx_guid)
-      if err != nil {
-         t.Fatal(err)
-      }
-      video, err := meta.OnDemand()
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", video)
-      time.Sleep(time.Second)
-   }
-}

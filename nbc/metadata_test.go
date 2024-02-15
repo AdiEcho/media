@@ -7,7 +7,7 @@ import (
    "time"
 )
 
-var mpx_guids = []int64 {
+var mpx_guids = []int{
    // episode unlocked
    // nbc.com/saturday-night-live/video/october-21-bad-bunny/9000283422
    9000283422,
@@ -18,7 +18,8 @@ var mpx_guids = []int64 {
 
 func TestMetadata(t *testing.T) {
    for _, mpx_guid := range mpx_guids {
-      meta, err := NewMetadata(mpx_guid)
+      var meta Metadata
+      err := meta.New(mpx_guid)
       if err != nil {
          t.Fatal(err)
       }
