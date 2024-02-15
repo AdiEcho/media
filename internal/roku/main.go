@@ -32,11 +32,12 @@ func main() {
    log.TransportInfo()
    log.Handler(f.v)
    if f.roku_id != "" {
-      content, err := roku.New_Content(f.id)
+      var home roku.HomeScreen
+      err := home.New(f.roku_id)
       if err != nil {
          panic(err)
       }
-      if err := f.DASH(content); err != nil {
+      if err := f.DASH(home); err != nil {
          panic(err)
       }
    } else {

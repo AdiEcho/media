@@ -9,9 +9,10 @@ import (
 )
 
 type flags struct {
+   dash_id string
    h rosso.HttpStream
+   nbc_id int
    v log.Level
-   guid int64
 }
 
 func main() {
@@ -21,16 +22,15 @@ func main() {
    }
    home = filepath.ToSlash(home) + "/widevine/"
    var f flags
-   flag.Int64Var(&f.guid, "b", 0, "GUID")
+   flag.IntVar(&f.nbc_id, "b", 0, "NBC ID")
    flag.StringVar(&f.h.Client_ID, "c", home+"client_id.bin", "client ID")
-   flag.BoolVar(&f.h.Info, "i", false, "information")
-   flag.StringVar(&f.h.Private_Key, "k", home+"private_key.pem", "private key")
-   flag.IntVar(&f.bandwidth, "m", 6_999_999, "max video bandwidth")
-   flag.TextVar(&f.level, "v", f.level, "level")
+   flag.StringVar(&f.dash_id, "d", "", "DASH ID")
+   flag.StringVar(&f.h.Private_Key, "p", home+"private_key.pem", "private key")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
-   log.Set_Transport(0)
-   log.Set_Logger(f.level)
-   if f.guid >= 1 {
+   log.TransportInfo()
+   log.Handler(f.v)
+   if f.nbc_id >= 1 {
       err := f.download()
       if err != nil {
          panic(err)
