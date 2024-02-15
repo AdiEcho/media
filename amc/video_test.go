@@ -8,7 +8,7 @@ import (
    "time"
 )
 
-func Test_Content(t *testing.T) {
+func TestContent(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -17,20 +17,20 @@ func Test_Content(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   auth, err := Raw_Auth.Unmarshal(raw)
+   auth, err := RawAuth.Unmarshal(raw)
    if err != nil {
       t.Fatal(err)
    }
    for _, test := range tests {
-      con, err := auth.Content(test.u)
+      content, err := auth.Content(test.u)
       if err != nil {
          t.Fatal(err)
       }
-      vid, err := con.Video()
+      video, err := content.Video()
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(stream.Name(vid))
+      fmt.Println(rosso.Name(video))
       time.Sleep(time.Second)
    }
 }

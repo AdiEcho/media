@@ -7,64 +7,64 @@ import (
    "strings"
 )
 
-func (c Content) Video() (*Video, error) {
+func (c ContentCompiler) Video() (*CurrentVideo, error) {
    for _, child := range c.Data.Children {
       if child.Type == "video-player-ap" {
          var s struct {
-            Current_Video Video `json:"currentVideo"`
+            CurrentVideo CurrentVideo
          }
          err := json.Unmarshal(child.Properties, &s)
          if err != nil {
             return nil, err
          }
-         return &s.Current_Video, nil
+         return &s.CurrentVideo, nil
       }
    }
    return nil, errors.New("video-player-ap")
 }
 
-type Video struct {
+type CurrentVideo struct {
    Meta struct {
       Airdate string // 1996-01-01T00:00:00.000Z
-      Episode_Number int `json:"episodeNumber"`
+      EpisodeNumber int
       Season int `json:",string"`
-      Show_Title string `json:"showTitle"`
+      ShowTitle string
    }
    Text struct {
       Title string
    }
 }
 
-func (Video) Owner() (string, bool) {
+func (CurrentVideo) Owner() (string, bool) {
    return "", false
 }
 
-func (v Video) Season() (string, bool) {
-   if v.Meta.Season >= 1 {
-      return strconv.Itoa(v.Meta.Season), true
+func (c CurrentVideo) Season() (string, bool) {
+   if c.Meta.Season >= 1 {
+      return strconv.Itoa(c.Meta.Season), true
    }
    return "", false
 }
 
-func (v Video) Episode() (string, bool) {
-   if v.Meta.Episode_Number >= 1 {
-      return strconv.Itoa(v.Meta.Episode_Number), true
+func (c CurrentVideo) Episode() (string, bool) {
+   if c.Meta.EpisodeNumber >= 1 {
+      return strconv.Itoa(c.Meta.EpisodeNumber), true
    }
    return "", false
 }
 
-func (v Video) Title() (string, bool) {
-   return v.Text.Title, true
+func (c CurrentVideo) Title() (string, bool) {
+   return c.Text.Title, true
 }
 
-func (v Video) Show() (string, bool) {
-   return v.Meta.Show_Title, v.Meta.Show_Title != ""
+func (c CurrentVideo) Show() (string, bool) {
+   return c.Meta.ShowTitle, c.Meta.ShowTitle != ""
 }
 
-func (v Video) Year() (string, bool) {
-   if v.Meta.Show_Title != "" {
+func (c CurrentVideo) Year() (string, bool) {
+   if c.Meta.ShowTitle != "" {
       return "", false
    }
-   year, _, _ := strings.Cut(v.Meta.Airdate, "-")
+   year, _, _ := strings.Cut(c.Meta.Airdate, "-")
    return year, true
 }

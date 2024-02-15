@@ -9,40 +9,7 @@ import (
    "strings"
 )
 
-func (r Raw_Auth) Unmarshal() (*Auth, error) {
-   var a Auth
-   err := json.Unmarshal(r, &a)
-   if err != nil {
-      return nil, err
-   }
-   return &a, nil
-}
-
-func Unauth() (Raw_Auth, error) {
-   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
-   req.Header = http.Header{
-      "X-Amcn-Device-ID": {"-"},
-      "X-Amcn-Language": {"en"},
-      "X-Amcn-Network": {"amcplus"},
-      "X-Amcn-Platform": {"web"},
-      "X-Amcn-Tenant": {"amcn"},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   return io.ReadAll(res.Body)
-}
-
-func (a Auth) Content(u URL) (*Content, error) {
+func (a Auth) Content(u URL) (*ContentCompiler, error) {
    req, err := http.NewRequest("GET", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return nil, err
@@ -76,27 +43,27 @@ func (a Auth) Content(u URL) (*Content, error) {
    if res.StatusCode != http.StatusOK {
       return nil, errors.New(res.Status)
    }
-   con := new(Content)
-   if err := json.NewDecoder(res.Body).Decode(con); err != nil {
+   content := new(ContentCompiler)
+   if err := json.NewDecoder(res.Body).Decode(content); err != nil {
       return nil, err
    }
-   return con, nil
+   return content, nil
 }
 
 func (a Auth) Playback(u URL) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var s struct {
-         Ad_Tags struct {
+         AdTags struct {
             Lat int `json:"lat"`
             Mode string `json:"mode"`
             PPID int `json:"ppid"`
-            Player_Height int `json:"playerHeight"`
-            Player_Width int `json:"playerWidth"`
+            PlayerHeight int `json:"playerHeight"`
+            PlayerWidth int `json:"playerWidth"`
             URL string `json:"url"`
          } `json:"adtags"`
       }
-      s.Ad_Tags.Mode = "on-demand"
-      s.Ad_Tags.URL = "-"
+      s.AdTags.Mode = "on-demand"
+      s.AdTags.URL = "-"
       return json.Marshal(s)
    }()
    if err != nil {
@@ -136,7 +103,7 @@ func (a Auth) Playback(u URL) (*Playback, error) {
    return &play, nil
 }
 
-func (a Auth) Refresh() (Raw_Auth, error) {
+func (a Auth) Refresh() (RawAuth, error) {
    req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return nil, err
@@ -161,9 +128,9 @@ type Auth struct {
    }
 }
 
-type Raw_Auth []byte
+type RawAuth []byte
 
-func (a Auth) Login(email, password string) (Raw_Auth, error) {
+func (a Auth) Login(email, password string) (RawAuth, error) {
    body, err := json.Marshal(map[string]string{
       "email": email,
       "password": password,
@@ -202,8 +169,8 @@ func (a Auth) Login(email, password string) (Raw_Auth, error) {
    return io.ReadAll(res.Body)
 }
 
-func (p Playback) HTTP_DASH() (*Source, error) {
-   for _, s := range p.body.Data.Playback_JSON_Data.Sources {
+func (p Playback) HttpDash() (*Source, error) {
+   for _, s := range p.body.Data.PlaybackJsonData.Sources {
       if strings.HasPrefix(s.Src, "https://") {
          if s.Type == "application/dash+xml" {
             return &s, nil
@@ -213,7 +180,7 @@ func (p Playback) HTTP_DASH() (*Source, error) {
    return nil, errors.New("data.playbackJsonData.sources")
 }
 
-type Content struct {
+type ContentCompiler struct {
    Data	struct {
       Children []struct {
          Properties json.RawMessage
@@ -222,11 +189,11 @@ type Content struct {
    }
 }
 
-func (Playback) Request_Body(b []byte) ([]byte, error) {
+func (Playback) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Playback) Response_Body(b []byte) ([]byte, error) {
+func (Playback) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
@@ -234,14 +201,14 @@ type Playback struct {
    header http.Header
    body struct {
       Data struct {
-         Playback_JSON_Data struct {
+         PlaybackJsonData struct {
             Sources []Source
-         } `json:"playbackJsonData"`
+         }
       }
    }
 }
 
-func (p Playback) Request_Header() http.Header {
+func (p Playback) RequestHeader() http.Header {
    return http.Header{
       "bcov-auth": {p.header.Get("X-AMCN-BC-JWT")},
    }
@@ -257,8 +224,8 @@ type Source struct {
    Type string
 }
 
-func (p Playback) Request_URL() (string, error) {
-   v, err := p.HTTP_DASH()
+func (p Playback) RequestURL() (string, error) {
+   v, err := p.HttpDash()
    if err != nil {
       return "", err
    }
@@ -287,3 +254,36 @@ func (u *URL) Set(s string) error {
    }
    return nil
 }
+func (r RawAuth) Unmarshal() (*Auth, error) {
+   var a Auth
+   err := json.Unmarshal(r, &a)
+   if err != nil {
+      return nil, err
+   }
+   return &a, nil
+}
+
+func Unauth() (RawAuth, error) {
+   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
+   req.Header = http.Header{
+      "X-Amcn-Device-ID": {"-"},
+      "X-Amcn-Language": {"en"},
+      "X-Amcn-Network": {"amcplus"},
+      "X-Amcn-Platform": {"web"},
+      "X-Amcn-Tenant": {"amcn"},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   return io.ReadAll(res.Body)
+}
+

@@ -9,20 +9,19 @@ import (
    "testing"
 )
 
-var tests = []struct {
+var tests = map[string]struct{
    key_id string
-   u URL
-} {
-   { // amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152
+   url string
+}{
+   {
+      url: "amcplus.com/movies/nocebo--1061554",
+   }, {
+      url: "amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152",
       key_id: "bc791d3b444f4aca83de23f37aea4f78",
-      u: URL{"/shows/orphan-black/episodes/season-1-instinct--1011152", "1011152"},
-   },
-   { // amcplus.com/movies/nocebo--1061554
-      u: URL{"/movies/nocebo--1061554", "1061554"},
    },
 }
 
-func Test_Login(t *testing.T) {
+func TestLogin(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -46,7 +45,7 @@ func Test_Login(t *testing.T) {
    os.WriteFile(home + "/amc/auth.json", raw, 0666)
 }
 
-func Test_Key(t *testing.T) {
+func TestKey(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -64,7 +63,7 @@ func Test_Key(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   mod, err := widevine.New_Module(private_key, client_id, key_id, nil)
+   mod, err := widevine.NewModule(private_key, client_id, key_id, nil)
    if err != nil {
       t.Fatal(err)
    }
@@ -72,7 +71,7 @@ func Test_Key(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   auth, err := Raw_Auth.Unmarshal(raw)
+   auth, err := RawAuth.Unmarshal(raw)
    if err != nil {
       t.Fatal(err)
    }
@@ -87,7 +86,7 @@ func Test_Key(t *testing.T) {
    fmt.Printf("%x\n", key)
 }
 
-func Test_Refresh(t *testing.T) {
+func TestRefresh(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -96,7 +95,7 @@ func Test_Refresh(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   auth, err := Raw_Auth.Unmarshal(raw)
+   auth, err := RawAuth.Unmarshal(raw)
    if err != nil {
       t.Fatal(err)
    }
@@ -112,7 +111,7 @@ var path_tests = []string{
    "amcplus.com/movies/nocebo--1061554",
 }
 
-func Test_Path(t *testing.T) {
+func TestPath(t *testing.T) {
    for _, test := range path_tests {
       var u URL
       err := u.Set(test)
@@ -121,14 +120,4 @@ func Test_Path(t *testing.T) {
       }
       fmt.Println(u)
    }
-}
-
-func user(s string) (map[string]string, error) {
-   b, err := os.ReadFile(s)
-   if err != nil {
-      return nil, err
-   }
-   var m map[string]string
-   json.Unmarshal(b, &m)
-   return m, nil
 }
