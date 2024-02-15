@@ -1,24 +1,17 @@
 package main
 
-import (
-   "154.pages.dev/encoding/dash"
-   "154.pages.dev/media/paramount"
-   "154.pages.dev/rosso"
-   "net/http"
-)
+import "154.pages.dev/media/paramount"
 
 func (f flags) dash(app paramount.AppToken) error {
    address, err := paramount.DashCenc(f.paramount_id)
    if err != nil {
       return err
    }
-   res, err := http.Get(address)
+   media, err := f.h.DashMedia(address)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   f.h.Base = res.Request.URL
-   if !f.h.Info {
+   if f.dash_id != "" {
       f.h.Poster, err = app.Session(f.paramount_id)
       if err != nil {
          return err
@@ -27,13 +20,7 @@ func (f flags) dash(app paramount.AppToken) error {
       if err != nil {
          return err
       }
-      f.h.Name = rosso.Name(item)
+      f.h.Name = item
    }
-   var media dash.MPD
-   media.Decode(res.Body)
-   reps, err := media.Representation("0")
-   if err != nil {
-      return err
-   }
-   return f.h.DASH_Sofia(reps, index)
+   return f.h.DASH(media, f.dash_id)
 }
