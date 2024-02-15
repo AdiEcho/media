@@ -41,7 +41,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.id.String() != "":
+   case f.hulu_id.String() != "":
       err := f.download()
       if err != nil {
          panic(err)
