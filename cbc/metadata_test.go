@@ -14,9 +14,9 @@ var links = []string{
    "https://gem.cbc.ca/the-witch",
 }
 
-func Test_Stream(t *testing.T) {
+func TestStream(t *testing.T) {
    for _, link := range links {
-      gem, err := New_Catalog_Gem(link)
+      gem, err := NewCatalogGem(link)
       if err != nil {
          t.Fatal(err)
       }
@@ -27,17 +27,17 @@ func Test_Stream(t *testing.T) {
    }
 }
 
-func Test_Media(t *testing.T) {
+func TestMedia(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   pro, err := Read_Profile(home + "/cbc/profile.json")
+   pro, err := ReadProfile(home + "/cbc/profile.json")
    if err != nil {
       t.Fatal(err)
    }
    for _, link := range links {
-      gem, err := New_Catalog_Gem(link)
+      gem, err := NewCatalogGem(link)
       if err != nil {
          t.Fatal(err)
       }

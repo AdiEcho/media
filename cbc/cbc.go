@@ -9,7 +9,7 @@ import (
    "strings"
 )
 
-func New_Token(username, password string) (*Token, error) {
+func (t *LoginToken) New(username, password string) error {
    address := func() string {
       var b strings.Builder
       b.WriteString("https://login.cbc.radio-canada.ca")
@@ -25,20 +25,13 @@ func New_Token(username, password string) (*Token, error) {
       "username": {username},
    })
    if err != nil {
-      return nil, err
+      return err
    }
    defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   t := new(Token)
-   if err := json.NewDecoder(res.Body).Decode(t); err != nil {
-      return nil, err
-   }
-   return t, nil
+   return json.NewDecoder(res.Body).Decode(t)
 }
 
-func New_Catalog_Gem(address string) (*Catalog_Gem, error) {
+func NewCatalogGem(address string) (*CatalogGem, error) {
    // you can also use `phone_android`, but it returns combined number and name:
    // 3. Beauty Hath Strange Power
    req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
@@ -61,26 +54,23 @@ func New_Catalog_Gem(address string) (*Catalog_Gem, error) {
       return nil, err
    }
    defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   gem := new(Catalog_Gem)
+   gem := new(CatalogGem)
    if err := json.NewDecoder(res.Body).Decode(gem); err != nil {
       return nil, err
    }
    return gem, nil
 }
 
-type Lineup_Item struct {
+type LineupItem struct {
    URL string
-   Formatted_ID_Media string `json:"formattedIdMedia"`
+   FormattedIdMedia string
 }
 
-func (c Catalog_Gem) Item() *Lineup_Item {
+func (c CatalogGem) Item() *LineupItem {
    for _, content := range c.Content {
       for _, lineup := range content.Lineups {
          for _, item := range lineup.Items {
-            if item.URL == c.Selected_URL {
+            if item.URL == c.SelectedUrl {
                return &item
             }
          }
@@ -91,60 +81,37 @@ func (c Catalog_Gem) Item() *Lineup_Item {
 
 const forwarded_for = "99.224.0.0"
 
-func (p Profile) Write_File(name string) error {
-   text, err := json.MarshalIndent(p, "", " ")
+func (p GemProfile) WriteFile(name string) error {
+   text, err := json.Marshal(p)
    if err != nil {
       return err
    }
    return os.WriteFile(name, text, 0666)
 }
 
-func Read_Profile(name string) (*Profile, error) {
+func ReadProfile(name string) (*GemProfile, error) {
    text, err := os.ReadFile(name)
    if err != nil {
       return nil, err
    }
-   pro := new(Profile)
-   if err := json.Unmarshal(text, pro); err != nil {
+   profile := new(GemProfile)
+   if err := json.Unmarshal(text, profile); err != nil {
       return nil, err
    }
-   return pro, nil
+   return profile, nil
 }
 
-type Profile struct {
-   Claims_Token string `json:"claimsToken"`
+type GemProfile struct {
+   ClaimsToken string
 }
 
-func (t Token) Profile() (*Profile, error) {
-   req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/ott/subscription/v2/gem/Subscriber/profile"
-   req.URL.RawQuery = "device=phone_android"
-   req.Header.Set("Authorization", "Bearer " + t.Access_Token)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   pro := new(Profile)
-   if err := json.NewDecoder(res.Body).Decode(pro); err != nil {
-      return nil, err
-   }
-   return pro, nil
-}
-
-type Token struct {
+type LoginToken struct {
    Access_Token string
 }
 
 const manifest_type = "desktop"
 
-func (p Profile) Media(item *Lineup_Item) (*Media, error) {
+func (p GemProfile) Media(item *LineupItem) (*Media, error) {
    req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
    if err != nil {
       return nil, err
@@ -152,7 +119,7 @@ func (p Profile) Media(item *Lineup_Item) (*Media, error) {
    req.URL.Path = "/media/validation/v2"
    req.URL.RawQuery = url.Values{
       "appCode": {"gem"},
-      "idMedia": {item.Formatted_ID_Media},
+      "idMedia": {item.FormattedIdMedia},
       "manifestType": {manifest_type},
       "output": {"json"},
       // you need this one the first request for a video, but can omit after
@@ -160,7 +127,7 @@ func (p Profile) Media(item *Lineup_Item) (*Media, error) {
       "tech": {"hls"},
    }.Encode()
    req.Header = http.Header{
-      "X-Claims-Token": {p.Claims_Token},
+      "X-Claims-Token": {p.ClaimsToken},
       "X-Forwarded-For": {forwarded_for},
    }
    res, err := http.DefaultClient.Do(req)
@@ -168,9 +135,6 @@ func (p Profile) Media(item *Lineup_Item) (*Media, error) {
       return nil, err
    }
    defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
    m := new(Media)
    if err := json.NewDecoder(res.Body).Decode(m); err != nil {
       return nil, err
@@ -191,4 +155,24 @@ var scope = []string{
    "https://rcmnb2cprod.onmicrosoft.com/84593b65-0ef6-4a72-891c-d351ddd50aab/subscriptions.write",
    "https://rcmnb2cprod.onmicrosoft.com/84593b65-0ef6-4a72-891c-d351ddd50aab/toutv-profiling",
    "openid",
+}
+
+func (t LoginToken) Profile() (*GemProfile, error) {
+   req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/ott/subscription/v2/gem/Subscriber/profile"
+   req.URL.RawQuery = "device=phone_android"
+   req.Header.Set("Authorization", "Bearer " + t.Access_Token)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   profile := new(GemProfile)
+   if err := json.NewDecoder(res.Body).Decode(profile); err != nil {
+      return nil, err
+   }
+   return profile, nil
 }

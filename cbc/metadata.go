@@ -5,26 +5,26 @@ import (
    "strings"
 )
 
-type Catalog_Gem struct {
+type CatalogGem struct {
    Content []struct {
       Lineups []struct {
-         Items []Lineup_Item
+         Items []LineupItem
       }
    }
-   Selected_URL string `json:"selectedUrl"`
-   Structured_Metadata Metadata `json:"structuredMetadata"`
+   SelectedUrl string
+   StructuredMetadata Metadata
 }
 
 type Metadata struct {
-   Part_Of_Series *struct {
+   PartOfSeries *struct {
       Name string // The Fall
-   } `json:"partofSeries"`
-   Part_Of_Season *struct {
-      Season_Number int `json:"seasonNumber"`
-   } `json:"partofSeason"`
-   Episode_Number int `json:"episodeNumber"`
+   }
+   PartOfSeason *struct {
+      SeasonNumber int
+   }
+   EpisodeNumber int
    Name string
-   Date_Created string `json:"dateCreated"` // 2014-01-01T00:00:00
+   DateCreated string // 2014-01-01T00:00:00
 }
 
 func (Metadata) Owner() (string, bool) {
@@ -36,30 +36,30 @@ func (m Metadata) Title() (string, bool) {
 }
 
 func (m Metadata) Episode() (string, bool) {
-   if m.Episode_Number >= 1 {
-      return strconv.Itoa(m.Episode_Number), true
+   if m.EpisodeNumber >= 1 {
+      return strconv.Itoa(m.EpisodeNumber), true
    }
    return "", false
 }
 
 func (m Metadata) Season() (string, bool) {
-   if p := m.Part_Of_Season; p != nil {
-      return strconv.Itoa(p.Season_Number), true
+   if p := m.PartOfSeason; p != nil {
+      return strconv.Itoa(p.SeasonNumber), true
    }
    return "", false
 }
 
 func (m Metadata) Show() (string, bool) {
-   if m.Part_Of_Series != nil {
-      return m.Part_Of_Series.Name, true
+   if m.PartOfSeries != nil {
+      return m.PartOfSeries.Name, true
    }
    return "", false
 }
 
 func (m Metadata) Year() (string, bool) {
-   if m.Part_Of_Series != nil {
+   if m.PartOfSeries != nil {
       return "", false
    }
-   year, _, _ := strings.Cut(m.Date_Created, "-")
+   year, _, _ := strings.Cut(m.DateCreated, "-")
    return year, true
 }

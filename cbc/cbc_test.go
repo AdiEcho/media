@@ -1,38 +1,25 @@
 package cbc
 
 import (
-   "encoding/json"
-   "fmt"
    "os"
    "testing"
 )
 
-func Test_New_Profile(t *testing.T) {
-   tok, err := New_Token(u["username"], u["password"])
-   if err != nil {
-      t.Fatal(err)
-   }
-   pro, err := tok.Profile()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", pro)
-}
-
-func Test_Profile(t *testing.T) {
+func TestProfile(t *testing.T) {
+   username, password := os.Getenv("cbc_username"), os.Getenv("cbc_password")
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   tok, err := New_Token(u["username"], u["password"])
+   var token LoginToken
+   if err := token.New(username, password); err != nil {
+      t.Fatal(err)
+   }
+   pro, err := token.Profile()
    if err != nil {
       t.Fatal(err)
    }
-   pro, err := tok.Profile()
-   if err != nil {
-      t.Fatal(err)
-   }
-   if err := pro.Write_File(home + "/cbc/profile.json"); err != nil {
+   if err := pro.WriteFile(home + "/cbc/profile.json"); err != nil {
       t.Fatal(err)
    }
 }
