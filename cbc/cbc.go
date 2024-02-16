@@ -9,6 +9,12 @@ import (
    "strings"
 )
 
+type LoginToken struct {
+   Access_Token string
+}
+
+const manifest_type = "desktop"
+
 func (t *LoginToken) New(username, password string) error {
    address := func() string {
       var b strings.Builder
@@ -31,85 +37,16 @@ func (t *LoginToken) New(username, password string) error {
    return json.NewDecoder(res.Body).Decode(t)
 }
 
-func NewCatalogGem(address string) (*CatalogGem, error) {
-   // you can also use `phone_android`, but it returns combined number and name:
-   // 3. Beauty Hath Strange Power
-   req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.RawQuery = "device=web"
-   req.URL.Path, err = func() (string, error) {
-      p, err := url.Parse(address)
-      if err != nil {
-         return "", err
-      }
-      return "/ott/catalog/v2/gem/show" + p.Path, nil
-   }()
-   if err != nil {
-      return nil, err
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   gem := new(CatalogGem)
-   if err := json.NewDecoder(res.Body).Decode(gem); err != nil {
-      return nil, err
-   }
-   return gem, nil
-}
-
 type LineupItem struct {
    URL string
    FormattedIdMedia string
 }
 
-func (c CatalogGem) Item() *LineupItem {
-   for _, content := range c.Content {
-      for _, lineup := range content.Lineups {
-         for _, item := range lineup.Items {
-            if item.URL == c.SelectedUrl {
-               return &item
-            }
-         }
-      }
-   }
-   return nil
-}
-
 const forwarded_for = "99.224.0.0"
-
-func (p GemProfile) WriteFile(name string) error {
-   text, err := json.Marshal(p)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(name, text, 0666)
-}
-
-func ReadProfile(name string) (*GemProfile, error) {
-   text, err := os.ReadFile(name)
-   if err != nil {
-      return nil, err
-   }
-   profile := new(GemProfile)
-   if err := json.Unmarshal(text, profile); err != nil {
-      return nil, err
-   }
-   return profile, nil
-}
 
 type GemProfile struct {
    ClaimsToken string
 }
-
-type LoginToken struct {
-   Access_Token string
-}
-
-const manifest_type = "desktop"
 
 func (p GemProfile) Media(item *LineupItem) (*Media, error) {
    req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
@@ -172,6 +109,71 @@ func (t LoginToken) Profile() (*GemProfile, error) {
    defer res.Body.Close()
    profile := new(GemProfile)
    if err := json.NewDecoder(res.Body).Decode(profile); err != nil {
+      return nil, err
+   }
+   return profile, nil
+}
+
+////////////////////
+
+func NewCatalogGem(address string) (*CatalogGem, error) {
+   // you can also use `phone_android`, but it returns combined number and name:
+   // 3. Beauty Hath Strange Power
+   req, err := http.NewRequest("GET", "https://services.radio-canada.ca", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.RawQuery = "device=web"
+   req.URL.Path, err = func() (string, error) {
+      p, err := url.Parse(address)
+      if err != nil {
+         return "", err
+      }
+      return "/ott/catalog/v2/gem/show" + p.Path, nil
+   }()
+   if err != nil {
+      return nil, err
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   gem := new(CatalogGem)
+   if err := json.NewDecoder(res.Body).Decode(gem); err != nil {
+      return nil, err
+   }
+   return gem, nil
+}
+
+func (c CatalogGem) Item() *LineupItem {
+   for _, content := range c.Content {
+      for _, lineup := range content.Lineups {
+         for _, item := range lineup.Items {
+            if item.URL == c.SelectedUrl {
+               return &item
+            }
+         }
+      }
+   }
+   return nil
+}
+
+func (p GemProfile) WriteFile(name string) error {
+   text, err := json.Marshal(p)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(name, text, 0666)
+}
+
+func ReadProfile(name string) (*GemProfile, error) {
+   text, err := os.ReadFile(name)
+   if err != nil {
+      return nil, err
+   }
+   profile := new(GemProfile)
+   if err := json.Unmarshal(text, profile); err != nil {
       return nil, err
    }
    return profile, nil

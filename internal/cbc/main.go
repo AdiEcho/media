@@ -8,28 +8,23 @@ import (
 
 type flags struct {
    address string
-   audio_name string
+   dash_id string
    email string
+   h rosso.HttpStream
    password string
-   s rosso.Stream
-   video_height string
-   video_rate int64
-   level log.Level
+   v log.Level
 }
 
 func main() {
    var f flags
    flag.StringVar(&f.address, "a", "", "address")
+   flag.StringVar(&f.dash_id, "d", "", "DASH ID")
    flag.StringVar(&f.email, "e", "", "email")
-   flag.BoolVar(&f.s.Info, "i", false, "information")
    flag.StringVar(&f.password, "p", "", "password")
-   flag.Int64Var(&f.video_rate, "b", 3_000_000, "max video bandwidth")
-   flag.StringVar(&f.video_height, "r", "720", "video resolution")
-   flag.StringVar(&f.audio_name, "n", "English", "audio name")
-   flag.TextVar(&f.level, "v", f.level, "log level")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "log level")
    flag.Parse()
-   log.Set_Transport(0)
-   log.Set_Logger(f.level)
+   log.TransportInfo()
+   log.Handler(f.v)
    if f.email != "" {
       err := f.profile()
       if err != nil {

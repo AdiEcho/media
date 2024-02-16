@@ -22,7 +22,7 @@ func TestStream(t *testing.T) {
       }
       item := gem.Item()
       fmt.Printf("%+v\n", item)
-      fmt.Println(stream.Name(gem.Structured_Metadata))
+      fmt.Println(rosso.Name(gem.StructuredMetadata))
       time.Sleep(time.Second)
    }
 }
