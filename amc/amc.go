@@ -68,10 +68,10 @@ type ContentCompiler struct {
    }
 }
 
-func (p Playback) RequestHeader() http.Header {
-   return http.Header{
-      "bcov-auth": {p.header.Get("X-AMCN-BC-JWT")},
-   }
+func (p Playback) RequestHeader() (http.Header, bool) {
+   h := make(http.Header)
+   h.Set("bcov-auth", p.header.Get("X-AMCN-BC-JWT"))
+   return h, true
 }
 
 type DataSource struct {
