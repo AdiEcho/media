@@ -99,7 +99,7 @@ func (p GemProfile) Media(i *LineupItem) (*MediaService, error) {
       "tech": {"hls"},
    }.Encode()
    req.Header = http.Header{
-      "X-Claims-Token": {p.ClaimsToken},
+      "X-Claims-Token": {p.Gem.ClaimsToken},
       "X-Forwarded-For": {forwarded_for},
    }
    res, err := http.DefaultClient.Do(req)

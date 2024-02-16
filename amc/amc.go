@@ -3,13 +3,13 @@ package amc
 import (
    "bytes"
    "encoding/json"
-   "errors"
    "io"
    "net/http"
+   "strconv"
    "strings"
 )
 
-func (a Authorization) Playback(u URL) (*Playback, error) {
+func (a Authorization) Playback(id int) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          AdTags struct {
@@ -34,7 +34,7 @@ func (a Authorization) Playback(u URL) (*Playback, error) {
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/playback-id/api/v1/playback/" + u.nid
+   req.URL.Path = "/playback-id/api/v1/playback/" + strconv.Itoa(id)
    req.Header = http.Header{
       "Authorization": {"Bearer " + a.ID.Data.Access_Token},
       "Content-Type": {"application/json"},
@@ -90,29 +90,6 @@ func (Playback) RequestBody(b []byte) ([]byte, error) {
 
 func (Playback) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
-}
-
-func (u URL) String() string {
-   return u.path
-}
-
-// https://www.amcplus.com/movies/queen-of-earth--1026724
-type URL struct {
-   path string // /movies/queen-of-earth--1026724
-   nid string // 1026724
-}
-
-func (u *URL) Set(s string) error {
-   var found bool
-   _, u.path, found = strings.Cut(s, "amcplus.com")
-   if !found {
-      return errors.New("amcplus.com")
-   }
-   _, u.nid, found = strings.Cut(s, "--")
-   if !found {
-      return errors.New("--")
-   }
-   return nil
 }
 
 type Playback struct {
@@ -241,7 +218,8 @@ func (a *Authorization) Refresh() error {
    }
    return nil
 }
-func (a Authorization) Content(u URL) (*ContentCompiler, error) {
+
+func (a Authorization) Content(path string) (*ContentCompiler, error) {
    req, err := http.NewRequest("GET", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return nil, err
@@ -261,10 +239,10 @@ func (a Authorization) Content(u URL) (*ContentCompiler, error) {
    req.URL.Path = func() string {
       var b strings.Builder
       b.WriteString("/content-compiler-cr/api/v1/content/amcn/amcplus/path")
-      if strings.HasPrefix(u.path, "/movies/") {
+      if strings.HasPrefix(path, "/movies/") {
          b.WriteString("/watch")
       }
-      b.WriteString(u.path)
+      b.WriteString(path)
       return b.String()
    }()
    res, err := http.DefaultClient.Do(req)

@@ -8,9 +8,9 @@ import (
 
 type flags struct {
    address string
-   dash_id string
    email string
    h rosso.HttpStream
+   hls_index int
    password string
    v log.Level
 }
@@ -18,8 +18,8 @@ type flags struct {
 func main() {
    var f flags
    flag.StringVar(&f.address, "a", "", "address")
-   flag.StringVar(&f.dash_id, "d", "", "DASH ID")
    flag.StringVar(&f.email, "e", "", "email")
+   flag.IntVar(&f.hls_index, "h", -1, "HLS index")
    flag.StringVar(&f.password, "p", "", "password")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "log level")
    flag.Parse()

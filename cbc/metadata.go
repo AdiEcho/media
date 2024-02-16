@@ -5,7 +5,7 @@ import (
    "strings"
 )
 
-type CatalogGem struct {
+type GemCatalog struct {
    Content []struct {
       Lineups []struct {
          Items []LineupItem

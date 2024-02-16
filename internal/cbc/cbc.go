@@ -1,42 +1,42 @@
 package main
 
 import (
-   "154.pages.dev/encoding/hls"
    "154.pages.dev/media/cbc"
-   "154.pages.dev/rosso"
    "os"
-   "slices"
-   "strings"
 )
 
 func (f flags) download() error {
    home, err := os.UserHomeDir()
    if err != nil {
-      return nil, err
+      return err
    }
-   profile, err := cbc.ReadProfile(home + "/cbc/profile.json")
-   if err != nil {
-      return nil, err
-   }
-   gem, err := cbc.NewCatalogGem(f.address)
-   if err != nil {
-      return nil, err
-   }
-   media, err := profile.Media(gem.Item())
-   if err != nil {
-      return nil, err
-   }
-   f.s.Name = rosso.Name(gem.StructuredMetadata)
-   return f.s.HLS(media.URL)
-   return f.s.HLS_Streams(master.Stream, index)
-}
-
-func (f flags) profile() error {
-   login, err := cbc.NewToken(f.email, f.password)
+   var profile cbc.GemProfile
+   profile.Raw, err = os.ReadFile(home + "/cbc/profile.json")
    if err != nil {
       return err
    }
-   profile, err := login.Profile()
+   var catalog cbc.GemCatalog
+   catalog.New(f.address)
+   f.h.Name = catalog.StructuredMetadata
+   item, ok := catalog.Item()
+   if ok {
+      media, err := profile.Media(item)
+      if err != nil {
+         return err
+      }
+      master, err := f.h.HlsMaster(media.URL)
+      if err != nil {
+         return err
+      }
+      return f.h.HLS(master, f.hls_index)
+   }
+   return nil
+}
+
+func (f flags) profile() error {
+   var token cbc.LoginToken
+   token.New(f.email, f.password)
+   profile, err := token.Profile()
    if err != nil {
       return err
    }
@@ -44,5 +44,5 @@ func (f flags) profile() error {
    if err != nil {
       return err
    }
-   return profile.WriteFile(home + "/cbc/profile.json")
+   return os.WriteFile(home + "/cbc/profile.json", profile.Raw, 0666)
 }

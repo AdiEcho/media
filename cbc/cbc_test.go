@@ -1,25 +1,20 @@
 package cbc
 
 import (
+   "fmt"
    "os"
    "testing"
 )
 
 func TestProfile(t *testing.T) {
-   username, password := os.Getenv("cbc_username"), os.Getenv("cbc_password")
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
    var token LoginToken
+   username, password := os.Getenv("cbc_username"), os.Getenv("cbc_password")
    if err := token.New(username, password); err != nil {
       t.Fatal(err)
    }
-   pro, err := token.Profile()
+   profile, err := token.Profile()
    if err != nil {
       t.Fatal(err)
    }
-   if err := pro.WriteFile(home + "/cbc/profile.json"); err != nil {
-      t.Fatal(err)
-   }
+   fmt.Println(profile)
 }

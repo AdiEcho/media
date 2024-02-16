@@ -4,22 +4,10 @@ import (
    "154.pages.dev/widevine"
    "encoding/hex"
    "fmt"
+   "net/url"
    "os"
    "testing"
 )
-
-var tests = map[string]struct{
-   key_id string
-   url string
-}{
-   "movie": {
-      url: "amcplus.com/movies/nocebo--1061554",
-   },
-   "show": {
-      url: "amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152",
-      key_id: "bc791d3b444f4aca83de23f37aea4f78",
-   },
-}
 
 func TestKey(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -50,7 +38,11 @@ func TestKey(t *testing.T) {
       t.Fatal(err)
    }
    auth.Unmarshal()
-   play, err := auth.Playback(test.u)
+   address, err := url.Parse(test.url)
+   if err != nil {
+      t.Fatal(err)
+   }
+   play, err := auth.Playback(address.Path)
    if err != nil {
       t.Fatal(err)
    }
@@ -60,6 +52,19 @@ func TestKey(t *testing.T) {
    }
    key, ok := module.Key(license)
    fmt.Printf("%x %v\n", key, ok)
+}
+
+var tests = map[string]struct{
+   key_id string
+   url string
+}{
+   "movie": {
+      url: "http://amcplus.com/movies/nocebo--1061554",
+   },
+   "show": {
+      url: "http://amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152",
+      key_id: "bc791d3b444f4aca83de23f37aea4f78",
+   },
 }
 
 func TestRefresh(t *testing.T) {
