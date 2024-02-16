@@ -3,7 +3,6 @@ package amc
 import (
    "154.pages.dev/widevine"
    "encoding/hex"
-   "encoding/json"
    "fmt"
    "os"
    "testing"
@@ -13,9 +12,10 @@ var tests = map[string]struct{
    key_id string
    url string
 }{
-   {
+   "movie": {
       url: "amcplus.com/movies/nocebo--1061554",
-   }, {
+   },
+   "show": {
       url: "amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152",
       key_id: "bc791d3b444f4aca83de23f37aea4f78",
    },
@@ -23,10 +23,6 @@ var tests = map[string]struct{
 
 func TestLogin(t *testing.T) {
    home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   u, err := user(home + "/amc/user.json")
    if err != nil {
       t.Fatal(err)
    }

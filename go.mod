@@ -3,10 +3,10 @@ module 154.pages.dev/media
 go 1.22.0
 
 require (
-	154.pages.dev/encoding v1.17.9
-	154.pages.dev/log v1.1.8
-	154.pages.dev/rosso v1.4.3
-	154.pages.dev/widevine v1.2.7
+   154.pages.dev/encoding v1.17.9
+   154.pages.dev/log v1.1.8
+   154.pages.dev/rosso v1.4.3
+   154.pages.dev/widevine v1.2.7
 )
 
 require (
