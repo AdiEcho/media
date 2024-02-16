@@ -21,26 +21,6 @@ var tests = map[string]struct{
    },
 }
 
-func TestLogin(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   raw, err := Unauth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth, err := raw.Unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   raw, err = auth.Login(u["username"], u["password"])
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile(home + "/amc/auth.json", raw, 0666)
-}
-
 func TestKey(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -54,32 +34,32 @@ func TestKey(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   test := tests[0]
-   key_id, err := hex.DecodeString(test.key_id)
+   test := tests["show"]
+   var protect widevine.PSSH
+   protect.Key_ID, err = hex.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
-   mod, err := widevine.NewModule(private_key, client_id, key_id, nil)
+   module, err := protect.CDM(private_key, client_id)
    if err != nil {
       t.Fatal(err)
    }
-   raw, err := os.ReadFile(home + "/amc/auth.json")
+   var auth Authorization
+   auth.Raw, err = os.ReadFile(home + "/amc/auth.json")
    if err != nil {
       t.Fatal(err)
    }
-   auth, err := RawAuth.Unmarshal(raw)
-   if err != nil {
-      t.Fatal(err)
-   }
+   auth.Unmarshal()
    play, err := auth.Playback(test.u)
    if err != nil {
       t.Fatal(err)
    }
-   key, err := mod.Key(play)
+   license, err := module.License(play)
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%x\n", key)
+   key, ok := module.Key(license)
+   fmt.Printf("%x %v\n", key, ok)
 }
 
 func TestRefresh(t *testing.T) {
@@ -117,3 +97,19 @@ func TestPath(t *testing.T) {
       fmt.Println(u)
    }
 }
+
+func TestLogin(t *testing.T) {
+   var auth Authorization
+   err := auth.Unauth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   if err := auth.Unmarshal(); err != nil {
+      t.Fatal(err)
+   }
+   username, password := os.Getenv("amc_username"), os.Getenv("amc_password")
+   if err := auth.Login(username, password); err != nil {
+      t.Fatal(err)
+   }
+}
+

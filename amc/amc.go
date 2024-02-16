@@ -9,45 +9,7 @@ import (
    "strings"
 )
 
-func (a Auth) Content(u URL) (*ContentCompiler, error) {
-   req, err := http.NewRequest("GET", "https://gw.cds.amcn.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   // If you request once with headers, you can request again without any
-   // headers for 10 minutes, but then headers are required again
-   req.Header = http.Header{
-      "Authorization": {"Bearer " + a.Data.Access_Token},
-      "X-Amcn-Network": {"amcplus"},
-      "X-Amcn-Platform": {"web"},
-      "X-Amcn-Tenant": {"amcn"},
-   }
-   // Shows must use `path`, and movies must use `path/watch`. If trial has
-   // expired, you will get `.data.type` of `redirect`. You can remove the
-   // `/watch` to resolve this, but the resultant response will still be
-   // missing `video-player-ap`.
-   req.URL.Path = func() string {
-      var b strings.Builder
-      b.WriteString("/content-compiler-cr/api/v1/content/amcn/amcplus/path")
-      if strings.HasPrefix(u.path, "/movies/") {
-         b.WriteString("/watch")
-      }
-      b.WriteString(u.path)
-      return b.String()
-   }()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   content := new(ContentCompiler)
-   if err := json.NewDecoder(res.Body).Decode(content); err != nil {
-      return nil, err
-   }
-   return content, nil
-}
-
-func (a Auth) Playback(u URL) (*Playback, error) {
+func (a Authorization) Playback(u URL) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          AdTags struct {
@@ -74,7 +36,7 @@ func (a Auth) Playback(u URL) (*Playback, error) {
    }
    req.URL.Path = "/playback-id/api/v1/playback/" + u.nid
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.Data.Access_Token},
+      "Authorization": {"Bearer " + a.ID.Data.Access_Token},
       "Content-Type": {"application/json"},
       "X-Amcn-Device-Ad-ID": {"-"},
       "X-Amcn-Language": {"en"},
@@ -106,24 +68,13 @@ type ContentCompiler struct {
    }
 }
 
-type Playback struct {
-   header http.Header
-   body struct {
-      Data struct {
-         PlaybackJsonData struct {
-            Sources []Source
-         }
-      }
-   }
-}
-
 func (p Playback) RequestHeader() http.Header {
    return http.Header{
       "bcov-auth": {p.header.Get("X-AMCN-BC-JWT")},
    }
 }
 
-type Source struct {
+type DataSource struct {
    Key_Systems *struct {
       Widevine struct {
          License_URL string
@@ -164,7 +115,18 @@ func (u *URL) Set(s string) error {
    return nil
 }
 
-func (p Playback) HttpsDash() (*Source, bool) {
+type Playback struct {
+   header http.Header
+   body struct {
+      Data struct {
+         PlaybackJsonData struct {
+            Sources []DataSource
+         }
+      }
+   }
+}
+
+func (p Playback) HttpsDash() (*DataSource, bool) {
    for _, s := range p.body.Data.PlaybackJsonData.Sources {
       if strings.HasPrefix(s.Src, "https://") {
          if s.Type == "application/dash+xml" {
@@ -175,55 +137,59 @@ func (p Playback) HttpsDash() (*Source, bool) {
    return nil, false
 }
 
-////////////////////////////////
-
 func (p Playback) RequestURL() (string, bool) {
-   v, err := p.HttpDash()
-   if err != nil {
-      return "", err
+   if v, ok := p.HttpsDash(); ok {
+      return v.Key_Systems.Widevine.License_URL, true
    }
-   return v.Key_Systems.Widevine.License_URL, nil
+   return "", false
 }
 
-func (a Auth) Refresh() (RawAuth, error) {
+func (a *Authorization) Unauth() error {
    req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
-      return nil, err
+      return err
    }
-   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
-   req.Header.Set("Authorization", "Bearer " + a.Data.Refresh_Token)
+   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
+   req.Header = http.Header{
+      "X-Amcn-Device-ID": {"-"},
+      "X-Amcn-Language": {"en"},
+      "X-Amcn-Network": {"amcplus"},
+      "X-Amcn-Platform": {"web"},
+      "X-Amcn-Tenant": {"amcn"},
+   }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
-      return nil, err
+      return err
    }
    defer res.Body.Close()
-   return io.ReadAll(res.Body)
-}
-
-type Auth struct {
-   Data struct {
-      Access_Token string
-      Refresh_Token string
+   a.Raw, err = io.ReadAll(res.Body)
+   if err != nil {
+      return err
    }
+   return nil
 }
 
-func (a Auth) Login(email, password string) (RawAuth, error) {
+func (a *Authorization) Unmarshal() error {
+   return json.Unmarshal(a.Raw, &a.ID)
+}
+
+func (a *Authorization) Login(email, password string) error {
    body, err := json.Marshal(map[string]string{
       "email": email,
       "password": password,
    })
    if err != nil {
-      return nil, err
+      return err
    }
    req, err := http.NewRequest(
       "POST", "https://gw.cds.amcn.com", bytes.NewReader(body),
    )
    if err != nil {
-      return nil, err
+      return err
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/login"
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.Data.Access_Token},
+      "Authorization": {"Bearer " + a.ID.Data.Access_Token},
       "Content-Type": {"application/json"},
       "X-Amcn-Device-Ad-ID": {"-"},
       "X-Amcn-Device-ID": {"-"},
@@ -237,38 +203,78 @@ func (a Auth) Login(email, password string) (RawAuth, error) {
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
-      return nil, err
+      return err
    }
    defer res.Body.Close()
-   return io.ReadAll(res.Body)
-}
-
-func (r RawAuth) Unmarshal() (*Auth, error) {
-   var a Auth
-   err := json.Unmarshal(r, &a)
+   a.Raw, err = io.ReadAll(res.Body)
    if err != nil {
-      return nil, err
+      return err
    }
-   return &a, nil
+   return nil
 }
 
-func Unauth() (RawAuth, error) {
+type Authorization struct {
+   Raw []byte
+   ID struct {
+      Data struct {
+         Access_Token string
+         Refresh_Token string
+      }
+   }
+}
+
+func (a *Authorization) Refresh() error {
    req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
+      return err
+   }
+   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
+   req.Header.Set("Authorization", "Bearer " + a.ID.Data.Refresh_Token)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   a.Raw, err = io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+func (a Authorization) Content(u URL) (*ContentCompiler, error) {
+   req, err := http.NewRequest("GET", "https://gw.cds.amcn.com", nil)
+   if err != nil {
       return nil, err
    }
-   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
+   // If you request once with headers, you can request again without any
+   // headers for 10 minutes, but then headers are required again
    req.Header = http.Header{
-      "X-Amcn-Device-ID": {"-"},
-      "X-Amcn-Language": {"en"},
+      "Authorization": {"Bearer " + a.ID.Data.Access_Token},
       "X-Amcn-Network": {"amcplus"},
       "X-Amcn-Platform": {"web"},
       "X-Amcn-Tenant": {"amcn"},
    }
+   // Shows must use `path`, and movies must use `path/watch`. If trial has
+   // expired, you will get `.data.type` of `redirect`. You can remove the
+   // `/watch` to resolve this, but the resultant response will still be
+   // missing `video-player-ap`.
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/content-compiler-cr/api/v1/content/amcn/amcplus/path")
+      if strings.HasPrefix(u.path, "/movies/") {
+         b.WriteString("/watch")
+      }
+      b.WriteString(u.path)
+      return b.String()
+   }()
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer res.Body.Close()
-   return io.ReadAll(res.Body)
+   content := new(ContentCompiler)
+   if err := json.NewDecoder(res.Body).Decode(content); err != nil {
+      return nil, err
+   }
+   return content, nil
 }
