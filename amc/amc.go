@@ -3,13 +3,45 @@ package amc
 import (
    "bytes"
    "encoding/json"
+   "errors"
    "io"
    "net/http"
-   "strconv"
    "strings"
 )
 
-func (a Authorization) Playback(id int) (*Playback, error) {
+type WebAddress struct {
+   NID string
+   Path string
+}
+
+func (w *WebAddress) Set(s string) error {
+   var found bool
+   _, w.Path, found = strings.Cut(s, "amcplus.com")
+   if !found {
+      return errors.New("amcplus.com")
+   }
+   _, w.NID, found = strings.Cut(w.Path, "--")
+   if !found {
+      return errors.New("--")
+   }
+   return nil
+}
+
+func (w WebAddress) String() string {
+   return w.Path
+}
+
+type Authorization struct {
+   Raw []byte
+   s struct {
+      Data struct {
+         Access_Token string
+         Refresh_Token string
+      }
+   }
+}
+
+func (a Authorization) Playback(nid string) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          AdTags struct {
@@ -34,9 +66,9 @@ func (a Authorization) Playback(id int) (*Playback, error) {
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/playback-id/api/v1/playback/" + strconv.Itoa(id)
+   req.URL.Path = "/playback-id/api/v1/playback/" + nid
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.ID.Data.Access_Token},
+      "Authorization": {"Bearer " + a.s.Data.Access_Token},
       "Content-Type": {"application/json"},
       "X-Amcn-Device-Ad-ID": {"-"},
       "X-Amcn-Language": {"en"},
@@ -114,7 +146,7 @@ func (p Playback) HttpsDash() (*DataSource, bool) {
    return nil, false
 }
 
-func (p Playback) RequestURL() (string, bool) {
+func (p Playback) RequestUrl() (string, bool) {
    if v, ok := p.HttpsDash(); ok {
       return v.Key_Systems.Widevine.License_URL, true
    }
@@ -147,7 +179,7 @@ func (a *Authorization) Unauth() error {
 }
 
 func (a *Authorization) Unmarshal() error {
-   return json.Unmarshal(a.Raw, &a.ID)
+   return json.Unmarshal(a.Raw, &a.s)
 }
 
 func (a *Authorization) Login(email, password string) error {
@@ -166,7 +198,7 @@ func (a *Authorization) Login(email, password string) error {
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/login"
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.ID.Data.Access_Token},
+      "Authorization": {"Bearer " + a.s.Data.Access_Token},
       "Content-Type": {"application/json"},
       "X-Amcn-Device-Ad-ID": {"-"},
       "X-Amcn-Device-ID": {"-"},
@@ -190,23 +222,13 @@ func (a *Authorization) Login(email, password string) error {
    return nil
 }
 
-type Authorization struct {
-   Raw []byte
-   ID struct {
-      Data struct {
-         Access_Token string
-         Refresh_Token string
-      }
-   }
-}
-
 func (a *Authorization) Refresh() error {
    req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return err
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
-   req.Header.Set("Authorization", "Bearer " + a.ID.Data.Refresh_Token)
+   req.Header.Set("Authorization", "Bearer " + a.s.Data.Refresh_Token)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -227,7 +249,7 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
    // If you request once with headers, you can request again without any
    // headers for 10 minutes, but then headers are required again
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.ID.Data.Access_Token},
+      "Authorization": {"Bearer " + a.s.Data.Access_Token},
       "X-Amcn-Network": {"amcplus"},
       "X-Amcn-Platform": {"web"},
       "X-Amcn-Tenant": {"amcn"},

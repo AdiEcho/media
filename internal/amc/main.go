@@ -10,12 +10,12 @@ import (
 )
 
 type flags struct {
+   dash_id string
    email string
-   height int
+   h rosso.HttpStream
    password string
-   address amc.URL
-   s rosso.Stream
-   level log.Level
+   v log.Level
+   web amc.WebAddress
 }
 
 func main() {
@@ -25,24 +25,23 @@ func main() {
    }
    home = filepath.ToSlash(home) + "/widevine/"
    var f flags
-   flag.Var(&f.address, "a", "address")
-   flag.StringVar(&f.s.Client_ID, "c", home+"client_id.bin", "client ID")
+   flag.Var(&f.web, "a", "address")
+   flag.StringVar(&f.h.Client_ID, "c", home+"client_id.bin", "client ID")
+   flag.StringVar(&f.dash_id, "d", "", "DASH ID")
    flag.StringVar(&f.email, "e", "", "email")
-   flag.IntVar(&f.height, "h", 1080, "maximum height")
-   flag.BoolVar(&f.s.Info, "i", false, "information")
-   flag.StringVar(&f.s.Private_Key, "k", home+"private_key.pem", "private key")
+   flag.StringVar(&f.h.Private_Key, "k", home+"private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
-   flag.TextVar(&f.level, "v", f.level, "log level")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "log level")
    flag.Parse()
-   log.Set_Transport(0)
-   log.Set_Logger(f.level)
+   log.TransportInfo()
+   log.Handler(f.v)
    switch {
    case f.email != "":
       err := f.login()
       if err != nil {
          panic(err)
       }
-   case f.address.String() != "":
+   case f.web.NID != "":
       err := f.download()
       if err != nil {
          panic(err)

@@ -61,27 +61,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   slices.SortFunc(reps, func(a, b *dash.Representation) int {
-      return b.Bandwidth - a.Bandwidth
-   })
-   // video
-   {
-      reps := slices.Clone(reps)
-      reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
-         return !r.Video()
-      })
-      index := slices.IndexFunc(reps, func(r *dash.Representation) bool {
-         return r.Height <= f.height
-      })
-      if err := f.s.DASH_Sofia(reps, index); err != nil {
-         return err
-      }
-   }
-   // audio
-   reps = slices.DeleteFunc(reps, func(r *dash.Representation) bool {
-      return !r.Audio()
-   })
-   return f.s.DASH_Sofia(reps, 0)
+   return f.s.DASH_Sofia(reps, index)
 }
 
 func (f flags) login() error {

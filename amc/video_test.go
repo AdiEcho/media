@@ -13,16 +13,16 @@ func TestContent(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   raw, err := os.ReadFile(home + "/amc/auth.json")
+   var auth Authorization
+   auth.Raw, err = os.ReadFile(home + "/amc/auth.json")
    if err != nil {
       t.Fatal(err)
    }
-   auth, err := RawAuth.Unmarshal(raw)
-   if err != nil {
-      t.Fatal(err)
-   }
+   auth.Unmarshal()
    for _, test := range tests {
-      content, err := auth.Content(test.u)
+      var web WebAddress
+      web.Set(test.url)
+      content, err := auth.Content(web.Path)
       if err != nil {
          t.Fatal(err)
       }
