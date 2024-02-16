@@ -40,9 +40,6 @@ func (a Auth) Content(u URL) (*ContentCompiler, error) {
       return nil, err
    }
    defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
    content := new(ContentCompiler)
    if err := json.NewDecoder(res.Body).Decode(content); err != nil {
       return nil, err
@@ -92,15 +89,100 @@ func (a Auth) Playback(u URL) (*Playback, error) {
       return nil, err
    }
    defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
    var play Playback
    play.header = res.Header
    if err := json.NewDecoder(res.Body).Decode(&play.body); err != nil {
       return nil, err
    }
    return &play, nil
+}
+
+type ContentCompiler struct {
+   Data	struct {
+      Children []struct {
+         Properties json.RawMessage
+         Type string
+      }
+   }
+}
+
+type Playback struct {
+   header http.Header
+   body struct {
+      Data struct {
+         PlaybackJsonData struct {
+            Sources []Source
+         }
+      }
+   }
+}
+
+func (p Playback) RequestHeader() http.Header {
+   return http.Header{
+      "bcov-auth": {p.header.Get("X-AMCN-BC-JWT")},
+   }
+}
+
+type Source struct {
+   Key_Systems *struct {
+      Widevine struct {
+         License_URL string
+      } `json:"com.widevine.alpha"`
+   }
+   Src string
+   Type string
+}
+
+func (Playback) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Playback) ResponseBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (u URL) String() string {
+   return u.path
+}
+
+// https://www.amcplus.com/movies/queen-of-earth--1026724
+type URL struct {
+   path string // /movies/queen-of-earth--1026724
+   nid string // 1026724
+}
+
+func (u *URL) Set(s string) error {
+   var found bool
+   _, u.path, found = strings.Cut(s, "amcplus.com")
+   if !found {
+      return errors.New("amcplus.com")
+   }
+   _, u.nid, found = strings.Cut(s, "--")
+   if !found {
+      return errors.New("--")
+   }
+   return nil
+}
+
+func (p Playback) HttpsDash() (*Source, bool) {
+   for _, s := range p.body.Data.PlaybackJsonData.Sources {
+      if strings.HasPrefix(s.Src, "https://") {
+         if s.Type == "application/dash+xml" {
+            return &s, true
+         }
+      }
+   }
+   return nil, false
+}
+
+////////////////////////////////
+
+func (p Playback) RequestURL() (string, bool) {
+   v, err := p.HttpDash()
+   if err != nil {
+      return "", err
+   }
+   return v.Key_Systems.Widevine.License_URL, nil
 }
 
 func (a Auth) Refresh() (RawAuth, error) {
@@ -115,9 +197,6 @@ func (a Auth) Refresh() (RawAuth, error) {
       return nil, err
    }
    defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
    return io.ReadAll(res.Body)
 }
 
@@ -127,8 +206,6 @@ type Auth struct {
       Refresh_Token string
    }
 }
-
-type RawAuth []byte
 
 func (a Auth) Login(email, password string) (RawAuth, error) {
    body, err := json.Marshal(map[string]string{
@@ -163,97 +240,9 @@ func (a Auth) Login(email, password string) (RawAuth, error) {
       return nil, err
    }
    defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
    return io.ReadAll(res.Body)
 }
 
-func (p Playback) HttpDash() (*Source, error) {
-   for _, s := range p.body.Data.PlaybackJsonData.Sources {
-      if strings.HasPrefix(s.Src, "https://") {
-         if s.Type == "application/dash+xml" {
-            return &s, nil
-         }
-      }
-   }
-   return nil, errors.New("data.playbackJsonData.sources")
-}
-
-type ContentCompiler struct {
-   Data	struct {
-      Children []struct {
-         Properties json.RawMessage
-         Type string
-      }
-   }
-}
-
-func (Playback) RequestBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Playback) ResponseBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-type Playback struct {
-   header http.Header
-   body struct {
-      Data struct {
-         PlaybackJsonData struct {
-            Sources []Source
-         }
-      }
-   }
-}
-
-func (p Playback) RequestHeader() http.Header {
-   return http.Header{
-      "bcov-auth": {p.header.Get("X-AMCN-BC-JWT")},
-   }
-}
-
-type Source struct {
-   Key_Systems *struct {
-      Widevine struct {
-         License_URL string
-      } `json:"com.widevine.alpha"`
-   }
-   Src string
-   Type string
-}
-
-func (p Playback) RequestURL() (string, error) {
-   v, err := p.HttpDash()
-   if err != nil {
-      return "", err
-   }
-   return v.Key_Systems.Widevine.License_URL, nil
-}
-
-func (u URL) String() string {
-   return u.path
-}
-
-// https://www.amcplus.com/movies/queen-of-earth--1026724
-type URL struct {
-   path string // /movies/queen-of-earth--1026724
-   nid string // 1026724
-}
-
-func (u *URL) Set(s string) error {
-   var found bool
-   _, u.path, found = strings.Cut(s, "amcplus.com")
-   if !found {
-      return errors.New("amcplus.com")
-   }
-   _, u.nid, found = strings.Cut(s, "--")
-   if !found {
-      return errors.New("--")
-   }
-   return nil
-}
 func (r RawAuth) Unmarshal() (*Auth, error) {
    var a Auth
    err := json.Unmarshal(r, &a)
@@ -281,9 +270,5 @@ func Unauth() (RawAuth, error) {
       return nil, err
    }
    defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
    return io.ReadAll(res.Body)
 }
-
