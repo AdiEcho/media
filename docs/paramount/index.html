@@ -14,20 +14,19 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/paramount<span class="navbar-right">
-          v1.7.6 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.7.7 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package paramount</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/paramount&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
-  <li><a href="#DASH_CENC">func DASH_CENC(content_ID string) (string, error)</a></li>
-  <li><a href="#Downloadable">func Downloadable(content_ID string) (string, error)</a></li>
+  <li><a href="#DashCenc">func DashCenc(content_id string) (string, error)</a></li>
   <li>
-      <a href="#App_Token">type App_Token</a>
+      <a href="#AppToken">type AppToken</a>
       <ul>
-          <li><a href="#New_App_Token">func New_App_Token() (*App_Token, error)</a></li>
-          <li><a href="#App_Token.Item">func (at App_Token) Item(content_ID string) (*Item, error)</a></li>
-          <li><a href="#App_Token.Session">func (at App_Token) Session(content_ID string) (*Session, error)</a></li>
+          <li><a href="#AppToken.Item">func (at AppToken) Item(content_id string) (*Item, error)</a></li>
+          <li><a href="#AppToken.New">func (at *AppToken) New() error</a></li>
+          <li><a href="#AppToken.Session">func (at AppToken) Session(content_id string) (*SessionToken, error)</a></li>
           </ul>
       </li>
   <li>
@@ -42,41 +41,37 @@
           </ul>
       </li>
   <li>
-      <a href="#Session">type Session</a>
+      <a href="#SessionToken">type SessionToken</a>
       <ul>
-          <li><a href="#Session.Request_Body">func (Session) Request_Body(b []byte) ([]byte, error)</a></li>
-          <li><a href="#Session.Request_Header">func (s Session) Request_Header() http.Header</a></li>
-          <li><a href="#Session.Request_URL">func (s Session) Request_URL() (string, error)</a></li>
-          <li><a href="#Session.Response_Body">func (Session) Response_Body(b []byte) ([]byte, error)</a></li>
+          <li><a href="#SessionToken.RequestBody">func (SessionToken) RequestBody(b []byte) ([]byte, error)</a></li>
+          <li><a href="#SessionToken.RequestHeader">func (s SessionToken) RequestHeader() (http.Header, bool)</a></li>
+          <li><a href="#SessionToken.RequestUrl">func (s SessionToken) RequestUrl() (string, bool)</a></li>
+          <li><a href="#SessionToken.ResponseBody">func (SessionToken) ResponseBody(b []byte) ([]byte, error)</a></li>
           </ul>
       </li>
   </ul><h3 id="pkg-functions">Functions</h3>
-  <h3 id="DASH_CENC">func DASH_CENC</h3>
-    <pre class="chroma"><span class="kd">func</span> <span class="nf">DASH_CENC</span><span class="p">(</span><span class="nx">content_ID</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-    <h3 id="Downloadable">func Downloadable</h3>
-    <pre class="chroma"><span class="kd">func</span> <span class="nf">Downloadable</span><span class="p">(</span><span class="nx">content_ID</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="DashCenc">func DashCenc</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">DashCenc</span><span class="p">(</span><span class="nx">content_id</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
     <h3 id="pkg-types">Types</h3>
-  <h3 id="App_Token">type App_Token</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">App_Token</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="c1">// contains filtered or unexported fields
-</span><span class="c1"></span><span class="p">}</span></pre>
-    <h4 id="New_App_Token">func New_App_Token</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="nf">New_App_Token</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#App_Token"><span class="nx">App_Token</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="App_Token.Item">func (App_Token) Item</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">at</span> <a href="#App_Token"><span class="nx">App_Token</span></a><span class="p">)</span> <span class="nf">Item</span><span class="p">(</span><span class="nx">content_ID</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Item"><span class="nx">Item</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="App_Token.Session">func (App_Token) Session</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">at</span> <a href="#App_Token"><span class="nx">App_Token</span></a><span class="p">)</span> <span class="nf">Session</span><span class="p">(</span><span class="nx">content_ID</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Session"><span class="nx">Session</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="AppToken">type AppToken</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">AppToken</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+    <h4 id="AppToken.Item">func (AppToken) Item</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">at</span> <a href="#AppToken"><span class="nx">AppToken</span></a><span class="p">)</span> <span class="nf">Item</span><span class="p">(</span><span class="nx">content_id</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Item"><span class="nx">Item</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="AppToken.New">func (*AppToken) New</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">at</span> <span class="o">*</span><a href="#AppToken"><span class="nx">AppToken</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="AppToken.Session">func (AppToken) Session</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">at</span> <a href="#AppToken"><span class="nx">AppToken</span></a><span class="p">)</span> <span class="nf">Session</span><span class="p">(</span><span class="nx">content_id</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#SessionToken"><span class="nx">SessionToken</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h3 id="Item">type Item</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Item</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="Item.Air_Date_ISO"><span class="nx">Air_Date_ISO</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;_airDateISO&#34;`</span>
-	<span id="Item.Label"><span class="nx">Label</span></span>        <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="Item.Media_Type"><span class="nx">Media_Type</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;mediaType&#34;`</span>
-	<span id="Item.Series_Title"><span class="nx">Series_Title</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;seriesTitle&#34;`</span>
+	<span id="Item.AirDateIso"><span class="nx">AirDateIso</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;_airDateISO&#34;`</span>
+	<span id="Item.Label"><span class="nx">Label</span></span>       <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Item.MediaType"><span class="nx">MediaType</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Item.SeriesTitle"><span class="nx">SeriesTitle</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span class="c1">// these can be empty string, so we cannot use these:
 </span><span class="c1"></span>	<span class="c1">// int `json:&#34;,string&#34;`
 </span><span class="c1"></span>	<span class="c1">// json.Number
-</span><span class="c1"></span>	<span id="Item.Episode_Num"><span class="nx">Episode_Num</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;episodeNum&#34;`</span>
-	<span id="Item.Season_Num"><span class="nx">Season_Num</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;seasonNum&#34;`</span>
+</span><span class="c1"></span>	<span id="Item.EpisodeNum"><span class="nx">EpisodeNum</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Item.SeasonNum"><span class="nx">SeasonNum</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 <span class="p">}</span></pre>
     <h4 id="Item.Episode">func (Item) Episode</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <a href="#Item"><span class="nx">Item</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
@@ -90,19 +85,19 @@
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <a href="#Item"><span class="nx">Item</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h4 id="Item.Year">func (Item) Year</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <a href="#Item"><span class="nx">Item</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h3 id="Session">type Session</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">Session</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="Session.URL"><span class="nx">URL</span></span>        <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="Session.LS_Session"><span class="nx">LS_Session</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+  <h3 id="SessionToken">type SessionToken</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">SessionToken</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="SessionToken.URL"><span class="nx">URL</span></span>        <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="SessionToken.LS_Session"><span class="nx">LS_Session</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 <span class="p">}</span></pre>
-    <h4 id="Session.Request_Body">func (Session) Request_Body</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Session"><span class="nx">Session</span></a><span class="p">)</span> <span class="nf">Request_Body</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Session.Request_Header">func (Session) Request_Header</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#Session"><span class="nx">Session</span></a><span class="p">)</span> <span class="nf">Request_Header</span><span class="p">()</span> <a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a></pre>
-  <h4 id="Session.Request_URL">func (Session) Request_URL</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#Session"><span class="nx">Session</span></a><span class="p">)</span> <span class="nf">Request_URL</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Session.Response_Body">func (Session) Response_Body</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Session"><span class="nx">Session</span></a><span class="p">)</span> <span class="nf">Response_Body</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <h4 id="SessionToken.RequestBody">func (SessionToken) RequestBody</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#SessionToken"><span class="nx">SessionToken</span></a><span class="p">)</span> <span class="nf">RequestBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="SessionToken.RequestHeader">func (SessionToken) RequestHeader</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#SessionToken"><span class="nx">SessionToken</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="SessionToken.RequestUrl">func (SessionToken) RequestUrl</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#SessionToken"><span class="nx">SessionToken</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="SessionToken.ResponseBody">func (SessionToken) ResponseBody</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#SessionToken"><span class="nx">SessionToken</span></a><span class="p">)</span> <span class="nf">ResponseBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   </main>
     <hr>
     <footer>

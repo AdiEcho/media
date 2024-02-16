@@ -14,18 +14,18 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/nbc<span class="navbar-right">
-          v1.7.6 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.7.7 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package nbc</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/nbc&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
-  <li><a href="#pkg-variables">Variables</a></li><li>
+  <li>
       <a href="#Metadata">type Metadata</a>
       <ul>
-          <li><a href="#New_Metadata">func New_Metadata(guid int64) (*Metadata, error)</a></li>
           <li><a href="#Metadata.Episode">func (m Metadata) Episode() (string, bool)</a></li>
-          <li><a href="#Metadata.On_Demand">func (m Metadata) On_Demand() (*On_Demand, error)</a></li>
+          <li><a href="#Metadata.New">func (m *Metadata) New(guid int) error</a></li>
+          <li><a href="#Metadata.OnDemand">func (m Metadata) OnDemand() (*OnDemand, error)</a></li>
           <li><a href="#Metadata.Owner">func (Metadata) Owner() (string, bool)</a></li>
           <li><a href="#Metadata.Season">func (m Metadata) Season() (string, bool)</a></li>
           <li><a href="#Metadata.Show">func (m Metadata) Show() (string, bool)</a></li>
@@ -34,40 +34,36 @@
           </ul>
       </li>
   <li>
-      <a href="#On_Demand">type On_Demand</a>
+      <a href="#OnDemand">type OnDemand</a>
       </li>
   <li>
       <a href="#Video">type Video</a>
       <ul>
-          <li><a href="#Video.Request_Body">func (Video) Request_Body(b []byte) ([]byte, error)</a></li>
-          <li><a href="#Video.Request_Header">func (Video) Request_Header() http.Header</a></li>
-          <li><a href="#Video.Request_URL">func (v Video) Request_URL() (string, error)</a></li>
-          <li><a href="#Video.Response_Body">func (Video) Response_Body(b []byte) ([]byte, error)</a></li>
+          <li><a href="#Core">func Core() Video</a></li>
+          <li><a href="#Video.RequestBody">func (Video) RequestBody(b []byte) ([]byte, error)</a></li>
+          <li><a href="#Video.RequestHeader">func (Video) RequestHeader() (http.Header, bool)</a></li>
+          <li><a href="#Video.RequestUrl">func (v Video) RequestUrl() (string, bool)</a></li>
+          <li><a href="#Video.ResponseBody">func (Video) ResponseBody(b []byte) ([]byte, error)</a></li>
           </ul>
       </li>
-  </ul><h3 id="pkg-variables">Variables</h3>
-  <pre class="chroma"><span class="kd">var</span> <span id="Core"><span class="nx">Core</span></span> <span class="p">=</span> <a href="#Video"><span class="nx">Video</span></a><span class="p">{</span>
-	<span class="s">&#34;Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6&#34;</span><span class="p">,</span>
-	<span class="s">&#34;https://drmproxy.digitalsvc.apps.nbcuni.com/drm-proxy/license&#34;</span><span class="p">,</span>
-<span class="p">}</span></pre>
-  <h3 id="pkg-types">Types</h3>
+  </ul><h3 id="pkg-types">Types</h3>
   <h3 id="Metadata">type Metadata</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Metadata</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="Metadata.Air_Date"><span class="nx">Air_Date</span></span>           <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;airDate&#34;`</span>
-	<span id="Metadata.Episode_Number"><span class="nx">Episode_Number</span></span>     <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;episodeNumber&#34;`</span>
-	<span id="Metadata.MPX_Account_ID"><span class="nx">MPX_Account_ID</span></span>     <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>  <span class="s">`json:&#34;mpxAccountId,string&#34;`</span>
-	<span id="Metadata.MPX_GUID"><span class="nx">MPX_GUID</span></span>           <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>  <span class="s">`json:&#34;mpxGuid,string&#34;`</span>
-	<span id="Metadata.Programming_Type"><span class="nx">Programming_Type</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;programmingType&#34;`</span>
-	<span id="Metadata.Season_Number"><span class="nx">Season_Number</span></span>      <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;seasonNumber&#34;`</span>
-	<span id="Metadata.Secondary_Title"><span class="nx">Secondary_Title</span></span>    <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;secondaryTitle&#34;`</span>
-	<span id="Metadata.Series_Short_Title"><span class="nx">Series_Short_Title</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;seriesShortTitle&#34;`</span>
+	<span id="Metadata.AirDate"><span class="nx">AirDate</span></span>          <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Metadata.EpisodeNumber"><span class="nx">EpisodeNumber</span></span>    <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Metadata.MpxAccountId"><span class="nx">MpxAccountId</span></span>     <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a> <span class="s">`json:&#34;,string&#34;`</span>
+	<span id="Metadata.MpxGuid"><span class="nx">MpxGuid</span></span>          <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a> <span class="s">`json:&#34;,string&#34;`</span>
+	<span id="Metadata.ProgrammingType"><span class="nx">ProgrammingType</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Metadata.SeasonNumber"><span class="nx">SeasonNumber</span></span>     <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Metadata.SecondaryTitle"><span class="nx">SecondaryTitle</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Metadata.SeriesShortTitle"><span class="nx">SeriesShortTitle</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 <span class="p">}</span></pre>
-    <h4 id="New_Metadata">func New_Metadata</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="nf">New_Metadata</span><span class="p">(</span><span class="nx">guid</span> <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Metadata.Episode">func (Metadata) Episode</h4>
+    <h4 id="Metadata.Episode">func (Metadata) Episode</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h4 id="Metadata.On_Demand">func (Metadata) On_Demand</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">On_Demand</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#On_Demand"><span class="nx">On_Demand</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Metadata.New">func (*Metadata) New</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">(</span><span class="nx">guid</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Metadata.OnDemand">func (Metadata) OnDemand</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">OnDemand</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Metadata.Owner">func (Metadata) Owner</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Owner</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h4 id="Metadata.Season">func (Metadata) Season</h4>
@@ -78,23 +74,25 @@
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h4 id="Metadata.Year">func (Metadata) Year</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h3 id="On_Demand">type On_Demand</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">On_Demand</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="On_Demand.Playback_URL"><span class="nx">Playback_URL</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;playbackUrl&#34;`</span>
+  <h3 id="OnDemand">type OnDemand</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">OnDemand</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="OnDemand.PlaybackUrl"><span class="nx">PlaybackUrl</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 <span class="p">}</span></pre>
     <h3 id="Video">type Video</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Video</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="Video.DRM_Proxy_Secret"><span class="nx">DRM_Proxy_Secret</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="Video.DRM_Proxy_URL"><span class="nx">DRM_Proxy_URL</span></span>    <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Video.DrmProxyUrl"><span class="nx">DrmProxyUrl</span></span>    <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Video.DrmProxySecret"><span class="nx">DrmProxySecret</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 <span class="p">}</span></pre>
-    <h4 id="Video.Request_Body">func (Video) Request_Body</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">Request_Body</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Video.Request_Header">func (Video) Request_Header</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">Request_Header</span><span class="p">()</span> <a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a></pre>
-  <h4 id="Video.Request_URL">func (Video) Request_URL</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">Request_URL</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Video.Response_Body">func (Video) Response_Body</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">Response_Body</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <h4 id="Core">func Core</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="nf">Core</span><span class="p">()</span> <a href="#Video"><span class="nx">Video</span></a></pre>
+  <h4 id="Video.RequestBody">func (Video) RequestBody</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">RequestBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Video.RequestHeader">func (Video) RequestHeader</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="Video.RequestUrl">func (Video) RequestUrl</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="Video.ResponseBody">func (Video) ResponseBody</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">ResponseBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   </main>
     <hr>
     <footer>

@@ -1,34 +1,37 @@
 package main
 
 import (
-   "154.pages.dev/encoding/dash"
    "154.pages.dev/media/amc"
-   "154.pages.dev/rosso"
-   "net/http"
    "os"
-   "slices"
 )
+
+func (f flags) login() error {
+   var auth amc.Authorization
+   auth.Unauth()
+   auth.Unmarshal()
+   auth.Login(f.email, f.password)
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(home + "/amc/auth.json", auth.Raw, 0666)
+}
 
 func (f flags) download() error {
    home, err := os.UserHomeDir()
    if err != nil {
       return err
    }
-   raw, err := os.ReadFile(home + "/amc/auth.json")
+   var auth amc.Authorization
+   auth.Raw, err = os.ReadFile(home + "/amc/auth.json")
    if err != nil {
       return err
    }
-   auth, err := amc.Raw_Auth.Unmarshal(raw)
-   if err != nil {
-      return err
-   }
-   raw, err = auth.Refresh()
-   if err != nil {
-      return err
-   }
-   os.WriteFile(home + "/amc/auth.json", raw, 0666)
-   if !f.s.Info {
-      content, err := auth.Content(f.address)
+   auth.Unmarshal()
+   auth.Refresh()
+   os.WriteFile(home + "/amc/auth.json", auth.Raw, 0666)
+   if f.dash_id != "" {
+      content, err := auth.Content(f.web.Path)
       if err != nil {
          return err
       }
@@ -36,50 +39,20 @@ func (f flags) download() error {
       if err != nil {
          return err
       }
-      f.s.Name = stream.Name(video)
+      f.h.Name = video
    }
-   play, err := auth.Playback(f.address)
+   play, err := auth.Playback(f.web.NID)
    if err != nil {
       return err
    }
-   f.s.Poster = play
-   reps, err := func() ([]*dash.Representation, error) {
-      s, err := play.HTTP_DASH()
+   f.h.Poster = play
+   source, ok := play.HttpsDash()
+   if ok {
+      media, err := f.h.DashMedia(source.Src)
       if err != nil {
-         return nil, err
+         return err
       }
-      r, err := http.Get(s.Src)
-      if err != nil {
-         return nil, err
-      }
-      defer r.Body.Close()
-      
-      var media dash.Media
-      media.Decode(r.Body)
-      return media.Representation("")
-   }()
-   if err != nil {
-      return err
+      return f.h.DASH(media, f.dash_id)
    }
-   return f.s.DASH_Sofia(reps, index)
-}
-
-func (f flags) login() error {
-   raw, err := amc.Unauth()
-   if err != nil {
-      return err
-   }
-   auth, err := raw.Unmarshal()
-   if err != nil {
-      return err
-   }
-   raw, err = auth.Login(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(home + "/amc/auth.json", raw, 0666)
+   return nil
 }
