@@ -40,7 +40,6 @@ func (h HttpStream) DASH(media *dash.MPD, id string) error {
 }
 
 // wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-// wikipedia.org/wiki/HTTP_Live_Streaming
 type HttpStream struct {
    Base *url.URL
    Client_ID string
