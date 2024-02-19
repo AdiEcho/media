@@ -1,6 +1,6 @@
 # Android
 
-https://play.google.com/store/apps/details?id=com.mubi
+- https://play.google.com/store/apps/details?id=com.mubi
 
 ~~~
 downloads: 4.27 million
@@ -14,3 +14,19 @@ updated on: Feb 3, 2024
 version code: 29145256
 version name: 41.2
 ~~~
+
+1. 1.go
+2. https://mubi.com/android
+3. enter `link_code`
+4. ACTIVATE
+5. Email
+6. NEXT
+7. enter code
+8. 2.go with `auth_token`
+9. 3.go with `Bearer`
+
+
+
+
+
+
