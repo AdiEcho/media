@@ -1,7 +1,7 @@
 package amc
 
 import (
-   "154.pages.dev/rosso"
+   "154.pages.dev/encoding"
    "fmt"
    "os"
    "testing"
@@ -30,7 +30,7 @@ func TestContent(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(rosso.Name(video))
+      fmt.Println(encoding.Name(video))
       time.Sleep(time.Second)
    }
 }

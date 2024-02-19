@@ -2,8 +2,8 @@ package main
 
 import (
    "154.pages.dev/log"
+   "154.pages.dev/media/internal"
    "154.pages.dev/media/roku"
-   "154.pages.dev/rosso"
    "flag"
    "os"
    "path/filepath"
@@ -12,7 +12,7 @@ import (
 type flags struct {
    roku_id string
    dash_id string
-   h rosso.HttpStream
+   h internal.HttpStream
    v log.Level
 }
 

@@ -1,7 +1,7 @@
 package roku
 
 import (
-   "154.pages.dev/rosso"
+   "154.pages.dev/encoding"
    "fmt"
    "testing"
    "time"
@@ -14,7 +14,7 @@ func TestContent(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(rosso.Name(home))
+      fmt.Println(encoding.Name(home))
       time.Sleep(time.Second)
    }
 }

@@ -2,7 +2,7 @@ package main
 
 import (
    "154.pages.dev/log"
-   "154.pages.dev/rosso"
+   "154.pages.dev/media/internal"
    "flag"
    "os"
    "path/filepath"
@@ -10,7 +10,7 @@ import (
 
 type flags struct {
    dash_id string
-   h rosso.HttpStream
+   h internal.HttpStream
    nbc_id int
    v log.Level
 }

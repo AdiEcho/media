@@ -1,6 +1,7 @@
-package rosso
+package internal
 
 import (
+   "154.pages.dev/encoding"
    "154.pages.dev/encoding/dash"
    "154.pages.dev/sofia"
    "154.pages.dev/widevine"
@@ -43,7 +44,7 @@ func (h HttpStream) DASH(media *dash.MPD, id string) error {
 type HttpStream struct {
    Base *url.URL
    Client_ID string
-   Name Namer
+   Name encoding.Namer
    Poster widevine.Poster
    Private_Key string
 }

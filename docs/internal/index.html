@@ -9,23 +9,44 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
     <link rel="shortcut icon" href="../_/icons/favicon.ico">
-    <title>154.pages.dev/media/internal</title>
+    <title>internal</title>
 </head>
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/internal<span class="navbar-right">
-          <a href="..">Root</a></span>
+          v1.7.8 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
-    <main><h3 id="pkg-directories">Directories</h3>
+    <main><h2 id="pkg-overview">package internal</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/internal&#34;</span></pre>
+<h3 id="pkg-index">Index</h3>
+<ul>
+  <li>
+      <a href="#HttpStream">type HttpStream</a>
+      <ul>
+          <li><a href="#HttpStream.DASH">func (h HttpStream) DASH(media *dash.MPD, id string) error</a></li>
+          <li><a href="#HttpStream.DashMedia">func (h *HttpStream) DashMedia(uri string) (*dash.MPD, error)</a></li>
+          </ul>
+      </li>
+  </ul><h3 id="pkg-types">Types</h3>
+  <h3 id="HttpStream">type HttpStream</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">HttpStream</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="HttpStream.Base"><span class="nx">Base</span></span>        <span class="o">*</span><a href="https://pkg.go.dev/net/url"><span class="nx">url</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/url#URL"><span class="nx">URL</span></a>
+	<span id="HttpStream.Client_ID"><span class="nx">Client_ID</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="HttpStream.Name"><span class="nx">Name</span></span>        <a href="https://pkg.go.dev/154.pages.dev/encoding"><span class="nx">encoding</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding#Namer"><span class="nx">Namer</span></a>
+	<span id="HttpStream.Poster"><span class="nx">Poster</span></span>      <a href="https://pkg.go.dev/154.pages.dev/widevine"><span class="nx">widevine</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/widevine#Poster"><span class="nx">Poster</span></a>
+	<span id="HttpStream.Private_Key"><span class="nx">Private_Key</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <p>wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+<h4 id="HttpStream.DASH">func (HttpStream) DASH</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">h</span> <a href="#HttpStream"><span class="nx">HttpStream</span></a><span class="p">)</span> <span class="nf">DASH</span><span class="p">(</span><span class="nx">media</span> <span class="o">*</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash"><span class="nx">dash</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash#MPD"><span class="nx">MPD</span></a><span class="p">,</span> <span class="nx">id</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="HttpStream.DashMedia">func (*HttpStream) DashMedia</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">h</span> <span class="o">*</span><a href="#HttpStream"><span class="nx">HttpStream</span></a><span class="p">)</span> <span class="nf">DashMedia</span><span class="p">(</span><span class="nx">uri</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash"><span class="nx">dash</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash#MPD"><span class="nx">MPD</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="pkg-directories">Directories</h3>
 
 <table>
   <tbody>
     <tr>
         <td><a href="amc">amc</a></td>
-        <td></td>
-      </tr>
-    <tr>
-        <td><a href="cbc">cbc</a></td>
         <td></td>
       </tr>
     <tr>
@@ -42,10 +63,6 @@
       </tr>
     <tr>
         <td><a href="roku">roku</a></td>
-        <td></td>
-      </tr>
-    <tr>
-        <td><a href="youtube">youtube</a></td>
         <td></td>
       </tr>
     </tbody>

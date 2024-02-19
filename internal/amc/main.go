@@ -2,8 +2,8 @@ package main
 
 import (
    "154.pages.dev/media/amc"
+   "154.pages.dev/media/internal"
    "154.pages.dev/log"
-   "154.pages.dev/rosso"
    "flag"
    "os"
    "path/filepath"
@@ -12,7 +12,7 @@ import (
 type flags struct {
    dash_id string
    email string
-   h rosso.HttpStream
+   h internal.HttpStream
    password string
    v log.Level
    web amc.WebAddress

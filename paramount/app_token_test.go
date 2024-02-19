@@ -1,7 +1,7 @@
 package paramount
 
 import (
-   "154.pages.dev/rosso"
+   "154.pages.dev/encoding"
    "154.pages.dev/widevine"
    "encoding/base64"
    "fmt"
@@ -22,7 +22,7 @@ func TestItem(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(rosso.Name(item))
+      fmt.Println(encoding.Name(item))
       time.Sleep(time.Second)
    }
 }
