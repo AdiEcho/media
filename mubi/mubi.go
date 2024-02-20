@@ -10,6 +10,33 @@ import (
    "strings"
 )
 
+type SecureUrl struct {
+   URL string
+}
+
+func (w WebAddress) Film() (*FilmResponse, error) {
+   req, err := http.NewRequest(
+      "GET", "https://api.mubi.com/v3/films/" + w.s, nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "Client": {client},
+      "Client-Country": {ClientCountry},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   var film FilmResponse
+   if err := json.NewDecoder(res.Body).Decode(&film.s); err != nil {
+      return nil, err
+   }
+   return &film, nil
+}
+
 type FilmResponse struct {
    s struct {
       ID int64
@@ -40,10 +67,6 @@ func (f FilmResponse) Title() (string, bool) {
 
 func (f FilmResponse) Year() (string, bool) {
    return strconv.Itoa(f.s.Year), true
-}
-
-type SecureUrl struct {
-   URL string
 }
 
 func (c LinkCode) Authenticate() (*Authenticate, error) {
@@ -150,27 +173,4 @@ func (w *WebAddress) Set(s string) error {
 
 type WebAddress struct {
    s string
-}
-
-func (w WebAddress) film() (*FilmResponse, error) {
-   req, err := http.NewRequest(
-      "GET", "https://api.mubi.com/v3/films/" + w.s, nil,
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header = http.Header{
-      "Client": {client},
-      "Client-Country": {ClientCountry},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   var film FilmResponse
-   if err := json.NewDecoder(res.Body).Decode(&film.s); err != nil {
-      return nil, err
-   }
-   return &film, nil
 }

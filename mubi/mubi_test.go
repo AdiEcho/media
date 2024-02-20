@@ -7,6 +7,29 @@ import (
    "testing"
 )
 
+// mubi.com/films/325455/player
+// mubi.com/films/passages-2022
+const passages_2022 = 325455
+
+func TestSecure(t *testing.T) {
+   var (
+      auth Authenticate
+      err error
+   )
+   auth.Raw, err = os.ReadFile("authenticate.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   auth.Unmarshal()
+   var film FilmResponse
+   film.s.ID = passages_2022
+   secure, err := auth.URL(&film)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", secure)
+}
+
 // mubi.com/films/190/player
 // mubi.com/films/dogville
 var dogvilles = []string{
@@ -24,7 +47,7 @@ func TestFilm(t *testing.T) {
          t.Fatal(err)
       }
       if i == 0 {
-         film, err := web.film()
+         film, err := web.Film()
          if err != nil {
             t.Fatal(err)
          }
@@ -32,27 +55,6 @@ func TestFilm(t *testing.T) {
       }
       fmt.Println(web)
    }
-}
-
-// mubi.com/films/325455/player
-// mubi.com/films/passages-2022
-const passages_2022 = 325455
-
-func TestSecure(t *testing.T) {
-   var (
-      auth Authenticate
-      err error
-   )
-   auth.Raw, err = os.ReadFile("authenticate.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth.Unmarshal()
-   secure, err := auth.Secure(passages_2022)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", secure)
 }
 
 func TestAuthenticate(t *testing.T) {

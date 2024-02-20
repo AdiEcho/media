@@ -9,10 +9,10 @@ import (
    "strings"
 )
 
-func (a Authenticate) Secure(film int64) (*SecureUrl, error) {
+func (a Authenticate) URL(f *FilmResponse) (*SecureUrl, error) {
    address := func() string {
       b := []byte("https://api.mubi.com/v3/films/")
-      b = strconv.AppendInt(b, film, 10)
+      b = strconv.AppendInt(b, f.s.ID, 10)
       b = append(b, "/viewing/secure_url"...)
       return string(b)
    }

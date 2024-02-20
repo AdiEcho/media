@@ -1,15 +1,12 @@
 package main
 
 import (
-   "154.pages.dev/encoding"
    "154.pages.dev/log"
    "154.pages.dev/media/internal"
    "154.pages.dev/media/mubi"
    "flag"
-   "fmt"
    "os"
    "path/filepath"
-   "testing"
 )
 
 type flags struct {
@@ -23,12 +20,17 @@ type flags struct {
 }
 
 func main() {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      panic(err)
-   }
-   f.home = home + "/mubi/"
-   home = filepath.ToSlash(home) + "/widevine/"
+   var (
+      f flags
+      home string
+   )
+   f.home, home = func() (string, string) {
+      s, err := os.UserHomeDir()
+      if err != nil {
+         panic(err)
+      }
+      return s + "/mubi/", filepath.ToSlash(s) + "/widevine/"
+   }()
    flag.Var(&f.web, "a", "address")
    flag.BoolVar(&f.auth, "auth", false, "authenticate")
    flag.StringVar(&f.h.Client_ID, "c", home+"client_id.bin", "client ID")
