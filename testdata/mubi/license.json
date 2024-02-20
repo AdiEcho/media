@@ -1,0 +1,86 @@
+{
+  "status": "OK",
+  "status_message": "",
+  "license": "CAISmgIKTwoQUxXoMIy9R9wbpVZSkVCUVRImChBTFegwjL1H3BulVlKRUJRVEAEyEDpWYnQ1/KD+H/r5o7xPE/AaACABKAA4gJqeAUCAxgpIwZTLrgYSEQgBEAEYACCAmp4BKIDGCmABGlYSENOIB8LCbBtOpb76zRpjsioaQHP8Ev9mIDZ/dzawIVQGSAT4aenGDeq9EnVaDrfDcstRvi9VuoVf4vicyHI+LHDG0U+zU2yK9rAe+av6RKWMa0ggARpSChAtAGTdffNDIpHlw6GXVf1MEhBIgRah0Zb6gJBpfmcgyJlHGhCVZ2CrqogBp5DA16/Tb2qzIAIoAUISChBrYzE2AAAAAAkAnBGAAAAIYgJIRCDBlMuuBjgAUAIaIE0i9dXfklKk1BePGRcwcEAZTTBQeVHOuuKmtyRarkbMIoABZoimHModjMRqgr3VKPkTJJs45uhdo9YzMm8eu+neC2WG8durq55mCa4EdIvdCsoNkNL2qrW2YHhW6NqFZoUvubKwvYArRIUMmQJYAI1Tuxzp2EfCZE8E3UQmlwISOI3+ucclXVatfjvUtXtGtSWLrKbQGyJvEjdY5G9lZAZECog6MgowMTkuMC4xIEJ1aWx0IG9uIEphbiA1IDIwMjQgMTI6NTU6MTIgKDE3MDQ0ODgxMTIpQAFKsAEAAAACAAAAsAAFABAJAJwRm4uiAwAAAGgAAAAQAAAAegAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAnjQAAAAAAAAKjAAAAAAAAAAAAAAAAAQAAAMAAAAAQAAAA0gAAABAAAADkAAAAEAAAAAAAAAAAAAAA/AAAABA2zSANcaH4FRKonB4MHe2myNzrK5rvN/iWf+9xbP+P1lgB",
+  "license_metadata": {
+    "content_id": "TFFCazNYM3pReUtSNWNPaGwxWDlUQT09",
+    "license_type": "STREAMING",
+    "request_type": "NEW"
+  },
+  "supported_tracks": [
+    {
+      "type": "HD",
+      "key_id": "LQBk3X3zQyKR5cOhl1X9TA=="
+    }
+  ],
+  "make": "Google",
+  "model": "ChromeCDM-Win-x64-9",
+  "security_level": 3,
+  "internal_status": 0,
+  "session_state": {
+    "license_id": {
+      "request_id": "UxXoMIy9R9wbpVZSkVCUVQ==",
+      "session_id": "ChBTFegwjL1H3BulVlKRUJRVEAEyEDpWYnQ1/KD+H/r5o7xPE/A=",
+      "purchase_id": "",
+      "type": "STREAMING",
+      "version": 0,
+      "original_rental_duration_seconds": 2592000,
+      "original_playback_duration_seconds": 172800,
+      "original_start_time_seconds": 1708313153
+    },
+    "signing_key": "PnsdrflsvaAf8yF5UFKMto+i8xmRXPQActjj7yaKCUYq0dffZHiN//JR6u1ulQg6fPN6IWDQ3eymttkOUyoGgw==",
+    "keybox_system_id": 26830,
+    "license_counter": 0,
+    "secure_data_path_hw_decode_applied": false
+  },
+  "drm_cert_serial_number": "MGNlODFjNmNmMzkwZWYyNGJlM2YzZGEzZTg5ZTQ0NzU=",
+  "device_whitelist_state": "DEVICE_NOT_WHITELISTED",
+  "message_type": "LICENSE",
+  "platform": "windows",
+  "device_state": "RELEASED",
+  "pssh_data": {
+    "key_id": [
+      "LQBk3X3zQyKR5cOhl1X9TA=="
+    ],
+    "content_id": "TFFCazNYM3pReUtSNWNPaGwxWDlUQT09"
+  },
+  "client_max_hdcp_version": "HDCP_V1",
+  "client_info": [
+    {
+      "name": "architecture_name",
+      "value": "x86-64"
+    },
+    {
+      "name": "company_name",
+      "value": "Google"
+    },
+    {
+      "name": "model_name",
+      "value": "ChromeCDM"
+    },
+    {
+      "name": "platform_name",
+      "value": "Windows"
+    },
+    {
+      "name": "widevine_cdm_version",
+      "value": "4.10.2710.0"
+    }
+  ],
+  "platform_verification_status": "PLATFORM_SOFTWARE_VERIFIED",
+  "content_owner": "castlabs",
+  "content_provider": "castlabs",
+  "system_id": 26830,
+  "oem_crypto_api_version": 16,
+  "resource_rating_tier": 0,
+  "service_version_info": {
+    "license_sdk_version": "19.0.1 Built on Jan 5 2024 12:55:12 (1704488112)",
+    "license_service_version": "widevine.license-server_20240105.06_p0"
+  },
+  "soc": "x64",
+  "client_capabilities": {
+    "session_token": true,
+    "video_resolution_constraints": true,
+    "supported_key_type": []
+  }
+}

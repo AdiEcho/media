@@ -2,8 +2,10 @@ package mubi
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "strconv"
+   "strings"
 )
 
 type secure_url struct {
@@ -23,14 +25,19 @@ func (a authenticate) secure(film int64) (*secure_url, error) {
    }
    req.Header = http.Header{
       "Authorization": {"Bearer " + a.s.Token},
-      "Client": {"web"},
-      "Client-Country": {client_country},
+      "Client": {client},
+      "Client-Country": {ClientCountry},
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
    secure := new(secure_url)
    if err := json.NewDecoder(res.Body).Decode(secure); err != nil {
       return nil, err

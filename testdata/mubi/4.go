@@ -1,4 +1,4 @@
-package mubi
+package main
 
 import (
    "io"
@@ -17,7 +17,7 @@ const (
    user_id = 16454561
 )
 
-func Four() {
+func main() {
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"

@@ -2,17 +2,15 @@ package mubi
 
 import (
    "bytes"
+   "encoding/base64"
    "encoding/json"
    "errors"
    "io"
    "net/http"
 )
 
-type authenticate struct {
-   s struct {
-      Token string
-   }
-   Raw []byte
+func (a *authenticate) unmarshal() error {
+   return json.Unmarshal(a.Raw, &a.s)
 }
 
 func (c linkCode) authenticate() (*authenticate, error) {
@@ -27,9 +25,8 @@ func (c linkCode) authenticate() (*authenticate, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Client": {"android"},
-      "Client-Country": {client_country},
-      "Client-Device-Identifier": {"!"},
+      "Client": {client},
+      "Client-Country": {ClientCountry},
       "Client-Version": {"!"},
       "Content-Type": {"application/json"},
    }
@@ -51,6 +48,41 @@ func (c linkCode) authenticate() (*authenticate, error) {
    return &auth, nil
 }
 
-func (a *authenticate) unmarshal() error {
-   return json.Unmarshal(a.Raw, &a.s)
+func (authenticate) RequestUrl() (string, bool) {
+   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
+}
+
+func (authenticate) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+type authenticate struct {
+   s struct {
+      Token string
+      User struct {
+         ID int
+      }
+   }
+   Raw []byte
+}
+
+func (a authenticate) RequestHeader() (http.Header, error) {
+   value := map[string]any{
+      "merchant": "mubi",
+      "sessionId": a.s.Token,
+      "userId": a.s.User.ID,
+   }
+   text, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   head := make(http.Header)
+   head.Set("Dt-Custom-Data", base64.StdEncoding.EncodeToString(text))
+   return head, nil
+}
+
+///////////
+
+func (authenticate) ResponseBody(b []byte) ([]byte, error) {
+   return b, nil
 }

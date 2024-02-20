@@ -2,12 +2,16 @@ package mubi
 
 import (
    "encoding/json"
+   "errors"
    "io"
    "net/http"
    "strings"
 )
 
-var client_country = "US"
+// "android" requires header Client-Device-Identifier
+const client = "web"
+
+var ClientCountry = "US"
 
 func (c *linkCode) New() error {
    req, err := http.NewRequest("GET", "https://api.mubi.com/v3/link_code", nil)
@@ -15,9 +19,8 @@ func (c *linkCode) New() error {
       return err
    }
    req.Header = http.Header{
-      "Client": {"android"},
-      "Client-Country": {client_country},
-      "Client-Device-Identifier": {"!"},
+      "Client": {client},
+      "Client-Country": {ClientCountry},
       "Client-Version": {"!"},
    }
    res, err := http.DefaultClient.Do(req)
@@ -25,6 +28,11 @@ func (c *linkCode) New() error {
       return err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return errors.New(b.String())
+   }
    c.Raw, err = io.ReadAll(res.Body)
    if err != nil {
       return err
