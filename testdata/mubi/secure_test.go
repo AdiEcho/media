@@ -1,6 +1,7 @@
 package mubi
 
 import (
+   "fmt"
    "os"
    "testing"
 )
@@ -19,10 +20,9 @@ func TestSecure(t *testing.T) {
       t.Fatal(err)
    }
    auth.unmarshal()
-   res, err := auth.secure_url(passages_2022)
+   secure, err := auth.secure(passages_2022)
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   fmt.Printf("%+v\n", secure)
 }
