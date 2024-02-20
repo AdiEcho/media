@@ -9,7 +9,7 @@ import (
    "strings"
 )
 
-func (a authenticate) secure(film int64) (*secure_url, error) {
+func (a Authenticate) Secure(film int64) (*SecureUrl, error) {
    address := func() string {
       b := []byte("https://api.mubi.com/v3/films/")
       b = strconv.AppendInt(b, film, 10)
@@ -35,7 +35,7 @@ func (a authenticate) secure(film int64) (*secure_url, error) {
       res.Write(&b)
       return nil, errors.New(b.String())
    }
-   secure := new(secure_url)
+   secure := new(SecureUrl)
    if err := json.NewDecoder(res.Body).Decode(secure); err != nil {
       return nil, err
    }
@@ -43,15 +43,15 @@ func (a authenticate) secure(film int64) (*secure_url, error) {
 }
 
 // final slash is needed
-func (authenticate) RequestUrl() (string, bool) {
+func (Authenticate) RequestUrl() (string, bool) {
    return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
 }
 
-func (authenticate) RequestBody(b []byte) ([]byte, error) {
+func (Authenticate) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (authenticate) ResponseBody(b []byte) ([]byte, error) {
+func (Authenticate) ResponseBody(b []byte) ([]byte, error) {
    var s struct {
       License []byte
    }
@@ -62,7 +62,7 @@ func (authenticate) ResponseBody(b []byte) ([]byte, error) {
    return s.License, nil
 }
 
-func (a authenticate) RequestHeader() (http.Header, error) {
+func (a Authenticate) RequestHeader() (http.Header, error) {
    value := map[string]any{
       "merchant": "mubi",
       "sessionId": a.s.Token,
@@ -77,11 +77,11 @@ func (a authenticate) RequestHeader() (http.Header, error) {
    return head, nil
 }
 
-func (a *authenticate) unmarshal() error {
+func (a *Authenticate) Unmarshal() error {
    return json.Unmarshal(a.Raw, &a.s)
 }
 
-type authenticate struct {
+type Authenticate struct {
    s struct {
       Token string
       User struct {

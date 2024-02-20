@@ -12,70 +12,23 @@ import (
    "testing"
 )
 
-func TestFilm(t *testing.T) {
-   for i, dogville := range dogvilles {
-      var web WebAddress
-      err := web.Set(dogville)
-      if err != nil {
-         t.Fatal(err)
-      }
-      if i == 0 {
-         film, err := web.film()
-         if err != nil {
-            t.Fatal(err)
-         }
-         fmt.Println(encoding.Name(film))
-      }
-      fmt.Println(web)
-   }
-}
-
-func TestSecure(t *testing.T) {
-   var (
-      auth authenticate
-      err error
-   )
-   auth.Raw, err = os.ReadFile("authenticate.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth.unmarshal()
-   secure, err := auth.secure(passages_2022)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", secure)
-}
-
-func TestAuthenticate(t *testing.T) {
-   var (
-      code link_code
-      err error
-   )
-   code.Raw, err = os.ReadFile("code.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   code.unmarshal()
-   auth, err := code.authenticate()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("authenticate.json", auth.Raw, 0666)
-}
-
-func TestCode(t *testing.T) {
-   var code link_code
-   err := code.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("code.json", code.Raw, 0666)
-   code.unmarshal()
-   fmt.Println(code)
-}
-
 func (f flags) download() error {
+   var (
+      auth mubi.Authenticate
+      err error
+   )
+   auth.Raw, err = os.ReadFile(f.home + "authenticate.json")
+   if err != nil {
+      return err
+   }
+   auth.Unmarshal()
+   // FIXME
+   secure, err := auth.Secure(passages_2022)
+   if err != nil {
+      t.Fatal(err)
+   }
+   // NEW END
+   // OLD BEGIN
    var meta mubi.Metadata
    err := meta.New(f.mubi_id)
    if err != nil {
@@ -94,4 +47,41 @@ func (f flags) download() error {
       f.h.Poster = mubi.Core()
    }
    return f.h.DASH(media, f.dash_id)
+   // OLD END
+   // NEW BEGIN
+   film, err := web.film()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(encoding.Name(film))
+   // NEW END
+}
+
+func (f flags) write_code() error {
+   var code mubi.LinkCode
+   err := code.New()
+   if err != nil {
+      return err
+   }
+   os.WriteFile(f.home + "link_code.json", code.Raw, 0666)
+   code.Unmarshal()
+   fmt.Println(code)
+   return nil
+}
+
+func (f flags) write_auth() error {
+   var (
+      code mubi.LinkCode
+      err error
+   )
+   code.Raw, err = os.ReadFile(f.home + "link_code.json")
+   if err != nil {
+      return err
+   }
+   code.Unmarshal()
+   auth, err := code.Authenticate()
+   if err != nil {
+      return err
+   }
+   os.WriteFile(f.home + "authenticate.json", auth.Raw, 0666)
 }

@@ -7,6 +7,7 @@ import (
    "testing"
 )
 
+// mubi.com/films/190/player
 // mubi.com/films/dogville
 var dogvilles = []string{
    "/films/dogville",
@@ -39,15 +40,15 @@ const passages_2022 = 325455
 
 func TestSecure(t *testing.T) {
    var (
-      auth authenticate
+      auth Authenticate
       err error
    )
    auth.Raw, err = os.ReadFile("authenticate.json")
    if err != nil {
       t.Fatal(err)
    }
-   auth.unmarshal()
-   secure, err := auth.secure(passages_2022)
+   auth.Unmarshal()
+   secure, err := auth.Secure(passages_2022)
    if err != nil {
       t.Fatal(err)
    }
@@ -56,15 +57,15 @@ func TestSecure(t *testing.T) {
 
 func TestAuthenticate(t *testing.T) {
    var (
-      code link_code
+      code LinkCode
       err error
    )
    code.Raw, err = os.ReadFile("code.json")
    if err != nil {
       t.Fatal(err)
    }
-   code.unmarshal()
-   auth, err := code.authenticate()
+   code.Unmarshal()
+   auth, err := code.Authenticate()
    if err != nil {
       t.Fatal(err)
    }
@@ -72,12 +73,12 @@ func TestAuthenticate(t *testing.T) {
 }
 
 func TestCode(t *testing.T) {
-   var code link_code
+   var code LinkCode
    err := code.New()
    if err != nil {
       t.Fatal(err)
    }
    os.WriteFile("code.json", code.Raw, 0666)
-   code.unmarshal()
+   code.Unmarshal()
    fmt.Println(code)
 }

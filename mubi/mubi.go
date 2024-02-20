@@ -10,35 +10,43 @@ import (
    "strings"
 )
 
-func (film_response) Owner() (string, bool) {
+type FilmResponse struct {
+   s struct {
+      ID int64
+      Title string
+      Year int
+   }
+}
+
+func (FilmResponse) Owner() (string, bool) {
    return "", false
 }
 
-func (film_response) Show() (string, bool) {
+func (FilmResponse) Show() (string, bool) {
    return "", false
 }
 
-func (film_response) Season() (string, bool) {
+func (FilmResponse) Season() (string, bool) {
    return "", false
 }
 
-func (film_response) Episode() (string, bool) {
+func (FilmResponse) Episode() (string, bool) {
    return "", false
 }
 
-func (f film_response) Title() (string, bool) {
+func (f FilmResponse) Title() (string, bool) {
    return f.s.Title, true
 }
 
-func (f film_response) Year() (string, bool) {
+func (f FilmResponse) Year() (string, bool) {
    return strconv.Itoa(f.s.Year), true
 }
 
-type secure_url struct {
+type SecureUrl struct {
    URL string
 }
 
-func (c link_code) authenticate() (*authenticate, error) {
+func (c LinkCode) Authenticate() (*Authenticate, error) {
    body, err := json.Marshal(map[string]string{"auth_token": c.s.Auth_Token})
    if err != nil {
       return nil, err
@@ -64,7 +72,7 @@ func (c link_code) authenticate() (*authenticate, error) {
       res.Write(&b)
       return nil, errors.New(b.String())
    }
-   var auth authenticate
+   var auth Authenticate
    auth.Raw, err = io.ReadAll(res.Body)
    if err != nil {
       return nil, err
@@ -79,7 +87,7 @@ const client = "web"
 
 var ClientCountry = "US"
 
-func (c *link_code) New() error {
+func (c *LinkCode) New() error {
    req, err := http.NewRequest("GET", "https://api.mubi.com/v3/link_code", nil)
    if err != nil {
       return err
@@ -105,7 +113,7 @@ func (c *link_code) New() error {
    return nil
 }
 
-func (c link_code) String() string {
+func (c LinkCode) String() string {
    var b strings.Builder
    b.WriteString("TO LOG IN AND START WATCHING\n")
    b.WriteString("Go to\n")
@@ -115,7 +123,7 @@ func (c link_code) String() string {
    return b.String()
 }
 
-type link_code struct {
+type LinkCode struct {
    Raw []byte
    s struct {
       Auth_Token string
@@ -123,7 +131,7 @@ type link_code struct {
    }
 }
 
-func (c *link_code) unmarshal() error {
+func (c *LinkCode) Unmarshal() error {
    return json.Unmarshal(c.Raw, &c.s)
 }
 
@@ -140,18 +148,11 @@ func (w *WebAddress) Set(s string) error {
    return nil
 }
 
-type film_response struct {
-   s struct {
-      Title string
-      Year int
-   }
-}
-
 type WebAddress struct {
    s string
 }
 
-func (w WebAddress) film() (*film_response, error) {
+func (w WebAddress) film() (*FilmResponse, error) {
    req, err := http.NewRequest(
       "GET", "https://api.mubi.com/v3/films/" + w.s, nil,
    )
@@ -167,7 +168,7 @@ func (w WebAddress) film() (*film_response, error) {
       return nil, err
    }
    defer res.Body.Close()
-   var film film_response
+   var film FilmResponse
    if err := json.NewDecoder(res.Body).Decode(&film.s); err != nil {
       return nil, err
    }

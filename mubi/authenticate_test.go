@@ -34,12 +34,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var auth authenticate
+   var auth Authenticate
    auth.Raw, err = os.ReadFile("authenticate.json")
    if err != nil {
       t.Fatal(err)
    }
-   auth.unmarshal()
+   auth.Unmarshal()
    license, err := module.License(auth)
    if err != nil {
       t.Fatal(err)
