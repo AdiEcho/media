@@ -27,7 +27,6 @@ func (c linkCode) authenticate() (*authenticate, error) {
    req.Header = http.Header{
       "Client": {client},
       "Client-Country": {ClientCountry},
-      "Client-Version": {"!"},
       "Content-Type": {"application/json"},
    }
    res, err := http.DefaultClient.Do(req)
@@ -48,14 +47,6 @@ func (c linkCode) authenticate() (*authenticate, error) {
    return &auth, nil
 }
 
-func (authenticate) RequestUrl() (string, bool) {
-   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
-}
-
-func (authenticate) RequestBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 type authenticate struct {
    s struct {
       Token string
@@ -64,6 +55,25 @@ type authenticate struct {
       }
    }
    Raw []byte
+}
+
+func (authenticate) RequestUrl() (string, bool) {
+   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
+}
+
+func (authenticate) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (authenticate) ResponseBody(b []byte) ([]byte, error) {
+   var s struct {
+      License []byte
+   }
+   err := json.Unmarshal(b, &s)
+   if err != nil {
+      return nil, err
+   }
+   return s.License, nil
 }
 
 func (a authenticate) RequestHeader() (http.Header, error) {
@@ -79,10 +89,4 @@ func (a authenticate) RequestHeader() (http.Header, error) {
    head := make(http.Header)
    head.Set("Dt-Custom-Data", base64.StdEncoding.EncodeToString(text))
    return head, nil
-}
-
-///////////
-
-func (authenticate) ResponseBody(b []byte) ([]byte, error) {
-   return b, nil
 }

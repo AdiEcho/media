@@ -8,7 +8,9 @@ import (
    "strings"
 )
 
-// "android" requires header Client-Device-Identifier
+// "android" requires headers:
+// Client-Device-Identifier
+// Client-Version
 const client = "web"
 
 var ClientCountry = "US"
@@ -21,7 +23,6 @@ func (c *linkCode) New() error {
    req.Header = http.Header{
       "Client": {client},
       "Client-Country": {ClientCountry},
-      "Client-Version": {"!"},
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
