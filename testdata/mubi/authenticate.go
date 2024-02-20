@@ -9,6 +9,41 @@ import (
    "net/http"
 )
 
+// final slash is needed
+func (authenticate) RequestUrl() (string, bool) {
+   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
+}
+
+func (authenticate) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (authenticate) ResponseBody(b []byte) ([]byte, error) {
+   var s struct {
+      License []byte
+   }
+   err := json.Unmarshal(b, &s)
+   if err != nil {
+      return nil, err
+   }
+   return s.License, nil
+}
+
+func (a authenticate) RequestHeader() (http.Header, error) {
+   value := map[string]any{
+      "merchant": "mubi",
+      "sessionId": a.s.Token,
+      "userId": a.s.User.ID,
+   }
+   text, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   head := make(http.Header)
+   head.Set("Dt-Custom-Data", base64.StdEncoding.EncodeToString(text))
+   return head, nil
+}
+
 func (a *authenticate) unmarshal() error {
    return json.Unmarshal(a.Raw, &a.s)
 }
@@ -55,38 +90,4 @@ type authenticate struct {
       }
    }
    Raw []byte
-}
-
-func (authenticate) RequestUrl() (string, bool) {
-   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
-}
-
-func (authenticate) RequestBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (authenticate) ResponseBody(b []byte) ([]byte, error) {
-   var s struct {
-      License []byte
-   }
-   err := json.Unmarshal(b, &s)
-   if err != nil {
-      return nil, err
-   }
-   return s.License, nil
-}
-
-func (a authenticate) RequestHeader() (http.Header, error) {
-   value := map[string]any{
-      "merchant": "mubi",
-      "sessionId": a.s.Token,
-      "userId": a.s.User.ID,
-   }
-   text, err := json.Marshal(value)
-   if err != nil {
-      return nil, err
-   }
-   head := make(http.Header)
-   head.Set("Dt-Custom-Data", base64.StdEncoding.EncodeToString(text))
-   return head, nil
 }

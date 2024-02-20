@@ -40,17 +40,17 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var pssh widevine.PSSH
+   var protect widevine.PSSH
    {
       b, err := base64.StdEncoding.DecodeString(raw_pssh)
       if err != nil {
          t.Fatal(err)
       }
-      if err := pssh.New(b); err != nil {
+      if err := protect.New(b); err != nil {
          t.Fatal(err)
       }
    }
-   module, err := pssh.CDM(private_key, client_id)
+   module, err := protect.CDM(private_key, client_id)
    if err != nil {
       t.Fatal(err)
    }

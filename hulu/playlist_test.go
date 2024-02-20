@@ -10,10 +10,10 @@ import (
 
 func TestLicense(t *testing.T) {
    var (
-      pssh widevine.PSSH
+      protect widevine.PSSH
       err error
    )
-   pssh.Key_ID, err = hex.DecodeString(default_kid)
+   protect.Key_ID, err = hex.DecodeString(default_kid)
    if err != nil {
       t.Fatal(err)
    }
@@ -29,7 +29,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   module, err := pssh.CDM(private_key, client_id)
+   module, err := protect.CDM(private_key, client_id)
    if err != nil {
       t.Fatal(err)
    }

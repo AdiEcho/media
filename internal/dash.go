@@ -64,16 +64,16 @@ func (h *HttpStream) DashMedia(uri string) (*dash.MPD, error) {
 }
 
 func (h HttpStream) key(point dash.Pointer) ([]byte, error) {
-   var pssh widevine.PSSH
+   var protect widevine.PSSH
    data, err := point.PSSH()
    if err != nil {
       key_id, err := point.Default_KID()
       if err != nil {
          return nil, err
       }
-      pssh.Key_ID = key_id
+      protect.Key_ID = key_id
    } else {
-      err := pssh.New(data)
+      err := protect.New(data)
       if err != nil {
          return nil, err
       }
@@ -86,7 +86,7 @@ func (h HttpStream) key(point dash.Pointer) ([]byte, error) {
    if err != nil {
       return nil, err
    }
-   module, err := pssh.CDM(private_key, client_id)
+   module, err := protect.CDM(private_key, client_id)
    if err != nil {
       return nil, err
    }
