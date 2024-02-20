@@ -40,6 +40,8 @@ version code: 29145256
 version name: 41.2
 ~~~
 
+Create Android 6 device. Install user certificate.
+
 ## login
 
 1. 1.go

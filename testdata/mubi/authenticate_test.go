@@ -1,15 +1,24 @@
 package mubi
 
 import (
-   "fmt"
+   "os"
    "testing"
 )
 
 func TestAuthenticate(t *testing.T) {
-   var code linkCode
-   err := code.New("US")
+   var (
+      code linkCode
+      err error
+   )
+   code.Raw, err = os.ReadFile("code.json")
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", code)
+   code.unmarshal()
+   res, err := code.authenticate()
+   if err != nil {
+      t.Fatal(err)
+   }
+   defer res.Body.Close()
+   res.Write(os.Stdout)
 }

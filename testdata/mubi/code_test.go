@@ -2,6 +2,7 @@ package mubi
 
 import (
    "fmt"
+   "os"
    "testing"
 )
 
@@ -11,5 +12,7 @@ func TestCode(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", code)
+   os.WriteFile("code.json", code.Raw, 0666)
+   code.unmarshal()
+   fmt.Println(code)
 }

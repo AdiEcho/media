@@ -6,8 +6,8 @@ import (
    "net/http"
 )
 
-func (c linkCode) Authenticate() (*http.Response, error) {
-   body, err := json.Marshal(map[string]string{"auth_token": c.Auth_Token})
+func (c linkCode) authenticate() (*http.Response, error) {
+   body, err := json.Marshal(map[string]string{"auth_token": c.s.Auth_Token})
    if err != nil {
       return nil, err
    }

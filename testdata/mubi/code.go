@@ -2,12 +2,31 @@ package mubi
 
 import (
    "encoding/json"
+   "io"
    "net/http"
+   "strings"
 )
 
+func (c linkCode) String() string {
+   var b strings.Builder
+   b.WriteString("TO LOG IN AND START WATCHING\n")
+   b.WriteString("Go to\n")
+   b.WriteString("mubi.com/android\n")
+   b.WriteString("and enter the code below\n")
+   b.WriteString(c.s.Link_Code)
+   return b.String()
+}
+
 type linkCode struct {
-   Auth_Token string
-   Link_Code string
+   Raw []byte
+   s struct {
+      Auth_Token string
+      Link_Code string
+   }
+}
+
+func (c *linkCode) unmarshal() error {
+   return json.Unmarshal(c.Raw, &c.s)
 }
 
 func (c *linkCode) New(country string) error {
@@ -26,5 +45,9 @@ func (c *linkCode) New(country string) error {
       return err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(c)
+   c.Raw, err = io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
 }
