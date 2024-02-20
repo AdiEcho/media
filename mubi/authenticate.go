@@ -1,13 +1,46 @@
 package mubi
 
 import (
-   "bytes"
    "encoding/base64"
    "encoding/json"
    "errors"
-   "io"
    "net/http"
+   "strconv"
+   "strings"
 )
+
+func (a authenticate) secure(film int64) (*secure_url, error) {
+   address := func() string {
+      b := []byte("https://api.mubi.com/v3/films/")
+      b = strconv.AppendInt(b, film, 10)
+      b = append(b, "/viewing/secure_url"...)
+      return string(b)
+   }
+   req, err := http.NewRequest("GET", address(), nil)
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "Authorization": {"Bearer " + a.s.Token},
+      "Client": {client},
+      "Client-Country": {ClientCountry},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   secure := new(secure_url)
+   if err := json.NewDecoder(res.Body).Decode(secure); err != nil {
+      return nil, err
+   }
+   return secure, nil
+}
 
 // final slash is needed
 func (authenticate) RequestUrl() (string, bool) {
@@ -46,40 +79,6 @@ func (a authenticate) RequestHeader() (http.Header, error) {
 
 func (a *authenticate) unmarshal() error {
    return json.Unmarshal(a.Raw, &a.s)
-}
-
-func (c linkCode) authenticate() (*authenticate, error) {
-   body, err := json.Marshal(map[string]string{"auth_token": c.s.Auth_Token})
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header = http.Header{
-      "Client": {client},
-      "Client-Country": {ClientCountry},
-      "Content-Type": {"application/json"},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var auth authenticate
-   auth.Raw, err = io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &auth, nil
 }
 
 type authenticate struct {
