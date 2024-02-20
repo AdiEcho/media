@@ -5,7 +5,6 @@ import (
    "fmt"
    "os"
    "testing"
-   "time"
 )
 
 // mubi.com/films/dogville
@@ -17,14 +16,20 @@ var dogvilles = []string{
 }
 
 func TestFilm(t *testing.T) {
-   for _, dogville := range dogvilles {
-      var film film_response
-      err := film.New(dogville)
+   for i, dogville := range dogvilles {
+      var web WebAddress
+      err := web.Set(dogville)
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(encoding.Name(film))
-      time.Sleep(time.Second)
+      if i == 0 {
+         film, err := web.film()
+         if err != nil {
+            t.Fatal(err)
+         }
+         fmt.Println(encoding.Name(film))
+      }
+      fmt.Println(web)
    }
 }
 

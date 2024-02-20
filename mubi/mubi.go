@@ -10,44 +10,6 @@ import (
    "strings"
 )
 
-type WebAddress string
-
-func (w WebAddress) String() string {
-   return string(w)
-}
-
-// "/films/dogville",
-// "/en/us/films/dogville",
-// "/us/films/dogville",
-// "/en/films/dogville",
-func (w *WebAddress) Set(s string) error {
-   return nil
-}
-
-func (f *film_response) New(path string) error {
-   req, err := http.NewRequest("GET", "https://api.mubi.com/v3" + path, nil)
-   if err != nil {
-      return err
-   }
-   req.Header = http.Header{
-      "Client": {client},
-      "Client-Country": {ClientCountry},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(&f.s)
-}
-
-type film_response struct {
-   s struct {
-      Title string
-      Year int
-   }
-}
-
 func (film_response) Owner() (string, bool) {
    return "", false
 }
@@ -163,4 +125,51 @@ type link_code struct {
 
 func (c *link_code) unmarshal() error {
    return json.Unmarshal(c.Raw, &c.s)
+}
+
+func (w WebAddress) String() string {
+   return w.s
+}
+
+func (w *WebAddress) Set(s string) error {
+   var ok bool
+   _, w.s, ok = strings.Cut(s, "/films/")
+   if !ok {
+      return errors.New("/films/")
+   }
+   return nil
+}
+
+type film_response struct {
+   s struct {
+      Title string
+      Year int
+   }
+}
+
+type WebAddress struct {
+   s string
+}
+
+func (w WebAddress) film() (*film_response, error) {
+   req, err := http.NewRequest(
+      "GET", "https://api.mubi.com/v3/films/" + w.s, nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "Client": {client},
+      "Client-Country": {ClientCountry},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   var film film_response
+   if err := json.NewDecoder(res.Body).Decode(&film.s); err != nil {
+      return nil, err
+   }
+   return &film, nil
 }

@@ -1,44 +1,78 @@
 package main
 
 import (
+   "154.pages.dev/encoding"
    "154.pages.dev/log"
    "154.pages.dev/media/internal"
    "154.pages.dev/media/mubi"
    "flag"
+   "fmt"
    "os"
    "path/filepath"
+   "testing"
 )
 
-type flags struct {
-   dash_id string
-   h internal.HttpStream
-   mubi_id int
-   v log.Level
+func TestFilm(t *testing.T) {
+   for i, dogville := range dogvilles {
+      var web WebAddress
+      err := web.Set(dogville)
+      if err != nil {
+         t.Fatal(err)
+      }
+      if i == 0 {
+         film, err := web.film()
+         if err != nil {
+            t.Fatal(err)
+         }
+         fmt.Println(encoding.Name(film))
+      }
+      fmt.Println(web)
+   }
 }
 
-func main() {
-   home, err := os.UserHomeDir()
+func TestSecure(t *testing.T) {
+   var (
+      auth authenticate
+      err error
+   )
+   auth.Raw, err = os.ReadFile("authenticate.json")
    if err != nil {
-      panic(err)
+      t.Fatal(err)
    }
-   home = filepath.ToSlash(home) + "/widevine/"
-   var f flags
-   flag.IntVar(&f.mubi_id, "b", 0, "Mubi ID")
-   flag.StringVar(&f.h.Client_ID, "c", home+"client_id.bin", "client ID")
-   flag.StringVar(&f.dash_id, "d", "", "DASH ID")
-   flag.StringVar(&f.h.Private_Key, "p", home+"private_key.pem", "private key")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.Parse()
-   log.TransportInfo()
-   log.Handler(f.v)
-   if f.mubi_id >= 1 {
-      err := f.download()
-      if err != nil {
-         panic(err)
-      }
-   } else {
-      flag.Usage()
+   auth.unmarshal()
+   secure, err := auth.secure(passages_2022)
+   if err != nil {
+      t.Fatal(err)
    }
+   fmt.Printf("%+v\n", secure)
+}
+
+func TestAuthenticate(t *testing.T) {
+   var (
+      code link_code
+      err error
+   )
+   code.Raw, err = os.ReadFile("code.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   code.unmarshal()
+   auth, err := code.authenticate()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("authenticate.json", auth.Raw, 0666)
+}
+
+func TestCode(t *testing.T) {
+   var code link_code
+   err := code.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("code.json", code.Raw, 0666)
+   code.unmarshal()
+   fmt.Println(code)
 }
 
 func (f flags) download() error {
