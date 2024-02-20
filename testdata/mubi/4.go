@@ -1,4 +1,4 @@
-package main
+package mubi
 
 import (
    "io"
@@ -10,12 +10,14 @@ import (
    "fmt"
 )
 
+// these come from:
+// /v3/authenticate
 const (
    session_id = "1abf8440609dc3b9c835a9c8b1445319fb13a1"
    user_id = 16454561
 )
 
-func main() {
+func Four() {
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"
@@ -26,7 +28,6 @@ func main() {
    req.URL.Path = "/license-proxy-widevine/cenc/"
    req.URL.Scheme = "https"
    req.Body = io.NopCloser(body)
-   //req.Header["Dt-Custom-Data"] = []string{"eyJ1c2VySWQiOjE2NDU0NTYxLCJzZXNzaW9uSWQiOiIxYWJmODQ0MDYwOWRjM2I5YzgzNWE5YzhiMTQ0NTMxOWZiMTNhMSIsIm1lcmNoYW50IjoibXViaSJ9"}
    data := fmt.Sprintf(`
    {
       "merchant": "mubi",

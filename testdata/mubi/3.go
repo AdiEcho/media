@@ -1,4 +1,4 @@
-package main
+package mubi
 
 import (
    "net/http"
@@ -6,9 +6,12 @@ import (
    "os"
 )
 
+// https://mubi.com/en/us/films/passages-2022
+// https://mubi.com/en/films/325455/player
+
 const bearer = "79df72c589f824c61245ba11ff0a4c63fb13a1"
 
-func main() {
+func Three() {
    var req http.Request
    req.Header = make(http.Header)
    req.ProtoMajor = 1
