@@ -1,0 +1,814 @@
+{
+ "id": 190,
+ "slug": "dogville",
+ "title": "Dogville",
+ "title_locale": "en-US",
+ "original_title": "Dogville",
+ "year": 2003,
+ "duration": 171,
+ "stills": {
+  "small": "https://assets.mubicdn.net/images/film/190/image-w256.jpg?1674650191",
+  "medium": "https://assets.mubicdn.net/images/film/190/image-w448.jpg?1674650191",
+  "standard": "https://assets.mubicdn.net/images/film/190/image-w856.jpg?1674650191",
+  "retina": "https://assets.mubicdn.net/images/film/190/image-w1280.jpg?1674650191",
+  "small_overlaid": "https://assets.mubicdn.net/images/film/190/image-w512_overlaid.jpg?1674650191",
+  "large_overlaid": "https://assets.mubicdn.net/images/film/190/image-w1504_overlaid.jpg?1674650191"
+ },
+ "still_focal_point": {
+  "x": 0.612813,
+  "y": 0.443069
+ },
+ "hd": true,
+ "average_colour_hex": "2B2A25",
+ "trailer_url": "https://trailers.mubicdn.net/190/t-dogville_en_us_480_360_1544205840.mp4",
+ "trailer_id": 7420,
+ "popularity": 8804,
+ "web_url": "https://mubi.com/films/dogville",
+ "genres": [
+  "Drama",
+  "History",
+  "Avant-Garde"
+ ],
+ "average_rating": 4.3,
+ "average_rating_out_of_ten": 8.6,
+ "number_of_ratings": 21418,
+ "mubi_release": false,
+ "should_use_safe_still": false,
+ "still_url": "https://images.mubicdn.net/images/film/190/cache-47350-1674650191/image-w1280.jpg",
+ "title_upcase": "DOGVILLE",
+ "critic_review_rating": 3.7142857142857144,
+ "content_rating": {
+  "label": "mature",
+  "rating_code": "MATURE",
+  "description": "Contains material and themes suitable only for mature audiences.",
+  "icon_url": null,
+  "label_hex_color": "dd2323"
+ },
+ "short_synopsis": "In Depression-era America, a beautiful fugitive named Grace arrives at a small town in the Rocky Mountains on the run from the mob. Offering to work in exchange for asylum, Grace is welcomed in by the locals. But as they come to expect more favors from her, Grace hides a dangerous secret from them.",
+ "short_synopsis_html": "<p>In Depression-era America, a beautiful fugitive named Grace arrives at a small town in the Rocky Mountains on the run from the mob. Offering to work in exchange for asylum, Grace is welcomed in by the locals. But as they come to expect more favors from her, Grace hides a dangerous secret from them.</p>",
+ "default_editorial": "One part Brechtian experiment, and one part send up of America, Lars von Trier imported English language stars (including Nicole Kidman) and staged a 1930s gangsters’ tale in a studio stripped of all realism but blistered with turmoil. You’ve never seen anything like this!",
+ "default_editorial_html": "<p>One part Brechtian experiment, and one part send up of America, Lars von Trier imported English language stars (including Nicole Kidman) and staged a 1930s gangsters&#8217; tale in a studio stripped of all realism but blistered with turmoil. You&#8217;ve never seen anything like this!</p>",
+ "title_treatment_url": null,
+ "cast": [
+  {
+   "id": 1464,
+   "name": "Lars von Trier",
+   "name_upcase": "LARS VON TRIER",
+   "slug": "lars-von-trier",
+   "credits": "Director, Screenplay, Cinematography",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/1464/image-w240.jpg?1666090352"
+  },
+  {
+   "id": 3499,
+   "name": "Nicole Kidman",
+   "name_upcase": "NICOLE KIDMAN",
+   "slug": "nicole-kidman",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/3499/image-w240.jpg?1604304386"
+  },
+  {
+   "id": 3501,
+   "name": "Paul Bettany",
+   "name_upcase": "PAUL BETTANY",
+   "slug": "paul-bettany",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/3501/image-w240.jpg?1613509447"
+  },
+  {
+   "id": 4960,
+   "name": "James Caan",
+   "name_upcase": "JAMES CAAN",
+   "slug": "james-caan",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/4960/image-w240.jpg?1376242422"
+  },
+  {
+   "id": 2882,
+   "name": "Stellan Skarsgård",
+   "name_upcase": "STELLAN SKARSGÅRD",
+   "slug": "stellan-skarsgard",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/2882/image-w240.jpg?1615052351"
+  },
+  {
+   "id": 1466,
+   "name": "Anthony Dod Mantle",
+   "name_upcase": "ANTHONY DOD MANTLE",
+   "slug": "anthony-dod-mantle",
+   "credits": "Cinematography",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/1466/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 180054,
+   "name": "Henric Andersson",
+   "name_upcase": "HENRIC ANDERSSON",
+   "slug": "henric-andersson",
+   "credits": "Cinematography",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/180054/image-w240.jpg?1540082033"
+  },
+  {
+   "id": 17366,
+   "name": "Claus Rosenløv Jensen",
+   "name_upcase": "CLAUS ROSENLØV JENSEN",
+   "slug": "claus-rosenlov-jensen",
+   "credits": "Cinematography",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/17366/image-w240.jpg?1564901163"
+  },
+  {
+   "id": 318162,
+   "name": "Erik Persson",
+   "name_upcase": "ERIK PERSSON",
+   "slug": "erik-persson",
+   "credits": "Cinematography",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/318162/image-w240.jpg?1540083940"
+  },
+  {
+   "id": 6409,
+   "name": "David Bowie",
+   "name_upcase": "DAVID BOWIE",
+   "slug": "david-bowie",
+   "credits": "Music",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/6409/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 9958,
+   "name": "Antonio Vivaldi",
+   "name_upcase": "ANTONIO VIVALDI",
+   "slug": "antonio-vivaldi",
+   "credits": "Music",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/9958/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 620209,
+   "name": "Mike Garson",
+   "name_upcase": "MIKE GARSON",
+   "slug": "mike-garson",
+   "credits": "Music",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/620209/image-w240.jpg?1535684660"
+  },
+  {
+   "id": 251549,
+   "name": "Greg Rogers",
+   "name_upcase": "GREG ROGERS",
+   "slug": "greg-rogers",
+   "credits": "Music",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/251549/image-w240.jpg?1540106970"
+  },
+  {
+   "id": 11979,
+   "name": "Joachim Holbek",
+   "name_upcase": "JOACHIM HOLBEK",
+   "slug": "joachim-holbek",
+   "credits": "Music",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/11979/image-w240.jpg?1416640580"
+  },
+  {
+   "id": 173818,
+   "name": "Giovanni Battista Pergolesi",
+   "name_upcase": "GIOVANNI BATTISTA PERGOLESI",
+   "slug": "giovanni-battista-pergolesi",
+   "credits": "Music",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/173818/image-w240.jpg?1531823939"
+  },
+  {
+   "id": 97483,
+   "name": "George Frideric Handel",
+   "name_upcase": "GEORGE FRIDERIC HANDEL",
+   "slug": "george-frideric-handel",
+   "credits": "Music",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/97483/image-w240.jpg?1348068991"
+  },
+  {
+   "id": 161395,
+   "name": "Tomaso Albinoni",
+   "name_upcase": "TOMASO ALBINONI",
+   "slug": "tomaso-albinoni",
+   "credits": "Music",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/161395/image-w240.jpg?1532594550"
+  },
+  {
+   "id": 13645,
+   "name": "Molly Marlene Stensgaard",
+   "name_upcase": "MOLLY MARLENE STENSGAARD",
+   "slug": "molly-marlene-stensgaard",
+   "credits": "Editing",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/13645/image-w240.jpg?1416355889"
+  },
+  {
+   "id": 119209,
+   "name": "Thomas Krag",
+   "name_upcase": "THOMAS KRAG",
+   "slug": "thomas-krag",
+   "credits": "Editing, Visual Effects",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/119209/image-w240.jpg?1543910434"
+  },
+  {
+   "id": 129665,
+   "name": "Jacob Thuesen",
+   "name_upcase": "JACOB THUESEN",
+   "slug": "jacob-thuesen",
+   "credits": "Editing",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/129665/image-w240.jpg?1478793835"
+  },
+  {
+   "id": 127967,
+   "name": "Nicolaj Monberg",
+   "name_upcase": "NICOLAJ MONBERG",
+   "slug": "nicolaj-monberg",
+   "credits": "Editing",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/127967/image-w240.jpg?1540108383"
+  },
+  {
+   "id": 90890,
+   "name": "Bodil Kjærhauge",
+   "name_upcase": "BODIL KJÆRHAUGE",
+   "slug": "bodil-kjaerhauge",
+   "credits": "Editing",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/90890/image-w240.jpg?1560901082"
+  },
+  {
+   "id": 168362,
+   "name": "Christoffer Heie",
+   "name_upcase": "CHRISTOFFER HEIE",
+   "slug": "christoffer-heie",
+   "credits": "Editing",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/168362/image-w240.jpg?1481524604"
+  },
+  {
+   "id": 1465,
+   "name": "Vibeke Windeløv",
+   "name_upcase": "VIBEKE WINDELØV",
+   "slug": "vibeke-windelov",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/1465/image-w240.jpg?1461650563"
+  },
+  {
+   "id": 44438,
+   "name": "Gillian Berrie",
+   "name_upcase": "GILLIAN BERRIE",
+   "slug": "gillian-berrie",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/44438/image-w240.jpg?1504915003"
+  },
+  {
+   "id": 13466,
+   "name": "Bettina Brokemper",
+   "name_upcase": "BETTINA BROKEMPER",
+   "slug": "bettina-brokemper",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/13466/image-w240.jpg?1493792366"
+  },
+  {
+   "id": 73671,
+   "name": "Tomas Eskilsson",
+   "name_upcase": "TOMAS ESKILSSON",
+   "slug": "tomas-eskilsson",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/73671/image-w240.jpg?1532476756"
+  },
+  {
+   "id": 19867,
+   "name": "Jonas Frederiksen",
+   "name_upcase": "JONAS FREDERIKSEN",
+   "slug": "jonas-frederiksen",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/19867/image-w240.jpg?1509772131"
+  },
+  {
+   "id": 16107,
+   "name": "Peter Garde",
+   "name_upcase": "PETER GARDE",
+   "slug": "peter-garde",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/16107/image-w240.jpg?1416448626"
+  },
+  {
+   "id": 3680,
+   "name": "Lars Jönsson",
+   "name_upcase": "LARS JÖNSSON",
+   "slug": "lars-jonsson",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/3680/image-w240.jpg?1493681720"
+  },
+  {
+   "id": 379491,
+   "name": "Liisa Penttilä",
+   "name_upcase": "LIISA PENTTILÄ",
+   "slug": "liisa-penttila",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/379491/image-w240.jpg?1532507378"
+  },
+  {
+   "id": 4810,
+   "name": "Marianne Slot",
+   "name_upcase": "MARIANNE SLOT",
+   "slug": "marianne-slot",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/4810/image-w240.jpg?1418022777"
+  },
+  {
+   "id": 105518,
+   "name": "Els Vandevorst",
+   "name_upcase": "ELS VANDEVORST",
+   "slug": "els-vandevorst",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/105518/image-w240.jpg?1463184588"
+  },
+  {
+   "id": 85990,
+   "name": "Turid Øversveen",
+   "name_upcase": "TURID ØVERSVEEN",
+   "slug": "turid-oversveen",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/85990/image-w240.jpg?1532526509"
+  },
+  {
+   "id": 203975,
+   "name": "Alfredo Cuomo",
+   "name_upcase": "ALFREDO CUOMO",
+   "slug": "alfredo-cuomo",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/203975/image-w240.jpg?1540106346"
+  },
+  {
+   "id": 230486,
+   "name": "Daniel Ahlqvist",
+   "name_upcase": "DANIEL AHLQVIST",
+   "slug": "daniel-ahlqvist",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/230486/image-w240.jpg?1540255559"
+  },
+  {
+   "id": 340960,
+   "name": "Thomas Schindel",
+   "name_upcase": "THOMAS SCHINDEL",
+   "slug": "thomas-schindel",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/340960/image-w240.jpg?1540800712"
+  },
+  {
+   "id": 119842,
+   "name": "Malte Forssell",
+   "name_upcase": "MALTE FORSSELL",
+   "slug": "malte-forssell",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/119842/image-w240.jpg?1532526381"
+  },
+  {
+   "id": 497651,
+   "name": "Caroline Blanco",
+   "name_upcase": "CAROLINE BLANCO",
+   "slug": "caroline-blanco",
+   "credits": "Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/497651/image-w240.jpg?1540800890"
+  },
+  {
+   "id": 13646,
+   "name": "Peter Grant",
+   "name_upcase": "PETER GRANT",
+   "slug": "peter-grant",
+   "credits": "Production Design",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/13646/image-w240.jpg?1501263273"
+  },
+  {
+   "id": 11998,
+   "name": "Karl Júlíusson",
+   "name_upcase": "KARL JÚLÍUSSON",
+   "slug": "karl-juliusson",
+   "credits": "Art Department, Production Design",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/11998/image-w240.jpg?1416456044"
+  },
+  {
+   "id": 8690,
+   "name": "Manon Rasmussen",
+   "name_upcase": "MANON RASMUSSEN",
+   "slug": "manon-rasmussen",
+   "credits": "Costume Design",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/8690/image-w240.jpg?1552634990"
+  },
+  {
+   "id": 13647,
+   "name": "Per Streit",
+   "name_upcase": "PER STREIT",
+   "slug": "per-streit",
+   "credits": "Sound",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/13647/image-w240.jpg?1416444361"
+  },
+  {
+   "id": 13377,
+   "name": "Kristian Eidnes Andersen",
+   "name_upcase": "KRISTIAN EIDNES ANDERSEN",
+   "slug": "kristian-eidnes-andersen",
+   "credits": "Sound",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/13377/image-w240.jpg?1473984943"
+  },
+  {
+   "id": 140328,
+   "name": "Pétur Einarsson",
+   "name_upcase": "PÉTUR EINARSSON",
+   "slug": "petur-einarsson",
+   "credits": "Sound",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/140328/image-w240.jpg?1416566049"
+  },
+  {
+   "id": 370531,
+   "name": "Julien Naudin",
+   "name_upcase": "JULIEN NAUDIN",
+   "slug": "julien-naudin",
+   "credits": "Sound",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/370531/image-w240.jpg?1552637910"
+  },
+  {
+   "id": 115932,
+   "name": "Eddie Simonsen",
+   "name_upcase": "EDDIE SIMONSEN",
+   "slug": "eddie-simonsen",
+   "credits": "Sound",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/115932/image-w240.jpg?1552727932"
+  },
+  {
+   "id": 140887,
+   "name": "Ad Stoop",
+   "name_upcase": "AD STOOP",
+   "slug": "ad-stoop",
+   "credits": "Sound",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/140887/image-w240.jpg?1552623561"
+  },
+  {
+   "id": 97272,
+   "name": "Mark Kenna",
+   "name_upcase": "MARK KENNA",
+   "slug": "mark-kenna",
+   "credits": "Sound",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/97272/image-w240.jpg?1552780964"
+  },
+  {
+   "id": 8680,
+   "name": "Peter Aalbæk Jensen",
+   "name_upcase": "PETER AALBÆK JENSEN",
+   "slug": "peter-aalbaek-jensen",
+   "credits": "Executive Producer",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/8680/image-w240.jpg?1417167496"
+  },
+  {
+   "id": 3500,
+   "name": "Lauren Bacall",
+   "name_upcase": "LAUREN BACALL",
+   "slug": "lauren-bacall",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/3500/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 16565,
+   "name": "Patricia Clarkson",
+   "name_upcase": "PATRICIA CLARKSON",
+   "slug": "patricia-clarkson",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/16565/image-w240.jpg?1628007319"
+  },
+  {
+   "id": 10570,
+   "name": "Philip Baker Hall",
+   "name_upcase": "PHILIP BAKER HALL",
+   "slug": "philip-baker-hall",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/10570/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 33727,
+   "name": "Siobhan Fallon Hogan",
+   "name_upcase": "SIOBHAN FALLON HOGAN",
+   "slug": "siobhan-fallon-hogan",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/33727/image-w240.jpg?1464526715"
+  },
+  {
+   "id": 3047,
+   "name": "Ben Gazzara",
+   "name_upcase": "BEN GAZZARA",
+   "slug": "ben-gazzara",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/3047/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 128304,
+   "name": "Cleo King",
+   "name_upcase": "CLEO KING",
+   "slug": "cleo-king",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/128304/image-w240.jpg?1416445075"
+  },
+  {
+   "id": 2617,
+   "name": "Chloë Sevigny",
+   "name_upcase": "CHLOË SEVIGNY",
+   "slug": "chloe-sevigny",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/2617/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 16582,
+   "name": "Jeremy Davies",
+   "name_upcase": "JEREMY DAVIES",
+   "slug": "jeremy-davies",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/16582/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 200572,
+   "name": "Bill Raymond",
+   "name_upcase": "BILL RAYMOND",
+   "slug": "bill-raymond",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/200572/image-w240.jpg?1463183811"
+  },
+  {
+   "id": 3502,
+   "name": "Blair Brown",
+   "name_upcase": "BLAIR BROWN",
+   "slug": "blair-brown",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/3502/image-w240.jpg?1463182284"
+  },
+  {
+   "id": 2159,
+   "name": "Harriet Andersson",
+   "name_upcase": "HARRIET ANDERSSON",
+   "slug": "harriet-andersson",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/2159/image-w240.jpg?1544561411"
+  },
+  {
+   "id": 200573,
+   "name": "Miles Purinton",
+   "name_upcase": "MILES PURINTON",
+   "slug": "miles-purinton",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/200573/image-w240.jpg?1488427628"
+  },
+  {
+   "id": 200574,
+   "name": "Shauna Shim",
+   "name_upcase": "SHAUNA SHIM",
+   "slug": "shauna-shim",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/200574/image-w240.jpg?1604368391"
+  },
+  {
+   "id": 4885,
+   "name": "Udo Kier",
+   "name_upcase": "UDO KIER",
+   "slug": "udo-kier",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/4885/image-w240.jpg?1666091092"
+  },
+  {
+   "id": 2883,
+   "name": "Jean-Marc Barr",
+   "name_upcase": "JEAN-MARC BARR",
+   "slug": "jean-marc-barr",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/2883/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 25680,
+   "name": "Thom Hoffman",
+   "name_upcase": "THOM HOFFMAN",
+   "slug": "thom-hoffman",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/25680/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 33001,
+   "name": "Željko Ivanek",
+   "name_upcase": "ŽELJKO IVANEK",
+   "slug": "zeljko-ivanek",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/33001/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 89235,
+   "name": "John Randolph Jones",
+   "name_upcase": "JOHN RANDOLPH JONES",
+   "slug": "john-randolph-jones",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/89235/image-w240.jpg?1488427653"
+  },
+  {
+   "id": 232395,
+   "name": "Jan Coster",
+   "name_upcase": "JAN COSTER",
+   "slug": "jan-coster",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/232395/image-w240.jpg?1575769078"
+  },
+  {
+   "id": 497793,
+   "name": "László Hágó",
+   "name_upcase": "LÁSZLÓ HÁGÓ",
+   "slug": "laszlo-hago",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/497793/image-w240.jpg?1532480751"
+  },
+  {
+   "id": 67562,
+   "name": "Ingvar Örner",
+   "name_upcase": "INGVAR ÖRNER",
+   "slug": "ingvar-orner",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/67562/image-w240.jpg?1532523615"
+  },
+  {
+   "id": 219788,
+   "name": "Erich Silva",
+   "name_upcase": "ERICH SILVA",
+   "slug": "erich-silva",
+   "credits": "Cast",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/219788/image-w240.jpg?1532480114"
+  },
+  {
+   "id": 3343,
+   "name": "John Hurt",
+   "name_upcase": "JOHN HURT",
+   "slug": "john-hurt",
+   "credits": "Narrator",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/3343/image-w240.jpg?1478101707"
+  },
+  {
+   "id": 364114,
+   "name": "Franklin D. Roosevelt",
+   "name_upcase": "FRANKLIN D. ROOSEVELT",
+   "slug": "franklin-d-roosevelt",
+   "credits": "Voice",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/364114/image-w240.jpg?1535009747"
+  },
+  {
+   "id": 560979,
+   "name": "Peter Hjorth",
+   "name_upcase": "PETER HJORTH",
+   "slug": "peter-hjorth",
+   "credits": "Visual Effects",
+   "image_url": "https://assets.mubicdn.net/images/cast_member/560979/image-w240.jpg?1698698800"
+  }
+ ],
+ "industry_events": [
+  {
+   "name": "Cannes Film Festival",
+   "slug": "cannes",
+   "year": 2003,
+   "entries": [
+    "2003 | Winner: Palm Dog",
+    "2003 | Nominee: Palme d'Or"
+   ],
+   "logo_url": "https://images.mubicdn.net/images/industry_event/1/cache-222790-1494527057/logo-small_black.png",
+   "logo_url_white": "https://images.mubicdn.net/images/industry_event/1/cache-222790-1494527057/logo-large_white.png",
+   "event_type": "generic"
+  },
+  {
+   "name": "Sundance Film Festival",
+   "slug": "sundance",
+   "year": 2004,
+   "entries": [
+    "2004"
+   ],
+   "logo_url": "https://images.mubicdn.net/images/industry_event/5/cache-222793-1494527058/logo-small_black.png",
+   "logo_url_white": "https://images.mubicdn.net/images/industry_event/5/cache-222793-1494527058/logo-large_white.png",
+   "event_type": "generic"
+  },
+  {
+   "name": "Toronto International Film Festival",
+   "slug": "toronto",
+   "year": 2003,
+   "entries": [
+    "2003"
+   ],
+   "logo_url": "https://images.mubicdn.net/images/industry_event/8/cache-222796-1494527059/logo-small_black.png",
+   "logo_url_white": "https://images.mubicdn.net/images/industry_event/8/cache-222796-1494527059/logo-large_white.png",
+   "event_type": "generic"
+  },
+  {
+   "name": "Telluride Film Festival",
+   "slug": "telluride",
+   "year": 2003,
+   "entries": [
+    "2003"
+   ],
+   "logo_url": "https://images.mubicdn.net/images/industry_event/12/cache-222800-1494527061/logo-small_black.png",
+   "logo_url_white": "https://images.mubicdn.net/images/industry_event/12/cache-222800-1494527061/logo-large_white.png",
+   "event_type": "generic"
+  }
+ ],
+ "notebook_posts": [
+  {
+   "id": 10386,
+   "summary": "A career overview of the Danish filmmaker whose indelible and provocative films have made him one of contemporary cinema’s leading figures.",
+   "authors": [
+    {
+     "name": "Jeremy Carr",
+     "link": "/notebook/posts/author/313"
+    }
+   ],
+   "type": "column",
+   "image_url": {
+    "w690": "https://assets.mubicdn.net/images/notebook/post_spotlight_images/10461/images-w690.jpg?1668786975",
+    "standard": "https://assets.mubicdn.net/images/notebook/post_spotlight_images/10461/images-w690.jpg?1668786975",
+    "retina": "https://assets.mubicdn.net/images/notebook/post_spotlight_images/10461/images-w1280.jpg?1668786975"
+   },
+   "title": "Notebook Primer: Lars von Trier",
+   "updated_at": "2022-12-08T15:29:18Z",
+   "quote": null,
+   "source": null,
+   "published_at": "2022-11-25T15:14:00Z",
+   "comment_count": 3,
+   "tags": "Columns, Lars von Trier, Notebook Primer",
+   "slug": "notebook-primer-lars-von-trier",
+   "web_url": "https://mubi.com/notebook/posts/notebook-primer-lars-von-trier"
+  }
+ ],
+ "directors": [
+  {
+   "name": "Lars von Trier",
+   "name_upcase": "LARS VON TRIER",
+   "slug": "lars-von-trier"
+  }
+ ],
+ "historic_countries": [
+  "Denmark",
+  "Sweden"
+ ],
+ "optimised_trailers": [
+  {
+   "url": "https://trailers.mubicdn.net/190/optimised/240p-t-dogville_en_us_480_360_1544205840.mp4",
+   "profile": "240p"
+  },
+  {
+   "url": "https://trailers.mubicdn.net/190/optimised/720p-t-dogville_en_us_480_360_1544205840.mp4",
+   "profile": "720p"
+  }
+ ],
+ "mubi_go_highlighted": false,
+ "cast_members_count": 81,
+ "industry_events_count": 37,
+ "comments_count": 469,
+ "episode": null,
+ "portrait_image": null,
+ "consumable": {
+  "film_id": 190,
+  "available_at": "2023-04-15T07:00:00Z",
+  "availability": "live",
+  "availability_ends_at": "2032-12-10T08:00:00Z",
+  "expires_at": "2032-12-10T20:00:00Z",
+  "film_date_message": null,
+  "offered": [
+   {
+    "type": "catalogue",
+    "download_availability": null
+   }
+  ],
+  "exclusive": true,
+  "permit_download": true
+ },
+ "press_quote": null,
+ "star_rating": null,
+ "award": null,
+ "content_warnings": [
+  {
+   "id": 1,
+   "name": "sexual assault",
+   "key": "sexual_assault"
+  }
+ ],
+ "artworks": [
+  {
+   "format": "tile_artwork",
+   "locale": null,
+   "image_url": "https://assets.mubicdn.net/images/artworks/516770/images-original.png?1674669507"
+  },
+  {
+   "format": "cover_artwork_box_episode",
+   "locale": null,
+   "image_url": "https://assets.mubicdn.net/images/artworks/516771/images-original.png?1674669513"
+  },
+  {
+   "format": "cover_artwork_horizontal",
+   "locale": "en-US",
+   "image_url": "https://assets.mubicdn.net/images/artworks/516772/images-original.png?1674669522"
+  },
+  {
+   "format": "cover_artwork_vertical",
+   "locale": "en-US",
+   "image_url": "https://assets.mubicdn.net/images/artworks/516778/images-original.png?1674669575"
+  },
+  {
+   "format": "cover_artwork_box",
+   "locale": "en-US",
+   "image_url": "https://assets.mubicdn.net/images/artworks/516785/images-original.png?1674669623"
+  },
+  {
+   "format": "tvos_cover_artwork",
+   "locale": "en-US",
+   "image_url": "https://assets.mubicdn.net/images/artworks/549235/images-original.png?1686641698"
+  }
+ ],
+ "highlighted_industry_event_entry": null
+}
