@@ -41,15 +41,3 @@ version name: 41.2
 ~~~
 
 Create Android 6 device. Install user certificate.
-
-## login
-
-1. 1.go
-2. https://mubi.com/android
-3. enter `link_code`
-4. ACTIVATE
-5. Email
-6. NEXT
-7. enter code
-8. 2.go with `auth_token`
-9. 3.go with `Bearer`

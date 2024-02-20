@@ -8,7 +8,7 @@ import (
 
 func TestCode(t *testing.T) {
    var code linkCode
-   err := code.New("US")
+   err := code.New()
    if err != nil {
       t.Fatal(err)
    }

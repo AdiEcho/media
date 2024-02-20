@@ -15,10 +15,9 @@ func TestAuthenticate(t *testing.T) {
       t.Fatal(err)
    }
    code.unmarshal()
-   res, err := code.authenticate()
+   auth, err := code.authenticate()
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   os.WriteFile("authenticate.json", auth.Raw, 0666)
 }

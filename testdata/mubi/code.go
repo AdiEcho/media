@@ -7,6 +7,31 @@ import (
    "strings"
 )
 
+var client_country = "US"
+
+func (c *linkCode) New() error {
+   req, err := http.NewRequest("GET", "https://api.mubi.com/v3/link_code", nil)
+   if err != nil {
+      return err
+   }
+   req.Header = http.Header{
+      "Client": {"android"},
+      "Client-Country": {client_country},
+      "Client-Device-Identifier": {"!"},
+      "Client-Version": {"!"},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   c.Raw, err = io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
 func (c linkCode) String() string {
    var b strings.Builder
    b.WriteString("TO LOG IN AND START WATCHING\n")
@@ -27,27 +52,4 @@ type linkCode struct {
 
 func (c *linkCode) unmarshal() error {
    return json.Unmarshal(c.Raw, &c.s)
-}
-
-func (c *linkCode) New(country string) error {
-   req, err := http.NewRequest("GET", "https://api.mubi.com/v3/link_code", nil)
-   if err != nil {
-      return err
-   }
-   req.Header = http.Header{
-      "Client": {"android"},
-      "Client-Country": {country},
-      "Client-Device-Identifier": {"!"},
-      "Client-Version": {"!"},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   c.Raw, err = io.ReadAll(res.Body)
-   if err != nil {
-      return err
-   }
-   return nil
 }

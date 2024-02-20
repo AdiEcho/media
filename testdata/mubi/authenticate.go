@@ -3,10 +3,19 @@ package mubi
 import (
    "bytes"
    "encoding/json"
+   "errors"
+   "io"
    "net/http"
 )
 
-func (c linkCode) authenticate() (*http.Response, error) {
+type authenticate struct {
+   s struct {
+      Token string
+   }
+   Raw []byte
+}
+
+func (c linkCode) authenticate() (*authenticate, error) {
    body, err := json.Marshal(map[string]string{"auth_token": c.s.Auth_Token})
    if err != nil {
       return nil, err
@@ -18,19 +27,30 @@ func (c linkCode) authenticate() (*http.Response, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Accept": {"application/json"},
-      "Accept-Language": {"en-US"},
       "Client": {"android"},
-      "Client-Accept-Audio-Codecs": {"AAC"},
-      "Client-App": {"mubi"},
-      "Client-Country": {"US"},
-      "Client-Device-Brand": {"unknown"},
-      "Client-Device-Identifier": {"437cacfa-7421-410c-a4cd-fbe5d5460345"},
-      "Client-Device-Model": {"Android SDK built for x86"},
-      "Client-Device-Os": {"6.0"},
-      "Client-Version": {"41.2"},
-      "Content-Type": {"application/json; charset=UTF-8"},
-      "User-Agent": {"okhttp/4.10.0"},
+      "Client-Country": {client_country},
+      "Client-Device-Identifier": {"!"},
+      "Client-Version": {"!"},
+      "Content-Type": {"application/json"},
    }
-   return http.DefaultClient.Do(req)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var auth authenticate
+   auth.Raw, err = io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &auth, nil
+}
+
+func (a *authenticate) unmarshal() error {
+   return json.Unmarshal(a.Raw, &a.s)
 }
