@@ -10,6 +10,37 @@ import (
    "strings"
 )
 
+type WebAddress string
+
+func (w WebAddress) String() string {
+   return string(w)
+}
+
+// "/films/dogville",
+// "/en/us/films/dogville",
+// "/us/films/dogville",
+// "/en/films/dogville",
+func (w *WebAddress) Set(s string) error {
+   return nil
+}
+
+func (f *film_response) New(path string) error {
+   req, err := http.NewRequest("GET", "https://api.mubi.com/v3" + path, nil)
+   if err != nil {
+      return err
+   }
+   req.Header = http.Header{
+      "Client": {client},
+      "Client-Country": {ClientCountry},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   return json.NewDecoder(res.Body).Decode(&f.s)
+}
+
 type film_response struct {
    s struct {
       Title string
@@ -41,22 +72,6 @@ func (f film_response) Year() (string, bool) {
    return strconv.Itoa(f.s.Year), true
 }
 
-func (f *film_response) New(path string) error {
-   req, err := http.NewRequest("GET", "https://api.mubi.com/v3" + path, nil)
-   if err != nil {
-      return err
-   }
-   req.Header = http.Header{
-      "Client": {client},
-      "Client-Country": {ClientCountry},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(&f.s)
-}
 type secure_url struct {
    URL string
 }

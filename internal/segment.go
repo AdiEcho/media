@@ -81,7 +81,7 @@ func (h HttpStream) segment_template(
    if err != nil {
       return err
    }
-   req.URL = h.Base.ResolveReference(req.URL)
+   req.URL = h.base.ResolveReference(req.URL)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -102,7 +102,7 @@ func (h HttpStream) segment_template(
    defer log.TransportInfo()
    for _, ref := range media {
       // with DASH, initialization and media URLs are relative to the MPD URL
-      req.URL, err = h.Base.Parse(ref)
+      req.URL, err = h.base.Parse(ref)
       if err != nil {
          return err
       }

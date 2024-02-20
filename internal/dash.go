@@ -14,6 +14,15 @@ import (
    "text/template"
 )
 
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type HttpStream struct {
+   Client_ID string
+   Name encoding.Namer
+   Poster widevine.Poster
+   Private_Key string
+   base *url.URL
+}
+
 func (h HttpStream) DASH(media *dash.MPD, id string) error {
    var point dash.Pointer
    ok := media.Contains(func(p dash.Pointer) bool {
@@ -40,22 +49,13 @@ func (h HttpStream) DASH(media *dash.MPD, id string) error {
    return line.Execute(os.Stdout, media)
 }
 
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type HttpStream struct {
-   Base *url.URL
-   Client_ID string
-   Name encoding.Namer
-   Poster widevine.Poster
-   Private_Key string
-}
-
 func (h *HttpStream) DashMedia(uri string) (*dash.MPD, error) {
    res, err := http.Get(uri)
    if err != nil {
       return nil, err
    }
    defer res.Body.Close()
-   h.Base = res.Request.URL
+   h.base = res.Request.URL
    media := new(dash.MPD)
    if err := xml.NewDecoder(res.Body).Decode(media); err != nil {
       return nil, err
