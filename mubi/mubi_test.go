@@ -1,10 +1,23 @@
 package mubi
 
 import (
+   "154.pages.dev/encoding"
    "fmt"
    "os"
    "testing"
 )
+
+// mubi.com/films/dogville
+const dogville = "/films/dogville"
+
+func TestFilm(t *testing.T) {
+   var film film_response
+   err := film.New(dogville)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(encoding.Name(film))
+}
 
 // mubi.com/films/325455/player
 // mubi.com/films/passages-2022
@@ -29,7 +42,7 @@ func TestSecure(t *testing.T) {
 
 func TestAuthenticate(t *testing.T) {
    var (
-      code linkCode
+      code link_code
       err error
    )
    code.Raw, err = os.ReadFile("code.json")
@@ -45,7 +58,7 @@ func TestAuthenticate(t *testing.T) {
 }
 
 func TestCode(t *testing.T) {
-   var code linkCode
+   var code link_code
    err := code.New()
    if err != nil {
       t.Fatal(err)

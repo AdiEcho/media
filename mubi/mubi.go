@@ -6,14 +6,62 @@ import (
    "errors"
    "io"
    "net/http"
+   "strconv"
    "strings"
 )
 
+type film_response struct {
+   s struct {
+      Title string
+      Year int
+   }
+}
+
+func (film_response) Owner() (string, bool) {
+   return "", false
+}
+
+func (film_response) Show() (string, bool) {
+   return "", false
+}
+
+func (film_response) Season() (string, bool) {
+   return "", false
+}
+
+func (film_response) Episode() (string, bool) {
+   return "", false
+}
+
+func (f film_response) Title() (string, bool) {
+   return f.s.Title, true
+}
+
+func (f film_response) Year() (string, bool) {
+   return strconv.Itoa(f.s.Year), true
+}
+
+func (f *film_response) New(path string) error {
+   req, err := http.NewRequest("GET", "https://api.mubi.com/v3" + path, nil)
+   if err != nil {
+      return err
+   }
+   req.Header = http.Header{
+      "Client": {client},
+      "Client-Country": {ClientCountry},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   return json.NewDecoder(res.Body).Decode(&f.s)
+}
 type secure_url struct {
    URL string
 }
 
-func (c linkCode) authenticate() (*authenticate, error) {
+func (c link_code) authenticate() (*authenticate, error) {
    body, err := json.Marshal(map[string]string{"auth_token": c.s.Auth_Token})
    if err != nil {
       return nil, err
@@ -54,7 +102,7 @@ const client = "web"
 
 var ClientCountry = "US"
 
-func (c *linkCode) New() error {
+func (c *link_code) New() error {
    req, err := http.NewRequest("GET", "https://api.mubi.com/v3/link_code", nil)
    if err != nil {
       return err
@@ -80,7 +128,7 @@ func (c *linkCode) New() error {
    return nil
 }
 
-func (c linkCode) String() string {
+func (c link_code) String() string {
    var b strings.Builder
    b.WriteString("TO LOG IN AND START WATCHING\n")
    b.WriteString("Go to\n")
@@ -90,7 +138,7 @@ func (c linkCode) String() string {
    return b.String()
 }
 
-type linkCode struct {
+type link_code struct {
    Raw []byte
    s struct {
       Auth_Token string
@@ -98,6 +146,6 @@ type linkCode struct {
    }
 }
 
-func (c *linkCode) unmarshal() error {
+func (c *link_code) unmarshal() error {
    return json.Unmarshal(c.Raw, &c.s)
 }
