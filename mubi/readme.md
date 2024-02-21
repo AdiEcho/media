@@ -1,7 +1,8 @@
 # Mubi
 
-- https://github.com/NDDDDDDDDD/mubi-downloader/issues/7
-- https://github.com/jamieu/plugin.video.mubi/issues/33
+first commit Feb 19 2024:
+
+https://github.com/3052/media/commit/9e98200605d6450ef826a4204cd8dad305ac4ed1
 
 ~~~
 url = https://mubi.com/films/mulholland-drive

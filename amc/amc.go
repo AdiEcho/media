@@ -83,6 +83,9 @@ func (a Authorization) Playback(nid string) (*Playback, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    var play Playback
    play.header = res.Header
    if err := json.NewDecoder(res.Body).Decode(&play.body); err != nil {
@@ -100,10 +103,10 @@ type ContentCompiler struct {
    }
 }
 
-func (p Playback) RequestHeader() (http.Header, bool) {
+func (p Playback) RequestHeader() (http.Header, error) {
    h := make(http.Header)
    h.Set("bcov-auth", p.header.Get("X-AMCN-BC-JWT"))
-   return h, true
+   return h, nil
 }
 
 type DataSource struct {
@@ -171,6 +174,9 @@ func (a *Authorization) Unauth() error {
       return err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return errors.New(res.Status)
+   }
    a.Raw, err = io.ReadAll(res.Body)
    if err != nil {
       return err
@@ -215,6 +221,9 @@ func (a *Authorization) Login(email, password string) error {
       return err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return errors.New(res.Status)
+   }
    a.Raw, err = io.ReadAll(res.Body)
    if err != nil {
       return err
@@ -234,6 +243,9 @@ func (a *Authorization) Refresh() error {
       return err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return errors.New(res.Status)
+   }
    a.Raw, err = io.ReadAll(res.Body)
    if err != nil {
       return err
@@ -272,6 +284,9 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    content := new(ContentCompiler)
    if err := json.NewDecoder(res.Body).Decode(content); err != nil {
       return nil, err

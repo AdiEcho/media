@@ -14,7 +14,7 @@ func (f flags) login() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(home + "/amc/auth.json", auth.Raw, 0666)
+   return os.WriteFile(home + "/amc.json", auth.Raw, 0666)
 }
 
 func (f flags) download() error {
@@ -23,13 +23,13 @@ func (f flags) download() error {
       return err
    }
    var auth amc.Authorization
-   auth.Raw, err = os.ReadFile(home + "/amc/auth.json")
+   auth.Raw, err = os.ReadFile(home + "/amc.json")
    if err != nil {
       return err
    }
    auth.Unmarshal()
    auth.Refresh()
-   os.WriteFile(home + "/amc/auth.json", auth.Raw, 0666)
+   os.WriteFile(home + "/amc.json", auth.Raw, 0666)
    if f.dash_id != "" {
       content, err := auth.Content(f.web.Path)
       if err != nil {
