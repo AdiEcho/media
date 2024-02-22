@@ -1,27 +1,23 @@
 package mubi
 
 import (
+   "encoding/json"
    "errors"
    "net/http"
    "strconv"
    "strings"
 )
 
-// Mubi do this sneaky thing. you cannot download a video unless you have told
-// the API that you are watching it. so you have to call
-// `/v3/films/%v/viewing`, otherwise it wont let you get the MPD. if you have
-// already viewed the video on the website that counts, but if you only use the
-// tool it will error
-func (a Authenticate) Viewing(f *FilmResponse) error {
+func (a Authenticate) URL(f *FilmResponse) (*SecureUrl, error) {
    address := func() string {
       b := []byte("https://api.mubi.com/v3/films/")
       b = strconv.AppendInt(b, f.s.ID, 10)
-      b = append(b, "/viewing"...)
+      b = append(b, "/viewing/secure_url"...)
       return string(b)
    }
-   req, err := http.NewRequest("POST", address(), nil)
+   req, err := http.NewRequest("GET", address(), nil)
    if err != nil {
-      return err
+      return nil, err
    }
    req.Header = http.Header{
       "Authorization": {"Bearer " + a.s.Token},
@@ -30,13 +26,21 @@ func (a Authenticate) Viewing(f *FilmResponse) error {
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer res.Body.Close()
    if res.StatusCode != http.StatusOK {
       var b strings.Builder
       res.Write(&b)
-      return errors.New(b.String())
+      return nil, errors.New(b.String())
    }
-   return nil
+   secure := new(SecureUrl)
+   if err := json.NewDecoder(res.Body).Decode(secure); err != nil {
+      return nil, err
+   }
+   return secure, nil
+}
+
+type SecureUrl struct {
+   URL string
 }

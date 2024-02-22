@@ -2,6 +2,7 @@ package mubi
 
 import (
    "bytes"
+   "encoding/base64"
    "encoding/json"
    "errors"
    "io"
@@ -10,8 +11,87 @@ import (
    "strings"
 )
 
-type SecureUrl struct {
-   URL string
+// Mubi do this sneaky thing. you cannot download a video unless you have told
+// the API that you are watching it. so you have to call
+// `/v3/films/%v/viewing`, otherwise it wont let you get the MPD. if you have
+// already viewed the video on the website that counts, but if you only use the
+// tool it will error
+func (a Authenticate) Viewing(f *FilmResponse) error {
+   address := func() string {
+      b := []byte("https://api.mubi.com/v3/films/")
+      b = strconv.AppendInt(b, f.s.ID, 10)
+      b = append(b, "/viewing"...)
+      return string(b)
+   }
+   req, err := http.NewRequest("POST", address(), nil)
+   if err != nil {
+      return err
+   }
+   req.Header = http.Header{
+      "Authorization": {"Bearer " + a.s.Token},
+      "Client": {client},
+      "Client-Country": {ClientCountry},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return errors.New(b.String())
+   }
+   return nil
+}
+
+// final slash is needed
+func (Authenticate) RequestUrl() (string, bool) {
+   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
+}
+
+func (Authenticate) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Authenticate) ResponseBody(b []byte) ([]byte, error) {
+   var s struct {
+      License []byte
+   }
+   err := json.Unmarshal(b, &s)
+   if err != nil {
+      return nil, err
+   }
+   return s.License, nil
+}
+
+func (a Authenticate) RequestHeader() (http.Header, error) {
+   value := map[string]any{
+      "merchant": "mubi",
+      "sessionId": a.s.Token,
+      "userId": a.s.User.ID,
+   }
+   text, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   head := make(http.Header)
+   head.Set("Dt-Custom-Data", base64.StdEncoding.EncodeToString(text))
+   return head, nil
+}
+
+func (a *Authenticate) Unmarshal() error {
+   return json.Unmarshal(a.Raw, &a.s)
+}
+
+type Authenticate struct {
+   s struct {
+      Token string
+      User struct {
+         ID int
+      }
+   }
+   Raw []byte
 }
 
 func (w WebAddress) Film() (*FilmResponse, error) {
