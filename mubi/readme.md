@@ -1,19 +1,5 @@
 # Mubi
 
-first commit Feb 19 2024:
-
-https://github.com/3052/media/commit/9e98200605d6450ef826a4204cd8dad305ac4ed1
-
-~~~
-url = https://mubi.com/films/mulholland-drive
-monetization = FLATRATE
-country = Greece
-country = Italy
-country = Poland
-country = Romania
-country = Turkey
-~~~
-
 1. https://privacy.com
 2. https://mubi.com
 3. Email address
@@ -23,6 +9,10 @@ country = Turkey
 7. Expiry Date
 8. CVV
 9. START FREE TRIAL
+
+first commit Feb 19 2024:
+
+https://github.com/3052/media/commit/9e98200605d6450ef826a4204cd8dad305ac4ed1
 
 ## Android
 
@@ -47,3 +37,7 @@ Create Android 6 device. Install user certificate.
 adb shell am start -a android.intent.action.VIEW `
 -d https://mubi.com/en/us/films/passages-2022
 ~~~
+
+## x-forwarded-for
+
+doesnt seem to work

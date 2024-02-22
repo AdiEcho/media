@@ -38,25 +38,9 @@ https://docs.mitmproxy.org/stable/overview-features#blocklist
 Press `O` to enter options. Move to `modify_headers` and press Enter. Then press
 `a` to add a new entry. Press Esc when finished, then `q`.
 
-Canada:
-
 ~~~
 /~q/X-Forwarded-For/99.224.0.0
 /~u hello.world/X-Forwarded-For/99.224.0.0
 ~~~
 
-Denmark:
-
-~~~
-/~q/X-Forwarded-For/87.48.0.0
-~~~
-
-Norway:
-
-~~~
-/~q/X-Forwarded-For/84.208.0.0
-~~~
-
-- <https://github.com/firehol/blocklist-ipsets/blob/master/geolite2_country/country_ca.netset>
-- https://calculator.net/ip-subnet-calculator.html
-- https://docs.mitmproxy.org/stable/overview-features#modify-headers
+https://docs.mitmproxy.org/stable/overview-features#modify-headers
