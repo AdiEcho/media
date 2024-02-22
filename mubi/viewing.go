@@ -4,6 +4,7 @@ import (
    "errors"
    "net/http"
    "strconv"
+   "strings"
 )
 
 // Mubi do this sneaky thing. you cannot download a video unless you have told
@@ -33,7 +34,9 @@ func (a Authenticate) Viewing(f *FilmResponse) error {
    }
    defer res.Body.Close()
    if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
+      var b strings.Builder
+      res.Write(&b)
+      return errors.New(b.String())
    }
    return nil
 }

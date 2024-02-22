@@ -6,22 +6,13 @@ import (
    "154.pages.dev/sofia"
    "154.pages.dev/widevine"
    "encoding/xml"
+   "fmt"
    "errors"
    "io"
    "net/http"
    "net/url"
    "os"
-   "text/template"
 )
-
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type HttpStream struct {
-   Client_ID string
-   Name encoding.Namer
-   Poster widevine.Poster
-   Private_Key string
-   base *url.URL
-}
 
 func (h HttpStream) DASH(media *dash.MPD, id string) error {
    var point dash.Pointer
@@ -32,21 +23,18 @@ func (h HttpStream) DASH(media *dash.MPD, id string) error {
       }
       return false
    })
-   if ok {
-      ext, ok := point.Ext()
-      if !ok {
-         return errors.New("dash.Pointer.Ext")
-      }
-      if initial, ok := point.Initialization(); ok {
-         return h.segment_template(ext, initial, point)
-      }
-      return h.segment_base(ext, point.Representation.BaseURL, point)
+   if !ok {
+      fmt.Println(media)
+      return nil
    }
-   line, err := new(template.Template).Parse(dash.ModeLine)
-   if err != nil {
-      return err
+   ext, ok := point.Ext()
+   if !ok {
+      return errors.New("dash.Pointer.Ext")
    }
-   return line.Execute(os.Stdout, media)
+   if initial, ok := point.Initialization(); ok {
+      return h.segment_template(ext, initial, point)
+   }
+   return h.segment_base(ext, point.Representation.BaseURL, point)
 }
 
 func (h *HttpStream) DashMedia(uri string) (*dash.MPD, error) {
@@ -164,4 +152,12 @@ func encode_segment(dst io.Writer, src io.Reader, key []byte) error {
       }
    }
    return f.Encode(dst)
+}
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type HttpStream struct {
+   Client_ID string
+   Name encoding.Namer
+   Poster widevine.Poster
+   Private_Key string
+   base *url.URL
 }
