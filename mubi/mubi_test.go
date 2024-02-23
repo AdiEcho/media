@@ -36,7 +36,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var auth Authenticate
-   auth.Raw, err = os.ReadFile("authenticate.json")
+   auth.Data, err = os.ReadFile("authenticate.json")
    if err != nil {
       t.Fatal(err)
    }
@@ -81,7 +81,7 @@ func TestAuthenticate(t *testing.T) {
       code LinkCode
       err error
    )
-   code.Raw, err = os.ReadFile("code.json")
+   code.Data, err = os.ReadFile("code.json")
    if err != nil {
       t.Fatal(err)
    }
@@ -90,7 +90,7 @@ func TestAuthenticate(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("authenticate.json", auth.Raw, 0666)
+   os.WriteFile("authenticate.json", auth.Data, 0666)
 }
 
 func TestCode(t *testing.T) {
@@ -99,7 +99,7 @@ func TestCode(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("code.json", code.Raw, 0666)
+   os.WriteFile("code.json", code.Data, 0666)
    code.Unmarshal()
    fmt.Println(code)
 }

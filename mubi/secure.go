@@ -3,15 +3,27 @@ package mubi
 import (
    "encoding/json"
    "errors"
+   "io"
    "net/http"
    "strconv"
    "strings"
 )
 
+type SecureUrl struct {
+   Data []byte
+   V struct {
+      URL string
+   }
+}
+
+func (s *SecureUrl) Unmarshal() error {
+   return json.Unmarshal(s.Data, &s.V)
+}
+
 func (a Authenticate) URL(f *FilmResponse) (*SecureUrl, error) {
    address := func() string {
       b := []byte("https://api.mubi.com/v3/films/")
-      b = strconv.AppendInt(b, f.s.ID, 10)
+      b = strconv.AppendInt(b, f.v.ID, 10)
       b = append(b, "/viewing/secure_url"...)
       return string(b)
    }
@@ -20,7 +32,7 @@ func (a Authenticate) URL(f *FilmResponse) (*SecureUrl, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.s.Token},
+      "Authorization": {"Bearer " + a.v.Token},
       "Client": {client},
       "Client-Country": {ClientCountry},
    }
@@ -34,13 +46,10 @@ func (a Authenticate) URL(f *FilmResponse) (*SecureUrl, error) {
       res.Write(&b)
       return nil, errors.New(b.String())
    }
-   secure := new(SecureUrl)
-   if err := json.NewDecoder(res.Body).Decode(secure); err != nil {
+   var secure SecureUrl
+   secure.Data, err = io.ReadAll(res.Body)
+   if err != nil {
       return nil, err
    }
-   return secure, nil
-}
-
-type SecureUrl struct {
-   URL string
+   return &secure, nil
 }

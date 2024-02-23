@@ -11,6 +11,23 @@ import (
    "strings"
 )
 
+func (w WebAddress) String() string {
+   return w.s
+}
+
+func (w *WebAddress) Set(s string) error {
+   var ok bool
+   _, w.s, ok = strings.Cut(s, "/films/")
+   if !ok {
+      return errors.New("/films/")
+   }
+   return nil
+}
+
+type WebAddress struct {
+   s string
+}
+
 // Mubi do this sneaky thing. you cannot download a video unless you have told
 // the API that you are watching it. so you have to call
 // `/v3/films/%v/viewing`, otherwise it wont let you get the MPD. if you have
@@ -19,7 +36,7 @@ import (
 func (a Authenticate) Viewing(f *FilmResponse) error {
    address := func() string {
       b := []byte("https://api.mubi.com/v3/films/")
-      b = strconv.AppendInt(b, f.s.ID, 10)
+      b = strconv.AppendInt(b, f.v.ID, 10)
       b = append(b, "/viewing"...)
       return string(b)
    }
@@ -28,7 +45,7 @@ func (a Authenticate) Viewing(f *FilmResponse) error {
       return err
    }
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.s.Token},
+      "Authorization": {"Bearer " + a.v.Token},
       "Client": {client},
       "Client-Country": {ClientCountry},
    }
@@ -55,21 +72,21 @@ func (Authenticate) RequestBody(b []byte) ([]byte, error) {
 }
 
 func (Authenticate) ResponseBody(b []byte) ([]byte, error) {
-   var s struct {
+   var v struct {
       License []byte
    }
-   err := json.Unmarshal(b, &s)
+   err := json.Unmarshal(b, &v)
    if err != nil {
       return nil, err
    }
-   return s.License, nil
+   return v.License, nil
 }
 
 func (a Authenticate) RequestHeader() (http.Header, error) {
    value := map[string]any{
       "merchant": "mubi",
-      "sessionId": a.s.Token,
-      "userId": a.s.User.ID,
+      "sessionId": a.v.Token,
+      "userId": a.v.User.ID,
    }
    text, err := json.Marshal(value)
    if err != nil {
@@ -81,17 +98,17 @@ func (a Authenticate) RequestHeader() (http.Header, error) {
 }
 
 func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Raw, &a.s)
+   return json.Unmarshal(a.Data, &a.v)
 }
 
 type Authenticate struct {
-   s struct {
+   Data []byte
+   v struct {
       Token string
       User struct {
          ID int
       }
    }
-   Raw []byte
 }
 
 func (w WebAddress) Film() (*FilmResponse, error) {
@@ -111,14 +128,14 @@ func (w WebAddress) Film() (*FilmResponse, error) {
    }
    defer res.Body.Close()
    var film FilmResponse
-   if err := json.NewDecoder(res.Body).Decode(&film.s); err != nil {
+   if err := json.NewDecoder(res.Body).Decode(&film.v); err != nil {
       return nil, err
    }
    return &film, nil
 }
 
 type FilmResponse struct {
-   s struct {
+   v struct {
       ID int64
       Title string
       Year int
@@ -142,15 +159,15 @@ func (FilmResponse) Episode() (string, bool) {
 }
 
 func (f FilmResponse) Title() (string, bool) {
-   return f.s.Title, true
+   return f.v.Title, true
 }
 
 func (f FilmResponse) Year() (string, bool) {
-   return strconv.Itoa(f.s.Year), true
+   return strconv.Itoa(f.v.Year), true
 }
 
 func (c LinkCode) Authenticate() (*Authenticate, error) {
-   body, err := json.Marshal(map[string]string{"auth_token": c.s.Auth_Token})
+   body, err := json.Marshal(map[string]string{"auth_token": c.v.Auth_Token})
    if err != nil {
       return nil, err
    }
@@ -176,7 +193,7 @@ func (c LinkCode) Authenticate() (*Authenticate, error) {
       return nil, errors.New(b.String())
    }
    var auth Authenticate
-   auth.Raw, err = io.ReadAll(res.Body)
+   auth.Data, err = io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
@@ -209,7 +226,7 @@ func (c *LinkCode) New() error {
       res.Write(&b)
       return errors.New(b.String())
    }
-   c.Raw, err = io.ReadAll(res.Body)
+   c.Data, err = io.ReadAll(res.Body)
    if err != nil {
       return err
    }
@@ -222,35 +239,19 @@ func (c LinkCode) String() string {
    b.WriteString("Go to\n")
    b.WriteString("mubi.com/android\n")
    b.WriteString("and enter the code below\n")
-   b.WriteString(c.s.Link_Code)
+   b.WriteString(c.v.Link_Code)
    return b.String()
 }
 
 type LinkCode struct {
-   Raw []byte
-   s struct {
+   Data []byte
+   v struct {
       Auth_Token string
       Link_Code string
    }
 }
 
 func (c *LinkCode) Unmarshal() error {
-   return json.Unmarshal(c.Raw, &c.s)
+   return json.Unmarshal(c.Data, &c.v)
 }
 
-func (w WebAddress) String() string {
-   return w.s
-}
-
-func (w *WebAddress) Set(s string) error {
-   var ok bool
-   _, w.s, ok = strings.Cut(s, "/films/")
-   if !ok {
-      return errors.New("/films/")
-   }
-   return nil
-}
-
-type WebAddress struct {
-   s string
-}

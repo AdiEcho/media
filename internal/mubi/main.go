@@ -17,6 +17,7 @@ type flags struct {
    web mubi.WebAddress
    code bool
    auth bool
+   secure bool
 }
 
 func main() {
@@ -29,7 +30,8 @@ func main() {
       if err != nil {
          panic(err)
       }
-      return s + "/mubi/", filepath.ToSlash(s) + "/widevine/"
+      s = filepath.ToSlash(s)
+      return s + "/mubi/", s + "/widevine/"
    }()
    flag.Var(&f.web, "a", "address")
    flag.BoolVar(&f.auth, "auth", false, "authenticate")
@@ -37,6 +39,7 @@ func main() {
    flag.BoolVar(&f.code, "code", false, "link code")
    flag.StringVar(&f.dash_id, "i", "", "DASH ID")
    flag.StringVar(&f.h.Private_Key, "p", home+"private_key.pem", "private key")
+   flag.BoolVar(&f.secure, "s", false, "secure URL")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    log.TransportInfo()
@@ -49,6 +52,11 @@ func main() {
       }
    case f.code:
       err := f.write_code()
+      if err != nil {
+         panic(err)
+      }
+   case f.secure:
+      err := f.write_secure()
       if err != nil {
          panic(err)
       }

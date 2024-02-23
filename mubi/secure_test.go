@@ -15,13 +15,13 @@ func TestSecure(t *testing.T) {
       auth Authenticate
       err error
    )
-   auth.Raw, err = os.ReadFile("authenticate.json")
+   auth.Data, err = os.ReadFile("authenticate.json")
    if err != nil {
       t.Fatal(err)
    }
    auth.Unmarshal()
    var film FilmResponse
-   film.s.ID = passages_2022
+   film.v.ID = passages_2022
    secure, err := auth.URL(&film)
    if err != nil {
       t.Fatal(err)
