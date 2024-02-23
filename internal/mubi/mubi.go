@@ -56,7 +56,7 @@ func (f flags) write_secure() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + f.web.String(), secure.Data, 0666)
+   return os.WriteFile(f.home+f.web.String()+".json", secure.Data, 0666)
 }
 
 func (f flags) download() error {
@@ -71,7 +71,7 @@ func (f flags) download() error {
    }
    auth.Unmarshal()
    var secure mubi.SecureUrl
-   secure.Data, err = os.ReadFile(f.home + f.web.String())
+   secure.Data, err = os.ReadFile(f.home+f.web.String()+".json")
    if err != nil {
       return err
    }
