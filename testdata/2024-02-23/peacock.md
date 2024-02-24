@@ -75,6 +75,10 @@ te: trailers
 }
 ~~~
 
+60 loc:
+
+https://github.com/Paco8/plugin.video.skyott/blob/main/resources/lib/signature.py
+
 332 loc:
 
 https://github.com/sdhtele/VT/blob/main/vinetrimmer/services/peacock.py
