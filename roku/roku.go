@@ -7,6 +7,10 @@ import (
    "net/http"
 )
 
+func (Playback) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
 func (p Playback) RequestUrl() (string, bool) {
    return p.DRM.Widevine.LicenseServer, true
 }
@@ -58,10 +62,6 @@ type Playback struct {
          LicenseServer string
       }
    }
-}
-
-func (Playback) RequestHeader() (http.Header, bool) {
-   return nil, false
 }
 
 func (Playback) RequestBody(b []byte) ([]byte, error) {
