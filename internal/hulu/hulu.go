@@ -11,7 +11,7 @@ func (f flags) download() error {
       return err
    }
    var auth hulu.Authenticate
-   auth.Raw, err = os.ReadFile(home + "/hulu/token.json")
+   auth.Raw, err = os.ReadFile(home + "/hulu.json")
    if err != nil {
       return err
    }
@@ -44,7 +44,7 @@ func (f flags) authenticate() error {
    if err != nil {
       return err
    }
-   name += "/hulu/token.json"
+   name += "/hulu.json"
    auth, err := hulu.LivingRoom(f.email, f.password)
    if err != nil {
       return err

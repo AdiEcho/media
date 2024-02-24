@@ -75,13 +75,50 @@ te: trailers
 }
 ~~~
 
-https://github.com/Paco8/plugin.video.skyott/blob/main/resources/lib/signature.py
-
-you can get `x-skyott-usertoken` with web client via `/auth/tokens`, but it need
-`idsession` cookie. what about Android?
-
 https://play.google.com/store/apps/details?id=com.peacocktv.peacockandroid
 
 ~~~
-play -a com.peacocktv.peacockandroid
+> play -a com.peacocktv.peacockandroid
+downloads: 34.82 million
+files: APK APK APK APK
+name: Peacock TV: Stream TV & Movies
+offered by: Peacock TV LLC
+price: 0 USD
+requires: 7.0 and up
+size: 67.11 megabyte
+updated on: Feb 7, 2024
+version code: 124050214
+version name: 5.2.14
 ~~~
+
+you can get `x-skyott-usertoken` with web client via `/auth/tokens`, but it need
+`idsession` cookie. what is used here?:
+
+https://github.com/Paco8/plugin.video.skyott/blob/main/resources/lib/signature.py
+
+~~~py
+headers['x-skyott-usertoken'] = self.account['user_token']
+~~~
+
+then:
+
+~~~py
+self.account['user_token'] = data['userToken']
+~~~
+
+then:
+
+~~~py
+data = self.get_tokens()
+~~~
+
+then:
+
+~~~py
+def get_tokens(self):
+   url = self.endpoints['tokens']
+   headers = {}
+   headers['cookie'] = self.account['cookie']
+~~~
+
+https://github.com/Paco8/plugin.video.skyott/issues/39

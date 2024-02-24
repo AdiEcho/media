@@ -12,6 +12,34 @@ import (
    "strings"
 )
 
+func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
+   req, err := http.NewRequest("GET", "https://discover.hulu.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/content/v5/deeplink/playback"
+   req.URL.RawQuery = url.Values{
+      "id": {watch.s},
+      "namespace": {"entity"},
+   }.Encode()
+   req.Header.Set("Authorization", "Bearer " + a.Value.Data.User_Token)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   link := new(DeepLink)
+   if err := json.NewDecoder(res.Body).Decode(link); err != nil {
+      return nil, err
+   }
+   return link, nil
+}
+
 func (a Authenticate) Details(d *DeepLink) (*Details, error) {
    body, err := func() ([]byte, error) {
       m := map[string][]string{
@@ -205,28 +233,3 @@ func (i *ID) Set(s string) error {
    return nil
 }
 
-func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
-   req, err := http.NewRequest("GET", "https://discover.hulu.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/content/v5/deeplink/playback"
-   req.URL.RawQuery = url.Values{
-      "id": {watch.s},
-      "namespace": {"entity"},
-   }.Encode()
-   req.Header.Set("Authorization", "Bearer " + a.Value.Data.User_Token)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   link := new(DeepLink)
-   if err := json.NewDecoder(res.Body).Decode(link); err != nil {
-      return nil, err
-   }
-   return link, nil
-}

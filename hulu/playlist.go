@@ -7,6 +7,10 @@ import (
    "net/http"
 )
 
+func (Playlist) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
 func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    var p playlist_request
    p.Content_EAB_ID = d.EAB_ID
@@ -87,10 +91,6 @@ func (Playlist) RequestBody(b []byte) ([]byte, error) {
 
 func (Playlist) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
-}
-
-func (Playlist) RequestHeader() (http.Header, bool) {
-   return nil, false
 }
 
 func (p Playlist) RequestUrl() (string, bool) {

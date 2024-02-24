@@ -13,6 +13,43 @@ import (
    "time"
 )
 
+func (v video_playouts) sign(method, path string, body []byte) string {
+   timestamp := time.Now().Unix()
+   encode := func() []byte {
+      b := []byte("x-skyott-usertoken: ")
+      b = append(b, v.user_token()...)
+      return append(b, '\n')
+   }
+   headers_md5 := md5.Sum(encode())
+   payload_md5 := md5.Sum(body)
+   signature := func() string {
+      h := hmac.New(sha1.New, []byte(signature_key))
+      fmt.Fprintln(h, method)
+      fmt.Fprintln(h, path)
+      fmt.Fprintln(h)
+      fmt.Fprintln(h, app_id)
+      fmt.Fprintln(h, sig_version)
+      fmt.Fprintf(h, "%x\n", headers_md5)
+      fmt.Fprintln(h, timestamp)
+      fmt.Fprintf(h, "%x\n", payload_md5)
+      hashed := h.Sum(nil)
+      return base64.StdEncoding.EncodeToString(hashed[:])
+   }
+   sky_ott := func() string {
+      b := []byte("SkyOTT")
+      // must be quoted
+      b = fmt.Appendf(b, " client=%q", app_id)
+      // must be quoted
+      b = fmt.Appendf(b, ",signature=%q", signature())
+      // must be quoted
+      b = fmt.Appendf(b, `,timestamp="%v"`, timestamp)
+      // must be quoted
+      b = fmt.Appendf(b, ",version=%q", sig_version)
+      return string(b)
+   }
+   return sky_ott()
+}
+
 type video_playouts struct {
    Protection struct {
       LicenceToken string // wikipedia.org/wiki/License
@@ -77,43 +114,6 @@ func (v *video_playouts) New(content_id string) error {
       return errors.New(b.String())
    }
    return json.NewDecoder(res.Body).Decode(v)
-}
-
-func (v video_playouts) sign(method, path string, body []byte) string {
-   timestamp := time.Now().Unix()
-   encode := func() []byte {
-      b := []byte("x-skyott-usertoken: ")
-      b = append(b, v.user_token()...)
-      return append(b, '\n')
-   }
-   headers_md5 := md5.Sum(encode())
-   payload_md5 := md5.Sum(body)
-   signature := func() string {
-      h := hmac.New(sha1.New, []byte(signature_key))
-      fmt.Fprintln(h, method)
-      fmt.Fprintln(h, path)
-      fmt.Fprintln(h)
-      fmt.Fprintln(h, app_id)
-      fmt.Fprintln(h, sig_version)
-      fmt.Fprintf(h, "%x\n", headers_md5)
-      fmt.Fprintln(h, timestamp)
-      fmt.Fprintf(h, "%x\n", payload_md5)
-      hashed := h.Sum(nil)
-      return base64.StdEncoding.EncodeToString(hashed[:])
-   }
-   sky_ott := func() string {
-      b := []byte("SkyOTT")
-      // must be quoted
-      b = fmt.Appendf(b, " client=%q", app_id)
-      // must be quoted
-      b = fmt.Appendf(b, ",signature=%q", signature())
-      // must be quoted
-      b = fmt.Appendf(b, `,timestamp="%v"`, timestamp)
-      // must be quoted
-      b = fmt.Appendf(b, ",version=%q", sig_version)
-      return string(b)
-   }
-   return sky_ott()
 }
 
 func (video_playouts) user_token() string {
