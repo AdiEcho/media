@@ -31,7 +31,7 @@ func main() {
          panic(err)
       }
       s = filepath.ToSlash(s)
-      return s + "/mubi/", s + "/widevine/"
+      return s + "/", s + "/widevine/"
    }()
    flag.Var(&f.web, "a", "address")
    flag.BoolVar(&f.auth, "auth", false, "authenticate")

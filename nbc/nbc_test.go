@@ -9,6 +9,11 @@ import (
    "time"
 )
 
+func TestVideo(t *testing.T) {
+   v, ok := Core().RequestUrl()
+   fmt.Println(v, ok)
+}
+
 func TestOnDemand(t *testing.T) {
    for _, mpx_guid := range mpx_guids {
       var meta Metadata
@@ -61,4 +66,3 @@ func TestLicense(t *testing.T) {
    key, ok := module.Key(license)
    fmt.Printf("%x %v\n", key, ok)
 }
-

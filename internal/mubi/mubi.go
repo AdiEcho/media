@@ -11,7 +11,7 @@ func (f flags) write_auth() error {
       code mubi.LinkCode
       err error
    )
-   code.Data, err = os.ReadFile(f.home + "link_code.json")
+   code.Data, err = os.ReadFile("link_code.json")
    if err != nil {
       return err
    }
@@ -20,7 +20,7 @@ func (f flags) write_auth() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "authenticate.json", auth.Data, 0666)
+   return os.WriteFile(f.home + "mubi.json", auth.Data, 0666)
 }
 
 func (f flags) write_code() error {
@@ -29,7 +29,7 @@ func (f flags) write_code() error {
    if err != nil {
       return err
    }
-   os.WriteFile(f.home + "link_code.json", code.Data, 0666)
+   os.WriteFile("link_code.json", code.Data, 0666)
    code.Unmarshal()
    fmt.Println(code)
    return nil
@@ -40,7 +40,7 @@ func (f flags) write_secure() error {
       auth mubi.Authenticate
       err error
    )
-   auth.Data, err = os.ReadFile(f.home + "authenticate.json")
+   auth.Data, err = os.ReadFile(f.home + "mubi.json")
    if err != nil {
       return err
    }
@@ -56,7 +56,7 @@ func (f flags) write_secure() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home+f.web.String()+".json", secure.Data, 0666)
+   return os.WriteFile(f.web.String() + ".json", secure.Data, 0666)
 }
 
 func (f flags) download() error {
@@ -65,13 +65,13 @@ func (f flags) download() error {
       return err
    }
    var auth mubi.Authenticate
-   auth.Data, err = os.ReadFile(f.home + "authenticate.json")
+   auth.Data, err = os.ReadFile(f.home + "mubi.json")
    if err != nil {
       return err
    }
    auth.Unmarshal()
    var secure mubi.SecureUrl
-   secure.Data, err = os.ReadFile(f.home+f.web.String()+".json")
+   secure.Data, err = os.ReadFile(f.web.String() + ".json")
    if err != nil {
       return err
    }

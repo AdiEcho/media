@@ -28,6 +28,12 @@ func (v Video) RequestUrl() (string, bool) {
    return string(b), true
 }
 
+func (Video) RequestHeader() (http.Header, error) {
+   h := make(http.Header)
+   h.Set("content-type", "application/octet-stream")
+   return h, nil
+}
+
 func Core() Video {
    var v Video
    v.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
@@ -78,12 +84,6 @@ func (m Metadata) OnDemand() (*OnDemand, error) {
 
 func (Video) RequestBody(b []byte) ([]byte, error) {
    return b, nil
-}
-
-func (Video) RequestHeader() (http.Header, bool) {
-   h := make(http.Header)
-   h.Set("content-type", "application/octet-stream")
-   return h, true
 }
 
 func (Video) ResponseBody(b []byte) ([]byte, error) {
