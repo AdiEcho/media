@@ -6,10 +6,7 @@ import (
    "testing"
 )
 
-// peacocktv.com/watch/playback/vod/GMO_00000000224510_02_HDSDR
-const content_id = "GMO_00000000224510_02_HDSDR"
-
-func TestVideo(t *testing.T) {
+func TestSignRead(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -24,9 +21,26 @@ func TestVideo(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   video, err := auth.video(content_id)
+   fmt.Printf("%+v\n", auth)
+}
+
+func TestSignWrite(t *testing.T) {
+   user, password := os.Getenv("peacock_username"), os.Getenv("peacock_password")
+   if user == "" {
+      t.Fatal("peacock_username")
+   }
+   var sign sign_in
+   err := sign.New(user, password)
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", video)
+   text, err := sign.marshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile(home + "/peacock.json", text, 0666)
 }

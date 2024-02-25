@@ -10,60 +10,72 @@ import (
    "errors"
    "fmt"
    "net/http"
+   "net/url"
    "slices"
    "strings"
    "time"
 )
 
-const (
-   app_id = "NBCU-ANDROID-v3"
-   signature_key = "JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj"
-   sig_version = "1.0"
-)
+func (s *sign_in) unmarshal(b []byte) error {
+   return json.Unmarshal(b, &s.cookie)
+}
 
-func (a auth_tokens) video(content_id string) (*video_playouts, error) {
+func (s sign_in) marshal() ([]byte, error) {
+   return json.Marshal(s.cookie)
+}
+
+type sign_in struct {
+   cookie *http.Cookie
+}
+
+// userToken is good for one day
+type auth_tokens struct {
+   UserToken string
+}
+
+func (s sign_in) auth() (*auth_tokens, error) {
    body, err := func() ([]byte, error) {
-      type capability struct {
-         Acodec string `json:"acodec"`
-         Container string `json:"container"`
-         Protection string `json:"protection"`
-         Transport string `json:"transport"`
-         Vcodec string `json:"vcodec"`
-      }
       var s struct {
-         ContentId string `json:"contentId"`
+         Auth struct {
+            AuthScheme string `json:"authScheme"`
+            Proposition string `json:"proposition"`
+            Provider string `json:"provider"`
+            ProviderTerritory string `json:"providerTerritory"`
+         } `json:"auth"`
          Device struct {
-            Capabilities []capability `json:"capabilities"`
+            ID string `json:"id"`
+            Platform string `json:"platform"`
+            Type string `json:"type"`
          } `json:"device"`
       }
-      s.ContentId = content_id
-      s.Device.Capabilities = []capability{
-         {
-            Acodec: "AAC",
-            Container: "ISOBMFF",
-            Protection: "WIDEVINE",
-            Transport: "DASH",
-            Vcodec: "H264",
-         },
-      }
+      s.Auth.AuthScheme = "MESSO"
+      s.Auth.Proposition = "NBCUOTT"
+      s.Auth.Provider = "NBCU"
+      s.Auth.ProviderTerritory = "US"
+      s.Device.Type = "COMPUTER"
+      s.Device.Platform = "PC"
+      // request will work without this, but then `/video/playouts/vod`
+      // will fail with
+      // {"errorCode":"OVP_00311","description":"Unknown deviceId"}
+      // BE CAREFUL, changing this too often will result in a four hour block:
+      // {"errorCode":"OVP_00014",
+      // "description":"Maximum number of streaming devices exceeded"}
+      s.Device.ID = "PC"
       return json.Marshal(s)
    }()
    if err != nil {
       return nil, err
    }
    req, err := http.NewRequest(
-      "POST", "https://play.ovp.peacocktv.com/video/playouts/vod",
+      "POST", "https://play.ovp.peacocktv.com/auth/tokens",
       bytes.NewReader(body),
    )
    if err != nil {
       return nil, err
    }
-   req.Header.Set("x-skyott-usertoken", a.UserToken)
-   // `application/json` fails
-   req.Header.Set("content-type", "application/vnd.playvod.v1+json")
-   req.Header.Set(
-      "x-sky-signature", sign(req.Method, req.URL.Path, req.Header, body),
-   )
+   req.AddCookie(s.cookie)
+   req.Header.Set("content-type", "application/vnd.tokens.v1+json")
+   req.Header.Set("x-sky-signature", sign(req.Method, req.URL.Path, nil, body))
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -74,36 +86,50 @@ func (a auth_tokens) video(content_id string) (*video_playouts, error) {
       res.Write(&b)
       return nil, errors.New(b.String())
    }
-   video := new(video_playouts)
-   if err := json.NewDecoder(res.Body).Decode(video); err != nil {
+   auth := new(auth_tokens)
+   if err := json.NewDecoder(res.Body).Decode(auth); err != nil {
       return nil, err
    }
-   return video, nil
+   return auth, nil
 }
 
-type video_playouts struct {
-   Asset struct {
-      Endpoints []struct {
-         CDN string
-         URL string
+func (s *sign_in) New(user, password string) error {
+   body := url.Values{
+      "userIdentifier": {user},
+      "password": {password},
+   }.Encode()
+   req, err := http.NewRequest(
+      "POST", "https://rango.id.peacocktv.com/signin/service/international",
+      strings.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   req.Header = http.Header{
+      "Content-Type": {"application/x-www-form-urlencoded"},
+      "X-Skyott-Proposition": {"NBCUOTT"},
+      "X-Skyott-Provider": {"NBCU"},
+      "X-Skyott-Territory": {"US"},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   for _, cookie := range res.Cookies() {
+      if cookie.Name == "idsession" {
+         s.cookie = cookie
+         return nil
       }
    }
-   Protection struct {
-      LicenceAcquisitionUrl string // wikipedia.org/wiki/License
-   }
+   return http.ErrNoCookie
 }
 
-func (v video_playouts) RequestUrl() (string, bool) {
-   return v.Protection.LicenceAcquisitionUrl, true
-}
-
-func (video_playouts) RequestBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (video_playouts) ResponseBody(b []byte) ([]byte, error) {
-   return b, nil
-}
+const (
+   app_id = "NBCU-ANDROID-v3"
+   signature_key = "JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj"
+   sig_version = "1.0"
+)
 
 func sign(method, path string, head http.Header, body []byte) string {
    timestamp := time.Now().Unix()
@@ -146,14 +172,4 @@ func sign(method, path string, head http.Header, body []byte) string {
       return string(b)
    }
    return sky_ott()
-}
-
-// how the fuck do we sign the body?
-func (video_playouts) RequestHeader() (http.Header, error) {
-   h := make(http.Header)
-   h.Set(
-      "x-sky-signature",
-      sign("POST", "/drm/widevine/acquirelicense", nil, nil),
-   )
-   return h, nil
 }
