@@ -10,17 +10,29 @@ import (
    "errors"
    "fmt"
    "net/http"
+   "slices"
+   "strings"
    "time"
 )
 
-func (v video_playouts) sign(method, path string, body []byte) string {
+func user_token() string {
+   return "38-uyyWV0cL0it8NIN0igaMbD045ycSbGKUl9kuw5KyZuQIPgBSpm32E5bzXTFmysyIsgKawlGqKccNLHhor1ru5gEbU6rL/FfTSTTnNW70XO7TyHVAwKC0AhQEh0R4TSryjRAZjX06UMMJltKccv3pjTlsW52Y5Wo3QMjURNPZ2JA5yvjWhl2e5E+ZNpFGnhUj2YhRgj+Pjrb9b5hJhev+iSxTaDXcROivICKPdqxAlMxP43POUPhuxmzeNJ8ZtyWoGpFHQjjetpLPTKubJ6eyLA4V4/MGzNvt4gA4B7BbbWBw05tHSFno3Sgaxp9jSZv9XiNoWkhHHV25iVZyU1fcAfCkGzDctFQFFYL3D0MI9NWaeqKBD2a9cngxdm5Sd/eEm/0mJeeQ7Hllhhg0WELn/S7Q+uiv7/mCPBtW+tI6nlsvDSZyaouylM/8cxXQnZ1z5WP4gpprWAdMcQBFwzMVLYv9TvN09uZNWxVKXIox7nA0sATaN82nUbuq0P3hrWMtaEabOrYQqEHk0yN1ThPStJ4G50aRVGVFbbyUiAAgRijWPySbeuPQJ9612BWgvEtd"
+}
+
+func sign(method, path string, head http.Header, body []byte) string {
    timestamp := time.Now().Unix()
-   encode := func() []byte {
-      b := []byte("x-skyott-usertoken: ")
-      b = append(b, v.user_token()...)
-      return append(b, '\n')
-   }
-   headers_md5 := md5.Sum(encode())
+   text_headers := func() string {
+      var s []string
+      for k := range head {
+         k = strings.ToLower(k)
+         if strings.HasPrefix(k, "x-skyott-") {
+            s = append(s, k + ": " + head.Get(k) + "\n")
+         }
+      }
+      slices.Sort(s)
+      return strings.Join(s, "")
+   }()
+   headers_md5 := md5.Sum([]byte(text_headers))
    payload_md5 := md5.Sum(body)
    signature := func() string {
       h := hmac.New(sha1.New, []byte(signature_key))
@@ -101,8 +113,10 @@ func (v *video_playouts) New(content_id string) error {
    }
    // `application/json` fails
    req.Header.Set("content-type", "application/vnd.playvod.v1+json")
-   req.Header.Set("x-skyott-usertoken", v.user_token())
-   req.Header.Set("x-sky-signature", v.sign(req.Method, req.URL.Path, body))
+   req.Header.Set("x-skyott-usertoken", user_token())
+   req.Header.Set(
+      "x-sky-signature", sign(req.Method, req.URL.Path, req.Header, body),
+   )
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil
@@ -114,8 +128,4 @@ func (v *video_playouts) New(content_id string) error {
       return errors.New(b.String())
    }
    return json.NewDecoder(res.Body).Decode(v)
-}
-
-func (video_playouts) user_token() string {
-   return "13-CTnvCpv6dF15UMIhDeReOrNgasnSE+cvwqX+u7raWcahCmUim9G1dQJg311l/MwbPhAvF2BVsN57XPf+T+DHJvSb4f4vZ25jdGNdJ/fbW8YwmQInDV0Ury+V1I8/uvXLgqXQCtdQ/i23NC9RuSzTJ0LUa1Y2meoG+Vrlvy8cZSvwOxOMp6GpJB+IhZBG0iLJlYo1idT6fzD80pWPUdNM6ncp9UnlliWIh5VTXj/Fi+N6hWRgmkLshvKr0GbPVKcIY4uIV5NwslcNUAbMeI3fDaBmEfDVP7FGVM7EsayW/VbQmbu4DU5VXw5faJbINP3uDQ39LoyoH2gIcPZn7rMILVrfRgGlXabvvTDQqyTdFThChqpdVwo7rRjS0RhZGNQ3RX2CY63kKBcrJho5R/k3rj2vwIYyL++EQPHXoAnXSlUGV47JAlRq3Pi+7odT0juAtXqHuUt/Qk78RR1dehTxgzGrC5ajfl3sBgcFZD8FcZhBkFj7yvxjxaAcqA9+z5UE8ditDPSakJJxXDvVoCmH0q0yxr+DpbGWEo7JcwElv+mAoHNroezMebiQN5I/Nl3u"
 }
