@@ -10,6 +10,10 @@ const content_id = "GMO_00000000224510_02_HDSDR"
 
 func TestVideo(t *testing.T) {
    var auth auth_tokens
+   err := auth.New()
+   if err != nil {
+      t.Fatal(err)
+   }
    video, err := auth.video(content_id)
    if err != nil {
       t.Fatal(err)
