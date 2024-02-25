@@ -15,58 +15,11 @@ import (
    "time"
 )
 
-type auth_tokens struct {
-   UserToken string
-}
-
 const (
    app_id = "NBCU-ANDROID-v3"
    signature_key = "JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj"
    sig_version = "1.0"
 )
-
-func sign(method, path string, head http.Header, body []byte) string {
-   timestamp := time.Now().Unix()
-   text_headers := func() string {
-      var s []string
-      for k := range head {
-         k = strings.ToLower(k)
-         if strings.HasPrefix(k, "x-skyott-") {
-            s = append(s, k + ": " + head.Get(k) + "\n")
-         }
-      }
-      slices.Sort(s)
-      return strings.Join(s, "")
-   }()
-   headers_md5 := md5.Sum([]byte(text_headers))
-   payload_md5 := md5.Sum(body)
-   signature := func() string {
-      h := hmac.New(sha1.New, []byte(signature_key))
-      fmt.Fprintln(h, method)
-      fmt.Fprintln(h, path)
-      fmt.Fprintln(h)
-      fmt.Fprintln(h, app_id)
-      fmt.Fprintln(h, sig_version)
-      fmt.Fprintf(h, "%x\n", headers_md5)
-      fmt.Fprintln(h, timestamp)
-      fmt.Fprintf(h, "%x\n", payload_md5)
-      hashed := h.Sum(nil)
-      return base64.StdEncoding.EncodeToString(hashed[:])
-   }
-   sky_ott := func() string {
-      b := []byte("SkyOTT")
-      // must be quoted
-      b = fmt.Appendf(b, " client=%q", app_id)
-      // must be quoted
-      b = fmt.Appendf(b, ",signature=%q", signature())
-      // must be quoted
-      b = fmt.Appendf(b, `,timestamp="%v"`, timestamp)
-      // must be quoted
-      b = fmt.Appendf(b, ",version=%q", sig_version)
-      return string(b)
-   }
-   return sky_ott()
-}
 
 func (a auth_tokens) video(content_id string) (*video_playouts, error) {
    body, err := func() ([]byte, error) {
@@ -129,7 +82,78 @@ func (a auth_tokens) video(content_id string) (*video_playouts, error) {
 }
 
 type video_playouts struct {
-   Protection struct {
-      LicenceToken string // wikipedia.org/wiki/License
+   Asset struct {
+      Endpoints []struct {
+         CDN string
+         URL string
+      }
    }
+   Protection struct {
+      LicenceAcquisitionUrl string // wikipedia.org/wiki/License
+   }
+}
+
+func (v video_playouts) RequestUrl() (string, bool) {
+   return v.Protection.LicenceAcquisitionUrl, true
+}
+
+func (video_playouts) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (video_playouts) ResponseBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func sign(method, path string, head http.Header, body []byte) string {
+   timestamp := time.Now().Unix()
+   text_headers := func() string {
+      var s []string
+      for k := range head {
+         k = strings.ToLower(k)
+         if strings.HasPrefix(k, "x-skyott-") {
+            s = append(s, k + ": " + head.Get(k) + "\n")
+         }
+      }
+      slices.Sort(s)
+      return strings.Join(s, "")
+   }()
+   headers_md5 := md5.Sum([]byte(text_headers))
+   payload_md5 := md5.Sum(body)
+   signature := func() string {
+      h := hmac.New(sha1.New, []byte(signature_key))
+      fmt.Fprintln(h, method)
+      fmt.Fprintln(h, path)
+      fmt.Fprintln(h)
+      fmt.Fprintln(h, app_id)
+      fmt.Fprintln(h, sig_version)
+      fmt.Fprintf(h, "%x\n", headers_md5)
+      fmt.Fprintln(h, timestamp)
+      fmt.Fprintf(h, "%x\n", payload_md5)
+      hashed := h.Sum(nil)
+      return base64.StdEncoding.EncodeToString(hashed[:])
+   }
+   sky_ott := func() string {
+      b := []byte("SkyOTT")
+      // must be quoted
+      b = fmt.Appendf(b, " client=%q", app_id)
+      // must be quoted
+      b = fmt.Appendf(b, ",signature=%q", signature())
+      // must be quoted
+      b = fmt.Appendf(b, `,timestamp="%v"`, timestamp)
+      // must be quoted
+      b = fmt.Appendf(b, ",version=%q", sig_version)
+      return string(b)
+   }
+   return sky_ott()
+}
+
+// how the fuck do we sign the body?
+func (video_playouts) RequestHeader() (http.Header, error) {
+   h := make(http.Header)
+   h.Set(
+      "x-sky-signature",
+      sign("POST", "/drm/widevine/acquirelicense", nil, nil),
+   )
+   return h, nil
 }

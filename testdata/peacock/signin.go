@@ -9,6 +9,23 @@ import (
    "strings"
 )
 
+func (s *sign_in) unmarshal(b []byte) error {
+   return json.Unmarshal(b, &s.cookie)
+}
+
+func (s sign_in) marshal() ([]byte, error) {
+   return json.Marshal(s.cookie)
+}
+
+type sign_in struct {
+   cookie *http.Cookie
+}
+
+// userToken is good for one day
+type auth_tokens struct {
+   UserToken string
+}
+
 func (s sign_in) auth() (*auth_tokens, error) {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -67,10 +84,6 @@ func (s sign_in) auth() (*auth_tokens, error) {
       return nil, err
    }
    return auth, nil
-}
-
-type sign_in struct {
-   cookie *http.Cookie
 }
 
 func (s *sign_in) New(user, password string) error {

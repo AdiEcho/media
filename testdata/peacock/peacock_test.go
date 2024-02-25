@@ -10,15 +10,16 @@ import (
 const content_id = "GMO_00000000224510_02_HDSDR"
 
 func TestVideo(t *testing.T) {
-   user, password := os.Getenv("peacock_username"), os.Getenv("peacock_password")
-   if user == "" {
-      t.Fatal("peacock_username")
-   }
-   var sign sign_in
-   err := sign.New(user, password)
+   home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
+   text, err := os.ReadFile(home + "/peacock.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var sign sign_in
+   sign.unmarshal(text)
    auth, err := sign.auth()
    if err != nil {
       t.Fatal(err)

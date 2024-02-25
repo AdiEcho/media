@@ -95,4 +95,6 @@ set modify_headers '/~u signin.service.international/x-skyott-device/'
 
 Header needs to be removed from that request only, since other requests need the
 header. you can get `x-skyott-usertoken` with web client via `/auth/tokens`,
-but it need `idsession` cookie. Looks like Android is the same.
+but it need `idsession` cookie. Looks like Android is the same. MPD is here:
+
+<https://g003-vod-us-cmaf-prd-mc.cdn.peacocktv.com/pub/global/r3d/msk/PCK_1704473831643-PJZhp_01/cmaf/mpeg_cenc/master_cmaf.mpd>
