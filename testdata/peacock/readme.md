@@ -75,24 +75,7 @@ te: trailers
 }
 ~~~
 
-https://play.google.com/store/apps/details?id=com.peacocktv.peacockandroid
-
-~~~
-> play -a com.peacocktv.peacockandroid
-downloads: 34.82 million
-files: APK APK APK APK
-name: Peacock TV: Stream TV & Movies
-offered by: Peacock TV LLC
-price: 0 USD
-requires: 7.0 and up
-size: 67.11 megabyte
-updated on: Feb 7, 2024
-version code: 124050214
-version name: 5.2.14
-~~~
-
-you can get `x-skyott-usertoken` with web client via `/auth/tokens`, but it need
-`idsession` cookie. what is used here?:
+what is used here?:
 
 https://github.com/Paco8/plugin.video.skyott/blob/main/resources/lib/signature.py
 
@@ -121,4 +104,51 @@ def get_tokens(self):
    headers['cookie'] = self.account['cookie']
 ~~~
 
-https://github.com/Paco8/plugin.video.skyott/issues/39
+- https://github.com/Paco8/plugin.video.skyott/issues/39
+- https://github.com/larsenv/YouTube-TV-Downloader/issues/1
+
+~~~
+> play -a com.peacocktv.peacockandroid
+downloads: 34.82 million
+files: APK APK APK APK
+name: Peacock TV: Stream TV & Movies
+offered by: Peacock TV LLC
+price: 0 USD
+requires: 7.0 and up
+size: 67.11 megabyte
+updated on: Feb 7, 2024
+version code: 124050214
+version name: 5.2.14
+~~~
+
+https://play.google.com/store/apps/details?id=com.peacocktv.peacockandroid
+
+If you start the app and Sign In, this request:
+
+~~~
+POST https://rango.id.peacocktv.com/signin/service/international HTTP/2.0
+content-type: application/x-www-form-urlencoded
+x-skyott-device: MOBILE
+x-skyott-proposition: NBCUOTT
+x-skyott-provider: NBCU
+x-skyott-territory: US
+
+userIdentifier=MY_EMAIL&password=MY_PASSWORD
+~~~
+
+will fail:
+
+~~~
+HTTP/2.0 429
+~~~
+
+You can fix this problem by removing this request header before starting the
+app:
+
+~~~
+set modify_headers '/~u signin.service.international/x-skyott-device/'
+~~~
+
+Header needs to be removed from that request only, since other requests need the
+header. you can get `x-skyott-usertoken` with web client via `/auth/tokens`,
+but it need `idsession` cookie. Looks like Android is the same.
