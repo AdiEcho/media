@@ -1,58 +1,63 @@
 package peacock
 
 import (
+   "bytes"
    "encoding/json"
-   "io"
+   "errors"
    "net/http"
-   "net/url"
-   "strings"
 )
 
 func (a *auth_tokens) New() error {
-   const body = `
-   {
-     "auth": {
-       "authScheme": "MESSO",
-       "authIssuer": "NOWTV",
-       "personaId": "772bf4eb-4b98-4466-8922-d8c42f900e9c",
-       "provider": "NBCU",
-       "providerTerritory": "US",
-       "proposition": "NBCUOTT"
-     },
-     "device": {
-       "type": "COMPUTER",
-       "platform": "PC"
-     }
+   body, err := func() ([]byte, error) {
+      var s struct {
+         Auth struct {
+            AuthScheme string `json:"authScheme"`
+            Proposition string `json:"proposition"`
+            Provider string `json:"provider"`
+            ProviderTerritory string `json:"providerTerritory"`
+         } `json:"auth"`
+         Device struct {
+            Platform string `json:"platform"`
+            Type string `json:"type"`
+         } `json:"device"`
+      }
+      s.Auth.AuthScheme = "MESSO"
+      s.Auth.Proposition = "NBCUOTT"
+      s.Auth.Provider = "NBCU"
+      s.Auth.ProviderTerritory = "US"
+      s.Device.Platform = "PC"
+      s.Device.Type = "COMPUTER"
+      return json.Marshal(s)
+   }()
+   if err != nil {
+      return err
    }
-   `
-   req := new(http.Request)
-   req.Header = make(http.Header)
-   req.Method = "POST"
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "ovp.peacocktv.com"
-   req.URL.Path = "/auth/tokens"
-   req.URL.Scheme = "https"
-   req.Header["Cookie"] = []string{
-      "idsession=E0-AAAADBaA4I4bW1mAUJgD8HiYL3/d97POed3b0DcxA/VMs87+3JJYZA6V23xO2DTE9hgF1p2EUh6C5RWt0snSpc8+XZnCOetS3GsBlae8zfESQbonJTONmZxa4aypEqgYgWNW",
+   req, err := http.NewRequest(
+      "POST", "https://ovp.peacocktv.com/auth/tokens", bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
    }
-   req.Header["Content-Type"] = []string{"application/vnd.tokens.v1+json"}
-   req.Body = io.NopCloser(strings.NewReader(body))
-   req.Header["X-Skyott-Device"] = []string{"COMPUTER"}
-   req.Header["X-Skyott-Platform"] = []string{"PC"}
-   req.Header["X-Skyott-Proposition"] = []string{"NBCUOTT"}
-   req.Header["X-Skyott-Provider"] = []string{"NBCU"}
-   req.Header["X-Skyott-Territory"] = []string{"US"}
-   req.Header["X-Sky-Signature"] = []string{
-      sign(req.Method, req.URL.Path, req.Header, []byte(body)),
+   req.Header = http.Header{
+      "content-type": {"application/vnd.tokens.v1+json"},
+      "cookie": {"idsession=" + a.id_session()},
+      "x-sky-signature": {sign(req.Method, req.URL.Path, nil, body)},
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      res.Write(&b)
+      return errors.New(b.String())
+   }
    return json.NewDecoder(res.Body).Decode(a)
+}
+
+func (auth_tokens) id_session() string {
+   return "E0-AAAADBaA4I4bW1mAUJgD8HiYL3/d97POed3b0DcxA/VMs87+3JJYZA6V23xO2DTE9hgF1p2EUh6C5RWt0snSpc8+XZnCOetS3GsBlae8zfESQbonJTONmZxa4aypEqgYgWNW"
 }
 
 type auth_tokens struct {

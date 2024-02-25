@@ -9,8 +9,8 @@ import (
 const content_id = "GMO_00000000224510_02_HDSDR"
 
 func TestVideo(t *testing.T) {
-   var video video_playouts
-   err := video.New(content_id)
+   var auth auth_tokens
+   video, err := auth.video(content_id)
    if err != nil {
       t.Fatal(err)
    }
