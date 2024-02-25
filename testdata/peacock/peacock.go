@@ -15,6 +15,10 @@ import (
    "time"
 )
 
+type auth_tokens struct {
+   UserToken string
+}
+
 const (
    app_id = "NBCU-ANDROID-v3"
    signature_key = "JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj"

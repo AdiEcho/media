@@ -2,6 +2,7 @@ package peacock
 
 import (
    "fmt"
+   "os"
    "testing"
 )
 
@@ -9,8 +10,16 @@ import (
 const content_id = "GMO_00000000224510_02_HDSDR"
 
 func TestVideo(t *testing.T) {
-   var auth auth_tokens
-   err := auth.New()
+   user, password := os.Getenv("peacock_username"), os.Getenv("peacock_password")
+   if user == "" {
+      t.Fatal("peacock_username")
+   }
+   var sign sign_in
+   err := sign.New(user, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   auth, err := sign.auth()
    if err != nil {
       t.Fatal(err)
    }
