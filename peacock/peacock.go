@@ -16,12 +16,69 @@ import (
    "time"
 )
 
+func sign(method, path string, head http.Header, body []byte) string {
+   timestamp := time.Now().Unix()
+   text_headers := func() string {
+      var s []string
+      for k := range head {
+         k = strings.ToLower(k)
+         if strings.HasPrefix(k, "x-skyott-") {
+            s = append(s, k + ": " + head.Get(k) + "\n")
+         }
+      }
+      slices.Sort(s)
+      return strings.Join(s, "")
+   }()
+   headers_md5 := md5.Sum([]byte(text_headers))
+   payload_md5 := md5.Sum(body)
+   signature := func() string {
+      h := hmac.New(sha1.New, []byte(signature_key))
+      fmt.Fprintln(h, method)
+      fmt.Fprintln(h, path)
+      fmt.Fprintln(h)
+      fmt.Fprintln(h, app_id)
+      fmt.Fprintln(h, sig_version)
+      fmt.Fprintf(h, "%x\n", headers_md5)
+      fmt.Fprintln(h, timestamp)
+      fmt.Fprintf(h, "%x\n", payload_md5)
+      hashed := h.Sum(nil)
+      return base64.StdEncoding.EncodeToString(hashed[:])
+   }
+   sky_ott := func() string {
+      b := []byte("SkyOTT")
+      // must be quoted
+      b = fmt.Appendf(b, " client=%q", app_id)
+      // must be quoted
+      b = fmt.Appendf(b, ",signature=%q", signature())
+      // must be quoted
+      b = fmt.Appendf(b, `,timestamp="%v"`, timestamp)
+      // must be quoted
+      b = fmt.Appendf(b, ",version=%q", sig_version)
+      return string(b)
+   }
+   return sky_ott()
+}
+
 // userToken is good for one day
 type auth_tokens struct {
    UserToken string
 }
 
-func (s sign_in) auth() (*auth_tokens, error) {
+const (
+   app_id = "NBCU-ANDROID-v3"
+   signature_key = "JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj"
+   sig_version = "1.0"
+)
+
+type SignIn struct {
+   cookie *http.Cookie
+}
+
+func (s SignIn) Marshal() ([]byte, error) {
+   return json.Marshal(s.cookie)
+}
+
+func (s SignIn) auth() (*auth_tokens, error) {
    var v struct {
       Auth struct {
          AuthScheme string `json:"authScheme"`
@@ -89,25 +146,11 @@ func (s sign_in) auth() (*auth_tokens, error) {
    return auth, nil
 }
 
-const (
-   app_id = "NBCU-ANDROID-v3"
-   signature_key = "JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj"
-   sig_version = "1.0"
-)
-
-func (s *sign_in) unmarshal(b []byte) error {
+func (s *SignIn) unmarshal(b []byte) error {
    return json.Unmarshal(b, &s.cookie)
 }
 
-func (s sign_in) marshal() ([]byte, error) {
-   return json.Marshal(s.cookie)
-}
-
-type sign_in struct {
-   cookie *http.Cookie
-}
-
-func (s *sign_in) New(user, password string) error {
+func (s *SignIn) New(user, password string) error {
    body := url.Values{
       "userIdentifier": {user},
       "password": {password},
@@ -137,47 +180,4 @@ func (s *sign_in) New(user, password string) error {
       }
    }
    return http.ErrNoCookie
-}
-
-func sign(method, path string, head http.Header, body []byte) string {
-   timestamp := time.Now().Unix()
-   text_headers := func() string {
-      var s []string
-      for k := range head {
-         k = strings.ToLower(k)
-         if strings.HasPrefix(k, "x-skyott-") {
-            s = append(s, k + ": " + head.Get(k) + "\n")
-         }
-      }
-      slices.Sort(s)
-      return strings.Join(s, "")
-   }()
-   headers_md5 := md5.Sum([]byte(text_headers))
-   payload_md5 := md5.Sum(body)
-   signature := func() string {
-      h := hmac.New(sha1.New, []byte(signature_key))
-      fmt.Fprintln(h, method)
-      fmt.Fprintln(h, path)
-      fmt.Fprintln(h)
-      fmt.Fprintln(h, app_id)
-      fmt.Fprintln(h, sig_version)
-      fmt.Fprintf(h, "%x\n", headers_md5)
-      fmt.Fprintln(h, timestamp)
-      fmt.Fprintf(h, "%x\n", payload_md5)
-      hashed := h.Sum(nil)
-      return base64.StdEncoding.EncodeToString(hashed[:])
-   }
-   sky_ott := func() string {
-      b := []byte("SkyOTT")
-      // must be quoted
-      b = fmt.Appendf(b, " client=%q", app_id)
-      // must be quoted
-      b = fmt.Appendf(b, ",signature=%q", signature())
-      // must be quoted
-      b = fmt.Appendf(b, `,timestamp="%v"`, timestamp)
-      // must be quoted
-      b = fmt.Appendf(b, ",version=%q", sig_version)
-      return string(b)
-   }
-   return sky_ott()
 }

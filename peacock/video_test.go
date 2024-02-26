@@ -45,7 +45,7 @@ func TestVideo(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var sign sign_in
+   var sign SignIn
    sign.unmarshal(data)
    auth, err := sign.auth()
    if err != nil {
