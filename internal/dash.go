@@ -12,6 +12,7 @@ import (
    "net/http"
    "net/url"
    "os"
+   "slices"
 )
 
 func (h HttpStream) DASH(media *dash.MPD, id string) error {
@@ -24,6 +25,14 @@ func (h HttpStream) DASH(media *dash.MPD, id string) error {
       return false
    })
    if !ok {
+      cmp := func(a, b dash.Representation) int {
+         return b.Bandwidth - a.Bandwidth
+      }
+      for _, p := range media.Period {
+         for _, a := range p.AdaptationSet {
+            slices.SortFunc(a.Representation, cmp)
+         }
+      }
       fmt.Println(media)
       return nil
    }

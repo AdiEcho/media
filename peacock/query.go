@@ -28,31 +28,44 @@ func (QueryNode) Owner() (string, bool) {
    return "", false
 }
 
-type QueryNode struct {
-   Attributes struct {
-      EpisodeNumber int
-      SeasonNumber int
-      SeriesName string
-      Title string
+func (q QueryNode) Season() (string, bool) {
+   if v := q.Attributes.SeasonNumber; v >= 1 {
+      return strconv.Itoa(v), true
    }
-}
-
-func (QueryNode) Year() (string, bool) {
    return "", false
 }
 
-func (q QueryNode) Show() (string, bool) {
-   return q.Attributes.SeriesName, true
+func (q QueryNode) Episode() (string, bool) {
+   if v := q.Attributes.EpisodeNumber; v >= 1 {
+      return strconv.Itoa(v), true
+   }
+   return "", false
 }
 
 func (q QueryNode) Title() (string, bool) {
    return q.Attributes.Title, true
 }
 
-func (q QueryNode) Season() (string, bool) {
-   return strconv.Itoa(q.Attributes.SeasonNumber), true
+func (q QueryNode) Show() (string, bool) {
+   if v := q.Attributes.SeriesName; v != "" {
+      return v, true
+   }
+   return "", false
 }
 
-func (q QueryNode) Episode() (string, bool) {
-   return strconv.Itoa(q.Attributes.EpisodeNumber), true
+type QueryNode struct {
+   Attributes struct {
+      EpisodeNumber int
+      SeasonNumber int
+      SeriesName string
+      Title string
+      Year int
+   }
+}
+
+func (q QueryNode) Year() (string, bool) {
+   if q.Attributes.SeriesName != "" {
+      return "", false
+   }
+   return strconv.Itoa(q.Attributes.Year), true
 }
