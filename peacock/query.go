@@ -6,7 +6,7 @@ import (
    "strconv"
 )
 
-func (q *query_node) New(content_id string) error {
+func (q *QueryNode) New(content_id string) error {
    req, err := http.NewRequest("GET", "https://atom.peacocktv.com", nil)
    if err != nil {
       return err
@@ -24,31 +24,31 @@ func (q *query_node) New(content_id string) error {
    return json.NewDecoder(res.Body).Decode(q)
 }
 
-func (query_node) Owner() (string, bool) {
+func (QueryNode) Owner() (string, bool) {
    return "", false
 }
 
-func (query_node) Year() (string, bool) {
+func (QueryNode) Year() (string, bool) {
    return "", false
 }
 
-func (q query_node) Show() (string, bool) {
+func (q QueryNode) Show() (string, bool) {
    return q.Attributes.SeriesName, true
 }
 
-func (q query_node) Title() (string, bool) {
+func (q QueryNode) Title() (string, bool) {
    return q.Attributes.Title, true
 }
 
-func (q query_node) Season() (string, bool) {
+func (q QueryNode) Season() (string, bool) {
    return strconv.Itoa(q.Attributes.SeasonNumber), true
 }
 
-func (q query_node) Episode() (string, bool) {
+func (q QueryNode) Episode() (string, bool) {
    return strconv.Itoa(q.Attributes.EpisodeNumber), true
 }
 
-type query_node struct {
+type QueryNode struct {
    Attributes struct {
       EpisodeNumber int
       SeasonNumber int

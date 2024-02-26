@@ -7,11 +7,11 @@ import (
    "net/http"
 )
 
-func (video_playouts) RequestHeader() (http.Header, error) {
+func (VideoPlayout) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 
-type video_playouts struct {
+type VideoPlayout struct {
    Asset struct {
       Endpoints []struct {
          CDN string
@@ -23,19 +23,19 @@ type video_playouts struct {
    }
 }
 
-func (video_playouts) RequestBody(b []byte) ([]byte, error) {
+func (VideoPlayout) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (video_playouts) ResponseBody(b []byte) ([]byte, error) {
+func (VideoPlayout) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (v video_playouts) RequestUrl() (string, bool) {
+func (v VideoPlayout) RequestUrl() (string, bool) {
    return v.Protection.LicenceAcquisitionUrl, true
 }
 
-func (a AuthToken) video(content_id string) (*video_playouts, error) {
+func (a AuthToken) Video(content_id string) (*VideoPlayout, error) {
    body, err := func() ([]byte, error) {
       type capability struct {
          Acodec string `json:"acodec"`
@@ -88,7 +88,7 @@ func (a AuthToken) video(content_id string) (*video_playouts, error) {
       res.Write(&b)
       return nil, errors.New(b.String())
    }
-   video := new(video_playouts)
+   video := new(VideoPlayout)
    if err := json.NewDecoder(res.Body).Decode(video); err != nil {
       return nil, err
    }

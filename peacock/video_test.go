@@ -51,7 +51,7 @@ func TestVideo(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   video, err := auth.video(content_id)
+   video, err := auth.Video(content_id)
    if err != nil {
       t.Fatal(err)
    }
