@@ -28,6 +28,15 @@ func (QueryNode) Owner() (string, bool) {
    return "", false
 }
 
+type QueryNode struct {
+   Attributes struct {
+      EpisodeNumber int
+      SeasonNumber int
+      SeriesName string
+      Title string
+   }
+}
+
 func (QueryNode) Year() (string, bool) {
    return "", false
 }
@@ -46,13 +55,4 @@ func (q QueryNode) Season() (string, bool) {
 
 func (q QueryNode) Episode() (string, bool) {
    return strconv.Itoa(q.Attributes.EpisodeNumber), true
-}
-
-type QueryNode struct {
-   Attributes struct {
-      EpisodeNumber int
-      SeasonNumber int
-      SeriesName string
-      Title string
-   }
 }
