@@ -37,8 +37,8 @@ func TestSignRead(t *testing.T) {
       t.Fatal(err)
    }
    var sign SignIn
-   sign.unmarshal(text)
-   auth, err := sign.auth()
+   sign.Unmarshal(text)
+   auth, err := sign.Auth()
    if err != nil {
       t.Fatal(err)
    }

@@ -35,7 +35,7 @@ func (v video_playouts) RequestUrl() (string, bool) {
    return v.Protection.LicenceAcquisitionUrl, true
 }
 
-func (a auth_tokens) video(content_id string) (*video_playouts, error) {
+func (a AuthToken) video(content_id string) (*video_playouts, error) {
    body, err := func() ([]byte, error) {
       type capability struct {
          Acodec string `json:"acodec"`
