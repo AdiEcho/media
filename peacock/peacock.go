@@ -30,10 +30,10 @@ func (s sign_in) auth() (*auth_tokens, error) {
          ProviderTerritory string `json:"providerTerritory"`
       } `json:"auth"`
       Device struct {
+         DrmDeviceId string `json:"drmDeviceId"`
          ID string `json:"id"`
          Platform string `json:"platform"`
          Type string `json:"type"`
-         DrmDeviceId string `json:"drmDeviceId"`
       } `json:"device"`
    }
    v.Auth.AuthScheme = "MESSO"
