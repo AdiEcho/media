@@ -1,25 +1,50 @@
 package peacock
 
 import (
+   "154.pages.dev/widevine"
+   "encoding/base64"
    "fmt"
    "os"
    "testing"
 )
 
 // peacocktv.com/watch/playback/vod/GMO_00000000224510_02_HDSDR
-const content_id = "GMO_00000000224510_02_HDSDR"
+const (
+   content_id = "GMO_00000000224510_02_HDSDR"
+   pssh = "AAAAOHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAABgSEAAW4jRz6+d9k9jRpy3GkNdI49yVmwY="
+)
 
 func TestVideo(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   text, err := os.ReadFile(home + "/peacock.json")
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   if err != nil {
+      t.Fatal(err)
+   }
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
+   if err != nil {
+      t.Fatal(err)
+   }
+   data, err := base64.StdEncoding.DecodeString(pssh)
+   if err != nil {
+      t.Fatal(err)
+   }
+   var protect widevine.PSSH
+   if err := protect.New(data); err != nil {
+      t.Fatal(err)
+   }
+   module, err := protect.CDM(private_key, client_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   data, err = os.ReadFile(home + "/peacock.json")
    if err != nil {
       t.Fatal(err)
    }
    var sign sign_in
-   sign.unmarshal(text)
+   sign.unmarshal(data)
    auth, err := sign.auth()
    if err != nil {
       t.Fatal(err)
@@ -28,5 +53,10 @@ func TestVideo(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", video)
+   license, err := module.License(video)
+   if err != nil {
+      t.Fatal(err)
+   }
+   key, ok := module.Key(license)
+   fmt.Println(key, ok)
 }

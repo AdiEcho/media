@@ -16,6 +16,12 @@ import (
    "time"
 )
 
+const (
+   app_id = "NBCU-ANDROID-v3"
+   signature_key = "JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj"
+   sig_version = "1.0"
+)
+
 func (s *sign_in) unmarshal(b []byte) error {
    return json.Unmarshal(b, &s.cookie)
 }
@@ -67,8 +73,7 @@ func (s sign_in) auth() (*auth_tokens, error) {
       return nil, err
    }
    req, err := http.NewRequest(
-      "POST", "https://play.ovp.peacocktv.com/auth/tokens",
-      bytes.NewReader(body),
+      "POST", "https://ovp.peacocktv.com/auth/tokens", bytes.NewReader(body),
    )
    if err != nil {
       return nil, err
@@ -124,12 +129,6 @@ func (s *sign_in) New(user, password string) error {
    }
    return http.ErrNoCookie
 }
-
-const (
-   app_id = "NBCU-ANDROID-v3"
-   signature_key = "JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj"
-   sig_version = "1.0"
-)
 
 func sign(method, path string, head http.Header, body []byte) string {
    timestamp := time.Now().Unix()

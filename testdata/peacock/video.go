@@ -7,6 +7,10 @@ import (
    "net/http"
 )
 
+func (video_playouts) RequestHeader(b []byte) (http.Header, error) {
+   return http.Header{}, nil
+}
+
 type video_playouts struct {
    Asset struct {
       Endpoints []struct {
@@ -19,22 +23,16 @@ type video_playouts struct {
    }
 }
 
-func (v video_playouts) RequestUrl() (string, bool) {
-   return v.Protection.LicenceAcquisitionUrl, true
-}
-
-func (video_playouts) RequestHeader(b []byte) (http.Header, error) {
-   h := make(http.Header)
-   h.Set("x-sky-signature", sign("POST", "/drm/widevine/acquirelicense", nil, b))
-   return h, nil
-}
-
 func (video_playouts) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
 func (video_playouts) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
+}
+
+func (v video_playouts) RequestUrl() (string, bool) {
+   return v.Protection.LicenceAcquisitionUrl, true
 }
 
 func (a auth_tokens) video(content_id string) (*video_playouts, error) {
@@ -68,15 +66,16 @@ func (a auth_tokens) video(content_id string) (*video_playouts, error) {
       return nil, err
    }
    req, err := http.NewRequest(
-      "POST", "https://play.ovp.peacocktv.com/video/playouts/vod",
+      "POST", "https://ovp.peacocktv.com/video/playouts/vod",
       bytes.NewReader(body),
    )
    if err != nil {
       return nil, err
    }
-   req.Header.Set("x-skyott-usertoken", a.UserToken)
    // `application/json` fails
    req.Header.Set("content-type", "application/vnd.playvod.v1+json")
+   // ITS THIS FUCKER
+   req.Header.Set("x-skyott-usertoken", a.UserToken)
    req.Header.Set(
       "x-sky-signature", sign(req.Method, req.URL.Path, req.Header, body),
    )

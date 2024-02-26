@@ -98,3 +98,27 @@ header. you can get `x-skyott-usertoken` with web client via `/auth/tokens`,
 but it need `idsession` cookie. Looks like Android is the same. MPD is here:
 
 <https://g003-vod-us-cmaf-prd-mc.cdn.peacocktv.com/pub/global/r3d/msk/PCK_1704473831643-PJZhp_01/cmaf/mpeg_cenc/master_cmaf.mpd>
+
+first:
+
+~~~py
+def request_playback_tokens(self, url, post_data, content_type, preferred_server=''):
+   res['license_url'] = data['protection']['licenceAcquisitionUrl']
+   return res
+~~~
+
+then:
+
+~~~py
+def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False, hdcpEnabled=False, hdr10=False, dolbyvision=False):
+   return self.request_playback_tokens(url, post_data, 'application/vnd.playvod.v1+json', preferred_server)
+~~~
+
+then:
+
+~~~py
+def play(params):
+   data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], preferred_server, uhd=enable_uhd, hdcpEnabled=enable_hdcp, dolbyvision=dolbyvision, hdr10=hdr10)
+   license_url = '{}/license?url={}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']))
+   play_item.setProperty('inputstream.adaptive.license_key', license_url)
+~~~
