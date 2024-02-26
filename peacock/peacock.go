@@ -16,59 +16,50 @@ import (
    "time"
 )
 
-const (
-   app_id = "NBCU-ANDROID-v3"
-   signature_key = "JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj"
-   sig_version = "1.0"
-)
-
-func (s *sign_in) unmarshal(b []byte) error {
-   return json.Unmarshal(b, &s.cookie)
-}
-
-func (s sign_in) marshal() ([]byte, error) {
-   return json.Marshal(s.cookie)
-}
-
-type sign_in struct {
-   cookie *http.Cookie
-}
-
 // userToken is good for one day
 type auth_tokens struct {
    UserToken string
 }
 
 func (s sign_in) auth() (*auth_tokens, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Auth struct {
-            AuthScheme string `json:"authScheme"`
-            Proposition string `json:"proposition"`
-            Provider string `json:"provider"`
-            ProviderTerritory string `json:"providerTerritory"`
-         } `json:"auth"`
-         Device struct {
-            ID string `json:"id"`
-            Platform string `json:"platform"`
-            Type string `json:"type"`
-         } `json:"device"`
-      }
-      s.Auth.AuthScheme = "MESSO"
-      s.Auth.Proposition = "NBCUOTT"
-      s.Auth.Provider = "NBCU"
-      s.Auth.ProviderTerritory = "US"
-      s.Device.Type = "COMPUTER"
-      s.Device.Platform = "PC"
-      // request will work without this, but then `/video/playouts/vod`
-      // will fail with
-      // {"errorCode":"OVP_00311","description":"Unknown deviceId"}
-      // BE CAREFUL, changing this too often will result in a four hour block:
-      // {"errorCode":"OVP_00014",
-      // "description":"Maximum number of streaming devices exceeded"}
-      s.Device.ID = "PC"
-      return json.Marshal(s)
-   }()
+   var v struct {
+      Auth struct {
+         AuthScheme string `json:"authScheme"`
+         Proposition string `json:"proposition"`
+         Provider string `json:"provider"`
+         ProviderTerritory string `json:"providerTerritory"`
+      } `json:"auth"`
+      Device struct {
+         ID string `json:"id"`
+         Platform string `json:"platform"`
+         Type string `json:"type"`
+         DrmDeviceId string `json:"drmDeviceId"`
+      } `json:"device"`
+   }
+   v.Auth.AuthScheme = "MESSO"
+   v.Auth.Proposition = "NBCUOTT"
+   v.Auth.Provider = "NBCU"
+   v.Auth.ProviderTerritory = "US"
+   // if empty /drm/widevine/acquirelicense will fail with
+   // {
+   //    "errorCode": "OVP_00306",
+   //    "description": "Security failure"
+   // }
+   v.Device.DrmDeviceId = "UNKNOWN"
+   // if incorrect /video/playouts/vod will fail with
+   // {
+   //    "errorCode": "OVP_00311",
+   //    "description": "Unknown deviceId"
+   // }
+   // changing this too often will result in a four hour block
+   // {
+   //    "errorCode": "OVP_00014",
+   //    "description": "Maximum number of streaming devices exceeded"
+   // }
+   v.Device.ID = "PC"
+   v.Device.Platform = "ANDROIDTV"
+   v.Device.Type = "TV"
+   body, err := json.Marshal(v)
    if err != nil {
       return nil, err
    }
@@ -96,6 +87,24 @@ func (s sign_in) auth() (*auth_tokens, error) {
       return nil, err
    }
    return auth, nil
+}
+
+const (
+   app_id = "NBCU-ANDROID-v3"
+   signature_key = "JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj"
+   sig_version = "1.0"
+)
+
+func (s *sign_in) unmarshal(b []byte) error {
+   return json.Unmarshal(b, &s.cookie)
+}
+
+func (s sign_in) marshal() ([]byte, error) {
+   return json.Marshal(s.cookie)
+}
+
+type sign_in struct {
+   cookie *http.Cookie
 }
 
 func (s *sign_in) New(user, password string) error {

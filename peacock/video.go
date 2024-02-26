@@ -7,7 +7,7 @@ import (
    "net/http"
 )
 
-func (video_playouts) RequestHeader(b []byte) (http.Header, error) {
+func (video_playouts) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 
@@ -74,7 +74,6 @@ func (a auth_tokens) video(content_id string) (*video_playouts, error) {
    }
    // `application/json` fails
    req.Header.Set("content-type", "application/vnd.playvod.v1+json")
-   // ITS THIS FUCKER
    req.Header.Set("x-skyott-usertoken", a.UserToken)
    req.Header.Set(
       "x-sky-signature", sign(req.Method, req.URL.Path, req.Header, body),
