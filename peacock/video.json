@@ -1,0 +1,92 @@
+{
+  "asset": {
+    "id": "810773cb-a628-3775-b121-568a6ef52891",
+    "endpoints": [
+      {
+        "url": "https://g006-vod-us-cmaf-prd-ak.cdn.peacocktv.com/pub/global/r3d/msk/PCK_1704473831643-PJZhp_01/cmaf/mpeg_cenc/master_cmaf.mpd?c3.ri=5001631918060069465",
+        "cdn": "AKAMAI"
+      },
+      {
+        "url": "https://g006-vod-us-cmaf-prd-fy.cdn.peacocktv.com/pub/global/r3d/msk/PCK_1704473831643-PJZhp_01/cmaf/mpeg_cenc/master_cmaf.mpd?c3.ri=5001631918060069465",
+        "cdn": "FASTLY"
+      },
+      {
+        "url": "https://g006-vod-us-cmaf-prd-ll.cdn.peacocktv.com/pub/global/r3d/msk/PCK_1704473831643-PJZhp_01/cmaf/mpeg_cenc/master_cmaf.mpd?c3.ri=5001631918060069465",
+        "cdn": "LIMELIGHT"
+      },
+      {
+        "url": "https://g006-vod-us-cmaf-prd-cf.cdn.peacocktv.com/pub/global/r3d/msk/PCK_1704473831643-PJZhp_01/cmaf/mpeg_cenc/master_cmaf.mpd?c3.ri=5001631918060069465",
+        "cdn": "CLOUDFRONT"
+      }
+    ],
+    "format": {
+      "protection": "WIDEVINE",
+      "transport": "DASH",
+      "acodec": "AAC",
+      "vcodec": "H264",
+      "container": "ISOBMFF",
+      "frameRate": "23.976",
+      "colourSpace": "SDR",
+      "protectionScheme": "CENC"
+    },
+    "audioTracks": [
+      {
+        "type": "5.1",
+        "locale": "en"
+      },
+      {
+        "type": "Stereo",
+        "locale": "en"
+      },
+      {
+        "type": "Stereo",
+        "locale": "es"
+      },
+      {
+        "type": "Description",
+        "locale": "en"
+      }
+    ],
+    "subtitleTracks": [
+      {
+        "type": "CC",
+        "locale": "en"
+      },
+      {
+        "type": "CC",
+        "locale": "en"
+      },
+      {
+        "type": "CC",
+        "locale": "es"
+      },
+      {
+        "type": "CC",
+        "locale": "es"
+      }
+    ]
+  },
+  "contentId": "GMO_00000000224510_02_HDSDR",
+  "durationMs": 3047000,
+  "events": {
+    "heartbeat": {
+      "url": "https://ovp.peacocktv.com/concurrency/streams/88a1cee0-b5e0-4d5b-8521-5859c1a1c773",
+      "frequency": 600000,
+      "allowedMissed": 720
+    }
+  },
+  "offerId": 1,
+  "protection": {
+    "type": "WIDEVINE",
+    "licenceToken": "100-6ieBRrx-aejiaghIC-E8B9pQrwqT2ti6YCnUwhqbO8gudvu9siggbVLmxwJaaMHcKp83gG0OpN7DQ7HPwosYE_AZwu6IsuL3MSsytFPYqI3yKKkR4diNAaYcxDNCKKzDA7W54I-efakDfEPBuB2TKGs6oqsMQSpignG29MLby4nqj8FIP144wJZg4WHSetsRoBePRoO8Xi7zLO-ToTwmrCNqJfTOMyiu-cWW-t-JjOSnNdskh-IoTiiGTbA2qJ1BG1vdFPfsMEds293Y9apnlg3a-WUMtG7CPGQzHlRcvRgkVz44uWYwDeDErGXPx96C7OVJ7L8tLplMHqZ3AfJafMyIZZC2UYkH2tgVEwswH9qHot10htmrNm3LaeugtETrdS7YvzBIAnaEED8P",
+    "deviceId": "UNKNOWN",
+    "licenceAcquisitionUrl": "https://ovp.peacocktv.com/drm/widevine/acquirelicense?bt=100-6ieBRrx-aejiaghIC-E8B9pQrwqT2ti6YCnUwhqbO8gudvu9siggbVLmxwJaaMHcKp83gG0OpN7DQ7HPwosYE_AZwu6IsuL3MSsytFPYqI3yKKkR4diNAaYcxDNCKKzDA7W54I-efakDfEPBuB2TKGs6oqsMQSpignG29MLby4nqj8FIP144wJZg4WHSetsRoBePRoO8Xi7zLO-ToTwmrCNqJfTOMyiu-cWW-t-JjOSnNdskh-IoTiiGTbA2qJ1BG1vdFPfsMEds293Y9apnlg3a-WUMtG7CPGQzHlRcvRgkVz44uWYwDeDErGXPx96C7OVJ7L8tLplMHqZ3AfJafMyIZZC2UYkH2tgVEwswH9qHot10htmrNm3LaeugtETrdS7YvzBIAnaEED8P",
+    "contentRef": "PCK_1704473831643-PJZhp_01"
+  },
+  "providerVariantId": "d05ff316-d00e-3475-bfb5-5a4a86d8d1a0",
+  "rating": "7",
+  "session": {
+    "streamingTicketId": "88a1cee0-b5e0-4d5b-8521-5859c1a1c773"
+  },
+  "videoFormat": "HD"
+}

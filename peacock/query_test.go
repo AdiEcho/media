@@ -7,7 +7,7 @@ import (
 )
 
 func TestQuery(t *testing.T) {
-   var node query_node
+   var node QueryNode
    err := node.New(content_id)
    if err != nil {
       t.Fatal(err)

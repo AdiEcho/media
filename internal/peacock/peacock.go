@@ -24,37 +24,15 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   // Namer
-   
-   var node query_node
-   err := node.New(content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(encoding.Name(node))
-   // OLD
-   var auth peacock.Authenticate
-   auth.Raw, err = os.ReadFile(home + "/peacock.json")
-   if err != nil {
-      return err
-   }
-   auth.Unmarshal()
-   deep, err := auth.DeepLink(f.peacock_id)
-   if err != nil {
-      return err
-   }
-   play, err := auth.Playlist(deep)
-   if err != nil {
+   var node peacock.QueryNode
+   if err := node.New(f.peacock_id); err != nil {
       return err
    }
    if f.dash_id != "" {
-      detail, err := auth.Details(deep)
-      if err != nil {
-         return err
-      }
-      f.h.Name = detail
-      f.h.Poster = play
+      f.h.Name = node
+      f.h.Poster = video
    }
+   
    media, err := f.h.DashMedia(play.Stream_URL)
    if err != nil {
       return err

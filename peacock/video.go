@@ -7,10 +7,6 @@ import (
    "net/http"
 )
 
-func (VideoPlayout) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
 type VideoPlayout struct {
    Asset struct {
       Endpoints []struct {
@@ -21,6 +17,10 @@ type VideoPlayout struct {
    Protection struct {
       LicenceAcquisitionUrl string // wikipedia.org/wiki/License
    }
+}
+
+func (VideoPlayout) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
 }
 
 func (VideoPlayout) RequestBody(b []byte) ([]byte, error) {

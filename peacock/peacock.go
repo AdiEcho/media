@@ -9,12 +9,51 @@ import (
    "encoding/json"
    "errors"
    "fmt"
+   "log/slog"
    "net/http"
    "net/url"
    "slices"
    "strings"
    "time"
 )
+
+func (s *SignIn) New(user, password string) error {
+   slog.Debug("user", "identifier", user, "password", password)
+   body := url.Values{
+      "userIdentifier": {user},
+      "password": {password},
+   }.Encode()
+   req, err := http.NewRequest(
+      "POST", "https://rango.id.peacocktv.com/signin/service/international",
+      strings.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   req.Header = http.Header{
+      "Content-Type": {"application/x-www-form-urlencoded"},
+      "X-Skyott-Proposition": {"NBCUOTT"},
+      "X-Skyott-Provider": {"NBCU"},
+      "X-Skyott-Territory": {"US"},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusCreated {
+      var b strings.Builder
+      res.Write(&b)
+      return errors.New(b.String())
+   }
+   for _, cookie := range res.Cookies() {
+      if cookie.Name == "idsession" {
+         s.cookie = cookie
+         return nil
+      }
+   }
+   return http.ErrNoCookie
+}
 
 // userToken is good for one day
 type AuthToken struct {
@@ -148,36 +187,4 @@ type SignIn struct {
 
 func (s SignIn) Marshal() ([]byte, error) {
    return json.Marshal(s.cookie)
-}
-
-func (s *SignIn) New(user, password string) error {
-   body := url.Values{
-      "userIdentifier": {user},
-      "password": {password},
-   }.Encode()
-   req, err := http.NewRequest(
-      "POST", "https://rango.id.peacocktv.com/signin/service/international",
-      strings.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   req.Header = http.Header{
-      "Content-Type": {"application/x-www-form-urlencoded"},
-      "X-Skyott-Proposition": {"NBCUOTT"},
-      "X-Skyott-Provider": {"NBCU"},
-      "X-Skyott-Territory": {"US"},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   for _, cookie := range res.Cookies() {
-      if cookie.Name == "idsession" {
-         s.cookie = cookie
-         return nil
-      }
-   }
-   return http.ErrNoCookie
 }

@@ -2,11 +2,13 @@ package peacock
 
 import (
    "fmt"
+   "log/slog"
    "os"
    "testing"
 )
 
 func TestSignWrite(t *testing.T) {
+   slog.SetLogLoggerLevel(slog.LevelDebug)
    user, password := os.Getenv("peacock_username"), os.Getenv("peacock_password")
    if user == "" {
       t.Fatal("peacock_username")
