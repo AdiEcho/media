@@ -1,55 +1,40 @@
 # peacock
 
-<https://peacocktv.com/watch/playback/vod/GMO_00000000224510_02_HDSDR>
+1. https://privacy.com
+2. New Card
+3. Create Card
+4. $10
+5. Single-Use
+6. Set $10 Spend Limit
+7. https://peacocktv.com/plans/all-monthly
+8. Monthly
+9. GET PREMIUM
+10. Email
+11. Password
+12. Re-enter Password
+13. First Name
+14. Last Name
+15. Gender
+16. Birth Year
+17. Zip Code
+18. CREATE ACCOUNT
+19. first name
+20. last name
+21. address
+22. city
+23. state
+24. zip
+25. card number
+26. expiry date
+27. CVC
+28. SUBSCRIBE
+29. PAY NOW
 
-this is it:
-
-~~~
-POST https://play.ovp.peacocktv.com/drm/widevine/acquirelicense?bt=8-XpyykNa... HTTP/2.0
-user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
-accept: */*
-accept-language: en-US,en;q=0.5
-referer: https://www.peacocktv.com/
-content-type: text/plain
-x-sky-signature: SkyOTT client="NBCU-WEB-v8",signature="cYBRu9SEy2nS2rHzRvHtlKnucF4=",timestamp="1708737168",version="1.0"
-origin: https://www.peacocktv.com
-sec-fetch-dest: empty
-sec-fetch-mode: cors
-sec-fetch-site: same-site
-te: trailers
-~~~
-
-what is used here?:
+## thanks
 
 https://github.com/Paco8/plugin.video.skyott/blob/main/resources/lib/signature.py
 
-~~~py
-headers['x-skyott-usertoken'] = self.account['user_token']
-~~~
-
-then:
-
-~~~py
-self.account['user_token'] = data['userToken']
-~~~
-
-then:
-
-~~~py
-data = self.get_tokens()
-~~~
-
-then:
-
-~~~py
-def get_tokens(self):
-   url = self.endpoints['tokens']
-   headers = {}
-   headers['cookie'] = self.account['cookie']
-~~~
-
-- https://github.com/Paco8/plugin.video.skyott/issues/39
-- https://github.com/larsenv/YouTube-TV-Downloader/issues/1
+## android
 
 ~~~
 > play -a com.peacocktv.peacockandroid
@@ -94,31 +79,9 @@ set modify_headers '/~u signin.service.international/x-skyott-device/'
 ~~~
 
 Header needs to be removed from that request only, since other requests need the
-header. you can get `x-skyott-usertoken` with web client via `/auth/tokens`,
-but it need `idsession` cookie. Looks like Android is the same. MPD is here:
+header.
 
-<https://g003-vod-us-cmaf-prd-mc.cdn.peacocktv.com/pub/global/r3d/msk/PCK_1704473831643-PJZhp_01/cmaf/mpeg_cenc/master_cmaf.mpd>
+## web
 
-first:
-
-~~~py
-def request_playback_tokens(self, url, post_data, content_type, preferred_server=''):
-   res['license_url'] = data['protection']['licenceAcquisitionUrl']
-   return res
-~~~
-
-then:
-
-~~~py
-def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False, hdcpEnabled=False, hdr10=False, dolbyvision=False):
-   return self.request_playback_tokens(url, post_data, 'application/vnd.playvod.v1+json', preferred_server)
-~~~
-
-then:
-
-~~~py
-def play(params):
-   data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], preferred_server, uhd=enable_uhd, hdcpEnabled=enable_hdcp, dolbyvision=dolbyvision, hdr10=hdr10)
-   license_url = '{}/license?url={}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']))
-   play_item.setProperty('inputstream.adaptive.license_key', license_url)
-~~~
+you can get `x-skyott-usertoken` with web client via `/auth/tokens`, but it
+need `idsession` cookie. Looks like Android is the same.

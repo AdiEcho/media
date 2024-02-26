@@ -7,6 +7,15 @@ import (
    "net/http"
 )
 
+func (v VideoPlayout) Akamai() (string, bool) {
+   for _, endpoint := range v.Asset.Endpoints {
+      if endpoint.CDN == "AKAMAI" {
+         return endpoint.URL, true
+      }
+   }
+   return "", false
+}
+
 type VideoPlayout struct {
    Asset struct {
       Endpoints []struct {

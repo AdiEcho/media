@@ -1,12 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/peacock"
-   "154.pages.dev/media/internal"
-   "flag"
+   "errors"
    "os"
-   "path/filepath"
 )
 
 func (f flags) download() error {
@@ -32,8 +29,11 @@ func (f flags) download() error {
       f.h.Name = node
       f.h.Poster = video
    }
-   
-   media, err := f.h.DashMedia(play.Stream_URL)
+   akamai, ok := video.Akamai()
+   if !ok {
+      return errors.New("peacock.VideoPlayout.Akamai")
+   }
+   media, err := f.h.DashMedia(akamai)
    if err != nil {
       return err
    }

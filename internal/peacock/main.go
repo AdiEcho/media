@@ -2,7 +2,6 @@ package main
 
 import (
    "154.pages.dev/log"
-   "154.pages.dev/media/peacock"
    "154.pages.dev/media/internal"
    "flag"
    "os"
