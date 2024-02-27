@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/paramount<span class="navbar-right">
-          v1.7.9 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.0 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package paramount</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/paramount&#34;</span></pre>
@@ -44,7 +44,7 @@
       <a href="#SessionToken">type SessionToken</a>
       <ul>
           <li><a href="#SessionToken.RequestBody">func (SessionToken) RequestBody(b []byte) ([]byte, error)</a></li>
-          <li><a href="#SessionToken.RequestHeader">func (s SessionToken) RequestHeader() (http.Header, bool)</a></li>
+          <li><a href="#SessionToken.RequestHeader">func (s SessionToken) RequestHeader() (http.Header, error)</a></li>
           <li><a href="#SessionToken.RequestUrl">func (s SessionToken) RequestUrl() (string, bool)</a></li>
           <li><a href="#SessionToken.ResponseBody">func (SessionToken) ResponseBody(b []byte) ([]byte, error)</a></li>
           </ul>
@@ -93,7 +93,7 @@
     <h4 id="SessionToken.RequestBody">func (SessionToken) RequestBody</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#SessionToken"><span class="nx">SessionToken</span></a><span class="p">)</span> <span class="nf">RequestBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="SessionToken.RequestHeader">func (SessionToken) RequestHeader</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#SessionToken"><span class="nx">SessionToken</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#SessionToken"><span class="nx">SessionToken</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="SessionToken.RequestUrl">func (SessionToken) RequestUrl</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#SessionToken"><span class="nx">SessionToken</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h4 id="SessionToken.ResponseBody">func (SessionToken) ResponseBody</h4>
