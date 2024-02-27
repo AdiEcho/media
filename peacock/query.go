@@ -14,7 +14,7 @@ func (q *QueryNode) New(content_id string) error {
    req.URL.Path = "/adapter-calypso/v3/query/node/content_id/" + content_id
    req.Header = http.Header{
       "X-Skyott-Proposition": {"NBCUOTT"},
-      "X-Skyott-Territory": {"US"},
+      "X-Skyott-Territory": {Territory},
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {

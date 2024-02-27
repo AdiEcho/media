@@ -1,5 +1,9 @@
 # peacock
 
+how to get SkyOTT key?
+
+## account
+
 1. https://privacy.com
 2. New Card
 3. Create Card
@@ -29,10 +33,6 @@
 27. CVC
 28. SUBSCRIBE
 29. PAY NOW
-
-## thanks
-
-https://github.com/Paco8/plugin.video.skyott/blob/main/resources/lib/signature.py
 
 ## android
 
@@ -80,6 +80,10 @@ set modify_headers '/~u signin.service.international/x-skyott-device/'
 
 Header needs to be removed from that request only, since other requests need the
 header.
+
+## thanks
+
+https://github.com/Paco8/plugin.video.skyott/blob/main/resources/lib/signature.py
 
 ## web
 
