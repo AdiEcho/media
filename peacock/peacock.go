@@ -73,6 +73,7 @@ type SignIn struct {
 func (s SignIn) Marshal() ([]byte, error) {
    return json.Marshal(s.cookie)
 }
+
 var Territory = "US"
 
 func (s *SignIn) New(user, password string) error {
