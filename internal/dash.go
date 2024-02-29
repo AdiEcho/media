@@ -5,7 +5,6 @@ import (
    "154.pages.dev/encoding/dash"
    "154.pages.dev/sofia"
    "154.pages.dev/widevine"
-   "encoding/xml"
    "fmt"
    "errors"
    "io"
@@ -15,56 +14,38 @@ import (
    "slices"
 )
 
-func (h HttpStream) DASH(media *dash.MPD, id string) error {
-   var point dash.Pointer
-   ok := media.Contains(func(p dash.Pointer) bool {
-      if p.Representation.ID == id {
-         point = p
-         return true
-      }
-      return false
+func (h HttpStream) DASH(reps []dash.Representation, id string) error {
+   i := slices.IndexFunc(reps, func(r dash.Representation) bool {
+      return r.ID == id
    })
-   if !ok {
-      cmp := func(a, b dash.Representation) int {
-         return b.Bandwidth - a.Bandwidth
-      }
-      for _, p := range media.Period {
-         for _, a := range p.AdaptationSet {
-            slices.SortFunc(a.Representation, cmp)
+   if i == -1 {
+      slices.SortFunc(reps, func(a, b dash.Representation) int {
+         return int(b.Bandwidth - a.Bandwidth)
+      })
+      for i, rep := range reps {
+         if i >= 1 {
+            fmt.Println()
          }
+         fmt.Println(rep)
       }
-      fmt.Println(media)
       return nil
    }
-   ext, ok := point.Ext()
+   rep := reps[i]
+   ext, ok := rep.Ext()
    if !ok {
-      return errors.New("dash.Pointer.Ext")
+      return errors.New("dash.Representation.Ext")
    }
-   if initial, ok := point.Initialization(); ok {
-      return h.segment_template(ext, initial, point)
+   if initial, ok := rep.Initialization(); ok {
+      return h.segment_template(ext, initial, rep)
    }
-   return h.segment_base(ext, point.Representation.BaseURL, point)
+   return h.segment_base(ext, rep.BaseURL, rep)
 }
 
-func (h *HttpStream) DashMedia(uri string) (*dash.MPD, error) {
-   res, err := http.Get(uri)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   h.base = res.Request.URL
-   media := new(dash.MPD)
-   if err := xml.NewDecoder(res.Body).Decode(media); err != nil {
-      return nil, err
-   }
-   return media, nil
-}
-
-func (h HttpStream) key(point dash.Pointer) ([]byte, error) {
+func (h HttpStream) key(rep dash.Representation) ([]byte, error) {
    var protect widevine.PSSH
-   data, err := point.PSSH()
+   data, err := rep.PSSH()
    if err != nil {
-      key_id, err := point.Default_KID()
+      key_id, err := rep.Default_KID()
       if err != nil {
          return nil, err
       }
@@ -162,6 +143,7 @@ func encode_segment(dst io.Writer, src io.Reader, key []byte) error {
    }
    return f.Encode(dst)
 }
+
 // wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
 type HttpStream struct {
    Client_ID string
@@ -170,3 +152,18 @@ type HttpStream struct {
    Private_Key string
    base *url.URL
 }
+
+func (h *HttpStream) DashMedia(uri string) ([]dash.Representation, error) {
+   res, err := http.Get(uri)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   h.base = res.Request.URL
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   return dash.Unmarshal(text)
+}
+
