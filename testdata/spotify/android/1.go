@@ -1,11 +1,12 @@
 package main
 
 import (
+   "154.pages.dev/protobuf"
+   "bytes"
    "io"
    "net/http"
    "net/url"
    "os"
-   "strings"
 )
 
 func main() {
@@ -15,11 +16,10 @@ func main() {
    req.ProtoMajor = 1
    req.ProtoMinor = 1
    req.URL = new(url.URL)
-   req.URL.Host = "guc3-spclient.spotify.com"
-   req.URL.Path = "/extended-metadata/v0/extended-metadata"
+   req.URL.Host = "login5.spotify.com"
+   req.URL.Path = "/v3/login"
    req.URL.Scheme = "https"
-   req.Body = io.NopCloser(body)
-   req.Header["Authorization"] = []string{"Bearer BQCkkXlvEzT-iTS4rlLwOnnAzmyxcuz7yI19Joys5qvLZxwB0XCm8bea7ikhOoioxprBD8jGa0gqnBq1wSIUXbi6Yt9iB-uZYRv5Ogwu6Ccq_59CfHlB6x8dzHeFxuvGVvQCdCQ7RMZfZ3aucXPXNNMnt_Pm8hp1dNLGeb92CKWSIf7f6UziCrBVTfJap2f0j_uHbjZamT3DKve-xhj0ViqHA30WPY6EZFhs6pzAAPmBp4hjNmheQvwMU9GWhKjvxVlJvbRV994gWlg01krDWis4CC7CsEVKOVRYBCIkg3H5vl5ymO2dNFuVvFQSCmUuWYPqx350UmulKbObUvzz"}
+   req.Body = io.NopCloser(bytes.NewReader(body.Encode()))
    res, err := new(http.Transport).RoundTrip(&req)
    if err != nil {
       panic(err)
@@ -28,4 +28,11 @@ func main() {
    res.Write(os.Stdout)
 }
 
-var body = strings.NewReader("\n\x1c\n\x02US\x12\x04free\x1a\x10\x0e\xfdN\x9d\x9c\xd8.y\x95\xd1%\xb9\xa7\x01,\xf8\x12.\n$spotify:track:1oaaSrDJimABpOdCEbw2DJ\x12\x02\b\x05\x12\x02\b\n")
+var body = protobuf.Message{
+   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Message{
+      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("9a8d2f0ce77a4e248bb71fefcb557637")},
+   }},
+   protobuf.Field{Number: 100, Type: 2, Value: protobuf.Message{
+      protobuf.Field{Number: 2, Type: 2, Value: protobuf.Bytes("AQC16FhLEAnXz3AmrmM8VsWA85EqrwpOiS3HUFM2R-escWtteW_eiNTawRqy18tS9CqHdkIalCp31A0S_gy2sqOLhxGTcloaYX4wN8zNbZUuf6kyXQ5CIoHScC9sGykWauDtBSwy9v5gIG7GfofLjwjW5BQOH5xgm5-ywHiHS-G1DRBjR6Asud75ThdbDpeg8oiAdxjmmYAQ7oAuyyKcgg4pkQ")},
+   }},
+}

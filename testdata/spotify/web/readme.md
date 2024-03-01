@@ -15,3 +15,5 @@ Connection: close
 
 not a WebSocket handshake request: missing upgrade
 ~~~
+
+also login is protected by `recaptchaToken`

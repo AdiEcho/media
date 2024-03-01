@@ -25,3 +25,7 @@ adb shell am start -a android.intent.action.VIEW `
 this is it:
 
 <https://audio-ak-spotify-com.akamaized.net/audio/f682d2a95d0e14eeef4f40b60fddde56bc6721c7?__token__=exp=1709349625~hmac=ac8977fadda0917bce483dd40be0fbf77960729e90e3a8df8111959108bb935d>
+
+also:
+
+<https://github.com/glomatico/spotify-aac-downloader/blob/main/spotify_aac_downloader/downloader.py>
