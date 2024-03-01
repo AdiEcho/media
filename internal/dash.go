@@ -166,4 +166,3 @@ func (h *HttpStream) DashMedia(uri string) ([]dash.Representation, error) {
    }
    return dash.Unmarshal(text)
 }
-
