@@ -1,4 +1,4 @@
-package main
+package spotify
 
 import (
    "154.pages.dev/protobuf"
@@ -10,7 +10,7 @@ import (
    "os"
 )
 
-func main() {
+func one() {
    username := os.Getenv("spotify_username")
    if username == "" {
       panic("spotify_username")

@@ -1,4 +1,4 @@
-package main
+package spotify
 
 import (
    "154.pages.dev/protobuf"
@@ -9,7 +9,7 @@ import (
    "os"
 )
 
-func main() {
+func three() {
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"
@@ -19,7 +19,7 @@ func main() {
    req.URL.Host = "login5.spotify.com"
    req.URL.Path = "/v3/login"
    req.URL.Scheme = "https"
-   req.Body = io.NopCloser(bytes.NewReader(body.Encode()))
+   req.Body = io.NopCloser(bytes.NewReader(body3.Encode()))
    res, err := new(http.Transport).RoundTrip(&req)
    if err != nil {
       panic(err)
@@ -28,7 +28,7 @@ func main() {
    res.Write(os.Stdout)
 }
 
-var body = protobuf.Message{
+var body3 = protobuf.Message{
    protobuf.Field{Number: 1, Type: 2, Value: protobuf.Message{
       protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("9a8d2f0ce77a4e248bb71fefcb557637")},
    }},
