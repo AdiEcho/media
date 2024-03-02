@@ -22,7 +22,8 @@ adb shell am start -a android.intent.action.VIEW `
 -d https://open.spotify.com/track/1oaaSrDJimABpOdCEbw2DJ
 ~~~
 
-<https://github.com/glomatico/spotify-aac-downloader/blob/main/spotify_aac_downloader/downloader.py>
+- https://github.com/Ahmeth4n/javatify/issues/3
+- https://github.com/glomatico/spotify-aac-downloader/issues/21
 
 ## 1
 
@@ -120,4 +121,66 @@ accept-language: en-US
 content-type: application/protobuf
 content-length: 74
 accept-encoding: gzip
+~~~
+
+## PouleR/spotify-login
+
+OK start here:
+
+~~~php
+public function login(string $username, string $password): ?AccessToken
+~~~
+
+https://github.com/PouleR/spotify-login/blob/main/src/SpotifyLogin.php
+
+then:
+
+~~~php
+$challengeSolutions = $this->solveHashCashChallenge($loginResponse);
+~~~
+
+then get field 3.1:
+
+~~~php
+$hashCashChallenge = $loginResponse->getChallenges()->getChallenges()[0];
+~~~
+
+example `$loginResponse`:
+
+~~~go
+protobuf.Message{
+   protobuf.Field{Number: 3, Type: 2, Value: protobuf.Message{
+      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Message{
+         protobuf.Field{Number: 1, Type: 2, Value: protobuf.Message{
+            protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("6\x90l\b\xb2\xf27\xdal\xff\x9cV=\x00\xf7\xe0")},
+            protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(10)},
+         }},
+      }},
+   }},
+   protobuf.Field{Number: 5, Type: 2, Value: protobuf.Bytes("\x03\x00\x11\x1dj<\xa6,\xf7\x8d\x0eٞA$\x1dW\x019\x06\xe34/8<\x8fg\xc9Q\f+\xb5Q\xe7^e\n]E\xdbdp\x962\xd5\x17\xd9\xe2\x17\xbf\x1a\xa45E\xa4\x9d\x95ʴ\xc8\xfcw\xac\xc1\xbe\xb8\x1b6#RzM<wha,W\xdf\xfauE\x7f\x83\xe72\xec\x9f_!\xdb\xfe\x05\xb5\xd1.\xa7\x9a\xf3\x01\xf4s\x7f+\x9a\x93\xc5kK/ X\xc2b\xb7\x8e\xa7Q|\xd4\xee\xf1\xf6r\x85\x87y\xf4\xe3\x15\xe6\a+\fV{:\xb1l\xa0&҂\xf7ӧ\xaa\x1f\x7f\xa0O\xb1{\xdb\x1c\xa7\xbd\x16\xa21\xca\rQQ\x15Y ݅\xf7\"\xa4\x8f\x04\xe3\x97j\xad\xa3\x89\xac֓\xa9\xc8\x05\xc6v\xbaz\x03$\x7f\xbd\xa7\x01p\xba\xc5v4L\xbd\x16\xa4\xb8\xda\xd7\xe9\xbb\xf1IT>\xc9\"\xc6-y\xf1\xae\xd3\x165")},
+}
+~~~
+
+then get field 1:
+
+~~~php
+$hashCash = $hashCashChallenge->getHashcash();
+~~~
+
+then get field 5:
+
+~~~php
+$loginResponse->getLoginContext(),
+~~~
+
+then get field 1:
+
+~~~php
+$hashCash->getPrefix(),
+~~~
+
+then get field 2:
+
+~~~php
+$hashCash->getLength()
 ~~~

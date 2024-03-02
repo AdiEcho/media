@@ -11,6 +11,20 @@ import (
 )
 
 func main() {
+   username := os.Getenv("spotify_username")
+   if username == "" {
+      panic("spotify_username")
+   }
+   password := os.Getenv("spotify_password")
+   body := protobuf.Message{
+      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Message{
+         protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("9a8d2f0ce77a4e248bb71fefcb557637")},
+      }},
+      protobuf.Field{Number: 101, Type: 2, Value: protobuf.Message{
+         protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes(username)},
+         protobuf.Field{Number: 2, Type: 2, Value: protobuf.Bytes(password)},
+      }},
+   }
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"
@@ -36,14 +50,4 @@ func main() {
    }
    res.Write(os.Stdout)
    fmt.Printf("%#v\n", body)
-}
-
-var body = protobuf.Message{
-   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Message{
-      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("9a8d2f0ce77a4e248bb71fefcb557637")},
-   }},
-   protobuf.Field{Number: 101, Type: 2, Value: protobuf.Message{
-      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes(os.Getenv("spotify_username"))},
-      protobuf.Field{Number: 2, Type: 2, Value: protobuf.Bytes(os.Getenv("spotify_password"))},
-   }},
 }
