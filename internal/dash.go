@@ -14,53 +14,32 @@ import (
    "slices"
 )
 
-func (h HttpStream) DASH(reps []dash.Representation, id string) error {
-   i := slices.IndexFunc(reps, func(r dash.Representation) bool {
-      return r.ID == id
-   })
-   if i == -1 {
-      slices.SortFunc(reps, func(a, b dash.Representation) int {
-         return int(b.Bandwidth - a.Bandwidth)
-      })
-      for i, rep := range reps {
-         if i >= 1 {
-            fmt.Println()
-         }
-         fmt.Println(rep)
-      }
-      return nil
-   }
-   rep := reps[i]
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("dash.Representation.Ext")
-   }
-   if initial, ok := rep.Initialization(); ok {
-      return h.segment_template(ext, initial, rep)
-   }
-   return h.segment_base(ext, rep.BaseURL, rep)
-}
-
 func (h HttpStream) key(rep dash.Representation) ([]byte, error) {
-   var protect widevine.PSSH
-   data, err := rep.PSSH()
+   client_id, err := os.ReadFile(h.Client_ID)
    if err != nil {
-      key_id, err := rep.Default_KID()
-      if err != nil {
-         return nil, err
-      }
-      protect.Key_ID = key_id
-   } else {
-      err := protect.New(data)
-      if err != nil {
-         return nil, err
-      }
+      return nil, err
    }
    private_key, err := os.ReadFile(h.Private_Key)
    if err != nil {
       return nil, err
    }
-   client_id, err := os.ReadFile(h.Client_ID)
+   var protect widevine.PSSH
+   err = func() error {
+      if v, ok := rep.PSSH(); ok {
+         b, err := v.Decode()
+         if err != nil {
+            return err
+         }
+         return protect.New(b)
+      }
+      if v, ok := rep.Default_KID(); ok {
+         protect.Key_ID, err = v.Decode()
+         if err != nil {
+            return err
+         }
+      }
+      return nil
+   }()
    if err != nil {
       return nil, err
    }
@@ -165,4 +144,30 @@ func (h *HttpStream) DashMedia(uri string) ([]dash.Representation, error) {
       return nil, err
    }
    return dash.Unmarshal(text)
+}
+func (h HttpStream) DASH(reps []dash.Representation, id string) error {
+   i := slices.IndexFunc(reps, func(r dash.Representation) bool {
+      return r.ID == id
+   })
+   if i == -1 {
+      slices.SortFunc(reps, func(a, b dash.Representation) int {
+         return int(b.Bandwidth - a.Bandwidth)
+      })
+      for i, rep := range reps {
+         if i >= 1 {
+            fmt.Println()
+         }
+         fmt.Println(rep)
+      }
+      return nil
+   }
+   rep := reps[i]
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("dash.Representation.Ext")
+   }
+   if initial, ok := rep.Initialization(); ok {
+      return h.segment_template(ext, initial, rep)
+   }
+   return h.segment_base(ext, rep.BaseURL, rep)
 }
