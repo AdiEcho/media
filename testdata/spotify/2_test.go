@@ -21,7 +21,9 @@ func TestSolution(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   solution, err := res.challenge_solution(suffix, iterations)
+   solution, err := res.challenge_solution(
+      username, password, suffix, iterations,
+   )
    if err != nil {
       t.Fatal(err)
    }
