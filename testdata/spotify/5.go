@@ -6,7 +6,7 @@ import (
    "os"
 )
 
-func five() {
+func Five() {
    var req http.Request
    req.Header = make(http.Header)
    req.ProtoMajor = 1

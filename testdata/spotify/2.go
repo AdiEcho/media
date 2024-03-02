@@ -10,7 +10,7 @@ import (
    "os"
 )
 
-func two() {
+func Two() {
    username := os.Getenv("spotify_username")
    if username == "" {
       panic("spotify_username")

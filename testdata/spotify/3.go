@@ -9,7 +9,7 @@ import (
    "os"
 )
 
-func three() {
+func Three() {
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"
