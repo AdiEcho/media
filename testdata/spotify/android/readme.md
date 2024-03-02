@@ -184,3 +184,15 @@ then get field 2:
 ~~~php
 $hashCash->getLength()
 ~~~
+
+then:
+
+~~~php
+$seed = substr(sha1($loginContext), -16);
+$seed = HexUtils::hex2ByteArray($seed);
+$start = hrtime(false);
+$solved = $this->solveHashCash($hashCashPrefix, $hashCashLength, $seed);
+$end = hrtime(false);
+$solved->setDuration($end[1] - $start[1]);
+return $solved;
+~~~
