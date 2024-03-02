@@ -232,4 +232,3 @@ func (i *ID) Set(s string) error {
    i.s = path.Base(s)
    return nil
 }
-
