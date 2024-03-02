@@ -6,26 +6,17 @@ import (
    "testing"
 )
 
-func TestSolution(t *testing.T) {
+func TestChallenge(t *testing.T) {
    username := os.Getenv("spotify_username")
    password := os.Getenv("spotify_password")
-   var req login_request
-   if !req.New(username, password) {
-      t.Fatal("Getenv")
-   }
-   res, err := req.login()
+   var login login_response
+   err := login.New(username, password)
    if err != nil {
       t.Fatal(err)
    }
-   suffix, iterations, err := res.solve_hash_cash_challenge()
+   message, err := login.challenge(username, password)
    if err != nil {
       t.Fatal(err)
    }
-   solution, err := res.challenge_solution(
-      username, password, suffix, iterations,
-   )
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%#v\n", solution)
+   fmt.Printf("%#v\n", message)
 }

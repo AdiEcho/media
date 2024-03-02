@@ -4,16 +4,27 @@ import (
    "154.pages.dev/protobuf"
    "bytes"
    "errors"
-   "fmt"
    "io"
    "net/http"
 )
 
-func (r login_response) challenge_solution(
+func (r login_response) challenge(
    username, password string,
-   suffix []byte, iterations int,
 ) (protobuf.Message, error) {
-   login_context, _ := r.m.GetBytes(5)
+   login_context, ok := r.m.GetBytes(5)
+   if !ok {
+      return nil, errors.New("login_context")
+   }
+   prefix, ok := func() ([]byte, bool) {
+      m, _ := r.m.Get(3)
+      m, _ = m.Get(1)
+      m, _ = m.Get(1)
+      return m.GetBytes(1)
+   }()
+   if !ok {
+      return nil, errors.New("prefix")
+   }
+   suffix := solve_hash_cash_challenge(login_context, prefix)
    var m protobuf.Message
    m.AddFunc(1, func(m *protobuf.Message) {
       m.AddBytes(1, []byte("9a8d2f0ce77a4e248bb71fefcb557637"))
@@ -23,9 +34,6 @@ func (r login_response) challenge_solution(
       m.AddFunc(1, func(m *protobuf.Message) {
          m.AddFunc(1, func(m *protobuf.Message) {
             m.AddBytes(1, suffix)
-            m.AddFunc(2, func(m *protobuf.Message) {
-               m.AddVarint(2, protobuf.Varint(iterations))
-            })
          })
       })
    })
@@ -33,7 +41,6 @@ func (r login_response) challenge_solution(
       m.AddBytes(1, []byte(username))
       m.AddBytes(2, []byte(password))
    })
-   fmt.Printf("%#v\n", m)
    req, err := http.NewRequest(
       "POST", "https://login5.spotify.com/v3/login", bytes.NewReader(m.Encode()),
    )
@@ -41,9 +48,10 @@ func (r login_response) challenge_solution(
       return nil, err
    }
    req.Header = http.Header{
-      "Cache-Control": {"no-cache, no-store, max-age=0"},
       "Content-Type": {"application/x-protobuf"},
-      "User-Agent": {"Spotify/8.9.18.512 Android/23 (Android SDK built for x86)"},
+      //"Cache-Control": {"no-cache, no-store, max-age=0"},
+      //"User-Agent": {"Spotify/8.9.18.512 Android/23 (Android SDK built for x86)"},
+      "User-Agent": {"Symfony HttpClient (Curl)"},
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
