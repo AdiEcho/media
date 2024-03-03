@@ -47,12 +47,12 @@ func (r login_response) challenge(
    if err != nil {
       return nil, err
    }
-   req.Header = http.Header{
-      "Content-Type": {"application/x-protobuf"},
-      //"Cache-Control": {"no-cache, no-store, max-age=0"},
-      //"User-Agent": {"Spotify/8.9.18.512 Android/23 (Android SDK built for x86)"},
-      "User-Agent": {"Symfony HttpClient (Curl)"},
-   }
+   req.Header["Content-Type"] = []string{"application/x-protobuf"}
+   req.Header["Accept"] = []string{"*/*"}
+   req.Header["Accept-Encoding"] = []string{"identity"}
+   req.Header["User-Agent"] = []string{"Symfony HttpClient (Curl)"}
+   req.ProtoMajor = 1
+   req.ProtoMinor = 1
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err

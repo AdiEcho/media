@@ -35,6 +35,7 @@ func (r *login_response) New(username, password string) error {
    }
    req.Header.Set("content-type", "application/x-protobuf")
    req.Header.Set("user-agent", "Symfony HttpClient (Curl)")
+   req.Header.Set("accept", "*/*")
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
