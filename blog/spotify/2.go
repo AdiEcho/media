@@ -3,10 +3,43 @@ package spotify
 import (
    "154.pages.dev/protobuf"
    "bytes"
+   "crypto/sha1"
+   "encoding/binary"
    "errors"
    "io"
+   "math/bits"
    "net/http"
+   //"slices"
+   "fmt"
 )
+
+// wikipedia.org/wiki/Hashcash
+func hashcash(login_context, message []byte) []byte {
+   rand := func() uint64 {
+      sum := sha1.Sum(login_context)
+      return binary.BigEndian.Uint64(sum[len(sum)-8:])
+   }()
+   var counter uint64
+   for {
+      var b []byte
+      b = binary.BigEndian.AppendUint64(b, rand)
+      b = binary.BigEndian.AppendUint64(b, counter)
+      zero_bits := func() int {
+         begin := string(login_context)
+         sum := sha1.Sum(append(message, b...))
+         if string(login_context) != begin {
+            panic(1)
+         }
+         x := binary.BigEndian.Uint16(sum[sha1.Size-2:])
+         return bits.TrailingZeros16(x)
+      }()
+      if zero_bits >= 10 {
+         return b
+      }
+      rand++
+      counter++
+   }
+}
 
 func (r login_response) challenge(
    username, password string,
@@ -24,16 +57,25 @@ func (r login_response) challenge(
    if !ok {
       return nil, errors.New("prefix")
    }
-   suffix := solve_hash_cash_challenge(login_context, prefix)
+
+   fmt.Printf("%#v\n", r.m)
+
+   suffix_fail := hashcash(
+      login_context,
+      //slices.Clone(prefix),
+      prefix,
+   )
+   return nil, nil
+
    var m protobuf.Message
    m.AddFunc(1, func(m *protobuf.Message) {
-      m.AddBytes(1, []byte("9a8d2f0ce77a4e248bb71fefcb557637"))
+      m.AddBytes(1, []byte(client_id))
    })
    m.AddBytes(2, login_context)
    m.AddFunc(3, func(m *protobuf.Message) {
       m.AddFunc(1, func(m *protobuf.Message) {
          m.AddFunc(1, func(m *protobuf.Message) {
-            m.AddBytes(1, suffix)
+            m.AddBytes(1, suffix_fail)
          })
       })
    })
@@ -51,8 +93,6 @@ func (r login_response) challenge(
    req.Header["Accept"] = []string{"*/*"}
    req.Header["Accept-Encoding"] = []string{"identity"}
    req.Header["User-Agent"] = []string{"Symfony HttpClient (Curl)"}
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
