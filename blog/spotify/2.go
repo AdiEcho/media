@@ -9,8 +9,6 @@ import (
    "io"
    "math/bits"
    "net/http"
-   //"slices"
-   "fmt"
 )
 
 // wikipedia.org/wiki/Hashcash
@@ -25,11 +23,7 @@ func hashcash(login_context, message []byte) []byte {
       b = binary.BigEndian.AppendUint64(b, rand)
       b = binary.BigEndian.AppendUint64(b, counter)
       zero_bits := func() int {
-         begin := string(login_context)
          sum := sha1.Sum(append(message, b...))
-         if string(login_context) != begin {
-            panic(1)
-         }
          x := binary.BigEndian.Uint16(sum[sha1.Size-2:])
          return bits.TrailingZeros16(x)
       }()
@@ -57,29 +51,19 @@ func (r login_response) challenge(
    if !ok {
       return nil, errors.New("prefix")
    }
-
-   fmt.Printf("%#v\n", r.m)
-
-   suffix_fail := hashcash(
-      login_context,
-      //slices.Clone(prefix),
-      prefix,
-   )
-   return nil, nil
-
    var m protobuf.Message
-   m.AddFunc(1, func(m *protobuf.Message) {
+   m.Add(1, func(m *protobuf.Message) {
       m.AddBytes(1, []byte(client_id))
    })
    m.AddBytes(2, login_context)
-   m.AddFunc(3, func(m *protobuf.Message) {
-      m.AddFunc(1, func(m *protobuf.Message) {
-         m.AddFunc(1, func(m *protobuf.Message) {
-            m.AddBytes(1, suffix_fail)
+   m.Add(3, func(m *protobuf.Message) {
+      m.Add(1, func(m *protobuf.Message) {
+         m.Add(1, func(m *protobuf.Message) {
+            m.AddBytes(1, hashcash(login_context, prefix))
          })
       })
    })
-   m.AddFunc(101, func(m *protobuf.Message) {
+   m.Add(101, func(m *protobuf.Message) {
       m.AddBytes(1, []byte(username))
       m.AddBytes(2, []byte(password))
    })

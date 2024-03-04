@@ -6,8 +6,6 @@ import (
    "errors"
    "io"
    "net/http"
-   
-   "fmt"
 )
 
 // const client_id = "9a8d2f0ce77a4e248bb71fefcb557637"
@@ -21,10 +19,10 @@ func (r *login_response) New(username, password string) error {
       return errors.New("password")
    }
    var m protobuf.Message
-   m.AddFunc(1, func(m *protobuf.Message) {
+   m.Add(1, func(m *protobuf.Message) {
       m.AddBytes(1, []byte(client_id))
    })
-   m.AddFunc(101, func(m *protobuf.Message) {
+   m.Add(101, func(m *protobuf.Message) {
       m.AddBytes(1, []byte(username))
       m.AddBytes(2, []byte(password))
    })
@@ -49,9 +47,6 @@ func (r *login_response) New(username, password string) error {
    if err != nil {
       return err
    }
-   
-   fmt.Printf("%q\n", data)
-   
    return r.m.Consume(data)
 }
 
