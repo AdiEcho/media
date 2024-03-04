@@ -11,30 +11,6 @@ import (
    "net/http"
 )
 
-// wikipedia.org/wiki/Hashcash
-func hashcash(login_context, message []byte) []byte {
-   rand := func() uint64 {
-      sum := sha1.Sum(login_context)
-      return binary.BigEndian.Uint64(sum[len(sum)-8:])
-   }()
-   var counter uint64
-   for {
-      var b []byte
-      b = binary.BigEndian.AppendUint64(b, rand)
-      b = binary.BigEndian.AppendUint64(b, counter)
-      zero_bits := func() int {
-         sum := sha1.Sum(append(message, b...))
-         x := binary.BigEndian.Uint16(sum[sha1.Size-2:])
-         return bits.TrailingZeros16(x)
-      }()
-      if zero_bits >= 10 {
-         return b
-      }
-      rand++
-      counter++
-   }
-}
-
 func (r login_response) challenge(
    username, password string,
 ) (protobuf.Message, error) {

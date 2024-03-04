@@ -3,10 +3,37 @@ package spotify
 import (
    "154.pages.dev/protobuf"
    "bytes"
+   "crypto/sha1"
+   "encoding/binary"
    "errors"
    "io"
+   "math/bits"
    "net/http"
 )
+
+// wikipedia.org/wiki/Hashcash
+func hashcash(login_context, prefix []byte) []byte {
+   rand := func() uint64 {
+      sum := sha1.Sum(login_context)
+      return binary.BigEndian.Uint64(sum[len(sum)-8:])
+   }()
+   var counter uint64
+   for {
+      var b []byte
+      b = binary.BigEndian.AppendUint64(b, rand)
+      b = binary.BigEndian.AppendUint64(b, counter)
+      zero_bits := func() int {
+         sum := sha1.Sum(append(prefix, b...))
+         x := binary.BigEndian.Uint16(sum[sha1.Size-2:])
+         return bits.TrailingZeros16(x)
+      }()
+      if zero_bits >= 10 {
+         return b
+      }
+      rand++
+      counter++
+   }
+}
 
 const android_client_id = "9a8d2f0ce77a4e248bb71fefcb557637"
 
