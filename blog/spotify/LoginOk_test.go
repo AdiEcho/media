@@ -22,7 +22,7 @@ func TestChallenge(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%#v\n", ok.m)
+   fmt.Println(ok.access_token())
 }
 
 var _ = protobuf.Message{

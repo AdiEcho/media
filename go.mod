@@ -7,7 +7,7 @@ require (
 	154.pages.dev/log v1.1.8
 	154.pages.dev/protobuf v1.1.5
 	154.pages.dev/sofia v1.1.7
-	154.pages.dev/widevine v1.3.0
+	154.pages.dev/widevine v1.3.1
 )
 
 require (

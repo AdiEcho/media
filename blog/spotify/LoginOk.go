@@ -8,11 +8,20 @@ import (
    "net/http"
 )
 
+func (o login_ok) access_token() (string, bool) {
+   if v, ok := o.m.Get(1); ok { // LoginOk ok
+      if v, ok := v.GetBytes(2); ok { // string access_token
+         return string(v), true
+      }
+   }
+   return "", false
+}
+
+// github.com/librespot-org/librespot/blob/dev/protocol/proto/spotify/login5/v3/login5.proto
 type login_ok struct {
    m protobuf.Message
 }
 
-// github.com/librespot-org/librespot/blob/dev/protocol/proto/spotify/login5/v3/login5.proto
 func (h login_response) ok(username, password string) (*login_ok, error) {
    login_context, ok := h.login_context()
    if !ok {
