@@ -2,10 +2,12 @@ package web
 
 import (
    "154.pages.dev/media/blog/spotify/android"
+   "fmt"
    "os"
    "testing"
 )
 
+// open.spotify.com/track/1oaaSrDJimABpOdCEbw2DJ
 const track = "2da9a11032664413b24de181c534f157"
 
 func TestMetadata(t *testing.T) {
@@ -21,10 +23,11 @@ func TestMetadata(t *testing.T) {
    if err := login.Consume(); err != nil {
       t.Fatal(err)
    }
-   res, err := metadata(login, track)
-   if err != nil {
+   var meta metadata
+   if err := meta.New(login, track); err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   for _, file := range meta.File {
+      fmt.Printf("%+v\n", file)
+   }
 }

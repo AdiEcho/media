@@ -11,25 +11,6 @@ import (
    "net/http"
 )
 
-// github.com/librespot-org/librespot/blob/dev/core/src/spclient.rs
-func solve_hash_cash(login_context, prefix []byte, length int) []byte {
-   sum := sha1.Sum(login_context)
-   var counter uint64
-   target := binary.BigEndian.Uint64(sum[12:])
-   for {
-      suffix := func() []byte {
-         b := binary.BigEndian.AppendUint64(nil, target)
-         return binary.BigEndian.AppendUint64(b, counter)
-      }()
-      sum := sha1.Sum(append(prefix, suffix...))
-      if bits.TrailingZeros64(binary.BigEndian.Uint64(sum[12:])) >= length {
-         return suffix
-      }
-      counter++
-      target++
-   }
-}
-
 func (h login_response) ok(username, password string) (*LoginOk, error) {
    login_context, ok := h.login_context()
    if !ok {
@@ -95,3 +76,22 @@ func (o LoginOk) AccessToken() (string, bool) {
    }
    return "", false
 }
+// github.com/librespot-org/librespot/blob/dev/core/src/spclient.rs
+func solve_hash_cash(login_context, prefix []byte, length int) []byte {
+   sum := sha1.Sum(login_context)
+   var counter uint64
+   target := binary.BigEndian.Uint64(sum[12:])
+   for {
+      suffix := func() []byte {
+         b := binary.BigEndian.AppendUint64(nil, target)
+         return binary.BigEndian.AppendUint64(b, counter)
+      }()
+      sum := sha1.Sum(append(prefix, suffix...))
+      if bits.TrailingZeros64(binary.BigEndian.Uint64(sum[12:])) >= length {
+         return suffix
+      }
+      counter++
+      target++
+   }
+}
+

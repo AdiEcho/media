@@ -1,20 +1,5 @@
 # spotify
 
-https://open.spotify.com/track/1oaaSrDJimABpOdCEbw2DJ
-
-## web
-
-~~~
-HTTP/1.1 400 Bad Request
-Connection: close
-
-not a WebSocket handshake request: missing upgrade
-~~~
-
-also login is protected by `recaptchaToken`
-
-## android
-
 https://play.google.com/store/apps/details?id=com.spotify.music
 
 ~~~
