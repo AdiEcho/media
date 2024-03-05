@@ -1,4 +1,4 @@
-package spotify
+package android
 
 import (
    "154.pages.dev/protobuf"
@@ -7,10 +7,10 @@ import (
    "net/http"
 )
 
-func (o login_ok) metadata() (*http.Response, error) {
-   token, ok := o.access_token()
+func (o LoginOk) metadata() (*http.Response, error) {
+   token, ok := o.AccessToken()
    if !ok {
-      return nil, errors.New("login_ok.access_token")
+      return nil, errors.New("LoginOk.AccessToken")
    }
    body := protobuf.Message{
       protobuf.Field{Number: 1, Type: 2, Value: protobuf.Message{

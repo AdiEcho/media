@@ -1,4 +1,4 @@
-package spotify
+package android
 
 import (
    "bytes"
@@ -12,12 +12,12 @@ func TestMetadata(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var login login_ok
-   login.data, err = os.ReadFile(home + "/spotify.bin")
+   var login LoginOk
+   login.Data, err = os.ReadFile(home + "/spotify.bin")
    if err != nil {
       t.Fatal(err)
    }
-   if err := login.consume(); err != nil {
+   if err := login.Consume(); err != nil {
       t.Fatal(err)
    }
    res, err := login.metadata()

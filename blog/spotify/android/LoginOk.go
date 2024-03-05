@@ -1,4 +1,4 @@
-package spotify
+package android
 
 import (
    "154.pages.dev/protobuf"
@@ -30,7 +30,7 @@ func solve_hash_cash(login_context, prefix []byte, length int) []byte {
    }
 }
 
-func (h login_response) ok(username, password string) (*login_ok, error) {
+func (h login_response) ok(username, password string) (*LoginOk, error) {
    login_context, ok := h.login_context()
    if !ok {
       return nil, errors.New("login_response.login_context")
@@ -69,8 +69,8 @@ func (h login_response) ok(username, password string) (*login_ok, error) {
    if res.StatusCode != http.StatusOK {
       return nil, errors.New(res.Status)
    }
-   var login login_ok
-   login.data, err = io.ReadAll(res.Body)
+   var login LoginOk
+   login.Data, err = io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
@@ -78,16 +78,16 @@ func (h login_response) ok(username, password string) (*login_ok, error) {
 }
 
 // github.com/librespot-org/librespot/blob/dev/protocol/proto/spotify/login5/v3/login5.proto
-type login_ok struct {
-   data []byte
+type LoginOk struct {
+   Data []byte
    m protobuf.Message
 }
 
-func (o *login_ok) consume() error {
-   return o.m.Consume(o.data)
+func (o *LoginOk) Consume() error {
+   return o.m.Consume(o.Data)
 }
 
-func (o login_ok) access_token() (string, bool) {
+func (o LoginOk) AccessToken() (string, bool) {
    if v, ok := o.m.Get(1); ok { // LoginOk ok
       if v, ok := v.GetBytes(2); ok { // string access_token
          return string(v), true
