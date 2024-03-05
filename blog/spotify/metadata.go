@@ -4,9 +4,7 @@ import (
    "154.pages.dev/protobuf"
    "bytes"
    "errors"
-   "io"
    "net/http"
-   "net/url"
 )
 
 func (o login_ok) metadata() (*http.Response, error) {
@@ -30,16 +28,14 @@ func (o login_ok) metadata() (*http.Response, error) {
          }},
       }},
    }
-   req := new(http.Request)
-   req.Header = make(http.Header)
-   req.Method = "POST"
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "guc3-spclient.spotify.com"
+   req, err := http.NewRequest(
+      "POST", "https://guc3-spclient.spotify.com",
+      bytes.NewReader(body.Encode()),
+   )
+   if err != nil {
+      return nil, err
+   }
    req.URL.Path = "/extended-metadata/v0/extended-metadata"
-   req.URL.Scheme = "https"
-   req.Body = io.NopCloser(bytes.NewReader(body.Encode()))
-   req.Header["Authorization"] = []string{"Bearer " + token}
+   req.Header.Set("authorization", "Bearer " + token)
    return http.DefaultClient.Do(req)
 }

@@ -11,15 +11,6 @@ import (
    "net/http"
 )
 
-func (o login_ok) access_token() (string, bool) {
-   if v, ok := o.m.Get(1); ok { // LoginOk ok
-      if v, ok := v.GetBytes(2); ok { // string access_token
-         return string(v), true
-      }
-   }
-   return "", false
-}
-
 // github.com/librespot-org/librespot/blob/dev/core/src/spclient.rs
 func solve_hash_cash(login_context, prefix []byte, length int) []byte {
    sum := sha1.Sum(login_context)
@@ -37,11 +28,6 @@ func solve_hash_cash(login_context, prefix []byte, length int) []byte {
       counter++
       target++
    }
-}
-
-// github.com/librespot-org/librespot/blob/dev/protocol/proto/spotify/login5/v3/login5.proto
-type login_ok struct {
-   m protobuf.Message
 }
 
 func (h login_response) ok(username, password string) (*login_ok, error) {
@@ -83,13 +69,29 @@ func (h login_response) ok(username, password string) (*login_ok, error) {
    if res.StatusCode != http.StatusOK {
       return nil, errors.New(res.Status)
    }
-   data, err := io.ReadAll(res.Body)
+   var login login_ok
+   login.data, err = io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
-   var login login_ok
-   if err := login.m.Consume(data); err != nil {
-      return nil, err
-   }
    return &login, nil
+}
+
+// github.com/librespot-org/librespot/blob/dev/protocol/proto/spotify/login5/v3/login5.proto
+type login_ok struct {
+   data []byte
+   m protobuf.Message
+}
+
+func (o *login_ok) consume() error {
+   return o.m.Consume(o.data)
+}
+
+func (o login_ok) access_token() (string, bool) {
+   if v, ok := o.m.Get(1); ok { // LoginOk ok
+      if v, ok := v.GetBytes(2); ok { // string access_token
+         return string(v), true
+      }
+   }
+   return "", false
 }
