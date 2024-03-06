@@ -50,57 +50,43 @@ var _ = protobuf.Message{
          protobuf.Field{Number: 3, Type: -2, Value: protobuf.Message{
             protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("type.googleapis.com/spotify.extendedmetadata.audiofiles.AudioFilesExtensionResponse")},
             protobuf.Field{Number: 2, Type: -2, Value: protobuf.Message{
-               protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x18\n\x14\xf6\x82ҩ]\x0e\x14\xee\xefO@\xb6\x0f\xdd\xdeV\xbcg!\xc7\x10\x00")},
                protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
-                  protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x14\xf6\x82ҩ]\x0e\x14\xee\xefO@\xb6\x0f\xdd\xdeV\xbcg!\xc7\x10\x00")},
                   protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
                      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\xf6\x82ҩ]\x0e\x14\xee\xefO@\xb6\x0f\xdd\xdeV\xbcg!\xc7")},
                      protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(0)},
                   }},
                }},
-               protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x18\n\x14j_\x12\xfaQ\xf2\xc1ℯpz\x99\xf3ʆ\x96\xf7\xf6/\x10\x01")},
                protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
-                  protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x14j_\x12\xfaQ\xf2\xc1ℯpz\x99\xf3ʆ\x96\xf7\xf6/\x10\x01")},
                   protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
                      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("j_\x12\xfaQ\xf2\xc1ℯpz\x99\xf3ʆ\x96\xf7\xf6/")},
                      protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(1)},
                   }},
                }},
-               protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x18\n\x14\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT\x10\x02")},
                protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
-                  protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x14\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT\x10\x02")},
                   protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
                      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT")},
                      protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(2)},
                   }},
                }},
-               protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x18\n\x14\x06J\xff\v\xf7'8[\xcby\xe0\xa3֕֔\xd8\xc0,\xfe\x10\b")},
                protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
-                  protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x14\x06J\xff\v\xf7'8[\xcby\xe0\xa3֕֔\xd8\xc0,\xfe\x10\b")},
                   protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
                      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x06J\xff\v\xf7'8[\xcby\xe0\xa3֕֔\xd8\xc0,\xfe")},
                      protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(8)},
                   }},
                }},
-               protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x18\n\x14\xfe\xb3\xd0e\x0e\xc8|\xcf\xdf\x18\xb6\x89i\xb8_\xa4\xbb\x10\xfb\xb4\x10\x10")},
                protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
-                  protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x14\xfe\xb3\xd0e\x0e\xc8|\xcf\xdf\x18\xb6\x89i\xb8_\xa4\xbb\x10\xfb\xb4\x10\x10")},
                   protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
                      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\xfe\xb3\xd0e\x0e\xc8|\xcf\xdf\x18\xb6\x89i\xb8_\xa4\xbb\x10\xfb\xb4")},
                      protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(16)},
                   }},
                }},
-               protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x18\n\x14{T\x91\xd2rO\xf2HG\x16\x19.A\xe8\x06v\x824\xf68\x10\x12")},
                protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
-                  protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x14{T\x91\xd2rO\xf2HG\x16\x19.A\xe8\x06v\x824\xf68\x10\x12")},
                   protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
                      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("{T\x91\xd2rO\xf2HG\x16\x19.A\xe8\x06v\x824\xf68")},
                      protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(18)},
                   }},
                }},
-               protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x18\n\x14\xbd\x03z\xb3\x18a\x053\xfbk\xc5 \xe2:!\x83\x18\xf6C\xa8\x10\x13")},
                protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
-                  protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\n\x14\xbd\x03z\xb3\x18a\x053\xfbk\xc5 \xe2:!\x83\x18\xf6C\xa8\x10\x13")},
                   protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
                      protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\xbd\x03z\xb3\x18a\x053\xfbk\xc5 \xe2:!\x83\x18\xf6C\xa8")},
                      protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(19)},
@@ -197,42 +183,34 @@ var _ = protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("isrc")},
                   protobuf.Field{Number: 2, Type: 2, Value: protobuf.Bytes("GBBBM0002118")},
                }},
-               protobuf.Field{Number: 12, Type: 2, Value: protobuf.Bytes("\n\x14\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT\x10\x02")},
                protobuf.Field{Number: 12, Type: -2, Value: protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT")},
                   protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(2)},
                }},
-               protobuf.Field{Number: 12, Type: 2, Value: protobuf.Bytes("\n\x14j_\x12\xfaQ\xf2\xc1ℯpz\x99\xf3ʆ\x96\xf7\xf6/\x10\x01")},
                protobuf.Field{Number: 12, Type: -2, Value: protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("j_\x12\xfaQ\xf2\xc1ℯpz\x99\xf3ʆ\x96\xf7\xf6/")},
                   protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(1)},
                }},
-               protobuf.Field{Number: 12, Type: 2, Value: protobuf.Bytes("\n\x14\xf6\x82ҩ]\x0e\x14\xee\xefO@\xb6\x0f\xdd\xdeV\xbcg!\xc7\x10\x00")},
                protobuf.Field{Number: 12, Type: -2, Value: protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\xf6\x82ҩ]\x0e\x14\xee\xefO@\xb6\x0f\xdd\xdeV\xbcg!\xc7")},
                   protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(0)},
                }},
-               protobuf.Field{Number: 12, Type: 2, Value: protobuf.Bytes("\n\x14\x17=\xf6\x8bP\x97\xd4\a\xde\xff\x84\x1fAWl\x81\xc3\x0e\x13B\x10\r")},
                protobuf.Field{Number: 12, Type: -2, Value: protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x17=\xf6\x8bP\x97\xd4\a\xde\xff\x84\x1fAWl\x81\xc3\x0e\x13B")},
                   protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(13)},
                }},
-               protobuf.Field{Number: 12, Type: 2, Value: protobuf.Bytes("\n\x14l\x9ex0\xa3\xf4\xbcw\xd08K\xc3\xf5\xd2}\xf5 ^Q0\x10\v")},
                protobuf.Field{Number: 12, Type: -2, Value: protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("l\x9ex0\xa3\xf4\xbcw\xd08K\xc3\xf5\xd2}\xf5 ^Q0")},
                   protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(11)},
                }},
-               protobuf.Field{Number: 12, Type: 2, Value: protobuf.Bytes("\n\x14\x93\xd1v\\\xfd\xc5\xe8JA`\x00Qs\x1az\xffʢ\xe9\x12\x10\f")},
                protobuf.Field{Number: 12, Type: -2, Value: protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x93\xd1v\\\xfd\xc5\xe8JA`\x00Qs\x1az\xffʢ\xe9\x12")},
                   protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(12)},
                }},
-               protobuf.Field{Number: 12, Type: 2, Value: protobuf.Bytes("\n\x149$\x82\xfe\x9b\xedsr\xd1e}~\"\xf3+y)\x02\xf3\xbd\x10\n")},
                protobuf.Field{Number: 12, Type: -2, Value: protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("9$\x82\xfe\x9b\xedsr\xd1e}~\"\xf3+y)\x02\xf3\xbd")},
                   protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(10)},
                }},
-               protobuf.Field{Number: 12, Type: 2, Value: protobuf.Bytes("\n\x14\x06J\xff\v\xf7'8[\xcby\xe0\xa3֕֔\xd8\xc0,\xfe\x10\b")},
                protobuf.Field{Number: 12, Type: -2, Value: protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x06J\xff\v\xf7'8[\xcby\xe0\xa3֕֔\xd8\xc0,\xfe")},
                   protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(8)},
