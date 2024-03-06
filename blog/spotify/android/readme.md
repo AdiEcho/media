@@ -1,5 +1,11 @@
 # spotify
 
+~~~
+"canonical_uri": "spotify:track:1oaaSrDJimABpOdCEbw2DJ"
+"file_id": "98b53c239db400b0a016145700de431f68d28f54",
+"gid": "2da9a11032664413b24de181c534f157",
+~~~
+
 https://play.google.com/store/apps/details?id=com.spotify.music
 
 ~~~
