@@ -31,10 +31,6 @@ adb shell am start -a android.intent.action.VIEW `
 - https://github.com/Ahmeth4n/javatify/issues/3
 - https://github.com/glomatico/spotify-aac-downloader/issues/21
 
-## PouleR/spotify-login
-
-https://github.com/PouleR/spotify-login
-
 ## formats
 
 both blocks:

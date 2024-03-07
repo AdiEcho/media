@@ -26,11 +26,14 @@ func TestMetadata(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   for _, format := range meta.formats() {
-      fmt.Printf("%#v\n", format)
+   for _, file := range meta.file() {
+      if file.OGG_VORBIS_320() {
+         fmt.Println(file.file_id())
+      }
    }
 }
 
+// open.spotify.com/track/1oaaSrDJimABpOdCEbw2DJ
 var _ = protobuf.Message{
    protobuf.Field{Number: 2, Type: -2, Value: protobuf.Message{
       protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\b\xc8\x01\x10\x80\xa3\x05\x18\x80\xb4\xbc\x02")},

@@ -3,10 +3,18 @@ package android
 import (
    "154.pages.dev/protobuf"
    "bytes"
+   "encoding/hex"
    "errors"
    "io"
    "net/http"
 )
+
+func (f file_format) file_id() (string, bool) {
+   if v, ok := f.m.GetBytes(1); ok {
+      return hex.EncodeToString(v), true
+   }
+   return "", false
+}
 
 func (f file_format) OGG_VORBIS_320() bool {
    if v, ok := f.format(); ok {
