@@ -37,9 +37,13 @@ https://github.com/PouleR/spotify-login
 
 ## formats
 
-first block:
+both blocks:
 
-~~~go
+~~~
+protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT")},
+protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(2)},
+OGG_VORBIS_320 "\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT"
+
 protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\xf6\x82ҩ]\x0e\x14\xee\xefO@\xb6\x0f\xdd\xdeV\xbcg!\xc7")},
 protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(0)},
 OGG_VORBIS_96 "\xf6\x82ҩ]\x0e\x14\xee\xefO@\xb6\x0f\xdd\xdeV\xbcg!\xc7"
@@ -48,44 +52,25 @@ protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("j_\x12\xfaQ\xf2\xc1ℯ
 protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(1)},
 OGG_VORBIS_160 "j_\x12\xfaQ\xf2\xc1ℯpz\x99\xf3ʆ\x96\xf7\xf6/"
 
-protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT")},
-protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(2)},
-OGG_VORBIS_320 "\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT"
-
 protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x06J\xff\v\xf7'8[\xcby\xe0\xa3֕֔\xd8\xc0,\xfe")},
 protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(8)},
 AAC_24 "\x06J\xff\v\xf7'8[\xcby\xe0\xa3֕֔\xd8\xc0,\xfe"
-
-protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\xfe\xb3\xd0e\x0e\xc8|\xcf\xdf\x18\xb6\x89i\xb8_\xa4\xbb\x10\xfb\xb4")},
-protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(16)},
-FLAC_FLAC = 16;
-
-protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("{T\x91\xd2rO\xf2HG\x16\x19.A\xe8\x06v\x824\xf68")},
-protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(18)},
-
-protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\xbd\x03z\xb3\x18a\x053\xfbk\xc5 \xe2:!\x83\x18\xf6C\xa8")},
-protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(19)},
 ~~~
 
-second block:
+second block path, 6 steps:
 
 ~~~go
-protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\xf6\x82ҩ]\x0e\x14\xee\xefO@\xb6\x0f\xdd\xdeV\xbcg!\xc7")},
-protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(0)},
-OGG_VORBIS_96 "\xf6\x82ҩ]\x0e\x14\xee\xefO@\xb6\x0f\xdd\xdeV\xbcg!\xc7"
+protobuf.Field{Number: 2, Type: -2, Value: protobuf.Message{
+   protobuf.Field{Number: 3, Type: -2, Value: protobuf.Message{
+      protobuf.Field{Number: 3, Type: -2, Value: protobuf.Message{
+         protobuf.Field{Number: 2, Type: -2, Value: protobuf.Message{
+            protobuf.Field{Number: 12, Type: -2, Value: protobuf.Message{
+               protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT")},
+~~~
 
-protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("j_\x12\xfaQ\xf2\xc1ℯpz\x99\xf3ʆ\x96\xf7\xf6/")},
-protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(1)},
-OGG_VORBIS_160 "j_\x12\xfaQ\xf2\xc1ℯpz\x99\xf3ʆ\x96\xf7\xf6/"
+second block only:
 
-protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT")},
-protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(2)},
-OGG_VORBIS_320 "\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT"
-
-protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x06J\xff\v\xf7'8[\xcby\xe0\xa3֕֔\xd8\xc0,\xfe")},
-protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(8)},
-AAC_24 "\x06J\xff\v\xf7'8[\xcby\xe0\xa3֕֔\xd8\xc0,\xfe"
-
+~~~go
 protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("9$\x82\xfe\x9b\xedsr\xd1e}~\"\xf3+y)\x02\xf3\xbd")},
 protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(10)},
 MP4_128 "9$\x82\xfe\x9b\xedsr\xd1e}~\"\xf3+y)\x02\xf3\xbd"
@@ -101,4 +86,30 @@ MP4_128_DUAL "\x93\xd1v\\\xfd\xc5\xe8JA`\x00Qs\x1az\xffʢ\xe9\x12"
 protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x17=\xf6\x8bP\x97\xd4\a\xde\xff\x84\x1fAWl\x81\xc3\x0e\x13B")},
 protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(13)},
 MP4_256_DUAL "\x17=\xf6\x8bP\x97\xd4\a\xde\xff\x84\x1fAWl\x81\xc3\x0e\x13B"
+~~~
+
+first block path, 7 steps:
+
+~~~go
+protobuf.Field{Number: 2, Type: -2, Value: protobuf.Message{
+   protobuf.Field{Number: 3, Type: -2, Value: protobuf.Message{
+      protobuf.Field{Number: 3, Type: -2, Value: protobuf.Message{
+         protobuf.Field{Number: 2, Type: -2, Value: protobuf.Message{
+            protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
+               protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
+                  protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT")},
+~~~
+
+first block only:
+
+~~~go
+protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\xfe\xb3\xd0e\x0e\xc8|\xcf\xdf\x18\xb6\x89i\xb8_\xa4\xbb\x10\xfb\xb4")},
+protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(16)},
+FLAC_FLAC = 16;
+
+protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("{T\x91\xd2rO\xf2HG\x16\x19.A\xe8\x06v\x824\xf68")},
+protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(18)},
+
+protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\xbd\x03z\xb3\x18a\x053\xfbk\xc5 \xe2:!\x83\x18\xf6C\xa8")},
+protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(19)},
 ~~~

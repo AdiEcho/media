@@ -8,29 +8,54 @@ import (
    "net/http"
 )
 
-/*
-github.com/librespot-org/librespot/blob/dev/protocol/proto/media_format.proto
-1 "format": "OGG_VORBIS_96"
-2 "format": "OGG_VORBIS_160"
-3 "format": "OGG_VORBIS_320"
-9 "format": "AAC_24"
-11 "format": "MP4_128"
-12 "format": "MP4_128_DUAL"
-14 "format": "MP4_256"
-15 "format": "MP4_256_DUAL"
+func (f file_format) OGG_VORBIS_320() bool {
+   if v, ok := f.format(); ok {
+      if v == 2 {
+         return true
+      }
+   }
+   return false
+}
 
-github.com/librespot-org/librespot/blob/dev/protocol/proto/metadata.proto
-github.com/librespot-org/librespot/blob/dev/protocol/proto/media_manifest.proto
-0 "format": "OGG_VORBIS_96"
-1 "format": "OGG_VORBIS_160"
-2 "format": "OGG_VORBIS_320"
-8 "format": "AAC_24"
-"format": "MP4_128"
-"format": "MP4_128_DUAL"
-"format": "MP4_256"
-"format": "MP4_256_DUAL"
-*/
-func (o LoginOk) metadata(canonical_uri string) (protobuf.Message, error) {
+func (f file_format) format() (uint64, bool) {
+   if v, ok := f.m.GetVarint(2); ok {
+      return uint64(v), true
+   }
+   return 0, false
+}
+
+type file_format struct {
+   m protobuf.Message
+}
+
+func (m metadata) file() []file_format {
+   var vs []file_format
+   for _, field := range m.m {
+      if v, ok := field.Get(2); ok {
+         if v, ok := v.Get(3); ok {
+            if v, ok := v.Get(3); ok {
+               if v, ok := v.Get(2); ok {
+                  for _, field := range v {
+                     if v, ok := field.Get(12); ok {
+                        vs = append(vs, file_format{v})
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+   return vs
+}
+
+// github.com/librespot-org/librespot/blob/dev/protocol/proto/media_format.proto
+// github.com/librespot-org/librespot/blob/dev/protocol/proto/metadata.proto
+// github.com/librespot-org/librespot/blob/dev/protocol/proto/media_manifest.proto
+type metadata struct {
+   m protobuf.Message
+}
+
+func (o LoginOk) metadata(canonical_uri string) (*metadata, error) {
    token, ok := o.AccessToken()
    if !ok {
       return nil, errors.New("LoginOk.AccessToken")
@@ -64,9 +89,9 @@ func (o LoginOk) metadata(canonical_uri string) (protobuf.Message, error) {
    if err != nil {
       return nil, err
    }
-   var message protobuf.Message
-   if err := message.Consume(data); err != nil {
+   var meta metadata
+   if err := meta.m.Consume(data); err != nil {
       return nil, err
    }
-   return message, nil
+   return &meta, nil
 }

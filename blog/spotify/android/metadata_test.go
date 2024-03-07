@@ -22,11 +22,13 @@ func TestMetadata(t *testing.T) {
    if err := login.Consume(); err != nil {
       t.Fatal(err)
    }
-   message, err := login.metadata(canonical_uri)
+   meta, err := login.metadata(canonical_uri)
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%#v\n", message)
+   for _, format := range meta.formats() {
+      fmt.Printf("%#v\n", format)
+   }
 }
 
 var _ = protobuf.Message{
@@ -38,6 +40,7 @@ var _ = protobuf.Message{
          protobuf.Field{Number: 3, Type: 0, Value: protobuf.Varint(5184000)},
       }},
       protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(5)},
+      // 2.3
       protobuf.Field{Number: 3, Type: -2, Value: protobuf.Message{
          protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\b\xc8\x01\x12 972a5901e968a4832539d94ffba2a453 \x80\xa3\x05(\x80\xb4\xbc\x02")},
          protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
@@ -47,8 +50,10 @@ var _ = protobuf.Message{
             protobuf.Field{Number: 5, Type: 0, Value: protobuf.Varint(5184000)},
          }},
          protobuf.Field{Number: 2, Type: 2, Value: protobuf.Bytes("spotify:track:1oaaSrDJimABpOdCEbw2DJ")},
+         // 2.3.3
          protobuf.Field{Number: 3, Type: -2, Value: protobuf.Message{
             protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("type.googleapis.com/spotify.extendedmetadata.audiofiles.AudioFilesExtensionResponse")},
+            // 2.3.3.2
             protobuf.Field{Number: 2, Type: -2, Value: protobuf.Message{
                protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
                   protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
@@ -115,6 +120,7 @@ var _ = protobuf.Message{
          protobuf.Field{Number: 3, Type: 0, Value: protobuf.Varint(2592000)},
       }},
       protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(10)},
+      // 2.3
       protobuf.Field{Number: 3, Type: -2, Value: protobuf.Message{
          protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\b\xc8\x01\x12\baecfe9d9 \xf4\xc3\x04(\x80\x9a\x9e\x01")},
          protobuf.Field{Number: 1, Type: -2, Value: protobuf.Message{
@@ -124,8 +130,10 @@ var _ = protobuf.Message{
             protobuf.Field{Number: 5, Type: 0, Value: protobuf.Varint(2592000)},
          }},
          protobuf.Field{Number: 2, Type: 2, Value: protobuf.Bytes("spotify:track:1oaaSrDJimABpOdCEbw2DJ")},
+         // 2.3.3
          protobuf.Field{Number: 3, Type: -2, Value: protobuf.Message{
             protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("type.googleapis.com/spotify.metadata.Track")},
+            // 2.3.3.2
             protobuf.Field{Number: 2, Type: -2, Value: protobuf.Message{
                protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("-\xa9\xa1\x102fD\x13\xb2M\xe1\x81\xc54\xf1W")},
                protobuf.Field{Number: 2, Type: 2, Value: protobuf.Bytes("No Ordinary Love")},
@@ -183,6 +191,7 @@ var _ = protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("isrc")},
                   protobuf.Field{Number: 2, Type: 2, Value: protobuf.Bytes("GBBBM0002118")},
                }},
+               // 2.3.3.2.12
                protobuf.Field{Number: 12, Type: -2, Value: protobuf.Message{
                   protobuf.Field{Number: 1, Type: 2, Value: protobuf.Bytes("\x98\xb5<#\x9d\xb4\x00\xb0\xa0\x16\x14W\x00\xdeC\x1fhҏT")},
                   protobuf.Field{Number: 2, Type: 0, Value: protobuf.Varint(2)},
