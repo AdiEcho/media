@@ -7,10 +7,6 @@ import (
    "net/http"
 )
 
-func (Playlist) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
 func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    var p playlist_request
    p.Content_EAB_ID = d.EAB_ID
@@ -51,7 +47,7 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       s.Type = "FMP4"
       return []segment_value{s}
    }()
-   body, err := json.MarshalIndent(p, "", " ")
+   body, err := json.Marshal(p)
    if err != nil {
       return nil, err
    }
@@ -71,7 +67,9 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    }
    defer res.Body.Close()
    if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+      var b bytes.Buffer
+      res.Write(&b)
+      return nil, errors.New(b.String())
    }
    play := new(Playlist)
    if err := json.NewDecoder(res.Body).Decode(play); err != nil {
@@ -96,3 +94,7 @@ func (Playlist) ResponseBody(b []byte) ([]byte, error) {
 func (p Playlist) RequestUrl() (string, bool) {
    return p.WV_Server, true
 }
+func (Playlist) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
