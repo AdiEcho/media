@@ -1,0 +1,10 @@
+{
+  "result": "CDN",
+  "cdnurl": [
+    "https://audio4-ak-spotify-com.akamaized.net/audio/392482fe9bed7372d1657d7e22f32b792902f3bd?__token__=exp=1709870349~hmac=aee0822771b79e5f9d4651284e4b8bbfeb0683d3b2f7a55fb9b291c24d419f31",
+    "https://audio4-fa.scdn.co/audio/392482fe9bed7372d1657d7e22f32b792902f3bd?1709870349_HRh-pk6dxKFz1aAC1v-VrHS62FB9XKqIy3bQU4gg-UE=",
+    "https://audio4-gm-fb.spotifycdn.com/audio/392482fe9bed7372d1657d7e22f32b792902f3bd?Expires=1709870349~FullPath~hmac=R5LScQNjqbMPqJHX89NVGWMf9LlqNRsNan2W4zj_rrU="
+  ],
+  "fileid": "392482fe9bed7372d1657d7e22f32b792902f3bd",
+  "ttl": 86400
+}
