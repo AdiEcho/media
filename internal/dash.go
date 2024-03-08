@@ -14,6 +14,28 @@ import (
    "slices"
 )
 
+func encode_sidx(base_URL string, raw dash.RawRange) ([]sofia.Range, error) {
+   req, err := http.NewRequest("GET", base_URL, nil)
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("Range", "bytes=" + string(raw))
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   var file sofia.File
+   if err := file.Decode(res.Body); err != nil {
+      return nil, err
+   }
+   index, err := raw.Scan()
+   if err != nil {
+      return nil, err
+   }
+   return file.SegmentIndex.Ranges(index.End+1), nil
+}
+
 func (h HttpStream) key(rep dash.Representation) ([]byte, error) {
    client_id, err := os.ReadFile(h.Client_ID)
    if err != nil {
@@ -56,28 +78,6 @@ func (h HttpStream) key(rep dash.Representation) ([]byte, error) {
       return nil, errors.New("widevine.CDM.Key")
    }
    return key, nil
-}
-
-func encode_sidx(base_URL string, index dash.Range) ([][2]uint32, error) {
-   req, err := http.NewRequest("GET", base_URL, nil)
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("Range", "bytes=" + string(index))
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   var f sofia.File
-   if err := f.Decode(res.Body); err != nil {
-      return nil, err
-   }
-   _, sidx, err := index.Scan()
-   if err != nil {
-      return nil, err
-   }
-   return f.SegmentIndex.ByteRanges(uint32(sidx)+1), nil
 }
 
 func encode_init(dst io.Writer, src io.Reader) error {

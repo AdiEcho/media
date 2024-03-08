@@ -8,8 +8,6 @@ https://github.com/3052/media/commit/d9f2a3a33681992057aa9973752b79e5f7c3b44d
 
 ## Sign up
 
-If you cancel you lose access immediately
-
 1. https://privacy.com
 2. https://signup.hulu.com/plans
 3. Hulu (With Ads)

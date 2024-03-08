@@ -12,6 +12,53 @@ import (
    "strings"
 )
 
+func LivingRoom(email, password string) (*Authenticate, error) {
+   res, err := http.PostForm(
+      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
+         "friendly_name": {"!"},
+         "password": {password},
+         "serial_number": {"!"},
+         "user_email": {email},
+      },
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var auth Authenticate
+   auth.Raw, err = io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &auth, nil
+}
+
+func (a *Authenticate) Unmarshal() error {
+   return json.Unmarshal(a.Raw, &a.Value)
+}
+
+type DeepLink struct {
+   EAB_ID string
+}
+
+type ID struct {
+   s string
+}
+
+func (i ID) String() string {
+   return i.s
+}
+
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+func (i *ID) Set(s string) error {
+   i.s = path.Base(s)
+   return nil
+}
 func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
    req, err := http.NewRequest("GET", "https://discover.hulu.com", nil)
    if err != nil {
@@ -187,48 +234,3 @@ type Authenticate struct {
    }
 }
 
-func LivingRoom(email, password string) (*Authenticate, error) {
-   res, err := http.PostForm(
-      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
-         "friendly_name": {"!"},
-         "password": {password},
-         "serial_number": {"!"},
-         "user_email": {email},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   var auth Authenticate
-   auth.Raw, err = io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &auth, nil
-}
-
-func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Raw, &a.Value)
-}
-
-type DeepLink struct {
-   EAB_ID string
-}
-
-type ID struct {
-   s string
-}
-
-func (i ID) String() string {
-   return i.s
-}
-
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-func (i *ID) Set(s string) error {
-   i.s = path.Base(s)
-   return nil
-}
