@@ -3,16 +3,16 @@
 1. https://privacy.com
 2. https://mubi.com
 3. Email address
-4. Yearly
-5. NEXT
-6. Card Number
-7. Expiry Date
-8. CVV
-9. START FREE TRIAL
-
-first commit Feb 19 2024:
-
-https://github.com/3052/media/commit/9e98200605d6450ef826a4204cd8dad305ac4ed1
+4. GET STARTED
+5. enter code
+6. click MUBI
+7. NEXT
+8. cardholder name
+9. card number
+10. Expiry Date
+11. CVV
+12. zip code
+13. START FREE TRIAL
 
 ## Android
 

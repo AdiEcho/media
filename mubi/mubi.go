@@ -11,6 +11,31 @@ import (
    "strings"
 )
 
+type Authenticate struct {
+   Data []byte
+   v struct {
+      Token string
+      User struct {
+         ID int
+      }
+   }
+}
+
+func (a Authenticate) RequestHeader() (http.Header, error) {
+   value := map[string]any{
+      "merchant": "mubi",
+      "sessionId": a.v.Token,
+      "userId": a.v.User.ID,
+   }
+   text, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   head := make(http.Header)
+   head.Set("Dt-Custom-Data", base64.StdEncoding.EncodeToString(text))
+   return head, nil
+}
+
 func (w WebAddress) String() string {
    return w.s
 }
@@ -82,33 +107,8 @@ func (Authenticate) ResponseBody(b []byte) ([]byte, error) {
    return v.License, nil
 }
 
-func (a Authenticate) RequestHeader() (http.Header, error) {
-   value := map[string]any{
-      "merchant": "mubi",
-      "sessionId": a.v.Token,
-      "userId": a.v.User.ID,
-   }
-   text, err := json.Marshal(value)
-   if err != nil {
-      return nil, err
-   }
-   head := make(http.Header)
-   head.Set("Dt-Custom-Data", base64.StdEncoding.EncodeToString(text))
-   return head, nil
-}
-
 func (a *Authenticate) Unmarshal() error {
    return json.Unmarshal(a.Data, &a.v)
-}
-
-type Authenticate struct {
-   Data []byte
-   v struct {
-      Token string
-      User struct {
-         ID int
-      }
-   }
 }
 
 func (w WebAddress) Film() (*FilmResponse, error) {

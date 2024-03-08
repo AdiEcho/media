@@ -6,7 +6,6 @@ import (
    "154.pages.dev/log"
    "encoding/hex"
    "errors"
-   "fmt"
    "log/slog"
    "net/http"
    "os"
@@ -54,7 +53,7 @@ func (h HttpStream) segment_base(
          if err != nil {
             return err
          }
-         req.Header.Set("Range", fmt.Sprintf("bytes=%v-%v", r[0], r[1]))
+         req.Header.Set("Range", r.String())
          res, err := http.DefaultClient.Do(req)
          if err != nil {
             return err
