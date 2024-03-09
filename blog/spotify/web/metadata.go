@@ -16,9 +16,9 @@ type metadata struct {
 }
 
 func (m *metadata) New(login android.LoginOk, track string) error {
-   token, ok := login.AccessToken()
-   if !ok {
-      return errors.New("android.LoginOk.AccessToken")
+   token, err := login.AccessToken()
+   if err != nil {
+      return err
    }
    req, err := http.NewRequest("GET", "https://spclient.wg.spotify.com", nil)
    if err != nil {

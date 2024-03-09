@@ -9,9 +9,9 @@ import (
 )
 
 func (s *storage_resolve) New(login android.LoginOk, file_id string) error {
-   token, ok := login.AccessToken()
-   if !ok {
-      return errors.New("android.LoginOk.AccessToken")
+   token, err := login.AccessToken()
+   if err != nil {
+      return err
    }
    req, err := http.NewRequest("GET", "https://guc3-spclient.spotify.com", nil)
    if err != nil {

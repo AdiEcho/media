@@ -64,9 +64,9 @@ type metadata struct {
 }
 
 func (o LoginOk) metadata(canonical_uri string) (*metadata, error) {
-   token, ok := o.AccessToken()
-   if !ok {
-      return nil, errors.New("LoginOk.AccessToken")
+   token, err := o.AccessToken()
+   if err != nil {
+      return nil, err
    }
    var m protobuf.Message
    m.Add(2, func(m *protobuf.Message) {

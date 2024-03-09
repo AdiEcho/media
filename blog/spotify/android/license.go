@@ -2,7 +2,6 @@ package android
 
 import (
    "bytes"
-   "errors"
    "fmt"
    "io"
    "net/http"
@@ -26,9 +25,9 @@ func (LoginOk) RequestUrl() (string, bool) {
 }
 
 func (o LoginOk) RequestHeader() (http.Header, error) {
-   token, ok := o.AccessToken()
-   if !ok {
-      return nil, errors.New("LoginOk.AccessToken")
+   token, err := o.AccessToken()
+   if err != nil {
+      return nil, err
    }
    h := make(http.Header)
    h.Set("authorization", "Bearer "+token)

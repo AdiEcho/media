@@ -11,19 +11,21 @@ import (
    "net/http"
 )
 
+// we are converting the option to result multiple times, so lets go ahead and
+// return a result
+func (o LoginOk) AccessToken() (string, error) {
+   if v, ok := o.m.Get(1); ok { // LoginOk ok
+      if v, ok := v.GetBytes(2); ok { // string access_token
+         return string(v), nil
+      }
+   }
+   return "", errors.New("LoginOk.AccessToken")
+}
+
 // github.com/librespot-org/librespot/blob/dev/protocol/proto/spotify/login5/v3/login5.proto
 type LoginOk struct {
    Data []byte
    m    protobuf.Message
-}
-
-func (o LoginOk) AccessToken() (string, bool) {
-   if v, ok := o.m.Get(1); ok { // LoginOk ok
-      if v, ok := v.GetBytes(2); ok { // string access_token
-         return string(v), true
-      }
-   }
-   return "", false
 }
 
 func (h login_response) ok(username, password string) (*LoginOk, error) {
