@@ -14,8 +14,8 @@ import (
 // we are converting the option to result multiple times, so lets go ahead and
 // return a result
 func (o LoginOk) AccessToken() (string, error) {
-   if v, ok := o.m.Get(1); ok { // LoginOk ok
-      if v, ok := v.GetBytes(2); ok { // string access_token
+   if v, ok := <-o.m.Get(1); ok { // LoginOk ok
+      if v, ok := <-v.GetBytes(2); ok { // string access_token
          return string(v), nil
       }
    }

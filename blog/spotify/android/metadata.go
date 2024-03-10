@@ -9,50 +9,23 @@ import (
    "net/http"
 )
 
-func (f file_format) file_id() (string, bool) {
-   if v, ok := f.m.GetBytes(1); ok {
-      return hex.EncodeToString(v), true
-   }
-   return "", false
-}
-
-func (f file_format) OGG_VORBIS_320() bool {
-   if v, ok := f.format(); ok {
-      if v == 2 {
-         return true
-      }
-   }
-   return false
-}
-
-func (f file_format) format() (uint64, bool) {
-   if v, ok := f.m.GetVarint(2); ok {
-      return uint64(v), true
-   }
-   return 0, false
-}
-
 type file_format struct {
    m protobuf.Message
 }
 
-func (m metadata) file() []file_format {
-   var vs []file_format
-   for _, field := range m.m {
-      if v, ok := field.Get(2); ok {
-         if v, ok := v.Get(3); ok {
-            if v, ok := v.Get(3); ok {
-               if v, ok := v.Get(2); ok {
-                  for _, field := range v {
-                     if v, ok := field.Get(12); ok {
-                        vs = append(vs, file_format{v})
-                     }
-                  }
-               }
-            }
+func (m metadata) file() chan file_format {
+   vs := make(chan file_format)
+   go func() {
+      for v := range m.m.Get(2) {
+         v = <-v.Get(3)
+         v = <-v.Get(3)
+         v = <-v.Get(2)
+         for v := range v.Get(12) {
+            vs <- file_format{v}
          }
       }
-   }
+      close(vs)
+   }()
    return vs
 }
 
@@ -102,4 +75,27 @@ func (o LoginOk) metadata(canonical_uri string) (*metadata, error) {
       return nil, err
    }
    return &meta, nil
+}
+
+func (f file_format) file_id() (string, bool) {
+   if v, ok := <-f.m.GetBytes(1); ok {
+      return hex.EncodeToString(v), true
+   }
+   return "", false
+}
+
+func (f file_format) OGG_VORBIS_320() bool {
+   if v, ok := f.format(); ok {
+      if v == 2 {
+         return true
+      }
+   }
+   return false
+}
+
+func (f file_format) format() (uint64, bool) {
+   if v, ok := <-f.m.GetVarint(2); ok {
+      return uint64(v), true
+   }
+   return 0, false
 }
