@@ -8,6 +8,10 @@ import (
    "strings"
 )
 
+type storage_resolve struct {
+   CDNURL []string
+}
+
 func (s *storage_resolve) New(login android.LoginOk, file_id string) error {
    token, err := login.AccessToken()
    if err != nil {
@@ -31,8 +35,4 @@ func (s *storage_resolve) New(login android.LoginOk, file_id string) error {
       return errors.New(b.String())
    }
    return json.NewDecoder(res.Body).Decode(s)
-}
-
-type storage_resolve struct {
-   CDNURL []string
 }

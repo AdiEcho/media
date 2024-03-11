@@ -4,12 +4,35 @@ import (
    "154.pages.dev/media/blog/spotify/android"
    "154.pages.dev/widevine"
    "encoding/base64"
+   "encoding/json"
    "fmt"
    "os"
    "testing"
+   "time"
 )
 
 const pssh = "AAAAU3Bzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADMIARIQOSSC/pvtc3LRZX1+IvMreRoHc3BvdGlmeSIUOSSC/pvtc3LRZX1+IvMreSkC870="
+
+func TestSeektable(t *testing.T) {
+   text, err := os.ReadFile("metadata.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var meta metadata
+   if err := json.Unmarshal(text, &meta); err != nil {
+      t.Fatal(err)
+   }
+   for _, file := range meta.File {
+      var seek seektable
+      err := seek.New(file.File_ID)
+      fmt.Println(
+         file.Format,
+         base64.StdEncoding.EncodeToString(seek.PSSH),
+         err,
+      )
+      time.Sleep(time.Second)
+   }
+}
 
 func TestLicense(t *testing.T) {
    data, err := base64.StdEncoding.DecodeString(pssh)
@@ -50,13 +73,4 @@ func TestLicense(t *testing.T) {
    }
    key, ok := module.Key(license)
    fmt.Printf("%x %v\n", key, ok)
-}
-
-func TestSeektable(t *testing.T) {
-   var seek seektable
-   err := seek.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", seek)
 }

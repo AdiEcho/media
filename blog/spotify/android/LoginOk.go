@@ -12,19 +12,19 @@ import (
    "strings"
 )
 
+func (LoginOk) RequestUrl() (string, bool) {
+   var b strings.Builder
+   b.WriteString("https://guc3-spclient.spotify.com")
+   b.WriteString("/widevine-license/v1/audio/license")
+   return b.String(), true
+}
+
 func (LoginOk) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
 func (LoginOk) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
-}
-
-func (LoginOk) RequestUrl() (string, bool) {
-   var b strings.Builder
-   b.WriteString("https://guc3-spclient.spotify.com")
-   b.WriteString("/widevine-license/v1/audio/license")
-   return b.String(), true
 }
 
 func (o LoginOk) RequestHeader() (http.Header, error) {
