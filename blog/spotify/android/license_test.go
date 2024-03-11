@@ -1,19 +1,6 @@
 package android
 
-import (
-   "154.pages.dev/protobuf"
-   "fmt"
-   "testing"
-)
-
-func TestLicense(t *testing.T) {
-   var message protobuf.Message
-   err := message.Consume([]byte(spotify_request))
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%#v\n", message)
-}
+import "154.pages.dev/protobuf"
 
 // roku request
 var _ = protobuf.Message{

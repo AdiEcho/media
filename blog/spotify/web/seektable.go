@@ -1,24 +1,26 @@
-package main
+package web
 
 import (
+   "encoding/json"
    "net/http"
-   "net/url"
-   "os"
+   "strings"
 )
 
-func main() {
-   var req http.Request
-   req.Header = make(http.Header)
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "seektables.scdn.co"
-   req.URL.Path = "/seektable/392482fe9bed7372d1657d7e22f32b792902f3bd.json"
-   req.URL.Scheme = "https"
-   res, err := http.DefaultClient.Do(&req)
+type seektable struct {
+   PSSH []byte
+}
+
+func (s *seektable) New() error {
+   address := func() string {
+      var b strings.Builder
+      b.WriteString("https://seektables.scdn.co")
+      b.WriteString("/seektable/392482fe9bed7372d1657d7e22f32b792902f3bd.json")
+      return b.String()
+   }()
+   res, err := http.Get(address)
    if err != nil {
-      panic(err)
+      return err
    }
    defer res.Body.Close()
-   res.Write(os.Stdout)
+   return json.NewDecoder(res.Body).Decode(s)
 }
