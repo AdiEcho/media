@@ -25,19 +25,13 @@ Upgrade: websocket
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
 ~~~
 
-## 0
-
-https://open.spotify.com/track/1oaaSrDJimABpOdCEbw2DJ
-
 ## 1
 
-web click uses websocket here to convert `canonical_uri` to `gid`. use Android
-client instead.
+base62 `canonical_uri` to `gid`
 
 ## 2
 
-web client uses below to return `file_id` values. previous Android client request
-above also returns the values, so use that instead.
+web client uses below to return `file_id` values.
 
 ~~~
 GET https://spclient.wg.spotify.com/metadata/4/track/2da9a11032664413b24de181c534f157?market=from_token HTTP/2.0
@@ -58,8 +52,6 @@ user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 F
 ~~~
 
 ## 3
-
-this is next
 
 ~~~
 GET https://guc3-spclient.spotify.com/storage-resolve/v2/files/audio/interactive/10/392482fe9bed7372d1657d7e22f32b792902f3bd?version=10000000&product=9&platform=39&alt=json HTTP/2.0
