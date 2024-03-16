@@ -6,10 +6,28 @@ import (
    "154.pages.dev/log"
    "encoding/hex"
    "errors"
+   "io"
    "log/slog"
    "net/http"
    "os"
 )
+
+func (h HttpStream) TimedText(url string) error {
+   res, err := http.Get(url)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   file, err := os.Create(encoding.Name(h.Name) + ".vtt")
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   if _, err := file.ReadFrom(res.Body); err != nil {
+      return err
+   }
+   return nil
+}
 
 func (h HttpStream) segment_base(
    ext, base_url string, rep dash.Representation,
@@ -123,3 +141,30 @@ func (h HttpStream) segment_template(
    return nil
 }
 
+func (h HttpStream) DASH(rep dash.Representation) error {
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("dash.Representation.Ext")
+   }
+   if initial, ok := rep.Initialization(); ok {
+      return h.segment_template(ext, initial, rep)
+   }
+   return h.segment_base(ext, rep.BaseURL, rep)
+}
+
+func (h *HttpStream) DashMedia(url string) ([]dash.Representation, error) {
+   res, err := http.Get(url)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   h.base = res.Request.URL
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   return dash.Unmarshal(text)
+}

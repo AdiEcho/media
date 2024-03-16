@@ -9,9 +9,22 @@ import (
    "strings"
 )
 
+func (t TextTrack) String() string {
+   var b strings.Builder
+   b.WriteString("id = ")
+   b.WriteString(t.ID)
+   return b.String()
+}
+
+type TextTrack struct {
+   ID string
+   URL string
+}
+
 type SecureUrl struct {
    Data []byte
    V struct {
+      Text_Track_URLs []TextTrack
       URL string
    }
 }

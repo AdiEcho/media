@@ -10,7 +10,7 @@ import (
 )
 
 type flags struct {
-   dash_id string
+   media_id string
    h internal.HttpStream
    v log.Level
    web mubi.WebAddress
@@ -35,7 +35,7 @@ func main() {
    flag.BoolVar(&f.auth, "auth", false, "authenticate")
    flag.StringVar(&f.h.Client_ID, "c", home+"/client_id.bin", "client ID")
    flag.BoolVar(&f.code, "code", false, "link code")
-   flag.StringVar(&f.dash_id, "i", "", "DASH ID")
+   flag.StringVar(&f.media_id, "i", "", "media ID")
    flag.StringVar(&f.h.Private_Key, "p", home+"/private_key.pem", "private key")
    flag.BoolVar(&f.secure, "s", false, "secure URL")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
