@@ -14,8 +14,7 @@ type seektable struct {
 func (s *seektable) New(file_id string) error {
    address := func() string {
       var b strings.Builder
-      b.WriteString("https://seektables.scdn.co")
-      b.WriteString("/seektable/")
+      b.WriteString("https://seektables.scdn.co/seektable/")
       b.WriteString(file_id)
       b.WriteString(".json")
       return b.String()
