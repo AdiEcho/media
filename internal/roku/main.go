@@ -29,8 +29,8 @@ func main() {
    flag.StringVar(&f.h.Private_Key, "k", home+"private_key.pem", "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
-   log.TransportInfo()
-   log.Handler(f.v)
+   f.v.Set()
+   log.Transport{}.Set()
    if f.roku_id != "" {
       var home roku.HomeScreen
       err := home.New(f.roku_id)

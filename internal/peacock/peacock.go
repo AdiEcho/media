@@ -7,7 +7,7 @@ import (
 )
 
 func (f flags) download() error {
-   text, err := os.ReadFile(f.home + "peacock.json")
+   text, err := os.ReadFile(f.home + "/peacock.json")
    if err != nil {
       return err
    }
@@ -50,5 +50,5 @@ func (f flags) authenticate() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "peacock.json", text, 0666)
+   return os.WriteFile(f.home + "/peacock.json", text, 0666)
 }

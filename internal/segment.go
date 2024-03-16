@@ -45,8 +45,8 @@ func (h HttpStream) segment_base(
    }
    var meter log.ProgressMeter
    meter.Set(len(byte_ranges))
-   log.TransportDebug()
-   defer log.TransportInfo()
+   log.SetTransport(nil)
+   defer log.Transport{}.Set()
    for _, r := range byte_ranges {
       err := func() error {
          req, err := http.NewRequest("GET", base_url, nil)
@@ -97,8 +97,8 @@ func (h HttpStream) segment_template(
    media := rep.Media()
    var meter log.ProgressMeter
    meter.Set(len(media))
-   log.TransportDebug()
-   defer log.TransportInfo()
+   log.SetTransport(nil)
+   defer log.Transport{}.Set()
    for _, ref := range media {
       // with DASH, initialization and media URLs are relative to the MPD URL
       req.URL, err = h.base.Parse(ref)

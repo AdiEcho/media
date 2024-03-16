@@ -22,7 +22,7 @@ func (f flags) download() error {
    }
    if f.dash_id != "" {
       var auth mubi.Authenticate
-      auth.Data, err = os.ReadFile(f.home + "mubi.json")
+      auth.Data, err = os.ReadFile(f.home + "/mubi.json")
       if err != nil {
          return err
       }
@@ -51,7 +51,7 @@ func (f flags) write_auth() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "mubi.json", auth.Data, 0666)
+   return os.WriteFile(f.home + "/mubi.json", auth.Data, 0666)
 }
 
 func (f flags) write_code() error {
@@ -71,7 +71,7 @@ func (f flags) write_secure() error {
       auth mubi.Authenticate
       err error
    )
-   auth.Data, err = os.ReadFile(f.home + "mubi.json")
+   auth.Data, err = os.ReadFile(f.home + "/mubi.json")
    if err != nil {
       return err
    }

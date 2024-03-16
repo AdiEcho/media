@@ -28,8 +28,8 @@ func main() {
    flag.StringVar(&f.h.Private_Key, "p", home+"private_key.pem", "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
-   log.TransportInfo()
-   log.Handler(f.v)
+   f.v.Set()
+   log.Transport{}.Set()
    if f.nbc_id >= 1 {
       err := f.download()
       if err != nil {

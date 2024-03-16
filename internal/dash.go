@@ -81,16 +81,16 @@ func (h HttpStream) key(rep dash.Representation) ([]byte, error) {
 }
 
 func encode_init(dst io.Writer, src io.Reader) error {
-   var f sofia.File
-   if err := f.Decode(src); err != nil {
+   var file sofia.File
+   if err := file.Decode(src); err != nil {
       return err
    }
-   for _, b := range f.Movie.Boxes {
+   for _, b := range file.Movie.Boxes {
       if b.BoxHeader.BoxType() == "pssh" {
          copy(b.BoxHeader.Type[:], "free") // Firefox
       }
    }
-   sd := &f.Movie.Track.Media.MediaInformation.SampleTable.SampleDescription
+   sd := &file.Movie.Track.Media.MediaInformation.SampleTable.SampleDescription
    if as := sd.AudioSample; as != nil {
       copy(as.ProtectionScheme.BoxHeader.Type[:], "free") // Firefox
       copy(
@@ -105,22 +105,22 @@ func encode_init(dst io.Writer, src io.Reader) error {
          vs.ProtectionScheme.OriginalFormat.DataFormat[:],
       ) // Firefox
    }
-   return f.Encode(dst)
+   return file.Encode(dst)
 }
 
 func encode_segment(dst io.Writer, src io.Reader, key []byte) error {
-   var f sofia.File
-   if err := f.Decode(src); err != nil {
+   var file sofia.File
+   if err := file.Decode(src); err != nil {
       return err
    }
-   for i, data := range f.MediaData.Data {
-      sample := f.MovieFragment.TrackFragment.SampleEncryption.Samples[i]
+   for i, data := range file.MediaData.Data {
+      sample := file.MovieFragment.TrackFragment.SampleEncryption.Samples[i]
       err := sample.DecryptCenc(data, key)
       if err != nil {
          return err
       }
    }
-   return f.Encode(dst)
+   return file.Encode(dst)
 }
 
 // wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
@@ -132,19 +132,6 @@ type HttpStream struct {
    base *url.URL
 }
 
-func (h *HttpStream) DashMedia(uri string) ([]dash.Representation, error) {
-   res, err := http.Get(uri)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   h.base = res.Request.URL
-   text, err := io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   return dash.Unmarshal(text)
-}
 func (h HttpStream) DASH(reps []dash.Representation, id string) error {
    i := slices.IndexFunc(reps, func(r dash.Representation) bool {
       return r.ID == id
@@ -170,4 +157,21 @@ func (h HttpStream) DASH(reps []dash.Representation, id string) error {
       return h.segment_template(ext, initial, rep)
    }
    return h.segment_base(ext, rep.BaseURL, rep)
+}
+
+func (h *HttpStream) DashMedia(url string) ([]dash.Representation, error) {
+   res, err := http.Get(url)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   h.base = res.Request.URL
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   return dash.Unmarshal(text)
 }

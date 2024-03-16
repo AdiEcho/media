@@ -21,26 +21,24 @@ type flags struct {
 func main() {
    var (
       f flags
-      home string
+      err error
    )
-   f.home, home = func() (string, string) {
-      s, err := os.UserHomeDir()
-      if err != nil {
-         panic(err)
-      }
-      s = filepath.ToSlash(s)
-      return s + "/", s + "/widevine/"
-   }()
+   f.home, err = os.UserHomeDir()
+   if err != nil {
+      panic(err)
+   }
+   f.home = filepath.ToSlash(f.home)
+   home := f.home + "/widevine"
    flag.StringVar(&f.peacock_id, "b", "", "Peacock ID")
-   flag.StringVar(&f.h.Client_ID, "c", home+"client_id.bin", "client ID")
+   flag.StringVar(&f.h.Client_ID, "c", home+"/client_id.bin", "client ID")
    flag.StringVar(&f.email, "e", "", "email")
    flag.StringVar(&f.dash_id, "i", "", "DASH ID")
-   flag.StringVar(&f.h.Private_Key, "k", home+"private_key.pem", "private key")
+   flag.StringVar(&f.h.Private_Key, "k", home+"/private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
-   log.TransportInfo()
-   log.Handler(f.v)
+   f.v.Set()
+   log.Transport{}.Set()
    switch {
    case f.password != "":
       err := f.authenticate()

@@ -33,8 +33,8 @@ func main() {
    flag.StringVar(&f.password, "p", "", "password")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "log level")
    flag.Parse()
-   log.TransportInfo()
-   log.Handler(f.v)
+   f.v.Set()
+   log.Transport{}.Set()
    switch {
    case f.email != "":
       err := f.login()
