@@ -10,7 +10,38 @@ import (
    "log/slog"
    "net/http"
    "os"
+   "slices"
 )
+
+func (h *HttpStream) DashMedia(url string) ([]dash.Representation, error) {
+   res, err := http.Get(url)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   h.base = res.Request.URL
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   reps, err := dash.Unmarshal(text)
+   if err != nil {
+      return nil, err
+   }
+   reps = slices.DeleteFunc(reps, func(r dash.Representation) bool {
+      if _, ok := r.Ext(); !ok {
+         return true
+      }
+      if r.Protection() == nil {
+         return true
+      }
+      return false
+   })
+   return reps, nil
+}
 
 func (h HttpStream) TimedText(url string) error {
    res, err := http.Get(url)
@@ -150,21 +181,4 @@ func (h HttpStream) DASH(rep dash.Representation) error {
       return h.segment_template(ext, initial, rep)
    }
    return h.segment_base(ext, rep.BaseURL, rep)
-}
-
-func (h *HttpStream) DashMedia(url string) ([]dash.Representation, error) {
-   res, err := http.Get(url)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   h.base = res.Request.URL
-   text, err := io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   return dash.Unmarshal(text)
 }

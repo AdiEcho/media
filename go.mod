@@ -3,9 +3,9 @@ module 154.pages.dev/media
 go 1.22.0
 
 require (
-	154.pages.dev/encoding v1.18.9
+	154.pages.dev/encoding v1.19.6
 	154.pages.dev/log v1.2.0
-	154.pages.dev/sofia v1.2.0
+	154.pages.dev/sofia v1.2.2
 	154.pages.dev/widevine v1.3.4
 )
 
