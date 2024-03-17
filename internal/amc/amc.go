@@ -2,20 +2,10 @@ package main
 
 import (
    "154.pages.dev/media/amc"
+   "errors"
+   "fmt"
    "os"
 )
-
-func (f flags) login() error {
-   var auth amc.Authorization
-   auth.Unauth()
-   auth.Unmarshal()
-   auth.Login(f.email, f.password)
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(home + "/amc.json", auth.Raw, 0666)
-}
 
 func (f flags) download() error {
    home, err := os.UserHomeDir()
@@ -30,29 +20,52 @@ func (f flags) download() error {
    auth.Unmarshal()
    auth.Refresh()
    os.WriteFile(home + "/amc.json", auth.Raw, 0666)
-   if f.dash_id != "" {
-      content, err := auth.Content(f.web.Path)
-      if err != nil {
-         return err
-      }
-      video, err := content.Video()
-      if err != nil {
-         return err
-      }
-      f.h.Name = video
-   }
    play, err := auth.Playback(f.web.NID)
    if err != nil {
       return err
    }
-   f.h.Poster = play
    source, ok := play.HttpsDash()
-   if ok {
-      media, err := f.h.DashMedia(source.Src)
-      if err != nil {
-         return err
+   if !ok {
+      return errors.New("amc.Playback.HttpsDash")
+   }
+   // 1 MPD one
+   media, err := f.h.DashMedia(source.Src)
+   if err != nil {
+      return err
+   }
+   for _, medium := range media {
+      if medium.ID == f.media_id {
+         content, err := auth.Content(f.web.Path)
+         if err != nil {
+            return err
+         }
+         video, err := content.Video()
+         if err != nil {
+            return err
+         }
+         f.h.Name = video
+         f.h.Poster = play
+         return f.h.DASH(medium)
       }
-      return f.h.DASH(media, f.dash_id)
+   }
+   // 2 MPD all
+   for i, medium := range media {
+      if i >= 1 {
+         fmt.Println()
+      }
+      fmt.Println(medium)
    }
    return nil
+}
+
+func (f flags) login() error {
+   var auth amc.Authorization
+   auth.Unauth()
+   auth.Unmarshal()
+   auth.Login(f.email, f.password)
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(home + "/amc.json", auth.Raw, 0666)
 }
