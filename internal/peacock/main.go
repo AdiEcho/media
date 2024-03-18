@@ -9,7 +9,7 @@ import (
 )
 
 type flags struct {
-   dash_id string
+   media_id string
    email string
    h internal.HttpStream
    home string
@@ -32,7 +32,7 @@ func main() {
    flag.StringVar(&f.peacock_id, "b", "", "Peacock ID")
    flag.StringVar(&f.h.Client_ID, "c", home+"/client_id.bin", "client ID")
    flag.StringVar(&f.email, "e", "", "email")
-   flag.StringVar(&f.dash_id, "i", "", "DASH ID")
+   flag.StringVar(&f.media_id, "i", "", "media ID")
    flag.StringVar(&f.h.Private_Key, "k", home+"/private_key.pem", "private key")
    flag.StringVar(&f.password, "p", "", "password")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")

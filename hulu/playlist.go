@@ -10,20 +10,13 @@ import (
 func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    var p playlist_request
    p.Content_EAB_ID = d.EAB_ID
-   p.Playback.DRM.Selection_Mode = "ALL"
-   p.Playback.Segments.Selection_Mode = "ALL"
+   p.Deejay_Device_ID = 166
+   p.Playback.Audio.Codecs.Selection_Mode = "ALL"
    p.Playback.Audio.Codecs.Values = []codec_value{
       {Type: "AAC"},
       {Type: "EC3"},
    }
-   p.Playback.Video.Codecs.Selection_Mode = "ALL"
-   p.Playback.Audio.Codecs.Selection_Mode = "ALL"
-   p.Unencrypted = true
-   p.Deejay_Device_ID = 166
-   p.Version = 5012541
-   // this is required for 1080p:
-   p.Playback.Version = 2
-   p.Playback.Manifest.Type = "DASH"
+   p.Playback.DRM.Selection_Mode = "ALL"
    p.Playback.DRM.Values = []drm_value{
       {
          Security_Level: "L3",
@@ -31,6 +24,17 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
          Version: "MODULAR",
       },
    }
+   p.Playback.Manifest.Type = "DASH"
+   p.Playback.Segments.Selection_Mode = "ALL"
+   p.Playback.Segments.Values = func() []segment_value {
+      var s segment_value
+      s.Encryption.Mode = "CENC"
+      s.Encryption.Type = "CENC"
+      s.Type = "FMP4"
+      return []segment_value{s}
+   }()
+   p.Playback.Version = 2 // this is required for 1080p
+   p.Playback.Video.Codecs.Selection_Mode = "ALL"
    p.Playback.Video.Codecs.Values = []codec_value{
       {
          Height: 9999,
@@ -40,13 +44,8 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
          Type: "H264",
       },
    }
-   p.Playback.Segments.Values = func() []segment_value {
-      var s segment_value
-      s.Encryption.Mode = "CENC"
-      s.Encryption.Type = "CENC"
-      s.Type = "FMP4"
-      return []segment_value{s}
-   }()
+   p.Unencrypted = true
+   p.Version = 5012541
    body, err := json.Marshal(p)
    if err != nil {
       return nil, err

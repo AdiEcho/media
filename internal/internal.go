@@ -40,6 +40,9 @@ func (h *HttpStream) DashMedia(url string) ([]dash.Representation, error) {
       }
       return false
    })
+   slices.SortFunc(reps, func(a, b dash.Representation) int {
+      return int(a.Bandwidth - b.Bandwidth)
+   })
    return reps, nil
 }
 

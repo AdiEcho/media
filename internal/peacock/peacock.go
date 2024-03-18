@@ -3,6 +3,7 @@ package main
 import (
    "154.pages.dev/media/peacock"
    "errors"
+   "fmt"
    "os"
 )
 
@@ -21,23 +22,34 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   var node peacock.QueryNode
-   if err := node.New(f.peacock_id); err != nil {
-      return err
-   }
-   if f.dash_id != "" {
-      f.h.Name = node
-      f.h.Poster = video
-   }
    akamai, ok := video.Akamai()
    if !ok {
       return errors.New("peacock.VideoPlayout.Akamai")
    }
+   // 1 MPD one
    media, err := f.h.DashMedia(akamai)
    if err != nil {
       return err
    }
-   return f.h.DASH(media, f.dash_id)
+   for _, medium := range media {
+      if medium.ID == f.media_id {
+         var node peacock.QueryNode
+         if err := node.New(f.peacock_id); err != nil {
+            return err
+         }
+         f.h.Name = node
+         f.h.Poster = video
+         return f.h.DASH(medium)
+      }
+   }
+   // 2 MPD all
+   for i, medium := range media {
+      if i >= 1 {
+         fmt.Println()
+      }
+      fmt.Println(medium)
+   }
+   return nil
 }
 
 func (f flags) authenticate() error {

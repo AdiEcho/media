@@ -1,7 +1,6 @@
 package peacock
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/widevine"
    "encoding/base64"
    "fmt"
@@ -38,7 +37,6 @@ const (
 )
 
 func TestLicense(t *testing.T) {
-   log.TransportInfo()
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
