@@ -17,14 +17,15 @@ func (f flags) dash(app paramount.AppToken) error {
    }
    for _, medium := range media {
       if medium.ID == f.media_id {
-         f.h.Name, err = app.Item(f.paramount_id)
-         if err != nil {
-            return err
-         }
          f.h.Poster, err = app.Session(f.paramount_id)
          if err != nil {
             return err
          }
+         item, err := app.Item(f.paramount_id)
+         if err != nil {
+            return err
+         }
+         f.h.Name = <-item
          return f.h.DASH(medium)
       }
    }

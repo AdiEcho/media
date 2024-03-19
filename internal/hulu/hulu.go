@@ -32,10 +32,11 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.media_id {
-         f.h.Name, err = auth.Details(deep)
+         detail, err := auth.Details(deep)
          if err != nil {
             return err
          }
+         f.h.Name = <-detail
          f.h.Poster = play
          return f.h.DASH(medium)
       }

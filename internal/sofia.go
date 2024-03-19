@@ -35,7 +35,7 @@ func encode_init(dst io.Writer, src io.Reader) error {
       return err
    }
    for _, b := range file.Movie.Boxes {
-      if b.BoxHeader.BoxType() == "pssh" {
+      if b.BoxHeader.GetType() == "pssh" {
          copy(b.BoxHeader.Type[:], "free") // Firefox
       }
    }
@@ -43,14 +43,14 @@ func encode_init(dst io.Writer, src io.Reader) error {
    if as := sd.AudioSample; as != nil {
       copy(as.ProtectionScheme.BoxHeader.Type[:], "free") // Firefox
       copy(
-         as.Entry.BoxHeader.Type[:],
+         as.SampleEntry.BoxHeader.Type[:],
          as.ProtectionScheme.OriginalFormat.DataFormat[:],
       ) // Firefox
    }
    if vs := sd.VisualSample; vs != nil {
       copy(vs.ProtectionScheme.BoxHeader.Type[:], "free") // Firefox
       copy(
-         vs.Entry.BoxHeader.Type[:],
+         vs.SampleEntry.BoxHeader.Type[:],
          vs.ProtectionScheme.OriginalFormat.DataFormat[:],
       ) // Firefox
    }

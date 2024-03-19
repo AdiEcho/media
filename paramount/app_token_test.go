@@ -22,7 +22,7 @@ func TestItem(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(encoding.Name(item))
+      fmt.Println(encoding.Name(<-item))
       time.Sleep(time.Second)
    }
 }

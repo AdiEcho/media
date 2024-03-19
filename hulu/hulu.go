@@ -12,6 +12,47 @@ import (
    "strings"
 )
 
+func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
+   body, err := func() ([]byte, error) {
+      m := map[string][]string{
+         "eabs": {d.EAB_ID},
+      }
+      return json.Marshal(m)
+   }()
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://guide.hulu.com/guide/details", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("Authorization", "Bearer " + a.Value.Data.User_Token)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   var s struct {
+      Items []Details
+   }
+   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
+      return nil, err
+   }
+   channel := make(chan Details)
+   go func() {
+      for _, item := range s.Items {
+         channel <- item
+      }
+      close(channel)
+   }()
+   return channel, nil
+}
+
 func LivingRoom(email, password string) (*Authenticate, error) {
    res, err := http.PostForm(
       "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
@@ -85,43 +126,6 @@ func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
       return nil, err
    }
    return link, nil
-}
-
-func (a Authenticate) Details(d *DeepLink) (*Details, error) {
-   body, err := func() ([]byte, error) {
-      m := map[string][]string{
-         "eabs": {d.EAB_ID},
-      }
-      return json.Marshal(m)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://guide.hulu.com/guide/details", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("Authorization", "Bearer " + a.Value.Data.User_Token)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   var s struct {
-      Items []Details
-   }
-   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
-      return nil, err
-   }
-   if len(s.Items) == 0 {
-      return nil, errors.New("items length is zero")
-   }
-   return &s.Items[0], nil
 }
 
 type Details struct {
