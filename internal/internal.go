@@ -13,56 +13,6 @@ import (
    "slices"
 )
 
-func (h *HttpStream) DashMedia(url string) ([]dash.Representation, error) {
-   res, err := http.Get(url)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   h.base = res.Request.URL
-   text, err := io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   reps, err := dash.Unmarshal(text)
-   if err != nil {
-      return nil, err
-   }
-   reps = slices.DeleteFunc(reps, func(r dash.Representation) bool {
-      if _, ok := r.Ext(); !ok {
-         return true
-      }
-      if r.Protection() == nil {
-         return true
-      }
-      return false
-   })
-   slices.SortFunc(reps, func(a, b dash.Representation) int {
-      return int(a.Bandwidth - b.Bandwidth)
-   })
-   return reps, nil
-}
-
-func (h HttpStream) TimedText(url string) error {
-   res, err := http.Get(url)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   file, err := os.Create(encoding.Name(h.Name) + ".vtt")
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   if _, err := file.ReadFrom(res.Body); err != nil {
-      return err
-   }
-   return nil
-}
-
 func (h HttpStream) segment_base(
    ext, base_url string, rep dash.Representation,
 ) error {
@@ -111,6 +61,9 @@ func (h HttpStream) segment_base(
             return err
          }
          defer res.Body.Close()
+         if res.StatusCode != http.StatusPartialContent {
+            return errors.New(res.Status)
+         }
          return encode_segment(file, meter.Reader(res), key)
       }()
       if err != nil {
@@ -185,3 +138,54 @@ func (h HttpStream) DASH(rep dash.Representation) error {
    }
    return h.segment_base(ext, rep.BaseURL, rep)
 }
+
+func (h *HttpStream) DashMedia(url string) ([]dash.Representation, error) {
+   res, err := http.Get(url)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   h.base = res.Request.URL
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   reps, err := dash.Unmarshal(text)
+   if err != nil {
+      return nil, err
+   }
+   reps = slices.DeleteFunc(reps, func(r dash.Representation) bool {
+      if _, ok := r.Ext(); !ok {
+         return true
+      }
+      if r.Protection() == nil {
+         return true
+      }
+      return false
+   })
+   slices.SortFunc(reps, func(a, b dash.Representation) int {
+      return int(a.Bandwidth - b.Bandwidth)
+   })
+   return reps, nil
+}
+
+func (h HttpStream) TimedText(url string) error {
+   res, err := http.Get(url)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   file, err := os.Create(encoding.Name(h.Name) + ".vtt")
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   if _, err := file.ReadFrom(res.Body); err != nil {
+      return err
+   }
+   return nil
+}
+

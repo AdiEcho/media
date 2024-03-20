@@ -19,7 +19,7 @@ func encode_sidx(base_URL string, raw dash.RawRange) ([]sofia.Range, error) {
    }
    defer res.Body.Close()
    var file sofia.File
-   if err := file.Decode(res.Body); err != nil {
+   if err := file.Read(res.Body); err != nil {
       return nil, err
    }
    index, err := raw.Scan()
@@ -31,7 +31,7 @@ func encode_sidx(base_URL string, raw dash.RawRange) ([]sofia.Range, error) {
 
 func encode_init(dst io.Writer, src io.Reader) error {
    var file sofia.File
-   if err := file.Decode(src); err != nil {
+   if err := file.Read(src); err != nil {
       return err
    }
    for _, b := range file.Movie.Boxes {
@@ -54,12 +54,12 @@ func encode_init(dst io.Writer, src io.Reader) error {
          vs.ProtectionScheme.OriginalFormat.DataFormat[:],
       ) // Firefox
    }
-   return file.Encode(dst)
+   return file.Write(dst)
 }
 
 func encode_segment(dst io.Writer, src io.Reader, key []byte) error {
    var file sofia.File
-   if err := file.Decode(src); err != nil {
+   if err := file.Read(src); err != nil {
       return err
    }
    for i, data := range file.MediaData.Data {
@@ -69,5 +69,5 @@ func encode_segment(dst io.Writer, src io.Reader, key []byte) error {
          return err
       }
    }
-   return file.Encode(dst)
+   return file.Write(dst)
 }
