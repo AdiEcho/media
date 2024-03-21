@@ -2,44 +2,14 @@ package peacock
 
 import (
    "154.pages.dev/encoding"
+   "154.pages.dev/widevine"
+   "encoding/base64"
    "fmt"
-   "log/slog"
    "os"
    "testing"
 )
 
-func TestQuery(t *testing.T) {
-   var node QueryNode
-   err := node.New(content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(encoding.Name(node))
-}
-
-func TestSignWrite(t *testing.T) {
-   slog.SetLogLoggerLevel(slog.LevelDebug)
-   user, password := os.Getenv("peacock_username"), os.Getenv("peacock_password")
-   if user == "" {
-      t.Fatal("peacock_username")
-   }
-   var sign SignIn
-   err := sign.New(user, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   text, err := sign.Marshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile(home + "/peacock.json", text, 0666)
-}
-
-func TestSignRead(t *testing.T) {
+func TestVideo(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -54,5 +24,71 @@ func TestSignRead(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", auth)
+   video, err := auth.Video(content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", video)
+}
+
+// peacocktv.com/watch/playback/vod/GMO_00000000224510_02_HDSDR
+const (
+   content_id = "GMO_00000000224510_02_HDSDR"
+   pssh = "AAAAOHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAABgSEAAW4jRz6+d9k9jRpy3GkNdI49yVmwY="
+)
+
+func TestLicense(t *testing.T) {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   if err != nil {
+      t.Fatal(err)
+   }
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
+   if err != nil {
+      t.Fatal(err)
+   }
+   data, err := base64.StdEncoding.DecodeString(pssh)
+   if err != nil {
+      t.Fatal(err)
+   }
+   var protect widevine.PSSH
+   if err := protect.New(data); err != nil {
+      t.Fatal(err)
+   }
+   module, err := protect.CDM(private_key, client_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   data, err = os.ReadFile(home + "/peacock.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var sign SignIn
+   sign.Unmarshal(data)
+   auth, err := sign.Auth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   video, err := auth.Video(content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   license, err := module.License(video)
+   if err != nil {
+      t.Fatal(err)
+   }
+   key, ok := module.Key(license)
+   fmt.Println(key, ok)
+}
+
+func TestQuery(t *testing.T) {
+   var node QueryNode
+   err := node.New(content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(encoding.Name(node))
 }
