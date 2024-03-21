@@ -1,11 +1,21 @@
 package peacock
 
 import (
+   "154.pages.dev/encoding"
    "fmt"
    "log/slog"
    "os"
    "testing"
 )
+
+func TestQuery(t *testing.T) {
+   var node QueryNode
+   err := node.New(content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(encoding.Name(node))
+}
 
 func TestSignWrite(t *testing.T) {
    slog.SetLogLoggerLevel(slog.LevelDebug)

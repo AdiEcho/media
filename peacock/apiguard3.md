@@ -1,4 +1,4 @@
-# peacock
+# apiguard3
 
 https://github.com/Paco8/plugin.video.skyott/issues/42
 
@@ -116,3 +116,52 @@ which has the same value (note I removed some of the JSON below):
   "enableNHC": false
 }
 ~~~
+
+also I found this URL in the web client:
+
+<https://peacocktv.com/assets/peacock_common.js?single>
+
+which also includes the header key, but mixed case again:
+
+~~~js
+(function(a) {
+    var d = document,
+        w = window,
+        u = "/assets/peacock_common.js?async&seed=AMA8M16OAQAAW19BzSodn7jeK1y3BUNLpfX2Cmu8iKObSs5vROGLcIYD1HGL&q5VwYrl1FT--z=q",
+        v = "OVtKqOTac",
+        i = "78caf726a5be1b0d37ab40d28df3e055";
+    var s = d.currentScript;
+    addEventListener(v, function f(e) {
+        e.stopImmediatePropagation();
+        removeEventListener(v, f, !0);
+        e.detail.init("A1VPNV6OAQAAs2vfONTBMldgR05XQNGAcRcup7wTKJiKu7BeALalgesblKTlAUi1B9GcuNk0wH8AAEB3AAAAAA==", "r7jVpFu61CyaQzAE20ZcgovIXSbDd4=fJ3W_Pmx8w-KLnliqNHhkYs5O9MTReBGUt", [], [1549287101, 1864292991, 1433390943, 1610369413, 1425779306, 350974642, 742174146, 202138393], document.currentScript && document.currentScript.nonce || "kUEu6K03CCWoNS2Gd8Ca5+az", document.currentScript && document.currentScript.nonce || "kUEu6K03CCWoNS2Gd8Ca5+az", [], a)
+    }, !0);
+    var o = s && s.nonce ? s.nonce : "";
+    try {
+        s && s.parentNode.removeChild(s)
+    } catch (e) {} {
+        var n = d.createElement("script");
+        n.id = i;
+        n.src = u;
+        n.async = !0;
+        n.nonce = o;
+        d.head.appendChild(n)
+    }
+}(typeof arguments === "undefined" ? void 0 : arguments));
+~~~
+
+it seems this protection is called `apiguard3`:
+
+https://github.com/fdciabdul/Dana-Decompile/blob/main/sources/com/apiguard3/domain/Config.java
+
+other sites are using the same security:
+
+- <https://mobile.southwest.com/sw_check/android/init>
+- <https://mobile.southwest.com/sw_check/ios/init>
+- https://tdousmobile.tdbank.com/v2/android/native-app/initialize
+
+looks like some extended discussion here:
+
+- https://github.com/davidkassa/southwest-checkin-3/issues/95
+- https://github.com/pyro2927/SouthwestCheckin/issues/70
+- https://github.com/xur17/southwest-alerts/issues/16
