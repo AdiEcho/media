@@ -165,3 +165,10 @@ looks like some extended discussion here:
 - https://github.com/davidkassa/southwest-checkin-3/issues/95
 - https://github.com/pyro2927/SouthwestCheckin/issues/70
 - https://github.com/xur17/southwest-alerts/issues/16
+
+more info:
+
+- https://community.f5.com/kb/technicalarticles/what-is-shape-security/284359
+- https://botting.rocks/shapesecuritys-javascript-vm-part-1
+- https://botting.rocks/shapesecuritys-javascript-vm-part-2
+- https://botting.rocks/shapesecuritys-javascript-vm-part-3
