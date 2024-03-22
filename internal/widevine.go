@@ -11,19 +11,19 @@ import (
 
 // wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
 type HttpStream struct {
-   Client_ID string
+   ClientId string
    Name encoding.Namer
    Poster widevine.Poster
-   Private_Key string
+   PrivateKey string
    base *url.URL
 }
 
 func (h HttpStream) key(rep dash.Representation) ([]byte, error) {
-   client_id, err := os.ReadFile(h.Client_ID)
+   client_id, err := os.ReadFile(h.ClientId)
    if err != nil {
       return nil, err
    }
-   private_key, err := os.ReadFile(h.Private_Key)
+   private_key, err := os.ReadFile(h.PrivateKey)
    if err != nil {
       return nil, err
    }

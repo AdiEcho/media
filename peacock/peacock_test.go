@@ -18,9 +18,9 @@ func TestVideo(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var sign SignIn
-   sign.Unmarshal(text)
-   auth, err := sign.Auth()
+   var session IdSession
+   session.Unmarshal(text)
+   auth, err := session.Auth()
    if err != nil {
       t.Fatal(err)
    }
@@ -66,9 +66,9 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var sign SignIn
-   sign.Unmarshal(data)
-   auth, err := sign.Auth()
+   var session IdSession
+   session.Unmarshal(data)
+   auth, err := session.Auth()
    if err != nil {
       t.Fatal(err)
    }

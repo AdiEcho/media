@@ -7,8 +7,8 @@ import (
    "net/http"
 )
 
-func encode_sidx(base_URL string, raw dash.RawRange) ([]sofia.Range, error) {
-   req, err := http.NewRequest("GET", base_URL, nil)
+func encode_sidx(base_url string, raw dash.RawRange) ([]sofia.Range, error) {
+   req, err := http.NewRequest("GET", base_url, nil)
    if err != nil {
       return nil, err
    }

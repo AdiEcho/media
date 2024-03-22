@@ -8,39 +8,44 @@ import (
    "path/filepath"
 )
 
+func (f *flags) New() error {
+   var err error
+   f.home, err = os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   f.home = filepath.ToSlash(f.home)
+   f.h.ClientId = f.home + "/widevine/client_id.bin"
+   f.h.PrivateKey = f.home + "/widevine/private_key.pem"
+   return nil
+}
+
 type flags struct {
-   media_id string
-   email string
    h internal.HttpStream
    home string
-   password string
+   id_session string
+   media_id string
    peacock_id string
    v log.Level
 }
 
 func main() {
-   var (
-      f flags
-      err error
-   )
-   f.home, err = os.UserHomeDir()
+   var f flags
+   err := f.New()
    if err != nil {
       panic(err)
    }
-   f.home = filepath.ToSlash(f.home)
-   home := f.home + "/widevine"
    flag.StringVar(&f.peacock_id, "b", "", "Peacock ID")
-   flag.StringVar(&f.h.Client_ID, "c", home+"/client_id.bin", "client ID")
-   flag.StringVar(&f.email, "e", "", "email")
+   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
    flag.StringVar(&f.media_id, "i", "", "media ID")
-   flag.StringVar(&f.h.Private_Key, "k", home+"/private_key.pem", "private key")
-   flag.StringVar(&f.password, "p", "", "password")
+   flag.StringVar(&f.h.PrivateKey, "k", f.h.PrivateKey, "private key")
+   flag.StringVar(&f.id_session, "s", "", "idsession")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
    switch {
-   case f.password != "":
+   case f.id_session != "":
       err := f.authenticate()
       if err != nil {
          panic(err)
