@@ -28,7 +28,7 @@ func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
    if err != nil {
       return nil, err
    }
-   req.Header.Set("Authorization", "Bearer " + a.Value.Data.User_Token)
+   req.Header.Set("Authorization", "Bearer " + a.V.Data.User_Token)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -72,7 +72,7 @@ func LivingRoom(email, password string) (*Authenticate, error) {
       return nil, errors.New(b.String())
    }
    var auth Authenticate
-   auth.Raw, err = io.ReadAll(res.Body)
+   auth.Data, err = io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
@@ -80,7 +80,7 @@ func LivingRoom(email, password string) (*Authenticate, error) {
 }
 
 func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Raw, &a.Value)
+   return json.Unmarshal(a.DataRaw, &a.V)
 }
 
 type DeepLink struct {
@@ -110,7 +110,7 @@ func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
       "id": {watch.s},
       "namespace": {"entity"},
    }.Encode()
-   req.Header.Set("Authorization", "Bearer " + a.Value.Data.User_Token)
+   req.Header.Set("Authorization", "Bearer " + a.V.Data.User_Token)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -230,8 +230,8 @@ type segment_value struct {
 }
 
 type Authenticate struct {
-   Raw []byte
-   Value struct {
+   Data []byte
+   V struct {
       Data struct {
          User_Token string
       }

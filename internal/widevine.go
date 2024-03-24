@@ -3,7 +3,9 @@ package internal
 import (
    "154.pages.dev/encoding"
    "154.pages.dev/widevine"
+   "encoding/hex"
    "errors"
+   "log/slog"
    "net/url"
    "os"
 )
@@ -33,6 +35,7 @@ func (h HttpStream) key(pssh []byte) ([]byte, error) {
    if !ok {
       return nil, errors.New("widevine.CDM.Key")
    }
+   slog.Debug("CDM", "key", hex.EncodeToString(key))
    return key, nil
 }
 

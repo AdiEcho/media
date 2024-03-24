@@ -43,7 +43,7 @@ func TestKey(t *testing.T) {
       t.Fatal(err)
    }
    var auth Authorization
-   auth.Raw, err = os.ReadFile(home + "/amc/auth.json")
+   auth.Data, err = os.ReadFile(home + "/amc/auth.json")
    if err != nil {
       t.Fatal(err)
    }
@@ -101,12 +101,12 @@ func TestRefresh(t *testing.T) {
       t.Fatal(err)
    }
    var auth Authorization
-   auth.Raw, err = os.ReadFile(home + "/amc/auth.json")
+   auth.Data, err = os.ReadFile(home + "/amc/auth.json")
    if err != nil {
       t.Fatal(err)
    }
    auth.Unmarshal()
    auth.Refresh()
-   os.WriteFile(home + "/amc/auth.json", auth.Raw, 0666)
+   os.WriteFile(home + "/amc/auth.json", auth.Data, 0666)
 }
 

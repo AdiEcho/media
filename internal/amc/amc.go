@@ -8,18 +8,14 @@ import (
 )
 
 func (f flags) download() error {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
    var auth amc.Authorization
-   auth.Raw, err = os.ReadFile(home + "/amc.json")
+   auth.Raw, err = os.ReadFile(f.home + "/amc.json")
    if err != nil {
       return err
    }
    auth.Unmarshal()
    auth.Refresh()
-   os.WriteFile(home + "/amc.json", auth.Raw, 0666)
+   os.WriteFile(f.home + "/amc.json", auth.Raw, 0666)
    play, err := auth.Playback(f.web.NID)
    if err != nil {
       return err
@@ -63,9 +59,5 @@ func (f flags) login() error {
    auth.Unauth()
    auth.Unmarshal()
    auth.Login(f.email, f.password)
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(home + "/amc.json", auth.Raw, 0666)
+   return os.WriteFile(f.home + "/amc.json", auth.Raw, 0666)
 }

@@ -15,18 +15,28 @@ type flags struct {
    v log.Level
 }
 
-func main() {
+func (f *flags) New() error {
    home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   home = filepath.ToSlash(home)
+   f.h.ClientId = home + "/widevine/client_id.bin"
+   f.h.PrivateKey = home + "/widevine/private_key.pem"
+   return nil
+}
+
+func main() {
+   var f flags
+   err := f.New()
    if err != nil {
       panic(err)
    }
-   home = filepath.ToSlash(home) + "/widevine/"
-   var f flags
    flag.StringVar(&f.roku_id, "b", "", "Roku ID")
-   flag.StringVar(&f.h.Client_ID, "c", home+"client_id.bin", "client ID")
    flag.StringVar(&f.media_id, "i", "", "media ID")
-   flag.StringVar(&f.h.Private_Key, "k", home+"private_key.pem", "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
+   flag.StringVar(&f.h.PrivateKey, "k", f.h.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()

@@ -3,8 +3,10 @@ package internal
 import (
    "154.pages.dev/encoding/dash"
    "154.pages.dev/sofia"
+   "encoding/base64"
    "errors"
    "io"
+   "log/slog"
    "net/http"
 )
 
@@ -39,6 +41,7 @@ func write_init(w io.Writer, r io.Reader) ([]byte, error) {
    if !ok {
       return nil, errors.New("sofia.Movie.Widevine")
    }
+   slog.Debug("Widevine", "PSSH", base64.StdEncoding.EncodeToString(pssh))
    return pssh, nil
 }
 

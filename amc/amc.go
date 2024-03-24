@@ -22,7 +22,7 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
    // If you request once with headers, you can request again without any
    // headers for 10 minutes, but then headers are required again
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.s.Data.Access_Token},
+      "Authorization": {"Bearer " + a.v.Data.Access_Token},
       "X-Amcn-Cache-Hash": {cache_hash()},
       "X-Amcn-Network": {"amcplus"},
       "X-Amcn-Tenant": {"amcn"},
@@ -81,8 +81,8 @@ func (w WebAddress) String() string {
 }
 
 type Authorization struct {
-   Raw []byte
-   s struct {
+   Data []byte
+   v struct {
       Data struct {
          Access_Token string
          Refresh_Token string
@@ -92,7 +92,7 @@ type Authorization struct {
 
 func (a Authorization) Playback(nid string) (*Playback, error) {
    body, err := func() ([]byte, error) {
-      var s struct {
+      var v struct {
          AdTags struct {
             Lat int `json:"lat"`
             Mode string `json:"mode"`
@@ -102,9 +102,9 @@ func (a Authorization) Playback(nid string) (*Playback, error) {
             URL string `json:"url"`
          } `json:"adtags"`
       }
-      s.AdTags.Mode = "on-demand"
-      s.AdTags.URL = "-"
-      return json.Marshal(s)
+      v.AdTags.Mode = "on-demand"
+      v.AdTags.URL = "-"
+      return json.Marshal(v)
    }()
    if err != nil {
       return nil, err
@@ -117,7 +117,7 @@ func (a Authorization) Playback(nid string) (*Playback, error) {
    }
    req.URL.Path = "/playback-id/api/v1/playback/" + nid
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.s.Data.Access_Token},
+      "Authorization": {"Bearer " + a.v.Data.Access_Token},
       "Content-Type": {"application/json"},
       "X-Amcn-Device-Ad-ID": {"-"},
       "X-Amcn-Language": {"en"},
@@ -226,7 +226,7 @@ func (a *Authorization) Unauth() error {
    if res.StatusCode != http.StatusOK {
       return errors.New(res.Status)
    }
-   a.Raw, err = io.ReadAll(res.Body)
+   a.Data, err = io.ReadAll(res.Body)
    if err != nil {
       return err
    }
@@ -234,7 +234,7 @@ func (a *Authorization) Unauth() error {
 }
 
 func (a *Authorization) Unmarshal() error {
-   return json.Unmarshal(a.Raw, &a.s)
+   return json.Unmarshal(a.Data, &a.v)
 }
 
 func (a *Authorization) Login(email, password string) error {
@@ -253,7 +253,7 @@ func (a *Authorization) Login(email, password string) error {
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/login"
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.s.Data.Access_Token},
+      "Authorization": {"Bearer " + a.v.Data.Access_Token},
       "Content-Type": {"application/json"},
       "X-Amcn-Device-Ad-ID": {"-"},
       "X-Amcn-Device-ID": {"-"},
@@ -273,7 +273,7 @@ func (a *Authorization) Login(email, password string) error {
    if res.StatusCode != http.StatusOK {
       return errors.New(res.Status)
    }
-   a.Raw, err = io.ReadAll(res.Body)
+   a.Data, err = io.ReadAll(res.Body)
    if err != nil {
       return err
    }
@@ -286,7 +286,7 @@ func (a *Authorization) Refresh() error {
       return err
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
-   req.Header.Set("Authorization", "Bearer " + a.s.Data.Refresh_Token)
+   req.Header.Set("Authorization", "Bearer " + a.v.Data.Refresh_Token)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -295,7 +295,7 @@ func (a *Authorization) Refresh() error {
    if res.StatusCode != http.StatusOK {
       return errors.New(res.Status)
    }
-   a.Raw, err = io.ReadAll(res.Body)
+   a.Data, err = io.ReadAll(res.Body)
    if err != nil {
       return err
    }

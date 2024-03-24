@@ -4,10 +4,8 @@ import (
    "154.pages.dev/encoding"
    "154.pages.dev/encoding/dash"
    "154.pages.dev/log"
-   "encoding/hex"
    "errors"
    "io"
-   "log/slog"
    "net/http"
    "os"
    "slices"
@@ -16,11 +14,6 @@ import (
 func (h HttpStream) segment_template(
    ext, initialization string, rep dash.Representation,
 ) error {
-   key, err := h.key(rep)
-   if err != nil {
-      return err
-   }
-   slog.Debug("hex", "key", hex.EncodeToString(key))
    req, err := http.NewRequest("GET", initialization, nil)
    if err != nil {
       return err
@@ -36,7 +29,12 @@ func (h HttpStream) segment_template(
       return err
    }
    defer file.Close()
-   if err := write_init(file, res.Body); err != nil {
+   pssh, err := write_init(file, res.Body)
+   if err != nil {
+      return err
+   }
+   key, err := h.key(pssh)
+   if err != nil {
       return err
    }
    media := rep.Media()
@@ -157,7 +155,6 @@ func (h HttpStream) segment_base(
    if err != nil {
       return err
    }
-   slog.Debug("hex", "key", hex.EncodeToString(key))
    byte_ranges, err := write_sidx(base_url, sb.IndexRange)
    if err != nil {
       return err
