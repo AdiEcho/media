@@ -7,12 +7,11 @@ import (
 )
 
 func (f flags) download() error {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   var auth hulu.Authenticate
-   auth.Raw, err = os.ReadFile(home + "/hulu.json")
+   var (
+      auth hulu.Authenticate
+      err error
+   )
+   auth.Data, err = os.ReadFile(f.home + "/hulu.json")
    if err != nil {
       return err
    }
@@ -61,5 +60,5 @@ func (f flags) authenticate() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(name, auth.Raw, 0666)
+   return os.WriteFile(name, auth.Data, 0666)
 }

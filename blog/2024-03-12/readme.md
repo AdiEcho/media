@@ -20,16 +20,11 @@ https://audio4-fa.scdn.co/audio/064aff0bf727385bcb79e0a3d695d694d8c02cfe?1710211
 Encrypted, 1 substream, aes 
 ~~~
 
-searching this is dead end:
-
-~~~
-playplay/v1/key
-~~~
-
-interesting results:
+done:
 
 ~~~
 files/audio/interactive NOT is:fork
+playplay/v1/key
 ~~~
 
 ## C dump

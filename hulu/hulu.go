@@ -12,6 +12,15 @@ import (
    "strings"
 )
 
+type Authenticate struct {
+   Data []byte
+   v struct {
+      Data struct {
+         User_Token string
+      }
+   }
+}
+
 func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
    body, err := func() ([]byte, error) {
       m := map[string][]string{
@@ -28,7 +37,7 @@ func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
    if err != nil {
       return nil, err
    }
-   req.Header.Set("Authorization", "Bearer " + a.V.Data.User_Token)
+   req.Header.Set("Authorization", "Bearer " + a.v.Data.User_Token)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -80,7 +89,7 @@ func LivingRoom(email, password string) (*Authenticate, error) {
 }
 
 func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.DataRaw, &a.V)
+   return json.Unmarshal(a.Data, &a.v)
 }
 
 type DeepLink struct {
@@ -100,6 +109,7 @@ func (i *ID) Set(s string) error {
    i.s = path.Base(s)
    return nil
 }
+
 func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
    req, err := http.NewRequest("GET", "https://discover.hulu.com", nil)
    if err != nil {
@@ -110,7 +120,7 @@ func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
       "id": {watch.s},
       "namespace": {"entity"},
    }.Encode()
-   req.Header.Set("Authorization", "Bearer " + a.V.Data.User_Token)
+   req.Header.Set("Authorization", "Bearer " + a.v.Data.User_Token)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -228,13 +238,3 @@ type segment_value struct {
    } `json:"encryption"`
    Type string `json:"type"`
 }
-
-type Authenticate struct {
-   Data []byte
-   V struct {
-      Data struct {
-         User_Token string
-      }
-   }
-}
-

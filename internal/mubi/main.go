@@ -20,25 +20,32 @@ type flags struct {
    home string
 }
 
-func main() {
-   var (
-      f flags
-      err error
-   )
+func (f *flags) New() error {
+   var err error
    f.home, err = os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   f.home = filepath.ToSlash(f.home)
+   f.h.ClientId = f.home + "/widevine/client_id.bin"
+   f.h.PrivateKey = f.home + "/widevine/private_key.pem"
+   return nil
+}
+
+func main() {
+   var f flags
+   err := f.New()
    if err != nil {
       panic(err)
    }
-   f.home = filepath.ToSlash(f.home)
-   home := f.home + "/widevine"
    flag.Var(&f.web, "a", "address")
    flag.BoolVar(&f.auth, "auth", false, "authenticate")
-   flag.StringVar(&f.h.Client_ID, "c", home+"/client_id.bin", "client ID")
    flag.BoolVar(&f.code, "code", false, "link code")
    flag.StringVar(&f.media_id, "i", "", "media ID")
-   flag.StringVar(&f.h.Private_Key, "p", home+"/private_key.pem", "private key")
    flag.BoolVar(&f.secure, "s", false, "secure URL")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
+   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()

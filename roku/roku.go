@@ -7,6 +7,15 @@ import (
    "net/http"
 )
 
+func (c CrossSite) csrf() (*http.Cookie, bool) {
+   for _, cookie := range c.cookies {
+      if cookie.Name == "_csrf" {
+         return cookie, true
+      }
+   }
+   return nil, false
+}
+
 func (Playback) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
@@ -16,6 +25,10 @@ func (p Playback) RequestUrl() (string, bool) {
 }
 
 func (c CrossSite) Playback(id string) (*Playback, error) {
+   csrf, ok := c.csrf()
+   if !ok {
+      return nil, http.ErrNoCookie
+   }
    body, err := func() ([]byte, error) {
       m := map[string]string{
          "mediaFormat": "mpeg-dash",
@@ -39,7 +52,7 @@ func (c CrossSite) Playback(id string) (*Playback, error) {
    req.Header = http.Header{
       "CSRF-Token": {c.token},
       "Content-Type": {"application/json"},
-      "Cookie": {c.csrf().Raw},
+      "Cookie": {csrf.Raw},
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -75,15 +88,6 @@ func (Playback) ResponseBody(b []byte) ([]byte, error) {
 type CrossSite struct {
    cookies []*http.Cookie
    token string
-}
-
-func (c CrossSite) csrf() *http.Cookie {
-   for _, cookie := range c.cookies {
-      if cookie.Name == "_csrf" {
-         return cookie
-      }
-   }
-   return nil
 }
 
 type MediaVideo struct {

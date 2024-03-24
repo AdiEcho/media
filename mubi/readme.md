@@ -5,14 +5,13 @@
 3. Email address
 4. GET STARTED
 5. enter code
-6. click MUBI
-7. NEXT
-8. cardholder name
-9. card number
-10. Expiry Date
-11. CVV
-12. zip code
-13. START FREE TRIAL
+6. NEXT
+7. cardholder name
+8. card number
+9. Expiry Date
+10. CVV
+11. zip code
+12. START FREE TRIAL
 
 ## Android
 

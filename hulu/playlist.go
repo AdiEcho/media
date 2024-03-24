@@ -57,7 +57,7 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.Value.Data.User_Token},
+      "Authorization": {"Bearer " + a.v.Data.User_Token},
       "Content-Type": {"application/json"},
    }
    res, err := http.DefaultClient.Do(req)
@@ -93,7 +93,7 @@ func (Playlist) ResponseBody(b []byte) ([]byte, error) {
 func (p Playlist) RequestUrl() (string, bool) {
    return p.WV_Server, true
 }
+
 func (Playlist) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
-
