@@ -10,86 +10,6 @@ import (
    "strings"
 )
 
-func cache_hash() string {
-   return base64.StdEncoding.EncodeToString([]byte("ff="))
-}
-
-func (a Authorization) Content(path string) (*ContentCompiler, error) {
-   req, err := http.NewRequest("GET", "https://gw.cds.amcn.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   // If you request once with headers, you can request again without any
-   // headers for 10 minutes, but then headers are required again
-   req.Header = http.Header{
-      "Authorization": {"Bearer " + a.v.Data.Access_Token},
-      "X-Amcn-Cache-Hash": {cache_hash()},
-      "X-Amcn-Network": {"amcplus"},
-      "X-Amcn-Tenant": {"amcn"},
-      "X-Amcn-User-Cache-Hash": {cache_hash()},
-   }
-   // Shows must use `path`, and movies must use `path/watch`. If trial has
-   // expired, you will get `.data.type` of `redirect`. You can remove the
-   // `/watch` to resolve this, but the resultant response will still be
-   // missing `video-player-ap`.
-   req.URL.Path = func() string {
-      var b strings.Builder
-      b.WriteString("/content-compiler-cr/api/v1/content/amcn/amcplus/path")
-      if strings.HasPrefix(path, "/movies/") {
-         b.WriteString("/watch")
-      }
-      b.WriteString(path)
-      return b.String()
-   }()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   content := new(ContentCompiler)
-   if err := json.NewDecoder(res.Body).Decode(content); err != nil {
-      return nil, err
-   }
-   return content, nil
-}
-
-type WebAddress struct {
-   NID string
-   Path string
-}
-
-func (w *WebAddress) Set(s string) error {
-   var found bool
-   _, w.Path, found = strings.Cut(s, "amcplus.com")
-   if !found {
-      return errors.New("amcplus.com")
-   }
-   _, w.NID, found = strings.Cut(w.Path, "--")
-   if !found {
-      return errors.New("--")
-   }
-   return nil
-}
-
-func (w WebAddress) String() string {
-   return w.Path
-}
-
-type Authorization struct {
-   Data []byte
-   v struct {
-      Data struct {
-         Access_Token string
-         Refresh_Token string
-      }
-   }
-}
-
 func (a Authorization) Playback(nid string) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var v struct {
@@ -133,7 +53,9 @@ func (a Authorization) Playback(nid string) (*Playback, error) {
    }
    defer res.Body.Close()
    if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
    }
    var play Playback
    play.header = res.Header
@@ -301,3 +223,83 @@ func (a *Authorization) Refresh() error {
    }
    return nil
 }
+func cache_hash() string {
+   return base64.StdEncoding.EncodeToString([]byte("ff="))
+}
+
+func (a Authorization) Content(path string) (*ContentCompiler, error) {
+   req, err := http.NewRequest("GET", "https://gw.cds.amcn.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   // If you request once with headers, you can request again without any
+   // headers for 10 minutes, but then headers are required again
+   req.Header = http.Header{
+      "Authorization": {"Bearer " + a.v.Data.Access_Token},
+      "X-Amcn-Cache-Hash": {cache_hash()},
+      "X-Amcn-Network": {"amcplus"},
+      "X-Amcn-Tenant": {"amcn"},
+      "X-Amcn-User-Cache-Hash": {cache_hash()},
+   }
+   // Shows must use `path`, and movies must use `path/watch`. If trial has
+   // expired, you will get `.data.type` of `redirect`. You can remove the
+   // `/watch` to resolve this, but the resultant response will still be
+   // missing `video-player-ap`.
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/content-compiler-cr/api/v1/content/amcn/amcplus/path")
+      if strings.HasPrefix(path, "/movies/") {
+         b.WriteString("/watch")
+      }
+      b.WriteString(path)
+      return b.String()
+   }()
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   content := new(ContentCompiler)
+   if err := json.NewDecoder(res.Body).Decode(content); err != nil {
+      return nil, err
+   }
+   return content, nil
+}
+
+type WebAddress struct {
+   NID string
+   Path string
+}
+
+func (w *WebAddress) Set(s string) error {
+   var found bool
+   _, w.Path, found = strings.Cut(s, "amcplus.com")
+   if !found {
+      return errors.New("amcplus.com")
+   }
+   _, w.NID, found = strings.Cut(w.Path, "--")
+   if !found {
+      return errors.New("--")
+   }
+   return nil
+}
+
+func (w WebAddress) String() string {
+   return w.Path
+}
+
+type Authorization struct {
+   Data []byte
+   v struct {
+      Data struct {
+         Access_Token string
+         Refresh_Token string
+      }
+   }
+}
+
