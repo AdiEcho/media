@@ -42,6 +42,12 @@ Class C
 - https://calculator.net/ip-subnet-calculator.html
 - https://developer.mozilla.org/docs/Web/HTTP/Headers/X-Forwarded-For
 
+## Australia
+
+1.128.0.0/11
+
+<https://github.com/firehol/blocklist-ipsets/blob/master/geolite2_country/country_au.netset>
+
 ## Canada
 
 99.224.0.0
