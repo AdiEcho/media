@@ -13,7 +13,7 @@ func (p program_streams) StanVideo() (*url.URL, error) {
    if err != nil {
       return nil, err
    }
-   //video.Host = "gec.stan.video"
+   video.Host = "gec.stan.video"
    return video, nil
 }
 
