@@ -41,7 +41,7 @@ jwToken=eyJhbGciOiJIUzI1NiIsImtpZCI6InBpa2FjaHUiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3M
 
 https://api.stan.com.au/concurrency/v1/streams?programId=4212387&drm=widevine&quality=sd&clientId=3f9f91a359959c29&format=dash&captions=ttml&jwToken=eyJhbGciOiJIUzI1NiIsImtpZCI6InBpa2FjaHUiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3MjE3NzQzODgsImp0aSI6IjY1N2ExYTFkNWZkYzRhNzk5YWFlNmZlMjQwMjhiNDhmIiwiaWF0IjoxNzExNDA2Mzg4LCJyb2xlIjoidXNlciIsInVpZCI6ImUwNzUyOGZkM2I0NDRiMTQ4YTI0NmZmYjM5M2JlNjUyIiwic3RyZWFtcyI6ImhkIiwiY29uY3VycmVuY3kiOjMsInByb2ZpbGVJZCI6ImUwNzUyOGZkM2I0NDRiMTQ4YTI0NmZmYjM5M2JlNjUyIiwicHJvZmlsZU5hbWUiOiJzdGV2ZW4iLCJ0eiI6IkFtZXJpY2EvQ2hpY2FnbyIsImFwcCI6IlN0YW4tQW5kcm9pZCIsInZlciI6IjQuMzEuMS41MDkyOSIsImZlYXQiOjEyMDg5MTExMDR9.gTNITbe2UIoG5Y58IcB6LB2MuujZbWHrdmqGTbWqfN8&manufacturer=Android&os=Android&sdk=23&type=mobile&model=unknown&stanName=Stan-Android&stanVersion=4.31.1.50929&videoCodec=h264
 
-## code 1
+## code 1 DONE
 
 ~~~
 POST https://api.stan.com.au/login/v1/activation-codes/ HTTP/2.0
@@ -50,7 +50,7 @@ content-type: application/x-www-form-urlencoded
 generate=true
 ~~~
 
-## code 2
+## code 2 DONE
 
 https://api.stan.com.au/login/v1/activation-codes/?code=eyJhbGciOiJIUzI1NiIsImtpZCI6InBpa2FjaHUiLCJ0eXAiOiJKV1QifQ.eyJjb2RlIjoiMzE1NTcwMiJ9.MiKJeqGN0mpfr3KdWzkww0QakHgDfVzyj9BFiHcKsMU
 

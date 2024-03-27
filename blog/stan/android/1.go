@@ -2,6 +2,7 @@ package stan
 
 import (
    "encoding/json"
+   "io"
    "net/http"
    "net/url"
    "strings"
@@ -13,14 +14,16 @@ func (a activation_code) String() string {
    b.WriteString("Log in with code\n")
    b.WriteString("1. Visit stan.com.au/activate\n")
    b.WriteString("2. Enter the code:\n")
-   b.WriteString(a.Code)
+   b.WriteString(a.v.Code)
    return b.String()
 }
 
 type activation_code struct {
-   Code string
-   Token string
-   URL string
+   data []byte
+   v struct {
+      Code string
+      URL string
+   }
 }
 
 func (a *activation_code) New() error {
@@ -33,5 +36,13 @@ func (a *activation_code) New() error {
       return err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(a)
+   a.data, err = io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a *activation_code) unmarshal() error {
+   return json.Unmarshal(a.data, &a.v)
 }
