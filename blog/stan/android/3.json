@@ -1,0 +1,37 @@
+{
+  "mpxToken": "",
+  "jwToken": "eyJhbGciOiJIUzI1NiIsImtpZCI6InBpa2FjaHUiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE3MjE4NzAxODEsImp0aSI6ImJlZTg0NDExNzIwZTQ2YzA4NDNjMWM2MmRlN2FiMGZjIiwiaWF0IjoxNzExNTAyMTgxLCJyb2xlIjoidXNlciIsInVpZCI6ImUwNzUyOGZkM2I0NDRiMTQ4YTI0NmZmYjM5M2JlNjUyIiwic3RyZWFtcyI6ImhkIiwiY29uY3VycmVuY3kiOjMsInByb2ZpbGVJZCI6ImUwNzUyOGZkM2I0NDRiMTQ4YTI0NmZmYjM5M2JlNjUyIiwicHJvZmlsZU5hbWUiOiJzdGV2ZW4iLCJmZWF0IjoyMjgxNzAxNjMyfQ.WVR6SLdSM2WUKb47ws09Vloc0JZhd31mNGtdrT_8Leg",
+  "expiry": 1721870181,
+  "renew": 1711516581,
+  "now": 1711502181,
+  "settings": {},
+  "userId": "e07528fd3b444b148a246ffb393be652",
+  "profile": {
+    "id": "e07528fd3b444b148a246ffb393be652",
+    "name": "steven",
+    "created": 1711323913,
+    "iconIndex": 0,
+    "isPrimary": true,
+    "expiry": 1711516581,
+    "iconImage": {
+      "url": "https://streamcoimg-a.akamaihd.net/cms/2020/7/79e88c16-8af0-4e3b-63a0-7ae99c725547.jpg",
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  "deviceCap": [
+    "chapters",
+    "audiotracks"
+  ],
+  "userCap": [
+    "offline"
+  ],
+  "subscription": {
+    "email": "srpen6@gmail.com",
+    "active": true,
+    "streams": "hd",
+    "biller": "stripe",
+    "status": "active"
+  },
+  "sessionID": "bee84411720e46c0843c1c62de7ab0fc"
+}

@@ -1,7 +1,6 @@
 package stan
 
 import (
-   "fmt"
    "os"
    "testing"
 )
@@ -20,5 +19,5 @@ func TestToken(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", token)
+   os.WriteFile("2.json", token.data, 0666)
 }

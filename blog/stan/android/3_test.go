@@ -1,28 +1,24 @@
 package stan
 
 import (
+   "fmt"
    "os"
    "testing"
 )
 
 func TestSession(t *testing.T) {
    var (
-      code activation_code
+      token web_token
       err error
    )
-   code.data, err = os.ReadFile("1.json")
+   token.data, err = os.ReadFile("2.json")
    if err != nil {
       t.Fatal(err)
    }
-   code.unmarshal()
-   token, err := code.token()
+   token.unmarshal()
+   session, err := token.session()
    if err != nil {
       t.Fatal(err)
    }
-   res, err := token.session()
-   if err != nil {
-      t.Fatal(err)
-   }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   fmt.Printf("%+v\n", session)
 }

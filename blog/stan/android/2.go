@@ -3,13 +3,17 @@ package stan
 import (
    "encoding/json"
    "errors"
+   "io"
    "net/http"
    "strings"
 )
 
 type web_token struct {
-   JwToken string
-   ProfileId string
+   data []byte
+   v struct {
+      JwToken string
+      ProfileId string
+   }
 }
 
 func (a activation_code) token() (*web_token, error) {
@@ -23,9 +27,14 @@ func (a activation_code) token() (*web_token, error) {
       res.Write(&b)
       return nil, errors.New(b.String())
    }
-   web := new(web_token)
-   if err := json.NewDecoder(res.Body).Decode(web); err != nil {
+   var web web_token
+   web.data, err = io.ReadAll(res.Body)
+   if err != nil {
       return nil, err
    }
-   return web, nil
+   return &web, nil
+}
+
+func (w *web_token) unmarshal() error {
+   return json.Unmarshal(w.data, &w.v)
 }
