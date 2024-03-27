@@ -1,33 +1,49 @@
 package stan
 
 import (
+   "encoding/json"
    "net/http"
    "net/url"
 )
 
-func (a app_session) streams() (*http.Response, error) {
+func (a app_session) program() (*program_streams, error) {
    req, err := http.NewRequest(
       "GET", "https://api.stan.com.au/concurrency/v1/streams", nil,
    )
    if err != nil {
       return nil, err
    }
+   req.Header["x-forwarded-for"] = []string{"1.128.0.0"}
    req.URL.RawQuery = url.Values{
-      "captions":[]string{"ttml"},
-      "clientId":[]string{"6a25764ada16ddca"},
-      "drm":[]string{"widevine"},
       "format":[]string{"dash"},
       "jwToken":[]string{a.JwToken},
-      "manufacturer":[]string{"Android"},
-      "model":[]string{"unknown"},
-      "os":[]string{"Android"},
       "programId":[]string{"1768588"},
-      "quality":[]string{"sd"},
-      "sdk":[]string{"23"},
-      "stanName":[]string{"Stan-Android"},
-      "stanVersion":[]string{"4.31.1.50929"},
-      "type":[]string{"mobile"},
-      "videoCodec":[]string{"h264"},
    }.Encode()
-   return http.DefaultClient.Do(req)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   program := new(program_streams)
+   if err := json.NewDecoder(res.Body).Decode(program); err != nil {
+      return nil, err
+   }
+   return program, nil
+}
+
+// `akamaized.net` geo blocks, so change the host. note `aws.stan.video`
+// should work too
+func (p program_streams) StanVideo() (*url.URL, error) {
+   video, err := url.Parse(p.Media.VideoUrl)
+   if err != nil {
+      return nil, err
+   }
+   video.Host = "gec.stan.video"
+   return video, nil
+}
+
+type program_streams struct {
+   Media struct {
+      VideoUrl string
+   }
 }
