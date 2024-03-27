@@ -6,6 +6,17 @@ import (
    "net/url"
 )
 
+// `akamaized.net` geo blocks, so change the host. note `aws.stan.video`
+// should work too
+func (p program_streams) StanVideo() (*url.URL, error) {
+   video, err := url.Parse(p.Media.VideoUrl)
+   if err != nil {
+      return nil, err
+   }
+   //video.Host = "gec.stan.video"
+   return video, nil
+}
+
 func (a app_session) program() (*program_streams, error) {
    req, err := http.NewRequest(
       "GET", "https://api.stan.com.au/concurrency/v1/streams", nil,
@@ -29,17 +40,6 @@ func (a app_session) program() (*program_streams, error) {
       return nil, err
    }
    return program, nil
-}
-
-// `akamaized.net` geo blocks, so change the host. note `aws.stan.video`
-// should work too
-func (p program_streams) StanVideo() (*url.URL, error) {
-   video, err := url.Parse(p.Media.VideoUrl)
-   if err != nil {
-      return nil, err
-   }
-   video.Host = "gec.stan.video"
-   return video, nil
 }
 
 type program_streams struct {
