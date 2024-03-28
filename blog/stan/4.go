@@ -67,8 +67,13 @@ func (p program_streams) RequestHeader() (http.Header, error) {
    return head, nil
 }
 
-///////////
-
-func (program_streams) ResponseBody([]byte) ([]byte, error) {
-   return nil, nil
+func (program_streams) ResponseBody(b []byte) ([]byte, error) {
+   var s struct {
+      License []byte
+   }
+   err := json.Unmarshal(b, &s)
+   if err != nil {
+      return nil, err
+   }
+   return s.License, nil
 }

@@ -8,8 +8,6 @@ import (
    "strings"
 )
 
-// kill this?
-
 type web_token struct {
    data []byte
    v struct {
