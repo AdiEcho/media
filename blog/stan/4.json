@@ -1,0 +1,30 @@
+{
+  "concurrency": {
+    "serviceUrl": "https://api.stan.com.au/concurrency/v1/streams",
+    "updateInterval": 20,
+    "lockID": "10ebcc94-3373-475f-a8a9-dc848b637caa",
+    "lockSequenceToken": "1"
+  },
+  "media": {
+    "videoUrl": "https://gec.stan.video/09/dash/live/1540676B-1/sd/sdr/medium_h264-7ddb6702.mpd?cdns=akamai%2Camazon%2Cgoogle&clearaudio=true&maxQuality=sd",
+    "fallbackVideoUrl": "https://gec.stan.video/09/dash/live/1540676B-1/sd/sdr/medium_h264-7ddb6702.mpd?cdns=akamai%2Camazon%2Cgoogle&clearaudio=true&maxQuality=sd",
+    "quality": "medium",
+    "codec": "h264",
+    "thumbnailsUrl": "https://streamcoimg-a.akamaihd.net/thumbnails/015/406/76B-1/manifest.json",
+    "captions": [
+      {
+        "language": "eng",
+        "name": "English (cc)",
+        "url": "https://streamcott-a.akamaihd.net/4d23a7729757b3c3111a84e95ffb2044cd7d1b326409a6f5/1540676B-1/eng.vtt",
+        "type": "text/vtt"
+      }
+    ],
+    "drm": {
+      "licenseServerUrl": "https://lic.drmtoday.com/license-proxy-widevine/cenc/",
+      "keyId": "94eb4c43cb6a428f8f882b062ce08bbb",
+      "sessionId": "eyJhbGciOiJIUzI1NiIsImtpZCI6InBpa2FjaHUiLCJ0eXAiOiJKV1QifQ.eyJpYXQiOjE3MTE0MDQxOTEsImVudCI6InNkIiwicGlkIjoxNTQwNjc2LCJwaXIiOnRydWUsImZlYXQiOjMzNTYzNjE5ODQsInB1cmNoYXNlcyI6MCwiYXBwIjoiU3Rhbi1XZWIiLCJscm4iOjgwNjM5NjQ3OTQ0NzM2MDk0Nzl9.UR5ucbveuGTfLkJ0VNtpZVLb8vw6r52uk2GqPzsOqsc",
+      "customData": "eyJ1c2VySWQiOiAiZTA3NTI4ZmQzYjQ0NGIxNDhhMjQ2ZmZiMzkzYmU2NTIiLCJzZXNzaW9uSWQiOiAiZXlKaGJHY2lPaUpJVXpJMU5pSXNJbXRwWkNJNkluQnBhMkZqYUhVaUxDSjBlWEFpT2lKS1YxUWlmUS5leUpwWVhRaU9qRTNNVEUwTURReE9URXNJbVZ1ZENJNkluTmtJaXdpY0dsa0lqb3hOVFF3TmpjMkxDSndhWElpT25SeWRXVXNJbVpsWVhRaU9qTXpOVFl6TmpFNU9EUXNJbkIxY21Ob1lYTmxjeUk2TUN3aVlYQndJam9pVTNSaGJpMVhaV0lpTENKc2NtNGlPamd3TmpNNU5qUTNPVFEwTnpNMk1EazBOemw5LlVSNXVjYnZldUdUZkxrSjBWTnRwWlZMYjh2dzZyNTJ1azJHcVB6c09xc2MiLCJtZXJjaGFudCI6ICJzdGFuIn0="
+    },
+    "liveOffset": 0
+  }
+}

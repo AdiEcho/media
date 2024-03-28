@@ -2,8 +2,10 @@ package stan
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "net/url"
+   "strings"
 )
 
 type app_session struct {
@@ -20,6 +22,11 @@ func (w web_token) session() (*app_session, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
    session := new(app_session)
    if err := json.NewDecoder(res.Body).Decode(session); err != nil {
       return nil, err
