@@ -18,8 +18,7 @@ func (a app_session) program() (*program_streams, error) {
       "format": {"dash"},
       "jwToken": {a.JwToken},
       "programId": {"1768588"},
-      // note `high` or `ultra` should work too
-      "quality": {"auto"},
+      "quality": {"auto"}, // note `high` or `ultra` should work too
    }.Encode()
    res, err := http.DefaultClient.Do(req)
    if err != nil {
