@@ -24,5 +24,6 @@ func TestProgram(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
+   fmt.Printf("%+v\n", program)
    fmt.Println(program.StanVideo())
 }

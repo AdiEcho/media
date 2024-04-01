@@ -11,14 +11,24 @@ import (
    "strings"
 )
 
-type Authenticate struct {
-   Data []byte
-   v struct {
-      Token string
-      User struct {
-         ID int
-      }
+// final slash is needed
+func (Authenticate) RequestUrl() (string, bool) {
+   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
+}
+
+func (Authenticate) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Authenticate) ResponseBody(b []byte) ([]byte, error) {
+   var v struct {
+      License []byte
    }
+   err := json.Unmarshal(b, &v)
+   if err != nil {
+      return nil, err
+   }
+   return v.License, nil
 }
 
 func (a Authenticate) RequestHeader() (http.Header, error) {
@@ -34,6 +44,16 @@ func (a Authenticate) RequestHeader() (http.Header, error) {
    head := make(http.Header)
    head.Set("Dt-Custom-Data", base64.StdEncoding.EncodeToString(text))
    return head, nil
+}
+
+type Authenticate struct {
+   Data []byte
+   v struct {
+      Token string
+      User struct {
+         ID int
+      }
+   }
 }
 
 func (w WebAddress) String() string {
@@ -85,26 +105,6 @@ func (a Authenticate) Viewing(f *FilmResponse) error {
       return errors.New(b.String())
    }
    return nil
-}
-
-// final slash is needed
-func (Authenticate) RequestUrl() (string, bool) {
-   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
-}
-
-func (Authenticate) RequestBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Authenticate) ResponseBody(b []byte) ([]byte, error) {
-   var v struct {
-      License []byte
-   }
-   err := json.Unmarshal(b, &v)
-   if err != nil {
-      return nil, err
-   }
-   return v.License, nil
 }
 
 func (a *Authenticate) Unmarshal() error {

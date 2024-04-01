@@ -10,6 +10,15 @@ import (
    "os"
 )
 
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type HttpStream struct {
+   ClientId string
+   PrivateKey string
+   Name encoding.Namer
+   base *url.URL
+   Poster widevine.Poster
+}
+
 func (h HttpStream) key(pssh []byte) ([]byte, error) {
    client_id, err := os.ReadFile(h.ClientId)
    if err != nil {
@@ -37,13 +46,4 @@ func (h HttpStream) key(pssh []byte) ([]byte, error) {
    }
    slog.Debug("CDM", "key", hex.EncodeToString(key))
    return key, nil
-}
-
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type HttpStream struct {
-   ClientId string
-   Name encoding.Namer
-   Poster widevine.Poster
-   PrivateKey string
-   base *url.URL
 }

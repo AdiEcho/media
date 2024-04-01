@@ -1,0 +1,33 @@
+{
+  "concurrency": {
+    "serviceUrl": "https://api.stan.com.au/concurrency/v1/streams",
+    "updateInterval": 20,
+    "lockID": "9daa0c96f7614103dde9d848477397cb2e21abb4ab48f6a53dc45ff0706ef6a8cacfaf0ffddc27b4",
+    "lockSequenceToken": "1"
+  },
+  "media": {
+    "videoUrl": "https://gec.stan.video/40/dash/live/1768588A-3/hd/sdr/master_h264-72885547.mpd?maxQuality=hd",
+    "fallbackVideoUrl": "https://gec.stan.video/40/dash/live/1768588A-3/hd/sdr/master_h264-72885547.mpd?maxQuality=hd",
+    "quality": "high",
+    "codec": "h264",
+    "thumbnailsUrl": "https://streamcoimg-a.akamaihd.net/thumbnails/017/685/88A-4/manifest.json",
+    "captions": [
+      {
+        "language": "eng",
+        "name": "English (cc)",
+        "url": "https://streamcott-a.akamaihd.net/1768588A-2/eng.vtt",
+        "type": "text/vtt"
+      }
+    ],
+    "drm": {
+      "licenseServerUrl": "https://lic.drmtoday.com/license-proxy-widevine/cenc/",
+      "keyId": "0b5c271e61c244a8ab81e8363a66aa35",
+      "sessionId": "eyJhbGciOiJIUzI1NiIsImtpZCI6InBpa2FjaHUiLCJ0eXAiOiJKV1QifQ.eyJpYXQiOjE3MTE4NjczMzksImVudCI6ImhkIiwicGlkIjoxNzY4NTg4LCJmZWF0IjoyMjgxNzAxNjMyLCJwdXJjaGFzZXMiOjAsImFwcCI6IiIsImxybiI6MjY0NDE4NjA5NTQ0OTczMTQ2Mn0.VMOF6Zp8kdKqfol1iwXQf4AVdir0JedLOhnL8FfDNAA",
+      "customData": "eyJ1c2VySWQiOiAiZTA3NTI4ZmQzYjQ0NGIxNDhhMjQ2ZmZiMzkzYmU2NTIiLCJzZXNzaW9uSWQiOiAiZXlKaGJHY2lPaUpJVXpJMU5pSXNJbXRwWkNJNkluQnBhMkZqYUhVaUxDSjBlWEFpT2lKS1YxUWlmUS5leUpwWVhRaU9qRTNNVEU0Tmpjek16a3NJbVZ1ZENJNkltaGtJaXdpY0dsa0lqb3hOelk0TlRnNExDSm1aV0YwSWpveU1qZ3hOekF4TmpNeUxDSndkWEpqYUdGelpYTWlPakFzSW1Gd2NDSTZJaUlzSW14eWJpSTZNalkwTkRFNE5qQTVOVFEwT1Rjek1UUTJNbjAuVk1PRjZacDhrZEtxZm9sMWl3WFFmNEFWZGlyMEplZExPaG5MOEZmRE5BQSIsIm1lcmNoYW50IjogInN0YW4ifQ=="
+    },
+    "fallbackDrm": {
+      "licenseServerUrl": "https://standrm.keydelivery.australiaeast.media.azure.net/Widevine/?KID=0b5c271e-61c2-44a8-ab81-e8363a66aa35&token=eyJhbGciOiJIUzI1NiIsImtpZCI6InBpa2FjaHUiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJ1cm46c3RhbiIsImV4cCI6MTcxMTg4MTczOSwiaXNzIjoiaHR0cDovL3N0YW4uY29tLmF1LyIsInVybjptaWNyb3NvZnQ6YXp1cmU6bWVkaWFzZXJ2aWNlczpjb250ZW50a2V5aWRlbnRpZmllciI6IjBiNWMyNzFlLTYxYzItNDRhOC1hYjgxLWU4MzYzYTY2YWEzNSIsIkhEIjoidHJ1ZSIsIlNEIjoidHJ1ZSJ9.TIkorHnPYNuBtTm4u_Ec5g6398zK2878itWAZl5wKrQ"
+    },
+    "liveOffset": 0
+  }
+}

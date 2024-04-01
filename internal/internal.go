@@ -12,9 +12,9 @@ import (
 )
 
 func (h HttpStream) segment_template(
-   ext, initialization string, rep dash.Representation,
+   ext, initial string, rep dash.Representation,
 ) error {
-   req, err := http.NewRequest("GET", initialization, nil)
+   req, err := http.NewRequest("GET", initial, nil)
    if err != nil {
       return err
    }
@@ -186,4 +186,3 @@ func (h HttpStream) segment_base(
    }
    return nil
 }
-
