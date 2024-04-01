@@ -4,19 +4,10 @@ import (
    "encoding/json"
    "net/http"
    "net/url"
+   "strconv"
 )
 
-type program_streams struct {
-   Media struct {
-      DRM struct {
-         CustomData string
-         KeyId string
-      }
-      VideoUrl string
-   }
-}
-
-func (a app_session) program() (*program_streams, error) {
+func (a app_session) program(id int) (*program_streams, error) {
    req, err := http.NewRequest(
       "GET", "https://api.stan.com.au/concurrency/v1/streams", nil,
    )
@@ -25,10 +16,10 @@ func (a app_session) program() (*program_streams, error) {
    }
    req.Header["x-forwarded-for"] = []string{"1.128.0.0"}
    req.URL.RawQuery = url.Values{
-      "drm": {"widevine"},
-      "format": {"dash"},
+      "drm": {"widevine"}, // need for .Media.DRM
+      "format": {"dash"}, // 404 otherwise
       "jwToken": {a.JwToken},
-      "programId": {"1768588"},
+      "programId": {strconv.Itoa(id)},
       "quality": {"auto"}, // note `high` or `ultra` should work too
    }.Encode()
    res, err := http.DefaultClient.Do(req)
@@ -78,3 +69,13 @@ func (program_streams) ResponseBody(b []byte) ([]byte, error) {
    }
    return s.License, nil
 }
+type program_streams struct {
+   Media struct {
+      DRM *struct {
+         CustomData string
+         KeyId string
+      }
+      VideoUrl string
+   }
+}
+
