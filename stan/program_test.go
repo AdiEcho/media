@@ -10,11 +10,12 @@ import (
 const program_id = 1768588
 
 func TestProgram(t *testing.T) {
-   var (
-      token web_token
-      err error
-   )
-   token.data, err = os.ReadFile("token.json")
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   var token web_token
+   token.data, err = os.ReadFile(home + "/stan.json")
    if err != nil {
       t.Fatal(err)
    }
