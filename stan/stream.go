@@ -7,7 +7,7 @@ import (
    "strconv"
 )
 
-type program_streams struct {
+type program_stream struct {
    Media struct {
       DRM *struct {
          CustomData string
@@ -17,7 +17,7 @@ type program_streams struct {
    }
 }
 
-func (a app_session) streams(id int) (*program_streams, error) {
+func (a app_session) stream(id int) (*program_stream, error) {
    req, err := http.NewRequest(
       "GET", "https://api.stan.com.au/concurrency/v1/streams", nil,
    )
@@ -37,28 +37,28 @@ func (a app_session) streams(id int) (*program_streams, error) {
       return nil, err
    }
    defer res.Body.Close()
-   streams := new(program_streams)
-   if err := json.NewDecoder(res.Body).Decode(streams); err != nil {
+   stream := new(program_stream)
+   if err := json.NewDecoder(res.Body).Decode(stream); err != nil {
       return nil, err
    }
-   return streams, nil
+   return stream, nil
 }
 
-func (program_streams) RequestBody(b []byte) ([]byte, error) {
+func (program_stream) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (p program_streams) RequestHeader() (http.Header, error) {
+func (p program_stream) RequestHeader() (http.Header, error) {
    head := make(http.Header)
    head.Set("dt-custom-data", p.Media.DRM.CustomData)
    return head, nil
 }
 
-func (program_streams) RequestUrl() (string, bool) {
+func (program_stream) RequestUrl() (string, bool) {
    return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
 }
 
-func (program_streams) ResponseBody(b []byte) ([]byte, error) {
+func (program_stream) ResponseBody(b []byte) ([]byte, error) {
    var s struct {
       License []byte
    }
@@ -71,7 +71,7 @@ func (program_streams) ResponseBody(b []byte) ([]byte, error) {
 
 // `akamaized.net` geo blocks, so change the host. note `aws.stan.video`
 // should work too
-func (p program_streams) StanVideo() (*url.URL, error) {
+func (p program_stream) StanVideo() (*url.URL, error) {
    video, err := url.Parse(p.Media.VideoUrl)
    if err != nil {
       return nil, err
