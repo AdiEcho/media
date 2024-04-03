@@ -9,7 +9,7 @@ import (
 // play.stan.com.au/programs/1768588
 const program_id = 1768588
 
-func TestProgram(t *testing.T) {
+func TestStream(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -24,11 +24,11 @@ func TestProgram(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   program, err := session.program(program_id)
+   stream, err := session.stream(program_id)
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", program)
-   fmt.Printf("%+v\n", program.Media.DRM)
-   fmt.Println(program.StanVideo())
+   fmt.Printf("%+v\n", stream)
+   fmt.Printf("%+v\n", stream.Media.DRM)
+   fmt.Println(stream.StanVideo())
 }
