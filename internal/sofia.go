@@ -10,7 +10,7 @@ import (
    "net/http"
 )
 
-func write_sidx(base_url string, raw dash.RawRange) ([]sofia.Range, error) {
+func write_sidx(base_url string, raw dash.Range) ([]sofia.Range, error) {
    req, err := http.NewRequest("GET", base_url, nil)
    if err != nil {
       return nil, err
