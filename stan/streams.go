@@ -17,7 +17,7 @@ type program_streams struct {
    }
 }
 
-func (a app_session) program(id int) (*program_streams, error) {
+func (a app_session) streams(id int) (*program_streams, error) {
    req, err := http.NewRequest(
       "GET", "https://api.stan.com.au/concurrency/v1/streams", nil,
    )
@@ -37,11 +37,11 @@ func (a app_session) program(id int) (*program_streams, error) {
       return nil, err
    }
    defer res.Body.Close()
-   program := new(program_streams)
-   if err := json.NewDecoder(res.Body).Decode(program); err != nil {
+   streams := new(program_streams)
+   if err := json.NewDecoder(res.Body).Decode(streams); err != nil {
       return nil, err
    }
-   return program, nil
+   return streams, nil
 }
 
 func (program_streams) RequestBody(b []byte) ([]byte, error) {
