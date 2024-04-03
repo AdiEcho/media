@@ -10,6 +10,28 @@ import (
    "net/http"
 )
 
+func write_sidx(base_url string, raw dash.RawRange) ([]sofia.Range, error) {
+   req, err := http.NewRequest("GET", base_url, nil)
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("Range", "bytes=" + string(raw))
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   var file sofia.File
+   if err := file.Read(res.Body); err != nil {
+      return nil, err
+   }
+   index, err := raw.Scan()
+   if err != nil {
+      return nil, err
+   }
+   return file.SegmentIndex.Ranges(index.End+1), nil
+}
+
 func write_init(w io.Writer, r io.Reader) ([]byte, error) {
    var file sofia.File
    if err := file.Read(r); err != nil {
@@ -58,26 +80,4 @@ func write_segment(w io.Writer, r io.Reader, key []byte) error {
       }
    }
    return file.Write(w)
-}
-
-func write_sidx(base_url string, raw dash.RawRange) ([]sofia.Range, error) {
-   req, err := http.NewRequest("GET", base_url, nil)
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("Range", "bytes=" + string(raw))
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   var file sofia.File
-   if err := file.Read(res.Body); err != nil {
-      return nil, err
-   }
-   index, err := raw.Scan()
-   if err != nil {
-      return nil, err
-   }
-   return file.SegmentIndex.Ranges(index.End+1), nil
 }
