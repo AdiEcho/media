@@ -138,52 +138,6 @@ func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
    return link, nil
 }
 
-type Details struct {
-   Episode_Name string
-   Episode_Number int
-   Headline string
-   Premiere_Date string
-   Season_Number int
-   Series_Name string
-}
-
-func (Details) Owner() (string, bool) {
-   return "", false
-}
-
-func (d Details) Show() (string, bool) {
-   return d.Series_Name, d.Series_Name != ""
-}
-
-func (d Details) Season() (string, bool) {
-   if d.Season_Number >= 1 {
-      return strconv.Itoa(d.Season_Number), true
-   }
-   return "", false
-}
-
-func (d Details) Episode() (string, bool) {
-   if d.Episode_Number >= 1 {
-      return strconv.Itoa(d.Episode_Number), true
-   }
-   return "", false
-}
-
-func (d Details) Title() (string, bool) {
-   if d.Episode_Name != "" {
-      return d.Episode_Name, true
-   }
-   return d.Headline, true
-}
-
-func (d Details) Year() (string, bool) {
-   if d.Episode_Name != "" {
-      return "", false
-   }
-   year, _, _ := strings.Cut(d.Premiere_Date, "-")
-   return year, true
-}
-
 type codec_value struct {
    Height int `json:"height,omitempty"`
    Level   string `json:"level,omitempty"`
@@ -237,4 +191,41 @@ type segment_value struct {
       Type string `json:"type"`
    } `json:"encryption"`
    Type string `json:"type"`
+}
+
+type Details struct {
+   Episode_Name string
+   Episode_Number int
+   Headline string
+   Premiere_Date string
+   Season_Number int
+   Series_Name string
+}
+
+func (d Details) Show() string {
+   return d.Series_Name
+}
+
+func (d Details) Season() int {
+   return d.Season_Number
+}
+
+func (d Details) Episode() int {
+   return d.Episode_Number
+}
+
+func (d Details) Title() string {
+   if v := d.Episode_Name; v != "" {
+      return v
+   }
+   return d.Headline
+}
+
+func (d Details) Year() int {
+   if v, _, ok := strings.Cut(d.Premiere_Date, "-"); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
 }

@@ -4,6 +4,7 @@ import (
    "encoding/json"
    "net/http"
    "net/url"
+   "strconv"
    "strings"
 )
 
@@ -36,12 +37,23 @@ func (h *HomeScreen) New(id string) error {
       return err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(&h.s)
+   return json.NewDecoder(res.Body).Decode(&h.V)
+}
+
+func (h HomeScreen) DASH() (*MediaVideo, bool) {
+   for _, option := range h.V.ViewOptions {
+      for _, video := range option.Media.Videos {
+         if video.VideoType == "DASH" {
+            return &video, true
+         }
+      }
+   }
+   return nil, false
 }
 
 // we have to embed to prevent clobbering Namer.Title
 type HomeScreen struct {
-   s struct {
+   V struct {
       Series *struct {
          Title string
       }
@@ -57,50 +69,27 @@ type HomeScreen struct {
    }
 }
 
-func (h HomeScreen) Show() (string, bool) {
-   if h.s.Series != nil {
-      return h.s.Series.Title, true
-   }
-   return "", false
+func (h HomeScreen) Show() string {
+   return h.V.Series.Title
 }
 
-func (h HomeScreen) Year() (string, bool) {
-   if h.s.Series != nil {
-      return "", false
-   }
-   year, _, _ := strings.Cut(h.s.ReleaseDate, "-")
-   return year, true
+func (h HomeScreen) Season() int {
+   return h.V.SeasonNumber
 }
 
-func (HomeScreen) Owner() (string, bool) {
-   return "", false
+func (h HomeScreen) Episode() int {
+   return h.V.EpisodeNumber
 }
 
-func (h HomeScreen) Title() (string, bool) {
-   return h.s.Title, true
+func (h HomeScreen) Title() string {
+   return h.V.Title
 }
 
-func (h HomeScreen) Season() (string, bool) {
-   if sn := h.s.SeasonNumber; sn != "" {
-      return sn, true
-   }
-   return "", false
-}
-
-func (h HomeScreen) Episode() (string, bool) {
-   if en := h.s.EpisodeNumber; en != "" {
-      return en, true
-   }
-   return "", false
-}
-
-func (h HomeScreen) DASH() (*MediaVideo, bool) {
-   for _, option := range h.s.ViewOptions {
-      for _, video := range option.Media.Videos {
-         if video.VideoType == "DASH" {
-            return &video, true
-         }
+func (h HomeScreen) Year() int {
+   if v, _, ok := strings.Cut(h.V.ReleaseDate, "-"); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
       }
    }
-   return nil, false
+   return 0
 }

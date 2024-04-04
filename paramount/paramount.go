@@ -10,49 +10,6 @@ import (
    "strings"
 )
 
-type Item struct {
-   AirDateIso string `json:"_airDateISO"`
-   Label string
-   MediaType string
-   SeriesTitle string
-   // these can be empty string, so we cannot use these:
-   // int `json:",string"`
-   // json.Number
-   EpisodeNum string
-   SeasonNum string
-}
-
-func (Item) Owner() (string, bool) {
-   return "", false
-}
-
-func (i Item) Show() (string, bool) {
-   if i.MediaType == "Full Episode" {
-      return i.SeriesTitle, true
-   }
-   return "", false
-}
-
-func (i Item) Season() (string, bool) {
-   return i.SeasonNum, i.SeasonNum != ""
-}
-
-func (i Item) Episode() (string, bool) {
-   return i.EpisodeNum, i.EpisodeNum != ""
-}
-
-func (i Item) Title() (string, bool) {
-   return i.Label, true
-}
-
-func (i Item) Year() (string, bool) {
-   if i.MediaType == "Movie" {
-      year, _, _ := strings.Cut(i.AirDateIso, "-")
-      return year, true
-   }
-   return "", false
-}
-
 type app_details struct {
    version string
    code int
@@ -186,4 +143,41 @@ func (s SessionToken) RequestUrl() (string, bool) {
 
 func (SessionToken) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
+}
+
+type Item struct {
+   AirDateIso string `json:"_airDateISO"`
+   Label string
+   MediaType string
+   SeriesTitle string
+   // these can be empty string, so we cannot use these:
+   // int `json:",string"`
+   // json.Number
+   EpisodeNum string
+   SeasonNum string
+}
+
+func (i Item) Show() string {
+   return i.SeriesTitle
+}
+
+func (i Item) Season() int {
+   return i.SeasonNum
+}
+
+func (i Item) Episode() int {
+   return i.EpisodeNum
+}
+
+func (i Item) Title() string {
+   return i.Label
+}
+
+func (i Item) Year() int {
+   if v, _, ok := strings.Cut(i.AirDateIso, "-"); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
 }
