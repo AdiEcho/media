@@ -80,8 +80,8 @@ type HomeScreen struct {
             Videos []MediaVideo
          }
       }
-      SeasonNumber string
-      EpisodeNumber string
+      SeasonNumber int `json:",string"`
+      EpisodeNumber int `json:",string"`
    }
 }
 

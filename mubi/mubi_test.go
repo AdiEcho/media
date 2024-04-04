@@ -18,6 +18,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
+   var auth Authenticate
+   auth.Data, err = os.ReadFile(home + "/hulu.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   auth.Unmarshal()
    private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
    if err != nil {
       t.Fatal(err)
@@ -26,21 +32,14 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var protect widevine.PSSH
-   protect.Key_ID, err = hex.DecodeString(default_kid)
+   key_id, err := hex.DecodeString(default_kid)
    if err != nil {
       t.Fatal(err)
    }
-   module, err := protect.CDM(private_key, client_id)
-   if err != nil {
+   var module widevine.CDM
+   if err := module.New(private_key, client_id, key_id); err != nil {
       t.Fatal(err)
    }
-   var auth Authenticate
-   auth.Data, err = os.ReadFile("authenticate.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth.Unmarshal()
    license, err := module.License(auth)
    if err != nil {
       t.Fatal(err)

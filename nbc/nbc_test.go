@@ -9,6 +9,37 @@ import (
    "time"
 )
 
+const raw_key_id = "0552e44842654a4e81b326004be47be0"
+
+func TestLicense(t *testing.T) {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   if err != nil {
+      t.Fatal(err)
+   }
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
+   if err != nil {
+      t.Fatal(err)
+   }
+   key_id, err := hex.DecodeString(raw_key_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   var module widevine.CDM
+   if err := module.New(private_key, client_id, key_id); err != nil {
+      t.Fatal(err)
+   }
+   license, err := module.License(Core())
+   if err != nil {
+      t.Fatal(err)
+   }
+   key, ok := module.Key(license)
+   fmt.Printf("%x %v\n", key, ok)
+}
+
 func TestVideo(t *testing.T) {
    v, ok := Core().RequestUrl()
    fmt.Println(v, ok)
@@ -28,41 +59,4 @@ func TestOnDemand(t *testing.T) {
       fmt.Printf("%+v\n", video)
       time.Sleep(time.Second)
    }
-}
-
-const raw_pssh = "AAAAV3Bzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADcIARIQBVLkSEJlSk6BsyYAS+R74BoLYnV5ZHJta2V5b3MiEAVS5EhCZUpOgbMmAEvke+AqAkhE"
-
-func TestLicense(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
-   if err != nil {
-      t.Fatal(err)
-   }
-   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var protect widevine.PSSH
-   {
-      b, err := base64.StdEncoding.DecodeString(raw_pssh)
-      if err != nil {
-         t.Fatal(err)
-      }
-      if err := protect.New(b); err != nil {
-         t.Fatal(err)
-      }
-   }
-   module, err := protect.CDM(private_key, client_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   license, err := module.License(Core())
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, ok := module.Key(license)
-   fmt.Printf("%x %v\n", key, ok)
 }

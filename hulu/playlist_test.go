@@ -9,11 +9,11 @@ import (
 )
 
 func TestLicense(t *testing.T) {
-   var (
-      protect widevine.PSSH
-      err error
-   )
-   protect.Key_ID, err = hex.DecodeString(default_kid)
+   auth, err := new_auth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   play, err := auth.Playlist(test_deep)
    if err != nil {
       t.Fatal(err)
    }
@@ -29,16 +29,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   module, err := protect.CDM(private_key, client_id)
+   key_id, err := hex.DecodeString(default_kid)
    if err != nil {
       t.Fatal(err)
    }
-   auth, err := new_auth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   play, err := auth.Playlist(test_deep)
-   if err != nil {
+   var module widevine.CDM
+   if err := module.New(private_key, client_id, key_id); err != nil {
       t.Fatal(err)
    }
    license, err := module.License(play)

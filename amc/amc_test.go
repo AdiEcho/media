@@ -8,37 +8,9 @@ import (
    "testing"
 )
 
-func TestPath(t *testing.T) {
-   for _, test := range path_tests {
-      var web WebAddress
-      err := web.Set(test)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(web)
-   }
-}
-
 func TestKey(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
-   if err != nil {
-      t.Fatal(err)
-   }
-   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
-   if err != nil {
-      t.Fatal(err)
-   }
    test := tests["show"]
-   var protect widevine.PSSH
-   protect.Key_ID, err = hex.DecodeString(test.key_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   module, err := protect.CDM(private_key, client_id)
+   home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
@@ -52,6 +24,22 @@ func TestKey(t *testing.T) {
    web.Set(test.url)
    play, err := auth.Playback(web.NID)
    if err != nil {
+      t.Fatal(err)
+   }
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   if err != nil {
+      t.Fatal(err)
+   }
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
+   if err != nil {
+      t.Fatal(err)
+   }
+   key_id, err := hex.DecodeString(test.key_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   var module widevine.CDM
+   if err := module.New(private_key, client_id, key_id); err != nil {
       t.Fatal(err)
    }
    license, err := module.License(play)
@@ -108,5 +96,16 @@ func TestRefresh(t *testing.T) {
    auth.Unmarshal()
    auth.Refresh()
    os.WriteFile(home + "/amc/auth.json", auth.Data, 0666)
+}
+
+func TestPath(t *testing.T) {
+   for _, test := range path_tests {
+      var web WebAddress
+      err := web.Set(test)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(web)
+   }
 }
 

@@ -21,7 +21,7 @@ func TestSecure(t *testing.T) {
    }
    auth.Unmarshal()
    var film FilmResponse
-   film.v.ID = passages_2022
+   film.V.ID = passages_2022
    secure, err := auth.URL(&film)
    if err != nil {
       t.Fatal(err)
