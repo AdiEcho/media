@@ -51,6 +51,10 @@ func (h HomeScreen) DASH() (*MediaVideo, bool) {
    return nil, false
 }
 
+func (h HomeScreen) Show() string {
+   return h.V.Series.Title
+}
+
 // we have to embed to prevent clobbering Namer.Title
 type HomeScreen struct {
    V struct {
@@ -67,10 +71,6 @@ type HomeScreen struct {
       SeasonNumber string
       EpisodeNumber string
    }
-}
-
-func (h HomeScreen) Show() string {
-   return h.V.Series.Title
 }
 
 func (h HomeScreen) Season() int {
