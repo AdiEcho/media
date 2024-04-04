@@ -34,8 +34,8 @@ func (Authenticate) ResponseBody(b []byte) ([]byte, error) {
 func (a Authenticate) RequestHeader() (http.Header, error) {
    value := map[string]any{
       "merchant": "mubi",
-      "sessionId": a.v.Token,
-      "userId": a.v.User.ID,
+      "sessionId": a.V.Token,
+      "userId": a.V.User.ID,
    }
    text, err := json.Marshal(value)
    if err != nil {
@@ -48,7 +48,7 @@ func (a Authenticate) RequestHeader() (http.Header, error) {
 
 type Authenticate struct {
    Data []byte
-   v struct {
+   V struct {
       Token string
       User struct {
          ID int
@@ -81,7 +81,7 @@ type WebAddress struct {
 func (a Authenticate) Viewing(f *FilmResponse) error {
    address := func() string {
       b := []byte("https://api.mubi.com/v3/films/")
-      b = strconv.AppendInt(b, f.v.ID, 10)
+      b = strconv.AppendInt(b, f.V.ID, 10)
       b = append(b, "/viewing"...)
       return string(b)
    }
@@ -90,7 +90,7 @@ func (a Authenticate) Viewing(f *FilmResponse) error {
       return err
    }
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.v.Token},
+      "Authorization": {"Bearer " + a.V.Token},
       "Client": {client},
       "Client-Country": {ClientCountry},
    }
@@ -108,7 +108,7 @@ func (a Authenticate) Viewing(f *FilmResponse) error {
 }
 
 func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Data, &a.v)
+   return json.Unmarshal(a.Data, &a.V)
 }
 
 func (w WebAddress) Film() (*FilmResponse, error) {
@@ -128,46 +128,14 @@ func (w WebAddress) Film() (*FilmResponse, error) {
    }
    defer res.Body.Close()
    var film FilmResponse
-   if err := json.NewDecoder(res.Body).Decode(&film.v); err != nil {
+   if err := json.NewDecoder(res.Body).Decode(&film.V); err != nil {
       return nil, err
    }
    return &film, nil
 }
 
-type FilmResponse struct {
-   v struct {
-      ID int64
-      Title string
-      Year int
-   }
-}
-
-func (FilmResponse) Owner() (string, bool) {
-   return "", false
-}
-
-func (FilmResponse) Show() (string, bool) {
-   return "", false
-}
-
-func (FilmResponse) Season() (string, bool) {
-   return "", false
-}
-
-func (FilmResponse) Episode() (string, bool) {
-   return "", false
-}
-
-func (f FilmResponse) Title() (string, bool) {
-   return f.v.Title, true
-}
-
-func (f FilmResponse) Year() (string, bool) {
-   return strconv.Itoa(f.v.Year), true
-}
-
 func (c LinkCode) Authenticate() (*Authenticate, error) {
-   body, err := json.Marshal(map[string]string{"auth_token": c.v.Auth_Token})
+   body, err := json.Marshal(map[string]string{"auth_token": c.V.Auth_Token})
    if err != nil {
       return nil, err
    }
@@ -239,19 +207,46 @@ func (c LinkCode) String() string {
    b.WriteString("Go to\n")
    b.WriteString("mubi.com/android\n")
    b.WriteString("and enter the code below\n")
-   b.WriteString(c.v.Link_Code)
+   b.WriteString(c.V.Link_Code)
    return b.String()
 }
 
 type LinkCode struct {
    Data []byte
-   v struct {
+   V struct {
       Auth_Token string
       Link_Code string
    }
 }
 
 func (c *LinkCode) Unmarshal() error {
-   return json.Unmarshal(c.Data, &c.v)
+   return json.Unmarshal(c.Data, &c.V)
 }
 
+func (FilmResponse) Show() string {
+   return ""
+}
+
+func (FilmResponse) Season() int {
+   return 0
+}
+
+func (FilmResponse) Episode() int {
+   return 0
+}
+
+func (f FilmResponse) Title() string {
+   return f.V.Title
+}
+
+type FilmResponse struct {
+   V struct {
+      ID int64
+      Title string
+      Year int
+   }
+}
+
+func (f FilmResponse) Year() int {
+   return f.V.Year
+}
