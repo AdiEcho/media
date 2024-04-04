@@ -3,7 +3,7 @@ package paramount
 import (
    "154.pages.dev/encoding"
    "154.pages.dev/widevine"
-   "encoding/base64"
+   "encoding/hex"
    "fmt"
    "os"
    "path"
@@ -11,23 +11,16 @@ import (
    "time"
 )
 
-func TestItem(t *testing.T) {
-   var at AppToken
-   err := at.New()
+func TestWidevine(t *testing.T) {
+   test := tests["episode"]
+   var token AppToken
+   if err := token.New(); err != nil {
+      t.Fatal(err)
+   }
+   session, err := token.Session(path.Base(test.url))
    if err != nil {
       t.Fatal(err)
    }
-   for _, test := range tests {
-      item, err := at.Item(path.Base(test.url))
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(encoding.Name(<-item))
-      time.Sleep(time.Second)
-   }
-}
-
-func TestWidevine(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -40,27 +33,12 @@ func TestWidevine(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   test := tests["episode"]
-   var protect widevine.PSSH
-   {
-      b, err := base64.StdEncoding.DecodeString(test.pssh)
-      if err != nil {
-         t.Fatal(err)
-      }
-      if err := protect.New(b); err != nil {
-         t.Fatal(err)
-      }
-   }
-   module, err := protect.CDM(private_key, client_id)
+   key_id, err := hex.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
-   var at AppToken
-   if err := at.New(); err != nil {
-      t.Fatal(err)
-   }
-   session, err := at.Session(path.Base(test.url))
-   if err != nil {
+   var module widevine.CDM
+   if err := module.New(private_key, client_id, key_id); err != nil {
       t.Fatal(err)
    }
    license, err := module.License(session)
@@ -69,4 +47,20 @@ func TestWidevine(t *testing.T) {
    }
    key, ok := module.Key(license)
    fmt.Printf("%x %v\n", key, ok)
+}
+
+func TestItem(t *testing.T) {
+   var token AppToken
+   err := token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      item, err := token.Item(path.Base(test.url))
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(encoding.Name(<-item))
+      time.Sleep(time.Second)
+   }
 }

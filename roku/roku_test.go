@@ -9,23 +9,11 @@ import (
    "time"
 )
 
-func TestPlayback(t *testing.T) {
+func TestLicense(t *testing.T) {
    var site CrossSite
-   err := site.New()
-   if err != nil {
+   if err := site.New(); err != nil {
       t.Fatal(err)
    }
-   for _, test := range tests {
-      play, err := site.Playback(test.playback_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(play)
-      time.Sleep(time.Second)
-   }
-}
-
-func TestPost(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -36,10 +24,6 @@ func TestPost(t *testing.T) {
    }
    client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
    if err != nil {
-      t.Fatal(err)
-   }
-   var site CrossSite
-   if err := site.New(); err != nil {
       t.Fatal(err)
    }
    for _, test := range tests {
@@ -67,5 +51,21 @@ func TestPost(t *testing.T) {
       }
       key, ok := module.Key(license)
       fmt.Println(key, ok)
+   }
+}
+
+func TestPlayback(t *testing.T) {
+   var site CrossSite
+   err := site.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      play, err := site.Playback(test.playback_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(play)
+      time.Sleep(time.Second)
    }
 }

@@ -10,12 +10,12 @@ import (
 
 var tests = map[string]struct{
    asset func(string)(string,error)
-   pssh string
+   key_id string
    url string
 }{
    "episode": {
       asset: DashCenc,
-      pssh: "AAAAWHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAADgIARIQD3gqa9LyRm65UzN2yiD/XyIgcm4xenlpclZPUGpDbDhyeG9wV3JoVW1KRUlzM0djS1c4AQ==",
+      key_id: "0f782a6bd2f2466eb9533376ca20ff5f",
       url: "paramountplus.com/shows/video/rn1zyirVOPjCl8rxopWrhUmJEIs3GcKW",
    },
    "movie": {

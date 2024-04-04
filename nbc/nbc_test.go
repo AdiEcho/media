@@ -2,7 +2,7 @@ package nbc
 
 import (
    "154.pages.dev/widevine"
-   "encoding/base64"
+   "encoding/hex"
    "fmt"
    "os"
    "testing"
