@@ -3,34 +3,9 @@ package internal
 import (
    "154.pages.dev/encoding/dash"
    "154.pages.dev/sofia"
-   "encoding/base64"
-   "errors"
    "io"
-   "log/slog"
    "net/http"
 )
-
-func write_sidx(base_url string, bytes dash.Range) ([]sofia.Range, error) {
-   req, err := http.NewRequest("GET", base_url, nil)
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("Range", "bytes=" + string(bytes))
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   var file sofia.File
-   if err := file.Read(res.Body); err != nil {
-      return nil, err
-   }
-   _, end, err := bytes.Scan()
-   if err != nil {
-      return nil, err
-   }
-   return file.SegmentIndex.Ranges(end + 1), nil
-}
 
 func write_init(w io.Writer, r io.Reader) ([]byte, error) {
    var file sofia.File
@@ -59,12 +34,41 @@ func write_init(w io.Writer, r io.Reader) ([]byte, error) {
    if err := file.Write(w); err != nil {
       return nil, err
    }
-   pssh, ok := file.Movie.Widevine()
-   if !ok {
-      return nil, errors.New("sofia.Movie.Widevine")
+   key_id := file.
+      Movie.
+      Track.
+      Media.
+      MediaInformation.
+      SampleTable.
+      SampleDescription.
+      VisualSample.
+      ProtectionScheme.
+      SchemeInformation.
+      TrackEncryption.
+      DefaultKid
+   return key_id[:], nil
+}
+
+func write_sidx(base_url string, bytes dash.Range) ([]sofia.Range, error) {
+   req, err := http.NewRequest("GET", base_url, nil)
+   if err != nil {
+      return nil, err
    }
-   slog.Debug("Widevine", "PSSH", base64.StdEncoding.EncodeToString(pssh))
-   return pssh, nil
+   req.Header.Set("Range", "bytes=" + string(bytes))
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   var file sofia.File
+   if err := file.Read(res.Body); err != nil {
+      return nil, err
+   }
+   _, end, err := bytes.Scan()
+   if err != nil {
+      return nil, err
+   }
+   return file.SegmentIndex.Ranges(end + 1), nil
 }
 
 func write_segment(w io.Writer, r io.Reader, key []byte) error {

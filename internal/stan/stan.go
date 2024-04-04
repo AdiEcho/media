@@ -14,11 +14,14 @@ func (f flags) write_code() error {
    }
    code.Unmarshal()
    fmt.Println(code)
-   os.WriteFile("code.json", code.Data, 0666)
+   return os.WriteFile("code.json", code.Data, 0666)
 }
 
 func (f flags) write_token() error {
-   var code stan.ActivationCode
+   var (
+      code stan.ActivationCode
+      err error
+   )
    code.Data, err = os.ReadFile("code.json")
    if err != nil {
       return err
@@ -28,57 +31,49 @@ func (f flags) write_token() error {
    if err != nil {
       return err
    }
-   os.WriteFile(home + "/stan.json", token.Data, 0666)
+   return os.WriteFile(f.home + "/stan.json", token.Data, 0666)
 }
 
 func (f flags) download() error {
-   var token stan.WebToken
+   var (
+      token stan.WebToken
+      err error
+   )
    token.Data, err = os.ReadFile(f.home + "/stan.json")
    if err != nil {
       return err
    }
-   
-   token.unmarshal()
+   token.Unmarshal()
    session, err := token.Session()
-   if err != nil {
-      t.Fatal(err)
-   }
-   stream, err := session.Stream(program_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   // OLD
-   var (
-      secure stan.SecureUrl
-      err error
-   )
-   secure.Data, err = os.ReadFile(f.web.String() + ".json")
    if err != nil {
       return err
    }
-   secure.Unmarshal()
-   // 2 MPD one
-   media, err := f.h.DashMedia(secure.V.URL)
+   stream, err := session.Stream(f.program)
+   if err != nil {
+      return err
+   }
+   video, err := stream.StanVideo()
+   if err != nil {
+      return err
+   }
+   // 1 MPD one
+   media, err := f.h.DashMedia(video.String())
    if err != nil {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.media_id {
-         f.h.Name, err = f.web.Film()
+      if medium.ID == f.representation {
+         var program stan.LegacyProgram
+         err := program.New(f.program)
          if err != nil {
             return err
          }
-         var auth stan.Authenticate
-         auth.Data, err = os.ReadFile(f.home + "/stan.json")
-         if err != nil {
-            return err
-         }
-         auth.Unmarshal()
-         f.h.Poster = auth
+         f.h.Name = program
+         f.h.Poster = stream
          return f.h.DASH(medium)
       }
    }
-   // 4 MPD all
+   // 2 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()

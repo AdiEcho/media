@@ -7,17 +7,7 @@ import (
    "strconv"
 )
 
-type ProgramStream struct {
-   Media struct {
-      DRM *struct {
-         CustomData string
-         KeyId string
-      }
-      VideoUrl string
-   }
-}
-
-func (a AppSession) Stream(id int) (*ProgramStream, error) {
+func (a AppSession) Stream(id int64) (*ProgramStream, error) {
    req, err := http.NewRequest(
       "GET", "https://api.stan.com.au/concurrency/v1/streams", nil,
    )
@@ -29,7 +19,7 @@ func (a AppSession) Stream(id int) (*ProgramStream, error) {
       "drm": {"widevine"}, // need for .Media.DRM
       "format": {"dash"}, // 404 otherwise
       "jwToken": {a.JwToken},
-      "programId": {strconv.Itoa(id)},
+      "programId": {strconv.FormatInt(id, 10)},
       "quality": {"auto"}, // note `high` or `ultra` should work too
    }.Encode()
    res, err := http.DefaultClient.Do(req)
@@ -78,4 +68,13 @@ func (p ProgramStream) StanVideo() (*url.URL, error) {
    }
    video.Host = "gec.stan.video"
    return video, nil
+}
+type ProgramStream struct {
+   Media struct {
+      DRM *struct {
+         CustomData string
+         KeyId string
+      }
+      VideoUrl string
+   }
 }

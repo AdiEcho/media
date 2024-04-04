@@ -8,6 +8,38 @@ import (
    "strings"
 )
 
+type HomeScreen struct {
+   V struct {
+      Series *struct {
+         Title string
+      }
+      Title string
+      ReleaseDate string // 2007-01-01T000000Z
+      ViewOptions []struct {
+         Media struct {
+            Videos []MediaVideo
+         }
+      }
+      SeasonNumber int `json:",string"`
+      EpisodeNumber int `json:",string"`
+   }
+}
+
+func (h HomeScreen) DASH() (*MediaVideo, bool) {
+   for _, option := range h.V.ViewOptions {
+      for _, video := range option.Media.Videos {
+         if video.VideoType == "DASH" {
+            return &video, true
+         }
+      }
+   }
+   return nil, false
+}
+
+func (h HomeScreen) Episode() int {
+   return h.V.EpisodeNumber
+}
+
 // this has got to be the stupidest fucking URL construction I have ever seen,
 // but its what the server requires
 func (h *HomeScreen) New(id string) error {
@@ -40,15 +72,8 @@ func (h *HomeScreen) New(id string) error {
    return json.NewDecoder(res.Body).Decode(&h.V)
 }
 
-func (h HomeScreen) DASH() (*MediaVideo, bool) {
-   for _, option := range h.V.ViewOptions {
-      for _, video := range option.Media.Videos {
-         if video.VideoType == "DASH" {
-            return &video, true
-         }
-      }
-   }
-   return nil, false
+func (h HomeScreen) Season() int {
+   return h.V.SeasonNumber
 }
 
 func (h HomeScreen) Show() string {
@@ -66,29 +91,4 @@ func (h HomeScreen) Year() int {
       }
    }
    return 0
-}
-
-type HomeScreen struct {
-   V struct {
-      Series *struct {
-         Title string
-      }
-      Title string
-      ReleaseDate string // 2007-01-01T000000Z
-      ViewOptions []struct {
-         Media struct {
-            Videos []MediaVideo
-         }
-      }
-      SeasonNumber int `json:",string"`
-      EpisodeNumber int `json:",string"`
-   }
-}
-
-func (h HomeScreen) Season() int {
-   return h.V.SeasonNumber
-}
-
-func (h HomeScreen) Episode() int {
-   return h.V.EpisodeNumber
 }

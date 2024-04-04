@@ -10,7 +10,7 @@ import (
    "strings"
 )
 
-func (p *legacy_program) New(id int64) error {
+func (p *LegacyProgram) New(id int64) error {
    address := func() string {
       b := []byte("https://api.stan.com.au/programs/v1/legacy/programs/")
       b = strconv.AppendInt(b, id, 10)
@@ -22,11 +22,11 @@ func (p *legacy_program) New(id int64) error {
       return err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(&p.v)
+   return json.NewDecoder(res.Body).Decode(&p.V)
 }
 
-type legacy_program struct {
-   v struct {
+type LegacyProgram struct {
+   V struct {
       ReleaseYear int
       SeriesTitle string
       Title string
@@ -35,25 +35,26 @@ type legacy_program struct {
    }
 }
 
-func (p legacy_program) Episode() int {
-   return p.v.TvSeasonEpisodeNumber
+func (p LegacyProgram) Episode() int {
+   return p.V.TvSeasonEpisodeNumber
 }
 
-func (p legacy_program) Show() string {
-   return p.v.SeriesTitle
+func (p LegacyProgram) Show() string {
+   return p.V.SeriesTitle
 }
 
-func (p legacy_program) Season() int {
-   return p.v.TvSeasonNumber
+func (p LegacyProgram) Season() int {
+   return p.V.TvSeasonNumber
 }
 
-func (p legacy_program) Title() string {
-   return p.v.Title
+func (p LegacyProgram) Title() string {
+   return p.V.Title
 }
 
-func (p legacy_program) Year() int {
-   return p.v.ReleaseYear
+func (p LegacyProgram) Year() int {
+   return p.V.ReleaseYear
 }
+
 type ActivationCode struct {
    Data []byte
    V struct {
@@ -146,6 +147,6 @@ func (w WebToken) Session() (*AppSession, error) {
    return session, nil
 }
 
-func (w *WebToken) unmarshal() error {
+func (w *WebToken) Unmarshal() error {
    return json.Unmarshal(w.Data, &w.V)
 }

@@ -54,11 +54,11 @@ func (h HttpStream) segment_template(
       return err
    }
    defer file.Close()
-   pssh, err := write_init(file, res.Body)
+   key_id, err := write_init(file, res.Body)
    if err != nil {
       return err
    }
-   key, err := h.key(pssh)
+   key, err := h.key(key_id)
    if err != nil {
       return err
    }
@@ -168,11 +168,11 @@ func (h HttpStream) segment_base(
       return err
    }
    defer file.Close()
-   pssh, err := write_init(file, res.Body)
+   key_id, err := write_init(file, res.Body)
    if err != nil {
       return err
    }
-   key, err := h.key(pssh)
+   key, err := h.key(key_id)
    if err != nil {
       return err
    }

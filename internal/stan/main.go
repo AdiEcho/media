@@ -3,7 +3,6 @@ package main
 import (
    "154.pages.dev/log"
    "154.pages.dev/media/internal"
-   "154.pages.dev/media/stan"
    "flag"
    "os"
    "path/filepath"
@@ -26,7 +25,7 @@ type flags struct {
    home string
    representation string
    v log.Level
-   program int
+   program int64
    code bool
    token bool
 }
@@ -37,8 +36,8 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.IntVar(&f.program, "b", 0, "program ID")
-   flag.StringVar(&f.representation, "r", "", "representation")
+   flag.Int64Var(&f.program, "b", 0, "program ID")
+   flag.StringVar(&f.representation, "i", "", "representation ID")
    flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
    flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")

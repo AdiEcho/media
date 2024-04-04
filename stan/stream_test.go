@@ -24,7 +24,7 @@ func TestStream(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   token.unmarshal()
+   token.Unmarshal()
    session, err := token.Session()
    if err != nil {
       t.Fatal(err)
