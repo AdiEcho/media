@@ -17,11 +17,11 @@ func (h HttpStream) TimedText(url string) error {
       return err
    }
    defer res.Body.Close()
-   name, err := encoding.Name(encoding.Format, h.Name)
+   name, err := encoding.Name(h.Name)
    if err != nil {
       return err
    }
-   file, err := os.Create(name + ".vtt")
+   file, err := os.Create(encoding.Clean(name) + ".vtt")
    if err != nil {
       return err
    }
@@ -32,65 +32,6 @@ func (h HttpStream) TimedText(url string) error {
    return nil
 }
 
-func (h HttpStream) segment_base(
-   ext, base_url string, rep dash.Representation,
-) error {
-   sb := rep.SegmentBase
-   // Initialization
-   req, err := http.NewRequest("GET", base_url, nil)
-   if err != nil {
-      return err
-   }
-   req.Header.Set("Range", "bytes=" + string(sb.Initialization.Range))
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   file, err := os.Create(encoding.Name(h.Name) + ext)
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   pssh, err := write_init(file, res.Body)
-   if err != nil {
-      return err
-   }
-   key, err := h.key(pssh)
-   if err != nil {
-      return err
-   }
-   byte_ranges, err := write_sidx(base_url, sb.IndexRange)
-   if err != nil {
-      return err
-   }
-   var meter log.ProgressMeter
-   meter.Set(len(byte_ranges))
-   log.SetTransport(nil)
-   defer log.Transport{}.Set()
-   for _, r := range byte_ranges {
-      err := func() error {
-         req, err := http.NewRequest("GET", base_url, nil)
-         if err != nil {
-            return err
-         }
-         req.Header.Set("Range", r.String())
-         res, err := http.DefaultClient.Do(req)
-         if err != nil {
-            return err
-         }
-         defer res.Body.Close()
-         if res.StatusCode != http.StatusPartialContent {
-            return errors.New(res.Status)
-         }
-         return write_segment(file, meter.Reader(res), key)
-      }()
-      if err != nil {
-         return err
-      }
-   }
-   return nil
-}
 func (h HttpStream) segment_template(
    ext, initial string, rep dash.Representation,
 ) error {
@@ -104,11 +45,11 @@ func (h HttpStream) segment_template(
       return err
    }
    defer res.Body.Close()
-   name, err := encoding.Name(encoding.Format, h.Name)
+   name, err := encoding.Name(h.Name)
    if err != nil {
       return err
    }
-   file, err := os.Create(name + ext)
+   file, err := os.Create(encoding.Clean(name) + ext)
    if err != nil {
       return err
    }
@@ -201,5 +142,69 @@ func (h *HttpStream) DashMedia(url string) ([]dash.Representation, error) {
       return int(a.Bandwidth - b.Bandwidth)
    })
    return reps, nil
+}
+
+func (h HttpStream) segment_base(
+   ext, base_url string, rep dash.Representation,
+) error {
+   sb := rep.SegmentBase
+   // Initialization
+   req, err := http.NewRequest("GET", base_url, nil)
+   if err != nil {
+      return err
+   }
+   req.Header.Set("Range", "bytes=" + string(sb.Initialization.Range))
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   name, err := encoding.Name(h.Name)
+   if err != nil {
+      return err
+   }
+   file, err := os.Create(encoding.Clean(name) + ext)
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   pssh, err := write_init(file, res.Body)
+   if err != nil {
+      return err
+   }
+   key, err := h.key(pssh)
+   if err != nil {
+      return err
+   }
+   byte_ranges, err := write_sidx(base_url, sb.IndexRange)
+   if err != nil {
+      return err
+   }
+   var meter log.ProgressMeter
+   meter.Set(len(byte_ranges))
+   log.SetTransport(nil)
+   defer log.Transport{}.Set()
+   for _, r := range byte_ranges {
+      err := func() error {
+         req, err := http.NewRequest("GET", base_url, nil)
+         if err != nil {
+            return err
+         }
+         req.Header.Set("Range", r.String())
+         res, err := http.DefaultClient.Do(req)
+         if err != nil {
+            return err
+         }
+         defer res.Body.Close()
+         if res.StatusCode != http.StatusPartialContent {
+            return errors.New(res.Status)
+         }
+         return write_segment(file, meter.Reader(res), key)
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
 }
 

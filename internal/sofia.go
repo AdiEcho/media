@@ -10,12 +10,12 @@ import (
    "net/http"
 )
 
-func write_sidx(base_url string, raw dash.Range) ([]sofia.Range, error) {
+func write_sidx(base_url string, bytes dash.Range) ([]sofia.Range, error) {
    req, err := http.NewRequest("GET", base_url, nil)
    if err != nil {
       return nil, err
    }
-   req.Header.Set("Range", "bytes=" + string(raw))
+   req.Header.Set("Range", "bytes=" + string(bytes))
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -25,11 +25,11 @@ func write_sidx(base_url string, raw dash.Range) ([]sofia.Range, error) {
    if err := file.Read(res.Body); err != nil {
       return nil, err
    }
-   index, err := raw.Scan()
+   _, end, err := bytes.Scan()
    if err != nil {
       return nil, err
    }
-   return file.SegmentIndex.Ranges(index.End+1), nil
+   return file.SegmentIndex.Ranges(end + 1), nil
 }
 
 func write_init(w io.Writer, r io.Reader) ([]byte, error) {
