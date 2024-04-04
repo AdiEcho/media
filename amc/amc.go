@@ -223,6 +223,7 @@ func (a *Authorization) Refresh() error {
    }
    return nil
 }
+
 func cache_hash() string {
    return base64.StdEncoding.EncodeToString([]byte("ff="))
 }
@@ -302,4 +303,3 @@ type Authorization struct {
       }
    }
 }
-

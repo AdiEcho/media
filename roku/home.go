@@ -55,7 +55,19 @@ func (h HomeScreen) Show() string {
    return h.V.Series.Title
 }
 
-// we have to embed to prevent clobbering Namer.Title
+func (h HomeScreen) Title() string {
+   return h.V.Title
+}
+
+func (h HomeScreen) Year() int {
+   if v, _, ok := strings.Cut(h.V.ReleaseDate, "-"); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
+}
+
 type HomeScreen struct {
    V struct {
       Series *struct {
@@ -79,17 +91,4 @@ func (h HomeScreen) Season() int {
 
 func (h HomeScreen) Episode() int {
    return h.V.EpisodeNumber
-}
-
-func (h HomeScreen) Title() string {
-   return h.V.Title
-}
-
-func (h HomeScreen) Year() int {
-   if v, _, ok := strings.Cut(h.V.ReleaseDate, "-"); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
 }

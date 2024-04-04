@@ -9,54 +9,6 @@ import (
    "strings"
 )
 
-type Metadata struct {
-   AirDate string
-   EpisodeNumber string
-   MpxAccountId int64 `json:",string"`
-   MpxGuid int64 `json:",string"`
-   ProgrammingType string
-   SeasonNumber string
-   SecondaryTitle string
-   SeriesShortTitle string
-}
-
-func (Metadata) Owner() (string, bool) {
-   return "", false
-}
-
-func (m Metadata) Title() (string, bool) {
-   return m.SecondaryTitle, true
-}
-
-func (m Metadata) Season() (string, bool) {
-   if v := m.SeasonNumber; v != "" {
-      return v, true
-   }
-   return "", false
-}
-
-func (m Metadata) Episode() (string, bool) {
-   if v := m.EpisodeNumber; v != "" {
-      return v, true
-   }
-   return "", false
-}
-
-func (m Metadata) Show() (string, bool) {
-   if v := m.SeriesShortTitle; v != "" {
-      return v, true
-   }
-   return "", false
-}
-
-func (m Metadata) Year() (string, bool) {
-   if m.SeriesShortTitle != "" {
-      return "", false
-   }
-   year, _, _ := strings.Cut(m.AirDate, "-")
-   return year, true
-}
-
 func (m *Metadata) New(guid int) error {
    body, err := func() ([]byte, error) {
       var p page_request
@@ -97,4 +49,40 @@ func (m *Metadata) New(guid int) error {
    }
    *m = s.Data.BonanzaPage.Metadata
    return nil
+}
+
+type Metadata struct {
+   AirDate string
+   EpisodeNumber int `json:",string"`
+   MpxAccountId int64 `json:",string"`
+   MpxGuid int64 `json:",string"`
+   ProgrammingType string
+   SeasonNumber int `json:",string"`
+   SecondaryTitle string
+   SeriesShortTitle string
+}
+
+func (m Metadata) Show() string {
+   return m.SeriesShortTitle
+}
+
+func (m Metadata) Season() int {
+   return m.SeasonNumber
+}
+
+func (m Metadata) Episode() int {
+   return m.EpisodeNumber
+}
+
+func (m Metadata) Title() string {
+   return m.SecondaryTitle
+}
+
+func (m Metadata) Year() int {
+   if v, _, ok := strings.Cut(m.AirDate, "-"); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
 }

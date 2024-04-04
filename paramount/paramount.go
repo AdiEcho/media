@@ -145,28 +145,8 @@ func (SessionToken) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-type Item struct {
-   AirDateIso string `json:"_airDateISO"`
-   Label string
-   MediaType string
-   SeriesTitle string
-   // these can be empty string, so we cannot use these:
-   // int `json:",string"`
-   // json.Number
-   EpisodeNum string
-   SeasonNum string
-}
-
 func (i Item) Show() string {
    return i.SeriesTitle
-}
-
-func (i Item) Season() int {
-   return i.SeasonNum
-}
-
-func (i Item) Episode() int {
-   return i.EpisodeNum
 }
 
 func (i Item) Title() string {
@@ -178,6 +158,32 @@ func (i Item) Year() int {
       if v, err := strconv.Atoi(v); err == nil {
          return v
       }
+   }
+   return 0
+}
+
+type Item struct {
+   AirDateIso string `json:"_airDateISO"`
+   Label string
+   MediaType string
+   SeriesTitle string
+   // these can be empty string, so we cannot use these:
+   // int `json:",string"`
+   // json.Number
+   SeasonNum string
+   EpisodeNum string
+}
+
+func (i Item) Season() int {
+   if v, err := strconv.Atoi(i.SeasonNum); err == nil {
+      return v
+   }
+   return 0
+}
+
+func (i Item) Episode() int {
+   if v, err := strconv.Atoi(i.EpisodeNum); err == nil {
+      return v
    }
    return 0
 }
