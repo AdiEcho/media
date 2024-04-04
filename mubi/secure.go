@@ -36,7 +36,7 @@ func (s *SecureUrl) Unmarshal() error {
 func (a Authenticate) URL(f *FilmResponse) (*SecureUrl, error) {
    address := func() string {
       b := []byte("https://api.mubi.com/v3/films/")
-      b = strconv.AppendInt(b, f.v.ID, 10)
+      b = strconv.AppendInt(b, f.V.ID, 10)
       b = append(b, "/viewing/secure_url"...)
       return string(b)
    }
@@ -45,7 +45,7 @@ func (a Authenticate) URL(f *FilmResponse) (*SecureUrl, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.v.Token},
+      "Authorization": {"Bearer " + a.V.Token},
       "Client": {client},
       "Client-Country": {ClientCountry},
    }
