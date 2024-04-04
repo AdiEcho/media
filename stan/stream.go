@@ -24,7 +24,7 @@ func (a app_session) stream(id int) (*program_stream, error) {
    if err != nil {
       return nil, err
    }
-   req.Header["x-forwarded-for"] = []string{"1.128.0.0"}
+   req.Header.Set("x-forwarded-for", "1.128.0.0")
    req.URL.RawQuery = url.Values{
       "drm": {"widevine"}, // need for .Media.DRM
       "format": {"dash"}, // 404 otherwise

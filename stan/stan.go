@@ -9,15 +9,15 @@ import (
    "strings"
 )
 
-type activation_code struct {
-   data []byte
-   v struct {
+type ActivationCode struct {
+   Data []byte
+   V struct {
       Code string
       URL string
    }
 }
 
-func (a *activation_code) New() error {
+func (a *ActivationCode) New() error {
    res, err := http.PostForm(
       "https://api.stan.com.au/login/v1/activation-codes/", url.Values{
          "generate": {"true"},
@@ -27,25 +27,25 @@ func (a *activation_code) New() error {
       return err
    }
    defer res.Body.Close()
-   a.data, err = io.ReadAll(res.Body)
+   a.Data, err = io.ReadAll(res.Body)
    if err != nil {
       return err
    }
    return nil
 }
 
-func (a activation_code) String() string {
+func (a ActivationCode) String() string {
    var b strings.Builder
    b.WriteString("Stan.\n")
    b.WriteString("Log in with code\n")
    b.WriteString("1. Visit stan.com.au/activate\n")
    b.WriteString("2. Enter the code:\n")
-   b.WriteString(a.v.Code)
+   b.WriteString(a.V.Code)
    return b.String()
 }
 
-func (a activation_code) token() (*web_token, error) {
-   res, err := http.Get(a.v.URL)
+func (a ActivationCode) token() (*web_token, error) {
+   res, err := http.Get(a.V.URL)
    if err != nil {
       return nil, err
    }
@@ -56,15 +56,15 @@ func (a activation_code) token() (*web_token, error) {
       return nil, errors.New(b.String())
    }
    var web web_token
-   web.data, err = io.ReadAll(res.Body)
+   web.Data, err = io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
    return &web, nil
 }
 
-func (a *activation_code) unmarshal() error {
-   return json.Unmarshal(a.data, &a.v)
+func (a *ActivationCode) Unmarshal() error {
+   return json.Unmarshal(a.Data, &a.V)
 }
 
 type app_session struct {
@@ -72,8 +72,8 @@ type app_session struct {
 }
 
 type web_token struct {
-   data []byte
-   v struct {
+   Data []byte
+   V struct {
       JwToken string
       ProfileId string
    }
@@ -82,7 +82,7 @@ type web_token struct {
 func (w web_token) session() (*app_session, error) {
    res, err := http.PostForm(
       "https://api.stan.com.au/login/v1/sessions/mobile/app", url.Values{
-         "jwToken": {w.v.JwToken},
+         "jwToken": {w.V.JwToken},
       },
    )
    if err != nil {
@@ -102,5 +102,5 @@ func (w web_token) session() (*app_session, error) {
 }
 
 func (w *web_token) unmarshal() error {
-   return json.Unmarshal(w.data, &w.v)
+   return json.Unmarshal(w.Data, &w.V)
 }

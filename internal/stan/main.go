@@ -9,17 +9,6 @@ import (
    "path/filepath"
 )
 
-type flags struct {
-   media_id string
-   h internal.HttpStream
-   v log.Level
-   web stan.WebAddress
-   code bool
-   auth bool
-   secure bool
-   home string
-}
-
 func (f *flags) New() error {
    var err error
    f.home, err = os.UserHomeDir()
@@ -32,40 +21,44 @@ func (f *flags) New() error {
    return nil
 }
 
+type flags struct {
+   h internal.HttpStream
+   home string
+   representation string
+   v log.Level
+   program int
+   code bool
+   token bool
+}
+
 func main() {
    var f flags
    err := f.New()
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.web, "a", "address")
-   flag.BoolVar(&f.auth, "auth", false, "authenticate")
-   flag.BoolVar(&f.code, "code", false, "link code")
-   flag.StringVar(&f.media_id, "i", "", "media ID")
-   flag.BoolVar(&f.secure, "s", false, "secure URL")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.IntVar(&f.program, "b", 0, "program ID")
+   flag.StringVar(&f.representation, "r", "", "representation")
    flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
    flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.BoolVar(&f.code, "code", false, "activation code")
+   flag.BoolVar(&f.token, "token", false, "web token")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
    switch {
-   case f.auth:
-      err := f.write_auth()
-      if err != nil {
-         panic(err)
-      }
    case f.code:
       err := f.write_code()
       if err != nil {
          panic(err)
       }
-   case f.secure:
-      err := f.write_secure()
+   case f.token:
+      err := f.write_token()
       if err != nil {
          panic(err)
       }
-   case f.web.String() != "":
+   case f.program >= 1:
       err := f.download()
       if err != nil {
          panic(err)
