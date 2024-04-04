@@ -7,24 +7,14 @@ import (
    "os"
 )
 
-func (f flags) authenticate() error {
-   var session peacock.IdSession
-   session.New(f.id_session)
-   text, err := session.Marshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/peacock.json", text, 0666)
-}
-
 func (f flags) download() error {
    text, err := os.ReadFile(f.home + "/peacock.json")
    if err != nil {
       return err
    }
-   var session peacock.IdSession
-   session.Unmarshal(text)
-   auth, err := session.Auth()
+   var sign peacock.SignIn
+   sign.Unmarshal(text)
+   auth, err := sign.Auth()
    if err != nil {
       return err
    }
@@ -60,4 +50,17 @@ func (f flags) download() error {
       fmt.Println(medium)
    }
    return nil
+}
+
+func (f flags) authenticate() error {
+   var sign peacock.SignIn
+   err := sign.New(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   text, err := sign.Marshal()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/peacock.json", text, 0666)
 }

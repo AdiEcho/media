@@ -3,6 +3,7 @@ package main
 import (
    "154.pages.dev/log"
    "154.pages.dev/media/internal"
+   "154.pages.dev/media/stan"
    "flag"
    "os"
    "path/filepath"
@@ -10,12 +11,13 @@ import (
 
 type flags struct {
    media_id string
-   email string
    h internal.HttpStream
-   home string
-   password string
-   peacock_id string
    v log.Level
+   web stan.WebAddress
+   code bool
+   auth bool
+   secure bool
+   home string
 }
 
 func (f *flags) New() error {
@@ -36,23 +38,34 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.StringVar(&f.peacock_id, "b", "", "Peacock ID")
-   flag.StringVar(&f.email, "e", "", "email")
+   flag.Var(&f.web, "a", "address")
+   flag.BoolVar(&f.auth, "auth", false, "authenticate")
+   flag.BoolVar(&f.code, "code", false, "link code")
    flag.StringVar(&f.media_id, "i", "", "media ID")
-   flag.StringVar(&f.password, "p", "", "password")
+   flag.BoolVar(&f.secure, "s", false, "secure URL")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
-   flag.StringVar(&f.h.PrivateKey, "k", f.h.PrivateKey, "private key")
+   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
    switch {
-   case f.password != "":
-      err := f.authenticate()
+   case f.auth:
+      err := f.write_auth()
       if err != nil {
          panic(err)
       }
-   case f.peacock_id != "":
+   case f.code:
+      err := f.write_code()
+      if err != nil {
+         panic(err)
+      }
+   case f.secure:
+      err := f.write_secure()
+      if err != nil {
+         panic(err)
+      }
+   case f.web.String() != "":
       err := f.download()
       if err != nil {
          panic(err)

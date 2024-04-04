@@ -32,5 +32,5 @@ func TestToken(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile(home + "stan.json", token.data, 0666)
+   os.WriteFile(home + "/stan.json", token.data, 0666)
 }
