@@ -6,9 +6,54 @@ import (
    "io"
    "net/http"
    "net/url"
+   "strconv"
    "strings"
 )
 
+func (p *legacy_program) New(id int64) error {
+   address := func() string {
+      b := []byte("https://api.stan.com.au/programs/v1/legacy/programs/")
+      b = strconv.AppendInt(b, id, 10)
+      b = append(b, ".json"...)
+      return string(b)
+   }()
+   res, err := http.Get(address)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   return json.NewDecoder(res.Body).Decode(&p.v)
+}
+
+type legacy_program struct {
+   v struct {
+      ReleaseYear int
+      SeriesTitle string
+      Title string
+      TvSeasonEpisodeNumber int
+      TvSeasonNumber int
+   }
+}
+
+func (p legacy_program) Episode() int {
+   return p.v.TvSeasonEpisodeNumber
+}
+
+func (p legacy_program) Show() string {
+   return p.v.SeriesTitle
+}
+
+func (p legacy_program) Season() int {
+   return p.v.TvSeasonNumber
+}
+
+func (p legacy_program) Title() string {
+   return p.v.Title
+}
+
+func (p legacy_program) Year() int {
+   return p.v.ReleaseYear
+}
 type ActivationCode struct {
    Data []byte
    V struct {
@@ -44,7 +89,7 @@ func (a ActivationCode) String() string {
    return b.String()
 }
 
-func (a ActivationCode) token() (*web_token, error) {
+func (a ActivationCode) Token() (*WebToken, error) {
    res, err := http.Get(a.V.URL)
    if err != nil {
       return nil, err
@@ -55,7 +100,7 @@ func (a ActivationCode) token() (*web_token, error) {
       res.Write(&b)
       return nil, errors.New(b.String())
    }
-   var web web_token
+   var web WebToken
    web.Data, err = io.ReadAll(res.Body)
    if err != nil {
       return nil, err
@@ -67,11 +112,11 @@ func (a *ActivationCode) Unmarshal() error {
    return json.Unmarshal(a.Data, &a.V)
 }
 
-type app_session struct {
+type AppSession struct {
    JwToken string
 }
 
-type web_token struct {
+type WebToken struct {
    Data []byte
    V struct {
       JwToken string
@@ -79,7 +124,7 @@ type web_token struct {
    }
 }
 
-func (w web_token) session() (*app_session, error) {
+func (w WebToken) Session() (*AppSession, error) {
    res, err := http.PostForm(
       "https://api.stan.com.au/login/v1/sessions/mobile/app", url.Values{
          "jwToken": {w.V.JwToken},
@@ -94,13 +139,13 @@ func (w web_token) session() (*app_session, error) {
       res.Write(&b)
       return nil, errors.New(b.String())
    }
-   session := new(app_session)
+   session := new(AppSession)
    if err := json.NewDecoder(res.Body).Decode(session); err != nil {
       return nil, err
    }
    return session, nil
 }
 
-func (w *web_token) unmarshal() error {
+func (w *WebToken) unmarshal() error {
    return json.Unmarshal(w.Data, &w.V)
 }

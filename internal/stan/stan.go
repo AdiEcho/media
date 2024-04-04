@@ -7,34 +7,47 @@ import (
 )
 
 func (f flags) write_code() error {
-   var code activation_code
+   var code stan.ActivationCode
    err := code.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   code.unmarshal()
-   fmt.Println(code)
-   os.WriteFile("code.json", code.data, 0666)
-}
-
-func (f flags) write_auth() error {
-   var (
-      code stan.LinkCode
-      err error
-   )
-   code.Data, err = os.ReadFile("link_code.json")
    if err != nil {
       return err
    }
    code.Unmarshal()
-   auth, err := code.Authenticate()
+   fmt.Println(code)
+   os.WriteFile("code.json", code.Data, 0666)
+}
+
+func (f flags) write_token() error {
+   var code stan.ActivationCode
+   code.Data, err = os.ReadFile("code.json")
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/stan.json", auth.Data, 0666)
+   code.Unmarshal()
+   token, err := code.Token()
+   if err != nil {
+      return err
+   }
+   os.WriteFile(home + "/stan.json", token.Data, 0666)
 }
 
 func (f flags) download() error {
+   var token stan.WebToken
+   token.Data, err = os.ReadFile(f.home + "/stan.json")
+   if err != nil {
+      return err
+   }
+   
+   token.unmarshal()
+   session, err := token.Session()
+   if err != nil {
+      t.Fatal(err)
+   }
+   stream, err := session.Stream(program_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   // OLD
    var (
       secure stan.SecureUrl
       err error
@@ -44,16 +57,6 @@ func (f flags) download() error {
       return err
    }
    secure.Unmarshal()
-   // 1 VTT one
-   for _, text := range secure.V.Text_Track_URLs {
-      if text.ID == f.media_id {
-         f.h.Name, err = f.web.Film()
-         if err != nil {
-            return err
-         }
-         return f.h.TimedText(text.URL)
-      }
-   }
    // 2 MPD one
    media, err := f.h.DashMedia(secure.V.URL)
    if err != nil {
@@ -74,10 +77,6 @@ func (f flags) download() error {
          f.h.Poster = auth
          return f.h.DASH(medium)
       }
-   }
-   // 3 VTT all
-   for _, text := range secure.V.Text_Track_URLs {
-      fmt.Print(text, "\n\n")
    }
    // 4 MPD all
    for i, medium := range media {

@@ -19,17 +19,17 @@ func TestStream(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var token web_token
-   token.data, err = os.ReadFile(home + "/stan.json")
+   var token WebToken
+   token.Data, err = os.ReadFile(home + "/stan.json")
    if err != nil {
       t.Fatal(err)
    }
    token.unmarshal()
-   session, err := token.session()
+   session, err := token.Session()
    if err != nil {
       t.Fatal(err)
    }
-   stream, err := session.stream(program_id)
+   stream, err := session.Stream(program_id)
    if err != nil {
       t.Fatal(err)
    }
