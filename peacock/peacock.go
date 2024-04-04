@@ -186,16 +186,6 @@ const (
 
 var Territory = "US"
 
-type QueryNode struct {
-   Attributes struct {
-      EpisodeNumber int
-      SeasonNumber int
-      SeriesName string
-      Title string
-      Year int
-   }
-}
-
 func (q QueryNode) Show() string {
    return q.Attributes.SeriesName
 }
@@ -210,6 +200,16 @@ func (q QueryNode) Episode() int {
 
 func (q QueryNode) Title() string {
    return q.Attributes.Title
+}
+
+type QueryNode struct {
+   Attributes struct {
+      EpisodeNumber int
+      SeasonNumber int
+      SeriesName string
+      Title string
+      Year int
+   }
 }
 
 func (q QueryNode) Year() int {

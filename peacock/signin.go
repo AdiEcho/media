@@ -5,9 +5,51 @@ import (
    "encoding/json"
    "errors"
    "net/http"
+   "net/url"
+   "strings"
 )
 
-func (i IdSession) Auth() (*AuthToken, error) {
+func (s *SignIn) New(user, password string) error {
+   if user == "" {
+      return errors.New("user")
+   }
+   body := url.Values{
+      "userIdentifier": {user},
+      "password": {password},
+   }.Encode()
+   req, err := http.NewRequest(
+      "POST", "https://rango.id.peacocktv.com/signin/service/international",
+      strings.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   req.Header = http.Header{
+      "Content-Type": {"application/x-www-form-urlencoded"},
+      "X-Skyott-Proposition": {"NBCUOTT"},
+      "X-Skyott-Provider": {"NBCU"},
+      "X-Skyott-Territory": {Territory},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusCreated {
+      var b strings.Builder
+      res.Write(&b)
+      return errors.New(b.String())
+   }
+   for _, cookie := range res.Cookies() {
+      if cookie.Name == "idsession" {
+         s.cookie = cookie
+         return nil
+      }
+   }
+   return http.ErrNoCookie
+}
+
+func (s SignIn) Auth() (*AuthToken, error) {
    var v struct {
       Auth struct {
          AuthScheme string `json:"authScheme"`
@@ -55,7 +97,7 @@ func (i IdSession) Auth() (*AuthToken, error) {
    if err != nil {
       return nil, err
    }
-   req.AddCookie(i.cookie)
+   req.AddCookie(s.cookie)
    req.Header.Set("content-type", "application/vnd.tokens.v1+json")
    req.Header.Set("x-sky-signature", sign(req.Method, req.URL.Path, nil, body))
    res, err := http.DefaultClient.Do(req)
@@ -75,18 +117,14 @@ func (i IdSession) Auth() (*AuthToken, error) {
    return auth, nil
 }
 
-type IdSession struct {
+func (s *SignIn) Unmarshal(b []byte) error {
+   return json.Unmarshal(b, &s.cookie)
+}
+
+type SignIn struct {
    cookie *http.Cookie
 }
 
-func (i *IdSession) New(value string) {
-   i.cookie = &http.Cookie{Name: "idsession", Value: value}
-}
-
-func (i IdSession) Marshal() ([]byte, error) {
-   return json.MarshalIndent(i.cookie, "", " ")
-}
-
-func (i *IdSession) Unmarshal(b []byte) error {
-   return json.Unmarshal(b, &i.cookie)
+func (s SignIn) Marshal() ([]byte, error) {
+   return json.Marshal(s.cookie)
 }

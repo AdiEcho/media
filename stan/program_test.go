@@ -21,7 +21,7 @@ func TestProgram(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := encoding.Name(encoding.Format, program)
+      name, err := encoding.Name(program)
       if err != nil {
          t.Fatal(err)
       }

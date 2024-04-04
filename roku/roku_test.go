@@ -2,16 +2,38 @@ package roku
 
 import (
    "154.pages.dev/widevine"
-   "encoding/base64"
+   "encoding/hex"
    "fmt"
    "os"
+   "path"
    "testing"
    "time"
 )
 
+func TestPlayback(t *testing.T) {
+   var site CrossSite
+   err := site.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      play, err := site.Playback(path.Base(test.url))
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(play)
+      time.Sleep(time.Second)
+   }
+}
+
 func TestLicense(t *testing.T) {
+   test := tests["episode"]
    var site CrossSite
    if err := site.New(); err != nil {
+      t.Fatal(err)
+   }
+   play, err := site.Playback(path.Base(test.url))
+   if err != nil {
       t.Fatal(err)
    }
    home, err := os.UserHomeDir()
@@ -26,46 +48,18 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   for _, test := range tests {
-      var protect widevine.PSSH
-      {
-         b, err := base64.StdEncoding.DecodeString(test.pssh)
-         if err != nil {
-            t.Fatal(err)
-         }
-         if err := protect.New(b); err != nil {
-            t.Fatal(err)
-         }
-      }
-      module, err := protect.CDM(private_key, client_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      play, err := site.Playback(test.playback_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      license, err := module.License(play)
-      if err != nil {
-         t.Fatal(err)
-      }
-      key, ok := module.Key(license)
-      fmt.Println(key, ok)
-   }
-}
-
-func TestPlayback(t *testing.T) {
-   var site CrossSite
-   err := site.New()
+   key_id, err := hex.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
-   for _, test := range tests {
-      play, err := site.Playback(test.playback_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(play)
-      time.Sleep(time.Second)
+   var module widevine.CDM
+   if err := module.New(private_key, client_id, key_id); err != nil {
+      t.Fatal(err)
    }
+   license, err := module.License(play)
+   if err != nil {
+      t.Fatal(err)
+   }
+   key, ok := module.Key(license)
+   fmt.Println(key, ok)
 }

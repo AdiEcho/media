@@ -9,6 +9,41 @@ import (
    "testing"
 )
 
+func TestQuery(t *testing.T) {
+   var node QueryNode
+   err := node.New(content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   name, err := encoding.Name(node)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%q\n", name)
+}
+
+func TestVideo(t *testing.T) {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   text, err := os.ReadFile(home + "/peacock.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var sign SignIn
+   sign.Unmarshal(text)
+   auth, err := sign.Auth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   video, err := auth.Video(content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", video)
+}
+
 // peacocktv.com/watch/playback/vod/GMO_00000000224510_02_HDSDR
 const (
    content_id = "GMO_00000000224510_02_HDSDR"
@@ -24,9 +59,9 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var session IdSession
-   session.Unmarshal(data)
-   auth, err := session.Auth()
+   var sign SignIn
+   sign.Unmarshal(data)
+   auth, err := sign.Auth()
    if err != nil {
       t.Fatal(err)
    }
@@ -55,36 +90,6 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    key, ok := module.Key(license)
-   fmt.Println(key, ok)
-}
-
-func TestQuery(t *testing.T) {
-   var node QueryNode
-   err := node.New(content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(encoding.Name(node))
-}
-func TestVideo(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   text, err := os.ReadFile(home + "/peacock.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var session IdSession
-   session.Unmarshal(text)
-   auth, err := session.Auth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   video, err := auth.Video(content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", video)
+   fmt.Printf("%x %v\n", key, ok)
 }
 
