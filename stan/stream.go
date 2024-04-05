@@ -7,17 +7,6 @@ import (
    "strconv"
 )
 
-// `akamaized.net` geo blocks
-// `aws.stan.video` is another option
-func (p ProgramStream) StanVideo() (*url.URL, error) {
-   video, err := url.Parse(p.Media.VideoUrl)
-   if err != nil {
-      return nil, err
-   }
-   video.Host = "gec.stan.video"
-   return video, nil
-}
-
 func (a AppSession) Stream(id int64) (*ProgramStream, error) {
    req, err := http.NewRequest(
       "GET", "https://api.stan.com.au/concurrency/v1/streams", nil,
@@ -79,4 +68,14 @@ type ProgramStream struct {
       }
       VideoUrl string
    }
+}
+// `akamaized.net` geo blocks
+// `aws.stan.video` is another option
+func (p ProgramStream) StanVideo() (*url.URL, error) {
+   video, err := url.Parse(p.Media.VideoUrl)
+   if err != nil {
+      return nil, err
+   }
+   video.Host = "gec.stan.video"
+   return video, nil
 }
