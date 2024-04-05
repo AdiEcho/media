@@ -6,34 +6,6 @@ import (
    "os"
 )
 
-func (f flags) write_code() error {
-   var code stan.ActivationCode
-   err := code.New()
-   if err != nil {
-      return err
-   }
-   code.Unmarshal()
-   fmt.Println(code)
-   return os.WriteFile("code.json", code.Data, 0666)
-}
-
-func (f flags) write_token() error {
-   var (
-      code stan.ActivationCode
-      err error
-   )
-   code.Data, err = os.ReadFile("code.json")
-   if err != nil {
-      return err
-   }
-   code.Unmarshal()
-   token, err := code.Token()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/stan.json", token.Data, 0666)
-}
-
 func (f flags) download() error {
    var (
       token stan.WebToken
@@ -52,7 +24,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   video, err := stream.StanVideo()
+   video, err := stream.BaseUrl(f.host)
    if err != nil {
       return err
    }
@@ -81,4 +53,31 @@ func (f flags) download() error {
       fmt.Println(medium)
    }
    return nil
+}
+func (f flags) write_code() error {
+   var code stan.ActivationCode
+   err := code.New()
+   if err != nil {
+      return err
+   }
+   code.Unmarshal()
+   fmt.Println(code)
+   return os.WriteFile("code.json", code.Data, 0666)
+}
+
+func (f flags) write_token() error {
+   var (
+      code stan.ActivationCode
+      err error
+   )
+   code.Data, err = os.ReadFile("code.json")
+   if err != nil {
+      return err
+   }
+   code.Unmarshal()
+   token, err := code.Token()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/stan.json", token.Data, 0666)
 }

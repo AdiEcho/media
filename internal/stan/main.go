@@ -3,9 +3,11 @@ package main
 import (
    "154.pages.dev/log"
    "154.pages.dev/media/internal"
+   "154.pages.dev/media/stan"
    "flag"
    "os"
    "path/filepath"
+   "strings"
 )
 
 func (f *flags) New() error {
@@ -28,6 +30,7 @@ type flags struct {
    program int64
    code bool
    token bool
+   host string
 }
 
 func main() {
@@ -37,12 +40,15 @@ func main() {
       panic(err)
    }
    flag.Int64Var(&f.program, "b", 0, "program ID")
-   flag.StringVar(&f.representation, "i", "", "representation ID")
    flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
-   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.BoolVar(&f.code, "code", false, "activation code")
+   flag.StringVar(
+      &f.host, "h", stan.BaseUrl[0], strings.Join(stan.BaseUrl[1:], "\n"),
+   )
+   flag.StringVar(&f.representation, "i", "", "representation ID")
+   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
    flag.BoolVar(&f.token, "token", false, "web token")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()

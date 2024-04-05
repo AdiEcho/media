@@ -2,10 +2,26 @@ package stan
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "net/url"
    "strconv"
 )
+
+var BaseUrl = []string{
+   "aws.stan.video",
+   "gec.stan.video",
+   "666-stan.akamaized.net", // geo block
+}
+
+func (p ProgramStream) BaseUrl(host string) (*url.URL, error) {
+   video, err := url.Parse(p.Media.VideoUrl)
+   if err != nil {
+      return nil, err
+   }
+   video.Host = host
+   return video, nil
+}
 
 func (a AppSession) Stream(id int64) (*ProgramStream, error) {
    req, err := http.NewRequest(
@@ -27,6 +43,9 @@ func (a AppSession) Stream(id int64) (*ProgramStream, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    stream := new(ProgramStream)
    if err := json.NewDecoder(res.Body).Decode(stream); err != nil {
       return nil, err
@@ -68,14 +87,4 @@ type ProgramStream struct {
       }
       VideoUrl string
    }
-}
-// `akamaized.net` geo blocks
-// `aws.stan.video` is another option
-func (p ProgramStream) StanVideo() (*url.URL, error) {
-   video, err := url.Parse(p.Media.VideoUrl)
-   if err != nil {
-      return nil, err
-   }
-   video.Host = "gec.stan.video"
-   return video, nil
 }
