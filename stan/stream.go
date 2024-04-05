@@ -7,6 +7,17 @@ import (
    "strconv"
 )
 
+// `akamaized.net` geo blocks
+// `aws.stan.video` is another option
+func (p ProgramStream) StanVideo() (*url.URL, error) {
+   video, err := url.Parse(p.Media.VideoUrl)
+   if err != nil {
+      return nil, err
+   }
+   video.Host = "gec.stan.video"
+   return video, nil
+}
+
 func (a AppSession) Stream(id int64) (*ProgramStream, error) {
    req, err := http.NewRequest(
       "GET", "https://api.stan.com.au/concurrency/v1/streams", nil,
@@ -44,6 +55,7 @@ func (p ProgramStream) RequestHeader() (http.Header, error) {
    return head, nil
 }
 
+// final slash is needed
 func (ProgramStream) RequestUrl() (string, bool) {
    return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
 }
@@ -59,16 +71,6 @@ func (ProgramStream) ResponseBody(b []byte) ([]byte, error) {
    return s.License, nil
 }
 
-// `akamaized.net` geo blocks, so change the host. note `aws.stan.video`
-// should work too
-func (p ProgramStream) StanVideo() (*url.URL, error) {
-   video, err := url.Parse(p.Media.VideoUrl)
-   if err != nil {
-      return nil, err
-   }
-   video.Host = "gec.stan.video"
-   return video, nil
-}
 type ProgramStream struct {
    Media struct {
       DRM *struct {

@@ -9,28 +9,8 @@ import (
    "net/http"
    "os"
    "slices"
+   "strings"
 )
-
-func (h HttpStream) TimedText(url string) error {
-   res, err := http.Get(url)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   name, err := encoding.Name(h.Name)
-   if err != nil {
-      return err
-   }
-   file, err := os.Create(encoding.Clean(name) + ".vtt")
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   if _, err := file.ReadFrom(res.Body); err != nil {
-      return err
-   }
-   return nil
-}
 
 func (h HttpStream) segment_template(
    ext, initial string, rep dash.Representation,
@@ -87,7 +67,9 @@ func (h HttpStream) segment_template(
          }
          defer res.Body.Close()
          if res.StatusCode != http.StatusOK {
-            return errors.New(res.Status)
+            var b strings.Builder
+            res.Write(&b)
+            return errors.New(b.String())
          }
          return write_segment(file, meter.Reader(res), key)
       }()
@@ -207,4 +189,23 @@ func (h HttpStream) segment_base(
    }
    return nil
 }
-
+func (h HttpStream) TimedText(url string) error {
+   res, err := http.Get(url)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   name, err := encoding.Name(h.Name)
+   if err != nil {
+      return err
+   }
+   file, err := os.Create(encoding.Clean(name) + ".vtt")
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   if _, err := file.ReadFrom(res.Body); err != nil {
+      return err
+   }
+   return nil
+}

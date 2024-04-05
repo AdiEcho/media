@@ -12,41 +12,27 @@ func write_init(w io.Writer, r io.Reader) ([]byte, error) {
    if err := file.Read(r); err != nil {
       return nil, err
    }
-   for _, protect := range file.Movie.Protection {
-      copy(protect.BoxHeader.Type[:], "free") // Firefox
+   for _, box := range file.Movie.Boxes {
+      if box.BoxHeader.Type.String() == "pssh" {
+         copy(box.BoxHeader.Type[:], "free") // Firefox
+      }
    }
-   description := &file.Movie.Track.Media.
-      MediaInformation.SampleTable.SampleDescription
-   if v := description.AudioSample; v != nil {
-      copy(v.ProtectionScheme.BoxHeader.Type[:], "free") // Firefox
-      copy(
-         v.SampleEntry.BoxHeader.Type[:],
-         v.ProtectionScheme.OriginalFormat.DataFormat[:],
-      ) // Firefox
-   }
-   if v := description.VisualSample; v != nil {
-      copy(v.ProtectionScheme.BoxHeader.Type[:], "free") // Firefox
-      copy(
-         v.SampleEntry.BoxHeader.Type[:],
-         v.ProtectionScheme.OriginalFormat.DataFormat[:],
-      ) // Firefox
-   }
-   if err := file.Write(w); err != nil {
-      return nil, err
-   }
-   key_id := file.
+   sample, protect := file.
       Movie.
       Track.
       Media.
       MediaInformation.
       SampleTable.
       SampleDescription.
-      VisualSample.
-      ProtectionScheme.
-      SchemeInformation.
-      TrackEncryption.
-      DefaultKid
-   return key_id[:], nil
+      SampleEntry()
+   // Firefox enca encv sinf
+   copy(protect.BoxHeader.Type[:], "free")
+   // Firefox stsd enca encv
+   copy(sample.BoxHeader.Type[:], protect.OriginalFormat.DataFormat[:])
+   if err := file.Write(w); err != nil {
+      return nil, err
+   }
+   return protect.SchemeInformation.TrackEncryption.DefaultKid[:], nil
 }
 
 func write_sidx(base_url string, bytes dash.Range) ([]sofia.Range, error) {
