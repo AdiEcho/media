@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/amc<span class="navbar-right">
-          v1.8.0 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.1 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package amc</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/amc&#34;</span></pre>
@@ -40,12 +40,11 @@
   <li>
       <a href="#CurrentVideo">type CurrentVideo</a>
       <ul>
-          <li><a href="#CurrentVideo.Episode">func (c CurrentVideo) Episode() (string, bool)</a></li>
-          <li><a href="#CurrentVideo.Owner">func (CurrentVideo) Owner() (string, bool)</a></li>
-          <li><a href="#CurrentVideo.Season">func (c CurrentVideo) Season() (string, bool)</a></li>
-          <li><a href="#CurrentVideo.Show">func (c CurrentVideo) Show() (string, bool)</a></li>
-          <li><a href="#CurrentVideo.Title">func (c CurrentVideo) Title() (string, bool)</a></li>
-          <li><a href="#CurrentVideo.Year">func (c CurrentVideo) Year() (string, bool)</a></li>
+          <li><a href="#CurrentVideo.Episode">func (c CurrentVideo) Episode() int</a></li>
+          <li><a href="#CurrentVideo.Season">func (c CurrentVideo) Season() int</a></li>
+          <li><a href="#CurrentVideo.Show">func (c CurrentVideo) Show() string</a></li>
+          <li><a href="#CurrentVideo.Title">func (c CurrentVideo) Title() string</a></li>
+          <li><a href="#CurrentVideo.Year">func (c CurrentVideo) Year() int</a></li>
           </ul>
       </li>
   <li>
@@ -71,9 +70,14 @@
   </ul><h3 id="pkg-types">Types</h3>
   <h3 id="Authorization">type Authorization</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Authorization</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="Authorization.Raw"><span class="nx">Raw</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
-	<span class="c1">// contains filtered or unexported fields
-</span><span class="c1"></span><span class="p">}</span></pre>
+	<span id="Authorization.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
+	<span id="Authorization.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>
+		<span id="Authorization.Data"><span class="nx">Data</span></span> <span class="kd">struct</span> <span class="p">{</span>
+			<span id="Authorization.Access_Token"><span class="nx">Access_Token</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+			<span id="Authorization.Refresh_Token"><span class="nx">Refresh_Token</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
     <h4 id="Authorization.Content">func (Authorization) Content</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Authorization"><span class="nx">Authorization</span></a><span class="p">)</span> <span class="nf">Content</span><span class="p">(</span><span class="nx">path</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#ContentCompiler"><span class="nx">ContentCompiler</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Authorization.Login">func (*Authorization) Login</h4>
@@ -110,17 +114,15 @@
 	<span class="p">}</span>
 <span class="p">}</span></pre>
     <h4 id="CurrentVideo.Episode">func (CurrentVideo) Episode</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h4 id="CurrentVideo.Owner">func (CurrentVideo) Owner</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Owner</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h4 id="CurrentVideo.Season">func (CurrentVideo) Season</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h4 id="CurrentVideo.Show">func (CurrentVideo) Show</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h4 id="CurrentVideo.Title">func (CurrentVideo) Title</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h4 id="CurrentVideo.Year">func (CurrentVideo) Year</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#CurrentVideo"><span class="nx">CurrentVideo</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h3 id="DataSource">type DataSource</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">DataSource</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="DataSource.Key_Systems"><span class="nx">Key_Systems</span></span> <span class="o">*</span><span class="kd">struct</span> <span class="p">{</span>

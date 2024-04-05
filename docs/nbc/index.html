@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/nbc<span class="navbar-right">
-          v1.8.0 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.1 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package nbc</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/nbc&#34;</span></pre>
@@ -23,14 +23,13 @@
   <li>
       <a href="#Metadata">type Metadata</a>
       <ul>
-          <li><a href="#Metadata.Episode">func (m Metadata) Episode() (string, bool)</a></li>
+          <li><a href="#Metadata.Episode">func (m Metadata) Episode() int</a></li>
           <li><a href="#Metadata.New">func (m *Metadata) New(guid int) error</a></li>
           <li><a href="#Metadata.OnDemand">func (m Metadata) OnDemand() (*OnDemand, error)</a></li>
-          <li><a href="#Metadata.Owner">func (Metadata) Owner() (string, bool)</a></li>
-          <li><a href="#Metadata.Season">func (m Metadata) Season() (string, bool)</a></li>
-          <li><a href="#Metadata.Show">func (m Metadata) Show() (string, bool)</a></li>
-          <li><a href="#Metadata.Title">func (m Metadata) Title() (string, bool)</a></li>
-          <li><a href="#Metadata.Year">func (m Metadata) Year() (string, bool)</a></li>
+          <li><a href="#Metadata.Season">func (m Metadata) Season() int</a></li>
+          <li><a href="#Metadata.Show">func (m Metadata) Show() string</a></li>
+          <li><a href="#Metadata.Title">func (m Metadata) Title() string</a></li>
+          <li><a href="#Metadata.Year">func (m Metadata) Year() int</a></li>
           </ul>
       </li>
   <li>
@@ -50,30 +49,28 @@
   <h3 id="Metadata">type Metadata</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Metadata</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Metadata.AirDate"><span class="nx">AirDate</span></span>          <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="Metadata.EpisodeNumber"><span class="nx">EpisodeNumber</span></span>    <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Metadata.EpisodeNumber"><span class="nx">EpisodeNumber</span></span>    <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>   <span class="s">`json:&#34;,string&#34;`</span>
 	<span id="Metadata.MpxAccountId"><span class="nx">MpxAccountId</span></span>     <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a> <span class="s">`json:&#34;,string&#34;`</span>
 	<span id="Metadata.MpxGuid"><span class="nx">MpxGuid</span></span>          <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a> <span class="s">`json:&#34;,string&#34;`</span>
 	<span id="Metadata.ProgrammingType"><span class="nx">ProgrammingType</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="Metadata.SeasonNumber"><span class="nx">SeasonNumber</span></span>     <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Metadata.SeasonNumber"><span class="nx">SeasonNumber</span></span>     <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a> <span class="s">`json:&#34;,string&#34;`</span>
 	<span id="Metadata.SecondaryTitle"><span class="nx">SecondaryTitle</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span id="Metadata.SeriesShortTitle"><span class="nx">SeriesShortTitle</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 <span class="p">}</span></pre>
     <h4 id="Metadata.Episode">func (Metadata) Episode</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h4 id="Metadata.New">func (*Metadata) New</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">(</span><span class="nx">guid</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h4 id="Metadata.OnDemand">func (Metadata) OnDemand</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">OnDemand</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Metadata.Owner">func (Metadata) Owner</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Owner</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h4 id="Metadata.Season">func (Metadata) Season</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h4 id="Metadata.Show">func (Metadata) Show</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h4 id="Metadata.Title">func (Metadata) Title</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h4 id="Metadata.Year">func (Metadata) Year</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#Metadata"><span class="nx">Metadata</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h3 id="OnDemand">type OnDemand</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">OnDemand</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="OnDemand.PlaybackUrl"><span class="nx">PlaybackUrl</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>

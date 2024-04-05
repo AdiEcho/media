@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/mubi<span class="navbar-right">
-          v1.8.0 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.1 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package mubi</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/mubi&#34;</span></pre>
@@ -35,12 +35,11 @@
   <li>
       <a href="#FilmResponse">type FilmResponse</a>
       <ul>
-          <li><a href="#FilmResponse.Episode">func (FilmResponse) Episode() (string, bool)</a></li>
-          <li><a href="#FilmResponse.Owner">func (FilmResponse) Owner() (string, bool)</a></li>
-          <li><a href="#FilmResponse.Season">func (FilmResponse) Season() (string, bool)</a></li>
-          <li><a href="#FilmResponse.Show">func (FilmResponse) Show() (string, bool)</a></li>
-          <li><a href="#FilmResponse.Title">func (f FilmResponse) Title() (string, bool)</a></li>
-          <li><a href="#FilmResponse.Year">func (f FilmResponse) Year() (string, bool)</a></li>
+          <li><a href="#FilmResponse.Episode">func (FilmResponse) Episode() int</a></li>
+          <li><a href="#FilmResponse.Season">func (FilmResponse) Season() int</a></li>
+          <li><a href="#FilmResponse.Show">func (FilmResponse) Show() string</a></li>
+          <li><a href="#FilmResponse.Title">func (f FilmResponse) Title() string</a></li>
+          <li><a href="#FilmResponse.Year">func (f FilmResponse) Year() int</a></li>
           </ul>
       </li>
   <li>
@@ -59,6 +58,12 @@
           </ul>
       </li>
   <li>
+      <a href="#TextTrack">type TextTrack</a>
+      <ul>
+          <li><a href="#TextTrack.String">func (t TextTrack) String() string</a></li>
+          </ul>
+      </li>
+  <li>
       <a href="#WebAddress">type WebAddress</a>
       <ul>
           <li><a href="#WebAddress.Film">func (w WebAddress) Film() (*FilmResponse, error)</a></li>
@@ -72,8 +77,13 @@
   <h3 id="Authenticate">type Authenticate</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Authenticate</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Authenticate.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
-	<span class="c1">// contains filtered or unexported fields
-</span><span class="c1"></span><span class="p">}</span></pre>
+	<span id="Authenticate.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>
+		<span id="Authenticate.Token"><span class="nx">Token</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="Authenticate.User"><span class="nx">User</span></span>  <span class="kd">struct</span> <span class="p">{</span>
+			<span id="Authenticate.ID"><span class="nx">ID</span></span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
     <h4 id="Authenticate.RequestBody">func (Authenticate) RequestBody</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">RequestBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Authenticate.RequestHeader">func (Authenticate) RequestHeader</h4>
@@ -96,25 +106,30 @@ already viewed the video on the website that counts, but if you only use the
 tool it will error
 <h3 id="FilmResponse">type FilmResponse</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">FilmResponse</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="c1">// contains filtered or unexported fields
-</span><span class="c1"></span><span class="p">}</span></pre>
+	<span id="FilmResponse.V"><span class="nx">V</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="FilmResponse.ID"><span class="nx">ID</span></span>    <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>
+		<span id="FilmResponse.Title"><span class="nx">Title</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="FilmResponse.Year"><span class="nx">Year</span></span>  <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
     <h4 id="FilmResponse.Episode">func (FilmResponse) Episode</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h4 id="FilmResponse.Owner">func (FilmResponse) Owner</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Owner</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h4 id="FilmResponse.Season">func (FilmResponse) Season</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h4 id="FilmResponse.Show">func (FilmResponse) Show</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h4 id="FilmResponse.Title">func (FilmResponse) Title</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h4 id="FilmResponse.Year">func (FilmResponse) Year</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h3 id="LinkCode">type LinkCode</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">LinkCode</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="LinkCode.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
-	<span class="c1">// contains filtered or unexported fields
-</span><span class="c1"></span><span class="p">}</span></pre>
+	<span id="LinkCode.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>
+		<span id="LinkCode.Auth_Token"><span class="nx">Auth_Token</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="LinkCode.Link_Code"><span class="nx">Link_Code</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
     <h4 id="LinkCode.Authenticate">func (LinkCode) Authenticate</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#LinkCode"><span class="nx">LinkCode</span></a><span class="p">)</span> <span class="nf">Authenticate</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="LinkCode.New">func (*LinkCode) New</h4>
@@ -127,11 +142,19 @@ tool it will error
     <pre class="chroma"><span class="kd">type</span> <span class="nx">SecureUrl</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="SecureUrl.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
 	<span id="SecureUrl.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>
-		<span id="SecureUrl.URL"><span class="nx">URL</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="SecureUrl.Text_Track_URLs"><span class="nx">Text_Track_URLs</span></span> <span class="p">[]</span><a href="#TextTrack"><span class="nx">TextTrack</span></a>
+		<span id="SecureUrl.URL"><span class="nx">URL</span></span>             <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span class="p">}</span>
 <span class="p">}</span></pre>
     <h4 id="SecureUrl.Unmarshal">func (*SecureUrl) Unmarshal</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><a href="#SecureUrl"><span class="nx">SecureUrl</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h3 id="TextTrack">type TextTrack</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">TextTrack</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="TextTrack.ID"><span class="nx">ID</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="TextTrack.URL"><span class="nx">URL</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="TextTrack.String">func (TextTrack) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <a href="#TextTrack"><span class="nx">TextTrack</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h3 id="WebAddress">type WebAddress</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">WebAddress</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="c1">// contains filtered or unexported fields
