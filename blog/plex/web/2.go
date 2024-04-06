@@ -3,24 +3,28 @@ package plex
 import (
    "net/http"
    "net/url"
-   "os"
+   "strings"
 )
 
-func metadata() {
-   var req http.Request
-   req.Header = make(http.Header)
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "vod.provider.plex.tv"
-   req.URL.Path = "/library/metadata/movie:cruel-intentions"
-   req.URL.Scheme = "https"
-   req.Header["X-Plex-Token"] = []string{"fc1WPqnLdmq3J4Axt5pn"}
-   req.Header["Accept"] = []string{"application/json"}
-   res, err := http.DefaultClient.Do(&req)
+func (a anonymous) metadata(address string) (*http.Response, error) {
+   req, err := http.NewRequest("GET", "https://vod.provider.plex.tv", nil)
    if err != nil {
-      panic(err)
+      return nil, err
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   req.Header = http.Header{
+      "Accept": {"application/json"},
+      "X-Plex-Token": {a.AuthToken},
+   }
+   req.URL.Path, err = func() (string, error) {
+      u, err := url.Parse(address)
+      if err != nil {
+         return "", err
+      }
+      u.Path = strings.Replace(u.Path, "/movie/", "/movie:", 1)
+      return "/library/metadata" + u.Path, nil
+   }()
+   if err != nil {
+      return nil, err
+   }
+   return http.DefaultClient.Do(req)
 }

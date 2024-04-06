@@ -1,18 +1,30 @@
 package plex
 
-import "net/http"
+import (
+   "encoding/json"
+   "net/http"
+)
 
-func anonymous() (*http.Response, error) {
+type anonymous struct {
+   AuthToken string
+}
+
+func (a *anonymous) New() error {
    req, err := http.NewRequest(
       "POST", "https://plex.tv/api/v2/users/anonymous", nil,
    )
    if err != nil {
-      return nil, err
+      return err
    }
    req.Header = http.Header{
       "Accept": {"application/json"},
       "X-Plex-Product": {"Plex Mediaverse"},
       "X-Plex-Client-Identifier": {"!"},
    }
-   return http.DefaultClient.Do(req)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   return json.NewDecoder(res.Body).Decode(a)
 }
