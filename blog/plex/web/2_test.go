@@ -5,13 +5,15 @@ import (
    "testing"
 )
 
+const cruel = "https://watch.plex.tv/movie/cruel-intentions"
+
 func TestMetadata(t *testing.T) {
    var anon anonymous
    err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
-   res, err := anon.metadata("https://watch.plex.tv/movie/cruel-intentions")
+   res, err := anon.metadata(cruel)
    if err != nil {
       t.Fatal(err)
    }
