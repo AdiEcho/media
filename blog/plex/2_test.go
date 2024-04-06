@@ -1,7 +1,7 @@
 package plex
 
 import (
-   "os"
+   "fmt"
    "testing"
 )
 
@@ -13,10 +13,10 @@ func TestMetadata(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   res, err := anon.metadata(cruel)
+   meta, err := anon.metadata(cruel)
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   part, ok := meta.dash(anon.AuthToken)
+   fmt.Printf("%+v %v\n", part, ok)
 }

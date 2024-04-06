@@ -1,12 +1,21 @@
 package plex
 
 import (
-   "fmt"
-   "io"
+   "encoding/json"
    "net/http"
    "net/url"
-   "strings"
 )
+
+func (m metadata) dash(auth_token string) (*part, bool) {
+   for _, each := range m.Media {
+      if each.Protocol == "dash" {
+         p := each.Part[0]
+         p.auth_token = auth_token
+         return &p, true
+      }
+   }
+   return nil, false
+}
 
 func (a anonymous) metadata(address string) (*metadata, error) {
    match, err := url.Parse(address)
@@ -42,30 +51,37 @@ func (a anonymous) metadata(address string) (*metadata, error) {
 
 type metadata struct {
    Media []struct {
-      Part []struct {
-         Key string
-         License string
-      }
+      Part []part
+      Protocol string
    }
 }
 
-//req.URL.Host = "vod.provider.plex.tv"
-//req.URL.Path = "/library/parts/64cc0e5a7a36935c7ba4eb96-dash/license"
-//req.URL.Scheme = "https"
-//val["X-Plex-DRM"] = []string{"widevine"}
-//val["X-Plex-Token"] = []string{"fc1WPqnLdmq3J4Axt5pn"}
-func (metadata) RequestUrl() (string, bool) {
-   return "", false
+type part struct {
+   Key string
+   License string
+   auth_token string
 }
 
-func (metadata) RequestHeader() (http.Header, error) {
+func (part) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (part) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 
-func (metadata) RequestBody(b []byte) ([]byte, error) {
+func (part) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (metadata) ResponseBody(b []byte) ([]byte, error) {
-   return b, nil
+func (p part) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Host = "vod.provider.plex.tv"
+   u.Path = p.License
+   u.Scheme = "https"
+   u.RawQuery = url.Values{
+      "X-Plex-DRM": {"widevine"},
+      "X-Plex-Token": {p.auth_token},
+   }.Encode()
+   return u.String(), true
 }
