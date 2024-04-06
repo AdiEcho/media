@@ -1,8 +1,0 @@
-{
-  "journeyId" : "957f6947-1fcc-4b3c-8bd8-ace430457eda",
-  "pollingPeriodSecs" : 2,
-  "journeyUrl" : "/companion-service/journeys/957f6947-1fcc-4b3c-8bd8-ace430457eda",
-  "oneTimePassword" : "sp6j7c",
-  "status" : "NOT_STARTED",
-  "remainingOtpTtlSecs" : 299
-}

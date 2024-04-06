@@ -4,19 +4,34 @@ import (
    "encoding/json"
    "net/http"
    "net/url"
+   "strings"
 )
 
-func (m metadata) dash(auth_token string) (*part, bool) {
-   for _, each := range m.Media {
-      if each.Protocol == "dash" {
-         p := each.Part[0]
-         p.auth_token = auth_token
-         return &p, true
-      }
+// https://watch.plex.tv/movie/cruel-intentions
+func (a anonymous) metadata(address string) (*http.Response, error) {
+   req, err := http.NewRequest("GET", "https://vod.provider.plex.tv", nil)
+   if err != nil {
+      return nil, err
    }
-   return nil, false
+   req.Header = http.Header{
+      "Accept": {"application/json"},
+      "X-Plex-Token": {a.AuthToken},
+   }
+   req.URL.Path, err = func() (string, error) {
+      u, err := url.Parse(address)
+      if err != nil {
+         return "", err
+      }
+      u.Path = strings.Replace(u.Path, "/movie/", "/movie:", 1)
+      return "/library/metadata" + u.Path, nil
+   }()
+   if err != nil {
+      return nil, err
+   }
+   return http.DefaultClient.Do(req)
 }
 
+// missing license
 func (a anonymous) metadata(address string) (*metadata, error) {
    match, err := url.Parse(address)
    if err != nil {
@@ -47,6 +62,17 @@ func (a anonymous) metadata(address string) (*metadata, error) {
       return nil, err
    }
    return &s.MediaContainer.Metadata[0], nil
+}
+
+func (m metadata) dash(auth_token string) (*part, bool) {
+   for _, each := range m.Media {
+      if each.Protocol == "dash" {
+         p := each.Part[0]
+         p.auth_token = auth_token
+         return &p, true
+      }
+   }
+   return nil, false
 }
 
 type metadata struct {
