@@ -34,11 +34,25 @@ func (a anonymous) metadata(w web_address) (*metadata, error) {
    return &s.MediaContainer.Metadata[0], nil
 }
 
-type metadata struct {
-   Media []struct {
-      Part []part
-      Protocol string
-   }
+func (part) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (part) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (part) ResponseBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+type part struct {
+   Key string
+   License string
+}
+
+func (p part) RequestUrl() (string, bool) {
+   return p.License, true
 }
 
 type web_address struct {
