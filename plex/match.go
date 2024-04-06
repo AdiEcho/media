@@ -17,7 +17,8 @@ func main() {
    req.URL.Scheme = "http"
    req.Header["Accept"] = []string{"application/json"}
    val := make(url.Values)
-   val["url"] = []string{"/movie/cruel-intentions"}
+   //val["url"] = []string{"/movie/cruel-intentions"}
+   val["url"] = []string{"/show/broadchurch/season/3/episode/5"}
    val["X-Plex-Token"] = []string{"aREUTWtbGNN8p_ChaGpv"}
    req.URL.RawQuery = val.Encode()
    res, err := http.DefaultClient.Do(&req)
