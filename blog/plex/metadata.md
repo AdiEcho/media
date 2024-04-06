@@ -1,6 +1,6 @@
 # metadata
 
-## includes license but needs fmt.Sscanf
+## includes license but needs parse
 
 ~~~
 GET https://vod.provider.plex.tv/library/metadata/movie:cruel-intentions HTTP/2.0

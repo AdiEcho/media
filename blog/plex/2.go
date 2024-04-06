@@ -2,13 +2,13 @@ package plex
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "net/url"
    "strings"
 )
 
-// https://watch.plex.tv/movie/cruel-intentions
-func (a anonymous) metadata(address string) (*http.Response, error) {
+func (a anonymous) metadata(w web_address) (*metadata, error) {
    req, err := http.NewRequest("GET", "https://vod.provider.plex.tv", nil)
    if err != nil {
       return nil, err
@@ -17,37 +17,7 @@ func (a anonymous) metadata(address string) (*http.Response, error) {
       "Accept": {"application/json"},
       "X-Plex-Token": {a.AuthToken},
    }
-   req.URL.Path, err = func() (string, error) {
-      u, err := url.Parse(address)
-      if err != nil {
-         return "", err
-      }
-      u.Path = strings.Replace(u.Path, "/movie/", "/movie:", 1)
-      return "/library/metadata" + u.Path, nil
-   }()
-   if err != nil {
-      return nil, err
-   }
-   return http.DefaultClient.Do(req)
-}
-
-// missing license
-func (a anonymous) metadata(address string) (*metadata, error) {
-   match, err := url.Parse(address)
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "GET", "https://discover.provider.plex.tv/library/metadata/matches", nil,
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("accept", "application/json")
-   req.URL.RawQuery = url.Values{
-      "X-Plex-Token": {a.AuthToken},
-      "url": {match.Path},
-   }.Encode()
+   req.URL.Path = "/library/metadata/" + w.String()
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -64,28 +34,11 @@ func (a anonymous) metadata(address string) (*metadata, error) {
    return &s.MediaContainer.Metadata[0], nil
 }
 
-func (m metadata) dash(auth_token string) (*part, bool) {
-   for _, each := range m.Media {
-      if each.Protocol == "dash" {
-         p := each.Part[0]
-         p.auth_token = auth_token
-         return &p, true
-      }
-   }
-   return nil, false
-}
-
 type metadata struct {
    Media []struct {
       Part []part
       Protocol string
    }
-}
-
-type part struct {
-   Key string
-   License string
-   auth_token string
 }
 
 func (part) RequestBody(b []byte) ([]byte, error) {
@@ -100,14 +53,59 @@ func (part) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
+type web_address struct {
+   key string
+   value string
+}
+
+func (w *web_address) Set(s string) error {
+   if i := strings.LastIndexByte(s, '/'); i >= 0 {
+      s, w.value = s[:i], s[i+1:]
+      if i := strings.LastIndexByte(s, '/'); i >= 0 {
+         w.key = s[i+1:]
+         return nil
+      }
+   }
+   return errors.New("web_address.Set")
+}
+
+func (w web_address) String() string {
+   var b strings.Builder
+   b.WriteString(w.key)
+   b.WriteByte(':')
+   b.WriteString(w.value)
+   return b.String()
+}
+
+type part struct {
+   Key string
+   License string
+}
+
 func (p part) RequestUrl() (string, bool) {
+   return p.License, true
+}
+
+func (a anonymous) abs(path string, query url.Values) string {
+   query.Set("x-plex-token", a.AuthToken)
    var u url.URL
    u.Host = "vod.provider.plex.tv"
-   u.Path = p.License
+   u.Path = path
+   u.RawQuery = query.Encode()
    u.Scheme = "https"
-   u.RawQuery = url.Values{
-      "X-Plex-DRM": {"widevine"},
-      "X-Plex-Token": {p.auth_token},
-   }.Encode()
-   return u.String(), true
+   return u.String()
+}
+
+func (m metadata) dash(a anonymous) (*part, bool) {
+   for _, media := range m.Media {
+      if media.Protocol == "dash" {
+         p := media.Part[0]
+         p.Key = a.abs(p.Key, url.Values{})
+         p.License = a.abs(p.License, url.Values{
+            "x-plex-drm": {"widevine"},
+         })
+         return &p, true
+      }
+   }
+   return nil, false
 }

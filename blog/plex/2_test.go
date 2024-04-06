@@ -13,10 +13,14 @@ func TestMetadata(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   meta, err := anon.metadata(cruel)
+   var web web_address
+   if err := web.Set(cruel); err != nil {
+      t.Fatal(err)
+   }
+   meta, err := anon.metadata(web)
    if err != nil {
       t.Fatal(err)
    }
-   part, ok := meta.dash(anon.AuthToken)
+   part, ok := meta.dash(anon)
    fmt.Printf("%+v %v\n", part, ok)
 }
