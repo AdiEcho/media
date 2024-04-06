@@ -81,9 +81,20 @@ set modify_headers '/~u signin.service.international/x-skyott-device/'
 Header needs to be removed from that request only, since other requests need the
 header.
 
-## thanks
+## tv
 
-https://github.com/Paco8/plugin.video.skyott/blob/main/resources/lib/signature.py
+~~~
+$env:path = 'C:\windows\system32'
+.\rootAVD.bat system-images\android-29\android-tv\x86\ramdisk.img
+
+adb shell mkdir -p /data/local/tmp/cacerts
+adb push C:/Users/Steven/.mitmproxy/mitmproxy-ca-cert.pem /data/local/tmp/cacerts/c8750f0d.0
+adb shell cp /system/etc/security/cacerts/* /data/local/tmp/cacerts
+
+adb shell su -c 'mount -t tmpfs tmpfs /system/etc/security/cacerts'
+adb shell su -c 'cp /data/local/tmp/cacerts/* /system/etc/security/cacerts'
+adb shell su -c 'chcon u:object_r:system_file:s0 /system/etc/security/cacerts/*'
+~~~
 
 ## web
 

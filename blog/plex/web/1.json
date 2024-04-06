@@ -1,0 +1,243 @@
+{
+  "id": 350081689,
+  "uuid": "5cbbe9cc6d9e6cee",
+  "username": "",
+  "title": "",
+  "email": "",
+  "friendlyName": "",
+  "locale": null,
+  "confirmed": false,
+  "joinedAt": 1712370066,
+  "emailOnlyAuth": false,
+  "hasPassword": true,
+  "protected": false,
+  "thumb": "https://plex.tv/users/5cbbe9cc6d9e6cee/avatar?c=1712370066",
+  "authToken": "DfZX5xDy5kNBL-Y4kZvx",
+  "mailingListStatus": null,
+  "mailingListActive": false,
+  "scrobbleTypes": "",
+  "subscription": {
+    "active": false,
+    "subscribedAt": null,
+    "status": "Inactive",
+    "paymentService": null,
+    "plan": null,
+    "features": [
+      "guided-upgrade",
+      "increase-password-complexity",
+      "upgrade-3ds2",
+      "ad-countdown-timer",
+      "adaptive_bitrate",
+      "amazon-loop-debug",
+      "Android - Dolby Vision",
+      "Android - PiP",
+      "avod-ad-analysis",
+      "avod-new-media",
+      "blacklist_get_signin",
+      "CU Sunset",
+      "client-radio-stations",
+      "comments_and_replies_push_notifications",
+      "friend_request_push_notifications",
+      "companions_sonos",
+      "create_anonymous_users",
+      "custom-home-removal",
+      "disable_home_user_friendships",
+      "disable_sharing_friendships",
+      "drm_support",
+      "federated-auth",
+      "home",
+      "HRK_enable_EUR",
+      "iterable-notification-tokens",
+      "keep-payment-method",
+      "kevin-bacon",
+      "korea-consent",
+      "lets_encrypt",
+      "lightning-dvr-pivot",
+      "livetv",
+      "live-tv-support-incomplete-segments",
+      "tuner-sharing",
+      "live-tv-on-plex-subtitles",
+      "cloud-livetv",
+      "metadata_search",
+      "vod_cloudflare",
+      "vod_subtitles",
+      "vod",
+      "new_plex_pass_prices",
+      "photos-favorites",
+      "photos-metadata-edition",
+      "pms_health",
+      "shared_server_notification",
+      "shared_source_notification",
+      "collections",
+      "radio",
+      "exclude restrictions",
+      "signin_with_apple",
+      "spring_serve_ad_provider",
+      "transcoder_cache",
+      "TREBLE-show-features",
+      "unsupportedtuners",
+      "vod-schema",
+      "web_server_dashboard"
+    ]
+  },
+  "subscriptionDescription": null,
+  "restricted": false,
+  "anonymous": true,
+  "home": false,
+  "guest": false,
+  "homeSize": 1,
+  "homeAdmin": false,
+  "maxHomeSize": 15,
+  "rememberExpiresAt": null,
+  "profile": {
+    "autoSelectAudio": true,
+    "defaultAudioLanguage": null,
+    "defaultSubtitleLanguage": null,
+    "autoSelectSubtitle": 1,
+    "defaultSubtitleAccessibility": 0,
+    "defaultSubtitleForced": 0,
+    "watchedIndicator": 1
+  },
+  "entitlements": [],
+  "services": [
+    {
+      "identifier": "epg",
+      "endpoint": "https://epg.provider.plex.tv",
+      "token": "RkHIzgbqTjP2giDabsWdbBB9o4YNyhS6CqbTgwfKAOc=",
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "epg-staging",
+      "endpoint": "https://epg-staging.provider.plex.tv",
+      "token": "RkHIzgbqTjP2giDabsWdbBB9o4YNyhS6CqbTgwfKAOc=",
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "epg-dev",
+      "endpoint": "https://epg-dev.provider.plex.tv",
+      "token": "RkHIzgbqTjP2giDabsWdbBB9o4YNyhS6CqbTgwfKAOc=",
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "eyeq",
+      "endpoint": "https://c4412416.ipg.web.cddbp.net/webapi/xml/1.0/",
+      "token": "6iUU7VrBzA/Hz5nsS9o65Yz77qvh63pYmUN+TaVHeonhsQWlzYGcsik1opEU3toj",
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "eyeq-channel-icons",
+      "endpoint": "http://akamai-b.cdn.cddbp.net/cds/2.0/image",
+      "token": null,
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "graph-dev",
+      "endpoint": "https://community-dev.plex.tv",
+      "token": null,
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "graph-staging",
+      "endpoint": "https://community-staging.plex.tv",
+      "token": null,
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "community-dev",
+      "endpoint": "https://community-dev.plex.tv",
+      "token": null,
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "community-staging",
+      "endpoint": "https://community-staging.plex.tv",
+      "token": null,
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "community",
+      "endpoint": "https://community.plex.tv",
+      "token": null,
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "metadata",
+      "endpoint": "https://metadata.provider.plex.tv",
+      "token": "1vme2aaK6G8fZFtFyKeSmInEvdjpjsHEto45VgX1K0c=",
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "metadata-dev",
+      "endpoint": "https://metadata-dev.provider.plex.tv",
+      "token": "1vme2aaK6G8fZFtFyKeSmInEvdjpjsHEto45VgX1K0c=",
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "metadata-provider",
+      "endpoint": "https://mpm.plex.tv/",
+      "token": null,
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "tmsapi",
+      "endpoint": "https://tmsapi.plex.tv/v1.1/",
+      "token": "a0VC3zjGN7FmzvlZKIuRRUjLCRoQkgY2jwJsLgi8+OQ=",
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "subtitles-search",
+      "endpoint": "https://metadata.provider.plex.tv/library/streams/matches",
+      "token": "1vme2aaK6G8fZFtFyKeSmInEvdjpjsHEto45VgX1K0c=",
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "acoustid",
+      "endpoint": "https://acoustid.plex.tv/",
+      "token": "XxQtK3u05uaxTaZ6Y6jcrw==",
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "lyricfind",
+      "endpoint": "https://lyricfind.plex.tv/",
+      "token": "X46ofmSoyOTWjBU4oEx0Rb0ATQjYW31IgFeXw3+/n5hMfGoF7PLEMPrLT9v/zqV1",
+      "secret": "H8q1AfgeOcf8+wx2ODos1mLBkmsSE4PMCJkkdx27xNwpzzKVV3up6gZJb+teyIOw",
+      "status": "online"
+    },
+    {
+      "identifier": "lyricfind-search",
+      "endpoint": "https://lyricfind.plex.tv/",
+      "token": "4HRR+YgScsy+71q8J31KgROAuPkWvsus8XQuVFjYUiTjw5f+LesQ8MAgEcjnuYxW",
+      "secret": null,
+      "status": "online"
+    },
+    {
+      "identifier": "tvdb",
+      "endpoint": "https://api4.thetvdb.com/",
+      "token": "CFlmhH676IvrFij0l4BR1YNRtyHjz+9EAH+GU5ZgncfJ3ufdmzWK/3giK1Ovei7u",
+      "secret": null,
+      "status": "online"
+    }
+  ],
+  "adsConsent": null,
+  "adsConsentSetAt": null,
+  "adsConsentReminderAt": null,
+  "experimentalFeatures": false,
+  "twoFactorEnabled": false,
+  "backupCodesCreated": false
+}
