@@ -2,10 +2,8 @@ package plex
 
 import (
    "encoding/json"
-   "errors"
    "net/http"
    "net/url"
-   "strings"
 )
 
 func (part) RequestBody(b []byte) ([]byte, error) {

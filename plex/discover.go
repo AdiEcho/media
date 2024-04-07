@@ -1,17 +1,10 @@
 package plex
 
 import (
+   "encoding/json"
    "net/http"
    "net/url"
 )
-
-type metadata struct {
-   Media []struct {
-      Part []part
-      Protocol string
-   }
-   RatingKey string
-}
 
 func (a anonymous) matches(path string) (*metadata, error) {
    req, err := http.NewRequest(
@@ -73,4 +66,11 @@ func (m metadata) dash(a anonymous) (*part, bool) {
       }
    }
    return nil, false
+}
+type metadata struct {
+   Media []struct {
+      Part []part
+      Protocol string
+   }
+   RatingKey string
 }

@@ -7,53 +7,32 @@ import (
    "os"
    "testing"
 )
-package plex
 
-import (
-   "os"
-   "testing"
-   "time"
-)
-
-var paths = []string{
-   //"/movie/cruel-intentions",
-   "/show/broadchurch/season/3/episode/5",
-}
-
-func TestMatch(t *testing.T) {
+func TestVod(t *testing.T) {
    var anon anonymous
    err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
-   for _, path := range paths {
-      func() {
-         res, err := anon.matches(path)
-         if err != nil {
-            t.Fatal(err)
-         }
-         defer res.Body.Close()
-         res.Write(os.Stdout)
-      }()
-      time.Sleep(time.Second)
+   meta, err := anon.matches(movie)
+   if err != nil {
+      t.Fatal(err)
    }
+   res, err := anon.vod(meta)
+   if err != nil {
+      t.Fatal(err)
+   }
+   defer res.Body.Close()
+   res.Write(os.Stdout)
 }
-const (
-   cruel_intentions = "https://watch.plex.tv/movie/cruel-intentions"
-   default_kid = "eabdd790d9279b9699b32110eed9a154"
-)
 
-func TestMetadata(t *testing.T) {
+func TestLicense(t *testing.T) {
    var anon anonymous
    err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
-   var web web_address
-   if err := web.Set(cruel_intentions); err != nil {
-      t.Fatal(err)
-   }
-   meta, err := anon.metadata(web)
+   meta, err := anon.matches(movie)
    if err != nil {
       t.Fatal(err)
    }
