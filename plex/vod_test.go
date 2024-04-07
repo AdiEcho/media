@@ -8,35 +8,21 @@ import (
    "testing"
 )
 
-func TestVod(t *testing.T) {
-   var anon anonymous
-   err := anon.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   meta, err := anon.matches(movie)
-   if err != nil {
-      t.Fatal(err)
-   }
-   res, err := anon.vod(meta)
-   if err != nil {
-      t.Fatal(err)
-   }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
-}
-
 func TestLicense(t *testing.T) {
    var anon anonymous
    err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
-   meta, err := anon.matches(movie)
+   meta, err := anon.discover(movie)
    if err != nil {
       t.Fatal(err)
    }
-   part, ok := meta.dash(anon)
+   video, err := anon.vod(meta)
+   if err != nil {
+      t.Fatal(err)
+   }
+   part, ok := video.dash(anon)
    if !ok {
       t.Fatal("metadata.dash")
    }

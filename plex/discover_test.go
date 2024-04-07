@@ -12,13 +12,13 @@ const (
    episode = "/show/broadchurch/season/3/episode/5"
 )
 
-func TestMatch(t *testing.T) {
+func TestDiscover(t *testing.T) {
    var anon anonymous
    err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
-   meta, err := anon.matches(movie)
+   meta, err := anon.discover(movie)
    if err != nil {
       t.Fatal(err)
    }
