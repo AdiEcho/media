@@ -14,13 +14,13 @@ var tests = map[string]Path{
 }
 
 func TestDiscover(t *testing.T) {
-   var anon anonymous
+   var anon Anonymous
    err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
    for _, test := range tests {
-      match, err := anon.discover(test)
+      match, err := anon.Discover(test)
       if err != nil {
          t.Fatal(err)
       }

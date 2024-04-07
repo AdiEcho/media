@@ -23,7 +23,7 @@ func (p Path) String() string {
    return p.s
 }
 
-func (a anonymous) discover(p Path) (*discover_match, error) {
+func (a Anonymous) Discover(p Path) (*DiscoverMatch, error) {
    req, err := http.NewRequest(
       "GET", "https://discover.provider.plex.tv/library/metadata/matches", nil,
    )
@@ -48,32 +48,32 @@ func (a anonymous) discover(p Path) (*discover_match, error) {
    if err := json.NewDecoder(res.Body).Decode(&in); err != nil {
       return nil, err
    }
-   var out discover_match
+   var out DiscoverMatch
    out.m = in.MediaContainer.Metadata[0]
    return &out, nil
 }
 
-type discover_match struct {
+type DiscoverMatch struct {
    m metadata
 }
 
-func (d discover_match) Episode() int {
+func (d DiscoverMatch) Episode() int {
    return d.m.Index
 }
 
-func (d discover_match) Season() int {
+func (d DiscoverMatch) Season() int {
    return d.m.ParentIndex
 }
 
-func (d discover_match) Show() string {
+func (d DiscoverMatch) Show() string {
    return d.m.GrandparentTitle
 }
 
-func (d discover_match) Title() string {
+func (d DiscoverMatch) Title() string {
    return d.m.Title
 }
 
-func (d discover_match) Year() int {
+func (d DiscoverMatch) Year() int {
    return d.m.Year
 }
 

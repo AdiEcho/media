@@ -11,20 +11,20 @@ import (
 const default_kid = "eabdd790d9279b9699b32110eed9a154"
 
 func TestLicense(t *testing.T) {
-   var anon anonymous
+   var anon Anonymous
    err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
-   match, err := anon.discover(tests["movie"])
+   match, err := anon.Discover(tests["movie"])
    if err != nil {
       t.Fatal(err)
    }
-   video, err := anon.on_demand(match)
+   video, err := anon.OnDemand(match)
    if err != nil {
       t.Fatal(err)
    }
-   part, ok := video.dash(anon)
+   part, ok := video.DASH(anon)
    if !ok {
       t.Fatal("metadata.dash")
    }

@@ -12,6 +12,39 @@ import (
    "strings"
 )
 
+func (h *HttpStream) DashMedia(url string) ([]dash.Representation, error) {
+   res, err := http.Get(url)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   reps, err := dash.Unmarshal(text)
+   if err != nil {
+      return nil, err
+   }
+   reps = slices.DeleteFunc(reps, func(r dash.Representation) bool {
+      if _, ok := r.Ext(); !ok {
+         return true
+      }
+      if v, _ := r.GetAdaptationSet().GetPeriod().Seconds(); v < 9 {
+         return true
+      }
+      return false
+   })
+   slices.SortFunc(reps, func(a, b dash.Representation) int {
+      return int(a.Bandwidth - b.Bandwidth)
+   })
+   h.base = res.Request.URL
+   return reps, nil
+}
+
 func (h HttpStream) segment_template(
    ext, initial string, rep dash.Representation,
 ) error {
@@ -93,39 +126,6 @@ func (h HttpStream) DASH(rep dash.Representation) error {
    return h.segment_base(ext, *rep.BaseURL, rep)
 }
 
-func (h *HttpStream) DashMedia(url string) ([]dash.Representation, error) {
-   res, err := http.Get(url)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   h.base = res.Request.URL
-   text, err := io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   reps, err := dash.Unmarshal(text)
-   if err != nil {
-      return nil, err
-   }
-   reps = slices.DeleteFunc(reps, func(r dash.Representation) bool {
-      if _, ok := r.Ext(); !ok {
-         return true
-      }
-      if v, _ := r.GetAdaptationSet().GetPeriod().Seconds(); v < 9 {
-         return true
-      }
-      return false
-   })
-   slices.SortFunc(reps, func(a, b dash.Representation) int {
-      return int(a.Bandwidth - b.Bandwidth)
-   })
-   return reps, nil
-}
-
 func (h HttpStream) segment_base(
    ext, base_url string, rep dash.Representation,
 ) error {
@@ -189,6 +189,7 @@ func (h HttpStream) segment_base(
    }
    return nil
 }
+
 func (h HttpStream) TimedText(url string) error {
    res, err := http.Get(url)
    if err != nil {
