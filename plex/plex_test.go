@@ -8,17 +8,19 @@ import (
    "testing"
 )
 
+const default_kid = "eabdd790d9279b9699b32110eed9a154"
+
 func TestLicense(t *testing.T) {
    var anon anonymous
    err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
-   meta, err := anon.discover(movie)
+   match, err := anon.discover(movie)
    if err != nil {
       t.Fatal(err)
    }
-   video, err := anon.vod(meta)
+   video, err := anon.on_demand(match)
    if err != nil {
       t.Fatal(err)
    }

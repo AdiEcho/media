@@ -1,16 +1,16 @@
 package plex
 
 import (
+   "154.pages.dev/encoding"
    "fmt"
    "testing"
 )
 
-const (
+var tests = map[string]string{
+   "episode": "/show/broadchurch/season/3/episode/5",
    // watch.plex.tv/movie/cruel-intentions
-   movie = "/movie/cruel-intentions"
-   default_kid = "eabdd790d9279b9699b32110eed9a154"
-   episode = "/show/broadchurch/season/3/episode/5"
-)
+   "movie": "/movie/cruel-intentions",
+}
 
 func TestDiscover(t *testing.T) {
    var anon anonymous
@@ -18,10 +18,17 @@ func TestDiscover(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   meta, err := anon.discover(movie)
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      match, err := anon.discover(test)
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := encoding.Name(match)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(name)
+      time.Sleep(time.Second)
    }
-   fmt.Println(meta)
 }
 

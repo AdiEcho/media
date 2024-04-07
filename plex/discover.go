@@ -6,57 +6,7 @@ import (
    "net/url"
 )
 
-func (a anonymous) vod(d *discover) (*vod, error) {
-   req, err := http.NewRequest("GET", "https://vod.provider.plex.tv", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/library/metadata/" + d.RatingKey
-   req.Header = http.Header{
-      "accept": {"application/json"},
-      "x-plex-token": {a.AuthToken},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   var s struct {
-      MediaContainer struct {
-         Metadata []vod
-      }
-   }
-   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
-      return nil, err
-   }
-   return &s.MediaContainer.Metadata[0], nil
-}
-
-func (discover) Show() string {
-   return ""
-}
-
-func (discover) Season() int {
-   return 0
-}
-
-func (discover) Episode() int {
-   return 0
-}
-
-func (discover) Title() string {
-   return ""
-}
-
-func (discover) Year() int {
-   return 0
-}
-
-type discover struct {
-   RatingKey string
-}
-
-func (a anonymous) discover(path string) (*discover, error) {
+func (a anonymous) discover(path string) (*discover_match, error) {
    req, err := http.NewRequest(
       "GET", "https://discover.provider.plex.tv/library/metadata/matches", nil,
    )
@@ -75,11 +25,42 @@ func (a anonymous) discover(path string) (*discover, error) {
    defer res.Body.Close()
    var s struct {
       MediaContainer struct {
-         Metadata []discover
+         Metadata []discover_match
       }
    }
    if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
       return nil, err
    }
    return &s.MediaContainer.Metadata[0], nil
+}
+
+func (d discover_match) Show() string {
+   return d.V.GrandparentTitle
+}
+
+func (d discover_match) Season() int {
+   return d.V.ParentIndex
+}
+
+func (d discover_match) Episode() int {
+   return d.V.Index
+}
+
+func (d discover_match) Title() string {
+   return d.V.Title
+}
+
+type discover_match struct {
+   V struct {
+      GrandparentTitle string
+      Index int
+      ParentIndex int
+      RatingKey string
+      Title string
+      Year int
+   }
+}
+
+func (d discover_match) Year() int {
+   return d.V.Year
 }
