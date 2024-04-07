@@ -8,32 +8,6 @@ import (
    "strings"
 )
 
-func (a anonymous) metadata(w web_address) (*metadata, error) {
-   req, err := http.NewRequest("GET", "https://vod.provider.plex.tv", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.Header = http.Header{
-      "Accept": {"application/json"},
-      "X-Plex-Token": {a.AuthToken},
-   }
-   req.URL.Path = "/library/metadata/" + w.String()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   var s struct {
-      MediaContainer struct {
-         Metadata []metadata
-      }
-   }
-   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
-      return nil, err
-   }
-   return &s.MediaContainer.Metadata[0], nil
-}
-
 func (part) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -53,30 +27,6 @@ type part struct {
 
 func (p part) RequestUrl() (string, bool) {
    return p.License, true
-}
-
-type web_address struct {
-   key string
-   value string
-}
-
-func (w *web_address) Set(s string) error {
-   if i := strings.LastIndexByte(s, '/'); i >= 0 {
-      s, w.value = s[:i], s[i+1:]
-      if i := strings.LastIndexByte(s, '/'); i >= 0 {
-         w.key = s[i+1:]
-         return nil
-      }
-   }
-   return errors.New("web_address.Set")
-}
-
-func (w web_address) String() string {
-   var b strings.Builder
-   b.WriteString(w.key)
-   b.WriteByte(':')
-   b.WriteString(w.value)
-   return b.String()
 }
 
 func (a anonymous) abs(path string, query url.Values) string {
