@@ -6,7 +6,31 @@ import (
    "net/url"
 )
 
-func (a anonymous) matches(path string) (*metadata, error) {
+func (discover) Show() string {
+   return ""
+}
+
+func (discover) Season() int {
+   return 0
+}
+
+func (discover) Episode() int {
+   return 0
+}
+
+func (discover) Title() string {
+   return ""
+}
+
+func (discover) Year() int {
+   return 0
+}
+
+type discover struct {
+   RatingKey string
+}
+
+func (a anonymous) discover(path string) (*discover, error) {
    req, err := http.NewRequest(
       "GET", "https://discover.provider.plex.tv/library/metadata/matches", nil,
    )
@@ -25,52 +49,11 @@ func (a anonymous) matches(path string) (*metadata, error) {
    defer res.Body.Close()
    var s struct {
       MediaContainer struct {
-         Metadata []metadata
+         Metadata []discover
       }
    }
    if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
       return nil, err
    }
    return &s.MediaContainer.Metadata[0], nil
-}
-
-func (metadata) Show() string {
-   return ""
-}
-
-func (metadata) Season() int {
-   return 0
-}
-
-func (metadata) Episode() int {
-   return 0
-}
-
-func (metadata) Title() string {
-   return ""
-}
-
-func (metadata) Year() int {
-   return 0
-}
-
-func (m metadata) dash(a anonymous) (*part, bool) {
-   for _, media := range m.Media {
-      if media.Protocol == "dash" {
-         p := media.Part[0]
-         p.Key = a.abs(p.Key, url.Values{})
-         p.License = a.abs(p.License, url.Values{
-            "x-plex-drm": {"widevine"},
-         })
-         return &p, true
-      }
-   }
-   return nil, false
-}
-type metadata struct {
-   Media []struct {
-      Part []part
-      Protocol string
-   }
-   RatingKey string
 }
