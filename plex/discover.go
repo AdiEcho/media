@@ -6,6 +6,32 @@ import (
    "net/url"
 )
 
+func (a anonymous) vod(d *discover) (*vod, error) {
+   req, err := http.NewRequest("GET", "https://vod.provider.plex.tv", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/library/metadata/" + d.RatingKey
+   req.Header = http.Header{
+      "accept": {"application/json"},
+      "x-plex-token": {a.AuthToken},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   var s struct {
+      MediaContainer struct {
+         Metadata []vod
+      }
+   }
+   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
+      return nil, err
+   }
+   return &s.MediaContainer.Metadata[0], nil
+}
+
 func (discover) Show() string {
    return ""
 }
