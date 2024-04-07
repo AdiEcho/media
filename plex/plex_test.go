@@ -16,7 +16,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   match, err := anon.discover(movie)
+   match, err := anon.discover(tests["movie"])
    if err != nil {
       t.Fatal(err)
    }

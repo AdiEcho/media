@@ -45,7 +45,7 @@ func (a anonymous) on_demand(d *discover_match) (*on_demand, error) {
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/library/metadata/" + d.RatingKey
+   req.URL.Path = "/library/metadata/" + d.m.RatingKey
    req.Header = http.Header{
       "accept": {"application/json"},
       "x-plex-token": {a.AuthToken},

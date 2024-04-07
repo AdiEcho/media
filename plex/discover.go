@@ -23,44 +23,48 @@ func (a anonymous) discover(path string) (*discover_match, error) {
       return nil, err
    }
    defer res.Body.Close()
-   var s struct {
+   var in struct {
       MediaContainer struct {
-         Metadata []discover_match
+         Metadata []metadata
       }
    }
-   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
+   if err := json.NewDecoder(res.Body).Decode(&in); err != nil {
       return nil, err
    }
-   return &s.MediaContainer.Metadata[0], nil
-}
-
-func (d discover_match) Show() string {
-   return d.V.GrandparentTitle
-}
-
-func (d discover_match) Season() int {
-   return d.V.ParentIndex
-}
-
-func (d discover_match) Episode() int {
-   return d.V.Index
-}
-
-func (d discover_match) Title() string {
-   return d.V.Title
+   var out discover_match
+   out.m = in.MediaContainer.Metadata[0]
+   return &out, nil
 }
 
 type discover_match struct {
-   V struct {
-      GrandparentTitle string
-      Index int
-      ParentIndex int
-      RatingKey string
-      Title string
-      Year int
-   }
+   m metadata
+}
+
+func (d discover_match) Episode() int {
+   return d.m.Index
+}
+
+func (d discover_match) Season() int {
+   return d.m.ParentIndex
+}
+
+func (d discover_match) Show() string {
+   return d.m.GrandparentTitle
+}
+
+func (d discover_match) Title() string {
+   return d.m.Title
 }
 
 func (d discover_match) Year() int {
-   return d.V.Year
+   return d.m.Year
+}
+
+type metadata struct {
+   GrandparentTitle string
+   Index int
+   ParentIndex int
+   RatingKey string
+   Title string
+   Year int
 }

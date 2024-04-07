@@ -4,6 +4,7 @@ import (
    "154.pages.dev/encoding"
    "fmt"
    "testing"
+   "time"
 )
 
 var tests = map[string]string{
@@ -31,4 +32,3 @@ func TestDiscover(t *testing.T) {
       time.Sleep(time.Second)
    }
 }
-
