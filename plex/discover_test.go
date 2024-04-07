@@ -7,10 +7,10 @@ import (
    "time"
 )
 
-var tests = map[string]string{
-   "episode": "/show/broadchurch/season/3/episode/5",
+var tests = map[string]Path{
+   "episode": {"/show/broadchurch/season/3/episode/5"},
    // watch.plex.tv/movie/cruel-intentions
-   "movie": "/movie/cruel-intentions",
+   "movie": {"/movie/cruel-intentions"},
 }
 
 func TestDiscover(t *testing.T) {

@@ -6,7 +6,24 @@ import (
    "net/url"
 )
 
-func (a anonymous) discover(path string) (*discover_match, error) {
+type Path struct {
+   s string
+}
+
+func (p *Path) Set(s string) error {
+   u, err := url.Parse(s)
+   if err != nil {
+      return err
+   }
+   p.s = u.Path
+   return nil
+}
+
+func (p Path) String() string {
+   return p.s
+}
+
+func (a anonymous) discover(p Path) (*discover_match, error) {
    req, err := http.NewRequest(
       "GET", "https://discover.provider.plex.tv/library/metadata/matches", nil,
    )
@@ -15,7 +32,7 @@ func (a anonymous) discover(path string) (*discover_match, error) {
    }
    req.Header.Set("accept", "application/json")
    req.URL.RawQuery = url.Values{
-      "url": {path},
+      "url": {p.s},
       "x-plex-token": {a.AuthToken},
    }.Encode()
    res, err := http.DefaultClient.Do(req)
