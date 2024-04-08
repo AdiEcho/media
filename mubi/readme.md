@@ -3,6 +3,7 @@
 1. https://privacy.com
 2. https://mubi.com
 3. Email address
+   - mailsac.com: Sorry, this isn't a valid email address
 4. GET STARTED
 5. enter code
 6. NEXT

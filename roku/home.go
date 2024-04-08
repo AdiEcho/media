@@ -2,12 +2,78 @@ package roku
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "net/url"
    "strconv"
    "strings"
 )
 
+// this has got to be the stupidest fucking URL construction I have ever seen,
+// but its what the server requires
+func (h *HomeScreen) New(id string) error {
+   var b strings.Builder
+   b.WriteString("https://therokuchannel.roku.com/api/v2/homescreen/content/")
+   b.WriteString(func() string {
+      var b strings.Builder
+      b.WriteString("https://content.sr.roku.com/content/v1/roku-trc/")
+      b.WriteString(id)
+      b.WriteByte('?')
+      b.WriteString("expand=series&")
+      b.WriteString("include=")
+      b.WriteString(func() string {
+         var b strings.Builder
+         b.WriteString("episodeNumber,")
+         b.WriteString("releaseDate,")
+         b.WriteString("seasonNumber,")
+         b.WriteString("series.title,")
+         b.WriteString("title,")
+         b.WriteString("viewOptions")
+         return url.PathEscape(b.String())
+      }())
+      return url.PathEscape(b.String())
+   }())
+   // outside of US this redirects to
+   // therokuchannel.roku.com/enguard
+   // so disable redirect
+   http.DefaultClient.CheckRedirect = redirect
+   res, err := http.Get(b.String())
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return errors.New(b.String())
+   }
+   return json.NewDecoder(res.Body).Decode(&h.V)
+}
+
+func redirect(*http.Request, []*http.Request) error {
+   return http.ErrUseLastResponse
+}
+
+func (h HomeScreen) Season() int {
+   return h.V.SeasonNumber
+}
+
+func (h HomeScreen) Show() string {
+   return h.V.Series.Title
+}
+
+func (h HomeScreen) Title() string {
+   return h.V.Title
+}
+
+func (h HomeScreen) Year() int {
+   if v, _, ok := strings.Cut(h.V.ReleaseDate, "-"); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
+}
 type HomeScreen struct {
    V struct {
       Series *struct {
@@ -40,55 +106,3 @@ func (h HomeScreen) Episode() int {
    return h.V.EpisodeNumber
 }
 
-// this has got to be the stupidest fucking URL construction I have ever seen,
-// but its what the server requires
-func (h *HomeScreen) New(id string) error {
-   var b strings.Builder
-   b.WriteString("https://therokuchannel.roku.com/api/v2/homescreen/content/")
-   b.WriteString(func() string {
-      var b strings.Builder
-      b.WriteString("https://content.sr.roku.com/content/v1/roku-trc/")
-      b.WriteString(id)
-      b.WriteByte('?')
-      b.WriteString("expand=series&")
-      b.WriteString("include=")
-      b.WriteString(func() string {
-         var b strings.Builder
-         b.WriteString("episodeNumber,")
-         b.WriteString("releaseDate,")
-         b.WriteString("seasonNumber,")
-         b.WriteString("series.title,")
-         b.WriteString("title,")
-         b.WriteString("viewOptions")
-         return url.PathEscape(b.String())
-      }())
-      return url.PathEscape(b.String())
-   }())
-   res, err := http.Get(b.String())
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(&h.V)
-}
-
-func (h HomeScreen) Season() int {
-   return h.V.SeasonNumber
-}
-
-func (h HomeScreen) Show() string {
-   return h.V.Series.Title
-}
-
-func (h HomeScreen) Title() string {
-   return h.V.Title
-}
-
-func (h HomeScreen) Year() int {
-   if v, _, ok := strings.Cut(h.V.ReleaseDate, "-"); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
-}
