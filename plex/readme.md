@@ -1,7 +1,5 @@
 # plex
 
-https://watch.plex.tv/movie/cruel-intentions
-
 ## android
 
 https://play.google.com/store/apps/details?id=com.plexapp.android
