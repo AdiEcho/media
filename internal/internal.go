@@ -12,7 +12,74 @@ import (
    "strings"
 )
 
-func (h HttpStream) DASH(rep dash.Representation) error {
+func (h HttpStream) segment_template(
+   ext, initial string, rep *dash.Representation,
+) error {
+   req, err := http.NewRequest("GET", initial, nil)
+   if err != nil {
+      return err
+   }
+   req.URL = h.base.ResolveReference(req.URL)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   name, err := encoding.Name(h.Name)
+   if err != nil {
+      return err
+   }
+   file, err := os.Create(encoding.Clean(name) + ext)
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   key_id, err := write_init(file, res.Body)
+   if err != nil {
+      return err
+   }
+   key, err := h.key(key_id)
+   if err != nil {
+      return err
+   }
+   var meter log.ProgressMeter
+   log.SetTransport(nil)
+   defer log.Transport{}.Set()
+   template, ok := rep.GetSegmentTemplate()
+   if !ok {
+      return errors.New("GetSegmentTemplate")
+   }
+   media, err := template.GetMedia(rep)
+   if err != nil {
+      return err
+   }
+   meter.Set(len(media))
+   for _, ref := range media {
+      // with DASH, initialization and media URLs are relative to the MPD URL
+      req.URL, err = h.base.Parse(ref)
+      if err != nil {
+         return err
+      }
+      err := func() error {
+         res, err := http.DefaultClient.Do(req)
+         if err != nil {
+            return err
+         }
+         defer res.Body.Close()
+         if res.StatusCode != http.StatusOK {
+            var b strings.Builder
+            res.Write(&b)
+            return errors.New(b.String())
+         }
+         return write_segment(file, meter.Reader(res), key)
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
+func (h HttpStream) DASH(rep *dash.Representation) error {
    ext, ok := rep.Ext()
    if !ok {
       return errors.New("Ext")
@@ -26,7 +93,7 @@ func (h HttpStream) DASH(rep dash.Representation) error {
 }
 
 func (h HttpStream) segment_base(
-   ext, base_url string, rep dash.Representation,
+   ext, base_url string, rep *dash.Representation,
 ) error {
    sb := rep.SegmentBase
    // Initialization
@@ -109,6 +176,7 @@ func (h HttpStream) TimedText(url string) error {
    }
    return nil
 }
+
 func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
    res, err := http.Get(url)
    if err != nil {
@@ -150,72 +218,3 @@ func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
    })
    return reps, nil
 }
-
-func (h HttpStream) segment_template(
-   ext, initial string, rep *dash.Representation,
-) error {
-   req, err := http.NewRequest("GET", initial, nil)
-   if err != nil {
-      return err
-   }
-   req.URL = h.base.ResolveReference(req.URL)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   name, err := encoding.Name(h.Name)
-   if err != nil {
-      return err
-   }
-   file, err := os.Create(encoding.Clean(name) + ext)
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   key_id, err := write_init(file, res.Body)
-   if err != nil {
-      return err
-   }
-   key, err := h.key(key_id)
-   if err != nil {
-      return err
-   }
-   var meter log.ProgressMeter
-   log.SetTransport(nil)
-   defer log.Transport{}.Set()
-   template, ok := rep.GetSegmentTemplate()
-   if !ok {
-      return errors.New("GetSegmentTemplate")
-   }
-   media, err := template.GetMedia(rep)
-   if err != nil {
-      return err
-   }
-   meter.Set(len(media))
-   for _, ref := range media {
-      // with DASH, initialization and media URLs are relative to the MPD URL
-      req.URL, err = h.base.Parse(ref)
-      if err != nil {
-         return err
-      }
-      err := func() error {
-         res, err := http.DefaultClient.Do(req)
-         if err != nil {
-            return err
-         }
-         defer res.Body.Close()
-         if res.StatusCode != http.StatusOK {
-            var b strings.Builder
-            res.Write(&b)
-            return errors.New(b.String())
-         }
-         return write_segment(file, meter.Reader(res), key)
-      }()
-      if err != nil {
-         return err
-      }
-   }
-   return nil
-}
-

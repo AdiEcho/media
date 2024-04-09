@@ -6,9 +6,16 @@ import (
    "encoding/hex"
    "errors"
    "log/slog"
-   "net/url"
    "os"
 )
+
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type HttpStream struct {
+   ClientId string
+   PrivateKey string
+   Name encoding.Namer
+   Poster widevine.Poster
+}
 
 func (h HttpStream) key(key_id []byte) ([]byte, error) {
    private_key, err := os.ReadFile(h.PrivateKey)
@@ -33,13 +40,4 @@ func (h HttpStream) key(key_id []byte) ([]byte, error) {
    }
    slog.Debug("CDM", "key", hex.EncodeToString(key))
    return key, nil
-}
-
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type HttpStream struct {
-   ClientId string
-   PrivateKey string
-   Name encoding.Namer
-   base *url.URL
-   Poster widevine.Poster
 }
