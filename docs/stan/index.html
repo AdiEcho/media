@@ -14,13 +14,13 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/stan<span class="navbar-right">
-          v1.8.1 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.2 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package stan</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/stan&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
-  <li>
+  <li><a href="#pkg-variables">Variables</a></li><li>
       <a href="#ActivationCode">type ActivationCode</a>
       <ul>
           <li><a href="#ActivationCode.New">func (a *ActivationCode) New() error</a></li>
@@ -49,11 +49,11 @@
   <li>
       <a href="#ProgramStream">type ProgramStream</a>
       <ul>
+          <li><a href="#ProgramStream.BaseUrl">func (p ProgramStream) BaseUrl(host string) (*url.URL, error)</a></li>
           <li><a href="#ProgramStream.RequestBody">func (ProgramStream) RequestBody(b []byte) ([]byte, error)</a></li>
           <li><a href="#ProgramStream.RequestHeader">func (p ProgramStream) RequestHeader() (http.Header, error)</a></li>
           <li><a href="#ProgramStream.RequestUrl">func (ProgramStream) RequestUrl() (string, bool)</a></li>
           <li><a href="#ProgramStream.ResponseBody">func (ProgramStream) ResponseBody(b []byte) ([]byte, error)</a></li>
-          <li><a href="#ProgramStream.StanVideo">func (p ProgramStream) StanVideo() (*url.URL, error)</a></li>
           </ul>
       </li>
   <li>
@@ -63,7 +63,13 @@
           <li><a href="#WebToken.Unmarshal">func (w *WebToken) Unmarshal() error</a></li>
           </ul>
       </li>
-  </ul><h3 id="pkg-types">Types</h3>
+  </ul><h3 id="pkg-variables">Variables</h3>
+  <pre class="chroma"><span class="kd">var</span> <span id="BaseUrl"><span class="nx">BaseUrl</span></span> <span class="p">=</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">{</span>
+	<span class="s">&#34;666-stan.akamaized.net&#34;</span><span class="p">,</span>
+	<span class="s">&#34;aws.stan.video&#34;</span><span class="p">,</span>
+	<span class="s">&#34;gec.stan.video&#34;</span><span class="p">,</span>
+<span class="p">}</span></pre>
+  <h3 id="pkg-types">Types</h3>
   <h3 id="ActivationCode">type ActivationCode</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">ActivationCode</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="ActivationCode.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
@@ -118,7 +124,9 @@
 		<span id="ProgramStream.VideoUrl"><span class="nx">VideoUrl</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span class="p">}</span>
 <span class="p">}</span></pre>
-    <h4 id="ProgramStream.RequestBody">func (ProgramStream) RequestBody</h4>
+    <h4 id="ProgramStream.BaseUrl">func (ProgramStream) BaseUrl</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#ProgramStream"><span class="nx">ProgramStream</span></a><span class="p">)</span> <span class="nf">BaseUrl</span><span class="p">(</span><span class="nx">host</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="https://pkg.go.dev/net/url"><span class="nx">url</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/url#URL"><span class="nx">URL</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="ProgramStream.RequestBody">func (ProgramStream) RequestBody</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#ProgramStream"><span class="nx">ProgramStream</span></a><span class="p">)</span> <span class="nf">RequestBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="ProgramStream.RequestHeader">func (ProgramStream) RequestHeader</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#ProgramStream"><span class="nx">ProgramStream</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
@@ -127,11 +135,7 @@
   <p>final slash is needed
 <h4 id="ProgramStream.ResponseBody">func (ProgramStream) ResponseBody</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#ProgramStream"><span class="nx">ProgramStream</span></a><span class="p">)</span> <span class="nf">ResponseBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="ProgramStream.StanVideo">func (ProgramStream) StanVideo</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#ProgramStream"><span class="nx">ProgramStream</span></a><span class="p">)</span> <span class="nf">StanVideo</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="https://pkg.go.dev/net/url"><span class="nx">url</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/url#URL"><span class="nx">URL</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <p>`akamaized.net` geo blocks
-`aws.stan.video` is another option
-<h3 id="WebToken">type WebToken</h3>
+  <h3 id="WebToken">type WebToken</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">WebToken</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="WebToken.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
 	<span id="WebToken.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="doc2go">
+    <link href="../_/css/main.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../_/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="../_/icons/favicon.ico">
+    <title>plex</title>
+</head>
+  <body>
+    <nav>
+        <a href="..">154.pages.dev/media</a>/plex<span class="navbar-right">
+          v1.8.2 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+      </nav>
+    <main><h2 id="pkg-overview">package plex</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/plex&#34;</span></pre>
+<h3 id="pkg-index">Index</h3>
+<ul>
+  <li>
+      <a href="#Anonymous">type Anonymous</a>
+      <ul>
+          <li><a href="#Anonymous.Discover">func (a Anonymous) Discover(p Path) (*DiscoverMatch, error)</a></li>
+          <li><a href="#Anonymous.New">func (a *Anonymous) New() error</a></li>
+          <li><a href="#Anonymous.Video">func (a Anonymous) Video(d *DiscoverMatch) (*OnDemand, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#DiscoverMatch">type DiscoverMatch</a>
+      <ul>
+          <li><a href="#DiscoverMatch.Episode">func (d DiscoverMatch) Episode() int</a></li>
+          <li><a href="#DiscoverMatch.Season">func (d DiscoverMatch) Season() int</a></li>
+          <li><a href="#DiscoverMatch.Show">func (d DiscoverMatch) Show() string</a></li>
+          <li><a href="#DiscoverMatch.Title">func (d DiscoverMatch) Title() string</a></li>
+          <li><a href="#DiscoverMatch.Year">func (d DiscoverMatch) Year() int</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#MediaPart">type MediaPart</a>
+      <ul>
+          <li><a href="#MediaPart.RequestBody">func (MediaPart) RequestBody(b []byte) ([]byte, error)</a></li>
+          <li><a href="#MediaPart.RequestHeader">func (MediaPart) RequestHeader() (http.Header, error)</a></li>
+          <li><a href="#MediaPart.RequestUrl">func (p MediaPart) RequestUrl() (string, bool)</a></li>
+          <li><a href="#MediaPart.ResponseBody">func (MediaPart) ResponseBody(b []byte) ([]byte, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#OnDemand">type OnDemand</a>
+      <ul>
+          <li><a href="#OnDemand.DASH">func (o OnDemand) DASH(a Anonymous) (*MediaPart, bool)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Path">type Path</a>
+      <ul>
+          <li><a href="#Path.Set">func (p *Path) Set(s string) error</a></li>
+          <li><a href="#Path.String">func (p Path) String() string</a></li>
+          </ul>
+      </li>
+  </ul><h3 id="pkg-types">Types</h3>
+  <h3 id="Anonymous">type Anonymous</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Anonymous</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Anonymous.AuthToken"><span class="nx">AuthToken</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Anonymous.Discover">func (Anonymous) Discover</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Anonymous"><span class="nx">Anonymous</span></a><span class="p">)</span> <span class="nf">Discover</span><span class="p">(</span><span class="nx">p</span> <a href="#Path"><span class="nx">Path</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Anonymous.New">func (*Anonymous) New</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Anonymous"><span class="nx">Anonymous</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Anonymous.Video">func (Anonymous) Video</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Anonymous"><span class="nx">Anonymous</span></a><span class="p">)</span> <span class="nf">Video</span><span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="DiscoverMatch">type DiscoverMatch</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">DiscoverMatch</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">// contains filtered or unexported fields
+</span><span class="c1"></span><span class="p">}</span></pre>
+    <h4 id="DiscoverMatch.Episode">func (DiscoverMatch) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="DiscoverMatch.Season">func (DiscoverMatch) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="DiscoverMatch.Show">func (DiscoverMatch) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="DiscoverMatch.Title">func (DiscoverMatch) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="DiscoverMatch.Year">func (DiscoverMatch) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h3 id="MediaPart">type MediaPart</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">MediaPart</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="MediaPart.Key"><span class="nx">Key</span></span>     <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="MediaPart.License"><span class="nx">License</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="MediaPart.RequestBody">func (MediaPart) RequestBody</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#MediaPart"><span class="nx">MediaPart</span></a><span class="p">)</span> <span class="nf">RequestBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="MediaPart.RequestHeader">func (MediaPart) RequestHeader</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#MediaPart"><span class="nx">MediaPart</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="MediaPart.RequestUrl">func (MediaPart) RequestUrl</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#MediaPart"><span class="nx">MediaPart</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="MediaPart.ResponseBody">func (MediaPart) ResponseBody</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#MediaPart"><span class="nx">MediaPart</span></a><span class="p">)</span> <span class="nf">ResponseBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="OnDemand">type OnDemand</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">OnDemand</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="OnDemand.Media"><span class="nx">Media</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="OnDemand.Part"><span class="nx">Part</span></span>     <span class="p">[]</span><a href="#MediaPart"><span class="nx">MediaPart</span></a>
+		<span id="OnDemand.Protocol"><span class="nx">Protocol</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
+    <h4 id="OnDemand.DASH">func (OnDemand) DASH</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">)</span> <span class="nf">DASH</span><span class="p">(</span><span class="nx">a</span> <a href="#Anonymous"><span class="nx">Anonymous</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#MediaPart"><span class="nx">MediaPart</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h3 id="Path">type Path</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Path</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">// contains filtered or unexported fields
+</span><span class="c1"></span><span class="p">}</span></pre>
+    <h4 id="Path.Set">func (*Path) Set</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><a href="#Path"><span class="nx">Path</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Path.String">func (Path) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#Path"><span class="nx">Path</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  </main>
+    <hr>
+    <footer>
+      <small id="generated-by-footer">
+        Generated with <a href="https://abhinav.github.io/doc2go/">doc2go</a>
+      </small>
+    </footer>
+    <script src="../_/js/permalink.js"></script>
+  </body>
+</html>
