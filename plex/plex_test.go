@@ -20,7 +20,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   video, err := anon.OnDemand(match)
+   video, err := anon.Video(match)
    if err != nil {
       t.Fatal(err)
    }

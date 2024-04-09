@@ -16,7 +16,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   video, err := anon.OnDemand(match)
+   video, err := anon.Video(match)
    if err != nil {
       return err
    }

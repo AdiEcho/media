@@ -3,7 +3,7 @@ module 154.pages.dev/media
 go 1.22.0
 
 require (
-	154.pages.dev/encoding v1.20.7
+	154.pages.dev/encoding v1.20.8
 	154.pages.dev/log v1.2.0
 	154.pages.dev/sofia v1.3.2
 	154.pages.dev/widevine v1.3.7

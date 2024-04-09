@@ -40,7 +40,7 @@ func (a Anonymous) abs(path string, query url.Values) string {
    return u.String()
 }
 
-func (a Anonymous) OnDemand(d *DiscoverMatch) (*OnDemand, error) {
+func (a Anonymous) Video(d *DiscoverMatch) (*OnDemand, error) {
    req, err := http.NewRequest("GET", "https://vod.provider.plex.tv", nil)
    if err != nil {
       return nil, err
