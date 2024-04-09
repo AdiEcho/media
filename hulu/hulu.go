@@ -12,6 +12,32 @@ import (
    "strings"
 )
 
+func LivingRoom(email, password string) (*Authenticate, error) {
+   res, err := http.PostForm(
+      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
+         "friendly_name": {"!"},
+         "password": {password},
+         "serial_number": {"!"},
+         "user_email": {email},
+      },
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var auth Authenticate
+   auth.Data, err = io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &auth, nil
+}
+
 type Authenticate struct {
    Data []byte
    v struct {
@@ -60,32 +86,6 @@ func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
       close(channel)
    }()
    return channel, nil
-}
-
-func LivingRoom(email, password string) (*Authenticate, error) {
-   res, err := http.PostForm(
-      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
-         "friendly_name": {"!"},
-         "password": {password},
-         "serial_number": {"!"},
-         "user_email": {email},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var auth Authenticate
-   auth.Data, err = io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &auth, nil
 }
 
 func (a *Authenticate) Unmarshal() error {

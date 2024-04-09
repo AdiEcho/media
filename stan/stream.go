@@ -9,9 +9,9 @@ import (
 )
 
 var BaseUrl = []string{
+   "666-stan.akamaized.net", // geo block
    "aws.stan.video",
    "gec.stan.video",
-   "666-stan.akamaized.net", // geo block
 }
 
 func (p ProgramStream) BaseUrl(host string) (*url.URL, error) {

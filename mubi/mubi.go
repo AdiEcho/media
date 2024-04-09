@@ -11,24 +11,25 @@ import (
    "strings"
 )
 
-// final slash is needed
-func (Authenticate) RequestUrl() (string, bool) {
-   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
+var ClientCountry = "US"
+
+// "android" requires headers:
+// Client-Device-Identifier
+// Client-Version
+const client = "web"
+
+type Authenticate struct {
+   Data []byte
+   V struct {
+      Token string
+      User struct {
+         ID int
+      }
+   }
 }
 
 func (Authenticate) RequestBody(b []byte) ([]byte, error) {
    return b, nil
-}
-
-func (Authenticate) ResponseBody(b []byte) ([]byte, error) {
-   var v struct {
-      License []byte
-   }
-   err := json.Unmarshal(b, &v)
-   if err != nil {
-      return nil, err
-   }
-   return v.License, nil
 }
 
 func (a Authenticate) RequestHeader() (http.Header, error) {
@@ -46,31 +47,24 @@ func (a Authenticate) RequestHeader() (http.Header, error) {
    return head, nil
 }
 
-type Authenticate struct {
-   Data []byte
-   V struct {
-      Token string
-      User struct {
-         ID int
-      }
+// final slash is needed
+func (Authenticate) RequestUrl() (string, bool) {
+   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
+}
+
+func (Authenticate) ResponseBody(b []byte) ([]byte, error) {
+   var v struct {
+      License []byte
    }
-}
-
-func (w WebAddress) String() string {
-   return w.s
-}
-
-func (w *WebAddress) Set(s string) error {
-   var ok bool
-   _, w.s, ok = strings.Cut(s, "/films/")
-   if !ok {
-      return errors.New("/films/")
+   err := json.Unmarshal(b, &v)
+   if err != nil {
+      return nil, err
    }
-   return nil
+   return v.License, nil
 }
 
-type WebAddress struct {
-   s string
+func (a *Authenticate) Unmarshal() error {
+   return json.Unmarshal(a.Data, &a.V)
 }
 
 // Mubi do this sneaky thing. you cannot download a video unless you have told
@@ -107,31 +101,40 @@ func (a Authenticate) Viewing(f *FilmResponse) error {
    return nil
 }
 
-func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Data, &a.V)
+type FilmResponse struct {
+   V struct {
+      ID int64
+      Title string
+      Year int
+   }
 }
 
-func (w WebAddress) Film() (*FilmResponse, error) {
-   req, err := http.NewRequest(
-      "GET", "https://api.mubi.com/v3/films/" + w.s, nil,
-   )
-   if err != nil {
-      return nil, err
+func (FilmResponse) Episode() int {
+   return 0
+}
+
+func (FilmResponse) Season() int {
+   return 0
+}
+
+func (FilmResponse) Show() string {
+   return ""
+}
+
+func (f FilmResponse) Title() string {
+   return f.V.Title
+}
+
+func (f FilmResponse) Year() int {
+   return f.V.Year
+}
+
+type LinkCode struct {
+   Data []byte
+   V struct {
+      Auth_Token string
+      Link_Code string
    }
-   req.Header = http.Header{
-      "Client": {client},
-      "Client-Country": {ClientCountry},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   var film FilmResponse
-   if err := json.NewDecoder(res.Body).Decode(&film.V); err != nil {
-      return nil, err
-   }
-   return &film, nil
 }
 
 func (c LinkCode) Authenticate() (*Authenticate, error) {
@@ -167,13 +170,6 @@ func (c LinkCode) Authenticate() (*Authenticate, error) {
    }
    return &auth, nil
 }
-
-// "android" requires headers:
-// Client-Device-Identifier
-// Client-Version
-const client = "web"
-
-var ClientCountry = "US"
 
 func (c *LinkCode) New() error {
    req, err := http.NewRequest("GET", "https://api.mubi.com/v3/link_code", nil)
@@ -211,42 +207,46 @@ func (c LinkCode) String() string {
    return b.String()
 }
 
-type LinkCode struct {
-   Data []byte
-   V struct {
-      Auth_Token string
-      Link_Code string
-   }
-}
-
 func (c *LinkCode) Unmarshal() error {
    return json.Unmarshal(c.Data, &c.V)
 }
 
-func (FilmResponse) Show() string {
-   return ""
+type WebAddress struct {
+   s string
 }
 
-func (FilmResponse) Season() int {
-   return 0
-}
-
-func (FilmResponse) Episode() int {
-   return 0
-}
-
-func (f FilmResponse) Title() string {
-   return f.V.Title
-}
-
-type FilmResponse struct {
-   V struct {
-      ID int64
-      Title string
-      Year int
+func (w WebAddress) Film() (*FilmResponse, error) {
+   req, err := http.NewRequest(
+      "GET", "https://api.mubi.com/v3/films/" + w.s, nil,
+   )
+   if err != nil {
+      return nil, err
    }
+   req.Header = http.Header{
+      "Client": {client},
+      "Client-Country": {ClientCountry},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   var film FilmResponse
+   if err := json.NewDecoder(res.Body).Decode(&film.V); err != nil {
+      return nil, err
+   }
+   return &film, nil
 }
 
-func (f FilmResponse) Year() int {
-   return f.V.Year
+func (w *WebAddress) Set(s string) error {
+   var ok bool
+   _, w.s, ok = strings.Cut(s, "/films/")
+   if !ok {
+      return errors.New("/films/")
+   }
+   return nil
+}
+
+func (w WebAddress) String() string {
+   return w.s
 }

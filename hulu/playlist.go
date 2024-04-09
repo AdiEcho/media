@@ -86,14 +86,14 @@ func (Playlist) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Playlist) ResponseBody(b []byte) ([]byte, error) {
-   return b, nil
+func (Playlist) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
 }
 
 func (p Playlist) RequestUrl() (string, bool) {
    return p.WV_Server, true
 }
 
-func (Playlist) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
+func (Playlist) ResponseBody(b []byte) ([]byte, error) {
+   return b, nil
 }

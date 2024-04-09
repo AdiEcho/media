@@ -7,6 +7,7 @@ import (
    "errors"
    "io"
    "net/http"
+   "net/url"
    "os"
    "slices"
    "strings"
@@ -15,11 +16,15 @@ import (
 func (h HttpStream) segment_template(
    ext, initial string, rep *dash.Representation,
 ) error {
+   base, err := url.Parse(rep.GetAdaptationSet().GetPeriod().GetMpd().BaseURL)
+   if err != nil {
+      return err
+   }
    req, err := http.NewRequest("GET", initial, nil)
    if err != nil {
       return err
    }
-   req.URL = h.base.ResolveReference(req.URL)
+   req.URL = base.ResolveReference(req.URL)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -54,9 +59,8 @@ func (h HttpStream) segment_template(
       return err
    }
    meter.Set(len(media))
-   for _, ref := range media {
-      // with DASH, initialization and media URLs are relative to the MPD URL
-      req.URL, err = h.base.Parse(ref)
+   for _, medium := range media {
+      req.URL, err = base.Parse(medium)
       if err != nil {
          return err
       }
@@ -79,6 +83,7 @@ func (h HttpStream) segment_template(
    }
    return nil
 }
+
 func (h HttpStream) DASH(rep *dash.Representation) error {
    ext, ok := rep.Ext()
    if !ok {

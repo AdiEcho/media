@@ -9,6 +9,19 @@ import (
    "strings"
 )
 
+func cache_hash() string {
+   return base64.StdEncoding.EncodeToString([]byte("ff="))
+}
+
+type ContentCompiler struct {
+   Data	struct {
+      Children []struct {
+         Properties json.RawMessage
+         Type string
+      }
+   }
+}
+
 func (c ContentCompiler) Video() (*CurrentVideo, error) {
    for _, child := range c.Data.Children {
       if child.Type == "video-player-ap" {
@@ -37,16 +50,16 @@ type CurrentVideo struct {
    }
 }
 
+func (c CurrentVideo) Episode() int {
+   return c.Meta.EpisodeNumber
+}
+
 func (c CurrentVideo) Show() string {
    return c.Meta.ShowTitle
 }
 
 func (c CurrentVideo) Season() int {
    return c.Meta.Season
-}
-
-func (c CurrentVideo) Episode() int {
-   return c.Meta.EpisodeNumber
 }
 
 func (c CurrentVideo) Title() string {
@@ -60,19 +73,6 @@ func (c CurrentVideo) Year() int {
       }
    }
    return 0
-}
-
-func cache_hash() string {
-   return base64.StdEncoding.EncodeToString([]byte("ff="))
-}
-
-type ContentCompiler struct {
-   Data	struct {
-      Children []struct {
-         Properties json.RawMessage
-         Type string
-      }
-   }
 }
 
 type DataSource struct {
