@@ -1,95 +1,31 @@
 package hulu
 
 import (
-   "bytes"
-   "encoding/json"
-   "errors"
-   "io"
    "net/http"
-   "net/url"
    "path"
    "strconv"
    "strings"
 )
 
-func LivingRoom(email, password string) (*Authenticate, error) {
-   res, err := http.PostForm(
-      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
-         "friendly_name": {"!"},
-         "password": {password},
-         "serial_number": {"!"},
-         "user_email": {email},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var auth Authenticate
-   auth.Data, err = io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &auth, nil
+type Playlist struct {
+   Stream_URL string
+   WV_Server string
 }
 
-type Authenticate struct {
-   Data []byte
-   v struct {
-      Data struct {
-         User_Token string
-      }
-   }
+func (Playlist) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
 }
 
-func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
-   body, err := func() ([]byte, error) {
-      m := map[string][]string{
-         "eabs": {d.EAB_ID},
-      }
-      return json.Marshal(m)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://guide.hulu.com/guide/details", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("Authorization", "Bearer " + a.v.Data.User_Token)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   var s struct {
-      Items []Details
-   }
-   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
-      return nil, err
-   }
-   channel := make(chan Details)
-   go func() {
-      for _, item := range s.Items {
-         channel <- item
-      }
-      close(channel)
-   }()
-   return channel, nil
+func (Playlist) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
 }
 
-func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Data, &a.v)
+func (p Playlist) RequestUrl() (string, bool) {
+   return p.WV_Server, true
+}
+
+func (Playlist) ResponseBody(b []byte) ([]byte, error) {
+   return b, nil
 }
 
 type DeepLink struct {
@@ -108,34 +44,6 @@ func (i ID) String() string {
 func (i *ID) Set(s string) error {
    i.s = path.Base(s)
    return nil
-}
-
-func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
-   req, err := http.NewRequest("GET", "https://discover.hulu.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/content/v5/deeplink/playback"
-   req.URL.RawQuery = url.Values{
-      "id": {watch.s},
-      "namespace": {"entity"},
-   }.Encode()
-   req.Header.Set("Authorization", "Bearer " + a.v.Data.User_Token)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   link := new(DeepLink)
-   if err := json.NewDecoder(res.Body).Decode(link); err != nil {
-      return nil, err
-   }
-   return link, nil
 }
 
 type codec_value struct {

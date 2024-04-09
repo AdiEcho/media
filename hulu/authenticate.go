@@ -1,0 +1,189 @@
+package hulu
+
+import (
+   "bytes"
+   "encoding/json"
+   "errors"
+   "io"
+   "net/http"
+   "net/url"
+   "strings"
+)
+
+func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
+   var p playlist_request
+   p.Content_EAB_ID = d.EAB_ID
+   p.Deejay_Device_ID = 166
+   p.Playback.Audio.Codecs.Selection_Mode = "ALL"
+   p.Playback.Audio.Codecs.Values = []codec_value{
+      {Type: "AAC"},
+      {Type: "EC3"},
+   }
+   p.Playback.DRM.Selection_Mode = "ALL"
+   p.Playback.DRM.Values = []drm_value{
+      {
+         Security_Level: "L3",
+         Type: "WIDEVINE",
+         Version: "MODULAR",
+      },
+   }
+   p.Playback.Manifest.Type = "DASH"
+   p.Playback.Segments.Selection_Mode = "ALL"
+   p.Playback.Segments.Values = func() []segment_value {
+      var s segment_value
+      s.Encryption.Mode = "CENC"
+      s.Encryption.Type = "CENC"
+      s.Type = "FMP4"
+      return []segment_value{s}
+   }()
+   p.Playback.Version = 2 // this is required for 1080p
+   p.Playback.Video.Codecs.Selection_Mode = "ALL"
+   p.Playback.Video.Codecs.Values = []codec_value{
+      {
+         Height: 9999,
+         Width: 9999,
+         Level: "5.2",
+         Profile: "HIGH",
+         Type: "H264",
+      },
+   }
+   p.Unencrypted = true
+   p.Version = 5012541
+   body, err := json.Marshal(p)
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://play.hulu.com/v6/playlist", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "Authorization": {"Bearer " + a.v.Data.User_Token},
+      "Content-Type": {"application/json"},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   play := new(Playlist)
+   if err := json.NewDecoder(res.Body).Decode(play); err != nil {
+      return nil, err
+   }
+   return play, nil
+}
+
+func LivingRoom(email, password string) (*Authenticate, error) {
+   res, err := http.PostForm(
+      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
+         "friendly_name": {"!"},
+         "password": {password},
+         "serial_number": {"!"},
+         "user_email": {email},
+      },
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var auth Authenticate
+   auth.Data, err = io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &auth, nil
+}
+
+type Authenticate struct {
+   Data []byte
+   v struct {
+      Data struct {
+         User_Token string
+      }
+   }
+}
+
+func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
+   body, err := func() ([]byte, error) {
+      m := map[string][]string{
+         "eabs": {d.EAB_ID},
+      }
+      return json.Marshal(m)
+   }()
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://guide.hulu.com/guide/details", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("Authorization", "Bearer " + a.v.Data.User_Token)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   var s struct {
+      Items []Details
+   }
+   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
+      return nil, err
+   }
+   channel := make(chan Details)
+   go func() {
+      for _, item := range s.Items {
+         channel <- item
+      }
+      close(channel)
+   }()
+   return channel, nil
+}
+
+func (a *Authenticate) Unmarshal() error {
+   return json.Unmarshal(a.Data, &a.v)
+}
+
+func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
+   req, err := http.NewRequest("GET", "https://discover.hulu.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/content/v5/deeplink/playback"
+   req.URL.RawQuery = url.Values{
+      "id": {watch.s},
+      "namespace": {"entity"},
+   }.Encode()
+   req.Header.Set("Authorization", "Bearer " + a.v.Data.User_Token)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   link := new(DeepLink)
+   if err := json.NewDecoder(res.Body).Decode(link); err != nil {
+      return nil, err
+   }
+   return link, nil
+}
