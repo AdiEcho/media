@@ -13,6 +13,49 @@ import (
    "strings"
 )
 
+func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
+   res, err := http.Get(url)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   var media dash.MPD
+   if err := media.Unmarshal(text); err != nil {
+      return nil, err
+   }
+   if media.BaseURL == "" {
+      media.BaseURL = url
+   }
+   var reps []*dash.Representation
+   for _, v := range media.Period {
+      seconds, err := v.Seconds()
+      if err != nil {
+         return nil, err
+      }
+      for _, v := range v.AdaptationSet {
+         for _, v := range v.Representation {
+            if seconds > 9 {
+               if _, ok := v.Ext(); ok {
+                  reps = append(reps, v)
+               }
+            }
+         }
+      }
+   }
+   slices.SortFunc(reps, func(a, b *dash.Representation) int {
+      return int(a.Bandwidth - b.Bandwidth)
+   })
+   return reps, nil
+}
 func (h HttpStream) segment_template(
    ext, initial string, rep *dash.Representation,
 ) error {
@@ -182,44 +225,3 @@ func (h HttpStream) TimedText(url string) error {
    return nil
 }
 
-func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
-   res, err := http.Get(url)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   text, err := io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   var media dash.MPD
-   if err := media.Unmarshal(text); err != nil {
-      return nil, err
-   }
-   if media.BaseURL == "" {
-      media.BaseURL = url
-   }
-   var reps []*dash.Representation
-   for _, v := range media.Period {
-      seconds, err := v.Seconds()
-      if err != nil {
-         return nil, err
-      }
-      for _, v := range v.AdaptationSet {
-         for _, v := range v.Representation {
-            if seconds > 9 {
-               if _, ok := v.Ext(); ok {
-                  reps = append(reps, v)
-               }
-            }
-         }
-      }
-   }
-   slices.SortFunc(reps, func(a, b *dash.Representation) int {
-      return int(a.Bandwidth - b.Bandwidth)
-   })
-   return reps, nil
-}
