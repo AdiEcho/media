@@ -1,0 +1,119 @@
+{
+  "gn_fields": null,
+  "hero_images": [
+    "https://canvas-bridge.tubitv.com/WH-ho0qZC2qf6Hsk0jTEbjhcAUg=/434x362/smart/img.adrise.tv/cffe8ee8-834b-4a65-80d6-f77f452c01b4.jpg"
+  ],
+  "needs_login": false,
+  "images": {},
+  "title": "The Mask",
+  "availability_ends": "2024-04-30T23:59:59.000Z",
+  "availability_duration": 1629612,
+  "video_resources": [],
+  "id": "589292",
+  "subtitles": [
+    {
+      "lang": "English",
+      "lang_alpha3": "eng",
+      "url": "http://s.adrise.tv/fe3dd226-febc-4711-b6df-509aaf6fa6c3.srt"
+    }
+  ],
+  "lang": "English",
+  "country": "United States",
+  "ad_languages": [],
+  "imdb_id": "tt0110475",
+  "duration": 6068,
+  "has_trailer": true,
+  "ratings": [
+    {
+      "code": "PG-13",
+      "descriptors": [],
+      "system": "mpaa",
+      "value": "PG-13"
+    }
+  ],
+  "trailers": [
+    {
+      "duration": 112,
+      "id": "593101",
+      "url": "https://manifest.production-public.tubi.io/90155121-d64c-4f08-b5ae-6d2156f5860a/k585cfoszw.m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9hYmVybmloYWFhYWFhYWFtYWFhYWFhYWFhYWFhYS5jbG91ZGZyb250LnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiJhYjU1NDUyYy02NmUwLTQwMjEtOTYxOS01YmRjMjVmMjZhZTgiLCJleHAiOjE3MTMxNTA5MDAsIm1lZGlhX3NpZyI6ODE0MTYyMjQsInBsYXRmb3JtIjoiQU5EUk9JRCIsInVzZXJfaWQiOjB9.hLRtvyUMDUYITz6-HJrCd7nIhUFfYzpSBZQTQF-wv7M"
+    }
+  ],
+  "rt_fields": null,
+  "updated_at": "2024-04-10T18:04:05.000Z",
+  "monetization": {
+    "cue_points": [
+      0,
+      497,
+      1370,
+      1833,
+      2244,
+      2761,
+      3174,
+      3550,
+      4070,
+      4791,
+      5576
+    ]
+  },
+  "credit_cuepoints": {
+    "earlycredits_end": 0,
+    "earlycredits_start": 0,
+    "intro_end": 0,
+    "intro_start": 0,
+    "postlude": 5679,
+    "prelogue": 0,
+    "prologue": 0,
+    "recap_end": 0,
+    "recap_start": 0
+  },
+  "partner_id": null,
+  "policy_match": true,
+  "landscape_images": [
+    "https://canvas-bridge.tubitv.com/7IT3TiKPQ910dTjhc6ajMcOjce0=/1280x720/smart/img.adrise.tv/469bcf40-df74-4fa5-a4e8-c770a919b892.jpg"
+  ],
+  "backgrounds": [
+    "https://canvas-bridge.tubitv.com/wUz_j9YhfhMb45A6ZVAh5ix8Ggc=/0x774:4444x3240/1920x1080/smart/img.adrise.tv/cffe8ee8-834b-4a65-80d6-f77f452c01b4.jpg",
+    "https://canvas-bridge.tubitv.com/8WvRaaaDHQ2QE2OIFzeSRri5zEM=/0x452:4579x3045/1920x1080/smart/img.adrise.tv/d38cd931-0f2d-4f96-9d9a-48e2bb5c836d.jpg"
+  ],
+  "awards": {
+    "items": []
+  },
+  "url": "",
+  "import_id": "warner-bros",
+  "canonical_id": "",
+  "imdb_fields": null,
+  "tags": [
+    "Comedy",
+    "Action",
+    "Crime"
+  ],
+  "directors": [
+    "Chuck Russell"
+  ],
+  "detailed_type": "movie",
+  "has_subtitle": true,
+  "is_cdc": false,
+  "valid_duration": 7200,
+  "video_renditions": [],
+  "description": "Jim Carrey’s superstar role as a kind and meek bank teller who gets superpowers from a Nordic mask and becomes a totally s-s-s-smokin’ hero!",
+  "availability_starts": "2024-04-01T00:00:00.000Z",
+  "year": 1994,
+  "type": "v",
+  "version": 58,
+  "version_id": "",
+  "thumbnails": [
+    "https://canvas-bridge.tubitv.com/DIrr3c6ACa1yptB2uGBE4c88REU=/306x150/smart/img.adrise.tv/5ab2ae9a-ee04-4a42-a943-02870598585f.jpg"
+  ],
+  "posterarts": [
+    "https://canvas-bridge.tubitv.com/CSDqaVI2pCvZGDNEySrJ2HMTbzk=/214x306/smart/img.adrise.tv/c7b7f21a-a5ee-4444-b3e2-7daa61601845.jpg"
+  ],
+  "video_preview_url": "https://video-previews-cdn.production-public.tubi.io/videopreview/54e0bd98-9429-43b9-97c7-bad1248c6f51/54e0bd98-9429-43b9-97c7-bad1248c6f51-start1068-end1129_v2.mp4",
+  "publisher_id": "f45bd90ea95d233bf3625044d90eedc8",
+  "actors": [
+    "Jim Carrey",
+    "Cameron Diaz",
+    "Peter Riegert",
+    "Peter Greene",
+    "Joely Fisher"
+  ]
+}

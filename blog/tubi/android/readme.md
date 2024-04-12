@@ -3,56 +3,21 @@
 - https://apkmirror.com/apk/tubi-tv/tubi-free-movies-tv-shows
 - https://play.google.com/store/apps/details?id=com.tubitv
 
-## android 9
+need to use at least Android 12. the app crashes with older versions:
 
 ~~~
-8.7.0 crash fast
-7.24.0 crash slow
-5.9.1 crash fast
-4.48.1 crash fast
-4.21.2 require update
-~~~
-
-## android 10 x86
-
-~~~
-INSTALL_FAILED_NO_MATCHING_ABIS
-~~~
-
-## android 10 `x86_64`
-
-~~~
-INSTALL_FAILED_NO_MATCHING_ABIS
-~~~
-
-## android 11 x86
-
-~~~
-8.7.0 tubi does not work on rooted device
-8.4.1 tubi does not work on rooted device
-8.3.0 crash fast
-7.24.0 crash fast
-5.9.1 crash fast
-4.48.1 crash fast
-~~~
-
-## android 11 `x86_64`
-
-~~~
-8.3.0 tubi does not work on rooted device
 7.24.0 tubi does not work on rooted device
-5.9.1 we are having issues playing this protected content
-4.48.1 we are having issues playing this protected content
+5.9.1 pass
 ~~~
 
-## android 12 `x86_64`
+this is it:
 
-~~~
-5.9.1
-~~~
+https://abernihaaaaaaaamaaaaaaaaaaaaa.cloudfront.tubi.video/08154497-59e8-4b54-9588-8dbcca436fa8/5l9qdblj.mp4
 
-## android 13 `x86_64`
+from:
 
-~~~
-4.48.1 pass
-~~~
+https://manifest.production-public.tubi.io/08154497-59e8-4b54-9588-8dbcca436fa8/01cwjck21m.m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9hYmVybmloYWFhYWFhYWFtYWFhYWFhYWFhYWFhYS5jbG91ZGZyb250LnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiJhYjU1NDUyYy02NmUwLTQwMjEtOTYxOS01YmRjMjVmMjZhZTgiLCJleHAiOjE3MTMxNDkxMDAsIm1lZGlhX3NpZyI6MTMzMDY2OTc5LCJwbGF0Zm9ybSI6IkFORFJPSUQiLCJ1c2VyX2lkIjowfQ.mxGw2g4PmkWQsjKoS6zcqePWV2x9nm0w8cwlnYTwsOw
+
+from:
+
+<https://uapi.adrise.tv/cms/content?content_id=589292&video_resources%5B%5D=hlsv6_widevine_psshv0&limit_resolutions%5B%5D=h264_1080p&video_resources%5B%5D=hlsv6&platform=android&deviceId=ab55452c-66e0-4021-9619-5bdc25f26ae8&app_id=tubitv>
