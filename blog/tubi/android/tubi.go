@@ -1,30 +1,35 @@
-package main
+package tubi
 
 import (
+   "encoding/json"
    "net/http"
    "net/url"
-   "os"
+   "strconv"
 )
 
-func main() {
-   var req http.Request
-   req.Header = make(http.Header)
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "uapi.adrise.tv"
-   req.URL.Path = "/cms/content"
-   req.URL.Scheme = "https"
-   val := make(url.Values)
-   val["content_id"] = []string{"589292"}
-   val["deviceId"] = []string{"ab55452c-66e0-4021-9619-5bdc25f26ae8"}
-   val["platform"] = []string{"android"}
-   val["video_resources[]"] = []string{"dash_widevine"}
-   req.URL.RawQuery = val.Encode()
-   res, err := http.DefaultClient.Do(&req)
+type content_management struct {
+   Video_Resources []struct {
+      Manifest struct {
+         URL string
+      }
+   }
+}
+
+func (c *content_management) New(content_id int) error {
+   req, err := http.NewRequest("GET", "https://uapi.adrise.tv/cms/content", nil)
    if err != nil {
-      panic(err)
+      return err
+   }
+   req.URL.RawQuery = url.Values{
+      "content_id": {strconv.Itoa(content_id)},
+      "deviceId": {"ab55452c-66e0-4021-9619-5bdc25f26ae8"},
+      "platform": {"android"},
+      "video_resources[]": {"dash_widevine"},
+   }.Encode()
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
    }
    defer res.Body.Close()
-   res.Write(os.Stdout)
+   return json.NewDecoder(res.Body).Decode(c)
 }
