@@ -6,25 +6,39 @@ import (
    "fmt"
    "os"
    "testing"
+   "time"
 )
 
-// tubitv.com/tv-shows/200042567/s01-e03-hell-hath-no-fury
-
-// tubitv.com/movies/589292
-const (
-   content_id = 589292
-   default_kid = "943974887f2a4b87a3ded9e99f03c962"
-)
+var tests = map[string]struct{
+   content_id int
+   key_id string
+   url string
+}{
+   "movie": {
+      content_id: 589292,
+      key_id: "943974887f2a4b87a3ded9e99f03c962",
+      url: "tubitv.com/movies/589292",
+   },
+   "episode": {
+      content_id: 200042567,
+      url: "tubitv.com/tv-shows/200042567",
+   },
+}
 
 func TestContent(t *testing.T) {
-   var content content_management
-   if err := content.New(content_id); err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      var content content_management
+      err := content.New(test.content_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", content)
+      time.Sleep(time.Second)
    }
-   fmt.Printf("%+v\n", content)
 }
 
 func TestLicense(t *testing.T) {
+   test := tests["movie"]
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -37,7 +51,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key_id, err := hex.DecodeString(default_kid)
+   key_id, err := hex.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -46,7 +60,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var content content_management
-   if err := content.New(content_id); err != nil {
+   if err := content.New(test.content_id); err != nil {
       t.Fatal(err)
    }
    video, ok := content.Resolution720p()

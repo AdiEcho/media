@@ -1,0 +1,142 @@
+{
+  "images": {},
+  "valid_duration": 7200,
+  "lang": "English",
+  "hero_images": [],
+  "directors": [
+    "Allison Liddi-Brown"
+  ],
+  "gn_fields": null,
+  "posterarts": [],
+  "import_id": "disney",
+  "rt_fields": null,
+  "has_subtitle": true,
+  "url": "",
+  "monetization": {
+    "cue_points": [
+      0,
+      255,
+      563,
+      997,
+      1343,
+      1665,
+      2253
+    ]
+  },
+  "id": "200042567",
+  "video_resources": [
+    {
+      "codec": "VIDEO_CODEC_H264",
+      "generator_version": "",
+      "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_v1",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=CA8305AA473F66F56E2FEB7159DA6BFC&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiYWxsX2FuYWxvZ19wcm90ZWN0aW9ucyIsImV4cCI6MTcxMzIyMjAwMCwiaGRjcCI6InYxIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoyfQ.8ajeZGPUNKCZgfVnP32dE0YoUTjQTQf_4L6f8R27cAs"
+      },
+      "manifest": {
+        "duration": 2582,
+        "url": "https://manifest.production-public.tubi.io/dcdbceb9-efdd-4362-9b3b-268db6558919/92xlo53cmn.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjIyMDAwLCJtZWRpYV9zaWciOjc0OTc2NzkxLCJwbGF0Zm9ybSI6IkFORFJPSUQiLCJ1c2VyX2lkIjowfQ.v5taTDyahFdXe89W4VOMCkY8xvXVA9MV742sgDBfK3Q"
+      },
+      "resolution": "VIDEO_RESOLUTION_720P",
+      "ssai_version": "",
+      "titan_version": "",
+      "type": "dash_widevine"
+    },
+    {
+      "codec": "VIDEO_CODEC_H264",
+      "generator_version": "",
+      "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_disabled",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=CA8305AA473F66F56E2FEB7159DA6BFC&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiZW5hYmxlZCIsImV4cCI6MTcxMzIyMjAwMCwiaGRjcCI6ImRpc2FibGVkIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoxfQ.kB1VoJARJHlBtxr-NNP3VOsyt6uRuh50XV7CbSu6r0Y"
+      },
+      "manifest": {
+        "duration": 2582,
+        "url": "https://manifest.production-public.tubi.io/dcdbceb9-efdd-4362-9b3b-268db6558919/86btvz1ykl.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjIyMDAwLCJtZWRpYV9zaWciOjc0OTc2NzkxLCJwbGF0Zm9ybSI6IkFORFJPSUQiLCJ1c2VyX2lkIjowfQ.v5taTDyahFdXe89W4VOMCkY8xvXVA9MV742sgDBfK3Q"
+      },
+      "resolution": "VIDEO_RESOLUTION_576P",
+      "ssai_version": "",
+      "titan_version": "",
+      "type": "dash_widevine"
+    }
+  ],
+  "detailed_type": "episode",
+  "landscape_images": [],
+  "episode_number": "3",
+  "needs_login": false,
+  "display_episode_number": "3",
+  "availability_ends": "2025-01-31T23:59:59.000Z",
+  "ratings": [
+    {
+      "code": "TV-14",
+      "descriptors": [],
+      "system": "tvpg",
+      "value": "TV-14"
+    }
+  ],
+  "video_preview_url": "",
+  "thumbnails": [
+    "https://canvas-bridge02.tubitv.com/TENPcl-QYYYlzjZjr8sa3yL9jPo=/306x150/smart/img.adrise.tv/77a179d6-fc42-400e-bac5-10469384710e.jpg"
+  ],
+  "credit_cuepoints": {
+    "earlycredits_end": 0,
+    "earlycredits_start": 0,
+    "intro_end": 0,
+    "intro_start": 0,
+    "postlude": 2550,
+    "prelogue": 0,
+    "prologue": 0,
+    "recap_end": 37,
+    "recap_start": 3
+  },
+  "updated_at": "2024-03-13T15:06:04.000Z",
+  "partner_id": "F003",
+  "publisher_id": "81c692bbe7fc8baf4ac54dd69f2dd9ca",
+  "canonical_id": "",
+  "policy_match": true,
+  "has_trailer": false,
+  "version_id": "",
+  "title": "S01:E03 - Hell Hath No Fury",
+  "actors": [
+    "Kerry Washington",
+    "Henry Ian Cusick",
+    "Columbus Short",
+    "Darby Stanchfield",
+    "Katie Lowes",
+    "Guillermo Diaz"
+  ],
+  "tags": [
+    "Drama",
+    "Thriller"
+  ],
+  "duration": 2582,
+  "is_cdc": false,
+  "subtitles": [
+    {
+      "lang": "English",
+      "lang_alpha3": "eng",
+      "url": "http://s.adrise.tv/e1abec5d-2d1c-4006-b629-6f7bc4e92281.srt"
+    }
+  ],
+  "country": "United States",
+  "video_renditions": [],
+  "description": "A millionaire's son is accused of rape; Olivia must deal with Amanda's first request as a client, a meeting with the President.",
+  "imdb_id": "tt2016666",
+  "availability_starts": "2024-02-01T00:00:00.000Z",
+  "availability_duration": 25404947,
+  "awards": {
+    "items": []
+  },
+  "year": 2012,
+  "type": "v",
+  "series_id": "300002169",
+  "version": 27,
+  "imdb_fields": null,
+  "ad_languages": [],
+  "backgrounds": [
+    "https://canvas-bridge02.tubitv.com/N-_GBdmt08sTXaaOZqhrvLc7MRE=/1920x1080/smart/img.adrise.tv/77a179d6-fc42-400e-bac5-10469384710e.jpg"
+  ],
+  "trailers": []
+}
