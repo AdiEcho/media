@@ -6,6 +6,15 @@ import (
    "os"
 )
 
+func (f flags) authenticate() error {
+   var auth hulu.Authenticate
+   err := auth.New(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/hulu.json", auth.Data, 0666)
+}
+
 func (f flags) download() error {
    var (
       auth hulu.Authenticate
@@ -50,15 +59,3 @@ func (f flags) download() error {
    return nil
 }
 
-func (f flags) authenticate() error {
-   name, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   name += "/hulu.json"
-   auth, err := hulu.LivingRoom(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(name, auth.Data, 0666)
-}

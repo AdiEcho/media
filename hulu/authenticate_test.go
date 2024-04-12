@@ -6,21 +6,17 @@ import (
    "testing"
 )
 
-func new_auth() (*Authenticate, error) {
-   auth, err := LivingRoom(
-      os.Getenv("hulu_username"), os.Getenv("hulu_password"),
-   )
+func (a *Authenticate) getenv() error {
+   err := a.New(os.Getenv("hulu_username"), os.Getenv("hulu_password"))
    if err != nil {
-      return nil, err
+      return err
    }
-   if err := auth.Unmarshal(); err != nil {
-      return nil, err
-   }
-   return auth, nil
+   return a.Unmarshal()
 }
 
 func TestDetails(t *testing.T) {
-   auth, err := new_auth()
+   var auth Authenticate
+   err := auth.getenv()
    if err != nil {
       t.Fatal(err)
    }
@@ -32,7 +28,8 @@ func TestDetails(t *testing.T) {
 }
 
 func TestDeepLink(t *testing.T) {
-   auth, err := new_auth()
+   var auth Authenticate
+   err := auth.getenv()
    if err != nil {
       t.Fatal(err)
    }

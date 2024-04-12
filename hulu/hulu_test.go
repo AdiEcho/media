@@ -9,7 +9,8 @@ import (
 )
 
 func TestLicense(t *testing.T) {
-   auth, err := new_auth()
+   var auth Authenticate
+   err := auth.getenv()
    if err != nil {
       t.Fatal(err)
    }
