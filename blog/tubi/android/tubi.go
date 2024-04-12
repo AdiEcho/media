@@ -19,6 +19,7 @@ func main() {
    val["content_id"] = []string{"589292"}
    val["deviceId"] = []string{"ab55452c-66e0-4021-9619-5bdc25f26ae8"}
    val["platform"] = []string{"android"}
+   val["video_resources[]"] = []string{"dash_widevine"}
    req.URL.RawQuery = val.Encode()
    res, err := http.DefaultClient.Do(&req)
    if err != nil {
