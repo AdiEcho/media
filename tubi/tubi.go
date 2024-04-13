@@ -5,6 +5,7 @@ import (
    "net/http"
    "net/url"
    "strconv"
+   "strings"
 )
 
 type content struct {
@@ -42,10 +43,6 @@ func (c *content) New(id int) error {
    return nil
 }
 
-func (c content) episode() bool {
-   return c.Detailed_Type == "episode"
-}
-
 func (c content) get(id int) (*content, bool) {
    if c.ID == id {
       return &c, true
@@ -63,10 +60,6 @@ func (c *content) set(parent *content) {
    for _, child := range c.Children {
       child.set(c)
    }
-}
-
-type namer struct {
-   c *content
 }
 
 func (n namer) Episode() int {
@@ -87,10 +80,22 @@ func (n namer) Show() string {
    return ""
 }
 
-func (n namer) Title() string {
-   return n.c.Title
-}
-
 func (n namer) Year() int {
    return n.c.Year
+}
+
+type namer struct {
+   c *content
+}
+
+func (c content) episode() bool {
+   return c.Detailed_Type == "episode"
+}
+
+// S01:E03 - Hell Hath No Fury
+func (n namer) Title() string {
+   if _, v, ok := strings.Cut(n.c.Title, " - "); ok {
+      return v
+   }
+   return n.c.Title
 }
