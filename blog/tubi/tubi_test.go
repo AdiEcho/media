@@ -1,17 +1,15 @@
 package tubi
 
 import (
-   "encoding/json"
-   "os"
+   "154.pages.dev/encoding"
+   "fmt"
    "testing"
    "time"
 )
 
 func TestContent(t *testing.T) {
-   enc := json.NewEncoder(os.Stdout)
-   enc.SetIndent("", " ")
    for _, test := range tests {
-      var cms content
+      cms := new(content)
       err := cms.New(test.content_id)
       if err != nil {
          t.Fatal(err)
@@ -23,8 +21,17 @@ func TestContent(t *testing.T) {
             t.Fatal(err)
          }
          time.Sleep(time.Second)
+         var ok bool
+         cms, ok = cms.get(test.content_id)
+         if !ok {
+            t.Fatal("get")
+         }
       }
-      enc.Encode(cms)
+      name, err := encoding.Name(namer{cms})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
    }
 }
 
