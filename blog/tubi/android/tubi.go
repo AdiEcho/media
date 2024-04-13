@@ -62,10 +62,9 @@ func (c content_management) Resolution720p() (*VideoResource, bool) {
 }
 
 type content_management struct {
+   Detailed_Type string
    Video_Resources []VideoResource
 }
-
-/////////
 
 func (content_management) Show() string {
    return ""

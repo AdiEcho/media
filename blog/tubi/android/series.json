@@ -1,0 +1,656 @@
+{
+ "children": [
+  {
+   "children": [
+    {
+     "import_id": "disney",
+     "hero_images": [],
+     "lang": "English",
+     "directors": [
+      "Paul McGuigan"
+     ],
+     "needs_login": false,
+     "country": "United States",
+     "series_id": "300002169",
+     "ratings": [
+      {
+       "code": "TV-14",
+       "descriptors": [],
+       "system": "tvpg",
+       "value": "TV-14"
+      }
+     ],
+     "posterarts": [],
+     "gn_fields": null,
+     "video_renditions": [],
+     "id": "200042537",
+     "ad_languages": [],
+     "actors": [
+      "Kerry Washington",
+      "Henry Ian Cusick",
+      "Columbus Short",
+      "Darby Stanchfield",
+      "Katie Lowes",
+      "Guillermo Diaz"
+     ],
+     "has_trailer": false,
+     "title": "S01:E01 - Sweet Baby",
+     "rt_fields": null,
+     "backgrounds": [
+      "https://canvas-bridge02.tubitv.com/bN1DVBCV7OjYA8O5hSQmh0KfVIE=/1920x1080/smart/img.adrise.tv/562fd0fb-b8a9-478e-a945-366c6e56fadf.jpg",
+      "https://canvas-bridge02.tubitv.com/TupKGTscJoL0KvMe4kx9JEp1hKs=/1920x1080/smart/img.adrise.tv/51c1cdf7-e065-4f6a-aa28-692197cc655c.jpg"
+     ],
+     "thumbnails": [
+      "https://canvas-bridge02.tubitv.com/5puT--AAiJaRCtIcQ7li4zqjSI0=/0x15:1280x655/306x150/smart/img.adrise.tv/51c1cdf7-e065-4f6a-aa28-692197cc655c.jpg"
+     ],
+     "canonical_id": "",
+     "video_resources": [
+      {
+       "codec": "VIDEO_CODEC_H264",
+       "generator_version": "",
+       "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_v1",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=B555C51F77BDC950874BDB781349E9E6&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiYWxsX2FuYWxvZ19wcm90ZWN0aW9ucyIsImV4cCI6MTcxMzIzNDAwMCwiaGRjcCI6InYxIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoyfQ.-DndUDDGmp-u36k71-_NnnBgOfimPDfP-tmRgLA4zbY"
+       },
+       "manifest": {
+        "duration": 2702,
+        "url": "https://manifest.production-public.tubi.io/c51c7619-9a73-4bd9-a503-a6a3f8f0db96/ije0f0hv4d.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjM0MDAwLCJtZWRpYV9zaWciOjU1ODkxNDQ2LCJwbGF0Zm9ybSI6IkFORFJPSUQiLCJ1c2VyX2lkIjowfQ.amr1bufmdrMb_uqZhcDuDcEXugTYBg9PsK2YqpXPxG0"
+       },
+       "resolution": "VIDEO_RESOLUTION_720P",
+       "ssai_version": "",
+       "titan_version": "",
+       "type": "dash_widevine"
+      },
+      {
+       "codec": "VIDEO_CODEC_H264",
+       "generator_version": "",
+       "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_disabled",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=B555C51F77BDC950874BDB781349E9E6&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiZW5hYmxlZCIsImV4cCI6MTcxMzIzNDAwMCwiaGRjcCI6ImRpc2FibGVkIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoxfQ.nICkmmuw6BqUY_bf9zIMWOc0MHft9RoRBsmAjWRX2A0"
+       },
+       "manifest": {
+        "duration": 2702,
+        "url": "https://manifest.production-public.tubi.io/c51c7619-9a73-4bd9-a503-a6a3f8f0db96/ce39lztwc5.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjM0MDAwLCJtZWRpYV9zaWciOjU1ODkxNDQ2LCJwbGF0Zm9ybSI6IkFORFJPSUQiLCJ1c2VyX2lkIjowfQ.amr1bufmdrMb_uqZhcDuDcEXugTYBg9PsK2YqpXPxG0"
+       },
+       "resolution": "VIDEO_RESOLUTION_576P",
+       "ssai_version": "",
+       "titan_version": "",
+       "type": "dash_widevine"
+      }
+     ],
+     "updated_at": "2024-03-13T15:19:16.000Z",
+     "partner_id": "F001",
+     "video_preview_url": "",
+     "landscape_images": [],
+     "monetization": {
+      "cue_points": [
+       0,
+       415,
+       951,
+       1339,
+       1675,
+       1956,
+       2296
+      ]
+     },
+     "is_cdc": false,
+     "publisher_id": "81c692bbe7fc8baf4ac54dd69f2dd9ca",
+     "display_episode_number": "1",
+     "availability_ends": "2025-01-31T23:59:59.000Z",
+     "imdb_id": "tt2019658",
+     "tags": [
+      "Drama",
+      "Thriller"
+     ],
+     "detailed_type": "episode",
+     "availability_duration": 25393062,
+     "url": "",
+     "duration": 2702,
+     "images": {},
+     "availability_starts": "2024-02-01T00:00:00.000Z",
+     "subtitles": [
+      {
+       "lang": "English",
+       "lang_alpha3": "eng",
+       "url": "http://s.adrise.tv/4354b045-5385-45fd-bc36-9357aa10d00a.srt"
+      }
+     ],
+     "trailers": [],
+     "credit_cuepoints": {
+      "earlycredits_end": 0,
+      "earlycredits_start": 0,
+      "intro_end": 0,
+      "intro_start": 0,
+      "postlude": 2665,
+      "prelogue": 0,
+      "prologue": 0,
+      "recap_end": 0,
+      "recap_start": 0
+     },
+     "description": "A young lawyer starts a new job at a crisis management firm.",
+     "year": 2012,
+     "episode_number": "1",
+     "type": "v",
+     "version": 40,
+     "has_subtitle": true,
+     "policy_match": true,
+     "version_id": "",
+     "imdb_fields": null,
+     "awards": {
+      "items": []
+     }
+    },
+    {
+     "import_id": "disney",
+     "hero_images": [],
+     "lang": "English",
+     "directors": [
+      "Steve Robin"
+     ],
+     "needs_login": false,
+     "country": "United States",
+     "series_id": "300002169",
+     "ratings": [
+      {
+       "code": "TV-14",
+       "descriptors": [],
+       "system": "tvpg",
+       "value": "TV-14"
+      }
+     ],
+     "posterarts": [],
+     "gn_fields": null,
+     "video_renditions": [],
+     "id": "200042542",
+     "ad_languages": [],
+     "actors": [
+      "Kerry Washington",
+      "Henry Ian Cusick",
+      "Columbus Short",
+      "Darby Stanchfield",
+      "Katie Lowes",
+      "Guillermo Diaz"
+     ],
+     "has_trailer": false,
+     "title": "S01:E05 - Crash and Burn",
+     "rt_fields": null,
+     "backgrounds": [
+      "https://canvas-bridge.tubitv.com/rHh2RIEWvpPNKIc9a-6nAlBl0zQ=/1920x1080/smart/img.adrise.tv/14f24eca-e8b6-4870-a742-8e1d3825c4fc.jpg"
+     ],
+     "thumbnails": [
+      "https://canvas-bridge.tubitv.com/lkoMwyVv0n8KQItTXW_SnUsK-Bo=/306x150/smart/img.adrise.tv/14f24eca-e8b6-4870-a742-8e1d3825c4fc.jpg"
+     ],
+     "canonical_id": "",
+     "video_resources": [
+      {
+       "codec": "VIDEO_CODEC_H264",
+       "generator_version": "",
+       "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_v1",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=DD3363DA590A17564972F7C98062DCBF&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiYWxsX2FuYWxvZ19wcm90ZWN0aW9ucyIsImV4cCI6MTcxMzIzNDAwMCwiaGRjcCI6InYxIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoyfQ.-DndUDDGmp-u36k71-_NnnBgOfimPDfP-tmRgLA4zbY"
+       },
+       "manifest": {
+        "duration": 2582,
+        "url": "https://manifest.production-public.tubi.io/54f93201-8c17-4c30-bba3-62dce6ffbe9b/0w1azy2548.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjM0MDAwLCJtZWRpYV9zaWciOjI4NTIwNjY0LCJwbGF0Zm9ybSI6IkFORFJPSUQiLCJ1c2VyX2lkIjowfQ.uJgLAayb67tEWhGGJj602seMm6lpZoOa6kAkYm8v5Cc"
+       },
+       "resolution": "VIDEO_RESOLUTION_720P",
+       "ssai_version": "",
+       "titan_version": "",
+       "type": "dash_widevine"
+      },
+      {
+       "codec": "VIDEO_CODEC_H264",
+       "generator_version": "",
+       "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_disabled",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=DD3363DA590A17564972F7C98062DCBF&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiZW5hYmxlZCIsImV4cCI6MTcxMzIzNDAwMCwiaGRjcCI6ImRpc2FibGVkIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoxfQ.nICkmmuw6BqUY_bf9zIMWOc0MHft9RoRBsmAjWRX2A0"
+       },
+       "manifest": {
+        "duration": 2582,
+        "url": "https://manifest.production-public.tubi.io/54f93201-8c17-4c30-bba3-62dce6ffbe9b/rww361u7rj.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjM0MDAwLCJtZWRpYV9zaWciOjI4NTIwNjY0LCJwbGF0Zm9ybSI6IkFORFJPSUQiLCJ1c2VyX2lkIjowfQ.uJgLAayb67tEWhGGJj602seMm6lpZoOa6kAkYm8v5Cc"
+       },
+       "resolution": "VIDEO_RESOLUTION_576P",
+       "ssai_version": "",
+       "titan_version": "",
+       "type": "dash_widevine"
+      }
+     ],
+     "updated_at": "2024-03-13T15:18:40.000Z",
+     "partner_id": "F005",
+     "video_preview_url": "",
+     "landscape_images": [],
+     "monetization": {
+      "cue_points": [
+       0,
+       160,
+       474,
+       794,
+       1230,
+       1548,
+       2039
+      ]
+     },
+     "is_cdc": false,
+     "publisher_id": "81c692bbe7fc8baf4ac54dd69f2dd9ca",
+     "display_episode_number": "5",
+     "availability_ends": "2025-01-31T23:59:59.000Z",
+     "imdb_id": "tt2057186",
+     "tags": [
+      "Drama",
+      "Thriller"
+     ],
+     "detailed_type": "episode",
+     "availability_duration": 25393062,
+     "url": "",
+     "duration": 2583,
+     "images": {},
+     "availability_starts": "2024-02-01T00:00:00.000Z",
+     "subtitles": [
+      {
+       "lang": "English",
+       "lang_alpha3": "eng",
+       "url": "http://s.adrise.tv/af3e421e-3bc0-4c8b-88fa-5cbc49ba3801.srt"
+      }
+     ],
+     "trailers": [],
+     "credit_cuepoints": {
+      "earlycredits_end": 0,
+      "earlycredits_start": 0,
+      "intro_end": 0,
+      "intro_start": 0,
+      "postlude": 2546,
+      "prelogue": 0,
+      "prologue": 0,
+      "recap_end": 75,
+      "recap_start": 2
+     },
+     "description": "Olivia and her team help defend the pilot of a crashed plane.",
+     "year": 2012,
+     "episode_number": "5",
+     "type": "v",
+     "version": 25,
+     "has_subtitle": true,
+     "policy_match": true,
+     "version_id": "",
+     "imdb_fields": null,
+     "awards": {
+      "items": []
+     }
+    },
+    {
+     "import_id": "disney",
+     "hero_images": [],
+     "lang": "English",
+     "directors": [
+      "Tom Vercia"
+     ],
+     "needs_login": false,
+     "country": "United States",
+     "series_id": "300002169",
+     "ratings": [
+      {
+       "code": "TV-14",
+       "descriptors": [],
+       "system": "tvpg",
+       "value": "TV-14"
+      }
+     ],
+     "posterarts": [],
+     "gn_fields": null,
+     "video_renditions": [],
+     "id": "200042540",
+     "ad_languages": [],
+     "actors": [
+      "Kerry Washington",
+      "Henry Ian Cusick",
+      "Columbus Short",
+      "Darby Stanchfield",
+      "Katie Lowes",
+      "Guillermo Diaz"
+     ],
+     "has_trailer": false,
+     "title": "S01:E06 - The Trail",
+     "rt_fields": null,
+     "backgrounds": [
+      "https://canvas-bridge.tubitv.com/r1YFpBeYUk91sQGkViGj61t_U2g=/1920x1080/smart/img.adrise.tv/f8b5e401-f3af-4797-8179-150dfbdae1a1.jpg"
+     ],
+     "thumbnails": [
+      "https://canvas-bridge.tubitv.com/zfP23WFNZuu5km_YYBdRM6Ovuak=/306x150/smart/img.adrise.tv/f8b5e401-f3af-4797-8179-150dfbdae1a1.jpg"
+     ],
+     "canonical_id": "",
+     "video_resources": [
+      {
+       "codec": "VIDEO_CODEC_H264",
+       "generator_version": "",
+       "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_v1",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=83388E81FA3E3CC27FBD92566DD82B03&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiYWxsX2FuYWxvZ19wcm90ZWN0aW9ucyIsImV4cCI6MTcxMzIzNDAwMCwiaGRjcCI6InYxIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoyfQ.-DndUDDGmp-u36k71-_NnnBgOfimPDfP-tmRgLA4zbY"
+       },
+       "manifest": {
+        "duration": 2583,
+        "url": "https://manifest.production-public.tubi.io/e0cd528b-8ad3-4612-a7bb-a39f80aa688e/lgttlw4xe9.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjM0MDAwLCJtZWRpYV9zaWciOjEwMDg3MDQ3OSwicGxhdGZvcm0iOiJBTkRST0lEIiwidXNlcl9pZCI6MH0.ItanbnvqUevbO1p7g8qnfPKEqj2A-cpbiCI2wkXl8u8"
+       },
+       "resolution": "VIDEO_RESOLUTION_720P",
+       "ssai_version": "",
+       "titan_version": "",
+       "type": "dash_widevine"
+      },
+      {
+       "codec": "VIDEO_CODEC_H264",
+       "generator_version": "",
+       "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_disabled",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=83388E81FA3E3CC27FBD92566DD82B03&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiZW5hYmxlZCIsImV4cCI6MTcxMzIzNDAwMCwiaGRjcCI6ImRpc2FibGVkIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoxfQ.nICkmmuw6BqUY_bf9zIMWOc0MHft9RoRBsmAjWRX2A0"
+       },
+       "manifest": {
+        "duration": 2583,
+        "url": "https://manifest.production-public.tubi.io/e0cd528b-8ad3-4612-a7bb-a39f80aa688e/6ie0zm9yqk.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjM0MDAwLCJtZWRpYV9zaWciOjEwMDg3MDQ3OSwicGxhdGZvcm0iOiJBTkRST0lEIiwidXNlcl9pZCI6MH0.ItanbnvqUevbO1p7g8qnfPKEqj2A-cpbiCI2wkXl8u8"
+       },
+       "resolution": "VIDEO_RESOLUTION_576P",
+       "ssai_version": "",
+       "titan_version": "",
+       "type": "dash_widevine"
+      }
+     ],
+     "updated_at": "2024-03-13T15:18:20.000Z",
+     "partner_id": "F006",
+     "video_preview_url": "",
+     "landscape_images": [],
+     "monetization": {
+      "cue_points": [
+       0,
+       155,
+       348,
+       763,
+       1132,
+       1506,
+       2066
+      ]
+     },
+     "is_cdc": false,
+     "publisher_id": "81c692bbe7fc8baf4ac54dd69f2dd9ca",
+     "display_episode_number": "6",
+     "availability_ends": "2025-01-31T23:59:59.000Z",
+     "imdb_id": "tt2055370",
+     "tags": [
+      "Drama",
+      "Thriller"
+     ],
+     "detailed_type": "episode",
+     "availability_duration": 25393062,
+     "url": "",
+     "duration": 2583,
+     "images": {},
+     "availability_starts": "2024-02-01T00:00:00.000Z",
+     "subtitles": [
+      {
+       "lang": "English",
+       "lang_alpha3": "eng",
+       "url": "http://s.adrise.tv/2f9b4eb8-8f13-44fc-a583-58e4add868d6.srt"
+      }
+     ],
+     "trailers": [],
+     "credit_cuepoints": {
+      "earlycredits_end": 0,
+      "earlycredits_start": 0,
+      "intro_end": 0,
+      "intro_start": 0,
+      "postlude": 2547,
+      "prelogue": 0,
+      "prologue": 0,
+      "recap_end": 0,
+      "recap_start": 0
+     },
+     "description": "As Gideon looks into Amanda's past, a series of events from the past are revisited.",
+     "year": 2012,
+     "episode_number": "6",
+     "type": "v",
+     "version": 25,
+     "has_subtitle": true,
+     "policy_match": true,
+     "version_id": "",
+     "imdb_fields": null,
+     "awards": {
+      "items": []
+     }
+    },
+    {
+     "import_id": "disney",
+     "hero_images": [],
+     "lang": "English",
+     "directors": [
+      "Roxann Dawson"
+     ],
+     "needs_login": false,
+     "country": "United States",
+     "series_id": "300002169",
+     "ratings": [
+      {
+       "code": "TV-14",
+       "descriptors": [],
+       "system": "tvpg",
+       "value": "TV-14"
+      }
+     ],
+     "posterarts": [],
+     "gn_fields": null,
+     "video_renditions": [],
+     "id": "200042541",
+     "ad_languages": [],
+     "actors": [
+      "Kerry Washington",
+      "Henry Ian Cusick",
+      "Columbus Short",
+      "Darby Stanchfield",
+      "Katie Lowes",
+      "Guillermo Diaz"
+     ],
+     "has_trailer": false,
+     "title": "S01:E07 - Grant: For the People",
+     "rt_fields": null,
+     "backgrounds": [
+      "https://canvas-bridge02.tubitv.com/x8cujaDDOZJFrkffKNwfkXrCKg0=/1920x1080/smart/img.adrise.tv/a3f9e198-59bc-4a9c-8c21-af138f13a427.jpg"
+     ],
+     "thumbnails": [
+      "https://canvas-bridge02.tubitv.com/XhwzROrj9gADEGpWChVqjlpuOfU=/306x150/smart/img.adrise.tv/a3f9e198-59bc-4a9c-8c21-af138f13a427.jpg"
+     ],
+     "canonical_id": "",
+     "video_resources": [
+      {
+       "codec": "VIDEO_CODEC_H264",
+       "generator_version": "",
+       "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_v1",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=020A8D443E37AC0F7E9D6B39D140A097&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiYWxsX2FuYWxvZ19wcm90ZWN0aW9ucyIsImV4cCI6MTcxMzIzNDAwMCwiaGRjcCI6InYxIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoyfQ.-DndUDDGmp-u36k71-_NnnBgOfimPDfP-tmRgLA4zbY"
+       },
+       "manifest": {
+        "duration": 2584,
+        "url": "https://manifest.production-public.tubi.io/a034189a-6c13-435f-89fb-4018e4aee5f9/etowv2b5rp.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjM0MDAwLCJtZWRpYV9zaWciOjk1NzQ3MjY2LCJwbGF0Zm9ybSI6IkFORFJPSUQiLCJ1c2VyX2lkIjowfQ.BSYbkPkzk9rMLJKEAiLqwmRwrAdS8z2NGacUSZPaTIg"
+       },
+       "resolution": "VIDEO_RESOLUTION_720P",
+       "ssai_version": "",
+       "titan_version": "",
+       "type": "dash_widevine"
+      },
+      {
+       "codec": "VIDEO_CODEC_H264",
+       "generator_version": "",
+       "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_disabled",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=020A8D443E37AC0F7E9D6B39D140A097&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiZW5hYmxlZCIsImV4cCI6MTcxMzIzNDAwMCwiaGRjcCI6ImRpc2FibGVkIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoxfQ.nICkmmuw6BqUY_bf9zIMWOc0MHft9RoRBsmAjWRX2A0"
+       },
+       "manifest": {
+        "duration": 2584,
+        "url": "https://manifest.production-public.tubi.io/a034189a-6c13-435f-89fb-4018e4aee5f9/ujwm01xysd.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjM0MDAwLCJtZWRpYV9zaWciOjk1NzQ3MjY2LCJwbGF0Zm9ybSI6IkFORFJPSUQiLCJ1c2VyX2lkIjowfQ.BSYbkPkzk9rMLJKEAiLqwmRwrAdS8z2NGacUSZPaTIg"
+       },
+       "resolution": "VIDEO_RESOLUTION_576P",
+       "ssai_version": "",
+       "titan_version": "",
+       "type": "dash_widevine"
+      }
+     ],
+     "updated_at": "2024-01-13T00:55:33.000Z",
+     "partner_id": "F007",
+     "video_preview_url": "",
+     "landscape_images": [],
+     "monetization": {
+      "cue_points": [
+       0,
+       185,
+       496,
+       812,
+       1192,
+       1569,
+       2148
+      ]
+     },
+     "is_cdc": false,
+     "publisher_id": "81c692bbe7fc8baf4ac54dd69f2dd9ca",
+     "display_episode_number": "7",
+     "availability_ends": "2025-01-31T23:59:59.000Z",
+     "imdb_id": "tt2353107",
+     "tags": [
+      "Drama",
+      "Thriller"
+     ],
+     "detailed_type": "episode",
+     "availability_duration": 25393062,
+     "url": "",
+     "duration": 2584,
+     "images": {},
+     "availability_starts": "2024-02-01T00:00:00.000Z",
+     "subtitles": [
+      {
+       "lang": "English",
+       "lang_alpha3": "eng",
+       "url": "http://s.adrise.tv/53cbcf83-54ba-4723-86a3-37749b2ac36e.srt"
+      }
+     ],
+     "trailers": [],
+     "credit_cuepoints": {
+      "earlycredits_end": 0,
+      "earlycredits_start": 0,
+      "intro_end": 0,
+      "intro_start": 0,
+      "postlude": 2548,
+      "prelogue": 0,
+      "prologue": 0,
+      "recap_end": 0,
+      "recap_start": 0
+     },
+     "description": "Olivia and the team rally when Quinn finds herself in a tragic situation",
+     "year": 2012,
+     "episode_number": "7",
+     "type": "v",
+     "version": 19,
+     "has_subtitle": true,
+     "policy_match": true,
+     "version_id": "",
+     "imdb_fields": null,
+     "awards": {
+      "items": []
+     }
+    }
+   ],
+   "id": "1",
+   "posterarts": [],
+   "title": "Season 1",
+   "type": "a"
+  }
+ ],
+ "import_id": "disney",
+ "hero_images": [
+  "https://canvas-bridge02.tubitv.com/3Lqia24BuNZ-iqn8D8ToxuvG7QM=/434x362/smart/img.adrise.tv/f5de8e92-c467-49ce-aa85-74b89def0393.jpg"
+ ],
+ "lang": "English",
+ "directors": [
+  "Tom Verica"
+ ],
+ "needs_login": false,
+ "country": "United States",
+ "ratings": [
+  {
+   "code": "TV-14",
+   "descriptors": [],
+   "system": "tvpg",
+   "value": "TV-14"
+  }
+ ],
+ "posterarts": [
+  "https://canvas-bridge02.tubitv.com/JRCECHuOcTMHyJjlxR00Gu4GrVE=/214x306/smart/img.adrise.tv/39fbe3c0-4604-4a10-ad79-22dca757eb22.jpg"
+ ],
+ "gn_fields": null,
+ "video_renditions": [],
+ "id": "300002169",
+ "ad_languages": [],
+ "actors": [
+  "Kerry Washington",
+  "Henry Ian Cusick",
+  "Columbus Short",
+  "Darby Stanchfield",
+  "Katie Lowes",
+  "Guillermo Díaz",
+  "Jeff Perry",
+  "Tony Goldwyn",
+  "Bellamy Young",
+  "Joshua Malina"
+ ],
+ "has_trailer": false,
+ "title": "Scandal",
+ "rt_fields": null,
+ "backgrounds": [
+  "https://canvas-bridge02.tubitv.com/2CcaF6ZGAQCURLt_YUSPzIBbANo=/0x20:1224x700/1920x1080/smart/img.adrise.tv/45c441b0-2312-4049-a351-1a3e78ba8747.jpg"
+ ],
+ "thumbnails": [
+  "https://canvas-bridge02.tubitv.com/EHrpUQa4Iop6VZp7zfrtELFI0MU=/306x150/smart/img.adrise.tv/f5de8e92-c467-49ce-aa85-74b89def0393.jpg"
+ ],
+ "canonical_id": "",
+ "updated_at": "2024-04-08T20:03:17.000Z",
+ "partner_id": "SCANDAL",
+ "video_preview_url": "https://video-previews-cdn.production-public.tubi.io/videopreview/94e9c294-2453-4676-88d6-4b5a6d7763ca-start295.136-end366.516.mp4",
+ "landscape_images": [
+  "https://canvas-bridge02.tubitv.com/O9qFXiAJ6QN14tR7i1Fv5J33tMw=/1280x720/smart/img.adrise.tv/76ce9f26-5ceb-487b-abbc-072fd4bcd7fb.jpg"
+ ],
+ "is_cdc": false,
+ "publisher_id": "",
+ "availability_ends": "2025-01-31T23:59:59.000Z",
+ "imdb_id": "tt1837576",
+ "tags": [
+  "Drama",
+  "Thriller"
+ ],
+ "detailed_type": "series",
+ "availability_duration": null,
+ "images": {},
+ "availability_starts": "2024-02-01T00:00:00.000Z",
+ "subtitles": [],
+ "description": "Olivia Pope goes from White House fixer to protecting the who’s who of the Washington, D.C. elite when she launches her own crisis management firm.",
+ "year": 2018,
+ "valid_duration": 7200,
+ "type": "s",
+ "version": 190,
+ "has_subtitle": true,
+ "is_recurring": false,
+ "policy_match": true,
+ "version_id": "",
+ "imdb_fields": null,
+ "awards": {
+  "items": []
+ }
+}
