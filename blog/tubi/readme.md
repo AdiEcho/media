@@ -1,4 +1,6 @@
-# android
+# tubi
+
+## android
 
 - https://apkmirror.com/apk/tubi-tv/tubi-free-movies-tv-shows
 - https://play.google.com/store/apps/details?id=com.tubitv
@@ -21,3 +23,17 @@ https://manifest.production-public.tubi.io/08154497-59e8-4b54-9588-8dbcca436fa8/
 from:
 
 <https://uapi.adrise.tv/cms/content?content_id=589292&video_resources%5B%5D=hlsv6_widevine_psshv0&limit_resolutions%5B%5D=h264_1080p&video_resources%5B%5D=hlsv6&platform=android&deviceId=ab55452c-66e0-4021-9619-5bdc25f26ae8&app_id=tubitv>
+
+## web
+
+this is it:
+
+https://fastly2.tubi.video/08154497-59e8-4b54-9588-8dbcca436fa8/oqna1g3k.mp4
+
+from:
+
+<https://manifest.production-public.tubi.io/08154497-59e8-4b54-9588-8dbcca436fa8/isvyood9ww.m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9mYXN0bHkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiI3Y2Y3NTEwOS1hNjM5LTQ2MTMtYmUzYy0yYzVkOTQzOGY5ZWMiLCJleHAiOjE3MTMxNDM3MDAsIm1lZGlhX3NpZyI6MTMzMDY2OTc5LCJwbGF0Zm9ybSI6IldFQiIsInVzZXJfaWQiOjB9.eCLdEtHs06jUYtpFlKw2PF9QmtWwdhGzaiCluM_jyiI>
+
+from:
+
+https://tubitv.com/movies/589292/the-mask
