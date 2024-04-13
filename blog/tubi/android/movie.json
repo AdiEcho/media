@@ -1,0 +1,156 @@
+{
+  "canonical_id": "",
+  "landscape_images": [
+    "https://canvas-bridge.tubitv.com/7IT3TiKPQ910dTjhc6ajMcOjce0=/1280x720/smart/img.adrise.tv/469bcf40-df74-4fa5-a4e8-c770a919b892.jpg"
+  ],
+  "monetization": {
+    "cue_points": [
+      0,
+      497,
+      1370,
+      1833,
+      2244,
+      2761,
+      3174,
+      3550,
+      4070,
+      4791,
+      5576
+    ]
+  },
+  "ratings": [
+    {
+      "code": "PG-13",
+      "descriptors": [],
+      "system": "mpaa",
+      "value": "PG-13"
+    }
+  ],
+  "import_id": "warner-bros",
+  "hero_images": [
+    "https://canvas-bridge.tubitv.com/WH-ho0qZC2qf6Hsk0jTEbjhcAUg=/434x362/smart/img.adrise.tv/cffe8ee8-834b-4a65-80d6-f77f452c01b4.jpg"
+  ],
+  "images": {},
+  "availability_ends": "2024-04-30T23:59:59.000Z",
+  "imdb_id": "tt0110475",
+  "detailed_type": "movie",
+  "id": "589292",
+  "duration": 6068,
+  "gn_fields": null,
+  "country": "United States",
+  "ad_languages": [],
+  "version_id": "",
+  "backgrounds": [
+    "https://canvas-bridge.tubitv.com/wUz_j9YhfhMb45A6ZVAh5ix8Ggc=/0x774:4444x3240/1920x1080/smart/img.adrise.tv/cffe8ee8-834b-4a65-80d6-f77f452c01b4.jpg",
+    "https://canvas-bridge.tubitv.com/8WvRaaaDHQ2QE2OIFzeSRri5zEM=/0x452:4579x3045/1920x1080/smart/img.adrise.tv/d38cd931-0f2d-4f96-9d9a-48e2bb5c836d.jpg"
+  ],
+  "subtitles": [
+    {
+      "lang": "English",
+      "lang_alpha3": "eng",
+      "url": "http://s.adrise.tv/fe3dd226-febc-4711-b6df-509aaf6fa6c3.srt"
+    }
+  ],
+  "video_resources": [
+    {
+      "codec": "VIDEO_CODEC_H264",
+      "generator_version": "",
+      "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_v1",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=956DD00F1C1044C48D79B16A33CA6DF8&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiY2dtc19yZXF1aXJlZCIsImV4cCI6MTcxMzIzOTcwMCwiaGRjcCI6InYxIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoxfQ.uklGnaiRdRzY__n6WPzgTIk5r5uqbX7QvCFGs3r6QWA"
+      },
+      "manifest": {
+        "duration": 6068,
+        "url": "https://manifest.production-public.tubi.io/08154497-59e8-4b54-9588-8dbcca436fa8/8pawaf0gaz.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjM5NzAwLCJtZWRpYV9zaWciOjEzMzA2Njk3OSwicGxhdGZvcm0iOiJBTkRST0lEIiwidXNlcl9pZCI6MH0.1pkdxN84Q7D_Td6bOFgXiGWTaObCHYHnuQMlgDNV6AA"
+      },
+      "resolution": "VIDEO_RESOLUTION_720P",
+      "ssai_version": "",
+      "titan_version": "",
+      "type": "dash_widevine"
+    },
+    {
+      "codec": "VIDEO_CODEC_H264",
+      "generator_version": "",
+      "license_server": {
+        "auth_header_key": "customData",
+        "auth_header_value": "",
+        "hdcp_version": "hdcp_disabled",
+        "url": "https://license.adrise.tv/challenge?platform=android&type=widevine&external_id=956DD00F1C1044C48D79B16A33CA6DF8&drm_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbmFsb2dfb3V0IjoiZW5hYmxlZCIsImV4cCI6MTcxMzIzOTcwMCwiaGRjcCI6ImRpc2FibGVkIiwicHJfc2VjdXJpdHlfbGV2ZWwiOjIwMDAsInd2X3NlY3VyaXR5X2xldmVsIjoxfQ.KQv5-ShDdFH0H_tncmwkIunBMZoy8cvC_WB4Kycf_EY"
+      },
+      "manifest": {
+        "duration": 6068,
+        "url": "https://manifest.production-public.tubi.io/08154497-59e8-4b54-9588-8dbcca436fa8/ckgsm1cy1y.mpd?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkyLnR1YmkudmlkZW8iLCJjb3VudHJ5IjoiVVMiLCJkZXZpY2VfaWQiOiIhIiwiZXhwIjoxNzEzMjM5NzAwLCJtZWRpYV9zaWciOjEzMzA2Njk3OSwicGxhdGZvcm0iOiJBTkRST0lEIiwidXNlcl9pZCI6MH0.1pkdxN84Q7D_Td6bOFgXiGWTaObCHYHnuQMlgDNV6AA"
+      },
+      "resolution": "VIDEO_RESOLUTION_576P",
+      "ssai_version": "",
+      "titan_version": "",
+      "type": "dash_widevine"
+    }
+  ],
+  "updated_at": "2024-04-10T18:04:05.000Z",
+  "partner_id": null,
+  "actors": [
+    "Jim Carrey",
+    "Cameron Diaz",
+    "Peter Riegert",
+    "Peter Greene",
+    "Joely Fisher"
+  ],
+  "valid_duration": 7200,
+  "trailers": [
+    {
+      "duration": 112,
+      "id": "593101",
+      "url": "https://manifest.production-public.tubi.io/90155121-d64c-4f08-b5ae-6d2156f5860a/k585cfoszw.m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZG5fcHJlZml4IjoiaHR0cHM6Ly9ha2FtYWkudHViaS52aWRlbyIsImNvdW50cnkiOiJVUyIsImRldmljZV9pZCI6IiEiLCJleHAiOjE3MTMyMzk3MDAsIm1lZGlhX3NpZyI6ODE0MTYyMjQsInBsYXRmb3JtIjoiQU5EUk9JRCIsInVzZXJfaWQiOjB9.PIXB03e7ZxiAleqdqEQEmRD25-lZYbWHrFZMTleMk0Q"
+    }
+  ],
+  "thumbnails": [
+    "https://canvas-bridge.tubitv.com/DIrr3c6ACa1yptB2uGBE4c88REU=/306x150/smart/img.adrise.tv/5ab2ae9a-ee04-4a42-a943-02870598585f.jpg"
+  ],
+  "needs_login": false,
+  "url": "",
+  "has_subtitle": true,
+  "video_renditions": [],
+  "tags": [
+    "Comedy",
+    "Action",
+    "Crime"
+  ],
+  "has_trailer": true,
+  "credit_cuepoints": {
+    "earlycredits_end": 0,
+    "earlycredits_start": 0,
+    "intro_end": 0,
+    "intro_start": 0,
+    "postlude": 5679,
+    "prelogue": 0,
+    "prologue": 0,
+    "recap_end": 0,
+    "recap_start": 0
+  },
+  "directors": [
+    "Chuck Russell"
+  ],
+  "availability_duration": 1541043,
+  "description": "Jim Carrey’s superstar role as a kind and meek bank teller who gets superpowers from a Nordic mask and becomes a totally s-s-s-smokin’ hero!",
+  "availability_starts": "2024-04-01T00:00:00.000Z",
+  "imdb_fields": null,
+  "lang": "English",
+  "type": "v",
+  "year": 1994,
+  "policy_match": true,
+  "title": "The Mask",
+  "version": 58,
+  "awards": {
+    "items": []
+  },
+  "rt_fields": null,
+  "video_preview_url": "https://video-previews-cdn.production-public.tubi.io/videopreview/54e0bd98-9429-43b9-97c7-bad1248c6f51/54e0bd98-9429-43b9-97c7-bad1248c6f51-start1068-end1129_v2.mp4",
+  "posterarts": [
+    "https://canvas-bridge.tubitv.com/CSDqaVI2pCvZGDNEySrJ2HMTbzk=/214x306/smart/img.adrise.tv/c7b7f21a-a5ee-4444-b3e2-7daa61601845.jpg"
+  ],
+  "is_cdc": false,
+  "publisher_id": "f45bd90ea95d233bf3625044d90eedc8"
+}

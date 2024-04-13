@@ -7,6 +7,12 @@ import (
    "strconv"
 )
 
+type content_management struct {
+   Detailed_Type string
+   Series_ID string
+   Video_Resources []VideoResource
+}
+
 func (c *content_management) New(content_id int) error {
    req, err := http.NewRequest("GET", "https://uapi.adrise.tv/cms/content", nil)
    if err != nil {
@@ -59,29 +65,4 @@ func (c content_management) Resolution720p() (*VideoResource, bool) {
       }
    }
    return nil, false
-}
-
-type content_management struct {
-   Detailed_Type string
-   Video_Resources []VideoResource
-}
-
-func (content_management) Show() string {
-   return ""
-}
-
-func (content_management) Season() int {
-   return 0
-}
-
-func (content_management) Episode() int {
-   return 0
-}
-
-func (content_management) Title() string {
-   return ""
-}
-
-func (content_management) Year() int {
-   return 0
 }
