@@ -7,13 +7,11 @@ import (
    "strconv"
 )
 
-type content_management struct {
-   Detailed_Type string
-   Series_ID string
-   Video_Resources []VideoResource
+func (c content) episode() bool {
+   return c.Detailed_Type == "episode"
 }
 
-func (c *content_management) New(content_id int) error {
+func (c *content) New(content_id int) error {
    req, err := http.NewRequest("GET", "https://uapi.adrise.tv/cms/content", nil)
    if err != nil {
       return err
@@ -29,40 +27,28 @@ func (c *content_management) New(content_id int) error {
       return err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(c)
-}
-
-func (v VideoResource) RequestUrl() (string, bool) {
-   return v.License_Server.URL, true
-}
-
-type VideoResource struct {
-   License_Server struct {
-      URL string
+   if err := json.NewDecoder(res.Body).Decode(c); err != nil {
+      return err
    }
-   Manifest struct {
-      URL string
+   c.set_parent()
+   return nil
+}
+
+func (c *content) set_parent() {
+   for _, child := range c.Children {
+      child.parent = c
+      child.set_parent()
    }
-   Resolution string
 }
 
-func (VideoResource) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (VideoResource) RequestBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (VideoResource) ResponseBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (c content_management) Resolution720p() (*VideoResource, bool) {
-   for _, video := range c.Video_Resources {
-      if video.Resolution == "VIDEO_RESOLUTION_720P" {
-         return &video, true
-      }
-   }
-   return nil, false
+type content struct {
+   Children []*content
+   Detailed_Type string
+   Episode_Number int `json:",string"`
+   ID int `json:",string"`
+   Series_ID int `json:",string"`
+   Title string
+   Video_Resources []video_resource
+   Year int
+   parent *content
 }
