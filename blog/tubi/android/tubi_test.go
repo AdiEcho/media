@@ -23,6 +23,10 @@ var tests = map[string]struct{
       content_id: 200042567,
       url: "tubitv.com/tv-shows/200042567",
    },
+   "series": {
+      content_id: 300002169,
+      url: "tubitv.com/series/300002169",
+   },
 }
 
 func TestContent(t *testing.T) {
