@@ -1,7 +1,7 @@
 package mubi
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/media/internal"
    "154.pages.dev/widevine"
    "encoding/hex"
    "fmt"
@@ -69,7 +69,7 @@ func TestFilm(t *testing.T) {
          if err != nil {
             t.Fatal(err)
          }
-         fmt.Println(encoding.Name(film))
+         fmt.Println(internal.Name(film))
       }
       fmt.Println(web)
    }

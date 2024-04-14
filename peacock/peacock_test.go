@@ -1,7 +1,7 @@
 package peacock
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/media/internal"
    "154.pages.dev/widevine"
    "encoding/hex"
    "fmt"
@@ -15,7 +15,7 @@ func TestQuery(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   name, err := encoding.Name(node)
+   name, err := internal.Name(node)
    if err != nil {
       t.Fatal(err)
    }

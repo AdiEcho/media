@@ -1,7 +1,7 @@
 package roku
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/media/internal"
    "fmt"
    "path"
    "testing"
@@ -31,7 +31,7 @@ func TestContent(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(encoding.Name(home))
+      fmt.Println(internal.Name(home))
       time.Sleep(time.Second)
    }
 }

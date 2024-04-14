@@ -1,7 +1,7 @@
 package tubi
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/media/internal"
    "fmt"
    "testing"
    "time"
@@ -27,7 +27,7 @@ func TestContent(t *testing.T) {
             t.Fatal("get")
          }
       }
-      name, err := encoding.Name(namer{cms})
+      name, err := internal.Name(namer{cms})
       if err != nil {
          t.Fatal(err)
       }

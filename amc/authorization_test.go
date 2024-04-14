@@ -1,7 +1,7 @@
 package amc
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/media/internal"
    "fmt"
    "os"
    "testing"
@@ -30,7 +30,7 @@ func TestContent(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(encoding.Name(video))
+      fmt.Println(internal.Name(video))
       time.Sleep(time.Second)
    }
 }

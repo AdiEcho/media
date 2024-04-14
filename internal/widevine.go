@@ -1,7 +1,6 @@
 package internal
 
 import (
-   "154.pages.dev/encoding"
    "154.pages.dev/widevine"
    "encoding/hex"
    "errors"
@@ -13,7 +12,7 @@ import (
 type HttpStream struct {
    ClientId string
    PrivateKey string
-   Name encoding.Namer
+   Name Namer
    Poster widevine.Poster
 }
 
