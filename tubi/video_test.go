@@ -17,7 +17,7 @@ func TestResolution(t *testing.T) {
 			t.Fatal(err)
 		}
 		time.Sleep(time.Second)
-		if cms.episode() {
+		if cms.Episode() {
 			err := cms.New(cms.Series_ID)
 			if err != nil {
 				t.Fatal(err)
