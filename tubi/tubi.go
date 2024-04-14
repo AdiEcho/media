@@ -26,10 +26,13 @@ func (c *Content) New(id int) error {
 		return err
 	}
 	req.URL.RawQuery = url.Values{
-		"content_id":        {strconv.Itoa(id)},
-		"deviceId":          {"!"},
-		"platform":          {"android"},
-		"video_resources[]": {"dash_widevine"},
+		"content_id": {strconv.Itoa(id)},
+		"deviceId":   {"!"},
+		"platform":   {"android"},
+		"video_resources[]": {
+			"dash",
+			"dash_widevine",
+		},
 	}.Encode()
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -43,12 +46,14 @@ func (c *Content) New(id int) error {
 	return nil
 }
 
-func (c Content) get(id int) (*Content, bool) {
+////////
+
+func (c Content) Get(id int) (*Content, bool) {
 	if c.ID == id {
 		return &c, true
 	}
 	for _, child := range c.Children {
-		if v, ok := child.get(id); ok {
+		if v, ok := child.Get(id); ok {
 			return v, true
 		}
 	}
