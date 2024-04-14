@@ -39,7 +39,8 @@ func (c *Content) New(id int) error {
       return err
    }
    defer res.Body.Close()
-   if err := json.NewDecoder(res.Body).Decode(c); err != nil {
+   err = json.NewDecoder(res.Body).Decode(c)
+   if err != nil {
       return err
    }
    c.set(nil)
