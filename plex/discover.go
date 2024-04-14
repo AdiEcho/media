@@ -60,26 +60,26 @@ type DiscoverMatch struct {
    Year int
 }
 
-type Name struct {
+type Namer struct {
    D *DiscoverMatch
 }
 
-func (n Name) Episode() int {
+func (n Namer) Episode() int {
    return n.D.Index
 }
 
-func (n Name) Season() int {
+func (n Namer) Season() int {
    return n.D.ParentIndex
 }
 
-func (n Name) Show() string {
+func (n Namer) Show() string {
    return n.D.GrandparentTitle
 }
 
-func (n Name) Title() string {
+func (n Namer) Title() string {
    return n.D.Title
 }
 
-func (n Name) Year() int {
+func (n Namer) Year() int {
    return n.D.Year
 }

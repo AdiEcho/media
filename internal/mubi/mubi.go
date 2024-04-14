@@ -23,7 +23,7 @@ func (f flags) download() error {
          if err != nil {
             return err
          }
-         f.h.Name = mubi.Name{film}
+         f.h.Name = mubi.Namer{film}
          return f.h.TimedText(text.URL)
       }
    }
@@ -38,7 +38,7 @@ func (f flags) download() error {
          if err != nil {
             return err
          }
-         f.h.Name = mubi.Name{film}
+         f.h.Name = mubi.Namer{film}
          var auth mubi.Authenticate
          auth.Data, err = os.ReadFile(f.home + "/mubi.json")
          if err != nil {

@@ -43,23 +43,23 @@ func (a Authenticate) URL(film *FilmResponse) (*SecureUrl, error) {
    return &secure, nil
 }
 
-func (Name) Episode() int {
+func (Namer) Episode() int {
    return 0
 }
 
-func (Name) Season() int {
+func (Namer) Season() int {
    return 0
 }
 
-func (Name) Show() string {
+func (Namer) Show() string {
    return ""
 }
 
-func (n Name) Title() string {
+func (n Namer) Title() string {
    return n.F.Title
 }
 
-func (n Name) Year() int {
+func (n Namer) Year() int {
    return n.F.Year
 }
 
@@ -103,7 +103,7 @@ type FilmResponse struct {
    Year int
 }
 
-type Name struct {
+type Namer struct {
    F *FilmResponse
 }
 

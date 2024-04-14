@@ -22,7 +22,7 @@ func TestProgram(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := internal.Name(program)
+      name, err := internal.Name(Namer{program})
       if err != nil {
          t.Fatal(err)
       }

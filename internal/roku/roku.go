@@ -32,7 +32,7 @@ func (f flags) download() error {
          if err != nil {
             return err
          }
-         f.h.Name = home
+         f.h.Name = roku.Namer{home}
          return f.h.DASH(medium)
       }
    }

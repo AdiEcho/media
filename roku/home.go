@@ -80,30 +80,30 @@ type HomeScreen struct {
    }
 }
 
-type Name struct {
+type Namer struct {
    H HomeScreen
 }
 
-func (n Name) Show() string {
+func (n Namer) Show() string {
    if v := n.H.Series; v != nil {
       return v.Title
    }
    return ""
 }
 
-func (n Name) Season() int {
+func (n Namer) Season() int {
    return n.H.SeasonNumber
 }
 
-func (n Name) Episode() int {
+func (n Namer) Episode() int {
    return n.H.EpisodeNumber
 }
 
-func (n Name) Title() string {
+func (n Namer) Title() string {
    return n.H.Title
 }
 
-func (n Name) Year() int {
+func (n Namer) Year() int {
    if v, _, ok := strings.Cut(n.H.ReleaseDate, "-"); ok {
       if v, err := strconv.Atoi(v); err == nil {
          return v

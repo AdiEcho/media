@@ -22,37 +22,7 @@ func (p *LegacyProgram) New(id int64) error {
       return err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(&p.V)
-}
-
-type LegacyProgram struct {
-   V struct {
-      ReleaseYear int
-      SeriesTitle string
-      Title string
-      TvSeasonEpisodeNumber int
-      TvSeasonNumber int
-   }
-}
-
-func (p LegacyProgram) Episode() int {
-   return p.V.TvSeasonEpisodeNumber
-}
-
-func (p LegacyProgram) Show() string {
-   return p.V.SeriesTitle
-}
-
-func (p LegacyProgram) Season() int {
-   return p.V.TvSeasonNumber
-}
-
-func (p LegacyProgram) Title() string {
-   return p.V.Title
-}
-
-func (p LegacyProgram) Year() int {
-   return p.V.ReleaseYear
+   return json.NewDecoder(res.Body).Decode(p)
 }
 
 type ActivationCode struct {
@@ -149,4 +119,36 @@ func (w WebToken) Session() (*AppSession, error) {
 
 func (w *WebToken) Unmarshal() error {
    return json.Unmarshal(w.Data, &w.V)
+}
+
+type LegacyProgram struct {
+   ReleaseYear int
+   SeriesTitle string
+   Title string
+   TvSeasonEpisodeNumber int
+   TvSeasonNumber int
+}
+
+type Namer struct {
+   P LegacyProgram
+}
+
+func (n Namer) Episode() int {
+   return n.P.TvSeasonEpisodeNumber
+}
+
+func (n Namer) Show() string {
+   return n.P.SeriesTitle
+}
+
+func (n Namer) Season() int {
+   return n.P.TvSeasonNumber
+}
+
+func (n Namer) Title() string {
+   return n.P.Title
+}
+
+func (n Namer) Year() int {
+   return n.P.ReleaseYear
 }

@@ -27,7 +27,7 @@ func TestFilm(t *testing.T) {
          if err != nil {
             t.Fatal(err)
          }
-         fmt.Println(internal.Name(Name{film}))
+         fmt.Println(internal.Name(Namer{film}))
       }
       fmt.Println(web)
    }
