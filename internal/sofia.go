@@ -8,6 +8,34 @@ import (
    "strconv"
 )
 
+func write_init(w io.Writer, r io.Reader) ([]byte, error) {
+   var file sofia.File
+   if err := file.Read(r); err != nil {
+      return nil, err
+   }
+   for _, box := range file.Movie.Boxes {
+      if box.BoxHeader.Type.String() == "pssh" {
+         copy(box.BoxHeader.Type[:], "free") // Firefox
+      }
+   }
+   sample, protect := file.
+      Movie.
+      Track.
+      Media.
+      MediaInformation.
+      SampleTable.
+      SampleDescription.
+      SampleEntry()
+   // Firefox enca encv sinf
+   copy(protect.BoxHeader.Type[:], "free")
+   // Firefox stsd enca encv
+   copy(sample.BoxHeader.Type[:], protect.OriginalFormat.DataFormat[:])
+   if err := file.Write(w); err != nil {
+      return nil, err
+   }
+   return protect.SchemeInformation.TrackEncryption.DefaultKid[:], nil
+}
+
 func write_sidx(base_url string, bytes dash.Range) ([]sofia.Range, error) {
    req, err := http.NewRequest("GET", base_url, nil)
    if err != nil {
@@ -44,31 +72,4 @@ func write_segment(w io.Writer, r io.Reader, key []byte) error {
       }
    }
    return file.Write(w)
-}
-func write_init(w io.Writer, r io.Reader) ([]byte, error) {
-   var file sofia.File
-   if err := file.Read(r); err != nil {
-      return nil, err
-   }
-   for _, box := range file.Movie.Boxes {
-      if box.BoxHeader.Type.String() == "pssh" {
-         copy(box.BoxHeader.Type[:], "free") // Firefox
-      }
-   }
-   sample, protect := file.
-      Movie.
-      Track.
-      Media.
-      MediaInformation.
-      SampleTable.
-      SampleDescription.
-      SampleEntry()
-   // Firefox enca encv sinf
-   copy(protect.BoxHeader.Type[:], "free")
-   // Firefox stsd enca encv
-   copy(sample.BoxHeader.Type[:], protect.OriginalFormat.DataFormat[:])
-   if err := file.Write(w); err != nil {
-      return nil, err
-   }
-   return protect.SchemeInformation.TrackEncryption.DefaultKid[:], nil
 }

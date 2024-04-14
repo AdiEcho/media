@@ -9,9 +9,17 @@ import (
    "strings"
 )
 
-// this has got to be the stupidest fucking URL construction I have ever seen,
-// but its what the server requires
 func (h *HomeScreen) New(id string) error {
+   // outside of US this redirects to
+   // therokuchannel.roku.com/enguard
+   // so disable redirect
+   client := http.Client{
+      CheckRedirect: func(*http.Request, []*http.Request) error {
+         return http.ErrUseLastResponse
+      },
+   }
+   // this has got to be the stupidest fucking URL construction I have ever
+   // seen, but its what the server requires
    var b strings.Builder
    b.WriteString("https://therokuchannel.roku.com/api/v2/homescreen/content/")
    b.WriteString(func() string {
@@ -33,11 +41,7 @@ func (h *HomeScreen) New(id string) error {
       }())
       return url.PathEscape(b.String())
    }())
-   // outside of US this redirects to
-   // therokuchannel.roku.com/enguard
-   // so disable redirect
-   http.DefaultClient.CheckRedirect = redirect
-   res, err := http.Get(b.String())
+   res, err := client.Get(b.String())
    if err != nil {
       return err
    }
@@ -47,52 +51,11 @@ func (h *HomeScreen) New(id string) error {
       res.Write(&b)
       return errors.New(b.String())
    }
-   return json.NewDecoder(res.Body).Decode(&h.V)
-}
-
-func redirect(*http.Request, []*http.Request) error {
-   return http.ErrUseLastResponse
-}
-
-func (h HomeScreen) Season() int {
-   return h.V.SeasonNumber
-}
-
-func (h HomeScreen) Show() string {
-   return h.V.Series.Title
-}
-
-func (h HomeScreen) Title() string {
-   return h.V.Title
-}
-
-func (h HomeScreen) Year() int {
-   if v, _, ok := strings.Cut(h.V.ReleaseDate, "-"); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
-}
-type HomeScreen struct {
-   V struct {
-      Series *struct {
-         Title string
-      }
-      Title string
-      ReleaseDate string // 2007-01-01T000000Z
-      ViewOptions []struct {
-         Media struct {
-            Videos []MediaVideo
-         }
-      }
-      SeasonNumber int `json:",string"`
-      EpisodeNumber int `json:",string"`
-   }
+   return json.NewDecoder(res.Body).Decode(&h.S)
 }
 
 func (h HomeScreen) DASH() (*MediaVideo, bool) {
-   for _, option := range h.V.ViewOptions {
+   for _, option := range h.S.ViewOptions {
       for _, video := range option.Media.Videos {
          if video.VideoType == "DASH" {
             return &video, true
@@ -102,7 +65,47 @@ func (h HomeScreen) DASH() (*MediaVideo, bool) {
    return nil, false
 }
 
-func (h HomeScreen) Episode() int {
-   return h.V.EpisodeNumber
+func (h HomeScreen) Show() string {
+   if v := h.S.Series; v != nil {
+      return v.Title
+   }
+   return ""
 }
 
+func (h HomeScreen) Season() int {
+   return h.S.SeasonNumber
+}
+
+func (h HomeScreen) Episode() int {
+   return h.S.EpisodeNumber
+}
+
+func (h HomeScreen) Title() string {
+   return h.S.Title
+}
+
+type HomeScreen struct {
+   S struct {
+      EpisodeNumber int `json:",string"`
+      ReleaseDate string // 2007-01-01T000000Z
+      SeasonNumber int `json:",string"`
+      Series *struct {
+         Title string
+      }
+      Title string
+      ViewOptions []struct {
+         Media struct {
+            Videos []MediaVideo
+         }
+      }
+   }
+}
+
+func (h HomeScreen) Year() int {
+   if v, _, ok := strings.Cut(h.S.ReleaseDate, "-"); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
+}

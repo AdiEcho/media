@@ -1,7 +1,6 @@
 package internal
 
 import (
-   "154.pages.dev/encoding"
    "154.pages.dev/encoding/dash"
    "154.pages.dev/log"
    "errors"
@@ -11,7 +10,45 @@ import (
    "os"
    "slices"
    "strings"
+   "text/template"
 )
+
+var NameFormat = 
+   "{{if .Show}}" +
+      "{{.Show}} - {{.Season}} {{.Episode}} - {{.Title}}" +
+   "{{else}}" +
+      "{{.Title}} - {{.Year}}" +
+   "{{end}}"
+
+func CleanName(s string) string {
+   mapping := func(r rune) rune {
+      if strings.ContainsRune(`"*/:<>?\|`, r) {
+         return '-'
+      }
+      return r
+   }
+   return strings.Map(mapping, s)
+}
+
+func Name(n Namer) (string, error) {
+   text, err := new(template.Template).Parse(NameFormat)
+   if err != nil {
+      return "", err
+   }
+   var b strings.Builder
+   if err := text.Execute(&b, n); err != nil {
+      return "", err
+   }
+   return b.String(), nil
+}
+
+type Namer interface {
+   Show() string
+   Season() int
+   Episode() int
+   Title() string
+   Year() int
+}
 
 func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
    res, err := http.Get(url)
@@ -24,16 +61,16 @@ func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
       res.Write(&b)
       return nil, errors.New(b.String())
    }
+   var media dash.MPD
    text, err := io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
-   var media dash.MPD
    if err := media.Unmarshal(text); err != nil {
       return nil, err
    }
    if media.BaseURL == "" {
-      media.BaseURL = url
+      media.BaseURL = res.Request.URL.String()
    }
    var reps []*dash.Representation
    for _, v := range media.Period {
@@ -56,6 +93,7 @@ func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
    })
    return reps, nil
 }
+
 func (h HttpStream) segment_template(
    ext, initial string, rep *dash.Representation,
 ) error {
@@ -73,11 +111,16 @@ func (h HttpStream) segment_template(
       return err
    }
    defer res.Body.Close()
-   name, err := encoding.Name(h.Name)
-   if err != nil {
-      return err
+   if res.StatusCode != http.StatusOK {
+      return errors.New(res.Status)
    }
-   file, err := os.Create(encoding.Clean(name) + ext)
+   file, err := func() (*os.File, error) {
+      s, err := Name(h.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(CleanName(s) + ext)
+   }()
    if err != nil {
       return err
    }
@@ -155,11 +198,13 @@ func (h HttpStream) segment_base(
       return err
    }
    defer res.Body.Close()
-   name, err := encoding.Name(h.Name)
-   if err != nil {
-      return err
-   }
-   file, err := os.Create(encoding.Clean(name) + ext)
+   file, err := func() (*os.File, error) {
+      s, err := Name(h.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(CleanName(s) + ext)
+   }()
    if err != nil {
       return err
    }
@@ -210,11 +255,13 @@ func (h HttpStream) TimedText(url string) error {
       return err
    }
    defer res.Body.Close()
-   name, err := encoding.Name(h.Name)
-   if err != nil {
-      return err
-   }
-   file, err := os.Create(encoding.Clean(name) + ".vtt")
+   file, err := func() (*os.File, error) {
+      s, err := Name(h.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(CleanName(s) + ".vtt")
+   }()
    if err != nil {
       return err
    }
@@ -224,4 +271,3 @@ func (h HttpStream) TimedText(url string) error {
    }
    return nil
 }
-
