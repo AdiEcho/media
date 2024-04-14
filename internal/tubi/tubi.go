@@ -34,8 +34,8 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.IntVar(&f.tubi, "b", 0, "tubi ID")
-   flag.StringVar(&f.representation, "i", "", "media ID")
+   flag.IntVar(&f.tubi, "b", 0, "Tubi ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
    flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
@@ -51,6 +51,7 @@ func main() {
       flag.Usage()
    }
 }
+
 func (f flags) download() error {
    var meta tubi.Metadata
    err := meta.New(f.tubi)

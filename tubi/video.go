@@ -1,38 +1,53 @@
 package tubi
 
-import "net/http"
+import (
+	"net/http"
+	"slices"
+	"strconv"
+	"strings"
+)
 
-func (c content) resolution_720p() (*video_resource, bool) {
-   for _, video := range c.Video_Resources {
-      if video.Resolution == "VIDEO_RESOLUTION_720P" {
-         return &video, true
-      }
-   }
-   return nil, false
+func (c Content) Video() VideoResource {
+	slices.SortFunc(c.Video_Resources, func(a, b VideoResource) int {
+		return int(b.Resolution - a.Resolution)
+	})
+	return c.Video_Resources[0]
 }
 
-type video_resource struct {
-   License_Server struct {
-      URL string
-   }
-   Manifest struct {
-      URL string
-   }
-   Resolution string
+type Resolution int
+
+func (r *Resolution) UnmarshalText(text []byte) error {
+	a := strings.TrimPrefix(string(text), "VIDEO_RESOLUTION_")
+	i, err := strconv.Atoi(strings.TrimSuffix(a, "P"))
+	if err != nil {
+		return err
+	}
+	*r = Resolution(i)
+	return nil
 }
 
-func (video_resource) RequestBody(b []byte) ([]byte, error) {
-   return b, nil
+type VideoResource struct {
+	License_Server struct {
+		URL string
+	}
+	Manifest struct {
+		URL string
+	}
+	Resolution Resolution
 }
 
-func (video_resource) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
+func (VideoResource) RequestBody(b []byte) ([]byte, error) {
+	return b, nil
 }
 
-func (v video_resource) RequestUrl() (string, bool) {
-   return v.License_Server.URL, true
+func (VideoResource) RequestHeader() (http.Header, error) {
+	return http.Header{}, nil
 }
 
-func (video_resource) ResponseBody(b []byte) ([]byte, error) {
-   return b, nil
+func (v VideoResource) RequestUrl() (string, bool) {
+	return v.License_Server.URL, true
+}
+
+func (VideoResource) ResponseBody(b []byte) ([]byte, error) {
+	return b, nil
 }
