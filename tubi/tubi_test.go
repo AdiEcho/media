@@ -7,6 +7,22 @@ import (
    "time"
 )
 
+var tests = map[string]struct{
+   content_id int
+   key_id string
+   url string
+}{
+   "episode": {
+      content_id: 200042567,
+      url: "tubitv.com/tv-shows/200042567",
+   },
+   "movie": {
+      content_id: 589292,
+      key_id: "943974887f2a4b87a3ded9e99f03c962",
+      url: "tubitv.com/movies/589292",
+   },
+}
+
 func TestContent(t *testing.T) {
    for _, test := range tests {
       cms := new(content)
@@ -33,20 +49,4 @@ func TestContent(t *testing.T) {
       }
       fmt.Printf("%q\n", name)
    }
-}
-
-var tests = map[string]struct{
-   content_id int
-   key_id string
-   url string
-}{
-   "episode": {
-      content_id: 200042567,
-      url: "tubitv.com/tv-shows/200042567",
-   },
-   "movie": {
-      content_id: 589292,
-      key_id: "943974887f2a4b87a3ded9e99f03c962",
-      url: "tubitv.com/movies/589292",
-   },
 }

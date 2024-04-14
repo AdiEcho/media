@@ -4,18 +4,18 @@ import (
    "encoding/json"
    "net/http"
    "net/url"
+   "strings"
 )
 
 type Path struct {
    s string
 }
 
+// https://watch.plex.tv/movie/the-hurt-locker
+// https://watch.plex.tv/watch/movie/the-hurt-locker
 func (p *Path) Set(s string) error {
-   u, err := url.Parse(s)
-   if err != nil {
-      return err
-   }
-   p.s = u.Path
+   s = strings.TrimPrefix(s, "https://watch.plex.tv")
+   p.s = strings.TrimPrefix(s, "/watch")
    return nil
 }
 
