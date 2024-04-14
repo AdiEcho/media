@@ -51,11 +51,11 @@ func (h *HomeScreen) New(id string) error {
       res.Write(&b)
       return errors.New(b.String())
    }
-   return json.NewDecoder(res.Body).Decode(&h.S)
+   return json.NewDecoder(res.Body).Decode(h)
 }
 
 func (h HomeScreen) DASH() (*MediaVideo, bool) {
-   for _, option := range h.S.ViewOptions {
+   for _, option := range h.ViewOptions {
       for _, video := range option.Media.Videos {
          if video.VideoType == "DASH" {
             return &video, true
@@ -65,44 +65,46 @@ func (h HomeScreen) DASH() (*MediaVideo, bool) {
    return nil, false
 }
 
-func (h HomeScreen) Show() string {
-   if v := h.S.Series; v != nil {
+type HomeScreen struct {
+   EpisodeNumber int `json:",string"`
+   ReleaseDate string // 2007-01-01T000000Z
+   SeasonNumber int `json:",string"`
+   Series *struct {
+      Title string
+   }
+   Title string
+   ViewOptions []struct {
+      Media struct {
+         Videos []MediaVideo
+      }
+   }
+}
+
+type Name struct {
+   H HomeScreen
+}
+
+func (n Name) Show() string {
+   if v := n.H.Series; v != nil {
       return v.Title
    }
    return ""
 }
 
-func (h HomeScreen) Season() int {
-   return h.S.SeasonNumber
+func (n Name) Season() int {
+   return n.H.SeasonNumber
 }
 
-func (h HomeScreen) Episode() int {
-   return h.S.EpisodeNumber
+func (n Name) Episode() int {
+   return n.H.EpisodeNumber
 }
 
-func (h HomeScreen) Title() string {
-   return h.S.Title
+func (n Name) Title() string {
+   return n.H.Title
 }
 
-type HomeScreen struct {
-   S struct {
-      EpisodeNumber int `json:",string"`
-      ReleaseDate string // 2007-01-01T000000Z
-      SeasonNumber int `json:",string"`
-      Series *struct {
-         Title string
-      }
-      Title string
-      ViewOptions []struct {
-         Media struct {
-            Videos []MediaVideo
-         }
-      }
-   }
-}
-
-func (h HomeScreen) Year() int {
-   if v, _, ok := strings.Cut(h.S.ReleaseDate, "-"); ok {
+func (n Name) Year() int {
+   if v, _, ok := strings.Cut(n.H.ReleaseDate, "-"); ok {
       if v, err := strconv.Atoi(v); err == nil {
          return v
       }

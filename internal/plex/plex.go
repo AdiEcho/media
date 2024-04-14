@@ -31,8 +31,8 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.dash {
-         f.h.Name = match
          f.h.Poster = part
+         f.h.Name = plex.Name{match}
          return f.h.DASH(medium)
       }
    }

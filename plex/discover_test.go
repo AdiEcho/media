@@ -24,7 +24,7 @@ func TestDiscover(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := internal.Name(match)
+      name, err := internal.Name(Name{match})
       if err != nil {
          t.Fatal(err)
       }

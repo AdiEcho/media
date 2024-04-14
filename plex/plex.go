@@ -6,46 +6,12 @@ import (
    "net/url"
 )
 
-type Anonymous struct {
-   AuthToken string
-}
-
-func (a *Anonymous) New() error {
-   req, err := http.NewRequest(
-      "POST", "https://plex.tv/api/v2/users/anonymous", nil,
-   )
-   if err != nil {
-      return err
-   }
-   req.Header = http.Header{
-      "Accept": {"application/json"},
-      "X-Plex-Product": {"Plex Mediaverse"},
-      "X-Plex-Client-Identifier": {"!"},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(a)
-}
-
-func (a Anonymous) abs(path string, query url.Values) string {
-   query.Set("x-plex-token", a.AuthToken)
-   var u url.URL
-   u.Host = "vod.provider.plex.tv"
-   u.Path = path
-   u.RawQuery = query.Encode()
-   u.Scheme = "https"
-   return u.String()
-}
-
-func (a Anonymous) Video(d *DiscoverMatch) (*OnDemand, error) {
+func (a Anonymous) Video(match *DiscoverMatch) (*OnDemand, error) {
    req, err := http.NewRequest("GET", "https://vod.provider.plex.tv", nil)
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/library/metadata/" + d.m.RatingKey
+   req.URL.Path = "/library/metadata/" + match.RatingKey
    req.Header = http.Header{
       "accept": {"application/json"},
       "x-plex-token": {a.AuthToken},
@@ -106,4 +72,37 @@ func (o OnDemand) DASH(a Anonymous) (*MediaPart, bool) {
       }
    }
    return nil, false
+}
+type Anonymous struct {
+   AuthToken string
+}
+
+func (a *Anonymous) New() error {
+   req, err := http.NewRequest(
+      "POST", "https://plex.tv/api/v2/users/anonymous", nil,
+   )
+   if err != nil {
+      return err
+   }
+   req.Header = http.Header{
+      "Accept": {"application/json"},
+      "X-Plex-Product": {"Plex Mediaverse"},
+      "X-Plex-Client-Identifier": {"!"},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   return json.NewDecoder(res.Body).Decode(a)
+}
+
+func (a Anonymous) abs(path string, query url.Values) string {
+   query.Set("x-plex-token", a.AuthToken)
+   var u url.URL
+   u.Host = "vod.provider.plex.tv"
+   u.Path = path
+   u.RawQuery = query.Encode()
+   u.Scheme = "https"
+   return u.String()
 }

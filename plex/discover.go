@@ -40,48 +40,46 @@ func (a Anonymous) Discover(p Path) (*DiscoverMatch, error) {
       return nil, err
    }
    defer res.Body.Close()
-   var in struct {
+   var match struct {
       MediaContainer struct {
-         Metadata []metadata
+         Metadata []DiscoverMatch
       }
    }
-   if err := json.NewDecoder(res.Body).Decode(&in); err != nil {
+   if err := json.NewDecoder(res.Body).Decode(&match); err != nil {
       return nil, err
    }
-   var out DiscoverMatch
-   out.m = in.MediaContainer.Metadata[0]
-   return &out, nil
+   return &match.MediaContainer.Metadata[0], nil
 }
 
 type DiscoverMatch struct {
-   m metadata
-}
-
-func (d DiscoverMatch) Episode() int {
-   return d.m.Index
-}
-
-func (d DiscoverMatch) Season() int {
-   return d.m.ParentIndex
-}
-
-func (d DiscoverMatch) Show() string {
-   return d.m.GrandparentTitle
-}
-
-func (d DiscoverMatch) Title() string {
-   return d.m.Title
-}
-
-func (d DiscoverMatch) Year() int {
-   return d.m.Year
-}
-
-type metadata struct {
    GrandparentTitle string
    Index int
    ParentIndex int
    RatingKey string
    Title string
    Year int
+}
+
+type Name struct {
+   D *DiscoverMatch
+}
+
+func (n Name) Episode() int {
+   return n.D.Index
+}
+
+func (n Name) Season() int {
+   return n.D.ParentIndex
+}
+
+func (n Name) Show() string {
+   return n.D.GrandparentTitle
+}
+
+func (n Name) Title() string {
+   return n.D.Title
+}
+
+func (n Name) Year() int {
+   return n.D.Year
 }

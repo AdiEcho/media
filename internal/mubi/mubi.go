@@ -19,10 +19,11 @@ func (f flags) download() error {
    // 1 VTT one
    for _, text := range secure.V.Text_Track_URLs {
       if text.ID == f.media_id {
-         f.h.Name, err = f.web.Film()
+         film, err := f.web.Film()
          if err != nil {
             return err
          }
+         f.h.Name = mubi.Name{film}
          return f.h.TimedText(text.URL)
       }
    }
@@ -33,10 +34,11 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.media_id {
-         f.h.Name, err = f.web.Film()
+         film, err := f.web.Film()
          if err != nil {
             return err
          }
+         f.h.Name = mubi.Name{film}
          var auth mubi.Authenticate
          auth.Data, err = os.ReadFile(f.home + "/mubi.json")
          if err != nil {

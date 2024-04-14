@@ -9,10 +9,10 @@ import (
    "strings"
 )
 
-func (a Authenticate) URL(f *FilmResponse) (*SecureUrl, error) {
+func (a Authenticate) URL(film *FilmResponse) (*SecureUrl, error) {
    address := func() string {
       b := []byte("https://api.mubi.com/v3/films/")
-      b = strconv.AppendInt(b, f.V.ID, 10)
+      b = strconv.AppendInt(b, film.ID, 10)
       b = append(b, "/viewing/secure_url"...)
       return string(b)
    }
@@ -43,15 +43,35 @@ func (a Authenticate) URL(f *FilmResponse) (*SecureUrl, error) {
    return &secure, nil
 }
 
+func (Name) Episode() int {
+   return 0
+}
+
+func (Name) Season() int {
+   return 0
+}
+
+func (Name) Show() string {
+   return ""
+}
+
+func (n Name) Title() string {
+   return n.F.Title
+}
+
+func (n Name) Year() int {
+   return n.F.Year
+}
+
 // Mubi do this sneaky thing. you cannot download a video unless you have told
 // the API that you are watching it. so you have to call
 // `/v3/films/%v/viewing`, otherwise it wont let you get the MPD. if you have
 // already viewed the video on the website that counts, but if you only use the
 // tool it will error
-func (a Authenticate) Viewing(f *FilmResponse) error {
+func (a Authenticate) Viewing(film *FilmResponse) error {
    address := func() string {
       b := []byte("https://api.mubi.com/v3/films/")
-      b = strconv.AppendInt(b, f.V.ID, 10)
+      b = strconv.AppendInt(b, film.ID, 10)
       b = append(b, "/viewing"...)
       return string(b)
    }
@@ -78,31 +98,13 @@ func (a Authenticate) Viewing(f *FilmResponse) error {
 }
 
 type FilmResponse struct {
-   V struct {
-      ID int64
-      Title string
-      Year int
-   }
+   ID int64
+   Title string
+   Year int
 }
 
-func (FilmResponse) Episode() int {
-   return 0
-}
-
-func (FilmResponse) Season() int {
-   return 0
-}
-
-func (FilmResponse) Show() string {
-   return ""
-}
-
-func (f FilmResponse) Title() string {
-   return f.V.Title
-}
-
-func (f FilmResponse) Year() int {
-   return f.V.Year
+type Name struct {
+   F *FilmResponse
 }
 
 func (w WebAddress) Film() (*FilmResponse, error) {
@@ -121,9 +123,9 @@ func (w WebAddress) Film() (*FilmResponse, error) {
       return nil, err
    }
    defer res.Body.Close()
-   var film FilmResponse
-   if err := json.NewDecoder(res.Body).Decode(&film.V); err != nil {
+   film := new(FilmResponse)
+   if err := json.NewDecoder(res.Body).Decode(film); err != nil {
       return nil, err
    }
-   return &film, nil
+   return film, nil
 }
