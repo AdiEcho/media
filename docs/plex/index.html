@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/plex<span class="navbar-right">
-          v1.8.2 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.3 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package plex</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/plex&#34;</span></pre>
@@ -25,18 +25,11 @@
       <ul>
           <li><a href="#Anonymous.Discover">func (a Anonymous) Discover(p Path) (*DiscoverMatch, error)</a></li>
           <li><a href="#Anonymous.New">func (a *Anonymous) New() error</a></li>
-          <li><a href="#Anonymous.Video">func (a Anonymous) Video(d *DiscoverMatch) (*OnDemand, error)</a></li>
+          <li><a href="#Anonymous.Video">func (a Anonymous) Video(match *DiscoverMatch) (*OnDemand, error)</a></li>
           </ul>
       </li>
   <li>
       <a href="#DiscoverMatch">type DiscoverMatch</a>
-      <ul>
-          <li><a href="#DiscoverMatch.Episode">func (d DiscoverMatch) Episode() int</a></li>
-          <li><a href="#DiscoverMatch.Season">func (d DiscoverMatch) Season() int</a></li>
-          <li><a href="#DiscoverMatch.Show">func (d DiscoverMatch) Show() string</a></li>
-          <li><a href="#DiscoverMatch.Title">func (d DiscoverMatch) Title() string</a></li>
-          <li><a href="#DiscoverMatch.Year">func (d DiscoverMatch) Year() int</a></li>
-          </ul>
       </li>
   <li>
       <a href="#MediaPart">type MediaPart</a>
@@ -45,6 +38,16 @@
           <li><a href="#MediaPart.RequestHeader">func (MediaPart) RequestHeader() (http.Header, error)</a></li>
           <li><a href="#MediaPart.RequestUrl">func (p MediaPart) RequestUrl() (string, bool)</a></li>
           <li><a href="#MediaPart.ResponseBody">func (MediaPart) ResponseBody(b []byte) ([]byte, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Namer">type Namer</a>
+      <ul>
+          <li><a href="#Namer.Episode">func (n Namer) Episode() int</a></li>
+          <li><a href="#Namer.Season">func (n Namer) Season() int</a></li>
+          <li><a href="#Namer.Show">func (n Namer) Show() string</a></li>
+          <li><a href="#Namer.Title">func (n Namer) Title() string</a></li>
+          <li><a href="#Namer.Year">func (n Namer) Year() int</a></li>
           </ul>
       </li>
   <li>
@@ -70,22 +73,17 @@
   <h4 id="Anonymous.New">func (*Anonymous) New</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Anonymous"><span class="nx">Anonymous</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h4 id="Anonymous.Video">func (Anonymous) Video</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Anonymous"><span class="nx">Anonymous</span></a><span class="p">)</span> <span class="nf">Video</span><span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Anonymous"><span class="nx">Anonymous</span></a><span class="p">)</span> <span class="nf">Video</span><span class="p">(</span><span class="nx">match</span> <span class="o">*</span><a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h3 id="DiscoverMatch">type DiscoverMatch</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">DiscoverMatch</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="c1">// contains filtered or unexported fields
-</span><span class="c1"></span><span class="p">}</span></pre>
-    <h4 id="DiscoverMatch.Episode">func (DiscoverMatch) Episode</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h4 id="DiscoverMatch.Season">func (DiscoverMatch) Season</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h4 id="DiscoverMatch.Show">func (DiscoverMatch) Show</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="DiscoverMatch.Title">func (DiscoverMatch) Title</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="DiscoverMatch.Year">func (DiscoverMatch) Year</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h3 id="MediaPart">type MediaPart</h3>
+	<span id="DiscoverMatch.GrandparentTitle"><span class="nx">GrandparentTitle</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="DiscoverMatch.Index"><span class="nx">Index</span></span>            <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span id="DiscoverMatch.ParentIndex"><span class="nx">ParentIndex</span></span>      <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span id="DiscoverMatch.RatingKey"><span class="nx">RatingKey</span></span>        <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="DiscoverMatch.Title"><span class="nx">Title</span></span>            <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="DiscoverMatch.Year"><span class="nx">Year</span></span>             <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+<span class="p">}</span></pre>
+    <h3 id="MediaPart">type MediaPart</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">MediaPart</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="MediaPart.Key"><span class="nx">Key</span></span>     <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span id="MediaPart.License"><span class="nx">License</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
@@ -98,6 +96,20 @@
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#MediaPart"><span class="nx">MediaPart</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h4 id="MediaPart.ResponseBody">func (MediaPart) ResponseBody</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#MediaPart"><span class="nx">MediaPart</span></a><span class="p">)</span> <span class="nf">ResponseBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="Namer">type Namer</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Namer</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Namer.D"><span class="nx">D</span></span> <span class="o">*</span><a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Namer.Episode">func (Namer) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="Namer.Season">func (Namer) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="Namer.Show">func (Namer) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Namer.Title">func (Namer) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Namer.Year">func (Namer) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h3 id="OnDemand">type OnDemand</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">OnDemand</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="OnDemand.Media"><span class="nx">Media</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
@@ -113,7 +125,9 @@
 </span><span class="c1"></span><span class="p">}</span></pre>
     <h4 id="Path.Set">func (*Path) Set</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><a href="#Path"><span class="nx">Path</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="Path.String">func (Path) String</h4>
+  <p><a href="https://watch.plex.tv/movie/the-hurt-locker">https://watch.plex.tv/movie/the-hurt-locker</a>
+<a href="https://watch.plex.tv/watch/movie/the-hurt-locker">https://watch.plex.tv/watch/movie/the-hurt-locker</a>
+<h4 id="Path.String">func (Path) String</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#Path"><span class="nx">Path</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   </main>
     <hr>

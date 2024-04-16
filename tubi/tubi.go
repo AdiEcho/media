@@ -20,6 +20,10 @@ type Content struct {
    parent          *Content
 }
 
+func (c Content) Episode() bool {
+   return c.Detailed_Type == "episode"
+}
+
 func (c *Content) New(id int) error {
    req, err := http.NewRequest("GET", "https://uapi.adrise.tv/cms/content", nil)
    if err != nil {
@@ -66,6 +70,10 @@ func (c *Content) set(parent *Content) {
    }
 }
 
+type Namer struct {
+   C *Content
+}
+
 func (n Namer) Episode() int {
    return n.C.Episode_Number
 }
@@ -84,22 +92,14 @@ func (n Namer) Show() string {
    return ""
 }
 
-func (n Namer) Year() int {
-   return n.C.Year
-}
-
-type Namer struct {
-   C *Content
-}
-
-func (c Content) Episode() bool {
-   return c.Detailed_Type == "episode"
-}
-
 // S01:E03 - Hell Hath No Fury
 func (n Namer) Title() string {
    if _, v, ok := strings.Cut(n.C.Title, " - "); ok {
       return v
    }
    return n.C.Title
+}
+
+func (n Namer) Year() int {
+   return n.C.Year
 }

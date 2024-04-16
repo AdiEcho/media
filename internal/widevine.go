@@ -26,7 +26,8 @@ func (h HttpStream) key(key_id []byte) ([]byte, error) {
       return nil, err
    }
    var module widevine.CDM
-   if err := module.New(private_key, client_id, key_id); err != nil {
+   err = module.New(private_key, client_id, key_id)
+   if err != nil {
       return nil, err
    }
    license, err := module.License(h.Poster)

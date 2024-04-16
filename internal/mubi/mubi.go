@@ -106,7 +106,8 @@ func (f flags) write_secure() error {
    if err != nil {
       return err
    }
-   if err := auth.Viewing(film); err != nil {
+   err = auth.Viewing(film)
+   if err != nil {
       return err
    }
    secure, err := auth.URL(film)

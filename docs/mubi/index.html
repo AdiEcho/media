@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/mubi<span class="navbar-right">
-          v1.8.2 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.3 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package mubi</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/mubi&#34;</span></pre>
@@ -27,20 +27,13 @@
           <li><a href="#Authenticate.RequestHeader">func (a Authenticate) RequestHeader() (http.Header, error)</a></li>
           <li><a href="#Authenticate.RequestUrl">func (Authenticate) RequestUrl() (string, bool)</a></li>
           <li><a href="#Authenticate.ResponseBody">func (Authenticate) ResponseBody(b []byte) ([]byte, error)</a></li>
-          <li><a href="#Authenticate.URL">func (a Authenticate) URL(f *FilmResponse) (*SecureUrl, error)</a></li>
+          <li><a href="#Authenticate.URL">func (a Authenticate) URL(film *FilmResponse) (*SecureUrl, error)</a></li>
           <li><a href="#Authenticate.Unmarshal">func (a *Authenticate) Unmarshal() error</a></li>
-          <li><a href="#Authenticate.Viewing">func (a Authenticate) Viewing(f *FilmResponse) error</a></li>
+          <li><a href="#Authenticate.Viewing">func (a Authenticate) Viewing(film *FilmResponse) error</a></li>
           </ul>
       </li>
   <li>
       <a href="#FilmResponse">type FilmResponse</a>
-      <ul>
-          <li><a href="#FilmResponse.Episode">func (FilmResponse) Episode() int</a></li>
-          <li><a href="#FilmResponse.Season">func (FilmResponse) Season() int</a></li>
-          <li><a href="#FilmResponse.Show">func (FilmResponse) Show() string</a></li>
-          <li><a href="#FilmResponse.Title">func (f FilmResponse) Title() string</a></li>
-          <li><a href="#FilmResponse.Year">func (f FilmResponse) Year() int</a></li>
-          </ul>
       </li>
   <li>
       <a href="#LinkCode">type LinkCode</a>
@@ -49,6 +42,16 @@
           <li><a href="#LinkCode.New">func (c *LinkCode) New() error</a></li>
           <li><a href="#LinkCode.String">func (c LinkCode) String() string</a></li>
           <li><a href="#LinkCode.Unmarshal">func (c *LinkCode) Unmarshal() error</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Namer">type Namer</a>
+      <ul>
+          <li><a href="#Namer.Episode">func (Namer) Episode() int</a></li>
+          <li><a href="#Namer.Season">func (Namer) Season() int</a></li>
+          <li><a href="#Namer.Show">func (Namer) Show() string</a></li>
+          <li><a href="#Namer.Title">func (n Namer) Title() string</a></li>
+          <li><a href="#Namer.Year">func (n Namer) Year() int</a></li>
           </ul>
       </li>
   <li>
@@ -94,11 +97,11 @@
 <h4 id="Authenticate.ResponseBody">func (Authenticate) ResponseBody</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">ResponseBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Authenticate.URL">func (Authenticate) URL</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">URL</span><span class="p">(</span><span class="nx">f</span> <span class="o">*</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#SecureUrl"><span class="nx">SecureUrl</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">URL</span><span class="p">(</span><span class="nx">film</span> <span class="o">*</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#SecureUrl"><span class="nx">SecureUrl</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Authenticate.Unmarshal">func (*Authenticate) Unmarshal</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h4 id="Authenticate.Viewing">func (Authenticate) Viewing</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">Viewing</span><span class="p">(</span><span class="nx">f</span> <span class="o">*</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">Viewing</span><span class="p">(</span><span class="nx">film</span> <span class="o">*</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <p>Mubi do this sneaky thing. you cannot download a video unless you have told
 the API that you are watching it. so you have to call
 `/v3/films/%v/viewing`, otherwise it wont let you get the MPD. if you have
@@ -106,23 +109,11 @@ already viewed the video on the website that counts, but if you only use the
 tool it will error
 <h3 id="FilmResponse">type FilmResponse</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">FilmResponse</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="FilmResponse.V"><span class="nx">V</span></span> <span class="kd">struct</span> <span class="p">{</span>
-		<span id="FilmResponse.ID"><span class="nx">ID</span></span>    <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>
-		<span id="FilmResponse.Title"><span class="nx">Title</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-		<span id="FilmResponse.Year"><span class="nx">Year</span></span>  <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
-	<span class="p">}</span>
+	<span id="FilmResponse.ID"><span class="nx">ID</span></span>    <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>
+	<span id="FilmResponse.Title"><span class="nx">Title</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="FilmResponse.Year"><span class="nx">Year</span></span>  <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
 <span class="p">}</span></pre>
-    <h4 id="FilmResponse.Episode">func (FilmResponse) Episode</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h4 id="FilmResponse.Season">func (FilmResponse) Season</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h4 id="FilmResponse.Show">func (FilmResponse) Show</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="FilmResponse.Title">func (FilmResponse) Title</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="FilmResponse.Year">func (FilmResponse) Year</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <a href="#FilmResponse"><span class="nx">FilmResponse</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h3 id="LinkCode">type LinkCode</h3>
+    <h3 id="LinkCode">type LinkCode</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">LinkCode</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="LinkCode.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
 	<span id="LinkCode.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>
@@ -138,6 +129,20 @@ tool it will error
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <a href="#LinkCode"><span class="nx">LinkCode</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h4 id="LinkCode.Unmarshal">func (*LinkCode) Unmarshal</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><a href="#LinkCode"><span class="nx">LinkCode</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h3 id="Namer">type Namer</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Namer</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Namer.F"><span class="nx">F</span></span> <span class="o">*</span><a href="#FilmResponse"><span class="nx">FilmResponse</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Namer.Episode">func (Namer) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="Namer.Season">func (Namer) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="Namer.Show">func (Namer) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Namer.Title">func (Namer) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Namer.Year">func (Namer) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h3 id="SecureUrl">type SecureUrl</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">SecureUrl</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="SecureUrl.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>

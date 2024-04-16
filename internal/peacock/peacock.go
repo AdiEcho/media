@@ -34,7 +34,8 @@ func (f flags) download() error {
    for _, medium := range media {
       if medium.ID == f.media_id {
          var node peacock.QueryNode
-         if err := node.New(f.peacock_id); err != nil {
+         err := node.New(f.peacock_id)
+         if err != nil {
             return err
          }
          f.h.Name = node

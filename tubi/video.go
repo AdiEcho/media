@@ -7,17 +7,6 @@ import (
    "strings"
 )
 
-type VideoResource struct {
-   License_Server struct {
-      URL string
-   }
-   Manifest struct {
-      URL string
-   }
-   Resolution Resolution
-   Type string
-}
-
 func (c Content) Video() VideoResource {
    slices.SortFunc(c.Video_Resources, func(a, b VideoResource) int {
       return int(b.Resolution - a.Resolution)
@@ -35,6 +24,17 @@ func (r *Resolution) UnmarshalText(text []byte) error {
    }
    *r = Resolution(i)
    return nil
+}
+
+type VideoResource struct {
+   License_Server struct {
+      URL string
+   }
+   Manifest struct {
+      URL string
+   }
+   Resolution Resolution
+   Type string
 }
 
 func (VideoResource) RequestBody(b []byte) ([]byte, error) {

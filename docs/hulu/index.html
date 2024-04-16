@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/hulu<span class="navbar-right">
-          v1.8.2 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.3 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package hulu</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/hulu&#34;</span></pre>
@@ -23,9 +23,9 @@
   <li>
       <a href="#Authenticate">type Authenticate</a>
       <ul>
-          <li><a href="#LivingRoom">func LivingRoom(email, password string) (*Authenticate, error)</a></li>
           <li><a href="#Authenticate.DeepLink">func (a Authenticate) DeepLink(watch ID) (*DeepLink, error)</a></li>
           <li><a href="#Authenticate.Details">func (a Authenticate) Details(d *DeepLink) (chan Details, error)</a></li>
+          <li><a href="#Authenticate.New">func (a *Authenticate) New(email, password string) error</a></li>
           <li><a href="#Authenticate.Playlist">func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error)</a></li>
           <li><a href="#Authenticate.Unmarshal">func (a *Authenticate) Unmarshal() error</a></li>
           </ul>
@@ -65,12 +65,12 @@
 	<span id="Authenticate.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
 	<span class="c1">// contains filtered or unexported fields
 </span><span class="c1"></span><span class="p">}</span></pre>
-    <h4 id="LivingRoom">func LivingRoom</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="nf">LivingRoom</span><span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Authenticate.DeepLink">func (Authenticate) DeepLink</h4>
+    <h4 id="Authenticate.DeepLink">func (Authenticate) DeepLink</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">DeepLink</span><span class="p">(</span><span class="nx">watch</span> <a href="#ID"><span class="nx">ID</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#DeepLink"><span class="nx">DeepLink</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Authenticate.Details">func (Authenticate) Details</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">Details</span><span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DeepLink"><span class="nx">DeepLink</span></a><span class="p">)</span> <span class="p">(</span><span class="kd">chan</span> <a href="#Details"><span class="nx">Details</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Authenticate.New">func (*Authenticate) New</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h4 id="Authenticate.Playlist">func (Authenticate) Playlist</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">Playlist</span><span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DeepLink"><span class="nx">DeepLink</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Playlist"><span class="nx">Playlist</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Authenticate.Unmarshal">func (*Authenticate) Unmarshal</h4>

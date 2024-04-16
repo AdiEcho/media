@@ -9,6 +9,7 @@ import (
    "net/url"
    "os"
    "slices"
+   "strconv"
    "strings"
    "text/template"
 )
@@ -47,21 +48,38 @@ func (h HttpStream) segment_base(
    if err != nil {
       return err
    }
-   byte_ranges, err := write_sidx(base_url, sb.IndexRange)
+   references, err := write_sidx(base_url, sb.IndexRange)
    if err != nil {
       return err
    }
    var meter log.ProgressMeter
-   meter.Set(len(byte_ranges))
+   meter.Set(len(references))
+   var start uint64
+   end, err := func() (uint64, error) {
+      _, s, _ := sb.IndexRange.Cut()
+      return strconv.ParseUint(s, 10, 64)
+   }()
+   if err != nil {
+      return err
+   }
    log.SetTransport(nil)
    defer log.Transport{}.Set()
-   for _, r := range byte_ranges {
+   for _, reference := range references {
+      start = end + 1
+      end += uint64(reference.ReferencedSize())
+      bytes := func() string {
+         b := []byte("bytes=")
+         b = strconv.AppendUint(b, start, 10)
+         b = append(b, '-')
+         b = strconv.AppendUint(b, end, 10)
+         return string(b)
+      }()
       err := func() error {
          req, err := http.NewRequest("GET", base_url, nil)
          if err != nil {
             return err
          }
-         req.Header.Set("Range", r.String())
+         req.Header.Set("Range", bytes)
          res, err := http.DefaultClient.Do(req)
          if err != nil {
             return err
@@ -96,11 +114,13 @@ func (h HttpStream) TimedText(url string) error {
       return err
    }
    defer file.Close()
-   if _, err := file.ReadFrom(res.Body); err != nil {
+   _, err = file.ReadFrom(res.Body)
+   if err != nil {
       return err
    }
    return nil
 }
+
 var NameFormat = 
    "{{if .Show}}" +
       "{{.Show}} - {{.Season}} {{.Episode}} - {{.Title}}" +
@@ -124,7 +144,8 @@ func Name(n Namer) (string, error) {
       return "", err
    }
    var b strings.Builder
-   if err := text.Execute(&b, n); err != nil {
+   err = text.Execute(&b, n)
+   if err != nil {
       return "", err
    }
    return b.String(), nil
@@ -154,7 +175,8 @@ func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
    if err != nil {
       return nil, err
    }
-   if err := media.Unmarshal(text); err != nil {
+   err = media.Unmarshal(text)
+   if err != nil {
       return nil, err
    }
    if media.BaseURL == "" {

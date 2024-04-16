@@ -47,7 +47,8 @@ func main() {
       if err != nil {
          panic(err)
       }
-      if err := f.dash(app); err != nil {
+      err = f.dash(app)
+      if err != nil {
          panic(err)
       }
    } else {
