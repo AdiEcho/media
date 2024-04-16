@@ -7,15 +7,16 @@
 
 Download media or send API requests
 
-1. Hulu: Stream TV shows & movies
-2. Plex: Stream Movies & TV
-3. Peacock TV: Stream TV & Movies
-4. Paramount+
-5. The NBC App - Stream TV Shows
-6. Stan.
-7. MUBI: Curated Cinema
-8. AMC+
-9. The Roku Channel
+1. Tubi: Movies & Live TV
+2. Hulu: Stream TV shows & movies
+3. Plex: Stream Movies & TV
+4. Peacock TV: Stream TV & Movies
+5. Paramount+
+6. The NBC App - Stream TV Shows
+7. Stan.
+8. MUBI: Curated Cinema
+9. AMC+
+10. The Roku Channel
 
 [1]://f002.backblazeb2.com/file/ql8mlh/Paint.It.Black.2016.mp4
 
