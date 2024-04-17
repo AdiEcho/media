@@ -7,9 +7,34 @@ import (
    "net/http"
 )
 
-func write_init(w io.Writer, r io.Reader) ([]byte, error) {
+func write_segment(dst io.Writer, src io.Reader, key []byte) error {
+   if key == nil {
+      _, err := io.Copy(dst, src)
+      if err != nil {
+         return err
+      }
+      return nil
+   }
    var file sofia.File
-   err := file.Read(r)
+   err := file.Read(src)
+   if err != nil {
+      return err
+   }
+   if v := file.MovieFragment.TrackFragment.SampleEncryption; v != nil {
+      run := file.MovieFragment.TrackFragment.TrackRun
+      for i, data := range file.MediaData.Data(run) {
+         err := v.Samples[i].DecryptCenc(data, key)
+         if err != nil {
+            return err
+         }
+      }
+   }
+   return file.Write(dst)
+}
+
+func write_init(dst io.Writer, src io.Reader) ([]byte, error) {
+   var file sofia.File
+   err := file.Read(src)
    if err != nil {
       return nil, err
    }
@@ -35,29 +60,11 @@ func write_init(w io.Writer, r io.Reader) ([]byte, error) {
          copy(sample.BoxHeader.Type[:], protect.OriginalFormat.DataFormat[:])
       }
    }
-   err = file.Write(w)
+   err = file.Write(dst)
    if err != nil {
       return nil, err
    }
    return key_id, nil
-}
-
-func write_segment(w io.Writer, r io.Reader, key []byte) error {
-   var file sofia.File
-   err := file.Read(r)
-   if err != nil {
-      return err
-   }
-   if v := file.MovieFragment.TrackFragment.SampleEncryption; v != nil {
-      run := file.MovieFragment.TrackFragment.TrackRun
-      for i, data := range file.MediaData.Data(run) {
-         err := v.Samples[i].DecryptCenc(data, key)
-         if err != nil {
-            return err
-         }
-      }
-   }
-   return file.Write(w)
 }
 
 func write_sidx(base_url string, bytes dash.Range) ([]sofia.Reference, error) {

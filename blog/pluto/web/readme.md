@@ -1,5 +1,7 @@
 # pluto
 
+<https://github.com/spaam/svtplay-dl/blob/master/lib/svtplay_dl/service/plutotv.py>
+
 ~~~
 url = https://pluto.tv/on-demand/movies/ex-machina-2015-1-1-ptv1
 monetization = ADS
