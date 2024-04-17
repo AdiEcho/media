@@ -18,23 +18,28 @@ func write_init(w io.Writer, r io.Reader) ([]byte, error) {
          copy(box.BoxHeader.Type[:], "free") // Firefox
       }
    }
-   sample, protect := file.
+   description := file.
       Movie.
       Track.
       Media.
       MediaInformation.
       SampleTable.
-      SampleDescription.
-      SampleEntry()
-   // Firefox enca encv sinf
-   copy(protect.BoxHeader.Type[:], "free")
-   // Firefox stsd enca encv
-   copy(sample.BoxHeader.Type[:], protect.OriginalFormat.DataFormat[:])
+      SampleDescription
+   var key_id []byte
+   if protect, ok := description.Protection(); ok {
+      key_id = protect.SchemeInformation.TrackEncryption.DefaultKid[:]
+      // Firefox
+      copy(protect.BoxHeader.Type[:], "free")
+      if sample, ok := description.SampleEntry(); ok {
+         // Firefox
+         copy(sample.BoxHeader.Type[:], protect.OriginalFormat.DataFormat[:])
+      }
+   }
    err = file.Write(w)
    if err != nil {
       return nil, err
    }
-   return protect.SchemeInformation.TrackEncryption.DefaultKid[:], nil
+   return key_id, nil
 }
 
 func write_segment(w io.Writer, r io.Reader, key []byte) error {

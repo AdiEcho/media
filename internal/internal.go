@@ -14,88 +14,19 @@ import (
    "text/template"
 )
 
-func (h HttpStream) segment_base(
-   ext, base_url string, rep *dash.Representation,
-) error {
-   sb := rep.SegmentBase
-   // Initialization
-   req, err := http.NewRequest("GET", base_url, nil)
-   if err != nil {
-      return err
+func (h HttpStream) DASH(rep *dash.Representation) error {
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Ext")
    }
-   req.Header.Set("Range", "bytes=" + string(sb.Initialization.Range))
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   file, err := func() (*os.File, error) {
-      s, err := Name(h.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(CleanName(s) + ext)
-   }()
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   key_id, err := write_init(file, res.Body)
-   if err != nil {
-      return err
-   }
-   key, err := h.key(key_id)
-   if err != nil {
-      return err
-   }
-   references, err := write_sidx(base_url, sb.IndexRange)
-   if err != nil {
-      return err
-   }
-   var meter log.ProgressMeter
-   meter.Set(len(references))
-   var start uint64
-   end, err := func() (uint64, error) {
-      _, s, _ := sb.IndexRange.Cut()
-      return strconv.ParseUint(s, 10, 64)
-   }()
-   if err != nil {
-      return err
-   }
-   log.SetTransport(nil)
-   defer log.Transport{}.Set()
-   for _, reference := range references {
-      start = end + 1
-      end += uint64(reference.ReferencedSize())
-      bytes := func() string {
-         b := []byte("bytes=")
-         b = strconv.AppendUint(b, start, 10)
-         b = append(b, '-')
-         b = strconv.AppendUint(b, end, 10)
-         return string(b)
-      }()
-      err := func() error {
-         req, err := http.NewRequest("GET", base_url, nil)
-         if err != nil {
-            return err
-         }
-         req.Header.Set("Range", bytes)
-         res, err := http.DefaultClient.Do(req)
-         if err != nil {
-            return err
-         }
-         defer res.Body.Close()
-         if res.StatusCode != http.StatusPartialContent {
-            return errors.New(res.Status)
-         }
-         return write_segment(file, meter.Reader(res), key)
-      }()
-      if err != nil {
-         return err
+   if v, ok := rep.GetSegmentTemplate(); ok {
+      if v, ok := v.GetInitialization(rep); ok {
+         return h.segment_template(ext, v, rep)
       }
    }
-   return nil
+   return h.segment_base(ext, *rep.BaseURL, rep)
 }
+
 
 func (h HttpStream) TimedText(url string) error {
    res, err := http.Get(url)
@@ -204,6 +135,91 @@ func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
    return reps, nil
 }
 
+//////////////////////////////////////
+
+func (h HttpStream) segment_base(
+   ext, base_url string, rep *dash.Representation,
+) error {
+   sb := rep.SegmentBase
+   // Initialization
+   req, err := http.NewRequest("GET", base_url, nil)
+   if err != nil {
+      return err
+   }
+   req.Header.Set("Range", "bytes=" + string(sb.Initialization.Range))
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   file, err := func() (*os.File, error) {
+      s, err := Name(h.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(CleanName(s) + ext)
+   }()
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   key_id, err := write_init(file, res.Body)
+   if err != nil {
+      return err
+   }
+   key, err := h.key(key_id)
+   if err != nil {
+      return err
+   }
+   references, err := write_sidx(base_url, sb.IndexRange)
+   if err != nil {
+      return err
+   }
+   var meter log.ProgressMeter
+   meter.Set(len(references))
+   var start uint64
+   end, err := func() (uint64, error) {
+      _, s, _ := sb.IndexRange.Cut()
+      return strconv.ParseUint(s, 10, 64)
+   }()
+   if err != nil {
+      return err
+   }
+   log.SetTransport(nil)
+   defer log.Transport{}.Set()
+   for _, reference := range references {
+      start = end + 1
+      end += uint64(reference.ReferencedSize())
+      bytes := func() string {
+         b := []byte("bytes=")
+         b = strconv.AppendUint(b, start, 10)
+         b = append(b, '-')
+         b = strconv.AppendUint(b, end, 10)
+         return string(b)
+      }()
+      err := func() error {
+         req, err := http.NewRequest("GET", base_url, nil)
+         if err != nil {
+            return err
+         }
+         req.Header.Set("Range", bytes)
+         res, err := http.DefaultClient.Do(req)
+         if err != nil {
+            return err
+         }
+         defer res.Body.Close()
+         if res.StatusCode != http.StatusPartialContent {
+            return errors.New(res.Status)
+         }
+         return write_segment(file, meter.Reader(res), key)
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
+
 func (h HttpStream) segment_template(
    ext, initial string, rep *dash.Representation,
 ) error {
@@ -278,17 +294,4 @@ func (h HttpStream) segment_template(
       }
    }
    return nil
-}
-
-func (h HttpStream) DASH(rep *dash.Representation) error {
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Ext")
-   }
-   if v, ok := rep.GetSegmentTemplate(); ok {
-      if v, ok := v.GetInitialization(rep); ok {
-         return h.segment_template(ext, v, rep)
-      }
-   }
-   return h.segment_base(ext, *rep.BaseURL, rep)
 }

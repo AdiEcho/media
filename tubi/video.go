@@ -26,8 +26,20 @@ func (r *Resolution) UnmarshalText(text []byte) error {
    return nil
 }
 
+func (VideoResource) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (VideoResource) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (VideoResource) ResponseBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
 type VideoResource struct {
-   License_Server struct {
+   License_Server *struct {
       URL string
    }
    Manifest struct {
@@ -37,18 +49,9 @@ type VideoResource struct {
    Type string
 }
 
-func (VideoResource) RequestBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (VideoResource) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
 func (v VideoResource) RequestUrl() (string, bool) {
-   return v.License_Server.URL, true
-}
-
-func (VideoResource) ResponseBody(b []byte) ([]byte, error) {
-   return b, nil
+   if v := v.License_Server; v != nil {
+      return v.URL, true
+   }
+   return "", false
 }
