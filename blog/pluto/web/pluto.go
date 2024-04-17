@@ -1,43 +1,47 @@
-package main
+package pluto
 
 import (
-   "fmt"
-   "io"
+   "encoding/json"
    "net/http"
    "net/url"
-   "strings"
 )
 
-func main() {
-   var req http.Request
-   req.Header = make(http.Header)
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "boot.pluto.tv"
-   req.URL.Path = "/v4/start"
-   val := make(url.Values)
-   val["appName"] = []string{"web"}
-   val["appVersion"] = []string{"9"}
-   val["clientID"] = []string{"9"}
-   val["clientModelNumber"] = []string{"9"}
-   val["drmCapabilities"] = []string{"widevine:L3"}
-   val["episodeSlugs"] = []string{"ex-machina-2015-1-1-ptv1"}
-   req.URL.RawQuery = val.Encode()
-   req.URL.Scheme = "https"
-   res, err := http.DefaultClient.Do(&req)
+var forwards = map[string]string{"Canada": "99.224.0.0"}
+
+func (b *boot_start) New(slug, forward string) error {
+   req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
-      panic(err)
+      return err
+   }
+   if forward != "" {
+      req.Header.Set("x-forwarded-for", forward)
+   }
+   req.URL.RawQuery = url.Values{
+      "appName": {"web"},
+      "appVersion": {"9"},
+      "clientID": {"9"},
+      "clientModelNumber": {"9"},
+      "drmCapabilities": {"widevine:L3"},
+      "episodeSlugs": {slug},
+   }.Encode()
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
    }
    defer res.Body.Close()
-   text, err := io.ReadAll(res.Body)
-   if err != nil {
-      panic(err)
+   return json.NewDecoder(res.Body).Decode(b)
+}
+
+type boot_start struct {
+   Servers struct {
+      StitcherDash string
    }
-   fmt.Println(string(text))
-   if strings.Contains(string(text), `/main.mpd"`) {
-      fmt.Println("pass")
-   } else {
-      fmt.Println("fail")
+   VOD []struct {
+      Name string
+      Stitched struct {
+         Paths []struct {
+            Path string
+         }
+      }
    }
 }

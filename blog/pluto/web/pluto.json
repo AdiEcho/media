@@ -11,7 +11,7 @@
   "preferences": "",
   "campaigns": "https://service-campaigns-ga.prd.pluto.tv",
   "users": "https://service-users.clusters.pluto.tv",
-  "recommender": "https://service-recommender.clusters.pluto.tv",
+  "recommender": "",
   "catalog": "https://service-media-catalog.clusters.pluto.tv",
   "stitcherDash": "https://cfd-v4-service-stitcher-dash-use1-1.prd.pluto.tv",
   "pause": "https://service-ad-image-ga.prd.pluto.tv",
@@ -20,123 +20,54 @@
   "hub": "https://service-hub-builder-ga.prd.pluto.tv"
  },
  "features": {
-  "resumePointsUpdateFrequencyInMs": 30000,
-  "userAccounts": {
-   "accountDeletion": true,
-   "dateOfBirthField": true,
-   "genderField": true,
-   "marketingDoubleOptIn": false,
-   "marketingOptIn": false,
-   "minAge": 18,
-   "nameField": false
+  "channelTimelineView": false,
+  "enableGPP": true,
+  "nowNextGuide": true,
+  "searchMenuItemOnL1": true,
+  "adGracePeriod": {
+   "midGracePeriod": 15,
+   "startGracePeriod": 20
   },
-  "popularNow": true,
-  "visualizeDrift": true,
-  "websiteDisableSP": true,
-  "embedMode": {
-   "disableTimeout": false,
-   "disableTimeoutDomains": {
-    "list": []
+  "legacyEventsUse": false,
+  "signUpNamePlaceholder": {
+   "key": "name_optional_placeholder"
+  },
+  "forceUpdate": false,
+  "rmfEnabled": true,
+  "preferences": false,
+  "useChannelsText": false,
+  "accountManagement": {
+   "url": "https://pluto.tv/account/manage-account"
+  },
+  "id3Tags": {
+   "dashEnabled": true,
+   "hlsEnabled": true,
+   "omsdkEnabled": true
+  },
+  "endCard": {
+   "nextEpisode": {
+    "contentMarkupEnabled": true,
+    "countDownDurationWithCM": 15,
+    "countDownDurationWithoutCM": 25,
+    "isEnabled": true,
+    "offset": 25
    },
-   "showVOD": false,
-   "webAppLink": true
+   "nextMovie": {},
+   "nextSeries": {},
+   "prefetchSeconds": 60
   },
-  "userAccount": true,
   "askUserToReview": false,
-  "activateShow": true,
-  "watchFromStartWebChanges": true,
-  "disableKidsContentTracking": true,
+  "chromecastEnabled": false,
+  "privacyPolicy": "privacy.paramount.com/policy",
+  "adAdapterEnabled": true,
+  "pauseAdPod": true,
+  "websiteDisableSP": true,
+  "vodShow": true,
+  "activateShow": false,
+  "removeChannelNumbers": true,
   "adPodProgress": {
    "hasAdLabel": false,
    "treatment": 1
-  },
-  "usPrivacyString": true,
-  "drmDash": {
-   "enableFallback": false,
-   "enableVll": true,
-   "enableVod": true,
-   "supportDashIf": false,
-   "supportEventVod": false
-  },
-  "watchlist": true,
-  "showCaptions": true,
-  "legacyEventsUse": false,
-  "heroCarousel": true,
-  "useVPPA": true,
-  "liveTVCategoryShow": true,
-  "extendGuideUse": true,
-  "tmobile": {
-   "allowed": {
-    "method": "get",
-    "origin": "deal.t-mobiletuesdays.com"
-   },
-   "imgHost": "https://pluto-assets.s3.amazonaws.com/optimizely/",
-   "imgHostPluto": "https://pluto-assets.s3.amazonaws.com/optimizely/",
-   "success": {
-    "brandingColor": "#E20074",
-    "btnColor": "#EC0075",
-    "btnText": "Start Watching",
-    "btnTxtColor": "#FFFFFF",
-    "imgLogo": "nr-hero-Full-Tmobile-Logo-New-2021.png",
-    "imgTvIcon": "_Icon/_Icon+and+banner/sync+_icon_black%403x.png",
-    "mobileImg": "Tmobile/nr-hero-Full-Tmobile-Logo-New-2021.png",
-    "msg": "Improve your watching experience by connecting your Pluto.TV account to mobile and CTV platforms.",
-    "msgTv": "Launch the Pluto TV app on your TV device, go to the settings menu to log in and activate your account",
-    "tabletLandImg": "Tmobile/nr-hero-Full-Tmobile-Logo-New-2021.png",
-    "tabletPortImg": "Tmobile/nr-hero-Full-Tmobile-Logo-New-2021.png",
-    "title": "T-Mobile Tuesdays content successfully activated!",
-    "titleTv": "Watch from your TV",
-    "webBtnColor": "#FFDE2B",
-    "webBtnTxtColor": "#000000"
-   },
-   "welcome": {
-    "brandingColor": "#E20074",
-    "btnColor": "#EC0075",
-    "btnText": "Redeem T-Mobile Offer",
-    "btnTxtColor": "#FFFFFF",
-    "imgLogo": "nr-hero-Full-Tmobile-Logo-New-2021.png",
-    "imgWebBanner": "_Icon+and+banner/_desktop/PlutoTV_GenericWelcomeMat_Graphic_1440x470_2x+1%401x.png",
-    "imgWebMobileBanner": "_Icon+and+banner/_phone/PlutoTV_GenericWelcomeMat_Graphic_375x250_2x+1.png",
-    "mobileImg": "Tmobile/nr-hero-Full-Tmobile-Logo-New-2021.png",
-    "msg": "Redeem the offer by Signing Up or Signing In via existing account and start watching interruption free Video on Demand.",
-    "msgTextColor": "#FFFFFF",
-    "tabletLandImg": "Tmobile/nr-hero-Full-Tmobile-Logo-New-2021.png",
-    "tabletPortImg": "Tmobile/nr-hero-Full-Tmobile-Logo-New-2021.png",
-    "title": "T-Mobile Tuesdays Exclusive Interruption Free Offer",
-    "webBtnColor": "#FFDE2B",
-    "webBtnTxtColor": "#000000"
-   }
-  },
-  "websiteDisableS": true,
-  "kidsModePinEnabled": true,
-  "channeltimelines": true,
-  "lastWatchedRow": true,
-  "vodLabel": "Free Movies & TV Shows",
-  "watchlistSyncSec": 120,
-  "kidsModePinUse": true,
-  "kidsModeToggleEnabled": true,
-  "enableGPP": true,
-  "useMultiLanguage": true,
-  "nowNextGuide": true,
-  "pauseAds": {
-   "requestIntervalInMs": 300000
-  },
-  "UIEventUse": true,
-  "peekViewUse": false,
-  "idleBehavior": false,
-  "touNotification": {
-   "acceptanceRequired": true,
-   "disableOnSessionCount": 0,
-   "effectiveDate": "2023-02-16T00:00:00.000Z",
-   "endDate": "2023-03-19T00:00:00.000Z",
-   "isModal": false,
-   "msgOverride": "Our Terms of Use (\"Terms\") have been updated, including changes to the arbitration clause. By clicking \"Accept\", you acknowledge that you have read and agree to the updated Terms.",
-   "startDate": "2023-02-16T00:00:00.000Z",
-   "touUrl": "https://corporate.pluto.tv/terms-of-use/"
-  },
-  "policymessages": {
-   "moreInfo": false,
-   "prompt": false
   },
   "search": {
    "prompt": {
@@ -151,176 +82,106 @@
    "toolTip": false,
    "voiceEnabled": false
   },
-  "forceUpdate": false,
-  "NPAWUse": true,
-  "endCard": {
-   "nextEpisode": {
-    "contentMarkupEnabled": true,
-    "countDownDurationWithCM": 15,
-    "countDownDurationWithoutCM": 25,
-    "isEnabled": true,
-    "offset": 25
-   },
-   "nextMovie": {},
-   "nextSeries": {},
-   "prefetchSeconds": 60
+  "users": true,
+  "showCaptions": true,
+  "kidsModePrivacyPolicy": "privacy.paramount.com/childrens-short",
+  "heroCarouselPausable": true,
+  "userAccounts": {
+   "accountDeletion": true,
+   "dateOfBirthField": false,
+   "genderField": false,
+   "marketingDoubleOptIn": false,
+   "marketingOptIn": true,
+   "minAge": 18,
+   "nameField": false
   },
+  "useVPPA": true,
+  "sentry": true,
+  "useServiceWatchlist": true,
+  "vodLabel": "Free Movies & TV Shows",
+  "installCheck": true,
+  "watchlist": true,
+  "privacyPolicyVersion": 1,
+  "supportedLanguage": "en",
+  "disableKidsContentTracking": true,
+  "useTMSID": false,
+  "newEPG": true,
+  "accountDeletionUrl": "pluto.tv/account/delete-account",
+  "phoenix5EventsUse": true,
+  "idleBehavior": false,
   "vodParentCategories": {
    "tabletLayout": "variant1",
    "watchlistItems": "grouped"
   },
-  "vodCollectionTargeting": true,
-  "nowNextLaterTracking": true,
-  "useGooglePAL": true,
-  "rmfEnabled": true,
-  "kidsModePrivacyPolicy": "privacy.paramount.com/childrens",
-  "privacyPolicyVersion": 1,
-  "adAdapterEnabled": true,
-  "adGracePeriod": {
-   "midGracePeriod": 15,
-   "startGracePeriod": 20
-  },
-  "installCheck": true,
-  "blazeUse": false,
-  "scrubberUse": true,
-  "users": true,
-  "privacyPolicyShow": false,
-  "useServiceWatchlist": true,
-  "codeActivationUse": true,
-  "searchMenuItemOnL1": true,
   "hlsEventVodEnabled": true,
-  "adLoad": {
-   "cohort": "10"
+  "heroCarousel": true,
+  "NPAWUse": true,
+  "UIEventUse": true,
+  "extendGuideUse": true,
+  "phoenixUse": true,
+  "supportPage": "https://support.pluto.tv/s/?language=en_US",
+  "policymessages": {
+   "moreInfo": false,
+   "prompt": false
   },
-  "useParentChild": true,
-  "useStitcherSessionV3": true,
-  "accountManagement": {
-   "url": "https://pluto.tv/account/manage-account"
+  "useTCF": true,
+  "drmDash": {
+   "enableFallback": false,
+   "enableVll": true,
+   "enableVod": true,
+   "supportDashIf": false,
+   "supportEventVod": false
   },
-  "kidsModeManagePin": {
-   "url": "https://www.pluto.tv/account/kids-mode/manage-pin"
-  },
-  "heroCarouselPausable": true,
-  "ptb": {
-   "parallax": false,
-   "url": "https://service-recommender.clusters.pluto.tv/v1/personalized"
-  },
-  "chromecastEnabled": true,
-  "signUpNamePlaceholder": {
-   "key": "first_name_title_case"
-  },
-  "twelveHourExtTimeline": true,
   "clickableAdSmallSize": true,
-  "pauseAdPod": true,
-  "redfast": true,
-  "sentry": true,
-  "phoenix5EventsUse": true,
-  "californiaLegalNoticeUrl": "privacy.paramount.com/en/policy#additional-information-us-states",
+  "scrubberUse": true,
+  "peekViewUse": false,
+  "termsOfUse": "legal.paramount.com/plutotv/terms-of-use",
+  "privacyPolicyShow": true,
   "firstPlayResumeAtOffset": {
    "subtractedSeconds": 5
   },
-  "useChannelsText": false,
-  "doNotSellMyInfo": "privacy.paramount.com/app-donotsell",
-  "signUpNameFieldRequired": true,
-  "kidsModeToggle": true,
+  "watchFromStartWebChanges": true,
+  "useParentChild": true,
+  "twelveHourExtTimeline": true,
+  "liveTVCategoryShow": true,
+  "watchlistSyncSec": 120,
+  "resumePointsUpdateFrequencyInMs": 30000,
+  "redfast": true,
   "timelineAdMarkers": true,
-  "phoenixUse": true,
-  "channelTimelineView": false,
-  "useTMSID": false,
-  "kidsModeSearch": {
-   "recommendations": false
-  },
-  "kidsModeGlobal": {
-   "breakMessage": false,
-   "breakMessageAssets": -1,
-   "breakMessageDuration": -1,
-   "breakMessageSelfDismissalDelay": 180,
-   "breakMessageTotalWatchedTime": -1,
-   "entryBanner": {
-    "actions": [
-     {
-      "actionLabelKey": "kids_mode_toast_message_turn_on_button",
-      "tracking": {
-       "screenElementId": 10080
-      },
-      "type": "turnOnKidsMode"
-     },
-     {
-      "dismissLabelKey": "not_now",
-      "tracking": {
-       "screenElementId": 10079
-      },
-      "type": "dismiss"
-     }
-    ],
-    "autoDismissDisplayDelayHours": 24,
-    "autoDismissSeconds": 10,
-    "logoImage": "https://some.url.com/image.jpg",
-    "maxDisplayCountLifetime": 3,
-    "maxDisplayCountPerSession": 1,
-    "subtitleKey": "try_pluto_tv_new_kids_mode",
-    "titleKey": "looking_for_kid_friendly",
-    "tracking": {
-     "screenElementId": 10233
-    },
-    "userDismissDisplayDelayHours": 168
-   },
-   "landingSection": "",
-   "mandatoryPin": false,
-   "partnerTheme": "plutotv",
-   "search": true,
-   "searchRecommendations": false,
-   "userPinOptIn": true,
-   "welcomeScreen": false
-  },
-  "secondScreenAuthOptimization": true,
-  "kidsMode": true,
-  "vodShow": true,
-  "privacyPolicy": "privacy.paramount.com/policy",
-  "id3Tags": {
-   "dashEnabled": true,
-   "hlsEnabled": true,
-   "omsdkEnabled": true
-  },
-  "supportPage": "https://support.pluto.tv/s/?language=en_US",
-  "supportedLanguage": "en",
-  "removeChannelNumbers": true,
-  "newEPG": true,
-  "useTCF": true,
-  "accountDeletionUrl": "pluto.tv/account/delete-account",
-  "preferences": false,
-  "termsOfUse": "legal.paramount.com/plutotv/terms-of-use"
+  "websiteDisableS": true,
+  "vodCollectionTargeting": true,
+  "blazeUse": false
  },
  "session": {
-  "sessionID": "07fafef2-fc68-11ee-b9d9-22ab4d07faa1",
-  "clientIP": "72.181.7.209",
-  "countryCode": "US",
-  "activeRegion": "US",
-  "city": "Dallas",
-  "postalCode": "75234",
+  "sessionID": "cce4a437-fc6f-11ee-90e9-da38ff335039",
+  "clientIP": "99.224.0.0",
+  "countryCode": "CA",
+  "activeRegion": "CA",
+  "city": "Etobicoke",
+  "postalCode": "m9b 5a3",
   "preferredLanguage": "en",
   "deviceType": "web",
   "deviceMake": "",
   "deviceModel": "",
   "logLevel": "DEFAULT",
   "clientDeviceType": 0,
-  "marketingRegion": "US",
+  "marketingRegion": "CA",
   "restartThresholdMS": 1800000
  },
  "EPG": [
   {
-   "name": "Pluto TV Comedy",
-   "id": "5a4d3a00ad95e4718ae8d8db",
+   "name": "Global News National",
+   "id": "62cbef9ebb857100072fc187",
    "isStitched": true,
-   "slug": "pluto-tv-comedy",
+   "slug": "global-news-national-ca",
    "categoryIDs": [
-    "618c3cc54a27070007796ab4"
+    "62bda427f9db450007a1124d"
    ],
    "stitched": {
     "paths": [
      {
-      "type": "mpd",
-      "path": "/stitch/dash/channel/5a4d3a00ad95e4718ae8d8db/main.mpd"
+      "type": "hls",
+      "path": "/stitch/hls/channel/62cbef9ebb857100072fc187/master.m3u8"
      }
     ]
    },
@@ -331,7 +192,7 @@
      "ratio": 0.2857142857142857,
      "defaultWidth": 280,
      "defaultHeight": 80,
-     "url": "https://images.pluto.tv/channels/5a4d3a00ad95e4718ae8d8db/colorLogoPNG.png"
+     "url": "https://images.pluto.tv/channels/62cbef9ebb857100072fc187/colorLogoPNG.png"
     },
     {
      "type": "colorLogoSVG",
@@ -339,7 +200,7 @@
      "ratio": 0.2857142857142857,
      "defaultWidth": 280,
      "defaultHeight": 80,
-     "url": "https://images.pluto.tv/channels/5a4d3a00ad95e4718ae8d8db/colorLogoSVG.svg"
+     "url": "https://images.pluto.tv/channels/62cbef9ebb857100072fc187/colorLogoSVG.svg"
     },
     {
      "type": "solidLogoPNG",
@@ -347,7 +208,7 @@
      "ratio": 0.2857142857142857,
      "defaultWidth": 280,
      "defaultHeight": 80,
-     "url": "https://images.pluto.tv/channels/5a4d3a00ad95e4718ae8d8db/solidLogoPNG.png"
+     "url": "https://images.pluto.tv/channels/62cbef9ebb857100072fc187/solidLogoPNG.png"
     },
     {
      "type": "solidLogoSVG",
@@ -355,7 +216,7 @@
      "ratio": 0.2857142857142857,
      "defaultWidth": 280,
      "defaultHeight": 80,
-     "url": "https://images.pluto.tv/channels/5a4d3a00ad95e4718ae8d8db/solidLogoSVG.svg"
+     "url": "https://images.pluto.tv/channels/62cbef9ebb857100072fc187/solidLogoSVG.svg"
     },
     {
      "type": "logo",
@@ -363,7 +224,7 @@
      "ratio": 0.2857142857142857,
      "defaultWidth": 280,
      "defaultHeight": 80,
-     "url": "https://images.pluto.tv/channels/5a4d3a00ad95e4718ae8d8db/logo.png?fit=fill&fm=png&h=80&w=280"
+     "url": "https://images.pluto.tv/channels/62cbef9ebb857100072fc187/logo.png?fit=fill&fm=png&h=80&w=280"
     },
     {
      "type": "featuredImage",
@@ -371,7 +232,7 @@
      "ratio": 1.7777777777777777,
      "defaultWidth": 1560,
      "defaultHeight": 878,
-     "url": "https://images.pluto.tv/channels/5a4d3a00ad95e4718ae8d8db/featuredImage.jpg?fill=blur&fit=fill&fm=jpg&h=900&q=75&w=1600"
+     "url": "https://images.pluto.tv/channels/62cbef9ebb857100072fc187/featuredImage.jpg?fill=blur&fit=fill&fm=jpg&h=900&q=75&w=1600"
     },
     {
      "type": "hero",
@@ -379,7 +240,7 @@
      "ratio": 1,
      "defaultWidth": 660,
      "defaultHeight": 660,
-     "url": "https://images.pluto.tv/channels/5a4d3a00ad95e4718ae8d8db/thumbnail.jpg?fill=blur&fit=fill&fm=jpg&h=660&q=75&w=660"
+     "url": "https://images.pluto.tv/channels/62cbef9ebb857100072fc187/thumbnail.jpg?fill=blur&fit=fill&fm=jpg&h=660&q=75&w=660"
     },
     {
      "type": "tileColor",
@@ -387,7 +248,7 @@
      "ratio": 0.25,
      "defaultWidth": 660,
      "defaultHeight": 150,
-     "url": "https://images.pluto.tv/channels/5a4d3a00ad95e4718ae8d8db/tile.jpg?fill=blur&fit=fill&fm=jpg&h=150&q=75&w=600"
+     "url": "https://images.pluto.tv/channels/62cbef9ebb857100072fc187/tile.jpg?fill=blur&fit=fill&fm=jpg&h=150&q=75&w=600"
     },
     {
      "type": "tileGrayscale",
@@ -395,207 +256,319 @@
      "ratio": 0.25,
      "defaultWidth": 660,
      "defaultHeight": 150,
-     "url": "https://images.pluto.tv/channels/5a4d3a00ad95e4718ae8d8db/tileGrayscale.jpg?fill=blur&fit=fill&fm=jpg&h=150&q=75&w=600"
+     "url": "https://images.pluto.tv/channels/62cbef9ebb857100072fc187/tileGrayscale.jpg?fill=blur&fit=fill&fm=jpg&h=150&q=75&w=600"
     }
    ],
-   "number": 50,
+   "number": 600,
    "timelines": [
     {
-     "start": "2024-04-17T02:00:00.000Z",
-     "stop": "2024-04-17T04:00:00.000Z",
-     "title": "The Guilt Trip",
-     "_id": "6619ab587bcd8600089d6bc9",
+     "start": "2024-04-17T04:00:00.000Z",
+     "stop": "2024-04-17T04:30:00.000Z",
+     "title": "Global News National",
+     "_id": "65a6b9dd0d9ab400080d4975",
      "episode": {
-      "_id": "5e87985421f372001a2972ec",
-      "name": "The Guilt Trip",
-      "rating": "PG-13",
-      "originalContentDuration": 5745000,
-      "genre": "Comedy",
-      "description": "\"Barbra Streisand and Seth Rogen are the perfect comedy duo\"* as they embark on one mother of a road trip! When Andy invites his mom on an 8-day, 3,000-mile journey across the country, the farther they go, the closer they get. *Jake Hamilton, FOX-TV",
-      "slug": "the-guilt-trip-2011-1-1",
+      "_id": "633fe5341d90320007fc5077",
+      "name": "Global News National",
+      "rating": "Not Rated",
+      "originalContentDuration": 1800000,
+      "genre": "News & Information",
+      "description": "Providing Canadians with the day’s top international, national, and local news stories, 24-hours a day, 365 days/week.",
+      "slug": "global-news-national-livestream-1-1",
       "series": {
-       "_id": "5e87985321f372001a2972e5",
-       "name": "The Guilt Trip",
-       "slug": "the-guilt-trip",
-       "type": "film"
+       "_id": "633fe4b65aa987000723b468",
+       "name": "Global News National",
+       "slug": "global-news-national-live",
+       "type": "live"
       },
       "distributeAs": {
-       "AVOD": true
+       "AVOD": false
       }
      }
     },
     {
-     "start": "2024-04-17T04:00:00.000Z",
-     "stop": "2024-04-17T06:00:00.000Z",
-     "title": "A.C.O.D.",
-     "_id": "6619ab587bcd8600089d6bca",
+     "start": "2024-04-17T04:30:00.000Z",
+     "stop": "2024-04-17T05:00:00.000Z",
+     "title": "Global News National",
+     "_id": "65a6b9dd0d9ab400080d4977",
      "episode": {
-      "_id": "58e2e88ad7fe705cb66b74fa",
-      "name": "A.C.O.D.",
-      "rating": "R",
-      "originalContentDuration": 5265000,
-      "genre": "Comedy",
-      "description": "Carter, a seemingly well-adjusted Adult Child of Divorce. After surviving his parents' divorce, Carter has a successful career and girlfriend. But when his brother gets engaged, Carter must reunite his bitterly divorced parents for the wedding.",
-      "slug": "acod-1-1",
+      "_id": "633fe5341d90320007fc5077",
+      "name": "Global News National",
+      "rating": "Not Rated",
+      "originalContentDuration": 1800000,
+      "genre": "News & Information",
+      "description": "Providing Canadians with the day’s top international, national, and local news stories, 24-hours a day, 365 days/week.",
+      "slug": "global-news-national-livestream-1-1",
       "series": {
-       "_id": "58e2e887d7fe705cb66b74cb",
-       "name": "A.C.O.D.",
-       "slug": "acod",
-       "type": "film"
+       "_id": "633fe4b65aa987000723b468",
+       "name": "Global News National",
+       "slug": "global-news-national-live",
+       "type": "live"
       },
       "distributeAs": {
-       "AVOD": true
+       "AVOD": false
+      }
+     }
+    },
+    {
+     "start": "2024-04-17T05:00:00.000Z",
+     "stop": "2024-04-17T05:30:00.000Z",
+     "title": "Global News National",
+     "_id": "65a6b9dd0d9ab400080d4979",
+     "episode": {
+      "_id": "633fe5341d90320007fc5077",
+      "name": "Global News National",
+      "rating": "Not Rated",
+      "originalContentDuration": 1800000,
+      "genre": "News & Information",
+      "description": "Providing Canadians with the day’s top international, national, and local news stories, 24-hours a day, 365 days/week.",
+      "slug": "global-news-national-livestream-1-1",
+      "series": {
+       "_id": "633fe4b65aa987000723b468",
+       "name": "Global News National",
+       "slug": "global-news-national-live",
+       "type": "live"
+      },
+      "distributeAs": {
+       "AVOD": false
+      }
+     }
+    },
+    {
+     "start": "2024-04-17T05:30:00.000Z",
+     "stop": "2024-04-17T06:00:00.000Z",
+     "title": "Global News National",
+     "_id": "65a6b9dd0d9ab400080d497b",
+     "episode": {
+      "_id": "633fe5341d90320007fc5077",
+      "name": "Global News National",
+      "rating": "Not Rated",
+      "originalContentDuration": 1800000,
+      "genre": "News & Information",
+      "description": "Providing Canadians with the day’s top international, national, and local news stories, 24-hours a day, 365 days/week.",
+      "slug": "global-news-national-livestream-1-1",
+      "series": {
+       "_id": "633fe4b65aa987000723b468",
+       "name": "Global News National",
+       "slug": "global-news-national-live",
+       "type": "live"
+      },
+      "distributeAs": {
+       "AVOD": false
       }
      }
     },
     {
      "start": "2024-04-17T06:00:00.000Z",
-     "stop": "2024-04-17T07:45:00.000Z",
-     "title": "Flirting With Disaster",
-     "_id": "6619ab587bcd8600089d6bcb",
+     "stop": "2024-04-17T06:30:00.000Z",
+     "title": "Global News National",
+     "_id": "65a6b9dd0d9ab400080d497d",
      "episode": {
-      "_id": "60a7cfebca015c00143c94e7",
-      "name": "Flirting With Disaster",
-      "rating": "R",
-      "originalContentDuration": 5580000,
-      "genre": "Comedy",
-      "description": "From the director of AMERICAN HUSTLE and SILVER LININGS PLAYBOOK comes this clever comedy with an all-star cast that examines dysfunctions of modern family life.",
-      "slug": "flirting-with-disaster-1996-1-1",
+      "_id": "633fe5341d90320007fc5077",
+      "name": "Global News National",
+      "rating": "Not Rated",
+      "originalContentDuration": 1800000,
+      "genre": "News & Information",
+      "description": "Providing Canadians with the day’s top international, national, and local news stories, 24-hours a day, 365 days/week.",
+      "slug": "global-news-national-livestream-1-1",
       "series": {
-       "_id": "60a7cfe9ca015c00143c94e0",
-       "name": "Flirting With Disaster",
-       "slug": "flirting-with-disaster",
-       "type": "film"
+       "_id": "633fe4b65aa987000723b468",
+       "name": "Global News National",
+       "slug": "global-news-national-live",
+       "type": "live"
       },
       "distributeAs": {
-       "AVOD": true
+       "AVOD": false
+      }
+     }
+    },
+    {
+     "start": "2024-04-17T06:30:00.000Z",
+     "stop": "2024-04-17T07:00:00.000Z",
+     "title": "Global News National",
+     "_id": "65a6b9dd0d9ab400080d497f",
+     "episode": {
+      "_id": "633fe5341d90320007fc5077",
+      "name": "Global News National",
+      "rating": "Not Rated",
+      "originalContentDuration": 1800000,
+      "genre": "News & Information",
+      "description": "Providing Canadians with the day’s top international, national, and local news stories, 24-hours a day, 365 days/week.",
+      "slug": "global-news-national-livestream-1-1",
+      "series": {
+       "_id": "633fe4b65aa987000723b468",
+       "name": "Global News National",
+       "slug": "global-news-national-live",
+       "type": "live"
+      },
+      "distributeAs": {
+       "AVOD": false
+      }
+     }
+    },
+    {
+     "start": "2024-04-17T07:00:00.000Z",
+     "stop": "2024-04-17T07:30:00.000Z",
+     "title": "Global News National",
+     "_id": "65a6b9dd0d9ab400080d4981",
+     "episode": {
+      "_id": "633fe5341d90320007fc5077",
+      "name": "Global News National",
+      "rating": "Not Rated",
+      "originalContentDuration": 1800000,
+      "genre": "News & Information",
+      "description": "Providing Canadians with the day’s top international, national, and local news stories, 24-hours a day, 365 days/week.",
+      "slug": "global-news-national-livestream-1-1",
+      "series": {
+       "_id": "633fe4b65aa987000723b468",
+       "name": "Global News National",
+       "slug": "global-news-national-live",
+       "type": "live"
+      },
+      "distributeAs": {
+       "AVOD": false
+      }
+     }
+    },
+    {
+     "start": "2024-04-17T07:30:00.000Z",
+     "stop": "2024-04-17T08:00:00.000Z",
+     "title": "Global News National",
+     "_id": "65a6b9dd0d9ab400080d4983",
+     "episode": {
+      "_id": "633fe5341d90320007fc5077",
+      "name": "Global News National",
+      "rating": "Not Rated",
+      "originalContentDuration": 1800000,
+      "genre": "News & Information",
+      "description": "Providing Canadians with the day’s top international, national, and local news stories, 24-hours a day, 365 days/week.",
+      "slug": "global-news-national-livestream-1-1",
+      "series": {
+       "_id": "633fe4b65aa987000723b468",
+       "name": "Global News National",
+       "slug": "global-news-national-live",
+       "type": "live"
+      },
+      "distributeAs": {
+       "AVOD": false
+      }
+     }
+    },
+    {
+     "start": "2024-04-17T08:00:00.000Z",
+     "stop": "2024-04-17T08:30:00.000Z",
+     "title": "Global News National",
+     "_id": "65a6b9dd0d9ab400080d4985",
+     "episode": {
+      "_id": "633fe5341d90320007fc5077",
+      "name": "Global News National",
+      "rating": "Not Rated",
+      "originalContentDuration": 1800000,
+      "genre": "News & Information",
+      "description": "Providing Canadians with the day’s top international, national, and local news stories, 24-hours a day, 365 days/week.",
+      "slug": "global-news-national-livestream-1-1",
+      "series": {
+       "_id": "633fe4b65aa987000723b468",
+       "name": "Global News National",
+       "slug": "global-news-national-live",
+       "type": "live"
+      },
+      "distributeAs": {
+       "AVOD": false
       }
      }
     }
-   ],
-   "tmsid": "114895"
+   ]
   }
  ],
  "VOD": [
   {
-   "id": "65e5d81b5c25f600135becac",
-   "name": "As Good As It Gets",
-   "description": "A heartwarming story of three outcasts coping with the frustrations of life in New York City. Starring Jack Nicholson as a curmudgeon and Greg Kinnear as a gay artist who live in the same building with Helen Hunt, the waitress who changes their lives.",
-   "duration": 10800000,
-   "originalContentDuration": 8325000,
-   "slug": "as-good-as-it-gets-1997-1-1",
-   "rating": "PG-13",
-   "genre": "Drama",
+   "id": "63c8215d8ba71d0013f29b43",
+   "name": "Ex Machina",
+   "description": "A young programmer (Domhnall Gleeson) at an internet company is chosen by a reclusive CEO (Oscar Isaac) to evaluate the capabilities and consciousness of a beautiful and sophisticated robot (Alicia Vikander).",
+   "duration": 7680000,
+   "originalContentDuration": 6495000,
+   "slug": "ex-machina-2015-1-1-ptv1",
+   "rating": "18+",
+   "genre": "Sci-Fi & Fantasy",
    "stitched": {
     "paths": [
      {
       "type": "mpd",
-      "path": "/stitch/dash/episode/65e5d81b5c25f600135becac/main.mpd"
+      "path": "/stitch/dash/episode/63c8215d8ba71d0013f29b43/main.mpd"
+     },
+     {
+      "type": "hls",
+      "path": "/stitch/hls/episode/63c8215d8ba71d0013f29b43/master.m3u8"
      }
     ]
    },
    "covers": [
     {
      "aspectRatio": "347:500",
-     "url": "https://images.pluto.tv/episodes/65e5d81b5c25f600135becac/poster.jpg?fill=blur&fit=fill&fm=jpg&h=1000&q=75&w=694"
+     "url": "https://images.pluto.tv/episodes/63c8215d8ba71d0013f29b43/poster.jpg?fill=blur&fit=fill&fm=jpg&h=1000&q=75&w=694"
     },
     {
      "aspectRatio": "4:3",
-     "url": "https://images.pluto.tv/episodes/65e5d81b5c25f600135becac/screenshot4_3.jpg?fill=blur&fit=fill&fm=jpg&h=480&q=75&w=640"
+     "url": "https://images.pluto.tv/episodes/63c8215d8ba71d0013f29b43/screenshot4_3.jpg?fill=blur&fit=fill&fm=jpg&h=480&q=75&w=640"
     },
     {
      "aspectRatio": "16:9",
-     "url": "https://images.pluto.tv/episodes/65e5d81b5c25f600135becac/screenshot16_9.jpg?fill=blur&fit=fill&fm=jpg&h=540&q=75&w=960"
+     "url": "https://images.pluto.tv/episodes/63c8215d8ba71d0013f29b43/screenshot16_9.jpg?fill=blur&fit=fill&fm=jpg&h=540&q=75&w=960"
     }
    ],
-   "seriesID": "65e5d8195c25f600135bec87",
-   "categoryID": "",
+   "seriesID": "63c8215c8ba71d0013f29b3a",
+   "categoryID": "64f1a7e91105450008297532",
    "type": "movie"
   }
  ],
  "ratings": {
-  "G": {
-   "displayName": "G",
+  "E": {
+   "displayName": "E",
    "image": ""
   },
-  "TV-Y7": {
-   "displayName": "TV-Y7",
+  "13+": {
+   "displayName": "13+",
    "image": ""
   },
-  "TV-PG": {
-   "displayName": "TV-PG",
+  "8+": {
+   "displayName": "8+",
    "image": ""
   },
-  "TV-MA": {
-   "displayName": "TV-MA",
-   "image": ""
-  },
-  "NSFW": {
-   "displayName": "NSFW",
-   "image": ""
-  },
-  "R": {
-   "displayName": "R",
-   "image": ""
-  },
-  "TV-G": {
-   "displayName": "TV-G",
-   "image": ""
-  },
-  "TV-Y7FV": {
-   "displayName": "TV-Y7FV",
-   "image": ""
-  },
-  "PG-13": {
-   "displayName": "PG-13",
-   "image": ""
-  },
-  "TV-14": {
-   "displayName": "TV-14",
-   "image": ""
-  },
-  "NC-17": {
-   "displayName": "NC-17",
+  "C": {
+   "displayName": "C",
    "image": ""
   },
   "PG": {
    "displayName": "PG",
    "image": ""
   },
-  "TV-Y": {
-   "displayName": "TV-Y",
+  "C8": {
+   "displayName": "C8",
+   "image": ""
+  },
+  "14+": {
+   "displayName": "14+",
+   "image": ""
+  },
+  "18+": {
+   "displayName": "18+",
+   "image": ""
+  },
+  "16+": {
+   "displayName": "16+",
+   "image": ""
+  },
+  "G": {
+   "displayName": "G",
    "image": ""
   }
  },
- "ratingDescriptors": {
-  "us-nudity": {
-   "displayName": "Nudity"
-  },
-  "us-s": {
-   "displayName": "S"
-  },
-  "us-smoking": {
-   "displayName": "Smoking"
-  },
-  "us-suicide": {
-   "displayName": "Suicide"
-  },
-  "us-v": {
-   "displayName": "V"
-  },
-  "us-l": {
-   "displayName": "L"
-  },
-  "us-d": {
-   "displayName": "D"
-  }
- },
  "startingChannel": {
-  "id": "5a4d3a00ad95e4718ae8d8db",
-  "slug": "pluto-tv-comedy"
+  "id": "62cbef9ebb857100072fc187",
+  "slug": "global-news-national-ca"
  },
- "stitcherParams": "advertisingId=&appName=web&appVersion=9&app_name=web&clientDeviceType=0&clientID=9&clientModelNumber=9&country=US&deviceDNT=false&deviceId=9&deviceLat=32.9200&deviceLon=-96.9000&deviceMake=&deviceModel=&deviceType=web&deviceVersion=&marketingRegion=US&serverSideAds=false&sessionID=07fafef2-fc68-11ee-b9d9-22ab4d07faa1&sid=07fafef2-fc68-11ee-b9d9-22ab4d07faa1&userId=",
- "serverTime": "2024-04-17T03:10:23.575Z",
+ "stitcherParams": "advertisingId=&appName=web&appVersion=9&app_name=web&clientDeviceType=0&clientID=9&clientModelNumber=9&country=CA&deviceDNT=false&deviceId=9&deviceLat=43.6600&deviceLon=-79.5500&deviceMake=&deviceModel=&deviceType=web&deviceVersion=&marketingRegion=CA&serverSideAds=false&sessionID=cce4a437-fc6f-11ee-90e9-da38ff335039&sid=cce4a437-fc6f-11ee-90e9-da38ff335039&userId=",
+ "serverTime": "2024-04-17T04:06:00.416Z",
  "refreshInSec": 28800,
- "sessionToken": "eyJhbGciOiJIUzI1NiIsImtpZCI6IjJjMDg1ZmFlLWJkOTgtNDljZC1iY2NlLTc3MzgyNTg5NWI0NCIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSUQiOiIwN2ZhZmVmMi1mYzY4LTExZWUtYjlkOS0yMmFiNGQwN2ZhYTEiLCJjbGllbnRJUCI6IjcyLjE4MS43LjIwOSIsImNpdHkiOiJEYWxsYXMiLCJwb3N0YWxDb2RlIjoiNzUyMzQiLCJjb3VudHJ5IjoiVVMiLCJkbWEiOjYyMywiYWN0aXZlUmVnaW9uIjoiVVMiLCJkZXZpY2VMYXQiOjMyLjkxOTk5ODE2ODk0NTMxLCJkZXZpY2VMb24iOi05Ni45MDAwMDE1MjU4Nzg5LCJwcmVmZXJyZWRMYW5ndWFnZSI6ImVuIiwiZGV2aWNlVHlwZSI6IndlYiIsImRldmljZVZlcnNpb24iOiIiLCJkZXZpY2VNYWtlIjoiIiwiZGV2aWNlTW9kZWwiOiIiLCJhcHBOYW1lIjoid2ViIiwiYXBwVmVyc2lvbiI6IjkiLCJjbGllbnRJRCI6IjkiLCJjbUF1ZGllbmNlSUQiOiIiLCJpc0NsaWVudEROVCI6ZmFsc2UsInVzZXJJRCI6IiIsImxvZ0xldmVsIjoiREVGQVVMVCIsInRpbWVab25lIjoiQW1lcmljYS9DaGljYWdvIiwic2VydmVyU2lkZUFkcyI6ZmFsc2UsImUyZUJlYWNvbnMiOmZhbHNlLCJmZWF0dXJlcyI6eyJhZExvYWQiOnsiY29ob3J0IjoiMTAifSwiaXNTdGl0Y2hlckVrcyI6dHJ1ZSwibXVsdGlBdWRpbyI6eyJlbmFibGVkIjp0cnVlfSwibXVsdGlQb2RBZHMiOnsiZW5hYmxlZCI6dHJ1ZX0sInNlYXJjaEFQSSI6eyJtYXRjaEV4YWN0SW5QaHJhc2VFbmFibGVkIjp0cnVlLCJtYXRjaEluQWN0b3JzRW5hYmxlZCI6dHJ1ZSwibWF0Y2hJbkRpcmVjdG9yc0VuYWJsZWQiOnRydWUsIm5leHVzVGltZW91dE1zIjo1MDAsInF1ZXJ5U3lub255bXNFbmFibGVkIjp0cnVlLCJxdWVyeVZlcnNpb24iOiJ2MSIsInNlYXJjaFByb3h5RW5oYW5jZW1lbnQiOmZhbHNlfX0sImZtc1BhcmFtcyI6eyJmd1ZjSUQyIjoiOSIsImZ3VmNJRDJDb3BwYSI6IjkiLCJjdXN0b21QYXJhbXMiOnsiZm1zX2xpdmVyYW1wX2lkbCI6IiIsImZtc19lbWFpbGhhc2giOiIiLCJmbXNfc3Vic2NyaWJlcmlkIjoiIiwiZm1zX2lmYSI6IiIsImZtc19pZGZ2IjoiIiwiZm1zX3VzZXJpZCI6IjkiLCJmbXNfdmNpZDJ0eXBlIjoidXNlcmlkIiwiZm1zX3JhbXBfaWQiOiIiLCJmbXNfaGhfcmFtcF9pZCI6IiIsImZtc19iaWRpZHR5cGUiOiIxMDEyIiwiX2Z3XzNQX1VJRCI6IlVJRDI6QWdBQUNCQUszK3hLc004WjJ6c2s3UlRpeWZpN000ZTc3eFpLaENNSU9iV3p6YkVuNThjOThXN3VKZU5XOXhXZGNoMVVabEliUUc0WUhzSHVOWm1EUEJtZzFjTjB5TjlEOGxnY2JpbEp3MUkxaG4rQlVWYVhhZ0ltMmp5NTI4TDBtUUhsUG5ScCs4VjdHZGttSjBOeVFMSFRJR0VXck1nRnllWUFxN25qSm1wTGgrd0VLdz09IiwiZm1zX3J1bGVpZCI6IjEwMDAwLDEwMDA5In19LCJkcm0iOnsibmFtZSI6IndpZGV2aW5lIiwibGV2ZWwiOiJMMyJ9LCJpc3MiOiJib290LnBsdXRvLnR2Iiwic3ViIjoicHJpOnYxOnBsdXRvOmRldmljZXM6VVM6T1E9PSIsImF1ZCI6IioucGx1dG8udHYiLCJleHAiOjE3MTM0MDk4MjMsImlhdCI6MTcxMzMyMzQyMywianRpIjoiYjRiOGVhMTktM2UyYi00NDI2LTk4NTEtOWEyZDA4M2I2YjY3In0.42iRMtKEVoxWyzBZywLb2w1UFv6_dpEiQ0iod03YUp8"
+ "sessionToken": "eyJhbGciOiJIUzI1NiIsImtpZCI6IjJjMDg1ZmFlLWJkOTgtNDljZC1iY2NlLTc3MzgyNTg5NWI0NCIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSUQiOiJjY2U0YTQzNy1mYzZmLTExZWUtOTBlOS1kYTM4ZmYzMzUwMzkiLCJjbGllbnRJUCI6Ijk5LjIyNC4wLjAiLCJjaXR5IjoiRXRvYmljb2tlIiwicG9zdGFsQ29kZSI6Im05YiA1YTMiLCJjb3VudHJ5IjoiQ0EiLCJkbWEiOjEyNDUzNSwiYWN0aXZlUmVnaW9uIjoiQ0EiLCJkZXZpY2VMYXQiOjQzLjY1OTk5OTg0NzQxMjExLCJkZXZpY2VMb24iOi03OS41NTAwMDMwNTE3NTc4MSwicHJlZmVycmVkTGFuZ3VhZ2UiOiJlbiIsImRldmljZVR5cGUiOiJ3ZWIiLCJkZXZpY2VWZXJzaW9uIjoiIiwiZGV2aWNlTWFrZSI6IiIsImRldmljZU1vZGVsIjoiIiwiYXBwTmFtZSI6IndlYiIsImFwcFZlcnNpb24iOiI5IiwiY2xpZW50SUQiOiI5IiwiY21BdWRpZW5jZUlEIjoiIiwiaXNDbGllbnRETlQiOmZhbHNlLCJ1c2VySUQiOiIiLCJsb2dMZXZlbCI6IkRFRkFVTFQiLCJ0aW1lWm9uZSI6IkFtZXJpY2EvVG9yb250byIsInNlcnZlclNpZGVBZHMiOmZhbHNlLCJlMmVCZWFjb25zIjpmYWxzZSwiZmVhdHVyZXMiOnsiaXNTdGl0Y2hlckVrcyI6dHJ1ZSwibXVsdGlQb2RBZHMiOnsiZW5hYmxlZCI6dHJ1ZX19LCJmbXNQYXJhbXMiOnsiZndWY0lEMiI6IjkiLCJmd1ZjSUQyQ29wcGEiOiI5IiwiY3VzdG9tUGFyYW1zIjp7ImZtc19saXZlcmFtcF9pZGwiOiIiLCJmbXNfZW1haWxoYXNoIjoiIiwiZm1zX3N1YnNjcmliZXJpZCI6IiIsImZtc19pZmEiOiIiLCJmbXNfaWRmdiI6IiIsImZtc191c2VyaWQiOiI5IiwiZm1zX3ZjaWQydHlwZSI6InVzZXJpZCIsImZtc19yYW1wX2lkIjoiIiwiZm1zX2hoX3JhbXBfaWQiOiIiLCJmbXNfYmlkaWR0eXBlIjoiIiwiX2Z3XzNQX1VJRCI6IiIsImZtc19ydWxlaWQiOiIxMDAwMCwxMDAwOSwxMDAxMiJ9fSwiZHJtIjp7Im5hbWUiOiJ3aWRldmluZSIsImxldmVsIjoiTDMifSwiaXNzIjoiYm9vdC5wbHV0by50diIsInN1YiI6InByaTp2MTpwbHV0bzpkZXZpY2VzOkNBOk9RPT0iLCJhdWQiOiIqLnBsdXRvLnR2IiwiZXhwIjoxNzEzNDEzMTYwLCJpYXQiOjE3MTMzMjY3NjAsImp0aSI6ImY1OTI0ZDk4LWVkZjItNDY3Mi1iNTE1LTBiNGQyZTNmY2NmMiJ9.sUxEU8ge8gAj4bIjwSLV9Z82O48m7kU48RjL9d3IRd0"
 }
