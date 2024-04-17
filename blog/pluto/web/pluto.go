@@ -1,9 +1,11 @@
 package main
 
 import (
+   "fmt"
+   "io"
    "net/http"
    "net/url"
-   "os"
+   "strings"
 )
 
 func main() {
@@ -14,18 +16,28 @@ func main() {
    req.URL = new(url.URL)
    req.URL.Host = "boot.pluto.tv"
    req.URL.Path = "/v4/start"
-   req.URL.Scheme = "https"
    val := make(url.Values)
    val["appName"] = []string{"web"}
    val["appVersion"] = []string{"9"}
    val["clientID"] = []string{"9"}
    val["clientModelNumber"] = []string{"9"}
+   val["drmCapabilities"] = []string{"widevine:L3"}
    val["episodeSlugs"] = []string{"ex-machina-2015-1-1-ptv1"}
    req.URL.RawQuery = val.Encode()
+   req.URL.Scheme = "https"
    res, err := http.DefaultClient.Do(&req)
    if err != nil {
       panic(err)
    }
    defer res.Body.Close()
-   res.Write(os.Stdout)
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      panic(err)
+   }
+   fmt.Println(string(text))
+   if strings.Contains(string(text), `/main.mpd"`) {
+      fmt.Println("pass")
+   } else {
+      fmt.Println("fail")
+   }
 }
