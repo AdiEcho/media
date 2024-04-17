@@ -23,7 +23,10 @@ func (f flags) download() error {
          return errors.New("tubi.Content.Get")
       }
    }
-   video := content.Video()
+   video, ok := content.Video()
+   if !ok {
+      return errors.New("tubi.Content.Video")
+   }
    // 1 MPD one
    media, err := f.h.DashMedia(video.Manifest.URL)
    if err != nil {

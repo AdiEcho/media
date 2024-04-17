@@ -9,33 +9,6 @@ import (
    "time"
 )
 
-func TestResolution(t *testing.T) {
-   for _, test := range tests {
-      cms := new(Content)
-      err := cms.New(test.content_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      time.Sleep(time.Second)
-      if cms.Episode() {
-         err := cms.New(cms.Series_ID)
-         if err != nil {
-            t.Fatal(err)
-         }
-         time.Sleep(time.Second)
-         var ok bool
-         cms, ok = cms.Get(test.content_id)
-         if !ok {
-            t.Fatal("get")
-         }
-      }
-      fmt.Println(test.url)
-      for _, r := range cms.Video_Resources {
-         fmt.Println(r.Resolution, r.Type)
-      }
-   }
-}
-
 func TestLicense(t *testing.T) {
    test := tests["the-mask"]
    home, err := os.UserHomeDir()
@@ -64,10 +37,41 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   license, err := module.License(cms.Video())
+   video, ok := cms.Video()
+   if !ok {
+      t.Fatal("Content.Video")
+   }
+   license, err := module.License(video)
    if err != nil {
       t.Fatal(err)
    }
    key, ok := module.Key(license)
    fmt.Printf("%x %v\n", key, ok)
+}
+
+func TestResolution(t *testing.T) {
+   for _, test := range tests {
+      cms := new(Content)
+      err := cms.New(test.content_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(time.Second)
+      if cms.Episode() {
+         err := cms.New(cms.Series_ID)
+         if err != nil {
+            t.Fatal(err)
+         }
+         time.Sleep(time.Second)
+         var ok bool
+         cms, ok = cms.Get(test.content_id)
+         if !ok {
+            t.Fatal("get")
+         }
+      }
+      fmt.Println(test.url)
+      for _, r := range cms.Video_Resources {
+         fmt.Println(r.Resolution, r.Type)
+      }
+   }
 }
