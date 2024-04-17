@@ -164,12 +164,9 @@ func (h HttpStream) segment_base(
    if err != nil {
       return err
    }
-   var key []byte
-   if key_id != nil {
-      key, err = h.key(key_id)
-      if err != nil {
-         return err
-      }
+   key, err := h.key(key_id)
+   if err != nil {
+      return err
    }
    references, err := write_sidx(base_url, sb.IndexRange)
    if err != nil {
@@ -255,12 +252,9 @@ func (h HttpStream) segment_template(
    if err != nil {
       return err
    }
-   var key []byte
-   if key_id != nil {
-      key, err = h.key(key_id)
-      if err != nil {
-         return err
-      }
+   key, err := h.key(key_id)
+   if err != nil {
+      return err
    }
    var meter log.ProgressMeter
    log.SetTransport(nil)
