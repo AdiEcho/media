@@ -11,5 +11,6 @@ func TestBoot(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", boot)
+   mpd, ok := boot.mpd()
+   fmt.Println(mpd, ok)
 }
