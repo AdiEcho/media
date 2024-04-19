@@ -1,6 +1,7 @@
 package pluto
 
 import (
+   "errors"
    "net/http"
    "net/url"
    "encoding/json"
@@ -8,16 +9,13 @@ import (
 
 type on_demand struct {
    ID string
+   Slug string
 }
 
-type boot_start struct {
-   VOD []on_demand
-}
-
-func (b *boot_start) New(slug, forward string) error {
+func new_video(slug, forward string) (*on_demand, error) {
    req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
-      return err
+      return nil, err
    }
    if forward != "" {
       req.Header.Set("x-forwarded-for", forward)
@@ -31,8 +29,19 @@ func (b *boot_start) New(slug, forward string) error {
    }.Encode()
    res, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(b)
+   var s struct {
+      VOD []on_demand
+   }
+   err = json.NewDecoder(res.Body).Decode(&s)
+   if err != nil {
+      return nil, err
+   }
+   video := s.VOD[0]
+   if video.Slug != slug {
+      return nil, errors.New(video.Slug)
+   }
+   return &video, nil
 }
