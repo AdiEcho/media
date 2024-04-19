@@ -1,0 +1,209 @@
+[
+ {
+  "_id": "63c8215c8ba71d0013f29b3d",
+  "author": "FilmRise",
+  "name": "Ex Machina",
+  "duration": 6494000,
+  "liveBroadcast": false,
+  "provider": "jwplatform",
+  "code": "pluto-60e64c656136360007ce8714-9dd7100f-2e62-46d8-a437-6b4937e291cb",
+  "internalCode": "9dd7100f-2e62-46d8-a437-6b4937e291cb",
+  "inPoint": 0,
+  "outPoint": 6494000,
+  "thumbnail": "https://s3.amazonaws.com/silo.pluto.tv/origin/A24/production/202301/19/A24_9dd7100f-2e62-46d8-a437-6b4937e291cb_Ex-Machina_1674155064528.jpg",
+  "tags": [
+   "alicia-vikander",
+   "consciousness",
+   "domhnall-gleeson",
+   "giant-interactive",
+   "independent",
+   "oscar-isaac",
+   "programmer",
+   "reclusive",
+   "robot",
+   "sci-fi-and-fantasy",
+   "sonoya-mizuno",
+   "sophisticated",
+   "thriller"
+  ],
+  "adPods": [
+   {
+    "podType": "ad",
+    "partnerProvided": false,
+    "durationLocked": false,
+    "verified": false,
+    "_id": "63c8215d8ba71d0013f29b5e",
+    "startAt": 1067151,
+    "duration": 105000,
+    "tag": "https://search.spotxchange.com/vast/2.00/116947?content_page_url=http%3A%2F%2Fpluto.tv&custom%5Bpod_type%5D=ad&custom%5Bpartner_id%5D=FilmRise&pod_type=ad&partner_id=FilmRise&device%5Bua%5D=Amazon%20CloudFront&device%5Bmake%5D=&ip_address=72.181.7.209%2C%2064.252.77.226&custom%5Bepisode_id%5D=&custom%5Bepisode_name%5D=Ex%20Machina&custom%5Bepisode_cat%5D=Pop%20Culture&custom%5Bepisode_subcategory%5D=Movies&custom%5Bepisode_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bepisode_subgenre%5D=Sci-Fi%20Dramas&episode_id=&episode_name=Ex%20Machina&episode_cat=Pop%20Culture&episode_subcategory=Movies&episode_genre=Sci-Fi%20%26%20Fantasy&episode_subgenre=Sci-Fi%20Dramas&custom%5Bseries_id%5D=&custom%5Bseries_name%5D=Ex%20Machina&custom%5Bseries_cat%5D=Pop%20Culture&custom%5Bseries_subcategory%5D=Movies&custom%5Bseries_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bseries_subgenre%5D=Sci-Fi%20Dramas&series_id=&series_name=Ex%20Machina&series_cat=Pop%20Culture&series_subcategory=Movies&series_genre=Sci-Fi%20%26%20Fantasy&series_subgenre=Sci-Fi%20Dramas&custom%5Bclip_id%5D=&custom%5Bclip_name%5D=Ex%20Machina&custom%5Bclip_rating%5D=18%2B&custom%5Bclip_author_name%5D=FilmRise&clip_id=&clip_name=Ex%20Machina&clip_rating=18%2B&clip_author_name=FilmRise&custom%5BpartnerCode%5D=A24_ExMachina&token%5BpartnerCode%5D=A24_ExMachina&player_height=1080&player_width=1920&device%5Bdnt%5D=0&privacypolicy=0&app%5Bcat%5D=IAB1&app%5Bdomain%5D=Pluto.tv&app%5Bname%5D=Pluto.tv&VPI=MP4&device_type="
+   },
+   {
+    "podType": "ad",
+    "partnerProvided": false,
+    "durationLocked": false,
+    "verified": false,
+    "_id": "63c8215d8ba71d0013f29b5f",
+    "startAt": 1551677,
+    "duration": 120000,
+    "tag": "https://search.spotxchange.com/vast/2.00/116947?content_page_url=http%3A%2F%2Fpluto.tv&custom%5Bpod_type%5D=ad&custom%5Bpartner_id%5D=FilmRise&pod_type=ad&partner_id=FilmRise&device%5Bua%5D=Amazon%20CloudFront&device%5Bmake%5D=&ip_address=72.181.7.209%2C%2064.252.77.226&custom%5Bepisode_id%5D=&custom%5Bepisode_name%5D=Ex%20Machina&custom%5Bepisode_cat%5D=Pop%20Culture&custom%5Bepisode_subcategory%5D=Movies&custom%5Bepisode_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bepisode_subgenre%5D=Sci-Fi%20Dramas&episode_id=&episode_name=Ex%20Machina&episode_cat=Pop%20Culture&episode_subcategory=Movies&episode_genre=Sci-Fi%20%26%20Fantasy&episode_subgenre=Sci-Fi%20Dramas&custom%5Bseries_id%5D=&custom%5Bseries_name%5D=Ex%20Machina&custom%5Bseries_cat%5D=Pop%20Culture&custom%5Bseries_subcategory%5D=Movies&custom%5Bseries_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bseries_subgenre%5D=Sci-Fi%20Dramas&series_id=&series_name=Ex%20Machina&series_cat=Pop%20Culture&series_subcategory=Movies&series_genre=Sci-Fi%20%26%20Fantasy&series_subgenre=Sci-Fi%20Dramas&custom%5Bclip_id%5D=&custom%5Bclip_name%5D=Ex%20Machina&custom%5Bclip_rating%5D=18%2B&custom%5Bclip_author_name%5D=FilmRise&clip_id=&clip_name=Ex%20Machina&clip_rating=18%2B&clip_author_name=FilmRise&custom%5BpartnerCode%5D=A24_ExMachina&token%5BpartnerCode%5D=A24_ExMachina&player_height=1080&player_width=1920&device%5Bdnt%5D=0&privacypolicy=0&app%5Bcat%5D=IAB1&app%5Bdomain%5D=Pluto.tv&app%5Bname%5D=Pluto.tv&VPI=MP4&device_type="
+   },
+   {
+    "podType": "ad",
+    "partnerProvided": false,
+    "durationLocked": false,
+    "verified": false,
+    "_id": "63c8215d8ba71d0013f29b60",
+    "startAt": 2140808,
+    "duration": 120000,
+    "tag": "https://search.spotxchange.com/vast/2.00/116947?content_page_url=http%3A%2F%2Fpluto.tv&custom%5Bpod_type%5D=ad&custom%5Bpartner_id%5D=FilmRise&pod_type=ad&partner_id=FilmRise&device%5Bua%5D=Amazon%20CloudFront&device%5Bmake%5D=&ip_address=72.181.7.209%2C%2064.252.77.226&custom%5Bepisode_id%5D=&custom%5Bepisode_name%5D=Ex%20Machina&custom%5Bepisode_cat%5D=Pop%20Culture&custom%5Bepisode_subcategory%5D=Movies&custom%5Bepisode_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bepisode_subgenre%5D=Sci-Fi%20Dramas&episode_id=&episode_name=Ex%20Machina&episode_cat=Pop%20Culture&episode_subcategory=Movies&episode_genre=Sci-Fi%20%26%20Fantasy&episode_subgenre=Sci-Fi%20Dramas&custom%5Bseries_id%5D=&custom%5Bseries_name%5D=Ex%20Machina&custom%5Bseries_cat%5D=Pop%20Culture&custom%5Bseries_subcategory%5D=Movies&custom%5Bseries_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bseries_subgenre%5D=Sci-Fi%20Dramas&series_id=&series_name=Ex%20Machina&series_cat=Pop%20Culture&series_subcategory=Movies&series_genre=Sci-Fi%20%26%20Fantasy&series_subgenre=Sci-Fi%20Dramas&custom%5Bclip_id%5D=&custom%5Bclip_name%5D=Ex%20Machina&custom%5Bclip_rating%5D=18%2B&custom%5Bclip_author_name%5D=FilmRise&clip_id=&clip_name=Ex%20Machina&clip_rating=18%2B&clip_author_name=FilmRise&custom%5BpartnerCode%5D=A24_ExMachina&token%5BpartnerCode%5D=A24_ExMachina&player_height=1080&player_width=1920&device%5Bdnt%5D=0&privacypolicy=0&app%5Bcat%5D=IAB1&app%5Bdomain%5D=Pluto.tv&app%5Bname%5D=Pluto.tv&VPI=MP4&device_type="
+   },
+   {
+    "podType": "ad",
+    "partnerProvided": false,
+    "durationLocked": false,
+    "verified": false,
+    "_id": "63c8215d8ba71d0013f29b61",
+    "startAt": 2706749,
+    "duration": 120000,
+    "tag": "https://search.spotxchange.com/vast/2.00/116947?content_page_url=http%3A%2F%2Fpluto.tv&custom%5Bpod_type%5D=ad&custom%5Bpartner_id%5D=FilmRise&pod_type=ad&partner_id=FilmRise&device%5Bua%5D=Amazon%20CloudFront&device%5Bmake%5D=&ip_address=72.181.7.209%2C%2064.252.77.226&custom%5Bepisode_id%5D=&custom%5Bepisode_name%5D=Ex%20Machina&custom%5Bepisode_cat%5D=Pop%20Culture&custom%5Bepisode_subcategory%5D=Movies&custom%5Bepisode_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bepisode_subgenre%5D=Sci-Fi%20Dramas&episode_id=&episode_name=Ex%20Machina&episode_cat=Pop%20Culture&episode_subcategory=Movies&episode_genre=Sci-Fi%20%26%20Fantasy&episode_subgenre=Sci-Fi%20Dramas&custom%5Bseries_id%5D=&custom%5Bseries_name%5D=Ex%20Machina&custom%5Bseries_cat%5D=Pop%20Culture&custom%5Bseries_subcategory%5D=Movies&custom%5Bseries_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bseries_subgenre%5D=Sci-Fi%20Dramas&series_id=&series_name=Ex%20Machina&series_cat=Pop%20Culture&series_subcategory=Movies&series_genre=Sci-Fi%20%26%20Fantasy&series_subgenre=Sci-Fi%20Dramas&custom%5Bclip_id%5D=&custom%5Bclip_name%5D=Ex%20Machina&custom%5Bclip_rating%5D=18%2B&custom%5Bclip_author_name%5D=FilmRise&clip_id=&clip_name=Ex%20Machina&clip_rating=18%2B&clip_author_name=FilmRise&custom%5BpartnerCode%5D=A24_ExMachina&token%5BpartnerCode%5D=A24_ExMachina&player_height=1080&player_width=1920&device%5Bdnt%5D=0&privacypolicy=0&app%5Bcat%5D=IAB1&app%5Bdomain%5D=Pluto.tv&app%5Bname%5D=Pluto.tv&VPI=MP4&device_type="
+   },
+   {
+    "podType": "ad",
+    "partnerProvided": false,
+    "durationLocked": false,
+    "verified": false,
+    "_id": "63c8215d8ba71d0013f29b62",
+    "startAt": 3215800,
+    "duration": 120000,
+    "tag": "https://search.spotxchange.com/vast/2.00/116947?content_page_url=http%3A%2F%2Fpluto.tv&custom%5Bpod_type%5D=ad&custom%5Bpartner_id%5D=FilmRise&pod_type=ad&partner_id=FilmRise&device%5Bua%5D=Amazon%20CloudFront&device%5Bmake%5D=&ip_address=72.181.7.209%2C%2064.252.77.226&custom%5Bepisode_id%5D=&custom%5Bepisode_name%5D=Ex%20Machina&custom%5Bepisode_cat%5D=Pop%20Culture&custom%5Bepisode_subcategory%5D=Movies&custom%5Bepisode_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bepisode_subgenre%5D=Sci-Fi%20Dramas&episode_id=&episode_name=Ex%20Machina&episode_cat=Pop%20Culture&episode_subcategory=Movies&episode_genre=Sci-Fi%20%26%20Fantasy&episode_subgenre=Sci-Fi%20Dramas&custom%5Bseries_id%5D=&custom%5Bseries_name%5D=Ex%20Machina&custom%5Bseries_cat%5D=Pop%20Culture&custom%5Bseries_subcategory%5D=Movies&custom%5Bseries_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bseries_subgenre%5D=Sci-Fi%20Dramas&series_id=&series_name=Ex%20Machina&series_cat=Pop%20Culture&series_subcategory=Movies&series_genre=Sci-Fi%20%26%20Fantasy&series_subgenre=Sci-Fi%20Dramas&custom%5Bclip_id%5D=&custom%5Bclip_name%5D=Ex%20Machina&custom%5Bclip_rating%5D=18%2B&custom%5Bclip_author_name%5D=FilmRise&clip_id=&clip_name=Ex%20Machina&clip_rating=18%2B&clip_author_name=FilmRise&custom%5BpartnerCode%5D=A24_ExMachina&token%5BpartnerCode%5D=A24_ExMachina&player_height=1080&player_width=1920&device%5Bdnt%5D=0&privacypolicy=0&app%5Bcat%5D=IAB1&app%5Bdomain%5D=Pluto.tv&app%5Bname%5D=Pluto.tv&VPI=MP4&device_type="
+   },
+   {
+    "podType": "ad",
+    "partnerProvided": false,
+    "durationLocked": false,
+    "verified": false,
+    "_id": "63c8215d8ba71d0013f29b63",
+    "startAt": 3658784,
+    "duration": 120000,
+    "tag": "https://search.spotxchange.com/vast/2.00/116947?content_page_url=http%3A%2F%2Fpluto.tv&custom%5Bpod_type%5D=ad&custom%5Bpartner_id%5D=FilmRise&pod_type=ad&partner_id=FilmRise&device%5Bua%5D=Amazon%20CloudFront&device%5Bmake%5D=&ip_address=72.181.7.209%2C%2064.252.77.226&custom%5Bepisode_id%5D=&custom%5Bepisode_name%5D=Ex%20Machina&custom%5Bepisode_cat%5D=Pop%20Culture&custom%5Bepisode_subcategory%5D=Movies&custom%5Bepisode_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bepisode_subgenre%5D=Sci-Fi%20Dramas&episode_id=&episode_name=Ex%20Machina&episode_cat=Pop%20Culture&episode_subcategory=Movies&episode_genre=Sci-Fi%20%26%20Fantasy&episode_subgenre=Sci-Fi%20Dramas&custom%5Bseries_id%5D=&custom%5Bseries_name%5D=Ex%20Machina&custom%5Bseries_cat%5D=Pop%20Culture&custom%5Bseries_subcategory%5D=Movies&custom%5Bseries_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bseries_subgenre%5D=Sci-Fi%20Dramas&series_id=&series_name=Ex%20Machina&series_cat=Pop%20Culture&series_subcategory=Movies&series_genre=Sci-Fi%20%26%20Fantasy&series_subgenre=Sci-Fi%20Dramas&custom%5Bclip_id%5D=&custom%5Bclip_name%5D=Ex%20Machina&custom%5Bclip_rating%5D=18%2B&custom%5Bclip_author_name%5D=FilmRise&clip_id=&clip_name=Ex%20Machina&clip_rating=18%2B&clip_author_name=FilmRise&custom%5BpartnerCode%5D=A24_ExMachina&token%5BpartnerCode%5D=A24_ExMachina&player_height=1080&player_width=1920&device%5Bdnt%5D=0&privacypolicy=0&app%5Bcat%5D=IAB1&app%5Bdomain%5D=Pluto.tv&app%5Bname%5D=Pluto.tv&VPI=MP4&device_type="
+   },
+   {
+    "podType": "ad",
+    "partnerProvided": false,
+    "durationLocked": false,
+    "verified": false,
+    "_id": "63c8215d8ba71d0013f29b64",
+    "startAt": 4151944,
+    "duration": 120000,
+    "tag": "https://search.spotxchange.com/vast/2.00/116947?content_page_url=http%3A%2F%2Fpluto.tv&custom%5Bpod_type%5D=ad&custom%5Bpartner_id%5D=FilmRise&pod_type=ad&partner_id=FilmRise&device%5Bua%5D=Amazon%20CloudFront&device%5Bmake%5D=&ip_address=72.181.7.209%2C%2064.252.77.226&custom%5Bepisode_id%5D=&custom%5Bepisode_name%5D=Ex%20Machina&custom%5Bepisode_cat%5D=Pop%20Culture&custom%5Bepisode_subcategory%5D=Movies&custom%5Bepisode_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bepisode_subgenre%5D=Sci-Fi%20Dramas&episode_id=&episode_name=Ex%20Machina&episode_cat=Pop%20Culture&episode_subcategory=Movies&episode_genre=Sci-Fi%20%26%20Fantasy&episode_subgenre=Sci-Fi%20Dramas&custom%5Bseries_id%5D=&custom%5Bseries_name%5D=Ex%20Machina&custom%5Bseries_cat%5D=Pop%20Culture&custom%5Bseries_subcategory%5D=Movies&custom%5Bseries_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bseries_subgenre%5D=Sci-Fi%20Dramas&series_id=&series_name=Ex%20Machina&series_cat=Pop%20Culture&series_subcategory=Movies&series_genre=Sci-Fi%20%26%20Fantasy&series_subgenre=Sci-Fi%20Dramas&custom%5Bclip_id%5D=&custom%5Bclip_name%5D=Ex%20Machina&custom%5Bclip_rating%5D=18%2B&custom%5Bclip_author_name%5D=FilmRise&clip_id=&clip_name=Ex%20Machina&clip_rating=18%2B&clip_author_name=FilmRise&custom%5BpartnerCode%5D=A24_ExMachina&token%5BpartnerCode%5D=A24_ExMachina&player_height=1080&player_width=1920&device%5Bdnt%5D=0&privacypolicy=0&app%5Bcat%5D=IAB1&app%5Bdomain%5D=Pluto.tv&app%5Bname%5D=Pluto.tv&VPI=MP4&device_type="
+   },
+   {
+    "podType": "ad",
+    "partnerProvided": false,
+    "durationLocked": false,
+    "verified": false,
+    "_id": "63c8215d8ba71d0013f29b65",
+    "startAt": 4626711,
+    "duration": 120000,
+    "tag": "https://search.spotxchange.com/vast/2.00/116947?content_page_url=http%3A%2F%2Fpluto.tv&custom%5Bpod_type%5D=ad&custom%5Bpartner_id%5D=FilmRise&pod_type=ad&partner_id=FilmRise&device%5Bua%5D=Amazon%20CloudFront&device%5Bmake%5D=&ip_address=72.181.7.209%2C%2064.252.77.226&custom%5Bepisode_id%5D=&custom%5Bepisode_name%5D=Ex%20Machina&custom%5Bepisode_cat%5D=Pop%20Culture&custom%5Bepisode_subcategory%5D=Movies&custom%5Bepisode_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bepisode_subgenre%5D=Sci-Fi%20Dramas&episode_id=&episode_name=Ex%20Machina&episode_cat=Pop%20Culture&episode_subcategory=Movies&episode_genre=Sci-Fi%20%26%20Fantasy&episode_subgenre=Sci-Fi%20Dramas&custom%5Bseries_id%5D=&custom%5Bseries_name%5D=Ex%20Machina&custom%5Bseries_cat%5D=Pop%20Culture&custom%5Bseries_subcategory%5D=Movies&custom%5Bseries_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bseries_subgenre%5D=Sci-Fi%20Dramas&series_id=&series_name=Ex%20Machina&series_cat=Pop%20Culture&series_subcategory=Movies&series_genre=Sci-Fi%20%26%20Fantasy&series_subgenre=Sci-Fi%20Dramas&custom%5Bclip_id%5D=&custom%5Bclip_name%5D=Ex%20Machina&custom%5Bclip_rating%5D=18%2B&custom%5Bclip_author_name%5D=FilmRise&clip_id=&clip_name=Ex%20Machina&clip_rating=18%2B&clip_author_name=FilmRise&custom%5BpartnerCode%5D=A24_ExMachina&token%5BpartnerCode%5D=A24_ExMachina&player_height=1080&player_width=1920&device%5Bdnt%5D=0&privacypolicy=0&app%5Bcat%5D=IAB1&app%5Bdomain%5D=Pluto.tv&app%5Bname%5D=Pluto.tv&VPI=MP4&device_type="
+   },
+   {
+    "podType": "ad",
+    "partnerProvided": false,
+    "durationLocked": false,
+    "verified": false,
+    "_id": "63c8215d8ba71d0013f29b66",
+    "startAt": 5151152,
+    "duration": 120000,
+    "tag": "https://search.spotxchange.com/vast/2.00/116947?content_page_url=http%3A%2F%2Fpluto.tv&custom%5Bpod_type%5D=ad&custom%5Bpartner_id%5D=FilmRise&pod_type=ad&partner_id=FilmRise&device%5Bua%5D=Amazon%20CloudFront&device%5Bmake%5D=&ip_address=72.181.7.209%2C%2064.252.77.226&custom%5Bepisode_id%5D=&custom%5Bepisode_name%5D=Ex%20Machina&custom%5Bepisode_cat%5D=Pop%20Culture&custom%5Bepisode_subcategory%5D=Movies&custom%5Bepisode_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bepisode_subgenre%5D=Sci-Fi%20Dramas&episode_id=&episode_name=Ex%20Machina&episode_cat=Pop%20Culture&episode_subcategory=Movies&episode_genre=Sci-Fi%20%26%20Fantasy&episode_subgenre=Sci-Fi%20Dramas&custom%5Bseries_id%5D=&custom%5Bseries_name%5D=Ex%20Machina&custom%5Bseries_cat%5D=Pop%20Culture&custom%5Bseries_subcategory%5D=Movies&custom%5Bseries_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bseries_subgenre%5D=Sci-Fi%20Dramas&series_id=&series_name=Ex%20Machina&series_cat=Pop%20Culture&series_subcategory=Movies&series_genre=Sci-Fi%20%26%20Fantasy&series_subgenre=Sci-Fi%20Dramas&custom%5Bclip_id%5D=&custom%5Bclip_name%5D=Ex%20Machina&custom%5Bclip_rating%5D=18%2B&custom%5Bclip_author_name%5D=FilmRise&clip_id=&clip_name=Ex%20Machina&clip_rating=18%2B&clip_author_name=FilmRise&custom%5BpartnerCode%5D=A24_ExMachina&token%5BpartnerCode%5D=A24_ExMachina&player_height=1080&player_width=1920&device%5Bdnt%5D=0&privacypolicy=0&app%5Bcat%5D=IAB1&app%5Bdomain%5D=Pluto.tv&app%5Bname%5D=Pluto.tv&VPI=MP4&device_type="
+   },
+   {
+    "podType": "ad",
+    "partnerProvided": false,
+    "durationLocked": false,
+    "verified": false,
+    "_id": "63c8215d8ba71d0013f29b67",
+    "startAt": 5580998,
+    "duration": 120000,
+    "tag": "https://search.spotxchange.com/vast/2.00/116947?content_page_url=http%3A%2F%2Fpluto.tv&custom%5Bpod_type%5D=ad&custom%5Bpartner_id%5D=FilmRise&pod_type=ad&partner_id=FilmRise&device%5Bua%5D=Amazon%20CloudFront&device%5Bmake%5D=&ip_address=72.181.7.209%2C%2064.252.77.226&custom%5Bepisode_id%5D=&custom%5Bepisode_name%5D=Ex%20Machina&custom%5Bepisode_cat%5D=Pop%20Culture&custom%5Bepisode_subcategory%5D=Movies&custom%5Bepisode_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bepisode_subgenre%5D=Sci-Fi%20Dramas&episode_id=&episode_name=Ex%20Machina&episode_cat=Pop%20Culture&episode_subcategory=Movies&episode_genre=Sci-Fi%20%26%20Fantasy&episode_subgenre=Sci-Fi%20Dramas&custom%5Bseries_id%5D=&custom%5Bseries_name%5D=Ex%20Machina&custom%5Bseries_cat%5D=Pop%20Culture&custom%5Bseries_subcategory%5D=Movies&custom%5Bseries_genre%5D=Sci-Fi%20%26%20Fantasy&custom%5Bseries_subgenre%5D=Sci-Fi%20Dramas&series_id=&series_name=Ex%20Machina&series_cat=Pop%20Culture&series_subcategory=Movies&series_genre=Sci-Fi%20%26%20Fantasy&series_subgenre=Sci-Fi%20Dramas&custom%5Bclip_id%5D=&custom%5Bclip_name%5D=Ex%20Machina&custom%5Bclip_rating%5D=18%2B&custom%5Bclip_author_name%5D=FilmRise&clip_id=&clip_name=Ex%20Machina&clip_rating=18%2B&clip_author_name=FilmRise&custom%5BpartnerCode%5D=A24_ExMachina&token%5BpartnerCode%5D=A24_ExMachina&player_height=1080&player_width=1920&device%5Bdnt%5D=0&privacypolicy=0&app%5Bcat%5D=IAB1&app%5Bdomain%5D=Pluto.tv&app%5Bname%5D=Pluto.tv&VPI=MP4&device_type="
+   }
+  ],
+  "sources": [
+   {
+    "_id": "63c9cd8923ea720008216379",
+    "file": "https://siloh.pluto.tv/726_A24/clip/63c8215c8ba71d0013f29b3d_Ex_Machina/720p/20230119_110425/dash/0-end/main.mpd",
+    "type": "DASH",
+    "encryption": "Widevine"
+   },
+   {
+    "_id": "63c9cd8923ea72000821637a",
+    "file": "https://siloh.pluto.tv/726_A24/clip/63c8215c8ba71d0013f29b3d_Ex_Machina/720p/20230119_110425/hls/0-end/master.m3u8",
+    "type": "HLS",
+    "encryption": "ClearKeyFile"
+   }
+  ],
+  "url": "https://siloh.pluto.tv/726_A24/clip/63c8215c8ba71d0013f29b3d_Ex_Machina/720p/20230119_110425/hls/0-end/master.m3u8",
+  "partner": {
+   "_id": "5b085b75a3807a5ceeef530c",
+   "name": "FilmRise"
+  },
+  "partnerCode": "A24_ExMachina"
+ },
+ {
+  "_id": "56c2dcd66d542e12681ea39d",
+  "author": "",
+  "name": "Exploding Logo 5s v3 - Promo",
+  "duration": 1000,
+  "liveBroadcast": false,
+  "provider": "jwplatform",
+  "code": "IcS3saXP",
+  "inPoint": 4000,
+  "outPoint": 5000,
+  "thumbnail": "http://content.jwplatform.com/thumbs/IcS3saXP.jpg",
+  "tags": [
+   "promo",
+   "promo-2-9-16"
+  ],
+  "adPods": [],
+  "sources": [
+   {
+    "_id": "649c3fb3e6e73200083fe00b",
+    "file": "https://siloh.pluto.tv/744_Pluto_TV_OandO/clip/56c2dcd66d542e12681ea39d_Exploding_Logo_5s_v3_Promo/720p/20230628_070352/dash/main.mpd",
+    "type": "DASH",
+    "encryption": "Widevine"
+   },
+   {
+    "_id": "649c3fb3e6e73200083fe00c",
+    "file": "https://siloh.pluto.tv/744_Pluto_TV_OandO/clip/56c2dcd66d542e12681ea39d_Exploding_Logo_5s_v3_Promo/720p/20230628_070352/hls/master.m3u8",
+    "type": "HLS",
+    "encryption": "ClearKeyFile"
+   }
+  ],
+  "url": "https://siloh.pluto.tv/744_Pluto_TV_OandO/clip/56c2dcd66d542e12681ea39d_Exploding_Logo_5s_v3_Promo/720p/20230628_070352/hls/master.m3u8",
+  "partner": {
+   "advertisingId": {
+    "chromecast": "134933",
+    "ctv": "134932",
+    "roku": "134934",
+    "web": "116947",
+    "tvos": "134930",
+    "android-mobile": "134935",
+    "ios": "134936",
+    "desktop": "116947",
+    "viziovia": "",
+    "samsung-tizen": "134932",
+    "samsung-orsay": "134932",
+    "lg-webos": "134932",
+    "hisense": "134932",
+    "sky-q": "134932",
+    "now-tv": "134932",
+    "gom": "134932",
+    "tivo": "134932",
+    "opera-other": "134932",
+    "vizio": "134932"
+   },
+   "_id": "561c63d8b4836a2308b39c58",
+   "name": "Pluto TV O&O"
+  }
+ }
+]
