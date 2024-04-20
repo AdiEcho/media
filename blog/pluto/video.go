@@ -12,7 +12,7 @@ type on_demand struct {
    Slug string
 }
 
-func new_video(slug string) (*on_demand, error) {
+func new_video(id string) (*on_demand, error) {
    req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
       return nil, err
@@ -23,7 +23,7 @@ func new_video(slug string) (*on_demand, error) {
       "clientID": {"9"},
       "clientModelNumber": {"9"},
       "drmCapabilities": {"widevine:L3"},
-      "episodeSlugs": {slug},
+      "seriesIDs": {id},
    }.Encode()
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -38,8 +38,8 @@ func new_video(slug string) (*on_demand, error) {
       return nil, err
    }
    video := s.VOD[0]
-   if video.ID != slug {
-      if video.Slug != slug {
+   if video.ID != id {
+      if video.Slug != id {
          return nil, fmt.Errorf("%+v", video)
       }
    }

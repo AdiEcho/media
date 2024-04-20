@@ -42,8 +42,8 @@ func TestLicense(t *testing.T) {
 
 func TestClip(t *testing.T) {
    for _, test := range video_tests {
-      if test.id != "" {
-         clip, err := new_clip(test.id)
+      if test.clips != "" {
+         clip, err := new_clip(test.clips)
          if err != nil {
             t.Fatal(err)
          }
