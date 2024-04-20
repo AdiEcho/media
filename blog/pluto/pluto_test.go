@@ -9,18 +9,18 @@ import (
    "time"
 )
 
-var videos = []string{
-   // pluto.tv/on-demand/movies/63c8215d8ba71d0013f29b43
-   // pluto.tv/on-demand/movies/ex-machina-2015-1-1-ptv1
-   "63c8215d8ba71d0013f29b43",
-   // pluto.tv/on-demand/series/65ce5c60a3a8580013c4b64a/episode/65ce5c7ca3a8580013c4be02
+var addresses = []string{
    // pluto.tv/on-demand/series/king-of-queens/episode/head-first-1998-1-2
+   // pluto.tv/on-demand/series/65ce5c60a3a8580013c4b64a/episode/65ce5c7ca3a8580013c4be02
    "65ce5c7ca3a8580013c4be02",
+   // pluto.tv/on-demand/movies/ex-machina-2015-1-1-ptv1
+   // pluto.tv/on-demand/movies/63c8215d8ba71d0013f29b43
+   "63c8215d8ba71d0013f29b43",
 }
 
 func TestClip(t *testing.T) {
-   for _, video := range videos {
-      clip, err := new_clip(video)
+   for _, address := range addresses {
+      clip, err := new_clip(address)
       if err != nil {
          t.Fatal(err)
       }

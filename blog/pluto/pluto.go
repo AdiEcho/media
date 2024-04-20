@@ -8,43 +8,32 @@ import (
    "strings"
 )
 
-type on_demand struct {
-   ID string
-   Slug string
-}
-
-func new_video(slug, forward string) (*on_demand, error) {
-   req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
+func new_clip(id string) (*episode_clip, error) {
+   req, err := http.NewRequest("GET", "http://api.pluto.tv", nil)
    if err != nil {
       return nil, err
    }
-   if forward != "" {
-      req.Header.Set("x-forwarded-for", forward)
-   }
-   req.URL.RawQuery = url.Values{
-      "appName": {"web"},
-      "appVersion": {"9"},
-      "clientID": {"9"},
-      "clientModelNumber": {"9"},
-      "episodeSlugs": {slug},
-   }.Encode()
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/v2/episodes/")
+      b.WriteString(id)
+      b.WriteString("/clips.json")
+      return b.String()
+   }()
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer res.Body.Close()
-   var s struct {
-      VOD []on_demand
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
    }
-   err = json.NewDecoder(res.Body).Decode(&s)
+   var clips []episode_clip
+   err = json.NewDecoder(res.Body).Decode(&clips)
    if err != nil {
       return nil, err
    }
-   video := s.VOD[0]
-   if video.Slug != slug {
-      return nil, errors.New(video.Slug)
-   }
-   return &video, nil
+   return &clips[0], nil
 }
 
 type poster struct{}
@@ -95,29 +84,4 @@ func (e episode_clip) dash() (*source, bool) {
       }
    }
    return nil, false
-}
-
-func new_clip(id string) (*episode_clip, error) {
-   req, err := http.NewRequest("GET", "http://api.pluto.tv", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      var b strings.Builder
-      b.WriteString("/v2/episodes/")
-      b.WriteString(id)
-      b.WriteString("/clips.json")
-      return b.String()
-   }()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   var clips []episode_clip
-   err = json.NewDecoder(res.Body).Decode(&clips)
-   if err != nil {
-      return nil, err
-   }
-   return &clips[0], nil
 }
