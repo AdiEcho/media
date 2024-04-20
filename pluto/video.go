@@ -143,11 +143,30 @@ type season struct {
    parent *video
 }
 
+func (n namer) Show() string {
+   if v := n.v.parent; v != nil {
+      return v.parent.Name
+   }
+   return ""
+}
+
 type slug struct {
    episode int
    season int
    slug string
    year int
+}
+
+type namer struct {
+   v *video
+}
+
+func (n namer) Season() int {
+   return n.v.Slug.season
+}
+
+func (n namer) Episode() int {
+   return n.v.Slug.episode
 }
 
 type video struct {
@@ -159,29 +178,10 @@ type video struct {
    parent *season
 }
 
-type namer struct {
-   v video
+func (n namer) Title() string {
+   return n.v.Name
 }
 
-func (n namer) Show() string {
-   if v := n.v.parent; v != nil {
-      return v.parent.Name
-   }
-   return ""
-}
-
-func (namer) Season() int {
-   return 0
-}
-
-func (namer) Episode() int {
-   return 0
-}
-
-func (namer) Title() string {
-   return ""
-}
-
-func (namer) Year() int {
-   return 0
+func (n namer) Year() int {
+   return n.v.Slug.year
 }

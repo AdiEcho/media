@@ -1,6 +1,7 @@
 package pluto
 
 import (
+   "154.pages.dev/media/internal"
    "fmt"
    "testing"
    "time"
@@ -14,7 +15,11 @@ func TestVideo(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%+v\n", video)
+      name, err := internal.Name(namer{video})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
 }
