@@ -1,0 +1,99 @@
+# pluto
+
+## clips
+
+pass:
+
+- http://api.pluto.tv/v2/episodes/63c8215d8ba71d0013f29b43/clips.json
+- https://pluto.tv/on-demand/movies/63c8215d8ba71d0013f29b43
+
+fail:
+
+- https://pluto.tv/on-demand/movies/ex-machina-2015-1-1-ptv1
+- http://api.pluto.tv/v2/episodes/ex-machina-2015-1-1-ptv1/clips.json
+
+## slugs
+
+pass:
+
+~~~
+GET /v4/vod/slugs?slugs=ex-machina-2015-1-1-ptv1 HTTP/1.1
+Host: service-vod.clusters.pluto.tv
+authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IjBhZjFiZmZmLTIzODEtNDY3NC1iZmEzLWMyN2QxZDAzMGE3OCIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSUQiOiI1ZTYzYWFjMy1mZjJlLTExZWUtYmVkZS1jMjgzMWM2ZmQ0ZDUiLCJjbGllbnRJUCI6IjM4LjI0MC4yMjUuNTgiLCJjaXR5IjoiRWRtb250b24iLCJwb3N0YWxDb2RlIjoidDZ4IDFnMiIsImNvdW50cnkiOiJDQSIsImRtYSI6MTI0ODM1LCJhY3RpdmVSZWdpb24iOiJDQSIsImRldmljZUxhdCI6NTMuNDMwMDAwMzA1MTc1NzgsImRldmljZUxvbiI6LTExMy40NzAwMDEyMjA3MDMxMiwicHJlZmVycmVkTGFuZ3VhZ2UiOiJlbiIsImRldmljZVR5cGUiOiJ3ZWIiLCJkZXZpY2VWZXJzaW9uIjoiMTExLjAuMCIsImRldmljZU1ha2UiOiJjaHJvbWUiLCJkZXZpY2VNb2RlbCI6IndlYiIsImFwcE5hbWUiOiJ3ZWIiLCJhcHBWZXJzaW9uIjoiNi4xMS4xLTUxOGQ2ZGVhMjkzMzM0YTVkMjNlOWZkOTMyMmUyYmZjMjc0NGNkYTMiLCJjbGllbnRJRCI6IjU0NGQwYmEyLWUxMzctNDdjMC05M2Y1LWFkYmY2OGE5NTQ3YiIsImNtQXVkaWVuY2VJRCI6IiIsImlzQ2xpZW50RE5UIjpmYWxzZSwidXNlcklEIjoiIiwibG9nTGV2ZWwiOiJERUZBVUxUIiwidGltZVpvbmUiOiJBbWVyaWNhL0VkbW9udG9uIiwic2VydmVyU2lkZUFkcyI6dHJ1ZSwiZTJlQmVhY29ucyI6ZmFsc2UsImZlYXR1cmVzIjp7ImlzU3RpdGNoZXJFa3MiOnRydWV9LCJmbXNQYXJhbXMiOnsiZndWY0lEMiI6IjU0NGQwYmEyLWUxMzctNDdjMC05M2Y1LWFkYmY2OGE5NTQ3YiIsImZ3VmNJRDJDb3BwYSI6IjU0NGQwYmEyLWUxMzctNDdjMC05M2Y1LWFkYmY2OGE5NTQ3YiIsImN1c3RvbVBhcmFtcyI6eyJmbXNfbGl2ZXJhbXBfaWRsIjoiIiwiZm1zX2VtYWlsaGFzaCI6IiIsImZtc19zdWJzY3JpYmVyaWQiOiIiLCJmbXNfaWZhIjoiIiwiZm1zX2lkZnYiOiIiLCJmbXNfdXNlcmlkIjoiNTQ0ZDBiYTItZTEzNy00N2MwLTkzZjUtYWRiZjY4YTk1NDdiIiwiZm1zX3ZjaWQydHlwZSI6InVzZXJpZCIsImZtc19yYW1wX2lkIjoiIiwiZm1zX2hoX3JhbXBfaWQiOiIiLCJmbXNfYmlkaWR0eXBlIjoiIiwiX2Z3XzNQX1VJRCI6IiIsImZtc19ydWxlaWQiOiIxMDAwMCwxMDAwOSwxMDAxMiJ9fSwiZHJtIjp7Im5hbWUiOiJ3aWRldmluZSIsImxldmVsIjoiTDMifSwiaXNzIjoiYm9vdC5wbHV0by50diIsInN1YiI6InByaTp2MTpwbHV0bzpkZXZpY2VzOkNBOk5UUTBaREJpWVRJdFpURXpOeTAwTjJNd0xUa3paalV0WVdSaVpqWTRZVGsxTkRkaSIsImF1ZCI6IioucGx1dG8udHYiLCJleHAiOjE3MTM3MTQ5MTEsImlhdCI6MTcxMzYyODUxMSwianRpIjoiOTQzYmM4OGYtZTBmNy00NDM2LWE1MTYtNWQ1YmExMThiNmI0In0.UxRCUP89hSDYvfgql6SQ6-JM0j1EH6l3_zfni1x12S0
+~~~
+
+https://pluto.tv/on-demand/movies/ex-machina-2015-1-1-ptv1
+
+fail:
+
+~~~
+GET /v4/vod/slugs?slugs=63c8215d8ba71d0013f29b43 HTTP/1.1
+Host: service-vod.clusters.pluto.tv
+authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IjBhZjFiZmZmLTIzODEtNDY3NC1iZmEzLWMyN2QxZDAzMGE3OCIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSUQiOiI1ZTYzYWFjMy1mZjJlLTExZWUtYmVkZS1jMjgzMWM2ZmQ0ZDUiLCJjbGllbnRJUCI6IjM4LjI0MC4yMjUuNTgiLCJjaXR5IjoiRWRtb250b24iLCJwb3N0YWxDb2RlIjoidDZ4IDFnMiIsImNvdW50cnkiOiJDQSIsImRtYSI6MTI0ODM1LCJhY3RpdmVSZWdpb24iOiJDQSIsImRldmljZUxhdCI6NTMuNDMwMDAwMzA1MTc1NzgsImRldmljZUxvbiI6LTExMy40NzAwMDEyMjA3MDMxMiwicHJlZmVycmVkTGFuZ3VhZ2UiOiJlbiIsImRldmljZVR5cGUiOiJ3ZWIiLCJkZXZpY2VWZXJzaW9uIjoiMTExLjAuMCIsImRldmljZU1ha2UiOiJjaHJvbWUiLCJkZXZpY2VNb2RlbCI6IndlYiIsImFwcE5hbWUiOiJ3ZWIiLCJhcHBWZXJzaW9uIjoiNi4xMS4xLTUxOGQ2ZGVhMjkzMzM0YTVkMjNlOWZkOTMyMmUyYmZjMjc0NGNkYTMiLCJjbGllbnRJRCI6IjU0NGQwYmEyLWUxMzctNDdjMC05M2Y1LWFkYmY2OGE5NTQ3YiIsImNtQXVkaWVuY2VJRCI6IiIsImlzQ2xpZW50RE5UIjpmYWxzZSwidXNlcklEIjoiIiwibG9nTGV2ZWwiOiJERUZBVUxUIiwidGltZVpvbmUiOiJBbWVyaWNhL0VkbW9udG9uIiwic2VydmVyU2lkZUFkcyI6dHJ1ZSwiZTJlQmVhY29ucyI6ZmFsc2UsImZlYXR1cmVzIjp7ImlzU3RpdGNoZXJFa3MiOnRydWV9LCJmbXNQYXJhbXMiOnsiZndWY0lEMiI6IjU0NGQwYmEyLWUxMzctNDdjMC05M2Y1LWFkYmY2OGE5NTQ3YiIsImZ3VmNJRDJDb3BwYSI6IjU0NGQwYmEyLWUxMzctNDdjMC05M2Y1LWFkYmY2OGE5NTQ3YiIsImN1c3RvbVBhcmFtcyI6eyJmbXNfbGl2ZXJhbXBfaWRsIjoiIiwiZm1zX2VtYWlsaGFzaCI6IiIsImZtc19zdWJzY3JpYmVyaWQiOiIiLCJmbXNfaWZhIjoiIiwiZm1zX2lkZnYiOiIiLCJmbXNfdXNlcmlkIjoiNTQ0ZDBiYTItZTEzNy00N2MwLTkzZjUtYWRiZjY4YTk1NDdiIiwiZm1zX3ZjaWQydHlwZSI6InVzZXJpZCIsImZtc19yYW1wX2lkIjoiIiwiZm1zX2hoX3JhbXBfaWQiOiIiLCJmbXNfYmlkaWR0eXBlIjoiIiwiX2Z3XzNQX1VJRCI6IiIsImZtc19ydWxlaWQiOiIxMDAwMCwxMDAwOSwxMDAxMiJ9fSwiZHJtIjp7Im5hbWUiOiJ3aWRldmluZSIsImxldmVsIjoiTDMifSwiaXNzIjoiYm9vdC5wbHV0by50diIsInN1YiI6InByaTp2MTpwbHV0bzpkZXZpY2VzOkNBOk5UUTBaREJpWVRJdFpURXpOeTAwTjJNd0xUa3paalV0WVdSaVpqWTRZVGsxTkRkaSIsImF1ZCI6IioucGx1dG8udHYiLCJleHAiOjE3MTM3MTQ5MTEsImlhdCI6MTcxMzYyODUxMSwianRpIjoiOTQzYmM4OGYtZTBmNy00NDM2LWE1MTYtNWQ1YmExMThiNmI0In0.UxRCUP89hSDYvfgql6SQ6-JM0j1EH6l3_zfni1x12S0
+~~~
+
+https://pluto.tv/on-demand/movies/63c8215d8ba71d0013f29b43
+
+## start episodeSlugs
+
+pass:
+
+~~~
+GET /v4/start?appName=web&appVersion=9&clientID=9&clientModelNumber=9&drmCapabilities=widevine:L3&episodeSlugs=63c8215d8ba71d0013f29b43 HTTP/2.0
+host: boot.pluto.tv
+x-forwarded-for: 99.224.0.0
+~~~
+
+https://pluto.tv/on-demand/movies/63c8215d8ba71d0013f29b43
+
+pass:
+
+~~~
+GET /v4/start?appName=web&appVersion=9&clientID=9&clientModelNumber=9&drmCapabilities=widevine:L3&episodeSlugs=ex-machina-2015-1-1-ptv1 HTTP/2.0
+host: boot.pluto.tv
+x-forwarded-for: 99.224.0.0
+~~~
+
+https://pluto.tv/on-demand/movies/ex-machina-2015-1-1-ptv1
+
+pass:
+
+- https://boot.pluto.tv/v4/start?appName=web&appVersion=9&clientID=9&clientModelNumber=9&drmCapabilities=widevine:L3&episodeSlugs=king-of-queens
+- https://pluto.tv/on-demand/series/king-of-queens/episode/head-first-1998-1-2
+
+fail:
+
+- https://boot.pluto.tv/v4/start?appName=web&appVersion=9&clientID=9&clientModelNumber=9&drmCapabilities=widevine:L3&episodeSlugs=65ce5c60a3a8580013c4b64a
+- https://pluto.tv/on-demand/series/65ce5c60a3a8580013c4b64a/episode/65ce5c7ca3a8580013c4be02
+
+## start seriesIDs
+
+pass:
+
+- https://boot.pluto.tv/v4/start?appName=web&appVersion=9&clientID=9&clientModelNumber=9&drmCapabilities=widevine:L3&seriesIDs=65ce5c60a3a8580013c4b64a
+- https://pluto.tv/on-demand/series/65ce5c60a3a8580013c4b64a/episode/65ce5c7ca3a8580013c4be02
+
+pass:
+
+- https://boot.pluto.tv/v4/start?appName=web&appVersion=9&clientID=9&clientModelNumber=9&drmCapabilities=widevine:L3&seriesIDs=king-of-queens
+- https://pluto.tv/on-demand/series/king-of-queens/episode/head-first-1998-1-2
+
+pass:
+
+~~~
+GET /v4/start?appName=web&appVersion=9&clientID=9&clientModelNumber=9&drmCapabilities=widevine:L3&seriesIDs=ex-machina-2015-1-1-ptv1 HTTP/2.0
+host: boot.pluto.tv
+x-forwarded-for: 99.224.0.0
+~~~
+
+https://pluto.tv/on-demand/movies/ex-machina-2015-1-1-ptv1
+
+pass:
+
+~~~
+GET /v4/start?appName=web&appVersion=9&clientID=9&clientModelNumber=9&drmCapabilities=widevine:L3&seriesIDs=63c8215d8ba71d0013f29b43 HTTP/2.0
+host: boot.pluto.tv
+x-forwarded-for: 99.224.0.0
+~~~
+
+https://pluto.tv/on-demand/movies/63c8215d8ba71d0013f29b43
