@@ -7,20 +7,15 @@ import (
    "net/url"
 )
 
-var forwards = map[string]string{"Canada": "99.224.0.0"}
-
 type on_demand struct {
    ID string
    Slug string
 }
 
-func new_video(slug, forward string) (*on_demand, error) {
+func new_video(slug string) (*on_demand, error) {
    req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
       return nil, err
-   }
-   if forward != "" {
-      req.Header.Set("x-forwarded-for", forward)
    }
    req.URL.RawQuery = url.Values{
       "appName": {"web"},
