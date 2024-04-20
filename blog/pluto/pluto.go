@@ -8,6 +8,31 @@ import (
    "strings"
 )
 
+var bases = []url.URL{
+   // these return `403 OK` with compressed content
+   {Scheme: "http", Host: "siloh-fs.plutotv.net"},
+   {Scheme: "http", Host: "siloh-ns1.plutotv.net"},
+   {Scheme: "https", Host: "siloh-fs.plutotv.net"},
+   {Scheme: "https", Host: "siloh-ns1.plutotv.net"},
+   // returns `200 OK` with plain content
+   {Scheme: "http", Host: "silo-hybrik.pluto.tv.s3.amazonaws.com"},
+}
+
+func (s source) parse(base url.URL) (*url.URL, error) {
+   ref, err := url.Parse(s.File)
+   if err != nil {
+      return nil, err
+   }
+   ref.Scheme = base.Scheme
+   ref.Host = base.Host
+   return ref, nil
+}
+
+type source struct {
+   File string
+   Type string
+}
+
 func new_clip(id string) (*episode_clip, error) {
    req, err := http.NewRequest("GET", "http://api.pluto.tv", nil)
    if err != nil {
@@ -52,25 +77,6 @@ func (poster) RequestBody(b []byte) ([]byte, error) {
 
 func (poster) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
-}
-
-// `https://siloh.pluto.tv` returns `403 Forbidden` with no content.
-// `http://silo-hybrik.pluto.tv.s3.amazonaws.com` returns `200 OK` with plain
-// content.
-// `https://siloh-fs.plutotv.net` returns `403 OK` with compressed content.
-// `https://siloh-ns1.plutotv.net` returns `403 OK` with compressed content.
-func (s source) parse() (*url.URL, error) {
-   u, err := url.Parse(s.File)
-   if err != nil {
-      return nil, err
-   }
-   u.Host = "siloh-fs.plutotv.net"
-   return u, nil
-}
-
-type source struct {
-   File string
-   Type string
 }
 
 type episode_clip struct {

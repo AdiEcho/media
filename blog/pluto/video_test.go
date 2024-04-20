@@ -15,13 +15,13 @@ var video_tests = []struct{
    // "pluto.tv/on-demand/series/king-of-queens/episode/head-first-1998-1-2",
    {
       forward: "Canada",
-      slug: "63c8215d8ba71d0013f29b43",
-      url: "pluto.tv/on-demand/movies/63c8215d8ba71d0013f29b43",
+      slug: "ex-machina-2015-1-1-ptv1",
+      url: "pluto.tv/on-demand/movies/ex-machina-2015-1-1-ptv1",
    },
    {
       forward: "Canada",
-      slug: "ex-machina-2015-1-1-ptv1",
-      url: "pluto.tv/on-demand/movies/ex-machina-2015-1-1-ptv1",
+      slug: "63c8215d8ba71d0013f29b43",
+      url: "pluto.tv/on-demand/movies/63c8215d8ba71d0013f29b43",
    },
 }
 

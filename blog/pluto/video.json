@@ -1,0 +1,416 @@
+{
+  "servers": {
+    "api": "https://api.pluto.tv",
+    "channels": "https://service-channels.clusters.pluto.tv",
+    "vod": "https://service-vod.clusters.pluto.tv",
+    "stitcher": "https://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv",
+    "analytics": "https://sp.pluto.tv",
+    "watchlist": "https://service-watchlist-ga.prd.pluto.tv",
+    "search": "https://service-media-search.clusters.pluto.tv",
+    "concierge": "https://service-concierge.clusters.pluto.tv",
+    "preferences": "",
+    "campaigns": "https://service-campaigns-ga.prd.pluto.tv",
+    "users": "https://service-users.clusters.pluto.tv",
+    "recommender": "",
+    "catalog": "https://service-media-catalog.clusters.pluto.tv",
+    "stitcherDash": "https://cfd-v4-service-stitcher-dash-use1-1.prd.pluto.tv",
+    "pause": "https://service-ad-image-ga.prd.pluto.tv",
+    "carousel": "https://service-carousel-builder-ga.prd.pluto.tv",
+    "features": "https://service-features-use1-1.prd.pluto.tv",
+    "hub": "https://service-hub-builder-ga.prd.pluto.tv"
+  },
+  "features": {
+    "preferences": false,
+    "watchFromStartWebChanges": true,
+    "adGracePeriod": {
+      "midGracePeriod": 15,
+      "startGracePeriod": 20
+    },
+    "liveTVCategoryShow": true,
+    "askUserToReview": false,
+    "signUpNamePlaceholder": {
+      "key": "name_optional_placeholder"
+    },
+    "installCheck": true,
+    "phoenixUse": true,
+    "vodShow": true,
+    "showCaptions": true,
+    "idleBehavior": false,
+    "resumePointsUpdateFrequencyInMs": 30000,
+    "pauseAdPod": true,
+    "id3Tags": {
+      "dashEnabled": true,
+      "hlsEnabled": true,
+      "omsdkEnabled": true
+    },
+    "blazeUse": false,
+    "activateShow": false,
+    "legacyEventsUse": false,
+    "useTMSID": false,
+    "firstPlayResumeAtOffset": {
+      "subtractedSeconds": 5
+    },
+    "adPodProgress": {
+      "hasAdLabel": false,
+      "treatment": 1
+    },
+    "vodCollectionTargeting": true,
+    "accountDeletionUrl": "pluto.tv/account/delete-account",
+    "users": true,
+    "sentry": true,
+    "UIEventUse": true,
+    "channelTimelineView": false,
+    "hlsEventVodEnabled": true,
+    "searchMenuItemOnL1": true,
+    "removeChannelNumbers": true,
+    "redfast": true,
+    "supportPage": "https://support.pluto.tv/s/?language=en_US",
+    "privacyPolicyShow": true,
+    "timelineAdMarkers": true,
+    "newEPG": true,
+    "heroCarousel": true,
+    "forceUpdate": false,
+    "search": {
+      "prompt": {
+        "intervals": [
+          1,
+          3,
+          7,
+          20
+        ]
+      },
+      "recommendations": false,
+      "toolTip": false,
+      "voiceEnabled": false
+    },
+    "useVPPA": true,
+    "heroCarouselPausable": true,
+    "twelveHourExtTimeline": true,
+    "scrubberUse": true,
+    "watchlist": true,
+    "termsOfUse": "legal.paramount.com/plutotv/terms-of-use",
+    "kidsModePrivacyPolicy": "privacy.paramount.com/childrens-short",
+    "policymessages": {
+      "moreInfo": false,
+      "prompt": false
+    },
+    "useServiceWatchlist": true,
+    "NPAWUse": true,
+    "watchlistSyncSec": 120,
+    "chromecastEnabled": false,
+    "privacyPolicy": "privacy.paramount.com/policy",
+    "vodLabel": "Free Movies & TV Shows",
+    "accountManagement": {
+      "url": "https://pluto.tv/account/manage-account"
+    },
+    "vodParentCategories": {
+      "tabletLayout": "variant1",
+      "watchlistItems": "grouped"
+    },
+    "nowNextGuide": true,
+    "rmfEnabled": true,
+    "privacyPolicyVersion": 1,
+    "disableKidsContentTracking": true,
+    "endCard": {
+      "nextEpisode": {
+        "contentMarkupEnabled": true,
+        "countDownDurationWithCM": 15,
+        "countDownDurationWithoutCM": 25,
+        "isEnabled": true,
+        "offset": 25
+      },
+      "nextMovie": {},
+      "nextSeries": {},
+      "prefetchSeconds": 60
+    },
+    "phoenix5EventsUse": true,
+    "adAdapterEnabled": true,
+    "enableGPP": true,
+    "websiteDisableS": true,
+    "extendGuideUse": true,
+    "useChannelsText": false,
+    "drmDash": {
+      "enableFallback": false,
+      "enableVll": true,
+      "enableVod": true,
+      "supportDashIf": false,
+      "supportEventVod": false
+    },
+    "websiteDisableSP": true,
+    "useTCF": true,
+    "clickableAdSmallSize": true,
+    "peekViewUse": false,
+    "supportedLanguage": "en",
+    "useParentChild": true,
+    "userAccounts": {
+      "accountDeletion": true,
+      "dateOfBirthField": false,
+      "genderField": false,
+      "marketingDoubleOptIn": false,
+      "marketingOptIn": true,
+      "minAge": 18,
+      "nameField": false
+    }
+  },
+  "session": {
+    "sessionID": "998d958d-febf-11ee-8951-96cd193bee37",
+    "clientIP": "99.224.0.0",
+    "countryCode": "CA",
+    "activeRegion": "CA",
+    "city": "Etobicoke",
+    "postalCode": "m9b 6g1",
+    "preferredLanguage": "en",
+    "deviceType": "web",
+    "deviceMake": "",
+    "deviceModel": "",
+    "logLevel": "DEFAULT",
+    "clientDeviceType": 0,
+    "marketingRegion": "CA",
+    "restartThresholdMS": 1800000
+  },
+  "EPG": [
+    {
+      "name": "Pluto TV Drama Movies",
+      "id": "62bdb0bcd707b9000739d2e5",
+      "isStitched": true,
+      "slug": "pluto-tv-drama-movies-ca",
+      "categoryIDs": [
+        "62bda20342f92000075fe708"
+      ],
+      "stitched": {
+        "path": "/stitch/hls/channel/62bdb0bcd707b9000739d2e5/master.m3u8"
+      },
+      "images": [
+        {
+          "type": "colorLogoPNG",
+          "style": "wide",
+          "ratio": 0.2857142857142857,
+          "defaultWidth": 280,
+          "defaultHeight": 80,
+          "url": "https://images.pluto.tv/channels/62bdb0bcd707b9000739d2e5/colorLogoPNG.png"
+        },
+        {
+          "type": "colorLogoSVG",
+          "style": "wide",
+          "ratio": 0.2857142857142857,
+          "defaultWidth": 280,
+          "defaultHeight": 80,
+          "url": "https://images.pluto.tv/channels/62bdb0bcd707b9000739d2e5/colorLogoSVG.svg"
+        },
+        {
+          "type": "solidLogoPNG",
+          "style": "wide",
+          "ratio": 0.2857142857142857,
+          "defaultWidth": 280,
+          "defaultHeight": 80,
+          "url": "https://images.pluto.tv/channels/62bdb0bcd707b9000739d2e5/solidLogoPNG.png"
+        },
+        {
+          "type": "solidLogoSVG",
+          "style": "wide",
+          "ratio": 0.2857142857142857,
+          "defaultWidth": 280,
+          "defaultHeight": 80,
+          "url": "https://images.pluto.tv/channels/62bdb0bcd707b9000739d2e5/solidLogoSVG.svg"
+        },
+        {
+          "type": "logo",
+          "style": "wide",
+          "ratio": 0.2857142857142857,
+          "defaultWidth": 280,
+          "defaultHeight": 80,
+          "url": "https://images.pluto.tv/channels/62bdb0bcd707b9000739d2e5/logo.png?fit=fill&fm=png&h=80&w=280"
+        },
+        {
+          "type": "featuredImage",
+          "style": "tall",
+          "ratio": 1.7777777777777777,
+          "defaultWidth": 1560,
+          "defaultHeight": 878,
+          "url": "https://images.pluto.tv/channels/62bdb0bcd707b9000739d2e5/featuredImage.jpg?fill=blur&fit=fill&fm=jpg&h=900&q=75&w=1600"
+        },
+        {
+          "type": "hero",
+          "style": "square",
+          "ratio": 1,
+          "defaultWidth": 660,
+          "defaultHeight": 660,
+          "url": "https://images.pluto.tv/channels/62bdb0bcd707b9000739d2e5/thumbnail.jpg?fill=blur&fit=fill&fm=jpg&h=660&q=75&w=660"
+        },
+        {
+          "type": "tileColor",
+          "style": "wide",
+          "ratio": 0.25,
+          "defaultWidth": 660,
+          "defaultHeight": 150,
+          "url": "https://images.pluto.tv/channels/62bdb0bcd707b9000739d2e5/tile.jpg?fill=blur&fit=fill&fm=jpg&h=150&q=75&w=600"
+        },
+        {
+          "type": "tileGrayscale",
+          "style": "wide",
+          "ratio": 0.25,
+          "defaultWidth": 660,
+          "defaultHeight": 150,
+          "url": "https://images.pluto.tv/channels/62bdb0bcd707b9000739d2e5/tileGrayscale.jpg?fill=blur&fit=fill&fm=jpg&h=150&q=75&w=600"
+        }
+      ],
+      "number": 402,
+      "timelines": [
+        {
+          "start": "2024-04-20T01:01:00.000Z",
+          "stop": "2024-04-20T03:19:00.000Z",
+          "title": "Mother's Day",
+          "_id": "6622bf055e23700008f1f91b",
+          "episode": {
+            "_id": "657c602b7295a600141067ed",
+            "name": "Mother's Day",
+            "rating": "PG",
+            "originalContentDuration": 7095000,
+            "genre": "Drama",
+            "description": "This big-hearted comedy invites us all to enjoy the laughter, tears and love as three generations come together in the week leading up to Mother's Day.",
+            "slug": "mothers-day-ca-2015-1-1",
+            "series": {
+              "_id": "657c60287295a600141067cc",
+              "name": "Mother's Day",
+              "slug": "mothers-day-ca",
+              "type": "film"
+            },
+            "distributeAs": {
+              "AVOD": false
+            }
+          }
+        },
+        {
+          "start": "2024-04-20T03:19:00.000Z",
+          "stop": "2024-04-20T05:08:00.000Z",
+          "title": "Sunshine Cleaning",
+          "_id": "6622bf055e23700008f1f91c",
+          "episode": {
+            "_id": "660d7e71ab971d0013cd9009",
+            "name": "Sunshine Cleaning",
+            "rating": "18+",
+            "originalContentDuration": 5490000,
+            "genre": "Independent",
+            "description": "Former high school cheerleading captain Rose (Amy Adams) is a thirty-something single mother who cleans houses for a living. Wanting to send her trouble-making son Oscar to a private school, Rose decides to take her married lover's (Steve Zahn) advice.",
+            "slug": "sunshine-cleaning-2008-1-1-ptv4",
+            "series": {
+              "_id": "660d7e6fab971d0013cd8feb",
+              "name": "Sunshine Cleaning",
+              "slug": "sunshine-cleaning-ptv1",
+              "type": "film"
+            },
+            "distributeAs": {
+              "AVOD": false
+            }
+          }
+        },
+        {
+          "start": "2024-04-20T05:08:00.000Z",
+          "stop": "2024-04-20T07:26:00.000Z",
+          "title": "Mother's Day",
+          "_id": "6622bf055e23700008f1f91d",
+          "episode": {
+            "_id": "657c602b7295a600141067ed",
+            "name": "Mother's Day",
+            "rating": "PG",
+            "originalContentDuration": 7095000,
+            "genre": "Drama",
+            "description": "This big-hearted comedy invites us all to enjoy the laughter, tears and love as three generations come together in the week leading up to Mother's Day.",
+            "slug": "mothers-day-ca-2015-1-1",
+            "series": {
+              "_id": "657c60287295a600141067cc",
+              "name": "Mother's Day",
+              "slug": "mothers-day-ca",
+              "type": "film"
+            },
+            "distributeAs": {
+              "AVOD": false
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "VOD": [
+    {
+      "id": "63c8215d8ba71d0013f29b43",
+      "name": "Ex Machina",
+      "description": "A young programmer (Domhnall Gleeson) at an internet company is chosen by a reclusive CEO (Oscar Isaac) to evaluate the capabilities and consciousness of a beautiful and sophisticated robot (Alicia Vikander).",
+      "duration": 7680000,
+      "originalContentDuration": 6495000,
+      "slug": "ex-machina-2015-1-1-ptv1",
+      "rating": "18+",
+      "genre": "Sci-Fi & Fantasy",
+      "stitched": {
+        "path": "/stitch/hls/episode/63c8215d8ba71d0013f29b43/master.m3u8"
+      },
+      "covers": [
+        {
+          "aspectRatio": "347:500",
+          "url": "https://images.pluto.tv/episodes/63c8215d8ba71d0013f29b43/poster.jpg?fill=blur&fit=fill&fm=jpg&h=1000&q=75&w=694"
+        },
+        {
+          "aspectRatio": "4:3",
+          "url": "https://images.pluto.tv/episodes/63c8215d8ba71d0013f29b43/screenshot4_3.jpg?fill=blur&fit=fill&fm=jpg&h=480&q=75&w=640"
+        },
+        {
+          "aspectRatio": "16:9",
+          "url": "https://images.pluto.tv/episodes/63c8215d8ba71d0013f29b43/screenshot16_9.jpg?fill=blur&fit=fill&fm=jpg&h=540&q=75&w=960"
+        }
+      ],
+      "seriesID": "63c8215c8ba71d0013f29b3a",
+      "categoryID": "64f1a7e91105450008297532",
+      "type": "movie"
+    }
+  ],
+  "ratings": {
+    "E": {
+      "displayName": "E",
+      "image": ""
+    },
+    "18+": {
+      "displayName": "18+",
+      "image": ""
+    },
+    "PG": {
+      "displayName": "PG",
+      "image": ""
+    },
+    "G": {
+      "displayName": "G",
+      "image": ""
+    },
+    "8+": {
+      "displayName": "8+",
+      "image": ""
+    },
+    "C8": {
+      "displayName": "C8",
+      "image": ""
+    },
+    "C": {
+      "displayName": "C",
+      "image": ""
+    },
+    "16+": {
+      "displayName": "16+",
+      "image": ""
+    },
+    "14+": {
+      "displayName": "14+",
+      "image": ""
+    },
+    "13+": {
+      "displayName": "13+",
+      "image": ""
+    }
+  },
+  "startingChannel": {
+    "id": "62bdb0bcd707b9000739d2e5",
+    "slug": "pluto-tv-drama-movies-ca"
+  },
+  "stitcherParams": "advertisingId=&appName=web&appVersion=9&app_name=web&clientDeviceType=0&clientID=9&clientModelNumber=9&country=CA&deviceDNT=false&deviceId=9&deviceLat=43.6600&deviceLon=-79.5500&deviceMake=&deviceModel=&deviceType=web&deviceVersion=&marketingRegion=CA&serverSideAds=false&sessionID=998d958d-febf-11ee-8951-96cd193bee37&sid=998d958d-febf-11ee-8951-96cd193bee37&userId=",
+  "serverTime": "2024-04-20T02:42:16.346Z",
+  "refreshInSec": 28800,
+  "sessionToken": "eyJhbGciOiJIUzI1NiIsImtpZCI6IjBhZjFiZmZmLTIzODEtNDY3NC1iZmEzLWMyN2QxZDAzMGE3OCIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSUQiOiI5OThkOTU4ZC1mZWJmLTExZWUtODk1MS05NmNkMTkzYmVlMzciLCJjbGllbnRJUCI6Ijk5LjIyNC4wLjAiLCJjaXR5IjoiRXRvYmljb2tlIiwicG9zdGFsQ29kZSI6Im05YiA2ZzEiLCJjb3VudHJ5IjoiQ0EiLCJkbWEiOjEyNDUzNSwiYWN0aXZlUmVnaW9uIjoiQ0EiLCJkZXZpY2VMYXQiOjQzLjY1OTk5OTg0NzQxMjExLCJkZXZpY2VMb24iOi03OS41NTAwMDMwNTE3NTc4MSwicHJlZmVycmVkTGFuZ3VhZ2UiOiJlbiIsImRldmljZVR5cGUiOiJ3ZWIiLCJkZXZpY2VWZXJzaW9uIjoiIiwiZGV2aWNlTWFrZSI6IiIsImRldmljZU1vZGVsIjoiIiwiYXBwTmFtZSI6IndlYiIsImFwcFZlcnNpb24iOiI5IiwiY2xpZW50SUQiOiI5IiwiY21BdWRpZW5jZUlEIjoiIiwiaXNDbGllbnRETlQiOmZhbHNlLCJ1c2VySUQiOiIiLCJsb2dMZXZlbCI6IkRFRkFVTFQiLCJ0aW1lWm9uZSI6IkFtZXJpY2EvVG9yb250byIsInNlcnZlclNpZGVBZHMiOmZhbHNlLCJlMmVCZWFjb25zIjpmYWxzZSwiZmVhdHVyZXMiOnsiaXNTdGl0Y2hlckVrcyI6dHJ1ZSwibXVsdGlQb2RBZHMiOnsiZW5hYmxlZCI6dHJ1ZX19LCJmbXNQYXJhbXMiOnsiZndWY0lEMiI6IjkiLCJmd1ZjSUQyQ29wcGEiOiI5IiwiY3VzdG9tUGFyYW1zIjp7ImZtc19saXZlcmFtcF9pZGwiOiIiLCJmbXNfZW1haWxoYXNoIjoiIiwiZm1zX3N1YnNjcmliZXJpZCI6IiIsImZtc19pZmEiOiIiLCJmbXNfaWRmdiI6IiIsImZtc191c2VyaWQiOiI5IiwiZm1zX3ZjaWQydHlwZSI6InVzZXJpZCIsImZtc19yYW1wX2lkIjoiIiwiZm1zX2hoX3JhbXBfaWQiOiIiLCJmbXNfYmlkaWR0eXBlIjoiIiwiX2Z3XzNQX1VJRCI6IiIsImZtc19ydWxlaWQiOiIxMDAwMCwxMDAwOSwxMDAxMiJ9fSwiaXNzIjoiYm9vdC5wbHV0by50diIsInN1YiI6InByaTp2MTpwbHV0bzpkZXZpY2VzOkNBOk9RPT0iLCJhdWQiOiIqLnBsdXRvLnR2IiwiZXhwIjoxNzEzNjY3MzM2LCJpYXQiOjE3MTM1ODA5MzYsImp0aSI6Ijc4MmM2ZTlmLWQwOWEtNDkzZS1iNGU4LTY3ZjM3ZWI4ODA1YSJ9.X_jRnAEfjdRNyPTfD02JNH7E6Oe8FiEerQpAHm75foY"
+}
