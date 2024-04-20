@@ -10,21 +10,23 @@ import (
 )
 
 func TestClip(t *testing.T) {
-   for _, test := range video_tests[:2] {
-      clip, err := new_clip(test.slug)
-      if err != nil {
-         t.Fatal(err)
+   for _, test := range video_tests {
+      if test.id != "" {
+         clip, err := new_clip(test.id)
+         if err != nil {
+            t.Fatal(err)
+         }
+         manifest, ok := clip.dash()
+         if !ok {
+            t.Fatal("episode_clip.dash")
+         }
+         url, err := manifest.parse(bases[0])
+         if err != nil {
+            t.Fatal(err)
+         }
+         fmt.Println(url)
+         time.Sleep(time.Second)
       }
-      manifest, ok := clip.dash()
-      if !ok {
-         t.Fatal("episode_clip.dash")
-      }
-      url, err := manifest.parse(bases[0])
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(url)
-      time.Sleep(time.Second)
    }
 }
 
