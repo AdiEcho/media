@@ -5,8 +5,15 @@ import (
    "fmt"
    "net/http"
    "net/url"
+   "slices"
+   "strconv"
    "strings"
 )
+
+type web_address struct {
+   series string
+   episode string
+}
 
 func (w web_address) String() string {
    var b strings.Builder
@@ -23,27 +30,6 @@ func (w web_address) String() string {
       b.WriteString(w.episode)
    }
    return b.String()
-}
-
-func (w *web_address) Set(s string) error {
-   for {
-      var (
-         key string
-         ok bool
-      )
-      key, s, ok = strings.Cut(s, "/")
-      if !ok {
-         return nil
-      }
-      switch key {
-      case "episode":
-         w.episode = s
-      case "movies":
-         w.series = s
-      case "series":
-         w.series, s, _ = strings.Cut(s, "/")
-      }
-   }
 }
 
 func (w web_address) video() (*video, error) {
@@ -72,7 +58,7 @@ func (w web_address) video() (*video, error) {
       return nil, err
    }
    demand := start.VOD[0]
-   if demand.Slug != w.series {
+   if demand.Slug.slug != w.series {
       if demand.ID != w.series {
          return nil, fmt.Errorf("%+v", demand)
       }
@@ -80,21 +66,88 @@ func (w web_address) video() (*video, error) {
    for _, s := range demand.Seasons {
       s.parent = &demand
       for _, e := range s.Episodes {
+         err := e.Slug.atoi()
+         if err != nil {
+            return nil, err
+         }
          e.parent = s
          if e.Episode == w.episode {
             return e, nil
          }
-         if e.Slug == w.episode {
+         if e.Slug.slug == w.episode {
             return e, nil
          }
       }
    }
+   err = demand.Slug.atoi()
+   if err != nil {
+      return nil, err
+   }
    return &demand, nil
 }
 
-type web_address struct {
-   series string
-   episode string
+// ex-machina-2015-1-1-ptv1
+// head-first-1998-1-2
+// king-of-queens
+// pilot-1998-1-1-ptv8
+func (s *slug) atoi() error {
+   split := strings.Split(s.slug, "-")
+   slices.Reverse(split)
+   if strings.HasPrefix(split[0], "ptv") {
+      split = split[1:]
+   }
+   var err error
+   s.episode, err = strconv.Atoi(split[0])
+   if err != nil {
+      return err
+   }
+   s.season, err = strconv.Atoi(split[1])
+   if err != nil {
+      return err
+   }
+   s.year, err = strconv.Atoi(split[2])
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (w *web_address) Set(s string) error {
+   for {
+      var (
+         key string
+         ok bool
+      )
+      key, s, ok = strings.Cut(s, "/")
+      if !ok {
+         return nil
+      }
+      switch key {
+      case "episode":
+         w.episode = s
+      case "movies":
+         w.series = s
+      case "series":
+         w.series, s, _ = strings.Cut(s, "/")
+      }
+   }
+}
+
+func (s *slug) UnmarshalText(text []byte) error {
+   s.slug = string(text)
+   return nil
+}
+
+type season struct {
+   Episodes []*video
+   parent *video
+}
+
+type slug struct {
+   episode int
+   season int
+   slug string
+   year int
 }
 
 type video struct {
@@ -102,11 +155,33 @@ type video struct {
    ID string
    Name string
    Seasons []*season
-   Slug string
+   Slug slug
    parent *season
 }
 
-type season struct {
-   Episodes []*video
-   parent *video
+type namer struct {
+   v video
+}
+
+func (n namer) Show() string {
+   if v := n.v.parent; v != nil {
+      return v.parent.Name
+   }
+   return ""
+}
+
+func (namer) Season() int {
+   return 0
+}
+
+func (namer) Episode() int {
+   return 0
+}
+
+func (namer) Title() string {
+   return ""
+}
+
+func (namer) Year() int {
+   return 0
 }
