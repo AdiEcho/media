@@ -53,11 +53,13 @@ func main() {
 }
 
 func (f flags) download() error {
-   var meta pluto.Metadata
-   err := meta.New(f.address)
+   video, err := f.web.Video()
    if err != nil {
       return err
    }
+   // OLD
+   var meta pluto.Metadata
+   err := meta.New(f.address)
    demand, err := meta.OnDemand()
    if err != nil {
       return err

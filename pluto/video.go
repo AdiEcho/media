@@ -56,7 +56,7 @@ func (w WebAddress) String() string {
 	return b.String()
 }
 
-func (w WebAddress) video() (*Video, error) {
+func (w WebAddress) Video() (*Video, error) {
 	req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
 	if err != nil {
 		return nil, err
