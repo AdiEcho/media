@@ -14,6 +14,82 @@ import (
    "text/template"
 )
 
+func (h HttpStream) segment_template(
+   ext, initial string, rep *dash.Representation,
+) error {
+   base, err := url.Parse(rep.GetAdaptationSet().GetPeriod().GetMpd().BaseURL)
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest("GET", initial, nil)
+   if err != nil {
+      return err
+   }
+   req.URL = base.ResolveReference(req.URL)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return errors.New(res.Status)
+   }
+   file, err := func() (*os.File, error) {
+      s, err := Name(h.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(CleanName(s) + ext)
+   }()
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   key_id, err := write_init(file, res.Body)
+   if err != nil {
+      return err
+   }
+   key, err := h.key(key_id)
+   if err != nil {
+      return err
+   }
+   var meter log.ProgressMeter
+   log.SetTransport(nil)
+   defer log.Transport{}.Set()
+   template, ok := rep.GetSegmentTemplate()
+   if !ok {
+      return errors.New("GetSegmentTemplate")
+   }
+   media, err := template.GetMedia(rep)
+   if err != nil {
+      return err
+   }
+   meter.Set(len(media))
+   for _, medium := range media {
+      req.URL, err = base.Parse(medium)
+      if err != nil {
+         return err
+      }
+      err := func() error {
+         res, err := http.DefaultClient.Do(req)
+         if err != nil {
+            return err
+         }
+         defer res.Body.Close()
+         if res.StatusCode != http.StatusOK {
+            var b strings.Builder
+            res.Write(&b)
+            return errors.New(b.String())
+         }
+         return write_segment(file, meter.Reader(res), key)
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
+
 func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
    res, err := http.Get(url)
    if err != nil {
@@ -209,82 +285,6 @@ func (h HttpStream) segment_base(
          defer res.Body.Close()
          if res.StatusCode != http.StatusPartialContent {
             return errors.New(res.Status)
-         }
-         return write_segment(file, meter.Reader(res), key)
-      }()
-      if err != nil {
-         return err
-      }
-   }
-   return nil
-}
-
-func (h HttpStream) segment_template(
-   ext, initial string, rep *dash.Representation,
-) error {
-   base, err := url.Parse(rep.GetAdaptationSet().GetPeriod().GetMpd().BaseURL)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest("GET", initial, nil)
-   if err != nil {
-      return err
-   }
-   req.URL = base.ResolveReference(req.URL)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
-   }
-   file, err := func() (*os.File, error) {
-      s, err := Name(h.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(CleanName(s) + ext)
-   }()
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   key_id, err := write_init(file, res.Body)
-   if err != nil {
-      return err
-   }
-   key, err := h.key(key_id)
-   if err != nil {
-      return err
-   }
-   var meter log.ProgressMeter
-   log.SetTransport(nil)
-   defer log.Transport{}.Set()
-   template, ok := rep.GetSegmentTemplate()
-   if !ok {
-      return errors.New("GetSegmentTemplate")
-   }
-   media, err := template.GetMedia(rep)
-   if err != nil {
-      return err
-   }
-   meter.Set(len(media))
-   for _, medium := range media {
-      req.URL, err = base.Parse(medium)
-      if err != nil {
-         return err
-      }
-      err := func() error {
-         res, err := http.DefaultClient.Do(req)
-         if err != nil {
-            return err
-         }
-         defer res.Body.Close()
-         if res.StatusCode != http.StatusOK {
-            var b strings.Builder
-            res.Write(&b)
-            return errors.New(b.String())
          }
          return write_segment(file, meter.Reader(res), key)
       }()

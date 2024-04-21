@@ -5,7 +5,6 @@ import (
    "154.pages.dev/media/internal"
    "154.pages.dev/media/pluto"
    "flag"
-   "fmt"
    "os"
    "path/filepath"
    "strings"
@@ -27,10 +26,21 @@ func main() {
       return b.String()
    }())
    flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
-   flag.StringVar(&f.forward, "f", "", fmt.Sprint(pluto.Forward))
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.StringVar(&f.forward, "f", "", func() string {
+      var b strings.Builder
+      for key, value := range pluto.Forward {
+         if b.Len() >= 1 {
+            b.WriteByte('\n')
+         }
+         b.WriteString(key)
+         b.WriteByte(' ')
+         b.WriteString(value)
+      }
+      return b.String()
+   }())
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()

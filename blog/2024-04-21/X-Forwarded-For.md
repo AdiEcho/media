@@ -65,3 +65,14 @@ Class C
 ## Norway
 
 84.208.0.0
+
+## Sweden
+
+~~~
+78.64.0.0
+81.224.0.0
+90.224.0.0
+95.192.0.0
+~~~
+
+<https://github.com/firehol/blocklist-ipsets/blob/master/geolite2_country/country_se.netset>
