@@ -163,28 +163,28 @@ type season struct {
 }
 
 func (n Namer) Show() string {
-	if v := n.v.parent; v != nil {
+	if v := n.V.parent; v != nil {
 		return v.parent.Name
 	}
 	return ""
 }
 
 type Namer struct {
-	v *Video
+	V *Video
 }
 
 func (n Namer) Season() int {
-	return n.v.Slug.season
+	return n.V.Slug.season
 }
 
 func (n Namer) Episode() int {
-	return n.v.Slug.episode
+	return n.V.Slug.episode
 }
 
 func (n Namer) Title() string {
-	return n.v.Name
+	return n.V.Name
 }
 
 func (n Namer) Year() int {
-	return n.v.Slug.year
+	return n.V.Slug.year
 }

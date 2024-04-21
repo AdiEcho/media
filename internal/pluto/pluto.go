@@ -1,13 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/log"
-   "154.pages.dev/media/internal"
    "154.pages.dev/media/pluto"
-   "flag"
+   "errors"
    "fmt"
-   "os"
-   "path/filepath"
 )
 
 func (f flags) download() error {
@@ -34,9 +30,8 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         // FIXME
-         f.h.Name = meta
-         f.h.Poster = pluto.Core()
+         f.h.Name = pluto.Namer{video}
+         f.h.Poster = pluto.Poster{}
          return f.h.DASH(medium)
       }
    }

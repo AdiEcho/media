@@ -5,9 +5,9 @@ import (
    "154.pages.dev/media/internal"
    "154.pages.dev/media/pluto"
    "flag"
-   "fmt"
    "os"
    "path/filepath"
+   "strings"
 )
 
 type flags struct {
@@ -46,7 +46,7 @@ func main() {
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
-   if f.address.String() != "" {
+   if f.web.String() != "" {
       err := f.download()
       if err != nil {
          panic(err)
