@@ -8,31 +8,6 @@ import (
    "strings"
 )
 
-var bases = []url.URL{
-   // these return `403 OK` with compressed content
-   {Scheme: "http", Host: "siloh-fs.plutotv.net"},
-   {Scheme: "http", Host: "siloh-ns1.plutotv.net"},
-   {Scheme: "https", Host: "siloh-fs.plutotv.net"},
-   {Scheme: "https", Host: "siloh-ns1.plutotv.net"},
-   // returns `200 OK` with plain content
-   {Scheme: "http", Host: "silo-hybrik.pluto.tv.s3.amazonaws.com"},
-}
-
-func (s source) parse(base url.URL) (*url.URL, error) {
-   ref, err := url.Parse(s.File)
-   if err != nil {
-      return nil, err
-   }
-   ref.Scheme = base.Scheme
-   ref.Host = base.Host
-   return ref, nil
-}
-
-type source struct {
-   File string
-   Type string
-}
-
 type poster struct{}
 
 func (poster) RequestUrl() (string, bool) {
@@ -90,4 +65,33 @@ func new_clip(id string) (*episode_clip, error) {
       return nil, err
    }
    return &clips[0], nil
+}
+
+type source struct {
+   File string
+   Type string
+}
+
+var bases = []string{
+   // these return `403 OK` with compressed content
+   "http://siloh-fs.plutotv.net",
+   "http://siloh-ns1.plutotv.net",
+   "https://siloh-fs.plutotv.net",
+   "https://siloh-ns1.plutotv.net",
+   // returns `200 OK` with plain content
+   "http://silo-hybrik.pluto.tv.s3.amazonaws.com",
+}
+
+func (s source) parse(base string) (*url.URL, error) {
+   a, err := url.Parse(base)
+   if err != nil {
+      return nil, err
+   }
+   b, err := url.Parse(s.File)
+   if err != nil {
+      return nil, err
+   }
+   b.Scheme = a.Scheme
+   b.Host = a.Host
+   return b, nil
 }

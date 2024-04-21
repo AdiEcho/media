@@ -11,9 +11,9 @@ import (
 )
 
 type flags struct {
-   media_id string
+   representation string
    h internal.HttpStream
-   nbc_id int
+   address string
    v log.Level
 }
 
@@ -34,15 +34,15 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.IntVar(&f.nbc_id, "b", 0, "pluto ID")
-   flag.StringVar(&f.media_id, "i", "", "media ID")
+   flag.IntVar(&f.address, "b", 0, "pluto ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
    flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
-   if f.nbc_id >= 1 {
+   if f.address >= 1 {
       err := f.download()
       if err != nil {
          panic(err)
@@ -51,9 +51,10 @@ func main() {
       flag.Usage()
    }
 }
+
 func (f flags) download() error {
    var meta pluto.Metadata
-   err := meta.New(f.nbc_id)
+   err := meta.New(f.address)
    if err != nil {
       return err
    }
