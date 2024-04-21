@@ -13,8 +13,8 @@ import (
 type flags struct {
    representation string
    h internal.HttpStream
-   address string
    v log.Level
+   web pluto.WebAddress
 }
 
 func (f *flags) New() error {
@@ -34,15 +34,15 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.IntVar(&f.address, "b", 0, "pluto ID")
-   flag.StringVar(&f.representation, "i", "", "representation")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.Var(&f.web, "a", "address")
    flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
-   if f.address >= 1 {
+   if f.address.String() != "" {
       err := f.download()
       if err != nil {
          panic(err)
