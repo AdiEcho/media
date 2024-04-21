@@ -57,6 +57,10 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
+   clip, err := video.Clip()
+   if err != nil {
+      return err
+   }
    // OLD
    var meta pluto.Metadata
    err := meta.New(f.address)
