@@ -10,6 +10,30 @@ import (
    "strings"
 )
 
+func (w WebAddress) String() string {
+   var b strings.Builder
+   if w.series != "" {
+      b.WriteString("https://pluto.tv/on-demand/")
+      if w.episode != "" {
+         b.WriteString("series")
+      } else {
+         b.WriteString("movies")
+      }
+      b.WriteByte('/')
+      b.WriteString(w.series)
+   }
+   if w.episode != "" {
+      b.WriteString("/episode/")
+      b.WriteString(w.episode)
+   }
+   return b.String()
+}
+
+type WebAddress struct {
+   series  string
+   episode string
+}
+
 type Video struct {
    Name    string
    Seasons []*season
@@ -48,28 +72,6 @@ func (w *WebAddress) Set(s string) error {
          }
       }
    }
-}
-
-type WebAddress struct {
-   series  string
-   episode string
-}
-
-func (w WebAddress) String() string {
-   var b strings.Builder
-   b.WriteString("https://pluto.tv/on-demand/")
-   if w.episode != "" {
-      b.WriteString("series")
-   } else {
-      b.WriteString("movies")
-   }
-   b.WriteByte('/')
-   b.WriteString(w.series)
-   if w.episode != "" {
-      b.WriteString("/episode/")
-      b.WriteString(w.episode)
-   }
-   return b.String()
 }
 
 func (w WebAddress) Video() (*Video, error) {

@@ -1,6 +1,6 @@
 # pluto
 
-- https://github.com/stabbedbybrick/freevine/blob/main/services/pluto/pluto.py
+- https://play.google.com/store/apps/details?id=tv.pluto.android
 - https://pluto.tv/on-demand/movies/ex-machina-2015-1-1-ptv1
 
 ## clips
