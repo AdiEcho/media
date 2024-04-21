@@ -76,7 +76,7 @@ type Source struct {
 	Type string
 }
 
-var bases = []string{
+var Base = []string{
 	// these return `403 OK` with compressed content
 	"http://siloh-fs.plutotv.net",
 	"http://siloh-ns1.plutotv.net",
@@ -86,7 +86,9 @@ var bases = []string{
 	"http://silo-hybrik.pluto.tv.s3.amazonaws.com",
 }
 
-func (s Source) parse(base string) (*url.URL, error) {
+///////
+
+func (s Source) Parse(base string) (*url.URL, error) {
 	a, err := url.Parse(base)
 	if err != nil {
 		return nil, err

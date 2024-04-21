@@ -20,7 +20,7 @@ func TestClip(t *testing.T) {
 			if !ok {
 				t.Fatal("episode_clip.dash")
 			}
-			url, err := manifest.parse(bases[0])
+			url, err := manifest.Parse(Base[0])
 			if err != nil {
 				t.Fatal(err)
 			}
