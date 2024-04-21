@@ -7,6 +7,31 @@ import (
    "time"
 )
 
+func TestVideo(t *testing.T) {
+   for _, test := range video_tests {
+      var web WebAddress
+      web.Set(test.url)
+      video, err := web.Video("")
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", video)
+      name, err := internal.Name(Namer{video})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
+}
+
+func TestAddress(t *testing.T) {
+   for _, test := range video_tests {
+      var web WebAddress
+      web.Set(test.url)
+      fmt.Println(web)
+   }
+}
 var video_tests = []struct {
    clips string
    start string
@@ -30,30 +55,4 @@ var video_tests = []struct {
       url:   "pluto.tv/on-demand/series/king-of-queens/episode/head-first-1998-1-2",
       start: "king-of-queens",
    },
-}
-
-func TestVideo(t *testing.T) {
-   for _, test := range video_tests {
-      var web WebAddress
-      web.Set(test.url)
-      video, err := web.Video()
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", video)
-      name, err := internal.Name(Namer{video})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
-   }
-}
-
-func TestAddress(t *testing.T) {
-   for _, test := range video_tests {
-      var web WebAddress
-      web.Set(test.url)
-      fmt.Println(web)
-   }
 }

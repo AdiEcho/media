@@ -2,7 +2,7 @@ package pluto
 
 import (
    "encoding/json"
-   "fmt"
+   "errors"
    "net/http"
    "net/url"
    "slices"
@@ -10,74 +10,15 @@ import (
    "strings"
 )
 
-func (w WebAddress) String() string {
-   var b strings.Builder
-   if w.series != "" {
-      b.WriteString("https://pluto.tv/on-demand/")
-      if w.episode != "" {
-         b.WriteString("series")
-      } else {
-         b.WriteString("movies")
-      }
-      b.WriteByte('/')
-      b.WriteString(w.series)
-   }
-   if w.episode != "" {
-      b.WriteString("/episode/")
-      b.WriteString(w.episode)
-   }
-   return b.String()
-}
+var Forward = map[string]string{"Canada": "99.224.0.0"}
 
-type WebAddress struct {
-   series  string
-   episode string
-}
-
-type Video struct {
-   Name    string
-   Seasons []*season
-   parent  *season
-   Slug    slug
-   Episode string `json:"_id"`
-   ID      string
-}
-
-type slug struct {
-   episode int
-   season  int
-   slug    string
-   year    int
-}
-
-func (w *WebAddress) Set(s string) error {
-   for {
-      var (
-         key string
-         ok  bool
-      )
-      key, s, ok = strings.Cut(s, "/")
-      if !ok {
-         return nil
-      }
-      switch key {
-      case "episode":
-         w.episode = s
-      case "movies":
-         w.series = s
-      case "series":
-         w.series, s, ok = strings.Cut(s, "/")
-         if !ok {
-            return fmt.Errorf("%q", w.series)
-         }
-      }
-   }
-}
-
-func (w WebAddress) Video() (*Video, error) {
+func (w WebAddress) Video(forward string) (*Video, error) {
    req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
       return nil, err
+   }
+   if forward != "" {
+      req.Header.Set("x-forwarded-for", forward)
    }
    req.URL.RawQuery = url.Values{
       "appName":           {"web"},
@@ -102,7 +43,7 @@ func (w WebAddress) Video() (*Video, error) {
    demand := start.VOD[0]
    if demand.Slug.slug != w.series {
       if demand.ID != w.series {
-         return nil, fmt.Errorf("%+v", demand)
+         return nil, errors.New(demand.Slug.slug)
       }
    }
    for _, s := range demand.Seasons {
@@ -189,4 +130,67 @@ func (n Namer) Title() string {
 
 func (n Namer) Year() int {
    return n.V.Slug.year
+}
+func (w WebAddress) String() string {
+   var b strings.Builder
+   if w.series != "" {
+      b.WriteString("https://pluto.tv/on-demand/")
+      if w.episode != "" {
+         b.WriteString("series")
+      } else {
+         b.WriteString("movies")
+      }
+      b.WriteByte('/')
+      b.WriteString(w.series)
+   }
+   if w.episode != "" {
+      b.WriteString("/episode/")
+      b.WriteString(w.episode)
+   }
+   return b.String()
+}
+
+type WebAddress struct {
+   series  string
+   episode string
+}
+
+type Video struct {
+   Name    string
+   Seasons []*season
+   parent  *season
+   Slug    slug
+   Episode string `json:"_id"`
+   ID      string
+}
+
+type slug struct {
+   episode int
+   season  int
+   slug    string
+   year    int
+}
+
+func (w *WebAddress) Set(s string) error {
+   for {
+      var (
+         key string
+         ok  bool
+      )
+      key, s, ok = strings.Cut(s, "/")
+      if !ok {
+         return nil
+      }
+      switch key {
+      case "episode":
+         w.episode = s
+      case "movies":
+         w.series = s
+      case "series":
+         w.series, s, ok = strings.Cut(s, "/")
+         if !ok {
+            return errors.New("episode")
+         }
+      }
+   }
 }

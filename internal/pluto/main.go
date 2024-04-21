@@ -5,6 +5,7 @@ import (
    "154.pages.dev/media/internal"
    "154.pages.dev/media/pluto"
    "flag"
+   "fmt"
    "os"
    "path/filepath"
    "strings"
@@ -26,6 +27,7 @@ func main() {
       return b.String()
    }())
    flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
+   flag.StringVar(&f.forward, "f", "", fmt.Sprint(pluto.Forward))
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
@@ -43,6 +45,7 @@ func main() {
 }
 
 type flags struct {
+   forward string
    base string
    h internal.HttpStream
    representation string
