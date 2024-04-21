@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/pluto<span class="navbar-right">
-          v1.8.4 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.5 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package pluto</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/pluto&#34;</span></pre>
@@ -46,6 +46,15 @@
           </ul>
       </li>
   <li>
+      <a href="#Season">type Season</a>
+      </li>
+  <li>
+      <a href="#Slug">type Slug</a>
+      <ul>
+          <li><a href="#Slug.UnmarshalText">func (s *Slug) UnmarshalText(text []byte) error</a></li>
+          </ul>
+      </li>
+  <li>
       <a href="#Source">type Source</a>
       <ul>
           <li><a href="#Source.Parse">func (s Source) Parse(base string) (*url.URL, error)</a></li>
@@ -62,7 +71,7 @@
       <ul>
           <li><a href="#WebAddress.Set">func (w *WebAddress) Set(s string) error</a></li>
           <li><a href="#WebAddress.String">func (w WebAddress) String() string</a></li>
-          <li><a href="#WebAddress.Video">func (w WebAddress) Video() (*Video, error)</a></li>
+          <li><a href="#WebAddress.Video">func (w WebAddress) Video(forward string) (*Video, error)</a></li>
           </ul>
       </li>
   </ul><h3 id="pkg-variables">Variables</h3>
@@ -75,6 +84,7 @@
 
 	<span class="s">&#34;http://silo-hybrik.pluto.tv.s3.amazonaws.com&#34;</span><span class="p">,</span>
 <span class="p">}</span></pre>
+  <pre class="chroma"><span class="kd">var</span> <span id="Forward"><span class="nx">Forward</span></span> <span class="p">=</span> <span class="kd">map</span><span class="p">[</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">{</span><span class="s">&#34;Canada&#34;</span><span class="p">:</span> <span class="s">&#34;99.224.0.0&#34;</span><span class="p">}</span></pre>
   <h3 id="pkg-types">Types</h3>
   <h3 id="EpisodeClip">type EpisodeClip</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">EpisodeClip</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -106,6 +116,17 @@
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h4 id="Poster.ResponseBody">func (Poster) ResponseBody</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">ResponseBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="Season">type Season</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Season</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Season.Episodes"><span class="nx">Episodes</span></span> <span class="p">[]</span><span class="o">*</span><a href="#Video"><span class="nx">Video</span></a>
+	<span class="c1">// contains filtered or unexported fields
+</span><span class="c1"></span><span class="p">}</span></pre>
+    <h3 id="Slug">type Slug</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Slug</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">// contains filtered or unexported fields
+</span><span class="c1"></span><span class="p">}</span></pre>
+    <h4 id="Slug.UnmarshalText">func (*Slug) UnmarshalText</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><a href="#Slug"><span class="nx">Slug</span></a><span class="p">)</span> <span class="nf">UnmarshalText</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h3 id="Source">type Source</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Source</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Source.File"><span class="nx">File</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
@@ -116,9 +137,9 @@
   <h3 id="Video">type Video</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Video</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Video.Name"><span class="nx">Name</span></span>    <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="Video.Seasons"><span class="nx">Seasons</span></span> <span class="p">[]</span><span class="o">*</span><span class="nx">season</span>
+	<span id="Video.Seasons"><span class="nx">Seasons</span></span> <span class="p">[]</span><span class="o">*</span><a href="#Season"><span class="nx">Season</span></a>
 
-	<span id="Video.Slug"><span class="nx">Slug</span></span>    <span class="nx">slug</span>
+	<span id="Video.Slug"><span class="nx">Slug</span></span>    <a href="#Slug"><span class="nx">Slug</span></a>
 	<span id="Video.Episode"><span class="nx">Episode</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;_id&#34;`</span>
 	<span id="Video.ID"><span class="nx">ID</span></span>      <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span class="c1">// contains filtered or unexported fields
@@ -134,7 +155,7 @@
   <h4 id="WebAddress.String">func (WebAddress) String</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h4 id="WebAddress.Video">func (WebAddress) Video</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">Video</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#Video"><span class="nx">Video</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">Video</span><span class="p">(</span><span class="nx">forward</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Video"><span class="nx">Video</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   </main>
     <hr>
     <footer>
