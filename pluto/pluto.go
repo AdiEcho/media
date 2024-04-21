@@ -1,97 +1,101 @@
 package pluto
 
 import (
-	"encoding/json"
-	"errors"
-	"net/http"
-	"net/url"
-	"strings"
+   "encoding/json"
+   "errors"
+   "net/http"
+   "net/url"
+   "strings"
 )
+
+func (v Video) Clip() (*EpisodeClip, error) {
+   req, err := http.NewRequest("GET", "http://api.pluto.tv", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/v2/episodes/")
+      if v.ID != "" {
+         b.WriteString(v.ID)
+      } else {
+         b.WriteString(v.Episode)
+      }
+      b.WriteString("/clips.json")
+      return b.String()
+   }()
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   var clips []EpisodeClip
+   err = json.NewDecoder(res.Body).Decode(&clips)
+   if err != nil {
+      return nil, err
+   }
+   return &clips[0], nil
+}
 
 type poster struct{}
 
 func (poster) RequestUrl() (string, bool) {
-	return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
+   return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
 }
 
 func (poster) RequestHeader() (http.Header, error) {
-	return http.Header{}, nil
+   return http.Header{}, nil
 }
 
 func (poster) RequestBody(b []byte) ([]byte, error) {
-	return b, nil
+   return b, nil
 }
 
 func (poster) ResponseBody(b []byte) ([]byte, error) {
-	return b, nil
+   return b, nil
 }
 
 type EpisodeClip struct {
-	Sources []source
+   Sources []source
 }
 
 func (e EpisodeClip) dash() (*source, bool) {
-	for _, s := range e.Sources {
-		if s.Type == "DASH" {
-			return &s, true
-		}
-	}
-	return nil, false
-}
-
-func NewClip(id string) (*EpisodeClip, error) {
-	req, err := http.NewRequest("GET", "http://api.pluto.tv", nil)
-	if err != nil {
-		return nil, err
-	}
-	req.URL.Path = func() string {
-		var b strings.Builder
-		b.WriteString("/v2/episodes/")
-		b.WriteString(id)
-		b.WriteString("/clips.json")
-		return b.String()
-	}()
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-	if res.StatusCode != http.StatusOK {
-		return nil, errors.New(res.Status)
-	}
-	var clips []EpisodeClip
-	err = json.NewDecoder(res.Body).Decode(&clips)
-	if err != nil {
-		return nil, err
-	}
-	return &clips[0], nil
+   for _, s := range e.Sources {
+      if s.Type == "DASH" {
+         return &s, true
+      }
+   }
+   return nil, false
 }
 
 type source struct {
-	File string
-	Type string
+   File string
+   Type string
 }
 
 var bases = []string{
-	// these return `403 OK` with compressed content
-	"http://siloh-fs.plutotv.net",
-	"http://siloh-ns1.plutotv.net",
-	"https://siloh-fs.plutotv.net",
-	"https://siloh-ns1.plutotv.net",
-	// returns `200 OK` with plain content
-	"http://silo-hybrik.pluto.tv.s3.amazonaws.com",
+   // these return `403 OK` with compressed content
+   "http://siloh-fs.plutotv.net",
+   "http://siloh-ns1.plutotv.net",
+   "https://siloh-fs.plutotv.net",
+   "https://siloh-ns1.plutotv.net",
+   // returns `200 OK` with plain content
+   "http://silo-hybrik.pluto.tv.s3.amazonaws.com",
 }
 
 func (s source) parse(base string) (*url.URL, error) {
-	a, err := url.Parse(base)
-	if err != nil {
-		return nil, err
-	}
-	b, err := url.Parse(s.File)
-	if err != nil {
-		return nil, err
-	}
-	b.Scheme = a.Scheme
-	b.Host = a.Host
-	return b, nil
+   a, err := url.Parse(base)
+   if err != nil {
+      return nil, err
+   }
+   b, err := url.Parse(s.File)
+   if err != nil {
+      return nil, err
+   }
+   b.Scheme = a.Scheme
+   b.Host = a.Host
+   return b, nil
 }
