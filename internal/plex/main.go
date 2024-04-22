@@ -33,11 +33,12 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
-   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
-   flag.StringVar(&f.dash, "i", "", "representation ID")
    flag.Var(&f.path, "a", "plex path")
+   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
+   flag.StringVar(&plex.Forward, "f", "", internal.Forward.String())
+   flag.StringVar(&f.dash, "i", "", "representation ID")
+   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()

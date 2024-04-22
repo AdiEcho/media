@@ -26,21 +26,10 @@ func main() {
       return b.String()
    }())
    flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
+   flag.StringVar(&pluto.Forward, "f", "", internal.Forward.String())
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.StringVar(&f.forward, "f", "", func() string {
-      var b strings.Builder
-      for key, value := range internal.Forward {
-         if b.Len() >= 1 {
-            b.WriteByte('\n')
-         }
-         b.WriteString(key)
-         b.WriteByte(' ')
-         b.WriteString(value)
-      }
-      return b.String()
-   }())
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
@@ -55,7 +44,6 @@ func main() {
 }
 
 type flags struct {
-   forward string
    base string
    h internal.HttpStream
    representation string
