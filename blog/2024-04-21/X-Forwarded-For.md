@@ -42,37 +42,24 @@ Class C
 - https://calculator.net/ip-subnet-calculator.html
 - https://developer.mozilla.org/docs/Web/HTTP/Headers/X-Forwarded-For
 
-## Australia
-
-1.128.0.0/11
-
-<https://github.com/firehol/blocklist-ipsets/blob/master/geolite2_country/country_au.netset>
-
-## Canada
-
-99.224.0.0
-
-## Denmark
-
-87.48.0.0
-
-## Germany
-
-53.0.0.0
-
-<https://github.com/firehol/blocklist-ipsets/blob/master/geolite2_country/country_de.netset>
-
-## Norway
-
-84.208.0.0
-
-## Sweden
-
 ~~~
-78.64.0.0
-81.224.0.0
-90.224.0.0
-95.192.0.0
+Argentina [{size:12 ip:186.128.0.0} {size:12 ip:181.96.0.0} {size:12 ip:181.0.0.0} {size:13 ip:181.80.0.0} {size:13 ip:186.56.0.0} {size:13 ip:190.224.0.0} {size:13 ip:181.24.0.0} {size:14 ip:190.172.0.0} {size:14 ip:152.168.0.0}]
+Australia [{size:11 ip:1.128.0.0} {size:12 ip:49.176.0.0} {size:12 ip:121.208.0.0} {size:12 ip:58.160.0.0} {size:12 ip:120.144.0.0} {size:12 ip:101.176.0.0} {size:12 ip:124.176.0.0} {size:13 ip:110.144.0.0} {size:13 ip:60.224.0.0}]
+Bolivia [{size:15 ip:179.58.0.0} {size:16 ip:200.87.0.0} {size:16 ip:161.56.0.0} {size:16 ip:161.138.0.0} {size:16 ip:166.114.0.0} {size:16 ip:167.157.0.0} {size:16 ip:190.129.0.0} {size:16 ip:181.227.0.0} {size:16 ip:190.186.0.0}]
+Brazil [{size:9 ip:179.128.0.0} {size:9 ip:189.0.0.0} {size:10 ip:191.0.0.0} {size:10 ip:201.0.0.0} {size:10 ip:177.0.0.0} {size:10 ip:177.128.0.0} {size:10 ip:179.64.0.0} {size:10 ip:187.64.0.0} {size:10 ip:191.192.0.0}]
+Canada [{size:11 ip:99.224.0.0} {size:12 ip:142.208.0.0} {size:12 ip:167.32.0.0} {size:12 ip:142.112.0.0} {size:12 ip:99.208.0.0} {size:12 ip:70.64.0.0} {size:12 ip:142.160.0.0} {size:12 ip:142.16.0.0} {size:13 ip:173.176.0.0}]
+Chile [{size:13 ip:191.112.0.0} {size:14 ip:181.72.0.0} {size:14 ip:152.172.0.0} {size:14 ip:190.44.0.0} {size:14 ip:186.172.0.0} {size:14 ip:191.124.0.0} {size:14 ip:190.160.0.0} {size:14 ip:186.104.0.0} {size:14 ip:181.200.0.0}]
+Colombia [{size:11 ip:181.128.0.0} {size:12 ip:181.240.0.0} {size:12 ip:191.144.0.0} {size:12 ip:181.48.0.0} {size:12 ip:191.64.0.0} {size:13 ip:186.80.0.0} {size:13 ip:186.112.0.0} {size:13 ip:191.104.0.0} {size:13 ip:191.88.0.0}]
+Costa Rica [{size:12 ip:201.192.0.0} {size:15 ip:181.194.0.0} {size:16 ip:186.176.0.0} {size:16 ip:181.193.0.0} {size:16 ip:186.15.0.0} {size:16 ip:201.191.0.0} {size:16 ip:201.237.0.0} {size:16 ip:190.241.0.0} {size:16 ip:144.23.0.0}]
+Denmark [{size:12 ip:87.48.0.0} {size:13 ip:83.88.0.0} {size:13 ip:94.144.0.0} {size:13 ip:2.104.0.0} {size:13 ip:80.160.0.0} {size:13 ip:93.160.0.0} {size:13 ip:188.176.0.0} {size:14 ip:109.56.0.0} {size:14 ip:176.20.0.0}]
+Ecuador [{size:14 ip:186.68.0.0} {size:15 ip:186.46.0.0} {size:15 ip:190.154.0.0} {size:15 ip:181.112.0.0} {size:16 ip:181.198.0.0} {size:16 ip:186.101.0.0} {size:16 ip:181.211.0.0} {size:16 ip:201.183.0.0} {size:16 ip:186.3.0.0}]
+Germany [{size:8 ip:53.0.0.0} {size:10 ip:87.128.0.0} {size:10 ip:79.192.0.0} {size:10 ip:84.128.0.0} {size:10 ip:91.0.0.0} {size:10 ip:93.192.0.0} {size:11 ip:80.128.0.0} {size:11 ip:141.32.0.0} {size:11 ip:217.224.0.0}]
+Guatemala [{size:15 ip:190.148.0.0} {size:16 ip:190.56.0.0} {size:16 ip:186.151.0.0} {size:16 ip:168.234.0.0} {size:17 ip:181.209.128.0} {size:18 ip:201.216.128.0} {size:18 ip:181.174.64.0} {size:18 ip:190.143.128.0} {size:18 ip:200.6.192.0}]
+Ireland [{size:12 ip:87.32.0.0} {size:12 ip:34.240.0.0} {size:13 ip:52.208.0.0} {size:13 ip:86.40.0.0} {size:13 ip:108.128.0.0} {size:13 ip:3.248.0.0} {size:14 ip:54.72.0.0} {size:14 ip:63.32.0.0} {size:14 ip:52.16.0.0}]
+Mexico [{size:10 ip:189.128.0.0} {size:11 ip:189.224.0.0} {size:11 ip:187.192.0.0} {size:11 ip:187.128.0.0} {size:11 ip:201.96.0.0} {size:12 ip:148.208.0.0} {size:12 ip:187.224.0.0} {size:12 ip:187.160.0.0} {size:12 ip:148.224.0.0}]
+Norway [{size:13 ip:139.112.0.0} {size:13 ip:88.88.0.0} {size:13 ip:84.208.0.0} {size:14 ip:85.164.0.0} {size:14 ip:2.148.0.0} {size:14 ip:139.108.0.0} {size:14 ip:89.8.0.0} {size:14 ip:158.36.0.0} {size:14 ip:77.16.0.0}]
+Peru [{size:13 ip:190.232.0.0} {size:14 ip:190.116.0.0} {size:14 ip:190.40.0.0} {size:14 ip:186.160.0.0} {size:14 ip:181.64.0.0} {size:15 ip:179.6.0.0} {size:15 ip:190.222.0.0} {size:16 ip:200.37.0.0} {size:16 ip:132.191.0.0}]
+Sweden [{size:12 ip:95.192.0.0} {size:12 ip:78.64.0.0} {size:12 ip:90.224.0.0} {size:12 ip:81.224.0.0} {size:13 ip:85.224.0.0} {size:13 ip:2.64.0.0} {size:13 ip:83.248.0.0} {size:14 ip:130.236.0.0} {size:14 ip:37.196.0.0}]
+United Kingdom [{size:8 ip:25.0.0.0} {size:10 ip:86.128.0.0} {size:10 ip:31.64.0.0} {size:11 ip:82.0.0.0} {size:11 ip:86.0.0.0} {size:11 ip:81.128.0.0} {size:11 ip:92.0.0.0} {size:11 ip:90.192.0.0} {size:12 ip:109.144.0.0}]
+Venezuela [{size:13 ip:190.200.0.0} {size:13 ip:190.72.0.0} {size:13 ip:186.88.0.0} {size:14 ip:201.208.0.0} {size:14 ip:186.164.0.0} {size:14 ip:179.20.0.0} {size:14 ip:179.44.0.0} {size:14 ip:190.36.0.0} {size:14 ip:181.180.0.0}]
 ~~~
-
-<https://github.com/firehol/blocklist-ipsets/blob/master/geolite2_country/country_se.netset>

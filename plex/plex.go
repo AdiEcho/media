@@ -2,6 +2,7 @@ package plex
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "net/url"
 )
@@ -21,6 +22,9 @@ func (a Anonymous) Video(match *DiscoverMatch) (*OnDemand, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    var s struct {
       MediaContainer struct {
          Metadata []OnDemand

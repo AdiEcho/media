@@ -15,6 +15,20 @@ import (
    "text/template"
 )
 
+var Forward = map[string]string{
+   "Brazil": "189.0.0.0",
+   "Canada": "99.224.0.0",
+   "Denmark": "87.48.0.0",
+   "Ireland": "87.32.0.0",
+   "Norway": "84.208.0.0",
+   "Sweden": "78.64.0.0",
+   "United Kingdom": "25.0.0.0",
+   
+   
+
+   
+}
+
 func (h HttpStream) segment_template(
    ext, initial string, rep *dash.Representation,
 ) error {

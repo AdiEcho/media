@@ -10,13 +10,6 @@ import (
    "strings"
 )
 
-var Forward = map[string]string{
-   "Canada": "99.224.0.0",
-   "Denmark": "87.48.0.0",
-   "Norway": "84.208.0.0",
-   "Sweden": "78.64.0.0",
-}
-
 func (w WebAddress) Video(forward string) (*Video, error) {
    req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {

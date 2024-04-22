@@ -31,7 +31,7 @@ func main() {
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.StringVar(&f.forward, "f", "", func() string {
       var b strings.Builder
-      for key, value := range pluto.Forward {
+      for key, value := range internal.Forward {
          if b.Len() >= 1 {
             b.WriteByte('\n')
          }
