@@ -18,7 +18,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   video, err := auth.Video(f.peacock_id)
+   video, err := auth.Video(f.peacock)
    if err != nil {
       return err
    }
@@ -26,21 +26,24 @@ func (f flags) download() error {
    if !ok {
       return errors.New("peacock.VideoPlayout.Akamai")
    }
-   // 1 MPD one
-   media, err := f.h.DashMedia(akamai)
+   req, err := http.NewRequest("", akamai, nil)
+   if err != nil {
+      return err
+   }
+   media, err := f.s.DASH(req)
    if err != nil {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.media_id {
+      if medium.ID == f.representation {
          var node peacock.QueryNode
          err := node.New(f.peacock_id)
          if err != nil {
             return err
          }
-         f.h.Name = node
-         f.h.Poster = video
-         return f.h.DASH(medium)
+         f.s.Name = node
+         f.s.Poster = video
+         return f.s.Download(medium)
       }
    }
    // 2 MPD all

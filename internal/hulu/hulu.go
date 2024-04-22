@@ -3,6 +3,7 @@ package main
 import (
    "154.pages.dev/media/hulu"
    "fmt"
+   "net/http"
    "os"
 )
 
@@ -25,7 +26,7 @@ func (f flags) download() error {
       return err
    }
    auth.Unmarshal()
-   deep, err := auth.DeepLink(f.hulu_id)
+   deep, err := auth.DeepLink(f.hulu)
    if err != nil {
       return err
    }
@@ -33,20 +34,23 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   // 1 MPD one
-   media, err := f.s.DashMedia(play.Stream_URL)
+   req, err := http.NewRequest("", play.Stream_URL, nil)
+   if err != nil {
+      return err
+   }
+   media, err := f.s.DASH(req)
    if err != nil {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.media_id {
+      if medium.ID == f.representation {
          detail, err := auth.Details(deep)
          if err != nil {
             return err
          }
          f.s.Name = <-detail
          f.s.Poster = play
-         return f.s.DASH(medium)
+         return f.s.Download(medium)
       }
    }
    // 2 MPD all

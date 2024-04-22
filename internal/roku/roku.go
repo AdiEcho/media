@@ -4,11 +4,12 @@ import (
    "154.pages.dev/media/roku"
    "errors"
    "fmt"
+   "net/http"
 )
 
 func (f flags) download() error {
    var home roku.HomeScreen
-   err := home.New(f.roku_id)
+   err := home.New(f.roku)
    if err != nil {
       return err
    }
@@ -16,24 +17,27 @@ func (f flags) download() error {
    if !ok {
       return errors.New("roku.HomeScreen.DASH")
    }
-   // 1 MPD one
-   media, err := f.h.DashMedia(video.URL)
+   req, err := http.NewRequest("", video.URL, nil)
+   if err != nil {
+      return err
+   }
+   media, err := f.s.DASH(req)
    if err != nil {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.media_id {
+      if medium.ID == f.representation {
          var site roku.CrossSite
          err := site.New()
          if err != nil {
             return err
          }
-         f.h.Poster, err = site.Playback(f.roku_id)
+         f.s.Poster, err = site.Playback(f.roku)
          if err != nil {
             return err
          }
-         f.h.Name = roku.Namer{home}
-         return f.h.DASH(medium)
+         f.s.Name = roku.Namer{home}
+         return f.s.Download(medium)
       }
    }
    // 2 MPD all

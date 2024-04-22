@@ -27,8 +27,11 @@ func (f flags) download() error {
    if !ok {
       return errors.New("amc.Playback.HttpsDash")
    }
-   // 1 MPD one
-   media, err := f.h.DashMedia(source.Src)
+   req, err := http.NewRequest("", source.Src, nil)
+   if err != nil {
+      return err
+   }
+   media, err := f.s.DASH(req)
    if err != nil {
       return err
    }
@@ -42,9 +45,9 @@ func (f flags) download() error {
          if err != nil {
             return err
          }
-         f.h.Name = video
-         f.h.Poster = play
-         return f.h.DASH(medium)
+         f.s.Name = video
+         f.s.Poster = play
+         return f.s.Download(medium)
       }
    }
    // 2 MPD all

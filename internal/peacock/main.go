@@ -14,7 +14,7 @@ type flags struct {
    s internal.Stream
    home string
    password string
-   id string
+   peacock string
    v log.Level
 }
 
@@ -36,9 +36,9 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.StringVar(&f.id, "b", "", "Peacock ID")
+   flag.StringVar(&f.peacock, "b", "", "Peacock ID")
    flag.StringVar(&f.email, "e", "", "email")
-   flag.StringVar(&f.representation, "i", "", "media ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.password, "p", "", "password")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
@@ -52,7 +52,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.id != "":
+   case f.peacock != "":
       err := f.download()
       if err != nil {
          panic(err)

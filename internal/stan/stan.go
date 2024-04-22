@@ -3,6 +3,7 @@ package main
 import (
    "154.pages.dev/media/stan"
    "fmt"
+   "net/http"
    "os"
 )
 
@@ -20,29 +21,29 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   stream, err := session.Stream(f.program)
+   stream, err := session.Stream(f.stan)
    if err != nil {
       return err
    }
-   video, err := stream.BaseUrl(f.host)
+   var req http.Request
+   req.URL, err = stream.BaseUrl(f.host)
    if err != nil {
       return err
    }
-   // 1 MPD one
-   media, err := f.h.DashMedia(video.String())
+   media, err := f.s.DASH(&req)
    if err != nil {
       return err
    }
    for _, medium := range media {
       if medium.ID == f.representation {
          var program stan.LegacyProgram
-         err := program.New(f.program)
+         err := program.New(f.stan)
          if err != nil {
             return err
          }
-         f.h.Poster = stream
-         f.h.Name = stan.Namer{program}
-         return f.h.DASH(medium)
+         f.s.Poster = stream
+         f.s.Name = stan.Namer{program}
+         return f.s.Download(medium)
       }
    }
    // 2 MPD all

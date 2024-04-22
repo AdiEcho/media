@@ -24,16 +24,19 @@ func (f flags) download() error {
    if !ok {
       return errors.New("plex.OnDemand.DASH")
    }
-   // 1 MPD one
-   media, err := f.h.DashMedia(part.Key)
+   req, err := http.NewRequest("", part.Key, nil)
+   if err != nil {
+      return err
+   }
+   media, err := f.s.DASH(req)
    if err != nil {
       return err
    }
    for _, medium := range media {
       if medium.ID == f.dash {
-         f.h.Poster = part
-         f.h.Name = plex.Namer{match}
-         return f.h.DASH(medium)
+         f.s.Poster = part
+         f.s.Name = plex.Namer{match}
+         return f.s.Download(medium)
       }
    }
    // 2 MPD all

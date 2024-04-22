@@ -13,7 +13,7 @@ type flags struct {
    email string
    s internal.Stream
    home string
-   id hulu.ID
+   hulu hulu.ID
    representation string
    password string
    v log.Level
@@ -37,9 +37,9 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.id, "a", "address")
+   flag.Var(&f.hulu, "a", "address")
    flag.StringVar(&f.email, "e", "", "email")
-   flag.StringVar(&f.representation, "i", "", "media ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.password, "p", "", "password")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
@@ -53,7 +53,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.id.String() != "":
+   case f.hulu.String() != "":
       err := f.download()
       if err != nil {
          panic(err)

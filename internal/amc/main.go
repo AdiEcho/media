@@ -11,10 +11,10 @@ import (
 
 type flags struct {
    email string
-   s internal.Stream
    home string
-   representation string
    password string
+   representation string
+   s internal.Stream
    v log.Level
    web amc.WebAddress
 }

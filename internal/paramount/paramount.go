@@ -10,8 +10,11 @@ func (f flags) dash(app paramount.AppToken) error {
    if err != nil {
       return err
    }
-   // 1 MPD one
-   media, err := f.h.DashMedia(address)
+   req, err := http.NewRequest("", address, nil)
+   if err != nil {
+      return err
+   }
+   media, err := f.h.DASH(req)
    if err != nil {
       return err
    }
@@ -26,7 +29,7 @@ func (f flags) dash(app paramount.AppToken) error {
             return err
          }
          f.h.Name = <-item
-         return f.h.DASH(medium)
+         return f.h.Download(medium)
       }
    }
    // 2 MPD all

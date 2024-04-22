@@ -10,6 +10,17 @@ import (
    "strings"
 )
 
+type flags struct {
+   code bool
+   home string
+   host string
+   stan int64
+   representation string
+   s internal.Stream
+   token bool
+   v log.Level
+}
+
 func (f *flags) New() error {
    var err error
    f.home, err = os.UserHomeDir()
@@ -17,20 +28,9 @@ func (f *flags) New() error {
       return err
    }
    f.home = filepath.ToSlash(f.home)
-   f.h.ClientId = f.home + "/widevine/client_id.bin"
-   f.h.PrivateKey = f.home + "/widevine/private_key.pem"
+   f.s.ClientId = f.home + "/widevine/client_id.bin"
+   f.s.PrivateKey = f.home + "/widevine/private_key.pem"
    return nil
-}
-
-type flags struct {
-   h internal.HttpStream
-   home string
-   representation string
-   v log.Level
-   program int64
-   code bool
-   token bool
-   host string
 }
 
 func main() {
@@ -39,14 +39,14 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.Int64Var(&f.program, "b", 0, "program ID")
-   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
+   flag.Int64Var(&f.stan, "b", 0, "Stan ID")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.BoolVar(&f.code, "code", false, "activation code")
    flag.StringVar(
       &f.host, "h", stan.BaseUrl[0], strings.Join(stan.BaseUrl[1:], "\n"),
    )
-   flag.StringVar(&f.representation, "i", "", "representation ID")
-   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
+   flag.StringVar(&f.representation, "i", "", "representation")
+   flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.BoolVar(&f.token, "token", false, "web token")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
@@ -63,7 +63,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.program >= 1:
+   case f.stan >= 1:
       err := f.download()
       if err != nil {
          panic(err)

@@ -4,6 +4,7 @@ import (
    "154.pages.dev/media/tubi"
    "errors"
    "fmt"
+   "net/http"
 )
 
 func (f flags) download() error {
@@ -27,8 +28,11 @@ func (f flags) download() error {
    if !ok {
       return errors.New("tubi.Content.Video")
    }
-   // 1 MPD one
-   media, err := f.s.DASH(video.Manifest.URL)
+   req, err := http.NewRequest("", video.Manifest.URL, nil)
+   if err != nil {
+      return err
+   }
+   media, err := f.s.DASH(req)
    if err != nil {
       return err
    }
