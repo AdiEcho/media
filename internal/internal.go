@@ -3,6 +3,7 @@ package internal
 import (
    "154.pages.dev/encoding/dash"
    "154.pages.dev/log"
+   "crypto/tls"
    "errors"
    "io"
    "net/http"
@@ -65,13 +66,19 @@ func (h HttpStream) segment_template(
       return err
    }
    meter.Set(len(media))
+   client := http.Client{ // github.com/golang/go/issues/18639
+      Transport: &http.Transport{
+         Proxy: http.ProxyFromEnvironment,
+         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
+      },
+   }
    for _, medium := range media {
       req.URL, err = base.Parse(medium)
       if err != nil {
          return err
       }
       err := func() error {
-         res, err := http.DefaultClient.Do(req)
+         res, err := client.Do(req)
          if err != nil {
             return err
          }

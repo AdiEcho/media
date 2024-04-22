@@ -1,6 +1,7 @@
 # Mubi
 
 1. https://privacy.com
+   - might need to create new card
 2. https://mubi.com
 3. Email address
    - mailsac.com: Sorry, this isn't a valid email address

@@ -2,26 +2,11 @@ package plex
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "net/url"
    "strings"
 )
-
-type Path struct {
-   s string
-}
-
-// https://watch.plex.tv/movie/the-hurt-locker
-// https://watch.plex.tv/watch/movie/the-hurt-locker
-func (p *Path) Set(s string) error {
-   s = strings.TrimPrefix(s, "https://watch.plex.tv")
-   p.s = strings.TrimPrefix(s, "/watch")
-   return nil
-}
-
-func (p Path) String() string {
-   return p.s
-}
 
 func (a Anonymous) Discover(p Path) (*DiscoverMatch, error) {
    req, err := http.NewRequest(
@@ -40,6 +25,9 @@ func (a Anonymous) Discover(p Path) (*DiscoverMatch, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    var match struct {
       MediaContainer struct {
          Metadata []DiscoverMatch
@@ -83,3 +71,19 @@ func (n Namer) Title() string {
 func (n Namer) Year() int {
    return n.D.Year
 }
+type Path struct {
+   s string
+}
+
+// https://watch.plex.tv/movie/the-hurt-locker
+// https://watch.plex.tv/watch/movie/the-hurt-locker
+func (p *Path) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://watch.plex.tv")
+   p.s = strings.TrimPrefix(s, "/watch")
+   return nil
+}
+
+func (p Path) String() string {
+   return p.s
+}
+
