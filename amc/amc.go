@@ -112,9 +112,9 @@ func (Playback) RequestBody(b []byte) ([]byte, error) {
 }
 
 func (p Playback) RequestHeader() (http.Header, error) {
-   h := make(http.Header)
-   h.Set("bcov-auth", p.header.Get("X-AMCN-BC-JWT"))
-   return h, nil
+   head := make(http.Header)
+   head.Set("bcov-auth", p.header.Get("X-AMCN-BC-JWT"))
+   return head, nil
 }
 
 func (p Playback) RequestUrl() (string, bool) {

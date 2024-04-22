@@ -15,90 +15,8 @@ import (
    "text/template"
 )
 
-func (h HttpStream) segment_template(
-   ext, initial string, rep *dash.Representation,
-) error {
-   base, err := url.Parse(rep.GetAdaptationSet().GetPeriod().GetMpd().BaseURL)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest("GET", initial, nil)
-   if err != nil {
-      return err
-   }
-   req.URL = base.ResolveReference(req.URL)
+func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error) {
    res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
-   }
-   file, err := func() (*os.File, error) {
-      s, err := Name(h.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(CleanName(s) + ext)
-   }()
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   key_id, err := write_init(file, res.Body)
-   if err != nil {
-      return err
-   }
-   key, err := h.key(key_id)
-   if err != nil {
-      return err
-   }
-   var meter log.ProgressMeter
-   log.SetTransport(nil)
-   defer log.Transport{}.Set()
-   template, ok := rep.GetSegmentTemplate()
-   if !ok {
-      return errors.New("GetSegmentTemplate")
-   }
-   media, err := template.GetMedia(rep)
-   if err != nil {
-      return err
-   }
-   meter.Set(len(media))
-   client := http.Client{ // github.com/golang/go/issues/18639
-      Transport: &http.Transport{
-         Proxy: http.ProxyFromEnvironment,
-         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
-      },
-   }
-   for _, medium := range media {
-      req.URL, err = base.Parse(medium)
-      if err != nil {
-         return err
-      }
-      err := func() error {
-         res, err := client.Do(req)
-         if err != nil {
-            return err
-         }
-         defer res.Body.Close()
-         if res.StatusCode != http.StatusOK {
-            var b strings.Builder
-            res.Write(&b)
-            return errors.New(b.String())
-         }
-         return write_segment(file, meter.Reader(res), key)
-      }()
-      if err != nil {
-         return err
-      }
-   }
-   return nil
-}
-
-func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
-   res, err := http.Get(url)
    if err != nil {
       return nil, err
    }
@@ -144,28 +62,28 @@ func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error) {
    return reps, nil
 }
 
-func (h HttpStream) DASH(rep *dash.Representation) error {
+func (s Stream) Download(rep *dash.Representation) error {
    ext, ok := rep.Ext()
    if !ok {
       return errors.New("Ext")
    }
    if v, ok := rep.GetSegmentTemplate(); ok {
       if v, ok := v.GetInitialization(rep); ok {
-         return h.segment_template(ext, v, rep)
+         return s.segment_template(ext, v, rep)
       }
    }
-   return h.segment_base(ext, *rep.BaseURL, rep)
+   return s.segment_base(ext, *rep.BaseURL, rep)
 }
 
 
-func (h HttpStream) TimedText(url string) error {
+func (s Stream) TimedText(url string) error {
    res, err := http.Get(url)
    if err != nil {
       return err
    }
    defer res.Body.Close()
    file, err := func() (*os.File, error) {
-      s, err := Name(h.Name)
+      s, err := Name(s.Name)
       if err != nil {
          return nil, err
       }
@@ -220,7 +138,7 @@ type Namer interface {
    Year() int
 }
 
-func (h HttpStream) segment_base(
+func (s Stream) segment_base(
    ext, base_url string, rep *dash.Representation,
 ) error {
    sb := rep.SegmentBase
@@ -235,7 +153,7 @@ func (h HttpStream) segment_base(
    }
    defer res.Body.Close()
    file, err := func() (*os.File, error) {
-      s, err := Name(h.Name)
+      s, err := Name(s.Name)
       if err != nil {
          return nil, err
       }
@@ -249,7 +167,7 @@ func (h HttpStream) segment_base(
    if err != nil {
       return err
    }
-   key, err := h.key(key_id)
+   key, err := s.key(key_id)
    if err != nil {
       return err
    }
@@ -340,4 +258,86 @@ func (f ForwardedFor) String() string {
       b.WriteString(each.IP)
    }
    return b.String()
+}
+
+func (s Stream) segment_template(
+   ext, initial string, rep *dash.Representation,
+) error {
+   base, err := url.Parse(rep.GetAdaptationSet().GetPeriod().GetMpd().BaseURL)
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest("GET", initial, nil)
+   if err != nil {
+      return err
+   }
+   req.URL = base.ResolveReference(req.URL)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return errors.New(res.Status)
+   }
+   file, err := func() (*os.File, error) {
+      s, err := Name(s.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(CleanName(s) + ext)
+   }()
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   key_id, err := write_init(file, res.Body)
+   if err != nil {
+      return err
+   }
+   key, err := s.key(key_id)
+   if err != nil {
+      return err
+   }
+   var meter log.ProgressMeter
+   log.SetTransport(nil)
+   defer log.Transport{}.Set()
+   template, ok := rep.GetSegmentTemplate()
+   if !ok {
+      return errors.New("GetSegmentTemplate")
+   }
+   media, err := template.GetMedia(rep)
+   if err != nil {
+      return err
+   }
+   meter.Set(len(media))
+   client := http.Client{ // github.com/golang/go/issues/18639
+      Transport: &http.Transport{
+         Proxy: http.ProxyFromEnvironment,
+         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
+      },
+   }
+   for _, medium := range media {
+      req.URL, err = base.Parse(medium)
+      if err != nil {
+         return err
+      }
+      err := func() error {
+         res, err := client.Do(req)
+         if err != nil {
+            return err
+         }
+         defer res.Body.Close()
+         if res.StatusCode != http.StatusOK {
+            var b strings.Builder
+            res.Write(&b)
+            return errors.New(b.String())
+         }
+         return write_segment(file, meter.Reader(res), key)
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
 }

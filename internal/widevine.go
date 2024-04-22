@@ -8,15 +8,15 @@ import (
    "os"
 )
 
-func (h HttpStream) key(key_id []byte) ([]byte, error) {
+func (s Stream) key(key_id []byte) ([]byte, error) {
    if key_id == nil {
       return nil, nil
    }
-   private_key, err := os.ReadFile(h.PrivateKey)
+   private_key, err := os.ReadFile(s.PrivateKey)
    if err != nil {
       return nil, err
    }
-   client_id, err := os.ReadFile(h.ClientId)
+   client_id, err := os.ReadFile(s.ClientId)
    if err != nil {
       return nil, err
    }
@@ -25,7 +25,7 @@ func (h HttpStream) key(key_id []byte) ([]byte, error) {
    if err != nil {
       return nil, err
    }
-   license, err := module.License(h.Poster)
+   license, err := module.License(s.Poster)
    if err != nil {
       return nil, err
    }
@@ -38,7 +38,7 @@ func (h HttpStream) key(key_id []byte) ([]byte, error) {
 }
 
 // wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type HttpStream struct {
+type Stream struct {
    ClientId string
    PrivateKey string
    Name Namer

@@ -29,9 +29,9 @@ func (v Video) RequestUrl() (string, bool) {
 }
 
 func (Video) RequestHeader() (http.Header, error) {
-   h := make(http.Header)
-   h.Set("content-type", "application/octet-stream")
-   return h, nil
+   head := make(http.Header)
+   head.Set("content-type", "application/octet-stream")
+   return head, nil
 }
 
 func Core() Video {
