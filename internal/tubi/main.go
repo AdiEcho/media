@@ -10,8 +10,8 @@ import (
 
 type flags struct {
    representation string
-   h internal.HttpStream
-   tubi int
+   s internal.Stream
+   id int
    v log.Level
 }
 
@@ -21,8 +21,8 @@ func (f *flags) New() error {
       return err
    }
    home = filepath.ToSlash(home)
-   f.h.ClientId = home + "/widevine/client_id.bin"
-   f.h.PrivateKey = home + "/widevine/private_key.pem"
+   f.s.ClientId = home + "/widevine/client_id.bin"
+   f.s.PrivateKey = home + "/widevine/private_key.pem"
    return nil
 }
 
@@ -32,15 +32,15 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.IntVar(&f.tubi, "b", 0, "Tubi ID")
+   flag.IntVar(&f.id, "b", 0, "Tubi ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
-   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
+   flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
-   if f.tubi >= 1 {
+   if f.id >= 1 {
       err := f.download()
       if err != nil {
          panic(err)

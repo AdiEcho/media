@@ -10,6 +10,24 @@ import (
    "strings"
 )
 
+type flags struct {
+   base string
+   s internal.Stream
+   representation string
+   v log.Level
+   web pluto.WebAddress
+}
+
+func (f *flags) New() error {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   home = filepath.ToSlash(home)
+   f.s.ClientId = home + "/widevine/client_id.bin"
+   f.s.PrivateKey = home + "/widevine/private_key.pem"
+   return nil
+}
 func main() {
    var f flags
    err := f.New()
@@ -25,10 +43,10 @@ func main() {
       }
       return b.String()
    }())
-   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&pluto.Forward, "f", "", internal.Forward.String())
    flag.StringVar(&f.representation, "i", "", "representation")
-   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
+   flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
@@ -43,21 +61,3 @@ func main() {
    }
 }
 
-type flags struct {
-   base string
-   h internal.HttpStream
-   representation string
-   v log.Level
-   web pluto.WebAddress
-}
-
-func (f *flags) New() error {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   home = filepath.ToSlash(home)
-   f.h.ClientId = home + "/widevine/client_id.bin"
-   f.h.PrivateKey = home + "/widevine/private_key.pem"
-   return nil
-}

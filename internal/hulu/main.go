@@ -11,10 +11,10 @@ import (
 
 type flags struct {
    email string
-   h internal.HttpStream
+   s internal.Stream
    home string
-   hulu_id hulu.ID
-   media_id string
+   id hulu.ID
+   representation string
    password string
    v log.Level
 }
@@ -26,8 +26,8 @@ func (f *flags) New() error {
       return err
    }
    f.home = filepath.ToSlash(f.home)
-   f.h.ClientId = f.home + "/widevine/client_id.bin"
-   f.h.PrivateKey = f.home + "/widevine/private_key.pem"
+   f.s.ClientId = f.home + "/widevine/client_id.bin"
+   f.s.PrivateKey = f.home + "/widevine/private_key.pem"
    return nil
 }
 
@@ -37,13 +37,13 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.hulu_id, "a", "address")
+   flag.Var(&f.id, "a", "address")
    flag.StringVar(&f.email, "e", "", "email")
-   flag.StringVar(&f.media_id, "i", "", "media ID")
+   flag.StringVar(&f.representation, "i", "", "media ID")
    flag.StringVar(&f.password, "p", "", "password")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
-   flag.StringVar(&f.h.PrivateKey, "k", f.h.PrivateKey, "private key")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
+   flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
@@ -53,7 +53,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.hulu_id.String() != "":
+   case f.id.String() != "":
       err := f.download()
       if err != nil {
          panic(err)

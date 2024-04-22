@@ -28,15 +28,15 @@ func (f flags) download() error {
       return errors.New("tubi.Content.Video")
    }
    // 1 MPD one
-   media, err := f.h.DashMedia(video.Manifest.URL)
+   media, err := f.s.DASH(video.Manifest.URL)
    if err != nil {
       return err
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         f.h.Poster = video
-         f.h.Name = tubi.Namer{content}
-         return f.h.DASH(medium)
+         f.s.Poster = video
+         f.s.Name = tubi.Namer{content}
+         return f.s.Download(medium)
       }
    }
    // 2 MPD all

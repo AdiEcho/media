@@ -19,20 +19,20 @@ func (f flags) download() error {
    if !ok {
       return errors.New("pluto.EpisodeClip.DASH")
    }
-   file, err := source.Parse(f.base)
+   var req http.Request
+   req.URL, err = source.Parse(f.base)
    if err != nil {
       return err
    }
-   // 1 MPD one
-   media, err := f.h.DashMedia(file.String())
+   media, err := f.s.DASH(&req)
    if err != nil {
       return err
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         f.h.Name = pluto.Namer{video}
-         f.h.Poster = pluto.Poster{}
-         return f.h.DASH(medium)
+         f.s.Name = pluto.Namer{video}
+         f.s.Poster = pluto.Poster{}
+         return f.s.Download(medium)
       }
    }
    // 2 MPD all

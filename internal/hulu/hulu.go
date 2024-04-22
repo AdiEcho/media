@@ -34,7 +34,7 @@ func (f flags) download() error {
       return err
    }
    // 1 MPD one
-   media, err := f.h.DashMedia(play.Stream_URL)
+   media, err := f.s.DashMedia(play.Stream_URL)
    if err != nil {
       return err
    }
@@ -44,9 +44,9 @@ func (f flags) download() error {
          if err != nil {
             return err
          }
-         f.h.Name = <-detail
-         f.h.Poster = play
-         return f.h.DASH(medium)
+         f.s.Name = <-detail
+         f.s.Poster = play
+         return f.s.DASH(medium)
       }
    }
    // 2 MPD all

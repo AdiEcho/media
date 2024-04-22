@@ -9,22 +9,22 @@ import (
    "path/filepath"
 )
 
+type flags struct {
+   representation string
+   s internal.Stream
+   address plex.Path
+   v log.Level
+}
+
 func (f *flags) New() error {
    home, err := os.UserHomeDir()
    if err != nil {
       return err
    }
    home = filepath.ToSlash(home)
-   f.h.ClientId = home + "/widevine/client_id.bin"
-   f.h.PrivateKey = home + "/widevine/private_key.pem"
+   f.s.ClientId = home + "/widevine/client_id.bin"
+   f.s.PrivateKey = home + "/widevine/private_key.pem"
    return nil
-}
-
-type flags struct {
-   dash string
-   h internal.HttpStream
-   path plex.Path
-   v log.Level
 }
 
 func main() {
@@ -33,16 +33,16 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.path, "a", "plex path")
-   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
+   flag.Var(&f.address, "a", "address")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&plex.Forward, "f", "", internal.Forward.String())
-   flag.StringVar(&f.dash, "i", "", "representation ID")
-   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
+   flag.StringVar(&f.representation, "i", "", "representation")
+   flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
-   if f.path.String() != "" {
+   if f.address.String() != "" {
       err := f.download()
       if err != nil {
          panic(err)

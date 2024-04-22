@@ -10,9 +10,9 @@ import (
 )
 
 type flags struct {
-   media_id string
-   h internal.HttpStream
-   paramount_id string
+   representation string
+   s internal.Stream
+   id string
    v log.Level
 }
 
@@ -22,8 +22,8 @@ func (f *flags) New() error {
       return err
    }
    home = filepath.ToSlash(home)
-   f.h.ClientId = home + "/widevine/client_id.bin"
-   f.h.PrivateKey = home + "/widevine/private_key.pem"
+   f.s.ClientId = home + "/widevine/client_id.bin"
+   f.s.PrivateKey = home + "/widevine/private_key.pem"
    return nil
 }
 
@@ -33,15 +33,15 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.StringVar(&f.paramount_id, "b", "", "Paramount ID")
-   flag.StringVar(&f.media_id, "i", "", "media ID")
+   flag.StringVar(&f.id, "b", "", "Paramount ID")
+   flag.StringVar(&f.representation, "i", "", "media ID")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
-   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
+   flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
-   if f.paramount_id != "" {
+   if f.id != "" {
       var app paramount.AppToken
       err := app.New()
       if err != nil {
