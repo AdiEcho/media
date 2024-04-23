@@ -9,6 +9,7 @@ import (
 )
 
 var BaseUrl = []string{
+   "023-stan.akamaized.net",
    "666-stan.akamaized.net", // geo block
    "aws.stan.video",
    "gec.stan.video",

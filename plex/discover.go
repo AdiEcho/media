@@ -8,6 +8,24 @@ import (
    "strings"
 )
 
+type Path struct {
+   s string
+}
+
+// watch.plex.tv/movie/the-hurt-locker
+// https://watch.plex.tv/movie/the-hurt-locker
+// https://watch.plex.tv/watch/movie/the-hurt-locker
+func (p *Path) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "watch.plex.tv")
+   p.s = strings.TrimPrefix(s, "/watch")
+   return nil
+}
+
+func (p Path) String() string {
+   return p.s
+}
+
 func (a Anonymous) Discover(p Path) (*DiscoverMatch, error) {
    req, err := http.NewRequest(
       "GET", "https://discover.provider.plex.tv/library/metadata/matches", nil,
@@ -71,19 +89,3 @@ func (n Namer) Title() string {
 func (n Namer) Year() int {
    return n.D.Year
 }
-type Path struct {
-   s string
-}
-
-// https://watch.plex.tv/movie/the-hurt-locker
-// https://watch.plex.tv/watch/movie/the-hurt-locker
-func (p *Path) Set(s string) error {
-   s = strings.TrimPrefix(s, "https://watch.plex.tv")
-   p.s = strings.TrimPrefix(s, "/watch")
-   return nil
-}
-
-func (p Path) String() string {
-   return p.s
-}
-

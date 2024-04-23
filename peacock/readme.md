@@ -100,6 +100,8 @@ adb shell chmod +x /data/local/tmp/frida-server
 adb shell su -c /data/local/tmp/frida-server
 ~~~
 
+https://issuetracker.google.com/issues/331256113
+
 ## web
 
 you can get `x-skyott-usertoken` with web client via `/auth/tokens`, but it
