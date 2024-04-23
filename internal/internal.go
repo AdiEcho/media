@@ -15,6 +15,130 @@ import (
    "text/template"
 )
 
+var Forward = ForwardedFor{
+   {"Argentina", "181.0.0.0"},
+   {"Australia", "1.128.0.0"},
+   {"Bolivia", "179.58.0.0"},
+   {"Brazil", "189.0.0.0"},
+   {"Canada", "99.224.0.0"},
+   {"Chile", "191.112.0.0"},
+   {"Colombia", "181.128.0.0"},
+   {"Costa Rica", "201.192.0.0"},
+   {"Denmark", "87.48.0.0"},
+   {"Ecuador", "186.68.0.0"},
+   {"Germany", "53.0.0.0"},
+   {"Guatemala", "190.148.0.0"},
+   {"Ireland", "87.32.0.0"},
+   {"Italy", "79.0.0.0"},
+   {"Mexico", "189.128.0.0"},
+   {"Norway", "88.88.0.0"},
+   {"Peru", "190.232.0.0"},
+   {"South Africa", "41.0.0.0"},
+   {"Spain", "88.0.0.0"},
+   {"Sweden", "78.64.0.0"},
+   {"United Kingdom", "25.0.0.0"},
+   {"Venezuela", "186.88.0.0"},
+}
+
+type ForwardedFor []struct {
+   Country string
+   IP string
+}
+
+func (f ForwardedFor) String() string {
+   var b strings.Builder
+   for _, each := range f {
+      if b.Len() >= 1 {
+         b.WriteByte('\n')
+      }
+      b.WriteString(each.Country)
+      b.WriteByte(' ')
+      b.WriteString(each.IP)
+   }
+   return b.String()
+}
+
+func (s Stream) segment_template(
+   ext, initial string, rep *dash.Representation,
+) error {
+   base, err := url.Parse(rep.GetAdaptationSet().GetPeriod().GetMpd().BaseURL)
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest("GET", initial, nil)
+   if err != nil {
+      return err
+   }
+   req.URL = base.ResolveReference(req.URL)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return errors.New(res.Status)
+   }
+   file, err := func() (*os.File, error) {
+      s, err := Name(s.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(CleanName(s) + ext)
+   }()
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   key_id, err := write_init(file, res.Body)
+   if err != nil {
+      return err
+   }
+   key, err := s.key(key_id)
+   if err != nil {
+      return err
+   }
+   var meter log.ProgressMeter
+   log.SetTransport(nil)
+   defer log.Transport{}.Set()
+   template, ok := rep.GetSegmentTemplate()
+   if !ok {
+      return errors.New("GetSegmentTemplate")
+   }
+   media, err := template.GetMedia(rep)
+   if err != nil {
+      return err
+   }
+   meter.Set(len(media))
+   client := http.Client{ // github.com/golang/go/issues/18639
+      Transport: &http.Transport{
+         Proxy: http.ProxyFromEnvironment,
+         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
+      },
+   }
+   for _, medium := range media {
+      req.URL, err = base.Parse(medium)
+      if err != nil {
+         return err
+      }
+      err := func() error {
+         res, err := client.Do(req)
+         if err != nil {
+            return err
+         }
+         defer res.Body.Close()
+         if res.StatusCode != http.StatusOK {
+            var b strings.Builder
+            res.Write(&b)
+            return errors.New(b.String())
+         }
+         return write_segment(file, meter.Reader(res), key)
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
 func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error) {
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -210,128 +334,6 @@ func (s Stream) segment_base(
          defer res.Body.Close()
          if res.StatusCode != http.StatusPartialContent {
             return errors.New(res.Status)
-         }
-         return write_segment(file, meter.Reader(res), key)
-      }()
-      if err != nil {
-         return err
-      }
-   }
-   return nil
-}
-
-var Forward = ForwardedFor{
-   {"Argentina", "181.0.0.0"},
-   {"Australia", "1.128.0.0"},
-   {"Bolivia", "179.58.0.0"},
-   {"Brazil", "189.0.0.0"},
-   {"Canada", "99.224.0.0"},
-   {"Chile", "191.112.0.0"},
-   {"Colombia", "181.128.0.0"},
-   {"Costa Rica", "201.192.0.0"},
-   {"Denmark", "87.48.0.0"},
-   {"Ecuador", "186.68.0.0"},
-   {"Germany", "53.0.0.0"},
-   {"Guatemala", "190.148.0.0"},
-   {"Ireland", "87.32.0.0"},
-   {"Mexico", "189.128.0.0"},
-   {"Norway", "88.88.0.0"},
-   {"Peru", "190.232.0.0"},
-   {"Sweden", "78.64.0.0"},
-   {"United Kingdom", "25.0.0.0"},
-   {"Venezuela", "186.88.0.0"},
-}
-
-type ForwardedFor []struct {
-   Country string
-   IP string
-}
-
-func (f ForwardedFor) String() string {
-   var b strings.Builder
-   for _, each := range f {
-      if b.Len() >= 1 {
-         b.WriteByte('\n')
-      }
-      b.WriteString(each.Country)
-      b.WriteByte(' ')
-      b.WriteString(each.IP)
-   }
-   return b.String()
-}
-
-func (s Stream) segment_template(
-   ext, initial string, rep *dash.Representation,
-) error {
-   base, err := url.Parse(rep.GetAdaptationSet().GetPeriod().GetMpd().BaseURL)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest("GET", initial, nil)
-   if err != nil {
-      return err
-   }
-   req.URL = base.ResolveReference(req.URL)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
-   }
-   file, err := func() (*os.File, error) {
-      s, err := Name(s.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(CleanName(s) + ext)
-   }()
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   key_id, err := write_init(file, res.Body)
-   if err != nil {
-      return err
-   }
-   key, err := s.key(key_id)
-   if err != nil {
-      return err
-   }
-   var meter log.ProgressMeter
-   log.SetTransport(nil)
-   defer log.Transport{}.Set()
-   template, ok := rep.GetSegmentTemplate()
-   if !ok {
-      return errors.New("GetSegmentTemplate")
-   }
-   media, err := template.GetMedia(rep)
-   if err != nil {
-      return err
-   }
-   meter.Set(len(media))
-   client := http.Client{ // github.com/golang/go/issues/18639
-      Transport: &http.Transport{
-         Proxy: http.ProxyFromEnvironment,
-         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
-      },
-   }
-   for _, medium := range media {
-      req.URL, err = base.Parse(medium)
-      if err != nil {
-         return err
-      }
-      err := func() error {
-         res, err := client.Do(req)
-         if err != nil {
-            return err
-         }
-         defer res.Body.Close()
-         if res.StatusCode != http.StatusOK {
-            var b strings.Builder
-            res.Write(&b)
-            return errors.New(b.String())
          }
          return write_segment(file, meter.Reader(res), key)
       }()
