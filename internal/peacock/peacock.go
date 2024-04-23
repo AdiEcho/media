@@ -4,6 +4,7 @@ import (
    "154.pages.dev/media/peacock"
    "errors"
    "fmt"
+   "net/http"
    "os"
 )
 
@@ -37,7 +38,7 @@ func (f flags) download() error {
    for _, medium := range media {
       if medium.ID == f.representation {
          var node peacock.QueryNode
-         err := node.New(f.peacock_id)
+         err := node.New(f.peacock)
          if err != nil {
             return err
          }

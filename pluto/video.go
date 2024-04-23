@@ -10,15 +10,13 @@ import (
    "strings"
 )
 
-var Forward string
-
-func (w WebAddress) Video() (*Video, error) {
+func (w WebAddress) Video(forward string) (*Video, error) {
    req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
       return nil, err
    }
-   if Forward != "" {
-      req.Header.Set("x-forwarded-for", Forward)
+   if forward != "" {
+      req.Header.Set("x-forwarded-for", forward)
    }
    req.URL.RawQuery = url.Values{
       "appName":           {"web"},

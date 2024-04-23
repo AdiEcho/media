@@ -3,11 +3,12 @@ package main
 import (
    "154.pages.dev/media/nbc"
    "fmt"
+   "net/http"
 )
 
 func (f flags) download() error {
    var meta nbc.Metadata
-   err := meta.New(f.nbc_id)
+   err := meta.New(f.nbc)
    if err != nil {
       return err
    }
@@ -15,16 +16,19 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   // 1 MPD one
-   media, err := f.h.DashMedia(demand.PlaybackUrl)
+   req, err := http.NewRequest("", demand.PlaybackUrl, nil)
+   if err != nil {
+      return err
+   }
+   media, err := f.s.DASH(req)
    if err != nil {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.media_id {
-         f.h.Name = meta
-         f.h.Poster = nbc.Core()
-         return f.h.DASH(medium)
+      if medium.ID == f.representation {
+         f.s.Name = meta
+         f.s.Poster = nbc.Core()
+         return f.s.Download(medium)
       }
    }
    // 2 MPD all

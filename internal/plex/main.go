@@ -10,10 +10,11 @@ import (
 )
 
 type flags struct {
+   address plex.Path
    representation string
    s internal.Stream
-   address plex.Path
    v log.Level
+   forward string
 }
 
 func (f *flags) New() error {
@@ -35,7 +36,7 @@ func main() {
    }
    flag.Var(&f.address, "a", "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
-   flag.StringVar(&plex.Forward, "f", "", internal.Forward.String())
+   flag.StringVar(&f.forward, "f", "", internal.Forward.String())
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")

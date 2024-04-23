@@ -4,6 +4,7 @@ import (
    "154.pages.dev/media/plex"
    "errors"
    "fmt"
+   "net/http"
 )
 
 func (f flags) download() error {
@@ -12,11 +13,11 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   match, err := anon.Discover(f.path)
+   match, err := anon.Discover(f.address)
    if err != nil {
       return err
    }
-   video, err := anon.Video(match)
+   video, err := anon.Video(match, f.forward)
    if err != nil {
       return err
    }
@@ -28,12 +29,15 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
+   if f.forward != "" {
+      req.Header.Set("x-forwarded-for", f.forward)
+   }
    media, err := f.s.DASH(req)
    if err != nil {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.dash {
+      if medium.ID == f.representation {
          f.s.Poster = part
          f.s.Name = plex.Namer{match}
          return f.s.Download(medium)

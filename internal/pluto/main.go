@@ -16,6 +16,7 @@ type flags struct {
    representation string
    v log.Level
    web pluto.WebAddress
+   forward string
 }
 
 func (f *flags) New() error {
@@ -28,6 +29,7 @@ func (f *flags) New() error {
    f.s.PrivateKey = home + "/widevine/private_key.pem"
    return nil
 }
+
 func main() {
    var f flags
    err := f.New()
@@ -44,7 +46,7 @@ func main() {
       return b.String()
    }())
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
-   flag.StringVar(&pluto.Forward, "f", "", internal.Forward.String())
+   flag.StringVar(&f.forward, "f", "", internal.Forward.String())
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")

@@ -4,6 +4,7 @@ import (
    "154.pages.dev/media/amc"
    "errors"
    "fmt"
+   "net/http"
    "os"
 )
 
@@ -36,7 +37,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.media_id {
+      if medium.ID == f.representation {
          content, err := auth.Content(f.web.Path)
          if err != nil {
             return err

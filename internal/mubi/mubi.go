@@ -3,6 +3,7 @@ package main
 import (
    "154.pages.dev/media/mubi"
    "fmt"
+   "net/http"
    "os"
 )
 
@@ -18,35 +19,38 @@ func (f flags) download() error {
    secure.Unmarshal()
    // 1 VTT one
    for _, text := range secure.V.Text_Track_URLs {
-      if text.ID == f.media_id {
+      if text.ID == f.representation {
          film, err := f.web.Film()
          if err != nil {
             return err
          }
-         f.h.Name = mubi.Namer{film}
-         return f.h.TimedText(text.URL)
+         f.s.Name = mubi.Namer{film}
+         return f.s.TimedText(text.URL)
       }
    }
-   // 2 MPD one
-   media, err := f.h.DashMedia(secure.V.URL)
+   req, err := http.NewRequest("", secure.V.URL, nil)
+   if err != nil {
+      return err
+   }
+   media, err := f.s.DASH(req)
    if err != nil {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.media_id {
+      if medium.ID == f.representation {
          film, err := f.web.Film()
          if err != nil {
             return err
          }
-         f.h.Name = mubi.Namer{film}
+         f.s.Name = mubi.Namer{film}
          var auth mubi.Authenticate
          auth.Data, err = os.ReadFile(f.home + "/mubi.json")
          if err != nil {
             return err
          }
          auth.Unmarshal()
-         f.h.Poster = auth
-         return f.h.DASH(medium)
+         f.s.Poster = auth
+         return f.s.Download(medium)
       }
    }
    // 3 VTT all

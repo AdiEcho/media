@@ -11,7 +11,7 @@ func TestVideo(t *testing.T) {
    for _, test := range video_tests {
       var web WebAddress
       web.Set(test.url)
-      video, err := web.Video()
+      video, err := web.Video("")
       if err != nil {
          t.Fatal(err)
       }

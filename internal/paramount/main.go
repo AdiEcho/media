@@ -12,7 +12,7 @@ import (
 type flags struct {
    representation string
    s internal.Stream
-   id string
+   paramount string
    v log.Level
 }
 
@@ -33,15 +33,15 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.StringVar(&f.id, "b", "", "Paramount ID")
-   flag.StringVar(&f.representation, "i", "", "media ID")
+   flag.StringVar(&f.paramount, "b", "", "Paramount ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
-   if f.id != "" {
+   if f.paramount != "" {
       var app paramount.AppToken
       err := app.New()
       if err != nil {

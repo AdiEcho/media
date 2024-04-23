@@ -10,14 +10,14 @@ import (
 )
 
 type flags struct {
-   media_id string
-   h internal.HttpStream
+   auth bool
+   code bool
+   home string
+   representation string
+   s internal.Stream
+   secure bool
    v log.Level
    web mubi.WebAddress
-   code bool
-   auth bool
-   secure bool
-   home string
 }
 
 func (f *flags) New() error {
@@ -27,8 +27,8 @@ func (f *flags) New() error {
       return err
    }
    f.home = filepath.ToSlash(f.home)
-   f.h.ClientId = f.home + "/widevine/client_id.bin"
-   f.h.PrivateKey = f.home + "/widevine/private_key.pem"
+   f.s.ClientId = f.home + "/widevine/client_id.bin"
+   f.s.PrivateKey = f.home + "/widevine/private_key.pem"
    return nil
 }
 
@@ -41,11 +41,11 @@ func main() {
    flag.Var(&f.web, "a", "address")
    flag.BoolVar(&f.auth, "auth", false, "authenticate")
    flag.BoolVar(&f.code, "code", false, "link code")
-   flag.StringVar(&f.media_id, "i", "", "media ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
    flag.BoolVar(&f.secure, "s", false, "secure URL")
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.StringVar(&f.h.ClientId, "c", f.h.ClientId, "client ID")
-   flag.StringVar(&f.h.PrivateKey, "p", f.h.PrivateKey, "private key")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
+   flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()

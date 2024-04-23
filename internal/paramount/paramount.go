@@ -3,10 +3,11 @@ package main
 import (
    "154.pages.dev/media/paramount"
    "fmt"
+   "net/http"
 )
 
 func (f flags) dash(app paramount.AppToken) error {
-   address, err := paramount.DashCenc(f.paramount_id)
+   address, err := paramount.DashCenc(f.paramount)
    if err != nil {
       return err
    }
@@ -14,22 +15,22 @@ func (f flags) dash(app paramount.AppToken) error {
    if err != nil {
       return err
    }
-   media, err := f.h.DASH(req)
+   media, err := f.s.DASH(req)
    if err != nil {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.media_id {
-         f.h.Poster, err = app.Session(f.paramount_id)
+      if medium.ID == f.representation {
+         f.s.Poster, err = app.Session(f.paramount)
          if err != nil {
             return err
          }
-         item, err := app.Item(f.paramount_id)
+         item, err := app.Item(f.paramount)
          if err != nil {
             return err
          }
-         f.h.Name = <-item
-         return f.h.Download(medium)
+         f.s.Name = <-item
+         return f.s.Download(medium)
       }
    }
    // 2 MPD all

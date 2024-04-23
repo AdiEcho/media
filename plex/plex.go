@@ -7,18 +7,16 @@ import (
    "net/url"
 )
 
-var Forward string
-
-func (a Anonymous) Video(match *DiscoverMatch) (*OnDemand, error) {
+func (a Anonymous) Video(d *DiscoverMatch, forward string) (*OnDemand, error) {
    req, err := http.NewRequest("GET", "https://vod.provider.plex.tv", nil)
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/library/metadata/" + match.RatingKey
+   req.URL.Path = "/library/metadata/" + d.RatingKey
    req.Header.Set("accept", "application/json")
    req.Header.Set("x-plex-token", a.AuthToken)
-   if Forward != "" {
-      req.Header.Set("x-forwarded-for", Forward)
+   if forward != "" {
+      req.Header.Set("x-forwarded-for", forward)
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {

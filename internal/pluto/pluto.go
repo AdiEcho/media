@@ -8,7 +8,7 @@ import (
 )
 
 func (f flags) download() error {
-   video, err := f.web.Video()
+   video, err := f.web.Video(f.forward)
    if err != nil {
       return err
    }
