@@ -27,3 +27,5 @@ country = New Zealand
 19. start your free trial
 
 ! Payment Declined by Payment Gateway due to following reason : DECLINED
+
+even with brand new card

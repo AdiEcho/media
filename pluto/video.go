@@ -10,6 +10,33 @@ import (
    "strings"
 )
 
+// ex-machina-2015-1-1-ptv1
+// head-first-1998-1-2
+// king-of-queens
+// pilot-1998-1-1-ptv8
+func (s *Slug) atoi() error {
+   split := strings.Split(s.Slug, "-")
+   slices.Reverse(split)
+   if strings.HasPrefix(split[0], "ptv") {
+      split = split[1:]
+   }
+   var err error
+   s.episode, err = strconv.Atoi(split[0])
+   if err != nil {
+      return err
+   }
+   s.season, err = strconv.Atoi(split[1])
+   if err != nil {
+      return err
+   }
+   // some items just dont have a date:
+   // bound-paramount-1-1
+   // not just missing from the slug, missing EVERYWHERE, both on web and
+   // Android
+   s.year, _ = strconv.Atoi(split[2])
+   return nil
+}
+
 func (w WebAddress) Video(forward string) (*Video, error) {
    req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
@@ -65,32 +92,6 @@ func (w WebAddress) Video(forward string) (*Video, error) {
       return nil, err
    }
    return &demand, nil
-}
-
-// ex-machina-2015-1-1-ptv1
-// head-first-1998-1-2
-// king-of-queens
-// pilot-1998-1-1-ptv8
-func (s *Slug) atoi() error {
-   split := strings.Split(s.Slug, "-")
-   slices.Reverse(split)
-   if strings.HasPrefix(split[0], "ptv") {
-      split = split[1:]
-   }
-   var err error
-   s.episode, err = strconv.Atoi(split[0])
-   if err != nil {
-      return err
-   }
-   s.season, err = strconv.Atoi(split[1])
-   if err != nil {
-      return err
-   }
-   s.year, err = strconv.Atoi(split[2])
-   if err != nil {
-      return err
-   }
-   return nil
 }
 
 func (s *Slug) UnmarshalText(text []byte) error {
