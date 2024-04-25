@@ -139,6 +139,7 @@ func (s Stream) segment_template(
    }
    return nil
 }
+
 func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error) {
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -222,44 +223,6 @@ func (s Stream) TimedText(url string) error {
       return err
    }
    return nil
-}
-
-var NameFormat = 
-   "{{if .Show}}" +
-      "{{.Show}} - {{.Season}} {{.Episode}} - {{.Title}}" +
-   "{{else}}" +
-      "{{.Title}} - {{.Year}}" +
-   "{{end}}"
-
-func CleanName(s string) string {
-   mapping := func(r rune) rune {
-      if strings.ContainsRune(`"*/:<>?\|`, r) {
-         return '-'
-      }
-      return r
-   }
-   return strings.Map(mapping, s)
-}
-
-func Name(n Namer) (string, error) {
-   text, err := new(template.Template).Parse(NameFormat)
-   if err != nil {
-      return "", err
-   }
-   var b strings.Builder
-   err = text.Execute(&b, n)
-   if err != nil {
-      return "", err
-   }
-   return b.String(), nil
-}
-
-type Namer interface {
-   Show() string
-   Season() int
-   Episode() int
-   Title() string
-   Year() int
 }
 
 func (s Stream) segment_base(
