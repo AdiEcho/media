@@ -1,11 +1,22 @@
 package tubi
 
 import (
+   "errors"
    "net/http"
    "slices"
    "strconv"
    "strings"
 )
+
+func (c Content) Video() (*VideoResource, error) {
+   if len(c.Video_Resources) == 0 {
+      return nil, errors.New(".video_resources")
+   }
+   slices.SortFunc(c.Video_Resources, func(a, b VideoResource) int {
+      return int(b.Resolution - a.Resolution)
+   })
+   return &c.Video_Resources[0], nil
+}
 
 type Resolution int
 
@@ -47,14 +58,4 @@ func (v VideoResource) RequestUrl() (string, bool) {
       return v.URL, true
    }
    return "", false
-}
-
-func (c Content) Video() (*VideoResource, bool) {
-   if len(c.Video_Resources) == 0 {
-      return nil, false
-   }
-   slices.SortFunc(c.Video_Resources, func(a, b VideoResource) int {
-      return int(b.Resolution - a.Resolution)
-   })
-   return &c.Video_Resources[0], true
 }

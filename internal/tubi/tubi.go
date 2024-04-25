@@ -24,9 +24,9 @@ func (f flags) download() error {
          return errors.New("tubi.Content.Get")
       }
    }
-   video, ok := content.Video()
-   if !ok {
-      return errors.New("tubi.Content.Video")
+   video, err := content.Video()
+   if err != nil {
+      return err
    }
    req, err := http.NewRequest("", video.Manifest.URL, nil)
    if err != nil {

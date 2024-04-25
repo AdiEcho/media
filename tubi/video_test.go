@@ -37,9 +37,9 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   video, ok := cms.Video()
-   if !ok {
-      t.Fatal("Content.Video")
+   video, err := cms.Video()
+   if err != nil {
+      t.Fatal(err)
    }
    license, err := module.License(video)
    if err != nil {
