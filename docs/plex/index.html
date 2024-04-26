@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/plex<span class="navbar-right">
-          v1.8.6 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.7 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package plex</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/plex&#34;</span></pre>
@@ -25,7 +25,7 @@
       <ul>
           <li><a href="#Anonymous.Discover">func (a Anonymous) Discover(p Path) (*DiscoverMatch, error)</a></li>
           <li><a href="#Anonymous.New">func (a *Anonymous) New() error</a></li>
-          <li><a href="#Anonymous.Video">func (a Anonymous) Video(match *DiscoverMatch) (*OnDemand, error)</a></li>
+          <li><a href="#Anonymous.Video">func (a Anonymous) Video(d *DiscoverMatch, forward string) (*OnDemand, error)</a></li>
           </ul>
       </li>
   <li>
@@ -73,7 +73,7 @@
   <h4 id="Anonymous.New">func (*Anonymous) New</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Anonymous"><span class="nx">Anonymous</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h4 id="Anonymous.Video">func (Anonymous) Video</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Anonymous"><span class="nx">Anonymous</span></a><span class="p">)</span> <span class="nf">Video</span><span class="p">(</span><span class="nx">match</span> <span class="o">*</span><a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Anonymous"><span class="nx">Anonymous</span></a><span class="p">)</span> <span class="nf">Video</span><span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DiscoverMatch"><span class="nx">DiscoverMatch</span></a><span class="p">,</span> <span class="nx">forward</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h3 id="DiscoverMatch">type DiscoverMatch</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">DiscoverMatch</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="DiscoverMatch.GrandparentTitle"><span class="nx">GrandparentTitle</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
@@ -125,7 +125,8 @@
 </span><span class="c1"></span><span class="p">}</span></pre>
     <h4 id="Path.Set">func (*Path) Set</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><a href="#Path"><span class="nx">Path</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <p><a href="https://watch.plex.tv/movie/the-hurt-locker">https://watch.plex.tv/movie/the-hurt-locker</a>
+  <p>watch.plex.tv/movie/the-hurt-locker
+<a href="https://watch.plex.tv/movie/the-hurt-locker">https://watch.plex.tv/movie/the-hurt-locker</a>
 <a href="https://watch.plex.tv/watch/movie/the-hurt-locker">https://watch.plex.tv/watch/movie/the-hurt-locker</a>
 <h4 id="Path.String">func (Path) String</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#Path"><span class="nx">Path</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>

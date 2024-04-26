@@ -14,60 +14,74 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/internal<span class="navbar-right">
-          v1.8.6 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.7 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package internal</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/internal&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
-  <li><a href="#pkg-variables">Variables</a></li><li><a href="#CleanName">func CleanName(s string) string</a></li>
-  <li><a href="#Name">func Name(n Namer) (string, error)</a></li>
-  <li>
-      <a href="#HttpStream">type HttpStream</a>
+  <li><a href="#pkg-variables">Variables</a></li><li>
+      <a href="#ForwardedFor">type ForwardedFor</a>
       <ul>
-          <li><a href="#HttpStream.DASH">func (h HttpStream) DASH(rep *dash.Representation) error</a></li>
-          <li><a href="#HttpStream.DashMedia">func (h *HttpStream) DashMedia(url string) ([]*dash.Representation, error)</a></li>
-          <li><a href="#HttpStream.TimedText">func (h HttpStream) TimedText(url string) error</a></li>
+          <li><a href="#ForwardedFor.String">func (f ForwardedFor) String() string</a></li>
           </ul>
       </li>
   <li>
-      <a href="#Namer">type Namer</a>
+      <a href="#Stream">type Stream</a>
+      <ul>
+          <li><a href="#Stream.DASH">func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error)</a></li>
+          <li><a href="#Stream.Download">func (s Stream) Download(rep *dash.Representation) error</a></li>
+          <li><a href="#Stream.TimedText">func (s Stream) TimedText(url string) error</a></li>
+          </ul>
       </li>
   </ul><h3 id="pkg-variables">Variables</h3>
-  <pre class="chroma"><span class="kd">var</span> <span id="NameFormat"><span class="nx">NameFormat</span></span> <span class="p">=</span> <span class="s">&#34;{{if .Show}}&#34;</span> <span class="o">+</span>
-	<span class="s">&#34;{{.Show}} - {{.Season}} {{.Episode}} - {{.Title}}&#34;</span> <span class="o">+</span>
-	<span class="s">&#34;{{else}}&#34;</span> <span class="o">+</span>
-	<span class="s">&#34;{{.Title}} - {{.Year}}&#34;</span> <span class="o">+</span>
-	<span class="s">&#34;{{end}}&#34;</span></pre>
-  <h3 id="pkg-functions">Functions</h3>
-  <h3 id="CleanName">func CleanName</h3>
-    <pre class="chroma"><span class="kd">func</span> <span class="nf">CleanName</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-    <h3 id="Name">func Name</h3>
-    <pre class="chroma"><span class="kd">func</span> <span class="nf">Name</span><span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-    <h3 id="pkg-types">Types</h3>
-  <h3 id="HttpStream">type HttpStream</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">HttpStream</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="HttpStream.ClientId"><span class="nx">ClientId</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="HttpStream.PrivateKey"><span class="nx">PrivateKey</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="HttpStream.Name"><span class="nx">Name</span></span>       <a href="#Namer"><span class="nx">Namer</span></a>
-	<span id="HttpStream.Poster"><span class="nx">Poster</span></span>     <a href="https://pkg.go.dev/154.pages.dev/widevine"><span class="nx">widevine</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/widevine#Poster"><span class="nx">Poster</span></a>
+  <pre class="chroma"><span class="kd">var</span> <span id="Forward"><span class="nx">Forward</span></span> <span class="p">=</span> <a href="#ForwardedFor"><span class="nx">ForwardedFor</span></a><span class="p">{</span>
+	<span class="p">{</span><span class="s">&#34;Argentina&#34;</span><span class="p">,</span> <span class="s">&#34;181.0.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Australia&#34;</span><span class="p">,</span> <span class="s">&#34;1.128.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Bolivia&#34;</span><span class="p">,</span> <span class="s">&#34;179.58.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Brazil&#34;</span><span class="p">,</span> <span class="s">&#34;189.0.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Canada&#34;</span><span class="p">,</span> <span class="s">&#34;99.224.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Chile&#34;</span><span class="p">,</span> <span class="s">&#34;191.112.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Colombia&#34;</span><span class="p">,</span> <span class="s">&#34;181.128.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Costa Rica&#34;</span><span class="p">,</span> <span class="s">&#34;201.192.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Denmark&#34;</span><span class="p">,</span> <span class="s">&#34;87.48.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Ecuador&#34;</span><span class="p">,</span> <span class="s">&#34;186.68.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Germany&#34;</span><span class="p">,</span> <span class="s">&#34;53.0.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Guatemala&#34;</span><span class="p">,</span> <span class="s">&#34;190.148.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Ireland&#34;</span><span class="p">,</span> <span class="s">&#34;87.32.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Italy&#34;</span><span class="p">,</span> <span class="s">&#34;79.0.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Mexico&#34;</span><span class="p">,</span> <span class="s">&#34;189.128.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Norway&#34;</span><span class="p">,</span> <span class="s">&#34;88.88.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Peru&#34;</span><span class="p">,</span> <span class="s">&#34;190.232.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;South Africa&#34;</span><span class="p">,</span> <span class="s">&#34;41.0.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Spain&#34;</span><span class="p">,</span> <span class="s">&#34;88.0.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Sweden&#34;</span><span class="p">,</span> <span class="s">&#34;78.64.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;United Kingdom&#34;</span><span class="p">,</span> <span class="s">&#34;25.0.0.0&#34;</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">&#34;Venezuela&#34;</span><span class="p">,</span> <span class="s">&#34;186.88.0.0&#34;</span><span class="p">},</span>
+<span class="p">}</span></pre>
+  <h3 id="pkg-types">Types</h3>
+  <h3 id="ForwardedFor">type ForwardedFor</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">ForwardedFor</span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+	<span id="ForwardedFor.Country"><span class="nx">Country</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="ForwardedFor.IP"><span class="nx">IP</span></span>      <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="ForwardedFor.String">func (ForwardedFor) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <a href="#ForwardedFor"><span class="nx">ForwardedFor</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h3 id="Stream">type Stream</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Stream</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Stream.ClientId"><span class="nx">ClientId</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Stream.PrivateKey"><span class="nx">PrivateKey</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Stream.Name"><span class="nx">Name</span></span>       <a href="https://pkg.go.dev/154.pages.dev/encoding"><span class="nx">encoding</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding#Namer"><span class="nx">Namer</span></a>
+	<span id="Stream.Poster"><span class="nx">Poster</span></span>     <a href="https://pkg.go.dev/154.pages.dev/widevine"><span class="nx">widevine</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/widevine#Poster"><span class="nx">Poster</span></a>
 <span class="p">}</span></pre>
     <p>wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-<h4 id="HttpStream.DASH">func (HttpStream) DASH</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">h</span> <a href="#HttpStream"><span class="nx">HttpStream</span></a><span class="p">)</span> <span class="nf">DASH</span><span class="p">(</span><span class="nx">rep</span> <span class="o">*</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash"><span class="nx">dash</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash#Representation"><span class="nx">Representation</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="HttpStream.DashMedia">func (*HttpStream) DashMedia</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">h</span> <span class="o">*</span><a href="#HttpStream"><span class="nx">HttpStream</span></a><span class="p">)</span> <span class="nf">DashMedia</span><span class="p">(</span><span class="nx">url</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash"><span class="nx">dash</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash#Representation"><span class="nx">Representation</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="HttpStream.TimedText">func (HttpStream) TimedText</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">h</span> <a href="#HttpStream"><span class="nx">HttpStream</span></a><span class="p">)</span> <span class="nf">TimedText</span><span class="p">(</span><span class="nx">url</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h3 id="Namer">type Namer</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">Namer</span> <span class="kd">interface</span> <span class="p">{</span>
-	<span id="Namer.Show"><span class="nf">Show</span></span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="Namer.Season"><span class="nf">Season</span></span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
-	<span id="Namer.Episode"><span class="nf">Episode</span></span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
-	<span id="Namer.Title"><span class="nf">Title</span></span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="Namer.Year"><span class="nf">Year</span></span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
-<span class="p">}</span></pre>
-    <h3 id="pkg-directories">Directories</h3>
+<h4 id="Stream.DASH">func (*Stream) DASH</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><a href="#Stream"><span class="nx">Stream</span></a><span class="p">)</span> <span class="nf">DASH</span><span class="p">(</span><span class="nx">req</span> <span class="o">*</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Request"><span class="nx">Request</span></a><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash"><span class="nx">dash</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash#Representation"><span class="nx">Representation</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Stream.Download">func (Stream) Download</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#Stream"><span class="nx">Stream</span></a><span class="p">)</span> <span class="nf">Download</span><span class="p">(</span><span class="nx">rep</span> <span class="o">*</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash"><span class="nx">dash</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash#Representation"><span class="nx">Representation</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Stream.TimedText">func (Stream) TimedText</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#Stream"><span class="nx">Stream</span></a><span class="p">)</span> <span class="nf">TimedText</span><span class="p">(</span><span class="nx">url</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h3 id="pkg-directories">Directories</h3>
 
 <table>
   <tbody>
@@ -89,10 +103,6 @@
       </tr>
     <tr>
         <td><a href="paramount">paramount</a></td>
-        <td></td>
-      </tr>
-    <tr>
-        <td><a href="peacock">peacock</a></td>
         <td></td>
       </tr>
     <tr>

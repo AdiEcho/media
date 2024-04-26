@@ -1,6 +1,7 @@
 package internal
 
 import (
+   "154.pages.dev/encoding"
    "154.pages.dev/encoding/dash"
    "154.pages.dev/log"
    "crypto/tls"
@@ -12,7 +13,6 @@ import (
    "slices"
    "strconv"
    "strings"
-   "text/template"
 )
 
 var Forward = ForwardedFor{
@@ -79,11 +79,11 @@ func (s Stream) segment_template(
       return errors.New(res.Status)
    }
    file, err := func() (*os.File, error) {
-      s, err := Name(s.Name)
+      s, err := encoding.Name(s.Name)
       if err != nil {
          return nil, err
       }
-      return os.Create(CleanName(s) + ext)
+      return os.Create(encoding.Clean(s) + ext)
    }()
    if err != nil {
       return err
@@ -208,11 +208,11 @@ func (s Stream) TimedText(url string) error {
    }
    defer res.Body.Close()
    file, err := func() (*os.File, error) {
-      s, err := Name(s.Name)
+      s, err := encoding.Name(s.Name)
       if err != nil {
          return nil, err
       }
-      return os.Create(CleanName(s) + ".vtt")
+      return os.Create(encoding.Clean(s) + ".vtt")
    }()
    if err != nil {
       return err
@@ -240,11 +240,11 @@ func (s Stream) segment_base(
    }
    defer res.Body.Close()
    file, err := func() (*os.File, error) {
-      s, err := Name(s.Name)
+      s, err := encoding.Name(s.Name)
       if err != nil {
          return nil, err
       }
-      return os.Create(CleanName(s) + ext)
+      return os.Create(encoding.Clean(s) + ext)
    }()
    if err != nil {
       return err

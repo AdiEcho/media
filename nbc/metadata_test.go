@@ -1,7 +1,7 @@
 package nbc
 
 import (
-   "154.pages.dev/media/internal"
+   "154.pages.dev/encoding"
    "fmt"
    "testing"
    "time"
@@ -23,7 +23,7 @@ func TestMetadata(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(internal.Name(meta))
+      fmt.Println(encoding.Name(meta))
       time.Sleep(time.Second)
    }
 }

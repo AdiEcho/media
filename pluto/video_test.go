@@ -1,7 +1,7 @@
 package pluto
 
 import (
-   "154.pages.dev/media/internal"
+   "154.pages.dev/encoding"
    "fmt"
    "testing"
    "time"
@@ -16,7 +16,7 @@ func TestVideo(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", video)
-      name, err := internal.Name(Namer{video})
+      name, err := encoding.Name(Namer{video})
       if err != nil {
          t.Fatal(err)
       }

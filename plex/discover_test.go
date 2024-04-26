@@ -1,7 +1,7 @@
 package plex
 
 import (
-   "154.pages.dev/media/internal"
+   "154.pages.dev/encoding"
    "fmt"
    "testing"
    "time"
@@ -24,7 +24,7 @@ func TestDiscover(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := internal.Name(Namer{match})
+      name, err := encoding.Name(Namer{match})
       if err != nil {
          t.Fatal(err)
       }

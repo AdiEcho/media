@@ -1,6 +1,7 @@
 package internal
 
 import (
+   "154.pages.dev/encoding"
    "154.pages.dev/widevine"
    "encoding/hex"
    "errors"
@@ -41,6 +42,6 @@ func (s Stream) key(key_id []byte) ([]byte, error) {
 type Stream struct {
    ClientId string
    PrivateKey string
-   Name Namer
+   Name encoding.Namer
    Poster widevine.Poster
 }
