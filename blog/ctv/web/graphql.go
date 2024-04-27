@@ -50,127 +50,15 @@ func main() {
 }
 
 const hello = `
-  query resolvePath(
-    $path: String!
-    $subscriptions: [Subscription]!
-    $maturity: Maturity!
-    $language: Language!
-    $authenticationState: AuthenticationState!
-    $playbackLanguage: PlaybackLanguage!
-    $page: Int = 0
-  )
-  @uaContext(
-    subscriptions: $subscriptions
-    maturity: $maturity
-    language: $language
-    authenticationState: $authenticationState
-    playbackLanguage: $playbackLanguage
-  ) {
+  query resolvePath($path: String!) {
     resolvedPath(path: $path) {
-      redirected
-      path
-      segments {
-        position
-        content {
-          title
-          id
-          path
-        }
-      }
       lastSegment {
-        position
         content {
-          id
-          title
-          path
-          __typename
-          ... on AceWebContent {
-            path
-          }
           ... on AxisObject {
-            __typename
-            description
-            axisId
-            ... on AxisContent {
-              keywords
-              seasonNumber
-              episodeNumber
-              contentType
-            }
             ... on AxisMedia {
-              keywords
               firstPlayableContent {
-                id
                 axisId
-                badges {
-                  title
-                  label
-                }
               }
-            }
-          }
-          ... on Section {
-            containerType
-            secondNavigation {
-              title
-              renderTitleAs
-              titleImage {
-                __typename
-                id
-                url
-              }
-            }
-          }
-        }
-      }
-      searchResults {
-        ... on Medias {
-          page(page: $page) {
-            totalItemCount
-            totalPageCount
-            hasNextPage
-            items {
-              id
-              title
-              summary
-              agvotCode
-              qfrCode
-              axisId
-              path
-              posterImages: images(formats: POSTER) {
-                url
-              }
-              squareImages: images(formats: SQUARE) {
-                url
-              }
-              thumbnailImages: images(formats: THUMBNAIL) {
-                url
-              }
-              badges {
-                title
-                label
-              }
-              genres {
-                name
-              }
-              firstAirYear
-              originatingNetworkLogoId
-              heroBrandLogoId
-              seasons {
-                id
-              }
-            }
-          }
-        }
-        ... on Articles {
-          page(page: $page) {
-            totalItemCount
-            totalPageCount
-            hasNextPage
-            items {
-              id
-              title
-              path
             }
           }
         }

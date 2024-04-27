@@ -1,0 +1,43 @@
+{
+  "data": {
+    "resolvedPath": {
+      "redirected": false,
+      "path": "/movies/the-girl-with-the-dragon-tattoo-2011",
+      "segments": [
+        {
+          "position": 0,
+          "content": {
+            "title": "Movies",
+            "id": "contentid/ca.ctv.movies",
+            "path": "/movies"
+          }
+        },
+        {
+          "position": 1,
+          "content": {
+            "title": "The Girl with the Dragon Tattoo (2011)",
+            "id": "contentid/axis-media-43239",
+            "path": "/movies/the-girl-with-the-dragon-tattoo-2011"
+          }
+        }
+      ],
+      "lastSegment": {
+        "position": 1,
+        "content": {
+          "id": "contentid/axis-media-43239",
+          "title": "The Girl with the Dragon Tattoo (2011)",
+          "path": "/movies/the-girl-with-the-dragon-tattoo-2011",
+          "__typename": "AxisMedia",
+          "description": "Disgraced financial reporter Mikael Blomkvist (Daniel Craig) finds a chance to redeem his honor after being hired by wealthy Swedish industrialist Henrik Vanger (Christopher Plummer) to solve the 40-year-old murder of Vanger's niece, Harriet. Vanger believes that Harriet was killed by a member of his own family. Eventually joining Blomkvist on his dangerous quest for the truth is Lisbeth Salander (Rooney Mara), an unusual but ingenious investigator whose fragile trust is not easily won.",
+          "axisId": 43239,
+          "keywords": [],
+          "firstPlayableContent": {
+            "id": "contentid/axis-content-1417780",
+            "axisId": 1417780,
+            "badges": []
+          }
+        }
+      }
+    }
+  }
+}
