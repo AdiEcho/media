@@ -1,4 +1,4 @@
-package main
+package ctv
 
 import (
    "net/http"
@@ -6,7 +6,7 @@ import (
    "os"
 )
 
-func main() {
+func Manifest() {
    var req http.Request
    req.URL = new(url.URL)
    req.URL.Scheme = "https"
