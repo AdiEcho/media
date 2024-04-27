@@ -4,7 +4,49 @@ import (
    "bytes"
    "encoding/json"
    "net/http"
+   "strconv"
 )
+
+type content_packages struct {
+   Items []struct {
+      ID int
+   }
+}
+
+func (r resolve_path) content() (*content_packages, error) {
+   address := func() string {
+      b := []byte("https://capi.9c9media.com/destinations/ctvmovies_hub")
+      b = append(b, "/platforms/desktop/contents/"...)
+      b = strconv.AppendInt(b, r.Data.ResolvedPath.LastSegment.Content.FirstPlayableContent.AxisId, 10)
+      b = append(b, "/contentPackages"...)
+      return string(b)
+   }()
+   res, err := http.Get(address)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   content := new(content_packages)
+   err = json.NewDecoder(res.Body).Decode(content)
+   if err != nil {
+      return nil, err
+   }
+   return content, nil
+}
+
+type resolve_path struct {
+  Data struct {
+    ResolvedPath struct {
+      LastSegment struct {
+        Content struct {
+          FirstPlayableContent struct {
+            AxisId int64
+          }
+        }
+      }
+    }
+  }
+}
 
 func (r *resolve_path) New(path string) error {
    body, err := func() ([]byte, error) {
@@ -38,20 +80,6 @@ func (r *resolve_path) New(path string) error {
    }
    defer res.Body.Close()
    return json.NewDecoder(res.Body).Decode(r)
-}
-
-type resolve_path struct {
-  Data struct {
-    ResolvedPath struct {
-      LastSegment struct {
-        Content struct {
-          FirstPlayableContent struct {
-            AxisId int
-          }
-        }
-      }
-    }
-  }
 }
 
 const query_resolve = `

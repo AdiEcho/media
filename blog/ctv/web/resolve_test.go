@@ -11,5 +11,9 @@ func TestResolve(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", path)
+   content, err := path.content()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", content)
 }
