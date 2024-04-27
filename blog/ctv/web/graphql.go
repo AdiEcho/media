@@ -18,7 +18,14 @@ func main() {
    req.URL.Path = "/space-graphql/apq/graphql"
    val := make(url.Values)
    val["operationName"] = []string{"resolvePath"}
-   
+   val["extensions"] = []string{`
+   {
+      "persistedQuery": {
+         "version": 1,
+         "sha256Hash": "26d314b59ba2708d261067964353f9a92f1c2689f50d1254fa4d03ddb9b9092a"
+      }
+   }
+   `}
    val["variables"] = []string{`
    {
      "page": 0,
@@ -44,14 +51,6 @@ func main() {
      "language": "ENGLISH",
      "authenticationState": "UNAUTH",
      "playbackLanguage": "ENGLISH"
-   }
-   `}
-   val["extensions"] = []string{`
-   {
-      "persistedQuery": {
-         "version": 1,
-         "sha256Hash": "26d314b59ba2708d261067964353f9a92f1c2689f50d1254fa4d03ddb9b9092a"
-      }
    }
    `}
    req.URL.RawQuery = val.Encode()
