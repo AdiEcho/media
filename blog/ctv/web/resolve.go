@@ -5,6 +5,7 @@ import (
    "encoding/json"
    "io"
    "net/http"
+   "strings"
 )
 
 const query_resolve = `
@@ -37,6 +38,12 @@ type resolve_path struct {
    }
 }
 
+// this is better than strings.Replace and strings.ReplaceAll
+func graphql_compact(s string) string {
+   f := strings.Fields(s)
+   return strings.Join(f, " ")
+}
+
 func (r *resolve_path) New(path string) error {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -47,9 +54,9 @@ func (r *resolve_path) New(path string) error {
          } `json:"variables"`
       }
       s.OperationName = "resolvePath"
-      s.Query = query_resolve
       s.Variables.Path = path
-      return json.Marshal(s)
+      s.Query = graphql_compact(query_resolve)
+      return json.MarshalIndent(s, "", " ")
    }()
    if err != nil {
       return err

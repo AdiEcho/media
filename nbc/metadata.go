@@ -9,6 +9,12 @@ import (
    "strings"
 )
 
+// this is better than strings.Replace and strings.ReplaceAll
+func graphql_compact(s string) string {
+   f := strings.Fields(s)
+   return strings.Join(f, " ")
+}
+
 func (m *Metadata) New(guid int) error {
    body, err := func() ([]byte, error) {
       var p page_request

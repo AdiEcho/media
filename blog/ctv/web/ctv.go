@@ -38,10 +38,9 @@ func (poster) RequestUrl() (string, bool) {
    return "https://license.9c9media.ca/widevine", true
 }
 
-////////////
-
 type last_segment struct {
    Content struct {
+      AxisId int64
       FirstPlayableContent struct {
          AxisId int64
       }

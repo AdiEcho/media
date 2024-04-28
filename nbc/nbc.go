@@ -127,12 +127,6 @@ query bonanzaPage(
 }
 `
 
-// this is better than strings.Replace and strings.ReplaceAll
-func graphql_compact(s string) string {
-   f := strings.Fields(s)
-   return strings.Join(f, " ")
-}
-
 type page_request struct {
    Query string `json:"query"`
    Variables struct {
