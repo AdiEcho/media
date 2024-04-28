@@ -13,6 +13,7 @@ query resolvePath($path: String!) {
       lastSegment {
          content {
             ... on AxisObject {
+               axisId
                ... on AxisMedia {
                   firstPlayableContent {
                      axisId
