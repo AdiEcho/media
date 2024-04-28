@@ -59,3 +59,21 @@ func (s last_segment) packages() (*content_packages, error) {
    }
    return &packages, nil
 }
+
+type poster struct{}
+
+func (poster) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (poster) RequestBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (poster) ResponseBody(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (poster) RequestUrl() (string, bool) {
+   return "https://license.9c9media.ca/widevine", true
+}

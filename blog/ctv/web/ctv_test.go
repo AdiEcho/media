@@ -1,49 +1,40 @@
 package ctv
 
 import (
+   "154.pages.dev/widevine"
+   "encoding/hex"
    "fmt"
    "os"
    "testing"
 )
 
-// ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
-const dragon_tattoo = "/movies/the-girl-with-the-dragon-tattoo-2011"
+const default_kid = "cb09571eebcb3f7287202657f6b9f7a6"
 
-func TestWrite(t *testing.T) {
-   var path resolve_path
-   err := path.New(dragon_tattoo)
+func TestLicense(t *testing.T) {
+   home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("resolvePath.json", path.data, 0666)
-   err = path.unmarshal()
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
    if err != nil {
       t.Fatal(err)
    }
-   packages, err := path.v.Data.ResolvedPath.LastSegment.packages()
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("contentPackages.json", packages.data, 0666)
+   key_id, err := hex.DecodeString(default_kid)
+   if err != nil {
+      t.Fatal(err)
+   }
+   var module widevine.CDM
+   if err := module.New(private_key, client_id, key_id); err != nil {
+      t.Fatal(err)
+   }
+   license, err := module.License(poster{})
+   if err != nil {
+      t.Fatal(err)
+   }
+   key, ok := module.Key(license)
+   fmt.Printf("%x %v\n", key, ok)
 }
-
-func TestRead(t *testing.T) {
-   var (
-      path resolve_path
-      err error
-   )
-   path.data, err = os.ReadFile("resolvePath.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   path.unmarshal()
-   var packages content_packages
-   packages.data, err = os.ReadFile("contentPackages.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   packages.unmarshal()
-   manifest := path.v.Data.ResolvedPath.LastSegment.manifest(packages)
-   fmt.Printf("%q\n", manifest)
-}
-
