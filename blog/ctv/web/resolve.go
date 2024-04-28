@@ -17,7 +17,17 @@ query resolvePath($path: String!) {
                axisId
                ... on AxisMedia {
                   firstPlayableContent {
+                     authConstraints {
+                        ... on AuthConstraint {
+                           packageName
+                        }
+                     }
                      axisId
+                     axisPlaybackLanguages {
+                        ... on AxisPlayback {
+                           destinationCode
+                        }
+                     }
                   }
                }
             }
