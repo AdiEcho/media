@@ -29,31 +29,6 @@ broadcastDate	"1996-04-25T04:00:00Z"
 
 https://ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
 
-## 1
-
-~~~
-GET https://www.ctv.ca/space-graphql/apq/graphql?operationName=resolvePath&variables=%7B%22page%22%3A0%2C%22path%22%3A%22%2Fshows%2Ffriends%2Fthe-one-with-the-bullies-s2e21%22%2C%22subscriptions%22%3A%5B%22CTV%22%2C%22CTV_DRAMA%22%2C%22CTV_COMEDY%22%2C%22CTV_LIFE%22%2C%22CTV_SCIFI%22%2C%22CTV_THROWBACK%22%2C%22CTV_MOVIES%22%2C%22CTV_MTV%22%2C%22CTV_MUCH%22%2C%22DISCOVERY%22%2C%22DISCOVERY_SCIENCE%22%2C%22DISCOVERY_VELOCITY%22%2C%22INVESTIGATION_DISCOVERY%22%2C%22ANIMAL_PLANET%22%2C%22E_NOW%22%5D%2C%22maturity%22%3A%22ADULT%22%2C%22language%22%3A%22ENGLISH%22%2C%22authenticationState%22%3A%22UNAUTH%22%2C%22playbackLanguage%22%3A%22ENGLISH%22%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%2226d314b59ba2708d261067964353f9a92f1c2689f50d1254fa4d03ddb9b9092a%22%7D%7D HTTP/2.0
-graphql-client-platform: entpay_web
-~~~
-
-- input
-   - path
-- output
-   - id
-
-## 2
-
-~~~
-GET https://www.ctv.ca/space-graphql/apq/graphql?operationName=axisContent&variables=%7B%22id%22%3A%22contentid%2Faxis-content-1730820%22%2C%22subscriptions%22%3A%5B%22CTV%22%2C%22CTV_DRAMA%22%2C%22CTV_COMEDY%22%2C%22CTV_LIFE%22%2C%22CTV_SCIFI%22%2C%22CTV_THROWBACK%22%2C%22CTV_MOVIES%22%2C%22CTV_MTV%22%2C%22CTV_MUCH%22%2C%22DISCOVERY%22%2C%22DISCOVERY_SCIENCE%22%2C%22DISCOVERY_VELOCITY%22%2C%22INVESTIGATION_DISCOVERY%22%2C%22ANIMAL_PLANET%22%2C%22E_NOW%22%5D%2C%22maturity%22%3A%22ADULT%22%2C%22language%22%3A%22ENGLISH%22%2C%22authenticationState%22%3A%22UNAUTH%22%2C%22playbackLanguage%22%3A%22ENGLISH%22%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22d6e75de9b5836cd6305c98c8d2411e336f59eb12f095a61f71d454f3fae2ecda%22%7D%7D HTTP/2.0
-graphql-client-platform: entpay_web
-~~~
-
-- input
-   - id
-- output
-   - axisId
-   - destinationCode
-
 ## 3 meta, combine and save
 
 <https://capi.9c9media.com/destinations/ctvcomedy_hub/platforms/desktop/contents/1730820?$include=[Media,ContentPackages,Season]>

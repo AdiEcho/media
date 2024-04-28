@@ -15,12 +15,11 @@ var test_paths = []string{
 
 func TestResolvePath(t *testing.T) {
    for _, path := range test_paths {
-      var resolve resolve_path
-      err := resolve.New(path)
+      resolve, err := new_resolve(path)
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%+v\n", resolve)
+      fmt.Println(resolve.id())
       time.Sleep(time.Second)
    }
 }

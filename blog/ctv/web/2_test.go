@@ -6,21 +6,18 @@ import (
    "time"
 )
 
-var axis_ids = []string{
-   // ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
-   "contentid/axis-content-1417780",
-   // ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-   "contentid/axis-content-1730820",
-}
-
 func TestAxisContent(t *testing.T) {
-   for _, id := range axis_ids {
-      var axis axis_content
-      err := axis.New(id)
+   for _, path := range test_paths {
+      resolve, err := new_resolve(path)
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%+v\n", axis)
+      time.Sleep(time.Second)
+      content, err := resolve.content()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", content)
       time.Sleep(time.Second)
    }
 }

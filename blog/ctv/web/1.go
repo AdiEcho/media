@@ -25,7 +25,7 @@ query resolvePath($path: String!) {
 }
 `
 
-func (r *resolve_path) New(path string) error {
+func new_resolve(path string) (*resolve_path, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          OperationName string `json:"operationName"`
@@ -40,44 +40,48 @@ func (r *resolve_path) New(path string) error {
       return json.Marshal(s)
    }()
    if err != nil {
-      return err
+      return nil, err
    }
    req, err := http.NewRequest(
       "POST", "https://www.ctv.ca/space-graphql/apq/graphql",
       bytes.NewReader(body),
    )
    if err != nil {
-      return err
+      return nil, err
    }
    // you need this for the first request, then can omit
    req.Header.Set("graphql-client-platform", "entpay_web")
    res, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(r)
-}
-
-/*
-for shows this is:
-"id": "contentid/axis-content-1730820"
-
-for movies this is:
-"firstPlayableContent": {
-"id": "contentid/axis-content-1417780"
-*/
-type resolve_path struct {
-   Data struct {
-      ResolvedPath struct {
-         LastSegment struct {
-            Content struct {
-               AxisId int64
-               FirstPlayableContent struct {
-                  AxisId int64
-               }
+   var s struct {
+      Data struct {
+         ResolvedPath struct {
+            LastSegment struct {
+               Content resolve_path
             }
          }
       }
    }
+   err = json.NewDecoder(res.Body).Decode(&s)
+   if err != nil {
+      return nil, err
+   }
+   return &s.Data.ResolvedPath.LastSegment.Content, nil
+}
+
+type resolve_path struct {
+   ID string
+   FirstPlayableContent *struct {
+      ID string
+   }
+}
+
+func (r resolve_path) id() string {
+   if v := r.FirstPlayableContent; v != nil {
+      return v.ID
+   }
+   return r.ID
 }

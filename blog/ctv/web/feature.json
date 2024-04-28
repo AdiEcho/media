@@ -1,0 +1,123 @@
+{
+  "data": {
+    "axisContent": {
+      "axisId": 1417780,
+      "id": "contentid/axis-content-1417780",
+      "path": "/movies/the-girl-with-the-dragon-tattoo-2011/the-girl-with-the-dragon-tattoo-2011",
+      "title": "The Girl with the Dragon Tattoo (2011)",
+      "duration": "2h 38m",
+      "agvotCode": "18+",
+      "description": "Disgraced financial reporter Mikael Blomkvist (Daniel Craig) finds a chance to redeem his honor after being hired by wealthy Swedish industrialist Henrik Vanger (Christopher Plummer) to solve the 40-year-old murder of Vanger's niece, Harriet. Vanger believes that Harriet was killed by a member of his own family. Eventually joining Blomkvist on his dangerous quest for the truth is Lisbeth Salander (Rooney Mara), an unusual but ingenious investigator whose fragile trust is not easily won.",
+      "episodeNumber": 0,
+      "seasonNumber": 0,
+      "pathSegment": "the-girl-with-the-dragon-tattoo-2011",
+      "genres": [
+        {
+          "name": "Drama",
+          "__typename": "Genre"
+        }
+      ],
+      "axisMedia": {
+        "heroBrandLogoId": "CTVMOVIESHUB",
+        "id": "contentid/axis-media-43239",
+        "title": "The Girl with the Dragon Tattoo (2011)",
+        "__typename": "AxisMedia"
+      },
+      "adUnit": {
+        "adultAudience": true,
+        "heroBrand": "ctvmovieshub",
+        "pageType": "playerpage",
+        "product": "ctv",
+        "revShare": "na",
+        "title": "the-girl-with-the-dragon-tattoo-2011",
+        "analyticsTitle": "the-girl-with-the-dragon-tattoo-2011",
+        "keyValue": {
+          "webformType": null,
+          "adTarget": null,
+          "contentType": "feature",
+          "mediaType": "movie",
+          "pageTitle": "the-girl-with-the-dragon-tattoo-2011",
+          "revShare": "na",
+          "subType": "na",
+          "__typename": "AdUnitConfig"
+        },
+        "__typename": "AxisAdUnit"
+      },
+      "authConstraints": [
+        {
+          "authRequired": false,
+          "packageName": "ctvmovies_hub",
+          "endDate": "+1000000000-12-31T23:59:59.999999999Z",
+          "language": "EN",
+          "startDate": "-1000000000-01-01T00:00:00Z",
+          "subscriptionName": "CTV_MOVIES",
+          "__typename": "AuthConstraint"
+        }
+      ],
+      "axisPlaybackLanguages": [
+        {
+          "destinationCode": "ctvmovies_hub",
+          "language": "EN",
+          "duration": "2h 38m",
+          "playbackIndicators": [
+            "AUDIO",
+            "CLOSED_CAPTIONS"
+          ],
+          "partOfMultiLanguagePlayback": false,
+          "__typename": "AxisPlayback"
+        }
+      ],
+      "originalSpokenLanguage": "EN",
+      "ogFields": {
+        "ogDescription": "A journalist is aided in his search for a missing woman by a young computer hacker.",
+        "ogImages": [],
+        "ogTitle": "The Girl with the Dragon Tattoo (2011) | The Girl with the Dragon Tattoo (2011) | CTV",
+        "__typename": "OGFields"
+      },
+      "playbackMetadata": [
+        {
+          "indicator": "AUDIO",
+          "languages": [
+            {
+              "languageCode": "EN",
+              "languageDisplayName": "English",
+              "__typename": "AxisPlaybackLanguage"
+            }
+          ],
+          "__typename": "PlaybackIndicatorsByLanguage"
+        },
+        {
+          "indicator": "CLOSED_CAPTIONS",
+          "languages": [
+            {
+              "languageCode": "EN",
+              "languageDisplayName": "English",
+              "__typename": "AxisPlaybackLanguage"
+            }
+          ],
+          "__typename": "PlaybackIndicatorsByLanguage"
+        }
+      ],
+      "seoFields": {
+        "seoDescription": "A journalist is aided in his search for a missing woman by a young computer hacker.",
+        "seoTitle": "The Girl with the Dragon Tattoo (2011) | The Girl with the Dragon Tattoo (2011) | CTV",
+        "seoKeywords": [],
+        "canonicalUrl": null,
+        "__typename": "SEOFieldsWithKeywords"
+      },
+      "badges": [],
+      "posterImages": [
+        {
+          "url": "https://images2.9c9media.com/image_asset/2020_5_12_5d905943-b694-4a17-9626-87f9911d6d13_png_2000x3000.jpg",
+          "__typename": "AxisImage"
+        }
+      ],
+      "broadcastDate": "2011-12-20T10:00:00Z",
+      "expiresOn": "2024-07-31T06:59:00Z",
+      "startsOn": "2024-04-01T04:00:00Z",
+      "keywords": [],
+      "videoPageLayout": [],
+      "__typename": "AxisContent"
+    }
+  }
+}
