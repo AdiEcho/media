@@ -8,26 +8,24 @@ import (
    "strings"
 )
 
+/*
+for shows this is:
+"id": "contentid/axis-content-1730820"
+
+for movies this is:
+"firstPlayableContent": {
+"id": "contentid/axis-content-1417780"
+*/
 const query_resolve = `
 query resolvePath($path: String!) {
    resolvedPath(path: $path) {
       lastSegment {
          content {
             ... on AxisObject {
-               axisId
+               id
                ... on AxisMedia {
                   firstPlayableContent {
-                     authConstraints {
-                        ... on AuthConstraint {
-                           packageName
-                        }
-                     }
-                     axisId
-                     axisPlaybackLanguages {
-                        ... on AxisPlayback {
-                           destinationCode
-                        }
-                     }
+                     id
                   }
                }
             }

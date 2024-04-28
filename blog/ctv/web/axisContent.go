@@ -9,11 +9,7 @@ import (
 const query_axis = `
 query axisContent($id: ID!) {
    axisContent(id: $id) {
-      authConstraints {
-         ... on AuthConstraint {
-            packageName
-         }
-      }
+      axisId
       axisPlaybackLanguages {
          ... on AxisPlayback {
             destinationCode
@@ -26,9 +22,7 @@ query axisContent($id: ID!) {
 type axis_content struct {
    Data struct {
       AxisContent struct {
-         AuthConstraints []struct {
-            PackageName string
-         }
+         AxisId int
          AxisPlaybackLanguages []struct {
             DestinationCode string
          }
