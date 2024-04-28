@@ -6,14 +6,6 @@ import (
    "net/http"
 )
 
-/*
-for shows this is:
-"id": "contentid/axis-content-1730820"
-
-for movies this is:
-"firstPlayableContent": {
-"id": "contentid/axis-content-1417780"
-*/
 const query_resolve = `
 query resolvePath($path: String!) {
    resolvedPath(path: $path) {
@@ -67,6 +59,14 @@ func (r *resolve_path) New(path string) error {
    return json.NewDecoder(res.Body).Decode(r)
 }
 
+/*
+for shows this is:
+"id": "contentid/axis-content-1730820"
+
+for movies this is:
+"firstPlayableContent": {
+"id": "contentid/axis-content-1417780"
+*/
 type resolve_path struct {
    Data struct {
       ResolvedPath struct {
