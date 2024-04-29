@@ -73,6 +73,7 @@ func TestLicense(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
+
 func TestMedia(t *testing.T) {
    for _, path := range test_paths {
       resolve, err := new_resolve(path)
@@ -97,6 +98,7 @@ func TestMedia(t *testing.T) {
       time.Sleep(99 * time.Millisecond)
    }
 }
+
 func TestAxisContent(t *testing.T) {
    for _, path := range test_paths {
       resolve, err := new_resolve(path)

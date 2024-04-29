@@ -1,9 +1,9 @@
 package ctv
 
 import (
-   "bytes"
-   "encoding/json"
-   "net/http"
+	"bytes"
+	"encoding/json"
+	"net/http"
 )
 
 const query_resolve = `
@@ -25,63 +25,63 @@ query resolvePath($path: String!) {
 }
 `
 
-func new_resolve(path string) (*resolve_path, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         OperationName string `json:"operationName"`
-         Query string `json:"query"`
-         Variables struct {
-            Path string `json:"path"`
-         } `json:"variables"`
-      }
-      s.OperationName = "resolvePath"
-      s.Variables.Path = path
-      s.Query = query_resolve
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://www.ctv.ca/space-graphql/apq/graphql",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   // you need this for the first request, then can omit
-   req.Header.Set("graphql-client-platform", "entpay_web")
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   var s struct {
-      Data struct {
-         ResolvedPath struct {
-            LastSegment struct {
-               Content resolve_path
-            }
-         }
-      }
-   }
-   err = json.NewDecoder(res.Body).Decode(&s)
-   if err != nil {
-      return nil, err
-   }
-   return &s.Data.ResolvedPath.LastSegment.Content, nil
+func new_resolve(path string) (*ResolvePath, error) {
+	body, err := func() ([]byte, error) {
+		var s struct {
+			OperationName string `json:"operationName"`
+			Query         string `json:"query"`
+			Variables     struct {
+				Path string `json:"path"`
+			} `json:"variables"`
+		}
+		s.OperationName = "resolvePath"
+		s.Variables.Path = path
+		s.Query = query_resolve
+		return json.Marshal(s)
+	}()
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequest(
+		"POST", "https://www.ctv.ca/space-graphql/apq/graphql",
+		bytes.NewReader(body),
+	)
+	if err != nil {
+		return nil, err
+	}
+	// you need this for the first request, then can omit
+	req.Header.Set("graphql-client-platform", "entpay_web")
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+	var s struct {
+		Data struct {
+			ResolvedPath struct {
+				LastSegment struct {
+					Content ResolvePath
+				}
+			}
+		}
+	}
+	err = json.NewDecoder(res.Body).Decode(&s)
+	if err != nil {
+		return nil, err
+	}
+	return &s.Data.ResolvedPath.LastSegment.Content, nil
 }
 
-type resolve_path struct {
-   ID string
-   FirstPlayableContent *struct {
-      ID string
-   }
+type ResolvePath struct {
+	ID                   string
+	FirstPlayableContent *struct {
+		ID string
+	}
 }
 
-func (r resolve_path) id() string {
-   if v := r.FirstPlayableContent; v != nil {
-      return v.ID
-   }
-   return r.ID
+func (r ResolvePath) id() string {
+	if v := r.FirstPlayableContent; v != nil {
+		return v.ID
+	}
+	return r.ID
 }

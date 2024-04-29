@@ -11,48 +11,26 @@ import (
    "path/filepath"
 )
 
-type flags struct {
-   ctv int
-   representation string
-   s internal.Stream
-   v log.Level
-}
-
-func (f *flags) New() error {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   home = filepath.ToSlash(home)
-   f.s.ClientId = home + "/widevine/client_id.bin"
-   f.s.PrivateKey = home + "/widevine/private_key.pem"
-   return nil
-}
-
-func main() {
-   var f flags
-   err := f.New()
-   if err != nil {
-      panic(err)
-   }
-   flag.IntVar(&f.ctv, "b", 0, "ctv ID")
-   flag.StringVar(&f.representation, "i", "", "representation")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
-   flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.Parse()
-   f.v.Set()
-   log.Transport{}.Set()
-   if f.ctv >= 1 {
-      err := f.download()
-      if err != nil {
-         panic(err)
-      }
-   } else {
-      flag.Usage()
-   }
-}
 func (f flags) download() error {
+   resolve, err := new_resolve(path)
+   if err != nil {
+      t.Fatal(err)
+   }
+   time.Sleep(99 * time.Millisecond)
+   axis, err := resolve.axis()
+   if err != nil {
+      t.Fatal(err)
+   }
+   time.Sleep(99 * time.Millisecond)
+   media, err := axis.media()
+   if err != nil {
+      t.Fatal(err)
+   }
+   manifest, err := axis.manifest(media)
+   if err != nil {
+      t.Fatal(err)
+   }
+   // old
    var meta ctv.Metadata
    err := meta.New(f.ctv)
    if err != nil {
