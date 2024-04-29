@@ -1,6 +1,7 @@
 package ctv
 
 import (
+   "154.pages.dev/encoding"
    "154.pages.dev/widevine"
    "encoding/base64"
    "fmt"
@@ -25,7 +26,11 @@ func TestManifest(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%q\n", axis.manifest(media))
+      manifest, err := axis.manifest(media)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", manifest)
       time.Sleep(99 * time.Millisecond)
    }
 }
@@ -63,4 +68,43 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
+}
+func TestMedia(t *testing.T) {
+   for _, path := range test_paths {
+      resolve, err := new_resolve(path)
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(99 * time.Millisecond)
+      axis, err := resolve.axis()
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(99 * time.Millisecond)
+      media, err := axis.media()
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := encoding.Name(namer{media})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(99 * time.Millisecond)
+   }
+}
+func TestAxisContent(t *testing.T) {
+   for _, path := range test_paths {
+      resolve, err := new_resolve(path)
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(time.Second)
+      axis, err := resolve.axis()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", axis)
+      time.Sleep(time.Second)
+   }
 }
