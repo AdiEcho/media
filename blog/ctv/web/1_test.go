@@ -6,13 +6,6 @@ import (
    "time"
 )
 
-var test_paths = []string{
-   // ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-   "/shows/friends/the-one-with-the-bullies-s2e21",
-   // ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
-   "/movies/the-girl-with-the-dragon-tattoo-2011",
-}
-
 func TestResolvePath(t *testing.T) {
    for _, path := range test_paths {
       resolve, err := new_resolve(path)
