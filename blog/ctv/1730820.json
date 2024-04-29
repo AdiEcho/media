@@ -1,0 +1,27 @@
+{
+ "A": {
+  "AxisId": 1730820,
+  "AxisPlaybackLanguages": [
+   {
+    "DestinationCode": "ctvcomedy_hub"
+   }
+  ]
+ },
+ "S": {
+  "BroadcastDate": "1996-04-25",
+  "ContentPackages": [
+   {
+    "ID": 6073155
+   }
+  ],
+  "Episode": 21,
+  "Media": {
+   "Name": "Friends",
+   "Type": "series"
+  },
+  "Name": "The One With the Bullies",
+  "Season": {
+   "Number": 2
+  }
+ }
+}

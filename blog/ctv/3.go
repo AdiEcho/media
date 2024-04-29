@@ -7,12 +7,25 @@ import (
    "time"
 )
 
+func (d date) MarshalText() ([]byte, error) {
+   return d.T.AppendFormat(nil, time.DateOnly), nil
+}
+
+func (d *date) UnmarshalText(text []byte) error {
+   var err error
+   d.T, err = time.Parse(time.DateOnly, string(text))
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
 func (m *media_content) unmarshal(text []byte) error {
    return json.Unmarshal(text, m)
 }
 
 func (m media_content) marshal() ([]byte, error) {
-   return json.Marshal(m)
+   return json.MarshalIndent(m, "", " ")
 }
 
 type media_content struct {
@@ -32,15 +45,6 @@ type media_content struct {
          Number int
       }
    }
-}
-
-func (d *date) UnmarshalText(text []byte) error {
-   var err error
-   d.T, err = time.Parse(time.DateOnly, string(text))
-   if err != nil {
-      return err
-   }
-   return nil
 }
 
 func (a axis_content) media() (*media_content, error) {
