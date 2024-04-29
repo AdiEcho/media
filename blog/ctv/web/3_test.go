@@ -1,7 +1,8 @@
 package ctv
 
 import (
-   "os"
+   "154.pages.dev/encoding"
+   "fmt"
    "testing"
    "time"
 )
@@ -13,7 +14,7 @@ var test_paths = []string{
    "/shows/friends/the-one-with-the-bullies-s2e21",
 }
 
-func TestContentPackages(t *testing.T) {
+func TestMedia(t *testing.T) {
    for _, path := range test_paths {
       resolve, err := new_resolve(path)
       if err != nil {
@@ -25,14 +26,15 @@ func TestContentPackages(t *testing.T) {
          t.Fatal(err)
       }
       time.Sleep(99 * time.Millisecond)
-      func() {
-         res, err := content.content_packages()
-         if err != nil {
-            t.Fatal(err)
-         }
-         defer res.Body.Close()
-         res.Write(os.Stdout)
-      }()
-      break
+      media, err := content.media()
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := encoding.Name(namer{media})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(99 * time.Millisecond)
    }
 }
