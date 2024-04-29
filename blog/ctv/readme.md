@@ -8,6 +8,10 @@ justwatch.com/ca/movie/talladega-nights-the-ballad-of-ricky-bobby
 justwatch.com/ca/movie/the-girl-with-the-dragon-tattoo
 ~~~
 
+## android
+
+https://play.google.com/store/apps/details?id=ca.ctv.ctvgo
+
 ## movie
 
 ~~~
@@ -28,17 +32,6 @@ broadcastDate	"1996-04-25T04:00:00Z"
 ~~~
 
 https://ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-
-## 3 meta, combine and save
-
-<https://capi.9c9media.com/destinations/ctvcomedy_hub/platforms/desktop/contents/1730820?$include=[Media,ContentPackages,Season]>
-
-- input
-   - axisId
-   - destinationCode
-- output
-   - ContentPackages
-   - axisId
 
 ## 4 geo
 

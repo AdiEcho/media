@@ -2,7 +2,9 @@ package ctv
 
 import (
    "154.pages.dev/encoding"
+   "encoding/json"
    "fmt"
+   "os"
    "testing"
    "time"
 )
@@ -15,6 +17,8 @@ var test_paths = []string{
 }
 
 func TestMedia(t *testing.T) {
+   enc := json.NewEncoder(os.Stdout)
+   enc.SetIndent("", " ")
    for _, path := range test_paths {
       resolve, err := new_resolve(path)
       if err != nil {
@@ -30,7 +34,11 @@ func TestMedia(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := encoding.Name(namer{media})
+      name, err := encoding.Name(media)
+      if err != nil {
+         t.Fatal(err)
+      }
+      err = enc.Encode(media)
       if err != nil {
          t.Fatal(err)
       }
