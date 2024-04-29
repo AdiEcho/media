@@ -30,7 +30,11 @@ func TestManifest(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%q\n", manifest)
+      text, err := manifest.marshal()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(string(text))
       time.Sleep(99 * time.Millisecond)
    }
 }
