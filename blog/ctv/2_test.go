@@ -13,11 +13,11 @@ func TestAxisContent(t *testing.T) {
          t.Fatal(err)
       }
       time.Sleep(time.Second)
-      content, err := resolve.content()
+      axis, err := resolve.axis()
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%+v\n", content)
+      fmt.Printf("%+v\n", axis)
       time.Sleep(time.Second)
    }
 }

@@ -6,7 +6,29 @@ import (
    "fmt"
    "os"
    "testing"
+   "time"
 )
+
+func TestManifest(t *testing.T) {
+   for _, path := range test_paths {
+      resolve, err := new_resolve(path)
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(99 * time.Millisecond)
+      axis, err := resolve.axis()
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(99 * time.Millisecond)
+      media, err := axis.media()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", axis.manifest(media))
+      time.Sleep(99 * time.Millisecond)
+   }
+}
 
 // ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
 const raw_pssh = "CAESEMsJVx7ryz9yhyAmV/a596YaCWJlbGxtZWRpYSISZmYtZDAxM2NhN2EtMjY0MjY1"

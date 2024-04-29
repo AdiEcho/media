@@ -26,7 +26,7 @@ query axisContent($id: ID!) {
 }
 `
 
-func (r resolve_path) content() (*axis_content, error) {
+func (r resolve_path) axis() (*axis_content, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          OperationName string `json:"operationName"`

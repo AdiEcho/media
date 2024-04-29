@@ -7,6 +7,22 @@ import (
    "time"
 )
 
+type media_content struct {
+   BroadcastDate date
+   ContentPackages []struct {
+      ID int64
+   }
+   Episode int
+   Media struct {
+      Name string
+      Type string
+   }
+   Name string
+   Season struct {
+      Number int
+   }
+}
+
 func (d date) MarshalText() ([]byte, error) {
    return d.T.AppendFormat(nil, time.DateOnly), nil
 }
@@ -18,33 +34,6 @@ func (d *date) UnmarshalText(text []byte) error {
       return err
    }
    return nil
-}
-
-func (m *media_content) unmarshal(text []byte) error {
-   return json.Unmarshal(text, m)
-}
-
-func (m media_content) marshal() ([]byte, error) {
-   return json.MarshalIndent(m, "", " ")
-}
-
-type media_content struct {
-   A *axis_content
-   S struct {
-      BroadcastDate date
-      ContentPackages []struct {
-         ID int
-      }
-      Episode int
-      Media struct {
-         Name string
-         Type string
-      }
-      Name string
-      Season struct {
-         Number int
-      }
-   }
 }
 
 func (a axis_content) media() (*media_content, error) {
@@ -61,40 +50,44 @@ func (a axis_content) media() (*media_content, error) {
       return nil, err
    }
    defer res.Body.Close()
-   media := media_content{A: &a}
-   err = json.NewDecoder(res.Body).Decode(&media.S)
+   media := new(media_content)
+   err = json.NewDecoder(res.Body).Decode(media)
    if err != nil {
       return nil, err
    }
-   return &media, nil
+   return media, nil
 }
 
-func (m media_content) Episode() int {
-   return m.S.Episode
+type namer struct {
+   m *media_content
 }
 
-func (m media_content) Season() int {
-   return m.S.Season.Number
+type date struct {
+   T time.Time
 }
 
-func (m media_content) Show() string {
-   if v := m.S.Media; v.Type == "series" {
+func (n namer) Episode() int {
+   return n.m.Episode
+}
+
+func (n namer) Season() int {
+   return n.m.Season.Number
+}
+
+func (n namer) Show() string {
+   if v := n.m.Media; v.Type == "series" {
       return v.Name
    }
    return ""
 }
 
-func (m media_content) Title() string {
-   if m.S.Media.Type == "movie" {
-      return m.S.Name[:len(m.S.Name)-len(" (2024)")]
+func (n namer) Title() string {
+   if n.m.Media.Type == "movie" {
+      return n.m.Name[:len(n.m.Name)-len(" (2024)")]
    }
-   return m.S.Name
+   return n.m.Name
 }
 
-func (m media_content) Year() int {
-   return m.S.BroadcastDate.T.Year()
-}
-
-type date struct {
-   T time.Time
+func (n namer) Year() int {
+   return n.m.BroadcastDate.T.Year()
 }
