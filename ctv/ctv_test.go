@@ -10,6 +10,13 @@ import (
 	"time"
 )
 
+var test_paths = []string{
+	// ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
+	"/movies/the-girl-with-the-dragon-tattoo-2011",
+	// ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
+	"/shows/friends/the-one-with-the-bullies-s2e21",
+}
+
 func TestManifest(t *testing.T) {
 	for _, path := range test_paths {
 		resolve, err := NewResolve(path)
@@ -17,16 +24,16 @@ func TestManifest(t *testing.T) {
 			t.Fatal(err)
 		}
 		time.Sleep(99 * time.Millisecond)
-		axis, err := resolve.axis()
+		axis, err := resolve.Axis()
 		if err != nil {
 			t.Fatal(err)
 		}
 		time.Sleep(99 * time.Millisecond)
-		media, err := axis.media()
+		media, err := axis.Media()
 		if err != nil {
 			t.Fatal(err)
 		}
-		manifest, err := axis.manifest(media)
+		manifest, err := axis.Manifest(media)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -81,12 +88,12 @@ func TestMedia(t *testing.T) {
 			t.Fatal(err)
 		}
 		time.Sleep(99 * time.Millisecond)
-		axis, err := resolve.axis()
+		axis, err := resolve.Axis()
 		if err != nil {
 			t.Fatal(err)
 		}
 		time.Sleep(99 * time.Millisecond)
-		media, err := axis.media()
+		media, err := axis.Media()
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -96,21 +103,5 @@ func TestMedia(t *testing.T) {
 		}
 		fmt.Printf("%q\n", name)
 		time.Sleep(99 * time.Millisecond)
-	}
-}
-
-func TestAxisContent(t *testing.T) {
-	for _, path := range test_paths {
-		resolve, err := NewResolve(path)
-		if err != nil {
-			t.Fatal(err)
-		}
-		time.Sleep(time.Second)
-		axis, err := resolve.axis()
-		if err != nil {
-			t.Fatal(err)
-		}
-		fmt.Printf("%+v\n", axis)
-		time.Sleep(time.Second)
 	}
 }

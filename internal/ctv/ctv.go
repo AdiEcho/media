@@ -20,30 +20,19 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   axis, err := resolve.axis()
-   if err != nil {
-      t.Fatal(err)
-   }
-   time.Sleep(99 * time.Millisecond)
-   media, err := axis.media()
-   if err != nil {
-      t.Fatal(err)
-   }
-   manifest, err := axis.manifest(media)
-   if err != nil {
-      t.Fatal(err)
-   }
-   // old
-   var meta ctv.Metadata
-   err := meta.New(f.ctv)
+   axis, err := resolve.Axis()
    if err != nil {
       return err
    }
-   demand, err := meta.OnDemand()
+   media, err := axis.Media()
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", demand.PlaybackUrl, nil)
+   manifest, err := axis.Manifest(media)
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest("", manifest.URL, nil)
    if err != nil {
       return err
    }
@@ -53,6 +42,7 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
+         // FIXME
          f.s.Name = meta
          f.s.Poster = ctv.Core()
          return f.s.Download(medium)
