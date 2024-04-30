@@ -7,41 +7,14 @@ import (
    "net/http"
 )
 
-func write_segment(dst io.Writer, src io.Reader, key []byte) error {
-   if key == nil {
-      _, err := io.Copy(dst, src)
-      if err != nil {
-         return err
-      }
-      return nil
-   }
-   var file sofia.File
-   err := file.Read(src)
-   if err != nil {
-      return err
-   }
-   if v := file.MovieFragment.TrackFragment.SampleEncryption; v != nil {
-      run := file.MovieFragment.TrackFragment.TrackRun
-      for i, data := range file.MediaData.Data(run) {
-         err := v.Samples[i].DecryptCenc(data, key)
-         if err != nil {
-            return err
-         }
-      }
-   }
-   return file.Write(dst)
-}
-
 func write_init(dst io.Writer, src io.Reader) ([]byte, error) {
    var file sofia.File
    err := file.Read(src)
    if err != nil {
       return nil, err
    }
-   for _, box := range file.Movie.Boxes {
-      if box.BoxHeader.Type.String() == "pssh" {
-         copy(box.BoxHeader.Type[:], "free") // Firefox
-      }
+   for _, protect := range boxes.Movie.Protection {
+      copy(protect.BoxHeader.Type[:], "free") // Firefox
    }
    description := file.
       Movie.
@@ -65,6 +38,31 @@ func write_init(dst io.Writer, src io.Reader) ([]byte, error) {
       return nil, err
    }
    return key_id, nil
+}
+
+func write_segment(dst io.Writer, src io.Reader, key []byte) error {
+   if key == nil {
+      _, err := io.Copy(dst, src)
+      if err != nil {
+         return err
+      }
+      return nil
+   }
+   var file sofia.File
+   err := file.Read(src)
+   if err != nil {
+      return err
+   }
+   if v := file.MovieFragment.TrackFragment.SampleEncryption; v != nil {
+      run := file.MovieFragment.TrackFragment.TrackRun
+      for i, data := range file.MediaData.Data(run) {
+         err := v.Samples[i].DecryptCenc(data, key)
+         if err != nil {
+            return err
+         }
+      }
+   }
+   return file.Write(dst)
 }
 
 func write_sidx(base_url string, bytes dash.Range) ([]sofia.Reference, error) {
