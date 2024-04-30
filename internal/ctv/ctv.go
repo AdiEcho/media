@@ -12,11 +12,14 @@ import (
 )
 
 func (f flags) download() error {
-   resolve, err := new_resolve(path)
+   address, err := url.Parse(f.address)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   time.Sleep(99 * time.Millisecond)
+   resolve, err := ctv.NewResolve(address.Path)
+   if err != nil {
+      return err
+   }
    axis, err := resolve.axis()
    if err != nil {
       t.Fatal(err)

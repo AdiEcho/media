@@ -25,7 +25,7 @@ query resolvePath($path: String!) {
 }
 `
 
-func new_resolve(path string) (*ResolvePath, error) {
+func NewResolve(path string) (*ResolvePath, error) {
 	body, err := func() ([]byte, error) {
 		var s struct {
 			OperationName string `json:"operationName"`
