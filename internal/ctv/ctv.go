@@ -36,24 +36,23 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := f.s.DASH(req)
+   represents, err := f.s.DASH(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.ID == f.representation {
-         // FIXME
-         f.s.Name = meta
-         f.s.Poster = ctv.Core()
-         return f.s.Download(medium)
+   for _, represent := range represents {
+      if represent.ID == f.representation {
+         f.s.Name = ctv.Namer{media}
+         f.s.Poster = ctv.Poster{}
+         return f.s.Download(represent)
       }
    }
    // 2 MPD all
-   for i, medium := range media {
+   for i, represent := range represents {
       if i >= 1 {
          fmt.Println()
       }
-      fmt.Println(medium)
+      fmt.Println(represent)
    }
    return nil
 }

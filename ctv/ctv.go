@@ -11,26 +11,56 @@ import (
    "time"
 )
 
+type Namer struct {
+   M *MediaContent
+}
+
+func (n Namer) Episode() int {
+   return n.M.Episode
+}
+
+func (n Namer) Season() int {
+   return n.M.Season.Number
+}
+
+func (n Namer) Show() string {
+   if v := n.M.Media; v.Type == "series" {
+      return v.Name
+   }
+   return ""
+}
+
+func (n Namer) Title() string {
+   if n.M.Media.Type == "movie" {
+      return n.M.Name[:len(n.M.Name)-len(" (9999)")]
+   }
+   return n.M.Name
+}
+
+func (n Namer) Year() int {
+   return n.M.BroadcastDate.T.Year()
+}
+
 type MediaManifest struct {
    Content *MediaContent
    URL     string
 }
 
-type poster struct{}
+type Poster struct{}
 
-func (poster) RequestHeader() (http.Header, error) {
+func (Poster) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 
-func (poster) RequestBody(b []byte) ([]byte, error) {
+func (Poster) RequestBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (poster) ResponseBody(b []byte) ([]byte, error) {
+func (Poster) ResponseBody(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (poster) RequestUrl() (string, bool) {
+func (Poster) RequestUrl() (string, bool) {
    return "https://license.9c9media.ca/widevine", true
 }
 
@@ -67,36 +97,6 @@ func (a AxisContent) Media() (*MediaContent, error) {
       return nil, err
    }
    return media, nil
-}
-
-type namer struct {
-   m *MediaContent
-}
-
-func (n namer) Episode() int {
-   return n.m.Episode
-}
-
-func (n namer) Season() int {
-   return n.m.Season.Number
-}
-
-func (n namer) Show() string {
-   if v := n.m.Media; v.Type == "series" {
-      return v.Name
-   }
-   return ""
-}
-
-func (n namer) Title() string {
-   if n.m.Media.Type == "movie" {
-      return n.m.Name[:len(n.m.Name)-len(" (9999)")]
-   }
-   return n.m.Name
-}
-
-func (n namer) Year() int {
-   return n.m.BroadcastDate.T.Year()
 }
 
 type AxisContent struct {
