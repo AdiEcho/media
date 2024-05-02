@@ -6,7 +6,7 @@ import (
    "net/http"
 )
 
-func (a account_token) playback(roku_id string) (*http.Response, error) {
+func (a account_token) playback(roku_id string) (*playback, error) {
    body, err := func() ([]byte, error) {
       m := map[string]string{
          "mediaFormat": "DASH",
@@ -29,5 +29,23 @@ func (a account_token) playback(roku_id string) (*http.Response, error) {
       "User-Agent": {user_agent},
       "X-Roku-Content-Token": {a.AuthToken},
    }
-   return http.DefaultClient.Do(req)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   play := new(playback)
+   err = json.NewDecoder(res.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
+}
+
+type playback struct {
+   DRM struct {
+      Widevine struct {
+         LicenseServer string
+      }
+   }
 }

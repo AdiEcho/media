@@ -7,6 +7,14 @@ import (
    "net/http"
 )
 
+type Playback struct {
+   DRM struct {
+      Widevine struct {
+         LicenseServer string
+      }
+   }
+}
+
 func (c CrossSite) csrf() (*http.Cookie, bool) {
    for _, cookie := range c.cookies {
       if cookie.Name == "_csrf" {
@@ -68,14 +76,6 @@ func (c CrossSite) Playback(id string) (*Playback, error) {
       return nil, err
    }
    return play, nil
-}
-
-type Playback struct {
-   DRM struct {
-      Widevine struct {
-         LicenseServer string
-      }
-   }
 }
 
 func (Playback) WrapRequest(b []byte) ([]byte, error) {

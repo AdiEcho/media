@@ -1,7 +1,7 @@
 package roku
 
 import (
-   "os"
+   "fmt"
    "testing"
 )
 
@@ -14,10 +14,9 @@ func TestPlayback(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   res, err := token.playback(roku_id)
+   play, err := token.playback(roku_id)
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   fmt.Printf("%+v\n", play)
 }
