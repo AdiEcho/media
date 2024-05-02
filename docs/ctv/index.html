@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/ctv<span class="navbar-right">
-          v1.8.9 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.9.0 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package ctv</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/ctv&#34;</span></pre>
@@ -25,6 +25,13 @@
       <ul>
           <li><a href="#AxisContent.Manifest">func (a AxisContent) Manifest(m *MediaContent) (*MediaManifest, error)</a></li>
           <li><a href="#AxisContent.Media">func (a AxisContent) Media() (*MediaContent, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Date">type Date</a>
+      <ul>
+          <li><a href="#Date.MarshalText">func (d Date) MarshalText() ([]byte, error)</a></li>
+          <li><a href="#Date.UnmarshalText">func (d *Date) UnmarshalText(text []byte) error</a></li>
           </ul>
       </li>
   <li>
@@ -78,9 +85,17 @@
   <p>wikipedia.org/wiki/Geo-blocking
 <h4 id="AxisContent.Media">func (AxisContent) Media</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AxisContent"><span class="nx">AxisContent</span></a><span class="p">)</span> <span class="nf">Media</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#MediaContent"><span class="nx">MediaContent</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="Date">type Date</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Date</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Date.T"><span class="nx">T</span></span> <a href="https://pkg.go.dev/time"><span class="nx">time</span></a><span class="p">.</span><a href="https://pkg.go.dev/time#Time"><span class="nx">Time</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Date.MarshalText">func (Date) MarshalText</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#Date"><span class="nx">Date</span></a><span class="p">)</span> <span class="nf">MarshalText</span><span class="p">()</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Date.UnmarshalText">func (*Date) UnmarshalText</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#Date"><span class="nx">Date</span></a><span class="p">)</span> <span class="nf">UnmarshalText</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h3 id="MediaContent">type MediaContent</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">MediaContent</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="MediaContent.BroadcastDate"><span class="nx">BroadcastDate</span></span>   <span class="nx">date</span>
+	<span id="MediaContent.BroadcastDate"><span class="nx">BroadcastDate</span></span>   <a href="#Date"><span class="nx">Date</span></a>
 	<span id="MediaContent.ContentPackages"><span class="nx">ContentPackages</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
 		<span id="MediaContent.ID"><span class="nx">ID</span></span> <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>
 	<span class="p">}</span>

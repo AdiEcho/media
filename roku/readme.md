@@ -2,9 +2,23 @@
 
 ## Android client
 
-just a remote control:
+The Roku App:
 
 https://play.google.com/store/apps/details?id=com.roku.remote
+
+The Roku Channel (Android TV):
+
+https://play.google.com/store/apps/details?id=com.roku.web.trc
+
+Roku Channel:
+
+~~~
+com.roku.trc
+~~~
+
+https://apkmirror.com/apk/roku-inc/the-roku-channel
+
+Create Android 6 device. Install user certificate.
 
 ## Web premium
 
