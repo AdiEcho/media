@@ -76,7 +76,8 @@ func (m Metadata) OnDemand() (*OnDemand, error) {
       return nil, errors.New(res.Status)
    }
    video := new(OnDemand)
-   if err := json.NewDecoder(res.Body).Decode(video); err != nil {
+   err = json.NewDecoder(res.Body).Decode(video)
+   if err != nil {
       return nil, err
    }
    return video, nil

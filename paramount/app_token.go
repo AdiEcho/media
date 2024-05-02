@@ -37,7 +37,8 @@ func (at AppToken) Item(content_id string) (chan Item, error) {
    var video struct {
       ItemList []Item
    }
-   if err := json.NewDecoder(res.Body).Decode(&video); err != nil {
+   err = json.NewDecoder(res.Body).Decode(&video)
+   if err != nil {
       return nil, err
    }
    channel := make(chan Item)
@@ -96,7 +97,8 @@ func (at AppToken) Session(content_id string) (*SessionToken, error) {
    }
    defer res.Body.Close()
    session := new(SessionToken)
-   if err := json.NewDecoder(res.Body).Decode(session); err != nil {
+   err = json.NewDecoder(res.Body).Decode(session)
+   if err != nil {
       return nil, err
    }
    session.URL += content_id

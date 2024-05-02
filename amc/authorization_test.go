@@ -46,11 +46,13 @@ func TestLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   if err := auth.Unmarshal(); err != nil {
+   err = auth.Unmarshal()
+   if err != nil {
       t.Fatal(err)
    }
    username, password := os.Getenv("amc_username"), os.Getenv("amc_password")
-   if err := auth.Login(username, password); err != nil {
+   err = auth.Login(username, password)
+   if err != nil {
       t.Fatal(err)
    }
 }

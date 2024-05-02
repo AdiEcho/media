@@ -143,7 +143,8 @@ func (w WebToken) Session() (*AppSession, error) {
       return nil, errors.New(b.String())
    }
    session := new(AppSession)
-   if err := json.NewDecoder(res.Body).Decode(session); err != nil {
+   err = json.NewDecoder(res.Body).Decode(session)
+   if err != nil {
       return nil, err
    }
    return session, nil

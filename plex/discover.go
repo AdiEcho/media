@@ -51,7 +51,8 @@ func (a Anonymous) Discover(p Path) (*DiscoverMatch, error) {
          Metadata []DiscoverMatch
       }
    }
-   if err := json.NewDecoder(res.Body).Decode(&match); err != nil {
+   err = json.NewDecoder(res.Body).Decode(&match)
+   if err != nil {
       return nil, err
    }
    return &match.MediaContainer.Metadata[0], nil

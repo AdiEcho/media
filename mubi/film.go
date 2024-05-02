@@ -124,7 +124,8 @@ func (w WebAddress) Film() (*FilmResponse, error) {
    }
    defer res.Body.Close()
    film := new(FilmResponse)
-   if err := json.NewDecoder(res.Body).Decode(film); err != nil {
+   err = json.NewDecoder(res.Body).Decode(film)
+   if err != nil {
       return nil, err
    }
    return film, nil

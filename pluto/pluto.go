@@ -50,11 +50,11 @@ func (Poster) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 
-func (Poster) RequestBody(b []byte) ([]byte, error) {
+func (Poster) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Poster) ResponseBody(b []byte) ([]byte, error) {
+func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 

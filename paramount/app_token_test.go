@@ -14,7 +14,8 @@ import (
 func TestWidevine(t *testing.T) {
    test := tests["episode"]
    var token AppToken
-   if err := token.New(); err != nil {
+   err := token.New()
+   if err != nil {
       t.Fatal(err)
    }
    session, err := token.Session(path.Base(test.url))

@@ -49,7 +49,6 @@ sec-fetch-dest: empty
 sec-fetch-mode: cors
 sec-fetch-site: same-site
 te: trailers
-user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
 x-plex-client-identifier: ff8a91f5-8f93-4dba-b61b-e0f286101d29
 x-plex-language: en
 x-plex-product: Plex Mediaverse
@@ -64,7 +63,6 @@ Host: discover.provider.plex.tv
 Accept-Language: en-us
 Accept: application/json
 Connection: Keep-Alive
-User-Agent: Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86 Build/MASTER; wv)PlexMobile/10.12.1.370
 X-Plex-Advertising-DoNotTrack: 0
 X-Plex-Advertising-Identifier: 7d57058e-e508-435d-98ff-8b6aa0cd9a9b
 X-Plex-Client-Identifier: 429675a6d0ceebc9-com-plexapp-android
@@ -91,7 +89,6 @@ X-Plex-Version: 10.12.1.370
 GET https://vod.provider.plex.tv/library/metadata/5d7768b8594b2b001e693c52?checkFiles=1&includeReviews=1&includeExtras=1&asyncAugmentMetadata=1&X-Plex-Language=en-us HTTP/2.0
 accept-language: en-us
 accept: application/json
-user-agent: Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86 Build/MASTER; wv)PlexMobile/10.12.1.370
 x-plex-advertising-donottrack: 0
 x-plex-advertising-identifier: 621bba5a-646d-41d4-9e4a-202479d59127
 x-plex-client-identifier: 1adb7ab9dee363ed-com-plexapp-android

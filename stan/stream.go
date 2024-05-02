@@ -48,13 +48,14 @@ func (a AppSession) Stream(id int64) (*ProgramStream, error) {
       return nil, errors.New(res.Status)
    }
    stream := new(ProgramStream)
-   if err := json.NewDecoder(res.Body).Decode(stream); err != nil {
+   err = json.NewDecoder(res.Body).Decode(stream)
+   if err != nil {
       return nil, err
    }
    return stream, nil
 }
 
-func (ProgramStream) RequestBody(b []byte) ([]byte, error) {
+func (ProgramStream) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
@@ -69,7 +70,7 @@ func (ProgramStream) RequestUrl() (string, bool) {
    return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
 }
 
-func (ProgramStream) ResponseBody(b []byte) ([]byte, error) {
+func (ProgramStream) UnwrapResponse(b []byte) ([]byte, error) {
    var s struct {
       License []byte
    }

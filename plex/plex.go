@@ -31,7 +31,8 @@ func (a Anonymous) Video(d *DiscoverMatch, forward string) (*OnDemand, error) {
          Metadata []OnDemand
       }
    }
-   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
+   err = json.NewDecoder(res.Body).Decode(&s)
+   if err != nil {
       return nil, err
    }
    return &s.MediaContainer.Metadata[0], nil
@@ -42,7 +43,7 @@ type MediaPart struct {
    License string
 }
 
-func (MediaPart) RequestBody(b []byte) ([]byte, error) {
+func (MediaPart) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
@@ -54,7 +55,7 @@ func (p MediaPart) RequestUrl() (string, bool) {
    return p.License, true
 }
 
-func (MediaPart) ResponseBody(b []byte) ([]byte, error) {
+func (MediaPart) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 

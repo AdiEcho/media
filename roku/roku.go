@@ -63,7 +63,8 @@ func (c CrossSite) Playback(id string) (*Playback, error) {
       return nil, errors.New(res.Status)
    }
    play := new(Playback)
-   if err := json.NewDecoder(res.Body).Decode(play); err != nil {
+   err = json.NewDecoder(res.Body).Decode(play)
+   if err != nil {
       return nil, err
    }
    return play, nil

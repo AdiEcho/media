@@ -47,7 +47,8 @@ func (m *Metadata) New(guid int) error {
          Message string
       }
    }
-   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
+   err = json.NewDecoder(res.Body).Decode(&s)
+   if err != nil {
       return err
    }
    if len(s.Errors) >= 1 {

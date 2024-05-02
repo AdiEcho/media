@@ -99,7 +99,8 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       return nil, errors.New(b.String())
    }
    play := new(Playlist)
-   if err := json.NewDecoder(res.Body).Decode(play); err != nil {
+   err = json.NewDecoder(res.Body).Decode(play)
+   if err != nil {
       return nil, err
    }
    return play, nil
@@ -142,7 +143,8 @@ func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
    var s struct {
       Items []Details
    }
-   if err := json.NewDecoder(res.Body).Decode(&s); err != nil {
+   err = json.NewDecoder(res.Body).Decode(&s)
+   if err != nil {
       return nil, err
    }
    channel := make(chan Details)
@@ -181,7 +183,8 @@ func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
       return nil, errors.New(b.String())
    }
    link := new(DeepLink)
-   if err := json.NewDecoder(res.Body).Decode(link); err != nil {
+   err = json.NewDecoder(res.Body).Decode(link)
+   if err != nil {
       return nil, err
    }
    return link, nil

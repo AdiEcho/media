@@ -28,7 +28,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var module widevine.CDM
-   err = module.New(private_key, client_id, key_id)
+   err = module.New(private_key, client_id, widevine.PSSH(key_id))
    if err != nil {
       t.Fatal(err)
    }
@@ -41,12 +41,11 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   license, err := module.License(video)
+   key, err := module.Key(video, key_id)
    if err != nil {
       t.Fatal(err)
    }
-   key, ok := module.Key(license)
-   fmt.Printf("%x %v\n", key, ok)
+   fmt.Printf("%x\n", key)
 }
 
 func TestResolution(t *testing.T) {

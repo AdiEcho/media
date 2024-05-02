@@ -51,7 +51,7 @@ type Authenticate struct {
    }
 }
 
-func (Authenticate) RequestBody(b []byte) ([]byte, error) {
+func (Authenticate) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
@@ -75,7 +75,7 @@ func (Authenticate) RequestUrl() (string, bool) {
    return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
 }
 
-func (Authenticate) ResponseBody(b []byte) ([]byte, error) {
+func (Authenticate) UnwrapResponse(b []byte) ([]byte, error) {
    var v struct {
       License []byte
    }

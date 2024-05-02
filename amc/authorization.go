@@ -57,7 +57,8 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
       return nil, errors.New(b.String())
    }
    content := new(ContentCompiler)
-   if err := json.NewDecoder(res.Body).Decode(content); err != nil {
+   err = json.NewDecoder(res.Body).Decode(content)
+   if err != nil {
       return nil, err
    }
    return content, nil
@@ -155,7 +156,8 @@ func (a Authorization) Playback(nid string) (*Playback, error) {
    }
    var play Playback
    play.header = res.Header
-   if err := json.NewDecoder(res.Body).Decode(&play.body); err != nil {
+   err = json.NewDecoder(res.Body).Decode(&play.body)
+   if err != nil {
       return nil, err
    }
    return &play, nil

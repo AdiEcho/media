@@ -12,7 +12,7 @@ type Playlist struct {
    WV_Server string
 }
 
-func (Playlist) RequestBody(b []byte) ([]byte, error) {
+func (Playlist) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
@@ -24,7 +24,7 @@ func (p Playlist) RequestUrl() (string, bool) {
    return p.WV_Server, true
 }
 
-func (Playlist) ResponseBody(b []byte) ([]byte, error) {
+func (Playlist) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 

@@ -30,7 +30,7 @@ func (r *Resolution) UnmarshalText(text []byte) error {
    return nil
 }
 
-func (VideoResource) RequestBody(b []byte) ([]byte, error) {
+func (VideoResource) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
@@ -38,7 +38,7 @@ func (VideoResource) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 
-func (VideoResource) ResponseBody(b []byte) ([]byte, error) {
+func (VideoResource) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
