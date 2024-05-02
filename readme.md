@@ -15,8 +15,9 @@ Download media or send API requests
 6. The NBC App - Stream TV Shows
 7. Stan.
 8. MUBI: Curated Cinema
-9. AMC+
-10. The Roku Channel
+9. CTV
+10. AMC+
+11. The Roku Channel
 
 [1]://f002.backblazeb2.com/file/ql8mlh/Paint.It.Black.2016.mp4
 

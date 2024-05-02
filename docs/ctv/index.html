@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="doc2go">
+    <link href="../_/css/main.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../_/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="../_/icons/favicon.ico">
+    <title>ctv</title>
+</head>
+  <body>
+    <nav>
+        <a href="..">154.pages.dev/media</a>/ctv<span class="navbar-right">
+          v1.8.8 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+      </nav>
+    <main><h2 id="pkg-overview">package ctv</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/ctv&#34;</span></pre>
+<h3 id="pkg-index">Index</h3>
+<ul>
+  <li>
+      <a href="#AxisContent">type AxisContent</a>
+      <ul>
+          <li><a href="#AxisContent.Manifest">func (a AxisContent) Manifest(m *MediaContent) (*MediaManifest, error)</a></li>
+          <li><a href="#AxisContent.Media">func (a AxisContent) Media() (*MediaContent, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#MediaContent">type MediaContent</a>
+      </li>
+  <li>
+      <a href="#MediaManifest">type MediaManifest</a>
+      <ul>
+          <li><a href="#MediaManifest.Episode">func (m MediaManifest) Episode() int</a></li>
+          <li><a href="#MediaManifest.Marshal">func (m MediaManifest) Marshal() ([]byte, error)</a></li>
+          <li><a href="#MediaManifest.Season">func (m MediaManifest) Season() int</a></li>
+          <li><a href="#MediaManifest.Show">func (m MediaManifest) Show() string</a></li>
+          <li><a href="#MediaManifest.Title">func (m MediaManifest) Title() string</a></li>
+          <li><a href="#MediaManifest.Unmarshal">func (m *MediaManifest) Unmarshal(text []byte) error</a></li>
+          <li><a href="#MediaManifest.Year">func (m MediaManifest) Year() int</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Path">type Path</a>
+      <ul>
+          <li><a href="#Path.Resolve">func (p Path) Resolve() (*ResolvePath, error)</a></li>
+          <li><a href="#Path.Set">func (p *Path) Set(s string) error</a></li>
+          <li><a href="#Path.String">func (p Path) String() string</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Poster">type Poster</a>
+      <ul>
+          <li><a href="#Poster.RequestHeader">func (Poster) RequestHeader() (http.Header, error)</a></li>
+          <li><a href="#Poster.RequestUrl">func (Poster) RequestUrl() (string, bool)</a></li>
+          <li><a href="#Poster.UnwrapResponse">func (Poster) UnwrapResponse(b []byte) ([]byte, error)</a></li>
+          <li><a href="#Poster.WrapRequest">func (Poster) WrapRequest(b []byte) ([]byte, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#ResolvePath">type ResolvePath</a>
+      <ul>
+          <li><a href="#ResolvePath.Axis">func (r ResolvePath) Axis() (*AxisContent, error)</a></li>
+          </ul>
+      </li>
+  </ul><h3 id="pkg-types">Types</h3>
+  <h3 id="AxisContent">type AxisContent</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">AxisContent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="AxisContent.AxisId"><span class="nx">AxisId</span></span>                <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>
+	<span id="AxisContent.AxisPlaybackLanguages"><span class="nx">AxisPlaybackLanguages</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="AxisContent.DestinationCode"><span class="nx">DestinationCode</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
+    <h4 id="AxisContent.Manifest">func (AxisContent) Manifest</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AxisContent"><span class="nx">AxisContent</span></a><span class="p">)</span> <span class="nf">Manifest</span><span class="p">(</span><span class="nx">m</span> <span class="o">*</span><a href="#MediaContent"><span class="nx">MediaContent</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#MediaManifest"><span class="nx">MediaManifest</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <p>wikipedia.org/wiki/Geo-blocking
+<h4 id="AxisContent.Media">func (AxisContent) Media</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AxisContent"><span class="nx">AxisContent</span></a><span class="p">)</span> <span class="nf">Media</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#MediaContent"><span class="nx">MediaContent</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="MediaContent">type MediaContent</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">MediaContent</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="MediaContent.BroadcastDate"><span class="nx">BroadcastDate</span></span>   <span class="nx">date</span>
+	<span id="MediaContent.ContentPackages"><span class="nx">ContentPackages</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="MediaContent.ID"><span class="nx">ID</span></span> <a href="https://pkg.go.dev/builtin#int64"><span class="kt">int64</span></a>
+	<span class="p">}</span>
+	<span id="MediaContent.Episode"><span class="nx">Episode</span></span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span id="MediaContent.Media"><span class="nx">Media</span></span>   <span class="kd">struct</span> <span class="p">{</span>
+		<span id="MediaContent.Name"><span class="nx">Name</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="MediaContent.Type"><span class="nx">Type</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
+	<span id="MediaContent.Name"><span class="nx">Name</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="MediaContent.Season"><span class="nx">Season</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="MediaContent.Number"><span class="nx">Number</span></span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
+    <h3 id="MediaManifest">type MediaManifest</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">MediaManifest</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="MediaManifest.M"><span class="nx">M</span></span>   <span class="o">*</span><a href="#MediaContent"><span class="nx">MediaContent</span></a>
+	<span id="MediaManifest.URL"><span class="nx">URL</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="MediaManifest.Episode">func (MediaManifest) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#MediaManifest"><span class="nx">MediaManifest</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="MediaManifest.Marshal">func (MediaManifest) Marshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#MediaManifest"><span class="nx">MediaManifest</span></a><span class="p">)</span> <span class="nf">Marshal</span><span class="p">()</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="MediaManifest.Season">func (MediaManifest) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#MediaManifest"><span class="nx">MediaManifest</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="MediaManifest.Show">func (MediaManifest) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#MediaManifest"><span class="nx">MediaManifest</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="MediaManifest.Title">func (MediaManifest) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#MediaManifest"><span class="nx">MediaManifest</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="MediaManifest.Unmarshal">func (*MediaManifest) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><a href="#MediaManifest"><span class="nx">MediaManifest</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="MediaManifest.Year">func (MediaManifest) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <a href="#MediaManifest"><span class="nx">MediaManifest</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h3 id="Path">type Path</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Path</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+    <h4 id="Path.Resolve">func (Path) Resolve</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#Path"><span class="nx">Path</span></a><span class="p">)</span> <span class="nf">Resolve</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#ResolvePath"><span class="nx">ResolvePath</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Path.Set">func (*Path) Set</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><a href="#Path"><span class="nx">Path</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <p><a href="https://www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21">https://www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21</a>
+www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
+ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
+/shows/friends/the-one-with-the-bullies-s2e21
+<h4 id="Path.String">func (Path) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <a href="#Path"><span class="nx">Path</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h3 id="Poster">type Poster</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Poster</span> <span class="kd">struct</span><span class="p">{}</span></pre>
+    <h4 id="Poster.RequestHeader">func (Poster) RequestHeader</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Poster.RequestUrl">func (Poster) RequestUrl</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="Poster.UnwrapResponse">func (Poster) UnwrapResponse</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Poster.WrapRequest">func (Poster) WrapRequest</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="ResolvePath">type ResolvePath</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">ResolvePath</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="ResolvePath.ID"><span class="nx">ID</span></span>                   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="ResolvePath.FirstPlayableContent"><span class="nx">FirstPlayableContent</span></span> <span class="o">*</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="ResolvePath.ID"><span class="nx">ID</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
+    <h4 id="ResolvePath.Axis">func (ResolvePath) Axis</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <a href="#ResolvePath"><span class="nx">ResolvePath</span></a><span class="p">)</span> <span class="nf">Axis</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#AxisContent"><span class="nx">AxisContent</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  </main>
+    <hr>
+    <footer>
+      <small id="generated-by-footer">
+        Generated with <a href="https://abhinav.github.io/doc2go/">doc2go</a>
+      </small>
+    </footer>
+    <script src="../_/js/permalink.js"></script>
+  </body>
+</html>
