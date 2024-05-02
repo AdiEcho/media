@@ -9,7 +9,7 @@ import (
    "os"
 )
 
-func (s Stream) key(key_id []byte) ([]byte, error) {
+func (s Stream) key(protect protection) ([]byte, error) {
    if key_id == nil {
       return nil, nil
    }

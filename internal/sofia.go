@@ -3,21 +3,56 @@ package internal
 import (
    "154.pages.dev/encoding/dash"
    "154.pages.dev/sofia"
-   "154.pages.dev/widevine"
    "io"
    "net/http"
 )
 
-func write_segment(dst io.Writer, src io.Reader, key []byte) error {
+type protection struct {
+   key_id []byte
+   pssh []byte
+}
+
+func (p *protection) init(from io.Reader, to io.Writer) error {
+   var file sofia.File
+   err := file.Read(from)
+   if err != nil {
+      return err
+   }
+   if movie, ok := file.GetMovie(); ok {
+      for _, protect := range movie.Protection {
+         if protect.Widevine() {
+            p.pssh = protect.Data
+         }
+         copy(protect.BoxHeader.Type[:], "free") // Firefox
+      }
+      description := movie.
+         Track.
+         Media.
+         MediaInformation.
+         SampleTable.
+         SampleDecription
+      if protect, ok := description.Protection(); ok {
+         p.key_id = protect.SchemeInformation.TrackEncryption.DefaultKid[:]
+         // Firefox
+         copy(protect.BoxHeader.Type[:], "free")
+         if sample, ok := description.SampleEntry(); ok {
+            // Firefox
+            copy(sample.BoxHeader.Type[:], protect.OriginalFormat.DataFormat[:])
+         }
+      }
+   }
+   return file.Write(to)
+}
+func write_segment(from io.Reader, to io.Writer, key []byte) error {
    if key == nil {
-      _, err := io.Copy(dst, src)
+      _, err := io.Copy(to, from)
       if err != nil {
          return err
       }
       return nil
    }
    var file sofia.File
-   err := file.Read(src)
+   err := file.Read(from)
    if err != nil {
       return err
    }
@@ -30,7 +65,7 @@ func write_segment(dst io.Writer, src io.Reader, key []byte) error {
          }
       }
    }
-   return file.Write(dst)
+   return file.Write(to)
 }
 
 func write_sidx(base_url string, bytes dash.Range) ([]sofia.Reference, error) {
@@ -50,46 +85,4 @@ func write_sidx(base_url string, bytes dash.Range) ([]sofia.Reference, error) {
       return nil, err
    }
    return file.SegmentIndex.Reference, nil
-}
-
-func read_init(r io.Reader) (widevine.Data, error) {
-   var file sofia.File
-   err := file.Read(r)
-   if err != nil {
-      return nil, err
-   }
-   data := func() widevine.Data {
-      movie, ok := file.GetMovie()
-      if !ok {
-         return nil
-      }
-      for _, protect := range movie.Protection {
-         if protect.Widevine() {
-            return widevine.PSSH(protect.Data)
-         }
-      }
-      sample := movie.Track.Media.MediaInformation.SampleTable
-      if protect, ok := sample.SampleDecription.Protection(); ok {
-         key_id := protect.SchemeInformation.TrackEncryption.DefaultKid[:]
-         return widevine.KeyId(key_id)
-      }
-   }()
-   return data, nil
-}
-
-func write_init(w io.Writer) error {
-   var file sofia.File
-   for _, protect := range file.Movie.Protection {
-      copy(protect.BoxHeader.Type[:], "free") // Firefox
-   }
-   description := file.SampleDecription()
-   if protect, ok := description.Protection(); ok {
-      // Firefox
-      copy(protect.BoxHeader.Type[:], "free")
-      if sample, ok := description.SampleEntry(); ok {
-         // Firefox
-         copy(sample.BoxHeader.Type[:], protect.OriginalFormat.DataFormat[:])
-      }
-   }
-   return file.Write(w)
 }
