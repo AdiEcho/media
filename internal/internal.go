@@ -47,7 +47,7 @@ func (s Stream) segment_template(
    }
    defer file.Close()
    var protect protection
-   err = protect.init(res.Body, file)
+   err = protect.init(file, res.Body)
    if err != nil {
       return err
    }
@@ -89,7 +89,7 @@ func (s Stream) segment_template(
             res.Write(&b)
             return errors.New(b.String())
          }
-         return write_segment(meter.Reader(res), file, key)
+         return write_segment(file, meter.Reader(res), key)
       }()
       if err != nil {
          return err

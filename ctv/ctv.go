@@ -46,24 +46,6 @@ type MediaManifest struct {
    URL     string
 }
 
-type Poster struct{}
-
-func (Poster) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (Poster) RequestBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Poster) ResponseBody(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Poster) RequestUrl() (string, bool) {
-   return "https://license.9c9media.ca/widevine", true
-}
-
 func (d date) MarshalText() ([]byte, error) {
    return d.T.AppendFormat(nil, time.DateOnly), nil
 }
@@ -129,9 +111,9 @@ func (r ResolvePath) Axis() (*AxisContent, error) {
          } `json:"variables"`
       }
       s.OperationName = "axisContent"
-      s.Query = query_axis
+      s.Query = graphql_compact(query_axis)
       s.Variables.ID = r.id()
-      return json.Marshal(s)
+      return json.MarshalIndent(s, "", " ")
    }()
    if err != nil {
       return nil, err
@@ -217,4 +199,22 @@ func (a AxisContent) Manifest(m *MediaContent) (*MediaManifest, error) {
       return nil, err
    }
    return &MediaManifest{m, string(text)}, nil
+}
+
+type Poster struct{}
+
+func (Poster) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (Poster) RequestUrl() (string, bool) {
+   return "https://license.9c9media.ca/widevine", true
+}
+
+func (Poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
 }

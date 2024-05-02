@@ -4,13 +4,12 @@ import (
    "154.pages.dev/encoding"
    "154.pages.dev/widevine"
    "encoding/hex"
-   "errors"
    "log/slog"
    "os"
 )
 
 func (s Stream) key(protect protection) ([]byte, error) {
-   if key_id == nil {
+   if protect.key_id == nil {
       return nil, nil
    }
    private_key, err := os.ReadFile(s.PrivateKey)
@@ -21,18 +20,17 @@ func (s Stream) key(protect protection) ([]byte, error) {
    if err != nil {
       return nil, err
    }
+   if protect.pssh == nil {
+      protect.pssh = widevine.PSSH(protect.key_id)
+   }
    var module widevine.CDM
-   err = module.New(private_key, client_id, key_id)
+   err = module.New(private_key, client_id, protect.pssh)
    if err != nil {
       return nil, err
    }
-   license, err := module.License(s.Poster)
+   key, err := module.Key(s.Poster, protect.key_id)
    if err != nil {
       return nil, err
-   }
-   key, ok := module.Key(license)
-   if !ok {
-      return nil, errors.New("widevine.CDM.Key")
    }
    slog.Debug("CDM", "key", hex.EncodeToString(key))
    return key, nil

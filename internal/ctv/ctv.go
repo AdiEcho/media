@@ -1,14 +1,10 @@
 package main
 
 import (
-   "154.pages.dev/log"
-   "154.pages.dev/media/internal"
    "154.pages.dev/media/ctv"
-   "flag"
    "fmt"
    "net/http"
-   "os"
-   "path/filepath"
+   "net/url"
 )
 
 func (f flags) download() error {

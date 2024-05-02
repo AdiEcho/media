@@ -30,7 +30,7 @@ func (p *protection) init(to io.Writer, from io.Reader) error {
          Media.
          MediaInformation.
          SampleTable.
-         SampleDecription
+         SampleDescription
       if protect, ok := description.Protection(); ok {
          p.key_id = protect.SchemeInformation.TrackEncryption.DefaultKid[:]
          // Firefox
