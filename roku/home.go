@@ -9,6 +9,16 @@ import (
    "strings"
 )
 
+type HomeScreen struct {
+   EpisodeNumber int `json:",string"`
+   ReleaseDate string // 2007-01-01T000000Z
+   SeasonNumber int `json:",string"`
+   Series *struct {
+      Title string
+   }
+   Title string
+}
+
 func (h *HomeScreen) New(id string) error {
    // outside of US this redirects to
    // therokuchannel.roku.com/enguard
@@ -35,8 +45,7 @@ func (h *HomeScreen) New(id string) error {
          b.WriteString("releaseDate,")
          b.WriteString("seasonNumber,")
          b.WriteString("series.title,")
-         b.WriteString("title,")
-         b.WriteString("viewOptions")
+         b.WriteString("title")
          return url.PathEscape(b.String())
       }())
       return url.PathEscape(b.String())
@@ -52,38 +61,6 @@ func (h *HomeScreen) New(id string) error {
       return errors.New(b.String())
    }
    return json.NewDecoder(res.Body).Decode(h)
-}
-
-type HomeScreen struct {
-   EpisodeNumber int `json:",string"`
-   ReleaseDate string // 2007-01-01T000000Z
-   SeasonNumber int `json:",string"`
-   Series *struct {
-      Title string
-   }
-   Title string
-   ViewOptions []struct {
-      Media struct {
-         Videos []MediaVideo
-      }
-   }
-}
-
-type MediaVideo struct {
-   DrmAuthentication *struct{}
-   URL string
-   VideoType string
-}
-
-func (h HomeScreen) DASH() (*MediaVideo, bool) {
-   for _, option := range h.ViewOptions {
-      for _, video := range option.Media.Videos {
-         if video.VideoType == "DASH" {
-            return &video, true
-         }
-      }
-   }
-   return nil, false
 }
 
 type Namer struct {

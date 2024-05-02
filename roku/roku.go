@@ -3,37 +3,28 @@ package roku
 import (
    "bytes"
    "encoding/json"
+   "errors"
    "net/http"
 )
 
-type Playback struct {
+type account_token struct {
+   AuthToken string
+}
+
+type playback struct {
    DRM struct {
       Widevine struct {
          LicenseServer string
       }
    }
-}
-
-func (Playback) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (p Playback) RequestUrl() (string, bool) {
-   return p.DRM.Widevine.LicenseServer, true
-}
-
-func (Playback) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
+   URL string
 }
 
 func (a account_token) playback(roku_id string) (*playback, error) {
    body, err := func() ([]byte, error) {
       m := map[string]string{
          "mediaFormat": "DASH",
+         "providerId": "rokuavod",
          "rokuId": roku_id,
       }
       return json.Marshal(m)
@@ -58,25 +49,15 @@ func (a account_token) playback(roku_id string) (*playback, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    play := new(playback)
    err = json.NewDecoder(res.Body).Decode(play)
    if err != nil {
       return nil, err
    }
    return play, nil
-}
-
-type playback struct {
-   DRM struct {
-      Widevine struct {
-         LicenseServer string
-      }
-   }
-}
-const user_agent = "trc-googletv; production; 0"
-
-type account_token struct {
-   AuthToken string
 }
 
 func (a *account_token) New() error {
@@ -93,4 +74,22 @@ func (a *account_token) New() error {
    }
    defer res.Body.Close()
    return json.NewDecoder(res.Body).Decode(a)
+}
+
+const user_agent = "trc-googletv; production; 0"
+
+func (playback) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (p playback) RequestUrl() (string, bool) {
+   return p.DRM.Widevine.LicenseServer, true
+}
+
+func (playback) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (playback) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
 }

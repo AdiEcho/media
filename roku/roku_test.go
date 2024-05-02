@@ -10,17 +10,24 @@ import (
    "time"
 )
 
+func TestPlayback(t *testing.T) {
+   var token account_token
+   err := token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      play, err := token.playback(path.Base(test.url))
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", play)
+      time.Sleep(time.Second)
+   }
+}
+
 func TestLicense(t *testing.T) {
    test := tests["episode"]
-   var site CrossSite
-   err := site.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   play, err := site.Playback(path.Base(test.url))
-   if err != nil {
-      t.Fatal(err)
-   }
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -42,25 +49,18 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
+   var token account_token
+   err = token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   play, err := token.playback(path.Base(test.url))
+   if err != nil {
+      t.Fatal(err)
+   }
    key, err := module.Key(play, key_id)
    if err != nil {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-func TestPlayback(t *testing.T) {
-   var site CrossSite
-   err := site.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      play, err := site.Playback(path.Base(test.url))
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(play)
-      time.Sleep(time.Second)
-   }
 }

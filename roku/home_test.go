@@ -31,7 +31,11 @@ func TestContent(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(encoding.Name(Namer{home}))
+      name, err := encoding.Name(Namer{home})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
 }
