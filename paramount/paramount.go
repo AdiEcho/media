@@ -127,7 +127,7 @@ type SessionToken struct {
    LS_Session string
 }
 
-func (SessionToken) RequestBody(b []byte) ([]byte, error) {
+func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
@@ -141,7 +141,7 @@ func (s SessionToken) RequestUrl() (string, bool) {
    return s.URL, true
 }
 
-func (SessionToken) ResponseBody(b []byte) ([]byte, error) {
+func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 

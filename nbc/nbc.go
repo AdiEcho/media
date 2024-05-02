@@ -82,11 +82,11 @@ func (m Metadata) OnDemand() (*OnDemand, error) {
    return video, nil
 }
 
-func (Video) RequestBody(b []byte) ([]byte, error) {
+func (Video) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Video) ResponseBody(b []byte) ([]byte, error) {
+func (Video) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 

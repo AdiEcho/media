@@ -107,7 +107,7 @@ func (p Playback) HttpsDash() (*DataSource, bool) {
    return nil, false
 }
 
-func (Playback) RequestBody(b []byte) ([]byte, error) {
+func (Playback) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
@@ -124,7 +124,7 @@ func (p Playback) RequestUrl() (string, bool) {
    return "", false
 }
 
-func (Playback) ResponseBody(b []byte) ([]byte, error) {
+func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 

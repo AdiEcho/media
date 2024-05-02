@@ -77,11 +77,11 @@ type Playback struct {
    }
 }
 
-func (Playback) RequestBody(b []byte) ([]byte, error) {
+func (Playback) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Playback) ResponseBody(b []byte) ([]byte, error) {
+func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
