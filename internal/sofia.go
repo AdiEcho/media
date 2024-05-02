@@ -12,7 +12,7 @@ type protection struct {
    pssh []byte
 }
 
-func (p *protection) init(from io.Reader, to io.Writer) error {
+func (p *protection) init(to io.Writer, from io.Reader) error {
    var file sofia.File
    err := file.Read(from)
    if err != nil {
@@ -43,7 +43,8 @@ func (p *protection) init(from io.Reader, to io.Writer) error {
    }
    return file.Write(to)
 }
-func write_segment(from io.Reader, to io.Writer, key []byte) error {
+
+func write_segment(to io.Writer, from io.Reader, key []byte) error {
    if key == nil {
       _, err := io.Copy(to, from)
       if err != nil {
