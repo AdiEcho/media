@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/nbc<span class="navbar-right">
-          v1.8.8 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.9 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package nbc</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/nbc&#34;</span></pre>
@@ -39,10 +39,10 @@
       <a href="#Video">type Video</a>
       <ul>
           <li><a href="#Core">func Core() Video</a></li>
-          <li><a href="#Video.RequestBody">func (Video) RequestBody(b []byte) ([]byte, error)</a></li>
           <li><a href="#Video.RequestHeader">func (Video) RequestHeader() (http.Header, error)</a></li>
           <li><a href="#Video.RequestUrl">func (v Video) RequestUrl() (string, bool)</a></li>
-          <li><a href="#Video.ResponseBody">func (Video) ResponseBody(b []byte) ([]byte, error)</a></li>
+          <li><a href="#Video.UnwrapResponse">func (Video) UnwrapResponse(b []byte) ([]byte, error)</a></li>
+          <li><a href="#Video.WrapRequest">func (Video) WrapRequest(b []byte) ([]byte, error)</a></li>
           </ul>
       </li>
   </ul><h3 id="pkg-types">Types</h3>
@@ -82,14 +82,14 @@
 <span class="p">}</span></pre>
     <h4 id="Core">func Core</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="nf">Core</span><span class="p">()</span> <a href="#Video"><span class="nx">Video</span></a></pre>
-  <h4 id="Video.RequestBody">func (Video) RequestBody</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">RequestBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Video.RequestHeader">func (Video) RequestHeader</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Video.RequestUrl">func (Video) RequestUrl</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h4 id="Video.ResponseBody">func (Video) ResponseBody</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">ResponseBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Video.UnwrapResponse">func (Video) UnwrapResponse</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Video.WrapRequest">func (Video) WrapRequest</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   </main>
     <hr>
     <footer>

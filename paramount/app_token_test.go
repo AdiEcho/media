@@ -39,15 +39,15 @@ func TestWidevine(t *testing.T) {
       t.Fatal(err)
    }
    var module widevine.CDM
-   if err := module.New(private_key, client_id, key_id); err != nil {
-      t.Fatal(err)
-   }
-   license, err := module.License(session)
+   err = module.New(private_key, client_id, widevine.PSSH(key_id))
    if err != nil {
       t.Fatal(err)
    }
-   key, ok := module.Key(license)
-   fmt.Printf("%x %v\n", key, ok)
+   key, err := module.Key(session, key_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%x\n", key)
 }
 
 func TestItem(t *testing.T) {

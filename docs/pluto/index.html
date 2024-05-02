@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/pluto<span class="navbar-right">
-          v1.8.8 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.8.9 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package pluto</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/pluto&#34;</span></pre>
@@ -39,10 +39,10 @@
   <li>
       <a href="#Poster">type Poster</a>
       <ul>
-          <li><a href="#Poster.RequestBody">func (Poster) RequestBody(b []byte) ([]byte, error)</a></li>
           <li><a href="#Poster.RequestHeader">func (Poster) RequestHeader() (http.Header, error)</a></li>
           <li><a href="#Poster.RequestUrl">func (Poster) RequestUrl() (string, bool)</a></li>
-          <li><a href="#Poster.ResponseBody">func (Poster) ResponseBody(b []byte) ([]byte, error)</a></li>
+          <li><a href="#Poster.UnwrapResponse">func (Poster) UnwrapResponse(b []byte) ([]byte, error)</a></li>
+          <li><a href="#Poster.WrapRequest">func (Poster) WrapRequest(b []byte) ([]byte, error)</a></li>
           </ul>
       </li>
   <li>
@@ -107,14 +107,14 @@
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h3 id="Poster">type Poster</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Poster</span> <span class="kd">struct</span><span class="p">{}</span></pre>
-    <h4 id="Poster.RequestBody">func (Poster) RequestBody</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">RequestBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Poster.RequestHeader">func (Poster) RequestHeader</h4>
+    <h4 id="Poster.RequestHeader">func (Poster) RequestHeader</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Poster.RequestUrl">func (Poster) RequestUrl</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h4 id="Poster.ResponseBody">func (Poster) ResponseBody</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">ResponseBody</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Poster.UnwrapResponse">func (Poster) UnwrapResponse</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Poster.WrapRequest">func (Poster) WrapRequest</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h3 id="Season">type Season</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Season</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Season.Episodes"><span class="nx">Episodes</span></span> <span class="p">[]</span><span class="o">*</span><a href="#Video"><span class="nx">Video</span></a>
