@@ -10,41 +10,9 @@ import (
    "time"
 )
 
-func TestMedia(t *testing.T) {
-   for _, path := range test_paths {
-      resolve, err := NewResolve(path)
-      if err != nil {
-         t.Fatal(err)
-      }
-      time.Sleep(99 * time.Millisecond)
-      axis, err := resolve.Axis()
-      if err != nil {
-         t.Fatal(err)
-      }
-      time.Sleep(99 * time.Millisecond)
-      media, err := axis.Media()
-      if err != nil {
-         t.Fatal(err)
-      }
-      name, err := encoding.Name(Namer{media})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(99 * time.Millisecond)
-   }
-}
-
-var test_paths = []string{
-   // ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
-   "/movies/the-girl-with-the-dragon-tattoo-2011",
-   // ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-   "/shows/friends/the-one-with-the-bullies-s2e21",
-}
-
 func TestManifest(t *testing.T) {
-   for _, path := range test_paths {
-      resolve, err := NewResolve(path)
+   for _, test_path := range test_paths {
+      resolve, err := NewResolve(test_path)
       if err != nil {
          t.Fatal(err)
       }
@@ -105,3 +73,35 @@ func TestLicense(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
+func TestMedia(t *testing.T) {
+   for _, test_path := range test_paths {
+      resolve, err := Path(test_path).Resolve()
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(99 * time.Millisecond)
+      axis, err := resolve.Axis()
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(99 * time.Millisecond)
+      media, err := axis.Media()
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := encoding.Name(Namer{media})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(99 * time.Millisecond)
+   }
+}
+
+var test_paths = []string{
+   // ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
+   "/movies/the-girl-with-the-dragon-tattoo-2011",
+   // ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
+   "/shows/friends/the-one-with-the-bullies-s2e21",
+}
+

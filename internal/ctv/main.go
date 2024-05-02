@@ -2,6 +2,7 @@ package main
 
 import (
    "154.pages.dev/log"
+   "154.pages.dev/media/ctv"
    "154.pages.dev/media/internal"
    "flag"
    "os"
@@ -20,10 +21,11 @@ func (f *flags) New() error {
 }
 
 type flags struct {
-   address string
+   path ctv.Path
    representation string
    s internal.Stream
    v log.Level
+   manifest bool
 }
 
 func main() {
@@ -32,20 +34,27 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.StringVar(&f.representation, "i", "", "representation")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.Var(&f.path, "a", "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
+   flag.BoolVar(&f.manifest, "m", false, "manifest")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.StringVar(&f.address, "a", "", "address")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
-   if f.address != "" {
+   switch {
+   case f.manifest:
+      err := f.get_manifest()
+      if err != nil {
+         panic(err)
+      }
+   case f.path != "":
       err := f.download()
       if err != nil {
          panic(err)
       }
-   } else {
+   default:
       flag.Usage()
    }
 }

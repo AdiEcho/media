@@ -7,19 +7,35 @@ import (
    "strings"
 )
 
-type path string
+type Path string
 
-func NewResolve(path string) (*ResolvePath, error) {
+func (p Path) String() string {
+   return string(p)
+}
+
+// https://www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
+// www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
+// ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
+// /shows/friends/the-one-with-the-bullies-s2e21
+func (p *Path) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   s = strings.TrimPrefix(s, "ctv.ca")
+   *p = Path(s)
+   return nil
+}
+
+func (p Path) Resolve() (*ResolvePath, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          OperationName string `json:"operationName"`
          Query         string `json:"query"`
          Variables     struct {
-            Path string `json:"path"`
+            Path Path `json:"path"`
          } `json:"variables"`
       }
       s.OperationName = "resolvePath"
-      s.Variables.Path = path
+      s.Variables.Path = p
       s.Query = graphql_compact(query_resolve)
       return json.MarshalIndent(s, "", " ")
    }()
