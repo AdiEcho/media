@@ -90,9 +90,3 @@ type CrossSite struct {
    cookies []*http.Cookie
    token string
 }
-
-type MediaVideo struct {
-   DrmAuthentication *struct{}
-   URL string
-   VideoType string
-}

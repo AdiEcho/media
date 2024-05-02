@@ -54,17 +54,6 @@ func (h *HomeScreen) New(id string) error {
    return json.NewDecoder(res.Body).Decode(h)
 }
 
-func (h HomeScreen) DASH() (*MediaVideo, bool) {
-   for _, option := range h.ViewOptions {
-      for _, video := range option.Media.Videos {
-         if video.VideoType == "DASH" {
-            return &video, true
-         }
-      }
-   }
-   return nil, false
-}
-
 type HomeScreen struct {
    EpisodeNumber int `json:",string"`
    ReleaseDate string // 2007-01-01T000000Z
@@ -78,6 +67,23 @@ type HomeScreen struct {
          Videos []MediaVideo
       }
    }
+}
+
+type MediaVideo struct {
+   DrmAuthentication *struct{}
+   URL string
+   VideoType string
+}
+
+func (h HomeScreen) DASH() (*MediaVideo, bool) {
+   for _, option := range h.ViewOptions {
+      for _, video := range option.Media.Videos {
+         if video.VideoType == "DASH" {
+            return &video, true
+         }
+      }
+   }
+   return nil, false
 }
 
 type Namer struct {
