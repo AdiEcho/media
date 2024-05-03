@@ -7,41 +7,43 @@
 
 https://play.google.com/store/apps/details?id=com.sbs.ondemand.android
 
-## web
-
-this is it:
-
-<https://sbs-vod-dai-prod-01.akamaized.net/Content/HLS_TS/VOD/geo/12584/6125/949f1b93-2399-426a-ba69-60d0fbcbd640/9439a831-9b13-6280-ed4f-cb66148195cb/Stream(04)/Segment(533988888).ts?aka_me_session_id=AAAAAAAAAADHcDZmAAAAALDYin8Q6QGZ7+1a2sdeyvGTCCg51HJsJQ3yBe+hNB1Lq9ZKzCGiWdBtF6GZ667n5y%2FGegMMFa68>
-
-from:
-
-https://dai.google.com/ondemand/hls/content/2488267/vid/2229616195516A/SIN/streams/84673c39-202a-48da-9458-aa756ceced7d/media/36ab5517f05afcaef855376bf5144fcc.m3u8
-
-from:
-
-<https://sbs-vod-dai-prod-01.akamaized.net/Content/HLS_TS/VOD/geo/12584/6125/949f1b93-2399-426a-ba69-60d0fbcbd640/9439a831-9b13-6280-ed4f-cb66148195cb/master.m3u8?hdnea=st=1714771411~exp=1714775011~acl=/Content/HLS_TS/VOD/geo/12584/6125/949f1b93-2399-426a-ba69-60d0fbcbd640/9439a831-9b13-6280-ed4f-cb66148195cb/*~id=63470820-3d7c-4f57-ba5e-b7a7f5ea0759~hmac=d317b06c0e810aa7f900b7240612af02aa299dd687f2a02927e0d37f2b39193b&originpath=/ondemand/hls/content/2488267/vid/2229616195516A/SIN/streams/84673c39-202a-48da-9458-aa756ceced7d/master.m3u8>
-
-from:
+## 1
 
 ~~~
-POST https://pubads.g.doubleclick.net/ondemand/hls/content/2488267/vid/2229616195516A/streams HTTP/2.0
+POST https://www.sbs.com.au/api/v3/janrain/auth_native_traditional?context=odwebsite HTTP/2.0
 user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
-accept: */*
+accept: application/json, text/plain, */*
 accept-language: en-US,en;q=0.5
 accept-encoding: gzip, deflate, br
-content-type: application/x-www-form-urlencoded;charset=utf-8
-content-length: 1198
+content-type: multipart/form-data; boundary=---------------------------3672811325816669204907760291
+content-length: 530
 origin: https://www.sbs.com.au
-referer: https://www.sbs.com.au/
+referer: https://www.sbs.com.au/ondemand/watch/2229616195516
 sec-fetch-dest: empty
 sec-fetch-mode: cors
-sec-fetch-site: cross-site
+sec-fetch-site: same-origin
 te: trailers
 
-cust_params=cxsegments%3D%26cxprnd%3D25460999%26cxid%3D077f2646-7b68-485a-9112-846f1a46344d%26cxsiteid%3D1133921284657819058%26cxurl%3Dhttp%3A%2F%2Fwww.sbs.com.au%2Fondemand%2Fvideo%2Fsingle%2F2229616195516%26device%3Dweb%26ipaddress%3D103.136.147.29%26partner%3Dnone%26programname%3Dcloser%26genre%3DFilm%2CDrama%26season%3D%26ratings%3Dma15%2B%26vid%3D2229616195516%26scor%3D2229616195516%26uid%3D077f2646-7b68-485a-9112-846f1a46344d%26ifa%3D%26ifaoptout%3D0%26tvid%3D%26oztam%3Dcf92a103-2330-c1dc-ac74-ce46fd2638e4&ppid=077F26467B68485A9112846F1A46344D&iu=%2F4117%2Fvideo.web.sbs.com.au&npa=0&description_url=https%3A%2F%2Fwww.sbs.com.au%2Fondemand%2Fvideo%2F2229616195516&ipaddress=103.136.147.29&ctv=0&correlator=2484860642866773&ptt=20&osd=2&sdr=1&sdki=41&sdkv=h.3.639.0&uach=null&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64%3B%20rv%3A109.0)%20Gecko%2F20100101%20Firefox%2F111.0&eid=44777649%2C44781409%2C95321947%2C95322027%2C95323893%2C95324128%2C95324210%2C95326337%2C95329629%2C95331589&frm=0&omid_p=Google1%2Fh.3.639.0&sdk_apis=7&wta=0&sid=29936BB7-54C3-436F-A8D7-7DA72E65AED1&ssss=gima&url=https%3A%2F%2Fwww.sbs.com.au%2Fondemand%2Fwatch%2F2229616195516&cookie_enabled=1
+-----------------------------3672811325816669204907760291
+Content-Disposition: form-data; name="user"
+
+USER
+-----------------------------3672811325816669204907760291
+Content-Disposition: form-data; name="pass"
+
+PASS
+-----------------------------3672811325816669204907760291
+Content-Disposition: form-data; name="express"
+
+1
+-----------------------------3672811325816669204907760291
+Content-Disposition: form-data; name="lang"
+
+en
+-----------------------------3672811325816669204907760291--
 ~~~
 
-from:
+## 2
 
 ~~~
 GET https://www.sbs.com.au/api/v3/video_stream?context=odwebsite&id=2229616195516&audio=demuxed HTTP/2.0
@@ -77,38 +79,22 @@ te: trailers
 content-length: 0
 ~~~
 
-from:
+## 3
 
 ~~~
-POST https://www.sbs.com.au/api/v3/janrain/auth_native_traditional?context=odwebsite HTTP/2.0
+POST https://pubads.g.doubleclick.net/ondemand/hls/content/2488267/vid/2229616195516A/streams HTTP/2.0
 user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
-accept: application/json, text/plain, */*
+accept: */*
 accept-language: en-US,en;q=0.5
 accept-encoding: gzip, deflate, br
-content-type: multipart/form-data; boundary=---------------------------3672811325816669204907760291
-content-length: 530
+content-type: application/x-www-form-urlencoded;charset=utf-8
+content-length: 1198
 origin: https://www.sbs.com.au
-referer: https://www.sbs.com.au/ondemand/watch/2229616195516
+referer: https://www.sbs.com.au/
 sec-fetch-dest: empty
 sec-fetch-mode: cors
-sec-fetch-site: same-origin
+sec-fetch-site: cross-site
 te: trailers
 
------------------------------3672811325816669204907760291
-Content-Disposition: form-data; name="user"
-
-USER
------------------------------3672811325816669204907760291
-Content-Disposition: form-data; name="pass"
-
-PASS
------------------------------3672811325816669204907760291
-Content-Disposition: form-data; name="express"
-
-1
------------------------------3672811325816669204907760291
-Content-Disposition: form-data; name="lang"
-
-en
------------------------------3672811325816669204907760291--
+cust_params=cxsegments%3D%26cxprnd%3D25460999%26cxid%3D077f2646-7b68-485a-9112-846f1a46344d%26cxsiteid%3D1133921284657819058%26cxurl%3Dhttp%3A%2F%2Fwww.sbs.com.au%2Fondemand%2Fvideo%2Fsingle%2F2229616195516%26device%3Dweb%26ipaddress%3D103.136.147.29%26partner%3Dnone%26programname%3Dcloser%26genre%3DFilm%2CDrama%26season%3D%26ratings%3Dma15%2B%26vid%3D2229616195516%26scor%3D2229616195516%26uid%3D077f2646-7b68-485a-9112-846f1a46344d%26ifa%3D%26ifaoptout%3D0%26tvid%3D%26oztam%3Dcf92a103-2330-c1dc-ac74-ce46fd2638e4&ppid=077F26467B68485A9112846F1A46344D&iu=%2F4117%2Fvideo.web.sbs.com.au&npa=0&description_url=https%3A%2F%2Fwww.sbs.com.au%2Fondemand%2Fvideo%2F2229616195516&ipaddress=103.136.147.29&ctv=0&correlator=2484860642866773&ptt=20&osd=2&sdr=1&sdki=41&sdkv=h.3.639.0&uach=null&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64%3B%20rv%3A109.0)%20Gecko%2F20100101%20Firefox%2F111.0&eid=44777649%2C44781409%2C95321947%2C95322027%2C95323893%2C95324128%2C95324210%2C95326337%2C95329629%2C95331589&frm=0&omid_p=Google1%2Fh.3.639.0&sdk_apis=7&wta=0&sid=29936BB7-54C3-436F-A8D7-7DA72E65AED1&ssss=gima&url=https%3A%2F%2Fwww.sbs.com.au%2Fondemand%2Fwatch%2F2229616195516&cookie_enabled=1
 ~~~
