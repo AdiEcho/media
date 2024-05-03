@@ -1,12 +1,11 @@
 package sbs
 
 import (
-   "fmt"
    "os"
    "testing"
 )
 
-func TestAuth(t *testing.T) {
+func TestVideo(t *testing.T) {
    user, pass := os.Getenv("sbs_username"), os.Getenv("sbs_password")
    if user == "" {
       t.Fatal("Getenv")
@@ -16,5 +15,10 @@ func TestAuth(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", auth)
+   res, err := auth.video_stream()
+   if err != nil {
+      t.Fatal(err)
+   }
+   defer res.Body.Close()
+   res.Write(os.Stdout)
 }
