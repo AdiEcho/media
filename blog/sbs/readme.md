@@ -76,3 +76,39 @@ sec-fetch-site: same-origin
 te: trailers
 content-length: 0
 ~~~
+
+from:
+
+~~~
+POST https://www.sbs.com.au/api/v3/janrain/auth_native_traditional?context=odwebsite HTTP/2.0
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
+accept: application/json, text/plain, */*
+accept-language: en-US,en;q=0.5
+accept-encoding: gzip, deflate, br
+content-type: multipart/form-data; boundary=---------------------------3672811325816669204907760291
+content-length: 530
+origin: https://www.sbs.com.au
+referer: https://www.sbs.com.au/ondemand/watch/2229616195516
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+te: trailers
+
+-----------------------------3672811325816669204907760291
+Content-Disposition: form-data; name="user"
+
+USER
+-----------------------------3672811325816669204907760291
+Content-Disposition: form-data; name="pass"
+
+PASS
+-----------------------------3672811325816669204907760291
+Content-Disposition: form-data; name="express"
+
+1
+-----------------------------3672811325816669204907760291
+Content-Disposition: form-data; name="lang"
+
+en
+-----------------------------3672811325816669204907760291--
+~~~
