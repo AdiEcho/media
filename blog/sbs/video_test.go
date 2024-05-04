@@ -1,6 +1,7 @@
 package sbs
 
 import (
+   "fmt"
    "os"
    "testing"
 )
@@ -15,10 +16,9 @@ func TestVideo(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   res, err := auth.video_stream()
+   video, err := auth.video()
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   fmt.Printf("%+v\n", video)
 }
