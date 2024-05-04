@@ -22,6 +22,7 @@ func (a auth_native) video() (*video_stream, error) {
    req.Header.Set("authorization", "Bearer " + a.User_State.SessionToken)
    req.URL.RawQuery = url.Values{
       "context": {"odwebsite"},
+      //"context": {"tv"},
       "id": {"2229616195516"},
    }.Encode()
    res, err := http.DefaultClient.Do(req)
