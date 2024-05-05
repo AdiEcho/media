@@ -7,7 +7,7 @@ import (
    "time"
 )
 
-func TestEntitlement(t *testing.T) {
+func TestPlayback(t *testing.T) {
    var (
       auth auth_login
       err error
@@ -26,7 +26,11 @@ func TestEntitlement(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%+v\n", title)
+      play, err := auth.playback(movie, title)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", play)
       time.Sleep(time.Second)
    }
 }

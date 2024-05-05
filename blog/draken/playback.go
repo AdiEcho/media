@@ -1,21 +1,24 @@
 package draken
 
 import (
+   "encoding/json"
    "net/http"
-   "net/url"
-   "os"
 )
 
+type playback struct {
+   Playlist string
+}
+
 func (a auth_login) playback(
-   title entitlement, movie full_movie,
-) (*http.Response, error) {
+   movie *full_movie, title *entitlement,
+) (*playback, error) {
    req, err := http.NewRequest("POST", "https://client-api.magine.com", nil)
    if err != nil {
       return nil, err
    }
    req.URL.Path = "/api/playback/v1/preflight/asset/" + movie.ID
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.Token},
+      "authorization": {"Bearer " + a.v.Token},
       "magine-accesstoken": {magine_accesstoken},
       "magine-play-deviceid": {"!"},
       "magine-play-devicemodel": {"firefox 111.0 / windows 10"},
@@ -26,5 +29,15 @@ func (a auth_login) playback(
       "magine-play-protocol": {"dashs"},
       "x-forwarded-for": {"78.64.0.0"},
    }
-   return http.DefaultClient.Do(req)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   play := new(playback)
+   err = json.NewDecoder(res.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
 }

@@ -3,8 +3,15 @@ package draken
 import (
    "bytes"
    "encoding/json"
+   "errors"
    "net/http"
+   "strings"
 )
+
+func graphql_compact(s string) string {
+   f := strings.Fields(s)
+   return strings.Join(f, " ")
+}
 
 const get_custom_id = `
 query GetCustomIdFullMovie($customId: ID!) {
@@ -22,6 +29,10 @@ query GetCustomIdFullMovie($customId: ID!) {
 
 const magine_accesstoken = "22cc71a2-8b77-4819-95b0-8c90f4cf5663"
 
+type full_movie struct {
+   ID string
+}
+
 func new_movie(custom_id string) (*full_movie, error) {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -30,9 +41,9 @@ func new_movie(custom_id string) (*full_movie, error) {
             CustomId string `json:"customId"`
          } `json:"variables"`
       }
-      s.Query = get_custom_id
       s.Variables.CustomId = custom_id
-      return json.Marshal(s)
+      s.Query = graphql_compact(get_custom_id)
+      return json.MarshalIndent(s, "", " ")
    }()
    req, err := http.NewRequest(
       "POST", "https://client-api.magine.com/api/apiql/v2",
@@ -53,7 +64,7 @@ func new_movie(custom_id string) (*full_movie, error) {
    var s struct {
       Data struct {
          Viewer struct {
-            ViewableCustomId struct {
+            ViewableCustomId *struct {
                DefaultPlayable full_movie
             }
          }
@@ -63,9 +74,8 @@ func new_movie(custom_id string) (*full_movie, error) {
    if err != nil {
       return nil, err
    }
-   return &s.Data.Viewer.ViewableCustomId.DefaultPlayable, nil
-}
-
-type full_movie struct {
-   ID string
+   if v := s.Data.Viewer.ViewableCustomId; v != nil {
+      return &v.DefaultPlayable, nil
+   }
+   return nil, errors.New(`"viewableCustomId": null`)
 }

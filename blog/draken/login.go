@@ -3,12 +3,9 @@ package draken
 import (
    "bytes"
    "encoding/json"
+   "io"
    "net/http"
 )
-
-type auth_login struct {
-   Token string
-}
 
 func (a *auth_login) New(identity, key string) error {
    body, err := func() ([]byte, error) {
@@ -33,5 +30,20 @@ func (a *auth_login) New(identity, key string) error {
       return err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(a)
+   a.data, err = io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a *auth_login) unmarshal() error {
+   return json.Unmarshal(a.data, &a.v)
+}
+
+type auth_login struct {
+   data []byte
+   v struct {
+      Token string
+   }
 }

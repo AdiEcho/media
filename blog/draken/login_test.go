@@ -1,7 +1,6 @@
 package draken
 
 import (
-   "fmt"
    "os"
    "testing"
 )
@@ -17,5 +16,5 @@ func TestLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", auth)
+   os.WriteFile("login.json", auth.data, 0666)
 }

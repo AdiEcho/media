@@ -2,6 +2,7 @@ package draken
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
 )
 
@@ -16,7 +17,7 @@ func (a auth_login) entitlement(f *full_movie) (*entitlement, error) {
    }
    req.URL.Path = "/api/entitlement/v2/asset/" + f.ID
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.Token},
+      "authorization": {"Bearer " + a.v.Token},
       "magine-accesstoken": {magine_accesstoken},
    }
    res, err := http.DefaultClient.Do(req)
@@ -24,6 +25,9 @@ func (a auth_login) entitlement(f *full_movie) (*entitlement, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
    title := new(entitlement)
    err = json.NewDecoder(res.Body).Decode(title)
    if err != nil {
