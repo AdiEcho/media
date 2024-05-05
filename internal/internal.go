@@ -16,29 +16,29 @@ import (
 )
 
 var Forward = ForwardedFor{
-   {"Argentina", "181.0.0.0"},
+   {"Argentina", "186.128.0.0"},
    {"Australia", "1.128.0.0"},
    {"Bolivia", "179.58.0.0"},
-   {"Brazil", "189.0.0.0"},
+   {"Brazil", "179.192.0.0"},
    {"Canada", "99.224.0.0"},
    {"Chile", "191.112.0.0"},
    {"Colombia", "181.128.0.0"},
    {"Costa Rica", "201.192.0.0"},
-   {"Denmark", "87.48.0.0"},
+   {"Denmark", "2.104.0.0"},
    {"Ecuador", "186.68.0.0"},
    {"Germany", "53.0.0.0"},
-   {"Guatemala", "190.148.0.0"},
+   {"Guatemala", "190.56.0.0"},
    {"Ireland", "87.32.0.0"},
    {"Italy", "79.0.0.0"},
    {"Latvia", "78.84.0.0"},
    {"Mexico", "189.128.0.0"},
    {"Norway", "88.88.0.0"},
    {"Peru", "190.232.0.0"},
-   {"South Africa", "41.0.0.0"},
+   {"South Africa", "105.0.0.0"},
    {"Spain", "88.0.0.0"},
    {"Sweden", "78.64.0.0"},
    {"United Kingdom", "25.0.0.0"},
-   {"Venezuela", "186.88.0.0"},
+   {"Venezuela", "190.72.0.0"},
 }
 
 type ForwardedFor []struct {

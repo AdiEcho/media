@@ -7,6 +7,35 @@ import (
    "strings"
 )
 
+var magine_accesstoken = header{
+   "magine-accesstoken", "22cc71a2-8b77-4819-95b0-8c90f4cf5663",
+}
+
+var magine_play_devicemodel = header{
+   "magine-play-devicemodel", "firefox 111.0 / windows 10",
+}
+
+var magine_play_deviceplatform = header{
+   "magine-play-deviceplatform", "firefox",
+}
+
+var magine_play_devicetype = header{
+   "magine-play-devicetype", "web",
+}
+
+var magine_play_drm = header{
+   "magine-play-drm", "widevine",
+}
+
+var magine_play_protocol = header{
+   "magine-play-protocol", "dashs",
+}
+
+// this value is important, with the wrong value you get random failures
+var x_forwarded_for = header{
+   "x-forwarded-for", "95.192.0.0",
+}
+
 type playback struct {
    Headers map[string]string
    Playlist string
@@ -56,27 +85,3 @@ type header struct {
 func (h header) set(head http.Header) {
    head.Set(h.key, h.value)
 }
-
-var (
-   magine_accesstoken = header{
-      "magine-accesstoken", "22cc71a2-8b77-4819-95b0-8c90f4cf5663",
-   }
-   magine_play_devicemodel = header{
-      "magine-play-devicemodel", "firefox 111.0 / windows 10",
-   }
-   magine_play_deviceplatform = header{
-      "magine-play-deviceplatform", "firefox",
-   }
-   magine_play_devicetype = header{
-      "magine-play-devicetype", "web",
-   }
-   magine_play_drm = header{
-      "magine-play-drm", "widevine",
-   }
-   magine_play_protocol = header{
-      "magine-play-protocol", "dashs",
-   }
-   x_forwarded_for = header{
-      "x-forwarded-for", "78.64.0.0",
-   }
-)

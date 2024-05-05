@@ -31,6 +31,6 @@ func TestMovie(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", movie)
-      time.Sleep(time.Second)
+      time.Sleep(99 * time.Millisecond)
    }
 }
