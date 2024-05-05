@@ -8,31 +8,6 @@ import (
    "strings"
 )
 
-func graphql_compact(s string) string {
-   f := strings.Fields(s)
-   return strings.Join(f, " ")
-}
-
-const get_custom_id = `
-query GetCustomIdFullMovie($customId: ID!) {
-   viewer {
-      viewableCustomId(customId: $customId) {
-         ... on Movie {
-            defaultPlayable {
-               id
-            }
-         }
-      }
-   }
-}
-`
-
-const magine_accesstoken = "22cc71a2-8b77-4819-95b0-8c90f4cf5663"
-
-type full_movie struct {
-   ID string
-}
-
 func new_movie(custom_id string) (*full_movie, error) {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -52,10 +27,8 @@ func new_movie(custom_id string) (*full_movie, error) {
    if err != nil {
       return nil, err
    }
-   req.Header = http.Header{
-      "magine-accesstoken": {magine_accesstoken},
-      "x-forwarded-for": {"78.64.0.0"},
-   }
+   magine_accesstoken.set(req.Header)
+   x_forwarded_for.set(req.Header)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -78,4 +51,26 @@ func new_movie(custom_id string) (*full_movie, error) {
       return &v.DefaultPlayable, nil
    }
    return nil, errors.New(`"viewableCustomId": null`)
+}
+func graphql_compact(s string) string {
+   f := strings.Fields(s)
+   return strings.Join(f, " ")
+}
+
+const get_custom_id = `
+query GetCustomIdFullMovie($customId: ID!) {
+   viewer {
+      viewableCustomId(customId: $customId) {
+         ... on Movie {
+            defaultPlayable {
+               id
+            }
+         }
+      }
+   }
+}
+`
+
+type full_movie struct {
+   ID string
 }
