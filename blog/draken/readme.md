@@ -83,4 +83,29 @@ Connection: Keep-Alive
 Accept-Encoding: gzip
 ~~~
 
-Magine-AccessToken in the APK?
+Magine-Play-Entitlementid comes from:
+
+~~~
+POST /api/entitlement/v2/asset/17139357-ed0b-4a16-8be6-69e418c4ba40 HTTP/1.1
+User-Agent: Draken Film/4.5.0/1707910466;Magine-SDK/3.3.1;os=Android/6.0;device=Android SDK built for x86
+Accept-Language: en-US;q=1.0, en-US;q=0.9, *;q=0.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNTZLRUZKRExDN0hNSUtBVU5TUUJHOExTVVNSIiwiaWF0IjoxNzE0ODY4NzExLCJ1c2VySWQiOiIxNTZLRUZKRExDN0hNSUtBVU5TUUJHOExTVVNSIiwidXNlckNvdW50cnkiOiJTRSIsIm5vZ2VvIjpmYWxzZSwiZGVidWciOmZhbHNlfQ.5Km1FYvwuj5J3aMepNxwzbjY3w7aXfWcWtRD9q3stwBC3nZgKSMOIJwhotQQF1r4SJqBKRC5sGoz7p77LDoKRA
+Magine-AccessToken: 22cc71a2-8b77-4819-95b0-8c90f4cf5663
+Content-Length: 0
+Host: client-api.magine.com
+Connection: Keep-Alive
+~~~
+
+Magine-AccessToken in the APK:
+
+~~~java
+@Override // wc.b
+public String a() {
+  return "22cc71a2-8b77-4819-95b0-8c90f4cf5663";
+}
+
+@Override // wc.b
+public String b() {
+  return "ea6fc0bb-8352-4bd6-9c4d-040a2c478fe8";
+}
+~~~
