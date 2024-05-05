@@ -10,6 +10,65 @@ import (
    "time"
 )
 
+func get(address string) ([]block, error) {
+   res, err := http.Get(address)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   var blocks []block
+   for _, line := range strings.Split(string(text), "\n") {
+      if !strings.HasPrefix(line, "#") {
+         var (
+            b block
+            ok bool
+            raw_size string
+         )
+         if b.ip, raw_size, ok = strings.Cut(line, "/"); ok {
+            b.size, err = strconv.Atoi(raw_size)
+            if err != nil {
+               return nil, err
+            }
+            blocks = append(blocks, b)
+         }
+      }
+   }
+   return blocks, nil
+}
+
+func main() {
+   for _, country := range countries {
+      address := func() string {
+         var b strings.Builder
+         b.WriteString("https://raw.githubusercontent.com/firehol/")
+         b.WriteString("blocklist-ipsets/master/geolite2_country/")
+         b.WriteString(country.name)
+         return b.String()
+      }()
+      blocks, err := get(address)
+      if err != nil {
+         panic(err)
+      }
+      min := slices.MinFunc(blocks, func(a, b block) int {
+         if v := a.size - b.size; v != 0 {
+            return v
+         }
+         return len(a.ip) - len(b.ip)
+      })
+      fmt.Printf("{%q, %q},\n", country.country, min.ip)
+      time.Sleep(99 * time.Millisecond)
+   }
+}
+
+type block struct {
+   size int
+   ip string
+}
+
 var countries = []struct{
    country string
    name string
@@ -37,57 +96,4 @@ var countries = []struct{
    {"Sweden", "country_se.netset"},
    {"United Kingdom", "country_gb.netset"},
    {"Venezuela", "country_ve.netset"},
-}
-
-func main() {
-   for _, country := range countries {
-      address := func() string {
-         var b strings.Builder
-         b.WriteString("https://raw.githubusercontent.com/firehol/")
-         b.WriteString("blocklist-ipsets/master/geolite2_country/")
-         b.WriteString(country.name)
-         return b.String()
-      }()
-      var blocks []block
-      func() {
-         res, err := http.Get(address)
-         if err != nil {
-            panic(err)
-         }
-         defer res.Body.Close()
-         text, err := io.ReadAll(res.Body)
-         if err != nil {
-            panic(err)
-         }
-         for _, line := range strings.Split(string(text), "\n") {
-            if !strings.HasPrefix(line, "#") {
-               var (
-                  b block
-                  ok bool
-                  raw_size string
-               )
-               if b.ip, raw_size, ok = strings.Cut(line, "/"); ok {
-                  b.size, err = strconv.Atoi(raw_size)
-                  if err != nil {
-                     panic(err)
-                  }
-                  blocks = append(blocks, b)
-               }
-            }
-         }
-      }()
-      min := slices.MinFunc(blocks, func(a, b block) int {
-         if v := a.size - b.size; v != 0 {
-            return v
-         }
-         return len(a.ip) - len(b.ip)
-      })
-      fmt.Printf("{%q, %q},\n", country.country, min.ip)
-      time.Sleep(time.Second)
-   }
-}
-
-type block struct {
-   size int
-   ip string
 }

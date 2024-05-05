@@ -1,7 +1,6 @@
 package draken
 
 import (
-   "154.pages.dev/protobuf"
    "154.pages.dev/widevine"
    "encoding/base64"
    "fmt"
@@ -10,13 +9,6 @@ import (
    "testing"
    "time"
 )
-
-func pssh(key_id, content_id []byte) []byte {
-   var m protobuf.Message
-   m.AddBytes(2, key_id)
-   m.AddBytes(4, content_id)
-   return m.Encode()
-}
 
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -47,7 +39,7 @@ func TestLicense(t *testing.T) {
          t.Fatal(err)
       }
       var module widevine.CDM
-      err = module.New(private_key, client_id, pssh(key_id, content_id))
+      err = module.New(private_key, client_id, widevine.PSSH(key_id, content_id))
       if err != nil {
          t.Fatal(err)
       }
