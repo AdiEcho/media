@@ -22,6 +22,7 @@ func asset() {
    req.Header["Magine-Play-Deviceid"] = []string{"!"}
    req.Header["Magine-Play-Protocol"] = []string{"dashs"}
    req.Header["x-forwarded-for"] = []string{"78.64.0.0"}
+   // drakenfilm.se/film/michael-clayton
    req.URL.Path = "/api/playback/v1/preflight/asset/8149455c-cb3d-4b15-85a8-b95e3d1570b5"
    req.Header["Magine-Accesstoken"] = []string{"22cc71a2-8b77-4819-95b0-8c90f4cf5663"}
    req.Header["Magine-Play-Entitlementid"] = []string{"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhbGxvd2VkQ291bnRyaWVzIjpbIklFIiwiRlIiLCJOTCIsIlNJIiwiUk8iLCJCRyIsIkNZIiwiSVMiLCJERSIsIkZJIiwiTFYiLCJQTCIsIlBUIiwiTFUiLCJIUiIsIkVTIiwiQVQiLCJNVCIsIlNFIiwiR1IiLCJJVCIsIkhVIiwiRUUiLCJESyIsIkxJIiwiTFQiLCJTSyIsIkNaIiwiQkUiLCJOTyJdLCJtYXJrZXRJZHMiOlsiU0UiXSwiZXhwIjoxNzE0OTA1NTMwLCJhZHMiOmZhbHNlLCJpYXQiOjE3MTQ4NjIzMzAsInN1YiI6IjE1NktFRkpETEM3SE1JS0FVTlNRQkc4TFNVU1IiLCJ1c2VySWQiOiIxNTZLRUZKRExDN0hNSUtBVU5TUUJHOExTVVNSIiwiaXNzIjoiZHJha2VuZmlsbSIsIm9mZmxpbmVFeHBpcmF0aW9uIjoxNzE1MzEyNTAyLCJ1c2VyVGFncyI6W10sIm9mZmVySWQiOiI3OTNGTzg4NFFZVUJXRVM0TTEyRk1ESThKT0ZSIiwiYXNzZXRJZCI6IjgxNDk0NTVjLWNiM2QtNGIxNS04NWE4LWI5NWUzZDE1NzBiNSJ9.tNkc_ZsE2j1cZwNLg0wqpucU3HJcmvwWd0sqVlqijH5bhVEVON9Xmf5mBlb_UQLLhUW_3mMCTvpOfyn38yZclQ"}

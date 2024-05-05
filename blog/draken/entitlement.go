@@ -1,4 +1,4 @@
-package main
+package draken
 
 import (
    "net/http"
@@ -6,7 +6,7 @@ import (
    "os"
 )
 
-func main() {
+func entitlement() {
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"
