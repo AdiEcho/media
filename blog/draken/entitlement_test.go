@@ -3,6 +3,7 @@ package draken
 import (
    "fmt"
    "os"
+   "path"
    "testing"
    "time"
 )
@@ -17,8 +18,8 @@ func TestEntitlement(t *testing.T) {
       t.Fatal(err)
    }
    auth.unmarshal()
-   for _, id := range custom_ids {
-      movie, err := new_movie(id)
+   for _, film := range films {
+      movie, err := new_movie(path.Base(film.url))
       if err != nil {
          t.Fatal(err)
       }

@@ -20,6 +20,9 @@ func new_movie(custom_id string) (*full_movie, error) {
       s.Query = graphql_compact(get_custom_id)
       return json.MarshalIndent(s, "", " ")
    }()
+   if err != nil {
+      return nil, err
+   }
    req, err := http.NewRequest(
       "POST", "https://client-api.magine.com/api/apiql/v2",
       bytes.NewReader(body),

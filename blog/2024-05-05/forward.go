@@ -10,6 +10,35 @@ import (
    "time"
 )
 
+var countries = []struct{
+   country string
+   name string
+}{
+   {"Argentina", "country_ar.netset"},
+   {"Australia", "country_au.netset"},
+   {"Bolivia", "country_bo.netset"},
+   {"Brazil", "country_br.netset"},
+   {"Canada", "country_ca.netset"},
+   {"Chile", "country_cl.netset"},
+   {"Colombia", "country_co.netset"},
+   {"Costa Rica", "country_cr.netset"},
+   {"Denmark", "country_dk.netset"},
+   {"Ecuador", "country_ec.netset"},
+   {"Germany", "country_de.netset"},
+   {"Guatemala", "country_gt.netset"},
+   {"Ireland", "country_ie.netset"},
+   {"Italy", "country_it.netset"},
+   {"Latvia", "country_lv.netset"},
+   {"Mexico", "country_mx.netset"},
+   {"Norway", "country_no.netset"},
+   {"Peru", "country_pe.netset"},
+   {"South Africa", "country_za.netset"},
+   {"Spain", "country_es.netset"},
+   {"Sweden", "country_se.netset"},
+   {"United Kingdom", "country_gb.netset"},
+   {"Venezuela", "country_ve.netset"},
+}
+
 func main() {
    for _, country := range countries {
       address := func() string {
@@ -61,32 +90,4 @@ func main() {
 type block struct {
    size int
    ip string
-}
-
-var countries = []struct{
-   country string
-   name string
-}{
-   {"Argentina", "country_ar.netset"},
-   {"Australia", "country_au.netset"},
-   {"Bolivia", "country_bo.netset"},
-   {"Brazil", "country_br.netset"},
-   {"Canada", "country_ca.netset"},
-   {"Chile", "country_cl.netset"},
-   {"Colombia", "country_co.netset"},
-   {"Costa Rica", "country_cr.netset"},
-   {"Denmark", "country_dk.netset"},
-   {"Ecuador", "country_ec.netset"},
-   {"Germany", "country_de.netset"},
-   {"Guatemala", "country_gt.netset"},
-   {"Ireland", "country_ie.netset"},
-   {"Italy", "country_it.netset"},
-   {"Mexico", "country_mx.netset"},
-   {"Norway", "country_no.netset"},
-   {"Peru", "country_pe.netset"},
-   {"South Africa", "country_za.netset"},
-   {"Spain", "country_es.netset"},
-   {"Sweden", "country_se.netset"},
-   {"United Kingdom", "country_gb.netset"},
-   {"Venezuela", "country_ve.netset"},
 }

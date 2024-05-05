@@ -1,47 +1,73 @@
 package draken
 
 import (
-   "bytes"
+   "154.pages.dev/protobuf"
+   "154.pages.dev/widevine"
+   "encoding/base64"
    "fmt"
    "os"
+   "path"
    "testing"
+   "time"
 )
 
-var custom_ids = []string{
-   // drakenfilm.se/film/michael-clayton
-   "michael-clayton",
-   // drakenfilm.se/film/the-card-counter
-   "the-card-counter",
+func pssh(key_id, content_id []byte) []byte {
+   var m protobuf.Message
+   m.AddBytes(2, key_id)
+   m.AddBytes(4, content_id)
+   return m.Encode()
 }
 
 func TestLicense(t *testing.T) {
-   var (
-      auth auth_login
-      err error
-   )
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   if err != nil {
+      t.Fatal(err)
+   }
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var auth auth_login
    auth.data, err = os.ReadFile("login.json")
    if err != nil {
       t.Fatal(err)
    }
    auth.unmarshal()
-   movie, err := new_movie(custom_ids[0])
-   if err != nil {
-      t.Fatal(err)
+   for _, film := range films {
+      key_id, err := base64.StdEncoding.DecodeString(film.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      content_id, err := base64.StdEncoding.DecodeString(film.content_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var module widevine.CDM
+      err = module.New(private_key, client_id, pssh(key_id, content_id))
+      if err != nil {
+         t.Fatal(err)
+      }
+      movie, err := new_movie(path.Base(film.url))
+      if err != nil {
+         t.Fatal(err)
+      }
+      title, err := auth.entitlement(movie)
+      if err != nil {
+         t.Fatal(err)
+      }
+      play, err := auth.playback(movie, title)
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, err := module.Key(poster{auth, play}, key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
    }
-   title, err := auth.entitlement(movie)
-   if err != nil {
-      t.Fatal(err)
-   }
-   play, err := auth.playback(movie, title)
-   if err != nil {
-      t.Fatal(err)
-   }
-   res, err := auth.license(play)
-   if err != nil {
-      t.Fatal(err)
-   }
-   defer res.Body.Close()
-   buf := new(bytes.Buffer)
-   res.Write(buf)
-   fmt.Printf("%q\n", buf)
 }
