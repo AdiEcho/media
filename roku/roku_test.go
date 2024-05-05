@@ -10,22 +10,6 @@ import (
    "time"
 )
 
-func TestPlayback(t *testing.T) {
-   var token AccountToken
-   err := token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      play, err := token.Playback(path.Base(test.url))
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", play)
-      time.Sleep(time.Second)
-   }
-}
-
 func TestLicense(t *testing.T) {
    test := tests["episode"]
    home, err := os.UserHomeDir()
@@ -63,4 +47,20 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
+}
+
+func TestPlayback(t *testing.T) {
+   var token AccountToken
+   err := token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      play, err := token.Playback(path.Base(test.url))
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", play)
+      time.Sleep(time.Second)
+   }
 }

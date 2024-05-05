@@ -7,6 +7,11 @@ import (
    "strings"
 )
 
+type playback struct {
+   Headers map[string]string
+   Playlist string
+}
+
 func (a auth_login) playback(
    movie *full_movie, title *entitlement,
 ) (*playback, error) {
@@ -18,12 +23,12 @@ func (a auth_login) playback(
    magine_accesstoken.set(req.Header)
    magine_play_devicemodel.set(req.Header)
    magine_play_deviceplatform.set(req.Header)
+   magine_play_devicetype.set(req.Header)
+   magine_play_drm.set(req.Header)
+   magine_play_protocol.set(req.Header)
    req.Header.Set("authorization", "Bearer " + a.v.Token)
    req.Header.Set("magine-play-deviceid", "!")
-   req.Header.Set("magine-play-devicetype", "web")
-   req.Header.Set("magine-play-drm", "widevine")
    req.Header.Set("magine-play-entitlementid", title.Token)
-   req.Header.Set("magine-play-protocol", "dashs")
    x_forwarded_for.set(req.Header)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -60,12 +65,18 @@ var (
       "magine-play-devicemodel", "firefox 111.0 / windows 10",
    }
    magine_play_deviceplatform = header{
-      "magine_play_deviceplatform", "firefox",
+      "magine-play-deviceplatform", "firefox",
+   }
+   magine_play_devicetype = header{
+      "magine-play-devicetype", "web",
+   }
+   magine_play_drm = header{
+      "magine-play-drm", "widevine",
+   }
+   magine_play_protocol = header{
+      "magine-play-protocol", "dashs",
    }
    x_forwarded_for = header{
       "x-forwarded-for", "78.64.0.0",
    }
 )
-type playback struct {
-   Playlist string
-}
