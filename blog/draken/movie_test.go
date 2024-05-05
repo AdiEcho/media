@@ -15,8 +15,7 @@ var custom_ids = []string{
 
 func TestMovie(t *testing.T) {
    for _, id := range custom_ids {
-      var movie full_movie
-      err := movie.New(id)
+      movie, err := new_movie(id)
       if err != nil {
          t.Fatal(err)
       }
