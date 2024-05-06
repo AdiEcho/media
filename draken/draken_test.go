@@ -21,7 +21,7 @@ func TestLogin(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	os.WriteFile("login.json", auth.data, 0666)
+	os.WriteFile("login.json", auth.Data, 0666)
 }
 
 func TestLicense(t *testing.T) {
@@ -38,11 +38,11 @@ func TestLicense(t *testing.T) {
 		t.Fatal(err)
 	}
 	var auth AuthLogin
-	auth.data, err = os.ReadFile("login.json")
+	auth.Data, err = os.ReadFile("login.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	auth.unmarshal()
+	auth.Unmarshal()
 	for _, film := range films {
 		key_id, err := base64.StdEncoding.DecodeString(film.key_id)
 		if err != nil {
@@ -57,15 +57,15 @@ func TestLicense(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		movie, err := new_movie(path.Base(film.url))
+		movie, err := NewMovie(path.Base(film.url))
 		if err != nil {
 			t.Fatal(err)
 		}
-		title, err := auth.entitlement(movie)
+		title, err := auth.Entitlement(movie)
 		if err != nil {
 			t.Fatal(err)
 		}
-		play, err := auth.playback(movie, title)
+		play, err := auth.Playback(movie, title)
 		if err != nil {
 			t.Fatal(err)
 		}

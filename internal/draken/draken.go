@@ -11,18 +11,9 @@ import (
    "path/filepath"
 )
 
-func (f flags) authenticate() error {
-   var auth draken.Authenticate
-   err := auth.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/draken.json", auth.Data, 0666)
-}
-
 func (f flags) download() error {
    var (
-      auth draken.Authenticate
+      auth drake.AuthLogin
       err error
    )
    auth.Data, err = os.ReadFile(f.home + "/draken.json")
@@ -30,15 +21,19 @@ func (f flags) download() error {
       return err
    }
    auth.Unmarshal()
-   deep, err := auth.DeepLink(f.draken)
+   movie, err := draken.NewMovie(path.Base(f.address))
    if err != nil {
       return err
    }
-   play, err := auth.Playlist(deep)
+   title, err := auth.Entitlement(movie)
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", play.Stream_URL, nil)
+   play, err := auth.Playback(movie, title)
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest("", play.Playlist, nil)
    if err != nil {
       return err
    }
@@ -48,6 +43,7 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
+         // FIXME
          detail, err := auth.Details(deep)
          if err != nil {
             return err
@@ -67,3 +63,11 @@ func (f flags) download() error {
    return nil
 }
 
+func (f flags) authenticate() error {
+   var auth drake.AuthLogin
+   err := auth.New(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/draken.json", auth.Data, 0666)
+}
