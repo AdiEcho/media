@@ -24,36 +24,17 @@ query GetCustomIdFullMovie($customId: ID!) {
 }
 `
 
+func graphql_compact(s string) string {
+   f := strings.Fields(s)
+   return strings.Join(f, " ")
+}
+
 type full_movie struct {
    DefaultPlayable struct {
       ID string
    }
    ProductionYear int `json:",string"`
    Title string
-}
-
-type namer struct {
-   f *full_movie
-}
-
-func (namer) Show() string {
-   return ""
-}
-
-func (namer) Season() int {
-   return 0
-}
-
-func (namer) Episode() int {
-   return 0
-}
-
-func (n namer) Title() string {
-   return n.f.Title
-}
-
-func (n namer) Year() int {
-   return n.f.ProductionYear
 }
 
 func new_movie(custom_id string) (*full_movie, error) {
@@ -102,7 +83,26 @@ func new_movie(custom_id string) (*full_movie, error) {
    return nil, errors.New(`"viewableCustomId": null`)
 }
 
-func graphql_compact(s string) string {
-   f := strings.Fields(s)
-   return strings.Join(f, " ")
+type namer struct {
+   f *full_movie
+}
+
+func (namer) Show() string {
+   return ""
+}
+
+func (namer) Season() int {
+   return 0
+}
+
+func (namer) Episode() int {
+   return 0
+}
+
+func (n namer) Title() string {
+   return n.f.Title
+}
+
+func (n namer) Year() int {
+   return n.f.ProductionYear
 }
