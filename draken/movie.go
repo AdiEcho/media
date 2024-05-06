@@ -8,6 +8,54 @@ import (
    "strings"
 )
 
+const get_custom_id = `
+query GetCustomIdFullMovie($customId: ID!) {
+   viewer {
+      viewableCustomId(customId: $customId) {
+         ... on Movie {
+            defaultPlayable {
+               id
+            }
+            productionYear
+            title
+         }
+      }
+   }
+}
+`
+
+type full_movie struct {
+   DefaultPlayable struct {
+      ID string
+   }
+   ProductionYear int `json:",string"`
+   Title string
+}
+
+type namer struct {
+   f *full_movie
+}
+
+func (namer) Show() string {
+   return ""
+}
+
+func (namer) Season() int {
+   return 0
+}
+
+func (namer) Episode() int {
+   return 0
+}
+
+func (n namer) Title() string {
+   return n.f.Title
+}
+
+func (n namer) Year() int {
+   return n.f.ProductionYear
+}
+
 func new_movie(custom_id string) (*full_movie, error) {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -40,9 +88,7 @@ func new_movie(custom_id string) (*full_movie, error) {
    var s struct {
       Data struct {
          Viewer struct {
-            ViewableCustomId *struct {
-               DefaultPlayable full_movie
-            }
+            ViewableCustomId *full_movie
          }
       }
    }
@@ -51,29 +97,12 @@ func new_movie(custom_id string) (*full_movie, error) {
       return nil, err
    }
    if v := s.Data.Viewer.ViewableCustomId; v != nil {
-      return &v.DefaultPlayable, nil
+      return v, nil
    }
    return nil, errors.New(`"viewableCustomId": null`)
 }
+
 func graphql_compact(s string) string {
    f := strings.Fields(s)
    return strings.Join(f, " ")
-}
-
-const get_custom_id = `
-query GetCustomIdFullMovie($customId: ID!) {
-   viewer {
-      viewableCustomId(customId: $customId) {
-         ... on Movie {
-            defaultPlayable {
-               id
-            }
-         }
-      }
-   }
-}
-`
-
-type full_movie struct {
-   ID string
 }

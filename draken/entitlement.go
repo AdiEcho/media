@@ -15,7 +15,7 @@ func (a auth_login) entitlement(f *full_movie) (*entitlement, error) {
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/api/entitlement/v2/asset/" + f.ID
+   req.URL.Path = "/api/entitlement/v2/asset/" + f.DefaultPlayable.ID
    req.Header.Set("authorization", "Bearer " + a.v.Token)
    magine_accesstoken.set(req.Header)
    res, err := http.DefaultClient.Do(req)
