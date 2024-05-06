@@ -87,16 +87,16 @@ type namer struct {
    f *full_movie
 }
 
-func (namer) Show() string {
-   return ""
+func (namer) Episode() int {
+   return 0
 }
 
 func (namer) Season() int {
    return 0
 }
 
-func (namer) Episode() int {
-   return 0
+func (namer) Show() string {
+   return ""
 }
 
 func (n namer) Title() string {
