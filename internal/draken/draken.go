@@ -1,19 +1,16 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/draken"
-   "154.pages.dev/media/internal"
-   "flag"
    "fmt"
    "net/http"
    "os"
-   "path/filepath"
+   "path"
 )
 
 func (f flags) download() error {
    var (
-      auth drake.AuthLogin
+      auth draken.AuthLogin
       err error
    )
    auth.Data, err = os.ReadFile(f.home + "/draken.json")
@@ -58,7 +55,7 @@ func (f flags) download() error {
 }
 
 func (f flags) authenticate() error {
-   var auth drake.AuthLogin
+   var auth draken.AuthLogin
    err := auth.New(f.email, f.password)
    if err != nil {
       return err

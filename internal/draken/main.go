@@ -2,11 +2,8 @@ package main
 
 import (
    "154.pages.dev/log"
-   "154.pages.dev/media/draken"
    "154.pages.dev/media/internal"
    "flag"
-   "fmt"
-   "net/http"
    "os"
    "path/filepath"
 )
@@ -45,7 +42,7 @@ func main() {
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
-   flag.Var(&f.address, "a", "address")
+   flag.StringVar(&f.address, "a", "", "address")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()

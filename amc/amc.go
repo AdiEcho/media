@@ -14,7 +14,7 @@ func cache_hash() string {
 }
 
 type ContentCompiler struct {
-   Data	struct {
+   Data   struct {
       Children []struct {
          Properties json.RawMessage
          Type string
