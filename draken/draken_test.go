@@ -10,33 +10,6 @@ import (
    "time"
 )
 
-func TestPlayback(t *testing.T) {
-   var (
-      auth auth_login
-      err error
-   )
-   auth.data, err = os.ReadFile("login.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth.unmarshal()
-   for _, film := range films {
-      movie, err := new_movie(path.Base(film.url))
-      if err != nil {
-         t.Fatal(err)
-      }
-      title, err := auth.entitlement(movie)
-      if err != nil {
-         t.Fatal(err)
-      }
-      play, err := auth.playback(movie, title)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", play)
-      time.Sleep(time.Second)
-   }
-}
 func TestLogin(t *testing.T) {
    username := os.Getenv("draken_username")
    if username == "" {
@@ -50,6 +23,7 @@ func TestLogin(t *testing.T) {
    }
    os.WriteFile("login.json", auth.data, 0666)
 }
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -100,29 +74,6 @@ func TestLicense(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%x\n", key)
-      time.Sleep(time.Second)
-   }
-}
-func TestEntitlement(t *testing.T) {
-   var (
-      auth auth_login
-      err error
-   )
-   auth.data, err = os.ReadFile("login.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth.unmarshal()
-   for _, film := range films {
-      movie, err := new_movie(path.Base(film.url))
-      if err != nil {
-         t.Fatal(err)
-      }
-      title, err := auth.entitlement(movie)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", title)
       time.Sleep(time.Second)
    }
 }
