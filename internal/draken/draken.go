@@ -43,17 +43,11 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         // FIXME
-         detail, err := auth.Details(deep)
-         if err != nil {
-            return err
-         }
-         f.s.Name = <-detail
-         f.s.Poster = play
+         f.s.Name = draken.Namer{movie}
+         f.s.Poster = draken.Poster{auth, play}
          return f.s.Download(medium)
       }
    }
-   // 2 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()

@@ -21,7 +21,7 @@ func (s Stream) key(protect protection) ([]byte, error) {
       return nil, err
    }
    if protect.pssh == nil {
-      protect.pssh = widevine.PSSH(protect.key_id)
+      protect.pssh = widevine.PSSH(protect.key_id, nil)
    }
    var module widevine.CDM
    err = module.New(private_key, client_id, protect.pssh)
