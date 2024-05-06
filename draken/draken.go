@@ -9,34 +9,6 @@ import (
    "strings"
 )
 
-func (a auth_login) entitlement(f *full_movie) (*entitlement, error) {
-   req, err := http.NewRequest("POST", "https://client-api.magine.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/api/entitlement/v2/asset/" + f.DefaultPlayable.ID
-   req.Header.Set("authorization", "Bearer " + a.v.Token)
-   magine_accesstoken.set(req.Header)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   title := new(entitlement)
-   err = json.NewDecoder(res.Body).Decode(title)
-   if err != nil {
-      return nil, err
-   }
-   return title, nil
-}
-
-func (a *auth_login) unmarshal() error {
-   return json.Unmarshal(a.data, &a.v)
-}
-
 type auth_login struct {
    data []byte
    v struct {
@@ -74,6 +46,30 @@ func (a *auth_login) New(identity, key string) error {
    return nil
 }
 
+func (a auth_login) entitlement(f *full_movie) (*entitlement, error) {
+   req, err := http.NewRequest("POST", "https://client-api.magine.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/api/entitlement/v2/asset/" + f.DefaultPlayable.ID
+   req.Header.Set("authorization", "Bearer " + a.v.Token)
+   magine_accesstoken.set(req.Header)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   title := new(entitlement)
+   err = json.NewDecoder(res.Body).Decode(title)
+   if err != nil {
+      return nil, err
+   }
+   return title, nil
+}
+
 func (a auth_login) playback(
    movie *full_movie, title *entitlement,
 ) (*playback, error) {
@@ -108,6 +104,10 @@ func (a auth_login) playback(
       return nil, err
    }
    return play, nil
+}
+
+func (a *auth_login) unmarshal() error {
+   return json.Unmarshal(a.data, &a.v)
 }
 
 type entitlement struct {
@@ -162,18 +162,6 @@ type poster struct {
    play *playback
 }
 
-func (poster) RequestUrl() (string, bool) {
-   return "https://client-api.magine.com/api/playback/v1/widevine/license", true
-}
-
-func (poster) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (poster) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 func (p poster) RequestHeader() (http.Header, error) {
    head := make(http.Header)
    magine_accesstoken.set(head)
@@ -182,4 +170,16 @@ func (p poster) RequestHeader() (http.Header, error) {
       head.Set(key, value)
    }
    return head, nil
+}
+
+func (poster) RequestUrl() (string, bool) {
+   return "https://client-api.magine.com/api/playback/v1/widevine/license", true
+}
+
+func (poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
 }
