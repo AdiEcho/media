@@ -1,7 +1,7 @@
 # neon
 
 ~~~
-url = https://www.neontv.co.nz/movie/horrible-bosses
+url = http://neontv.co.nz/movie/horrible-bosses
 monetization = FLATRATE
 country = New Zealand
 ~~~

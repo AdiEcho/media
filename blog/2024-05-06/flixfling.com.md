@@ -1,12 +1,5 @@
 # flix fling
 
-~~~
-url = https://www.flixfling.com/justwatch/22864
-monetization = FLATRATE
-country = Canada
-country = United States
-~~~
-
 1. https://privacy.com
 2. https://flixfling.com
 3. try it free

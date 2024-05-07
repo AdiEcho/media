@@ -1,7 +1,7 @@
 # web
 
 ~~~
-url = https://www.fubo.tv/welcome/program/MV002986270000
+url = https://fubo.tv/welcome/program/MV002986270000
 monetization = FLATRATE
 country = Canada
 ~~~
