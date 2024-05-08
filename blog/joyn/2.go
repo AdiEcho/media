@@ -1,13 +1,56 @@
 package joyn
 
 import (
-   "net/http"
-   "net/url"
-   "os"
-   "io"
    "bytes"
    "encoding/json"
+   "net/http"
 )
+
+func (m *movie_detail) New(path string) error {
+   body, err := func() ([]byte, error) {
+      var s struct {
+         Query string `json:"query"`
+         Variables struct {
+            Path string `json:"path"`
+         } `json:"variables"`
+      }
+      s.Query = page_movie
+      s.Variables.Path = path
+      return json.Marshal(s)
+   }()
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://api.joyn.de/graphql", bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   req.Header = http.Header{
+      "content-type": {"application/json"},
+      "joyn-platform": {"web"},
+      "x-api-key": {"4f0fd9f18abbe3cf0e87fdb556bc39c8"},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   return json.NewDecoder(res.Body).Decode(m)
+}
+
+type movie_detail struct {
+   Data struct {
+      Page struct {
+         Movie struct {
+            Video struct {
+               ID string
+            }
+         }
+      }
+   }
+}
 
 const page_movie = `
 query PageMovieDetailStatic($path: String!) {
@@ -26,40 +69,3 @@ query PageMovieDetailStatic($path: String!) {
    }
 }
 `
-
-func movie_detail() {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Query string `json:"query"`
-         Variables struct {
-            Path string `json:"path"`
-         } `json:"variables"`
-      }
-      s.Query = page_movie
-      s.Variables.Path = "/filme/barry-seal-only-in-america"
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      panic(err)
-   }
-   var req http.Request
-   req.Header = make(http.Header)
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "api.joyn.de"
-   req.URL.Path = "/graphql"
-   req.URL.Scheme = "https"
-   req.Header["Joyn-Platform"] = []string{"web"}
-   // x-api-key is hard coded in JavaScript
-   req.Header["X-Api-Key"] = []string{"4f0fd9f18abbe3cf0e87fdb556bc39c8"}
-   req.Method = "POST"
-   req.Body = io.NopCloser(bytes.NewReader(body))
-   req.Header.Set("content-type", "application/json")
-   res, err := http.DefaultClient.Do(&req)
-   if err != nil {
-      panic(err)
-   }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
-}
