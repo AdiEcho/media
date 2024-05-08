@@ -57,37 +57,3 @@ Sec-Fetch-Site: cross-site
 
 {"content_id":"a_p4svn4a28fq","content_type":"VOD"}
 ~~~
-
-authorization from here:
-
-~~~
-POST https://auth.joyn.de/auth/anonymous HTTP/2.0
-user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
-accept: application/json
-accept-language: en-US,en;q=0.5
-accept-encoding: gzip, deflate, br
-content-type: application/json
-joyn-client-version: 5.702.5
-joyn-platform: web
-joyn-distribution-tenant: JOYN
-joyn-country: DE
-joyn-request-id: 08477561-a8bb-4e38-b298-cd2f680164df
-content-length: 128
-origin: https://www.joyn.de
-sec-fetch-dest: empty
-sec-fetch-mode: cors
-sec-fetch-site: same-site
-te: trailers
-
-{"client_id":"6bd16b48-a48a-400e-9cdb-27f3391e2e4e","client_name":"web","anon_device_id":"6bd16b48-a48a-400e-9cdb-27f3391e2e4e"}
-~~~
-
-## /graphql
-
-~~~
-GET https://api.joyn.de/graphql?operationName=PageMovieDetailStatic&enable_user_location=true&watch_assistant_variant=true&variables=%7B%22path%22%3A%22%2Ffilme%2Fbarry-seal-only-in-america%22%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%225cd6d962be007c782b5049ec7077dd446b334f14461423a72baf34df294d11b2%22%7D%7D HTTP/2.0
-joyn-platform: web
-x-api-key: 4f0fd9f18abbe3cf0e87fdb556bc39c8
-~~~
-
-x-api-key is hard coded in JavaScript
