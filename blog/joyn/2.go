@@ -6,6 +6,18 @@ import (
    "net/http"
 )
 
+type movie_detail struct {
+   Data struct {
+      Page struct {
+         Movie struct {
+            Video struct {
+               ID string
+            }
+         }
+      }
+   }
+}
+
 func (m *movie_detail) New(path string) error {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -38,18 +50,6 @@ func (m *movie_detail) New(path string) error {
    }
    defer res.Body.Close()
    return json.NewDecoder(res.Body).Decode(m)
-}
-
-type movie_detail struct {
-   Data struct {
-      Page struct {
-         Movie struct {
-            Video struct {
-               ID string
-            }
-         }
-      }
-   }
 }
 
 const page_movie = `
