@@ -1,0 +1,6 @@
+{
+  "streamingFormat": "dash",
+  "manifestUrl": "https://delivery.vod-prd.s.joyn.de/v1/CiQwMjYwN2RlZC0xNjU4LTQyMDMtODNjNC1iYzk0NGI0MmJkY2M.Cg1hX3A0c3ZuNGEyOGZxEAEY4AMiJDM5YTU4NTA5LWZjZjEtNGIxZC05ZWZiLTNhNTAyZTIzMWNlYg.Io7JBViGADc4EXQKv-C6v1OUGctJyGOgqZVac71-D7o/a_p4svn4a28fq/.ism/.mpd?filter=CiRkMmRiNzQ5OS02MmU0LTQ0MjYtODRiZS1mYzA1NDBhYTA4NDY.Cg1hX3A0c3ZuNGEyOGZxEkAodHlwZT09InZpZGVvIiYmTWF4SGVpZ2h0PD00ODApfHwodHlwZT09ImF1ZGlvIiYmRm91ckNDPT0iQUFDTCIp.Gv50lPM2yU4lNGjCLOsyROa00FYgeq5Kh5XwLoyXY6c",
+  "certificateUrl": "https://api.vod-prd.s.joyn.de/v1/certificate/widevine/644cc4b1abeeede6db7b3a9b71535ccda12ae4b2",
+  "licenseUrl": "https://api.vod-prd.s.joyn.de/v1/license?token=CiQ2YzAwMzQyZi0zNWJmLTQ2MTEtOGUyMy0xNzFkZDgxNDk4YzE.Cg1hX3A0c3ZuNGEyOGZxEAEaCHNvZnR3YXJlIMWY8LEGKM_e-rEGMiRjODU5ZjNkZC1iM2FhLTRhNTAtYmZmYS1iNmM3YTY0MmZmNDM44ANCJDM5YTU4NTA5LWZjZjEtNGIxZC05ZWZiLTNhNTAyZTIzMWNlYkoId2lkZXZpbmVQj4nxsQZYAA.yfOX8y8wZpr0WFiwDamYPaPqX-3DiQsOxoAubiVl7KM&keyId="
+}

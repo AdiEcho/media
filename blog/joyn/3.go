@@ -1,14 +1,26 @@
 package joyn
 
 import (
-   "io"
+   "bytes"
+   "crypto/sha1"
+   "encoding/hex"
+   "encoding/json"
    "net/http"
-   "net/url"
-   "os"
-   "strings"
 )
 
-func (a anonymous) entitlement(m movie_detail) (*http.Response, error) {
+func (e entitlement) signature(text []byte) string {
+   text = append(text, ',')
+   text = append(text, e.Entitlement_Token...)
+   text = hex.AppendEncode(text, []byte(signature_key))
+   sum := sha1.Sum(text)
+   return hex.EncodeToString(sum[:])
+}
+
+type entitlement struct {
+   Entitlement_Token string
+}
+
+func (a anonymous) entitlement(m movie_detail) (*entitlement, error) {
    body, err := json.Marshal(map[string]string{
       "content_id": m.Data.Page.Movie.Video.ID,
    })
@@ -23,5 +35,17 @@ func (a anonymous) entitlement(m movie_detail) (*http.Response, error) {
       return nil, err
    }
    req.Header.Set("authorization", "Bearer " + a.Access_Token)
-   return http.DefaultClient.Do(req)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   title := new(entitlement)
+   err = json.NewDecoder(res.Body).Decode(title)
+   if err != nil {
+      return nil, err
+   }
+   return title, nil
 }
+
+const signature_key = "5C7838365C7864665C786638265C783064595C783935245C7865395C7838323F5C7866333D3B5C78386635"
