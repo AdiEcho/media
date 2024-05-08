@@ -47,59 +47,18 @@ func main() {
 
 const movie_detail = `
 query PageMovieDetailStatic($path: String!) {
-  page(path: $path) {
+   page(path: $path) {
       ... on MoviePage {
-          path
-          tracking {
-              pageName
-              payload
-          }
-          id
-          movie {
-              ... on Movie {
-                 id
-                 __typename
-                 tagline
-                 path
-                 licenseTypes
-                 markings
-                 licenseTypes
-                 tracking {
-                     agofCode
-                     externalAssetId
-                 }
-                 ... on Movie {
-                    title
-                    ageRating {
-                        minAge
-                        descriptorsText
-                    }
-                    brands {
-                        path
-                    }
-                    copyrights
-                    description
-                    languages {
-                        code
-                        name
-                    }
-                    productionYear
-                    productionCountries
-                    productPlacement
-                    video {
-                        id
-                        duration
-                        audioLanguages {
-                            name
-                        }
-                        quality
-                    }
-                    markings
+         movie {
+            ... on Movie {
+               ... on Movie {
+                  video {
+                     id
                   }
                }
-
-          }
+            }
+         }
       }
-  }
+   }
 }
 `
