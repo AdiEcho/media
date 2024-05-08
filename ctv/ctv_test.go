@@ -11,6 +11,15 @@ import (
    "time"
 )
 
+var test_paths = []string{
+   // ctv.ca/shows/friends/the-one-with-the-chicken-pox-s2e23
+   "/shows/friends/the-one-with-the-chicken-pox-s2e23",
+   // ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
+   "/movies/the-girl-with-the-dragon-tattoo-2011",
+   // ctv.ca/movies/baby-driver
+   "/movies/baby-driver",
+}
+
 func TestMedia(t *testing.T) {
    for _, test_path := range test_paths {
       resolve, err := Path(test_path).Resolve()
@@ -34,13 +43,6 @@ func TestMedia(t *testing.T) {
       fmt.Printf("%q\n", name)
       time.Sleep(99 * time.Millisecond)
    }
-}
-
-var test_paths = []string{
-   // ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
-   "/movies/the-girl-with-the-dragon-tattoo-2011",
-   // ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-   "/shows/friends/the-one-with-the-bullies-s2e21",
 }
 
 func TestManifest(t *testing.T) {
@@ -71,6 +73,7 @@ func TestManifest(t *testing.T) {
       time.Sleep(99 * time.Millisecond)
    }
 }
+
 // ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
 const (
    raw_key_id = "cb09571eebcb3f7287202657f6b9f7a6"
@@ -109,4 +112,3 @@ func TestLicense(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
-

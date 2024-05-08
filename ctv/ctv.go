@@ -11,6 +11,29 @@ import (
    "time"
 )
 
+func (m MediaManifest) Title() string {
+   if strings.HasSuffix(m.M.Name, ")") {
+      return m.M.Name[:len(m.M.Name)-len(" (9999)")]
+   }
+   return m.M.Name
+}
+
+type MediaContent struct {
+   BroadcastDate   Date
+   ContentPackages []struct {
+      ID int64
+   }
+   Episode int
+   Media   struct {
+      Name string
+      Type string
+   }
+   Name   string
+   Season struct {
+      Number int
+   }
+}
+
 func (d Date) MarshalText() ([]byte, error) {
    return d.T.AppendFormat(nil, time.DateOnly), nil
 }
@@ -113,22 +136,6 @@ type Date struct {
    T time.Time
 }
 
-type MediaContent struct {
-   BroadcastDate   Date
-   ContentPackages []struct {
-      ID int64
-   }
-   Episode int
-   Media   struct {
-      Name string
-      Type string
-   }
-   Name   string
-   Season struct {
-      Number int
-   }
-}
-
 func (m MediaManifest) Marshal() ([]byte, error) {
    return json.MarshalIndent(m, "", " ")
 }
@@ -202,13 +209,6 @@ func (m MediaManifest) Show() string {
       return v.Name
    }
    return ""
-}
-
-func (m MediaManifest) Title() string {
-   if m.M.Media.Type == "movie" {
-      return m.M.Name[:len(m.M.Name)-len(" (9999)")]
-   }
-   return m.M.Name
 }
 
 func (m MediaManifest) Year() int {
