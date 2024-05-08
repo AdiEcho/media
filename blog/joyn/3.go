@@ -1,4 +1,4 @@
-package main
+package joyn
 
 import (
    "io"
@@ -8,7 +8,13 @@ import (
    "strings"
 )
 
-func main() {
+func entitlement() {
+   // from PageMovieDetailStatic
+   var body = strings.NewReader(`
+   {
+      "content_id": "a_p4svn4a28fq"
+   }
+   `)
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"
@@ -28,10 +34,3 @@ func main() {
    defer res.Body.Close()
    res.Write(os.Stdout)
 }
-
-// from PageMovieDetailStatic
-var body = strings.NewReader(`
-{
-   "content_id": "a_p4svn4a28fq"
-}
-`)

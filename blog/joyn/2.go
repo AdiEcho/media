@@ -1,4 +1,4 @@
-package main
+package joyn
 
 import (
    "net/http"
@@ -9,7 +9,25 @@ import (
    "encoding/json"
 )
 
-func main() {
+const page_movie = `
+query PageMovieDetailStatic($path: String!) {
+   page(path: $path) {
+      ... on MoviePage {
+         movie {
+            ... on Movie {
+               ... on Movie {
+                  video {
+                     id
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+`
+
+func movie_detail() {
    body, err := func() ([]byte, error) {
       var s struct {
          Query string `json:"query"`
@@ -17,7 +35,7 @@ func main() {
             Path string `json:"path"`
          } `json:"variables"`
       }
-      s.Query = movie_detail
+      s.Query = page_movie
       s.Variables.Path = "/filme/barry-seal-only-in-america"
       return json.Marshal(s)
    }()
@@ -45,21 +63,3 @@ func main() {
    defer res.Body.Close()
    res.Write(os.Stdout)
 }
-
-const movie_detail = `
-query PageMovieDetailStatic($path: String!) {
-   page(path: $path) {
-      ... on MoviePage {
-         movie {
-            ... on Movie {
-               ... on Movie {
-                  video {
-                     id
-                  }
-               }
-            }
-         }
-      }
-   }
-}
-`

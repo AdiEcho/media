@@ -1,36 +1,24 @@
-package main
+package joyn
 
 import (
-   "io"
+   "bytes"
+   "encoding/json"
    "net/http"
-   "net/url"
-   "os"
-   "strings"
 )
 
-func main() {
-   var req http.Request
-   req.Header = make(http.Header)
-   req.Method = "POST"
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "auth.joyn.de"
-   req.URL.Path = "/auth/anonymous"
-   req.URL.Scheme = "https"
-   req.Body = io.NopCloser(body)
-   req.Header["Content-Type"] = []string{"application/json"}
-   res, err := http.DefaultClient.Do(&req)
+func anonymous() (*http.Response, error) {
+   body, err := func() ([]byte, error) {
+      m := map[string]string{
+         "client_id": "!",
+         "client_name": "web",
+      }
+      return json.Marshal(m)
+   }()
    if err != nil {
-      panic(err)
+      return nil, err
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   return http.Post(
+      "https://auth.joyn.de/auth/anonymous", "application/json",
+      bytes.NewReader(body),
+   )
 }
-
-var body = strings.NewReader(`
-{
-   "client_name": "web",
-   "client_id": "!"
-}
-`)
