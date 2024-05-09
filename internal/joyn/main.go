@@ -3,6 +3,7 @@ package main
 import (
    "154.pages.dev/log"
    "154.pages.dev/media/internal"
+   "154.pages.dev/media/joyn"
    "flag"
    "os"
    "path/filepath"
@@ -20,10 +21,10 @@ func (f *flags) New() error {
 }
 
 type flags struct {
+   path joyn.Path
    representation string
    s internal.Stream
    v log.Level
-   address string
 }
 
 func main() {
@@ -32,15 +33,15 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.StringVar(&f.representation, "i", "", "representation")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.Var(&f.path, "a", "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.StringVar(&f.address, "a", "", "address")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
-   if f.address != "" {
+   if f.path != "" {
       err := f.download()
       if err != nil {
          panic(err)

@@ -4,18 +4,37 @@ import (
    "bytes"
    "encoding/json"
    "net/http"
+   "strings"
 )
 
-func NewDetail(path string) (*DetailPage, error) {
+type Path string
+
+func (p Path) String() string {
+   return string(p)
+}
+
+// https://www.joyn.de/filme/barry-seal-only-in-america
+// www.joyn.de/filme/barry-seal-only-in-america
+// joyn.de/filme/barry-seal-only-in-america
+// /filme/barry-seal-only-in-america
+func (p *Path) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   s = strings.TrimPrefix(s, "joyn.de")
+   *p = Path(s)
+   return nil
+}
+
+func (p Path) Detail() (*DetailPage, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Query     string `json:"query"`
          Variables struct {
-            Path string `json:"path"`
+            Path Path `json:"path"`
          } `json:"variables"`
       }
       s.Query = detail_page_static
-      s.Variables.Path = path
+      s.Variables.Path = p
       return json.Marshal(s)
    }()
    if err != nil {

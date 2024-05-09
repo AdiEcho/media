@@ -5,15 +5,10 @@ import (
    "errors"
    "fmt"
    "net/http"
-   "net/url"
 )
 
 func (f flags) download() error {
-   address, err := url.Parse(f.address)
-   if err != nil {
-      return err
-   }
-   detail, err := joyn.NewDetail(address.Path)
+   detail, err := f.path.Detail()
    if err != nil {
       return err
    }
