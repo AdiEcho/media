@@ -6,7 +6,7 @@ import (
    "bytes"
 )
 
-func (e entitlement) playlist(m movie_detail) (*http.Response, error) {
+func (e entitlement) playlist(m movie_detail) (*playlist, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Manufacturer     string `json:"manufacturer"`
@@ -28,16 +28,47 @@ func (e entitlement) playlist(m movie_detail) (*http.Response, error) {
       return nil, err
    }
    req, err := http.NewRequest(
-      "POST", "https://api.vod-prd.s.joyn.de/v1/asset/a_p4svn4a28fq/playlist",
-      bytes.NewReader(body),
+      "POST", "https://api.vod-prd.s.joyn.de", bytes.NewReader(body),
    )
    if err != nil {
       return nil, err
    }
+   req.URL.Path = "/v1/asset/" + m.Data.Page.Movie.Video.ID + "/playlist"
+   req.URL.RawQuery = "signature=" + e.signature(body)
    req.Header = http.Header{
       "authorization": {"Bearer " + e.Entitlement_Token},
       "content-type": {"application/json"},
    }
-   req.URL.RawQuery = "signature=" + e.signature(body)
-   return http.DefaultClient.Do(req)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   play := new(playlist)
+   err = json.NewDecoder(res.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
+}
+
+func (playlist) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (playlist) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (playlist) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+type playlist struct {
+   LicenseUrl string
+   ManifestUrl string
+}
+
+func (p playlist) RequestUrl() (string, bool) {
+   return p.LicenseUrl, true
 }
