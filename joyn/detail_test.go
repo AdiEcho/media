@@ -13,7 +13,7 @@ func TestDetail(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		name, err := encoding.Name(namer{detail})
+		name, err := encoding.Name(Namer{detail})
 		if err != nil {
 			t.Fatal(err)
 		}

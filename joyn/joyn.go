@@ -10,7 +10,7 @@ import (
 
 const signature_key = "5C7838365C7864665C786638265C783064595C783935245C7865395C7838323F5C7866333D3B5C78386635"
 
-func (e entitlement) playlist(content_id string) (*playlist, error) {
+func (e Entitlement) Playlist(content_id string) (*Playlist, error) {
 	body, err := func() ([]byte, error) {
 		var s struct {
 			Manufacturer     string `json:"manufacturer"`
@@ -48,7 +48,7 @@ func (e entitlement) playlist(content_id string) (*playlist, error) {
 		return nil, err
 	}
 	defer res.Body.Close()
-	play := new(playlist)
+	play := new(Playlist)
 	err = json.NewDecoder(res.Body).Decode(play)
 	if err != nil {
 		return nil, err
@@ -56,28 +56,28 @@ func (e entitlement) playlist(content_id string) (*playlist, error) {
 	return play, nil
 }
 
-func (playlist) WrapRequest(b []byte) ([]byte, error) {
+func (Playlist) WrapRequest(b []byte) ([]byte, error) {
 	return b, nil
 }
 
-func (playlist) UnwrapResponse(b []byte) ([]byte, error) {
+func (Playlist) UnwrapResponse(b []byte) ([]byte, error) {
 	return b, nil
 }
 
-type playlist struct {
+type Playlist struct {
 	LicenseUrl  string
 	ManifestUrl string
 }
 
-func (p playlist) RequestUrl() (string, bool) {
+func (p Playlist) RequestUrl() (string, bool) {
 	return p.LicenseUrl, true
 }
 
-func (playlist) RequestHeader() (http.Header, error) {
+func (Playlist) RequestHeader() (http.Header, error) {
 	return http.Header{}, nil
 }
 
-func (a Anonymous) entitlement(content_id string) (*entitlement, error) {
+func (a Anonymous) Entitlement(content_id string) (*Entitlement, error) {
 	body, err := json.Marshal(map[string]string{"content_id": content_id})
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (a Anonymous) entitlement(content_id string) (*entitlement, error) {
 		return nil, err
 	}
 	defer res.Body.Close()
-	title := new(entitlement)
+	title := new(Entitlement)
 	err = json.NewDecoder(res.Body).Decode(title)
 	if err != nil {
 		return nil, err
@@ -103,11 +103,11 @@ func (a Anonymous) entitlement(content_id string) (*entitlement, error) {
 	return title, nil
 }
 
-type entitlement struct {
+type Entitlement struct {
 	Entitlement_Token string
 }
 
-func (e entitlement) signature(text []byte) string {
+func (e Entitlement) signature(text []byte) string {
 	text = append(text, ',')
 	text = append(text, e.Entitlement_Token...)
 	text = hex.AppendEncode(text, []byte(signature_key))

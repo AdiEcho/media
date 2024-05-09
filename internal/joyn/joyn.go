@@ -1,39 +1,40 @@
 package main
 
 import (
-   "154.pages.dev/log"
-   "154.pages.dev/media/internal"
    "154.pages.dev/media/joyn"
-   "flag"
+   "errors"
    "fmt"
    "net/http"
-   "os"
-   "path/filepath"
+   "net/url"
 )
 
 func (f flags) download() error {
-   var anonymous joyn.Anonymous
-   err := anon.New()
+   address, err := url.Parse(f.address)
    if err != nil {
       return err
    }
-   detail, err := joyn.NewDetail(test.path)
+   detail, err := joyn.NewDetail(address.Path)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   content_id, ok := detail.content_id()
+   var anonymous joyn.Anonymous
+   err = anonymous.New()
+   if err != nil {
+      return err
+   }
+   content_id, ok := detail.ContentId()
    if !ok {
-      t.Fatal("detail_page.content_id")
+      return errors.New("joyn.DetailPage.ContentId")
    }
-   title, err := anon.entitlement(content_id)
+   title, err := anonymous.Entitlement(content_id)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   play, err := title.playlist(content_id)
+   play, err := title.Playlist(content_id)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   req, err := http.NewRequest("", demand.PlaybackUrl, nil)
+   req, err := http.NewRequest("", play.ManifestUrl, nil)
    if err != nil {
       return err
    }
@@ -43,12 +44,11 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         f.s.Name = meta
-         f.s.Poster = joyn.Core()
+         f.s.Name = joyn.Namer{detail}
+         f.s.Poster = play
          return f.s.Download(medium)
       }
    }
-   // 2 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()

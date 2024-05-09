@@ -1,21 +1,10 @@
 package internal
 
 import (
-   "154.pages.dev/encoding"
    "154.pages.dev/encoding/dash"
-   "154.pages.dev/log"
    "154.pages.dev/sofia"
-   "154.pages.dev/widevine"
-   "crypto/tls"
-   "encoding/hex"
-   "errors"
    "io"
-   "log/slog"
    "net/http"
-   "net/url"
-   "os"
-   "slices"
-   "strconv"
    "strings"
 )
 

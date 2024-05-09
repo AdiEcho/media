@@ -40,15 +40,15 @@ func TestLicense(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	content_id, ok := detail.content_id()
+	content_id, ok := detail.ContentId()
 	if !ok {
 		t.Fatal("detail_page.content_id")
 	}
-	title, err := anon.entitlement(content_id)
+	title, err := anon.Entitlement(content_id)
 	if err != nil {
 		t.Fatal(err)
 	}
-	play, err := title.playlist(content_id)
+	play, err := title.Playlist(content_id)
 	if err != nil {
 		t.Fatal(err)
 	}

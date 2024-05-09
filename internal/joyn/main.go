@@ -3,10 +3,7 @@ package main
 import (
    "154.pages.dev/log"
    "154.pages.dev/media/internal"
-   "154.pages.dev/media/joyn"
    "flag"
-   "fmt"
-   "net/http"
    "os"
    "path/filepath"
 )
