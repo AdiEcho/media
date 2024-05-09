@@ -6,7 +6,7 @@ import (
    "bytes"
 )
 
-func (e entitlement) playlist(m movie_detail) (*playlist, error) {
+func (e entitlement) playlist(m detail_page) (*playlist, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Manufacturer     string `json:"manufacturer"`

@@ -3,12 +3,10 @@ package joyn
 import (
    "bytes"
    "encoding/json"
-   "errors"
-   "io"
    "net/http"
 )
 
-const query_episode = `
+const detail_page_static = `
 query EpisodeDetailPageStatic($path: String!) {
    page(path: $path) {
       ... on EpisodePage {
@@ -30,11 +28,45 @@ query EpisodeDetailPageStatic($path: String!) {
             }
          }
       }
+      ... on MoviePage {
+         movie {
+            ... on Movie {
+               productionYear
+               title
+               video {
+                  id
+               }
+            }
+         }
+      }
    }
 }
 `
 
-func (e *episode_detail) New(path string) error {
+type detail_page struct {
+   Episode *struct {
+      Video struct {
+         ID string
+      }
+      Series struct {
+         Title string
+      }
+      Season struct {
+         Number int
+      }
+      Number int
+      Title string
+   }
+   Movie *struct {
+      ProductionYear int `json:",string"`
+      Title string
+      Video struct {
+         ID string
+      }
+   }
+}
+
+func new_detail(path string) (*detail_page, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Query string `json:"query"`
@@ -42,18 +74,18 @@ func (e *episode_detail) New(path string) error {
             Path string `json:"path"`
          } `json:"variables"`
       }
-      s.Query = query_episode
+      s.Query = detail_page_static
       s.Variables.Path = path
       return json.Marshal(s)
    }()
    if err != nil {
-      return err
+      return nil, err
    }
    req, err := http.NewRequest(
       "POST", "https://api.joyn.de/graphql", bytes.NewReader(body),
    )
    if err != nil {
-      return err
+      return nil, err
    }
    req.Header = http.Header{
       "content-type": {"application/json"},
@@ -62,39 +94,17 @@ func (e *episode_detail) New(path string) error {
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer res.Body.Close()
-   text, err := io.ReadAll(res.Body)
-   if err != nil {
-      return err
-   }
-   err = json.Unmarshal(text, e)
-   if err != nil {
-      return err
-   }
-   if e.Data.Page.Episode == nil {
-      return errors.New(string(text))
-   }
-   return nil
-}
-
-type episode_detail struct {
-   Data struct {
-      Page struct {
-         Episode *struct {
-            Video struct {
-               ID string
-            }
-            Series struct {
-               Title string
-            }
-            Season struct {
-               Number int
-            }
-            Number int
-            Title string
-         }
+   var s struct {
+      Data struct {
+         Page detail_page
       }
    }
+   err = json.NewDecoder(res.Body).Decode(&s)
+   if err != nil {
+      return nil, err
+   }
+   return &s.Data.Page, nil
 }

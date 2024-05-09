@@ -20,7 +20,7 @@ type entitlement struct {
    Entitlement_Token string
 }
 
-func (a anonymous) entitlement(m movie_detail) (*entitlement, error) {
+func (a anonymous) entitlement(m detail_page) (*entitlement, error) {
    body, err := json.Marshal(map[string]string{
       "content_id": m.Data.Page.Movie.Video.ID,
    })
