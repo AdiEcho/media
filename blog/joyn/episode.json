@@ -1,0 +1,93 @@
+{
+  "data": {
+    "page": {
+      "__typename": "EpisodePage",
+      "path": "/serien/one-tree-hill/1-2-quaelende-angst",
+      "episode": {
+        "__typename": "Episode",
+        "id": "b_par6g9qohmx",
+        "title": "Quälende Angst",
+        "path": "/serien/one-tree-hill/1-2-quaelende-angst",
+        "number": 2,
+        "season": {
+          "number": 1,
+          "id": "c_p9rfrbuoimf",
+          "licenseTypes": [
+            "SVOD",
+            "AVOD"
+          ],
+          "numberOfEpisodes": 22
+        },
+        "airdate": null,
+        "startsAt": 1710543600,
+        "ageRating": {
+          "minAge": 0,
+          "descriptorsText": []
+        },
+        "licenseTypes": [
+          "SVOD",
+          "AVOD"
+        ],
+        "description": "Lucas ist verzweifelt als er bei dem Spiel der Ravens versagt, doch Coach Whitey kann ihn aufbauen.",
+        "brands": [
+          {
+            "path": null
+          }
+        ],
+        "markings": [],
+        "genres": [
+          {
+            "name": "Drama"
+          }
+        ],
+        "video": {
+          "id": "a_par87vfydlg",
+          "duration": 2545,
+          "type": "MAIN_VIDEO",
+          "quality": null,
+          "audioFormats": null,
+          "videoFormats": []
+        },
+        "videoDescriptors": [],
+        "productPlacement": false,
+        "heroImageDesktop": {
+          "accentColor": "#8e8e8eff",
+          "darkAccentColor": "#707070",
+          "url": "https://img.joyn.de/gn/assets/p2870984_e_h10_ac.jpg/profile:nextgen-web-herolandscape-1920x"
+        },
+        "heroImageMobile": {
+          "accentColor": "#8e8e8eff",
+          "darkAccentColor": "#707070",
+          "url": "https://img.joyn.de/gn/assets/p2870984_e_h10_ac.jpg/profile:nextgen-webphone-primary-768x432"
+        },
+        "series": {
+          "id": "d_p9qpdretmtl",
+          "title": "One Tree Hill",
+          "subtype": "SERIES",
+          "__typename": "Series",
+          "path": "/serien/one-tree-hill",
+          "productionYear": "2003",
+          "productionCompanies": [],
+          "productionCountries": [
+            "USA"
+          ],
+          "copyrights": [
+            "TM & Warner Bros. Entertainment Inc. All Rights Reserved."
+          ],
+          "numberOfSeasons": 9,
+          "primaryImage": {
+            "accentColor": "#be7752",
+            "darkAccentColor": "#724731",
+            "url": "https://img.joyn.de/mas-prod/assets/d_p9qpdretmtl/PRIMARY-66317e92.jpeg/profile:nextgen-webphone-primary-768x432"
+          },
+          "heroImage": {
+            "accentColor": "#be7752",
+            "darkAccentColor": "#724731",
+            "url": "https://img.joyn.de/mas-prod/assets/d_p9qpdretmtl/HERO_LANDSCAPE-43a32c8d.jpeg/profile:nextgen-web-herolandscape-1920x"
+          }
+        }
+      }
+    }
+  },
+  "extensions": {}
+}

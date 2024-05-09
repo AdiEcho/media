@@ -12,10 +12,10 @@ query PageMovieDetailStatic($path: String!) {
       ... on MoviePage {
          movie {
             ... on Movie {
-               ... on Movie {
-                  video {
-                     id
-                  }
+               productionYear
+               title
+               video {
+                  id
                }
             }
          }
@@ -28,6 +28,8 @@ type movie_detail struct {
    Data struct {
       Page struct {
          Movie struct {
+            ProductionYear int `json:",string"`
+            Title string
             Video struct {
                ID string
             }
