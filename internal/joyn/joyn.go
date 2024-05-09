@@ -11,56 +11,27 @@ import (
    "path/filepath"
 )
 
-type flags struct {
-   joyn int
-   representation string
-   s internal.Stream
-   v log.Level
-}
-
-func (f *flags) New() error {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   home = filepath.ToSlash(home)
-   f.s.ClientId = home + "/widevine/client_id.bin"
-   f.s.PrivateKey = home + "/widevine/private_key.pem"
-   return nil
-}
-
-func main() {
-   var f flags
-   err := f.New()
-   if err != nil {
-      panic(err)
-   }
-   flag.IntVar(&f.joyn, "b", 0, "joyn ID")
-   flag.StringVar(&f.representation, "i", "", "representation")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
-   flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.Parse()
-   f.v.Set()
-   log.Transport{}.Set()
-   if f.joyn >= 1 {
-      err := f.download()
-      if err != nil {
-         panic(err)
-      }
-   } else {
-      flag.Usage()
-   }
-}
 func (f flags) download() error {
-   var meta joyn.Metadata
-   err := meta.New(f.joyn)
+   var anon anonymous
+   err = anon.New()
    if err != nil {
-      return err
+      t.Fatal(err)
    }
-   demand, err := meta.OnDemand()
+   detail, err := new_detail(test.path)
    if err != nil {
-      return err
+      t.Fatal(err)
+   }
+   content_id, ok := detail.content_id()
+   if !ok {
+      t.Fatal("detail_page.content_id")
+   }
+   title, err := anon.entitlement(content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   play, err := title.playlist(content_id)
+   if err != nil {
+      t.Fatal(err)
    }
    req, err := http.NewRequest("", demand.PlaybackUrl, nil)
    if err != nil {
