@@ -6,6 +6,24 @@ import (
    "net/http"
 )
 
+const page_movie = `
+query PageMovieDetailStatic($path: String!) {
+   page(path: $path) {
+      ... on MoviePage {
+         movie {
+            ... on Movie {
+               ... on Movie {
+                  video {
+                     id
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+`
+
 type movie_detail struct {
    Data struct {
       Page struct {
@@ -51,21 +69,3 @@ func (m *movie_detail) New(path string) error {
    defer res.Body.Close()
    return json.NewDecoder(res.Body).Decode(m)
 }
-
-const page_movie = `
-query PageMovieDetailStatic($path: String!) {
-   page(path: $path) {
-      ... on MoviePage {
-         movie {
-            ... on Movie {
-               ... on Movie {
-                  video {
-                     id
-                  }
-               }
-            }
-         }
-      }
-   }
-}
-`

@@ -52,10 +52,6 @@ func (e entitlement) playlist(m movie_detail) (*playlist, error) {
    return play, nil
 }
 
-func (playlist) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
 func (playlist) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -71,4 +67,8 @@ type playlist struct {
 
 func (p playlist) RequestUrl() (string, bool) {
    return p.LicenseUrl, true
+}
+
+func (playlist) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
 }
