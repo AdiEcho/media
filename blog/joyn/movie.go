@@ -3,10 +3,12 @@ package joyn
 import (
    "bytes"
    "encoding/json"
+   "errors"
+   "io"
    "net/http"
 )
 
-const page_movie = `
+const query_movie = `
 query PageMovieDetailStatic($path: String!) {
    page(path: $path) {
       ... on MoviePage {
@@ -24,20 +26,6 @@ query PageMovieDetailStatic($path: String!) {
 }
 `
 
-type movie_detail struct {
-   Data struct {
-      Page struct {
-         Movie struct {
-            ProductionYear int `json:",string"`
-            Title string
-            Video struct {
-               ID string
-            }
-         }
-      }
-   }
-}
-
 func (m *movie_detail) New(path string) error {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -46,7 +34,7 @@ func (m *movie_detail) New(path string) error {
             Path string `json:"path"`
          } `json:"variables"`
       }
-      s.Query = page_movie
+      s.Query = query_movie
       s.Variables.Path = path
       return json.Marshal(s)
    }()
@@ -69,5 +57,30 @@ func (m *movie_detail) New(path string) error {
       return err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(m)
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   err = json.Unmarshal(text, m)
+   if err != nil {
+      return err
+   }
+   if m.Data.Page.Movie == nil {
+      return errors.New(string(text))
+   }
+   return nil
+}
+
+type movie_detail struct {
+   Data struct {
+      Page struct {
+         Movie *struct {
+            ProductionYear int `json:",string"`
+            Title string
+            Video struct {
+               ID string
+            }
+         }
+      }
+   }
 }

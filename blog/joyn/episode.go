@@ -1,100 +1,100 @@
-package main
+package joyn
 
 import (
-   "net/http"
-   "net/url"
-   "os"
-   "fmt"
+   "bytes"
+   "encoding/json"
+   "errors"
    "io"
-   "strings"
+   "net/http"
 )
 
-func main() {
-   var req http.Request
-   req.Header = make(http.Header)
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "api.joyn.de"
-   req.URL.Path = "/graphql"
-   req.URL.Scheme = "https"
-   req.Header["Content-Type"] = []string{"application/json"}
-   req.Method = "POST"
-   req.Header["Joyn-Platform"] = []string{"web"}
-   req.Header["X-Api-Key"] = []string{"4f0fd9f18abbe3cf0e87fdb556bc39c8"}
-   body := fmt.Sprintf(`
-   {
-      "variables": {
-         "path": "/serien/one-tree-hill/1-2-quaelende-angst"
-      },
-      "query": %q
-   }
-   `, episode_detail)
-   req.Body = io.NopCloser(strings.NewReader(body))
-   res, err := http.DefaultClient.Do(&req)
-   if err != nil {
-      panic(err)
-   }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
-}
-
-const episode_detail = `
+const query_episode = `
 query EpisodeDetailPageStatic($path: String!) {
-  page(path: $path) {
-      __typename
-      path
+   page(path: $path) {
       ... on EpisodePage {
-          episode {
-              ... on Episode {
-                 number
-                 title
-                 season {
-                     ... on Season {
-                       number
-                     }
-                 }
-                 video {
-                     id
-                 }
-                 series {
-                     title
-                     
-                     id
-                     subtype
-                     path
-                     productionYear
-                     productionCompanies
-                     productionCountries
-                     copyrights
-                     path
-                     numberOfSeasons
-                 }
-                 __typename
-                 id
-                 path
-                 airdate
-                 startsAt
-                 ageRating {
-                     minAge
-                     descriptorsText
-                 }
-                 licenseTypes
-                 description
-                 brands {
-                     path
-                 }
-                 markings
-                 genres {
-                     name
-                 }
-                 videoDescriptors {
-                     name
-                 }
-                 productPlacement
+         episode {
+            ... on Episode {
+               video {
+                  id
                }
-          }
+               series {
+                  title
+               }
+               season {
+                  ... on Season {
+                     number
+                  }
+               }
+               number
+               title
+            }
+         }
       }
-  }
+   }
 }
 `
+
+func (e *episode_detail) New(path string) error {
+   body, err := func() ([]byte, error) {
+      var s struct {
+         Query string `json:"query"`
+         Variables struct {
+            Path string `json:"path"`
+         } `json:"variables"`
+      }
+      s.Query = query_episode
+      s.Variables.Path = path
+      return json.Marshal(s)
+   }()
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://api.joyn.de/graphql", bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   req.Header = http.Header{
+      "content-type": {"application/json"},
+      "joyn-platform": {"web"},
+      "x-api-key": {"4f0fd9f18abbe3cf0e87fdb556bc39c8"},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   err = json.Unmarshal(text, e)
+   if err != nil {
+      return err
+   }
+   if e.Data.Page.Episode == nil {
+      return errors.New(string(text))
+   }
+   return nil
+}
+
+type episode_detail struct {
+   Data struct {
+      Page struct {
+         Episode *struct {
+            Video struct {
+               ID string
+            }
+            Series struct {
+               Title string
+            }
+            Season struct {
+               Number int
+            }
+            Number int
+            Title string
+         }
+      }
+   }
+}
