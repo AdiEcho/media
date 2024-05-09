@@ -12,12 +12,12 @@ import (
 )
 
 func (f flags) download() error {
-   var anon anonymous
-   err = anon.New()
+   var anonymous joyn.Anonymous
+   err := anon.New()
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   detail, err := new_detail(test.path)
+   detail, err := joyn.NewDetail(test.path)
    if err != nil {
       t.Fatal(err)
    }
