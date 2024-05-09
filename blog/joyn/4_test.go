@@ -8,10 +8,8 @@ import (
    "testing"
 )
 
-// joyn.de/filme/barry-seal-only-in-america
-const raw_key_id = "e+os9wvbQLpkvIFRuG3exA=="
-
 func TestLicense(t *testing.T) {
+   test := tests[0]
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -24,7 +22,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key_id, err := base64.StdEncoding.DecodeString(raw_key_id)
+   key_id, err := base64.StdEncoding.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -38,16 +36,19 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var movie movie_detail
-   err = movie.New(barry_seal)
+   detail, err := new_detail(test.path)
    if err != nil {
       t.Fatal(err)
    }
-   title, err := anon.entitlement(movie)
+   content_id, ok := detail.content_id()
+   if !ok {
+      t.Fatal("detail_page.content_id")
+   }
+   title, err := anon.entitlement(content_id)
    if err != nil {
       t.Fatal(err)
    }
-   play, err := title.playlist(movie)
+   play, err := title.playlist(content_id)
    if err != nil {
       t.Fatal(err)
    }

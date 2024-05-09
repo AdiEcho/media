@@ -1,19 +1,39 @@
 package joyn
 
 import (
+   "154.pages.dev/encoding"
    "fmt"
    "testing"
+   "time"
 )
 
-// joyn.de/serien/one-tree-hill/1-2-quaelende-angst
-const one_tree = "/serien/one-tree-hill/1-2-quaelende-angst"
-
-func TestEpisode(t *testing.T) {
-   var episode episode_detail
-   //err := episode.New(one_tree)
-   err := episode.New(barry_seal)
-   if err != nil {
-      t.Fatal(err)
+func TestDetail(t *testing.T) {
+   for _, test := range tests {
+      detail, err := new_detail(test.path)
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := encoding.Name(namer{detail})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      fmt.Printf("%+v\n", detail)
+      time.Sleep(time.Second)
    }
-   fmt.Printf("%+v\n", episode)
+}
+
+var tests = []struct{
+   key_id string
+   path string
+}{
+   {
+      // joyn.de/filme/barry-seal-only-in-america
+      key_id: "e+os9wvbQLpkvIFRuG3exA==",
+      path: "/filme/barry-seal-only-in-america",
+   },
+   {
+      // joyn.de/serien/one-tree-hill/1-2-quaelende-angst
+      path: "/serien/one-tree-hill/1-2-quaelende-angst",
+   },
 }

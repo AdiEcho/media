@@ -8,22 +8,8 @@ import (
    "net/http"
 )
 
-func (e entitlement) signature(text []byte) string {
-   text = append(text, ',')
-   text = append(text, e.Entitlement_Token...)
-   text = hex.AppendEncode(text, []byte(signature_key))
-   sum := sha1.Sum(text)
-   return hex.EncodeToString(sum[:])
-}
-
-type entitlement struct {
-   Entitlement_Token string
-}
-
-func (a anonymous) entitlement(m detail_page) (*entitlement, error) {
-   body, err := json.Marshal(map[string]string{
-      "content_id": m.Data.Page.Movie.Video.ID,
-   })
+func (a anonymous) entitlement(content_id string) (*entitlement, error) {
+   body, err := json.Marshal(map[string]string{"content_id": content_id})
    if err != nil {
       return nil, err
    }
@@ -49,3 +35,15 @@ func (a anonymous) entitlement(m detail_page) (*entitlement, error) {
 }
 
 const signature_key = "5C7838365C7864665C786638265C783064595C783935245C7865395C7838323F5C7866333D3B5C78386635"
+func (e entitlement) signature(text []byte) string {
+   text = append(text, ',')
+   text = append(text, e.Entitlement_Token...)
+   text = hex.AppendEncode(text, []byte(signature_key))
+   sum := sha1.Sum(text)
+   return hex.EncodeToString(sum[:])
+}
+
+type entitlement struct {
+   Entitlement_Token string
+}
+

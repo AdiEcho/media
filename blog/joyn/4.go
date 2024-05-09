@@ -6,7 +6,7 @@ import (
    "bytes"
 )
 
-func (e entitlement) playlist(m detail_page) (*playlist, error) {
+func (e entitlement) playlist(content_id string) (*playlist, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Manufacturer     string `json:"manufacturer"`
@@ -33,7 +33,7 @@ func (e entitlement) playlist(m detail_page) (*playlist, error) {
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/v1/asset/" + m.Data.Page.Movie.Video.ID + "/playlist"
+   req.URL.Path = "/v1/asset/" + content_id + "/playlist"
    req.URL.RawQuery = "signature=" + e.signature(body)
    req.Header = http.Header{
       "authorization": {"Bearer " + e.Entitlement_Token},

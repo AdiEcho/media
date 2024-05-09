@@ -6,8 +6,12 @@ import (
    "net/http"
 )
 
+type namer struct {
+   d *detail_page
+}
+
 const detail_page_static = `
-query EpisodeDetailPageStatic($path: String!) {
+query($path: String!) {
    page(path: $path) {
       ... on EpisodePage {
          episode {
@@ -43,27 +47,14 @@ query EpisodeDetailPageStatic($path: String!) {
 }
 `
 
-type detail_page struct {
-   Episode *struct {
-      Video struct {
-         ID string
-      }
-      Series struct {
-         Title string
-      }
-      Season struct {
-         Number int
-      }
-      Number int
-      Title string
+func (d detail_page) content_id() (string, bool) {
+   if v := d.Episode; v != nil {
+      return v.Video.ID, true
    }
-   Movie *struct {
-      ProductionYear int `json:",string"`
-      Title string
-      Video struct {
-         ID string
-      }
+   if v := d.Movie; v != nil {
+      return v.Video.ID, true
    }
+   return "", false
 }
 
 func new_detail(path string) (*detail_page, error) {
@@ -107,4 +98,65 @@ func new_detail(path string) (*detail_page, error) {
       return nil, err
    }
    return &s.Data.Page, nil
+}
+
+func (n namer) Show() string {
+   if v := n.d.Episode; v != nil {
+      return v.Series.Title
+   }
+   return ""
+}
+
+func (n namer) Season() int {
+   if v := n.d.Episode; v != nil {
+      return v.Season.Number
+   }
+   return 0
+}
+
+func (n namer) Episode() int {
+   if v := n.d.Episode; v != nil {
+      return v.Number
+   }
+   return 0
+}
+
+func (n namer) Title() string {
+   if v := n.d.Episode; v != nil {
+      return v.Title
+   }
+   if v := n.d.Movie; v != nil {
+      return v.Title
+   }
+   return ""
+}
+
+type detail_page struct {
+   Episode *struct {
+      Video struct {
+         ID string
+      }
+      Series struct {
+         Title string
+      }
+      Season struct {
+         Number int
+      }
+      Number int
+      Title string
+   }
+   Movie *struct {
+      ProductionYear int `json:",string"`
+      Title string
+      Video struct {
+         ID string
+      }
+   }
+}
+
+func (n namer) Year() int {
+   if v := n.d.Movie; v != nil {
+      return v.ProductionYear
+   }
+   return 0
 }
