@@ -1,9 +1,11 @@
 package joyn
 
 import (
+   "bytes"
+   "crypto/sha1"
+   "encoding/hex"
    "encoding/json"
    "net/http"
-   "bytes"
 )
 
 func (e entitlement) playlist(content_id string) (*playlist, error) {
@@ -71,4 +73,68 @@ func (p playlist) RequestUrl() (string, bool) {
 
 func (playlist) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
+}
+const signature_key = "5C7838365C7864665C786638265C783064595C783935245C7865395C7838323F5C7866333D3B5C78386635"
+
+func (a anonymous) entitlement(content_id string) (*entitlement, error) {
+   body, err := json.Marshal(map[string]string{"content_id": content_id})
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://entitlement.p7s1.io/api/user/entitlement-token",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("authorization", "Bearer " + a.Access_Token)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   title := new(entitlement)
+   err = json.NewDecoder(res.Body).Decode(title)
+   if err != nil {
+      return nil, err
+   }
+   return title, nil
+}
+
+type entitlement struct {
+   Entitlement_Token string
+}
+
+func (e entitlement) signature(text []byte) string {
+   text = append(text, ',')
+   text = append(text, e.Entitlement_Token...)
+   text = hex.AppendEncode(text, []byte(signature_key))
+   sum := sha1.Sum(text)
+   return hex.EncodeToString(sum[:])
+}
+type anonymous struct {
+   Access_Token string
+}
+
+func (a *anonymous) New() error {
+   body, err := func() ([]byte, error) {
+      m := map[string]string{
+         "client_id": "!",
+         "client_name": "web",
+      }
+      return json.Marshal(m)
+   }()
+   if err != nil {
+      return err
+   }
+   res, err := http.Post(
+      "https://auth.joyn.de/auth/anonymous", "application/json",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   return json.NewDecoder(res.Body).Decode(a)
 }
