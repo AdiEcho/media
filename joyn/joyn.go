@@ -48,6 +48,7 @@ type Entitlement struct {
 type Anonymous struct {
    Access_Token string
 }
+
 func (e Entitlement) Playlist(content_id string) (*Playlist, error) {
    body, err := func() ([]byte, error) {
       var s struct {
