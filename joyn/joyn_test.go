@@ -36,7 +36,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   detail, err := NewDetail(test.path)
+   detail, err := Path(test.path).Detail()
    if err != nil {
       t.Fatal(err)
    }

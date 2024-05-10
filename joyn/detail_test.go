@@ -9,7 +9,7 @@ import (
 
 func TestDetail(t *testing.T) {
    for _, test := range tests {
-      detail, err := NewDetail(test.path)
+      detail, err := Path(test.path).Detail()
       if err != nil {
          t.Fatal(err)
       }

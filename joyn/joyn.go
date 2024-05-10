@@ -7,7 +7,32 @@ import (
    "encoding/json"
    "errors"
    "net/http"
+   "time"
 )
+
+func (a *Anonymous) New() error {
+   body, err := func() ([]byte, error) {
+      m := map[string]string{
+         // fuck you:
+         // ENT_RVOD_Playback_Restricted
+         "client_id": time.Now().String(),
+         "client_name":"web",
+      }
+      return json.Marshal(m)
+   }()
+   if err != nil {
+      return err
+   }
+   res, err := http.Post(
+      "https://auth.joyn.de/auth/anonymous", "application/json",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   return json.NewDecoder(res.Body).Decode(a)
+}
 
 func (a Anonymous) Entitlement(content_id string) (*Entitlement, error) {
    body, err := json.Marshal(map[string]string{"content_id": content_id})
@@ -56,27 +81,6 @@ type Anonymous struct {
    Access_Token string
 }
 
-func (a *Anonymous) New() error {
-   body, err := func() ([]byte, error) {
-      m := map[string]string{
-         "client_id":   "!",
-         "client_name": "web",
-      }
-      return json.Marshal(m)
-   }()
-   if err != nil {
-      return err
-   }
-   res, err := http.Post(
-      "https://auth.joyn.de/auth/anonymous", "application/json",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(a)
-}
 func (e Entitlement) Playlist(content_id string) (*Playlist, error) {
    body, err := func() ([]byte, error) {
       var s struct {
