@@ -10,6 +10,44 @@ import (
    "time"
 )
 
+func (a Anonymous) Entitlement(content_id string) (*Entitlement, error) {
+   body, err := json.Marshal(map[string]string{"content_id": content_id})
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://entitlement.p7s1.io/api/user/entitlement-token",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("authorization", "Bearer "+a.Access_Token)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   title := new(Entitlement)
+   err = json.NewDecoder(res.Body).Decode(title)
+   if err != nil {
+      return nil, err
+   }
+   return title, nil
+}
+
+type Entitlement struct {
+   Entitlement_Token string
+}
+
+type Anonymous struct {
+   Access_Token string
+}
 func (e Entitlement) Playlist(content_id string) (*Playlist, error) {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -109,43 +147,4 @@ func (a *Anonymous) New() error {
    }
    defer res.Body.Close()
    return json.NewDecoder(res.Body).Decode(a)
-}
-
-func (a Anonymous) Entitlement(content_id string) (*Entitlement, error) {
-   body, err := json.Marshal(map[string]string{"content_id": content_id})
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://entitlement.p7s1.io/api/user/entitlement-token",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("authorization", "Bearer "+a.Access_Token)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   title := new(Entitlement)
-   err = json.NewDecoder(res.Body).Decode(title)
-   if err != nil {
-      return nil, err
-   }
-   return title, nil
-}
-
-type Entitlement struct {
-   Entitlement_Token string
-}
-
-type Anonymous struct {
-   Access_Token string
 }

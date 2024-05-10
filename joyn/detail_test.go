@@ -7,6 +7,21 @@ import (
    "time"
 )
 
+var tests = []struct {
+   key_id string
+   path   string
+}{
+   {
+      // joyn.de/filme/barry-seal-only-in-america
+      key_id: "9mY0MZrt58qhF/FvD837QA==",
+      path:   "/filme/barry-seal-only-in-america",
+   },
+   {
+      // joyn.de/serien/one-tree-hill/1-2-quaelende-angst
+      path: "/serien/one-tree-hill/1-2-quaelende-angst",
+   },
+}
+
 func TestDetail(t *testing.T) {
    for _, test := range tests {
       detail, err := Path(test.path).Detail()
@@ -21,19 +36,4 @@ func TestDetail(t *testing.T) {
       fmt.Printf("%+v\n", detail)
       time.Sleep(time.Second)
    }
-}
-
-var tests = []struct {
-   key_id string
-   path   string
-}{
-   {
-      // joyn.de/filme/barry-seal-only-in-america
-      key_id: "e+os9wvbQLpkvIFRuG3exA==",
-      path:   "/filme/barry-seal-only-in-america",
-   },
-   {
-      // joyn.de/serien/one-tree-hill/1-2-quaelende-angst
-      path: "/serien/one-tree-hill/1-2-quaelende-angst",
-   },
 }
