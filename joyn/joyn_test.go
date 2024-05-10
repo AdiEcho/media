@@ -8,6 +8,32 @@ import (
    "testing"
 )
 
+func TestPlaylist(t *testing.T) {
+   test := tests[0]
+   var anon Anonymous
+   err := anon.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   detail, err := Path(test.path).Detail()
+   if err != nil {
+      t.Fatal(err)
+   }
+   content_id, ok := detail.ContentId()
+   if !ok {
+      t.Fatal("detail_page.content_id")
+   }
+   title, err := anon.Entitlement(content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   play, err := title.Playlist(content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", play)
+}
+
 func TestLicense(t *testing.T) {
    test := tests[0]
    home, err := os.UserHomeDir()
