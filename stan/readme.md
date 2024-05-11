@@ -24,8 +24,18 @@ Create Android 6 device. Install user certificate.
 1. https://stan.com.au?intent=register
 2. standard
 3. continue
-
-email
-password
-first name
-last name
+4. email
+5. password
+6. first name
+7. last name
+8. day
+9. month
+10. year
+11. postcode
+12. card number
+   - need to use fresh card
+13. expiration
+14. CVC
+15. zip
+16. I agree to the terms
+17. start watching
