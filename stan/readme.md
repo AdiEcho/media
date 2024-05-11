@@ -18,3 +18,14 @@ version name = 4.31.1
 - https://play.google.com/store/apps/details?id=au.com.stan.and
 
 Create Android 6 device. Install user certificate.
+
+## register
+
+1. https://stan.com.au?intent=register
+2. standard
+3. continue
+
+email
+password
+first name
+last name
