@@ -10,6 +10,36 @@ import (
    "time"
 )
 
+var countries = []struct{
+   country string
+   name string
+}{
+   {"Argentina", "ipip_country_ar.netset"},
+   {"Australia", "ipip_country_au.netset"},
+   {"Bolivia", "ipip_country_bo.netset"},
+   {"Brazil", "ipip_country_br.netset"},
+   {"Canada", "ipip_country_ca.netset"},
+   {"Chile", "ipip_country_cl.netset"},
+   {"Colombia", "ipip_country_co.netset"},
+   {"Costa Rica", "ipip_country_cr.netset"},
+   {"Denmark", "ipip_country_dk.netset"},
+   {"Ecuador", "ipip_country_ec.netset"},
+   {"Germany", "ipip_country_de.netset"},
+   {"Guatemala", "ipip_country_gt.netset"},
+   {"Ireland", "ipip_country_ie.netset"},
+   {"Italy", "ipip_country_it.netset"},
+   {"Latvia", "ipip_country_lv.netset"},
+   {"Mexico", "ipip_country_mx.netset"},
+   {"New Zealand", "ipip_country_nz.netset"},
+   {"Norway", "ipip_country_no.netset"},
+   {"Peru", "ipip_country_pe.netset"},
+   {"South Africa", "ipip_country_za.netset"},
+   {"Spain", "ipip_country_es.netset"},
+   {"Sweden", "ipip_country_se.netset"},
+   {"United Kingdom", "ipip_country_gb.netset"},
+   {"Venezuela", "ipip_country_ve.netset"},
+}
+
 func main() {
    for _, country := range countries {
       address := func() string {
@@ -30,9 +60,9 @@ func main() {
          return len(a.ip) - len(b.ip)
       })
       fmt.Printf("{%q, %q},\n", country.country, blocks[0].ip)
-      for _, block := range blocks[1:9] {
-         fmt.Println(block.ip)
-      }
+      // for _, block := range blocks[1:9] {
+      //    fmt.Println(block.ip)
+      // }
       time.Sleep(99 * time.Millisecond)
    }
 }
@@ -70,33 +100,5 @@ func get(address string) ([]blocklist, error) {
 type blocklist struct {
    size int
    ip string
-}
-var countries = []struct{
-   country string
-   name string
-}{
-   {"Argentina", "ipip_country_ar.netset"},
-   {"Australia", "ipip_country_au.netset"},
-   {"Bolivia", "ipip_country_bo.netset"},
-   {"Brazil", "ipip_country_br.netset"},
-   {"Canada", "ipip_country_ca.netset"},
-   {"Chile", "ipip_country_cl.netset"},
-   {"Colombia", "ipip_country_co.netset"},
-   {"Costa Rica", "ipip_country_cr.netset"},
-   {"Denmark", "ipip_country_dk.netset"},
-   {"Ecuador", "ipip_country_ec.netset"},
-   {"Germany", "ipip_country_de.netset"},
-   {"Guatemala", "ipip_country_gt.netset"},
-   {"Ireland", "ipip_country_ie.netset"},
-   {"Italy", "ipip_country_it.netset"},
-   {"Latvia", "ipip_country_lv.netset"},
-   {"Mexico", "ipip_country_mx.netset"},
-   {"Norway", "ipip_country_no.netset"},
-   {"Peru", "ipip_country_pe.netset"},
-   {"South Africa", "ipip_country_za.netset"},
-   {"Spain", "ipip_country_es.netset"},
-   {"Sweden", "ipip_country_se.netset"},
-   {"United Kingdom", "ipip_country_gb.netset"},
-   {"Venezuela", "ipip_country_ve.netset"},
 }
 
