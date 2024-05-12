@@ -1,7 +1,6 @@
 package member
 
 import (
-   "fmt"
    "os"
    "testing"
 )
@@ -17,5 +16,5 @@ func TestAuthenticate(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", auth)
+   os.WriteFile("authenticate.json", auth.data, 0666)
 }

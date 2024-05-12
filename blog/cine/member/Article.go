@@ -6,6 +6,26 @@ import (
    "net/http"
 )
 
+func (d data_article) film() (*article_asset, bool) {
+   for _, asset := range d.Assets {
+      if asset.LinkedType == "film" {
+         return asset, true
+      }
+   }
+   return nil, false
+}
+
+type data_article struct {
+   ID int
+   Assets []*article_asset
+}
+
+type article_asset struct {
+   ID int
+   LinkedType string `json:"linked_type"`
+   article *data_article
+}
+
 const query_article = `
 query($articleUrlSlug: String) {
    Article(full_url_slug: $articleUrlSlug) {
@@ -58,15 +78,4 @@ func new_article(slug string) (*data_article, error) {
       asset.article = &s.Data.Article
    }
    return &s.Data.Article, nil
-}
-
-type data_article struct {
-   ID int
-   Assets []*article_asset
-}
-
-type article_asset struct {
-   ID int
-   Linked_Type string
-   article *data_article
 }

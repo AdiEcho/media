@@ -3,6 +3,7 @@ package member
 import (
    "bytes"
    "encoding/json"
+   "io"
    "net/http"
 )
 
@@ -13,14 +14,6 @@ mutation($email: String, $password: String) {
    }
 }
 `
-
-type authenticate struct {
-   Data struct {
-      UserAuthenticate struct {
-         AccessToken string `json:"access_token"`
-      }
-   }
-}
 
 func (a *authenticate) New(email, password string) error {
    body, err := func() ([]byte, error) {
@@ -47,5 +40,24 @@ func (a *authenticate) New(email, password string) error {
       return err
    }
    defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(a)
+   a.data, err = io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+type authenticate struct {
+   data []byte
+   v struct {
+      Data struct {
+         UserAuthenticate struct {
+            AccessToken string `json:"access_token"`
+         }
+      }
+   }
+}
+
+func (a *authenticate) unmarshal() error {
+   return json.Unmarshal(a.data, &a.v)
 }

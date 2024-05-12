@@ -3,23 +3,12 @@ package member
 import (
    "bytes"
    "encoding/json"
+   "errors"
+   "io"
    "net/http"
 )
 
-const query_asset = `
-mutation($article_id: Int, $asset_id: Int) {
-   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
-      entitlements {
-         ... on ArticleAssetPlayEntitlement {
-            manifest
-            protocol
-         }
-      }
-   }
-}
-`
-
-func (a authenticate) play(asset article_asset) (*asset_play, error) {
+func (a authenticate) play(asset *article_asset) (*asset_play, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Query string `json:"query"`
@@ -44,7 +33,7 @@ func (a authenticate) play(asset article_asset) (*asset_play, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.Data.UserAuthenticate.AccessToken},
+      "authorization": {"Bearer " + a.v.Data.UserAuthenticate.AccessToken},
       "content-type": {"application/json"},
    }
    res, err := http.DefaultClient.Do(req)
@@ -52,21 +41,41 @@ func (a authenticate) play(asset article_asset) (*asset_play, error) {
       return nil, err
    }
    defer res.Body.Close()
-   play := new(asset_play)
-   err = json.NewDecoder(res.Body).Decode(play)
+   text, err := io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
-   return play, nil
+   var s struct {
+      Data struct {
+         ArticleAssetPlay *asset_play
+      }
+   }
+   err = json.Unmarshal(text, &s)
+   if err != nil {
+      return nil, err
+   }
+   if v := s.Data.ArticleAssetPlay; v != nil {
+      return v, nil
+   }
+   return nil, errors.New(string(text))
 }
 
 type asset_play struct {
-   Data struct {
-      ArticleAssetPlay struct {
-         Entitlements []struct {
-            Manifest string
-            Protocol string
+   Entitlements []struct {
+      Manifest string
+      Protocol string
+   }
+}
+
+const query_asset = `
+mutation($article_id: Int, $asset_id: Int) {
+   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
+      entitlements {
+         ... on ArticleAssetPlayEntitlement {
+            manifest
+            protocol
          }
       }
    }
 }
+`
