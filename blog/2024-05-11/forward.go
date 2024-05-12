@@ -33,6 +33,7 @@ var countries = []struct{
    {"Latvia", "ipip_country_lv.netset"},
    {"Malaysia", "ipip_country_my.netset"},
    {"Mexico", "ipip_country_mx.netset"},
+   {"Netherlands", "ipip_country_nl.netset"},
    {"New Zealand", "ipip_country_nz.netset"},
    {"Norway", "ipip_country_no.netset"},
    {"Peru", "ipip_country_pe.netset"},
