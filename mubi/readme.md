@@ -1,19 +1,20 @@
 # Mubi
 
-1. https://privacy.com
-   - might need to create new card
-2. https://mubi.com
+1. https://mubi.com
+2. try 7 days free
 3. Email address
    - mailsac.com: Sorry, this isn't a valid email address
 4. GET STARTED
 5. enter code
-6. NEXT
-7. cardholder name
-8. card number
-9. Expiry Date
-10. CVV
-11. zip code
-12. START FREE TRIAL
+6. enable javascript
+7. mubi
+8. NEXT
+9. cardholder name
+10. card number
+11. Expiry Date
+12. CVV
+13. zip code
+14. START FREE TRIAL
 
 ## Android
 

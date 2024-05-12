@@ -4,7 +4,21 @@ import (
    "bytes"
    "encoding/json"
    "net/http"
+   "strconv"
 )
+
+type namer struct {
+   d *data_article
+}
+
+func (n namer) Year() int {
+   if v, ok := n.d.year(); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
+}
 
 const query_article = `
 query($articleUrlSlug: String) {
@@ -82,20 +96,20 @@ func new_article(slug string) (*data_article, error) {
    return &s.Data.Article, nil
 }
 
-func (data_article) Show() string {
+func (namer) Show() string {
    return ""
 }
 
-func (data_article) Season() int {
+func (namer) Season() int {
    return 0
 }
 
-func (data_article) Episode() int {
+func (namer) Episode() int {
    return 0
 }
 
-func (d data_article) Title() string {
-   return d.CanonicalTitle
+func (n namer) Title() string {
+   return n.d.CanonicalTitle
 }
 
 type data_article struct {
@@ -108,6 +122,12 @@ type data_article struct {
    }
 }
 
-func (data_article) Year() int {
-   return 0
+func (d data_article) year() (string, bool) {
+   for _, meta := range d.Metas {
+      if meta.Key == "year" {
+         return meta.Value, true
+      }
+   }
+   return "", false
 }
+
