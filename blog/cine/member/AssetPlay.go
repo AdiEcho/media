@@ -1,4 +1,4 @@
-package main
+package member
 
 import (
    "io"
@@ -9,7 +9,20 @@ import (
    "fmt"
 )
 
-func main() {
+const query_asset = `
+mutation($article_id: Int, $asset_id: Int) {
+   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
+      entitlements {
+         ... on ArticleAssetPlayEntitlement {
+            manifest
+            protocol
+         }
+      }
+   }
+}
+`
+
+func asset_play() {
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"
@@ -29,7 +42,7 @@ func main() {
          "asset_id": 1415
       }
    }
-   `, query)
+   `, query_asset)
    req.Body = io.NopCloser(strings.NewReader(body))
    res, err := http.DefaultClient.Do(&req)
    if err != nil {
@@ -38,16 +51,3 @@ func main() {
    defer res.Body.Close()
    res.Write(os.Stdout)
 }
-
-const query = `
-mutation($article_id: Int, $asset_id: Int) {
-   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
-      entitlements {
-         ... on ArticleAssetPlayEntitlement {
-            manifest
-            protocol
-         }
-      }
-   }
-}
-`
