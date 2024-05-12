@@ -47,23 +47,6 @@ Sec-Fetch-Site: cross-site
 {"operationName":"ArticleAssetPlay","variables":{"article_id":768,"asset_id":1415,"protocols":["dash","hls"],"is_offline_download":false},"query":"mutation ArticleAssetPlay($article_id: Int, $asset_id: Int, $protocols: [ArticlePlayProtocolEnum], $is_offline_download: Boolean, $resolution: ArticlePlayResolutionEnum, $device_model_context: DeviceModelContextEnum) {\n  ArticleAssetPlay(\n    article_id: $article_id\n    asset_id: $asset_id\n    protocols: $protocols\n    is_offline_download: $is_offline_download\n    resolution: $resolution\n    device_model_context: $device_model_context\n  ) {\n    article_id\n    asset_id\n    entitlements {\n      ...Entitlement\n    }\n    subtitles {\n      ...SubtitleFile\n    }\n    pulse_token\n    appa\n    appr\n    time_marker_end\n    user_subtitle_locale\n    user_audio_locale\n    aspect_ratio\n    issued_at(is_format_with_milliseconds: true)\n    fairplay_certificate_url\n  }\n}\n\nfragment Entitlement on ArticleAssetPlayEntitlement {\n  mime_type\n  protocol\n  manifest\n  token\n  encryption_type\n  key_delivery_url\n  download_expires_in\n  encryption_provider\n  hls_key_uri\n  media_provider\n}\n\nfragment SubtitleFile on File {\n  url\n  locale\n  locale_label\n}"}
 ~~~
 
-Authorization from:
+`article_id` from:
 
-~~~
-POST /graphql/2/user HTTP/1.1
-Host: api.audienceplayer.com
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
-Accept: application/json, text/plain, */*
-Accept-Language: nl
-Accept-Encoding: gzip, deflate, br
-Content-Type: application/json
-Content-Length: 264
-Origin: https://www.cinemember.nl
-Connection: keep-alive
-Referer: https://www.cinemember.nl/
-Sec-Fetch-Dest: empty
-Sec-Fetch-Mode: cors
-Sec-Fetch-Site: cross-site
-
-{"operationName":"UserAuthenticate","variables":{"email":"EMAIL","password":"PASSWORD"},"query":"mutation UserAuthenticate($email: String, $password: String) {\n  UserAuthenticate(email: $email, password: $password) {\n    access_token\n  }\n}"}
-~~~
+`asset_id` from:
