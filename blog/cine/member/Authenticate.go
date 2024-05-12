@@ -17,7 +17,7 @@ mutation($email: String, $password: String) {
 type authenticate struct {
    Data struct {
       UserAuthenticate struct {
-         Access_Token string
+         AccessToken string `json:"access_token"`
       }
    }
 }

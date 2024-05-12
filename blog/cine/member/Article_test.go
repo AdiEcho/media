@@ -1,15 +1,17 @@
 package member
 
 import (
-   "os"
+   "fmt"
    "testing"
 )
 
+const american_hustle = "films/american-hustle"
+
 func TestArticle(t *testing.T) {
-   res, err := article()
+   var article article_query
+   err := article.New(american_hustle)
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   os.Stdout.ReadFrom(res.Body)
+   fmt.Printf("%+v\n", article)
 }
