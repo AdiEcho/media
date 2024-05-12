@@ -8,6 +8,7 @@ import (
    "net/http"
 )
 
+// geo block - VPN not x-forwarded-for
 func (a authenticate) play(asset *article_asset) (*asset_play, error) {
    body, err := func() ([]byte, error) {
       var s struct {
