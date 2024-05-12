@@ -6,6 +6,29 @@ import (
    "net/http"
 )
 
+const query_article = `
+query($articleUrlSlug: String) {
+   Article(full_url_slug: $articleUrlSlug) {
+      ... on Article {
+         assets {
+            ... on Asset {
+               id
+               linked_type
+            }
+         }
+         canonical_title
+         id
+         metas(output: html) {
+            ... on ArticleMeta {
+               key
+               value
+            }
+         }
+      }
+   }
+}
+`
+
 func (d data_article) film() (*article_asset, bool) {
    for _, asset := range d.Assets {
       if asset.LinkedType == "film" {
@@ -15,32 +38,11 @@ func (d data_article) film() (*article_asset, bool) {
    return nil, false
 }
 
-type data_article struct {
-   ID int
-   Assets []*article_asset
-}
-
 type article_asset struct {
    ID int
    LinkedType string `json:"linked_type"`
    article *data_article
 }
-
-const query_article = `
-query($articleUrlSlug: String) {
-   Article(full_url_slug: $articleUrlSlug) {
-      ... on Article {
-         id
-         assets {
-            ... on Asset {
-               id
-               linked_type
-            }
-         }
-      }
-   }
-}
-`
 
 func new_article(slug string) (*data_article, error) {
    body, err := func() ([]byte, error) {
@@ -78,4 +80,34 @@ func new_article(slug string) (*data_article, error) {
       asset.article = &s.Data.Article
    }
    return &s.Data.Article, nil
+}
+
+func (data_article) Show() string {
+   return ""
+}
+
+func (data_article) Season() int {
+   return 0
+}
+
+func (data_article) Episode() int {
+   return 0
+}
+
+func (d data_article) Title() string {
+   return d.CanonicalTitle
+}
+
+type data_article struct {
+   Assets []*article_asset
+   CanonicalTitle string `json:"canonical_title"`
+   ID int
+   Metas []struct {
+      Key string
+      Value string
+   }
+}
+
+func (data_article) Year() int {
+   return 0
 }

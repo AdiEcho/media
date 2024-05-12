@@ -25,5 +25,5 @@ func TestAsset(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", play)
+   fmt.Println(play.dash())
 }

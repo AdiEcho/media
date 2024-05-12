@@ -8,6 +8,22 @@ import (
    "net/http"
 )
 
+func (a asset_play) dash() (string, bool) {
+   for _, title := range a.Entitlements {
+      if title.Protocol == "dash" {
+         return title.Manifest, true
+      }
+   }
+   return "", false
+}
+
+type asset_play struct {
+   Entitlements []struct {
+      Manifest string
+      Protocol string
+   }
+}
+
 // geo block - VPN not x-forwarded-for
 func (a authenticate) play(asset *article_asset) (*asset_play, error) {
    body, err := func() ([]byte, error) {
@@ -59,13 +75,6 @@ func (a authenticate) play(asset *article_asset) (*asset_play, error) {
       return v, nil
    }
    return nil, errors.New(string(text))
-}
-
-type asset_play struct {
-   Entitlements []struct {
-      Manifest string
-      Protocol string
-   }
 }
 
 const query_asset = `
