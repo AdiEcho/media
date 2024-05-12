@@ -1,0 +1,104 @@
+{
+  "data": {
+    "Article": {
+      "id": 768,
+      "url_slug": "american-hustle",
+      "full_url_slug": "films/american-hustle",
+      "canonical_url": null,
+      "canonical_title": "American Hustle",
+      "name": "american-hustle",
+      "type": "film",
+      "is_auth_required": true,
+      "parent_id": null,
+      "assets": [
+        {
+          "id": 1415,
+          "duration": 7953,
+          "linked_type": "film",
+          "accessibility": "authorized_only"
+        },
+        {
+          "id": 1486,
+          "duration": 135,
+          "linked_type": "trailer",
+          "accessibility": "everyone"
+        }
+      ],
+      "metas": [
+        {
+          "key": "title",
+          "value": "American Hustle"
+        },
+        {
+          "key": "year",
+          "value": "2013"
+        },
+        {
+          "key": "director",
+          "value": "David O. Russell"
+        },
+        {
+          "key": "spoken",
+          "value": "Engels"
+        },
+        {
+          "key": "description",
+          "value": "<p>Smullen is het van deze 70's lookalike van <i>The Sting</i>, waarin lomige dikzak Christian Bale (hij vrat zich met cheeseburgers 20 kg vetter) door Bradley Cooper als een ambitieuze FBI-agent wordt opgejaagd om te infiltreren bij de maffia. Echtgenote Jennifer Lawrence raakt ondertussen aan de drank en dreigt hun zorgvuldig uitgewerkt plan voortijdig te laten kapseizen. O ja, Amy Adams schittert als de minnares van Bale. <i>American Hustle</i> is, u merkt het, smullen!</p>"
+        },
+        {
+          "key": "description_short",
+          "value": "Een bedrieger wordt samen met zijn partner gedwongen om te werken voor een wilde F.B.I. Agent die hen in een wereld van Jersey power brokers en de maffia duwt."
+        },
+        {
+          "key": "parental",
+          "value": "12,g,s,v,t"
+        },
+        {
+          "key": "external_article_id",
+          "value": "200603"
+        },
+        {
+          "key": "subtitles",
+          "value": "Nederlands of Frans"
+        },
+        {
+          "key": "audio",
+          "value": "Engels"
+        },
+        {
+          "key": "cast",
+          "value": "Christian Bale, Amy Adams, Bradley Cooper"
+        },
+        {
+          "key": "seo_title",
+          "value": "American Hustle | Kijk nu online bij CineMember"
+        },
+        {
+          "key": "seo_description",
+          "value": "Kijk American Hustle thuis bij CineMember. Een bedrieger wordt samen met zijn partner gedwongen om te werken voor een wilde F.B.I. Agent die hen in een wereld van Jersey power brokers en de maffia duwt."
+        },
+        {
+          "key": "seo_keywords",
+          "value": "american hustle,christian bale,amy adams,bradley cooper,american hustle cast,cast american hustle"
+        },
+        {
+          "key": "content_owner",
+          "value": "PAR"
+        },
+        {
+          "key": "og_title",
+          "value": "American Hustle | Kijk nu online bij CineMember"
+        },
+        {
+          "key": "og_description",
+          "value": "Kijk American Hustle thuis bij CineMember. Een bedrieger wordt samen met zijn partner gedwongen om te werken voor een wilde F.B.I. Agent die hen in een wereld van Jersey power brokers en de maffia duwt."
+        }
+      ],
+      "published_at": "2019-10-23T00:00:00Z",
+      "upsell_product_call_to_action_tag": null,
+      "is_downloadable": true,
+      "ribbon_title": null,
+      "ribbon_settings": null
+    }
+  }
+}
