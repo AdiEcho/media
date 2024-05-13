@@ -7,7 +7,7 @@ import (
 )
 
 func TestAsset(t *testing.T) {
-   article, err := new_article(american_hustle)
+   article, err := american_hustle.article()
    if err != nil {
       t.Fatal(err)
    }
@@ -27,6 +27,7 @@ func TestAsset(t *testing.T) {
    }
    fmt.Println(play.dash())
 }
+
 func TestAuthenticate(t *testing.T) {
    username := os.Getenv("cineMember_username")
    if username == "" {
