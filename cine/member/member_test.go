@@ -21,7 +21,7 @@ func TestAsset(t *testing.T) {
 	if !ok {
 		t.Fatal("data_article.film")
 	}
-	play, err := auth.play(asset)
+	play, err := auth.Play(asset)
 	if err != nil {
 		t.Fatal(err)
 	}

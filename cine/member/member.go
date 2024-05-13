@@ -9,7 +9,7 @@ import (
 )
 
 // geo block - VPN not x-forwarded-for
-func (a Authenticate) play(asset *ArticleAsset) (*AssetPlay, error) {
+func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
 	body, err := func() ([]byte, error) {
 		var s struct {
 			Query     string `json:"query"`
