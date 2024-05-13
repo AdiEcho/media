@@ -15,10 +15,11 @@ type flags struct {
    email string
    s internal.Stream
    home string
-   cine member.ID
    representation string
    password string
    v log.Level
+   
+   cine member.ID
 }
 
 func (f *flags) New() error {

@@ -5,69 +5,36 @@ import (
    "encoding/json"
    "net/http"
    "strconv"
+   "strings"
 )
 
-type namer struct {
-   d *data_article
+// https://www.cinemember.nl/nl/films/american-hustle
+func (a *article_slug) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   s = strings.TrimPrefix(s, "cinemember.nl")
+   s = strings.TrimPrefix(s, "/nl")
+   s = strings.TrimPrefix(s, "/")
+   *a = article_slug(s)
+   return nil
 }
 
-func (n namer) Year() int {
-   if v, ok := n.d.year(); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
+func (a article_slug) String() string {
+   return string(a)
 }
 
-const query_article = `
-query($articleUrlSlug: String) {
-   Article(full_url_slug: $articleUrlSlug) {
-      ... on Article {
-         assets {
-            ... on Asset {
-               id
-               linked_type
-            }
-         }
-         canonical_title
-         id
-         metas(output: html) {
-            ... on ArticleMeta {
-               key
-               value
-            }
-         }
-      }
-   }
-}
-`
+type article_slug string
 
-func (d data_article) film() (*article_asset, bool) {
-   for _, asset := range d.Assets {
-      if asset.LinkedType == "film" {
-         return asset, true
-      }
-   }
-   return nil, false
-}
-
-type article_asset struct {
-   ID int
-   LinkedType string `json:"linked_type"`
-   article *data_article
-}
-
-func new_article(slug string) (*data_article, error) {
+func (a article_slug) article() (*data_article, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Query string `json:"query"`
          Variables struct {
-            ArticleUrlSlug string `json:"articleUrlSlug"`
+            ArticleUrlSlug article_slug `json:"articleUrlSlug"`
          } `json:"variables"`
       }
+      s.Variables.ArticleUrlSlug = a
       s.Query = query_article
-      s.Variables.ArticleUrlSlug = slug
       return json.Marshal(s)
    }()
    if err != nil {
@@ -129,5 +96,56 @@ func (d data_article) year() (string, bool) {
       }
    }
    return "", false
+}
+
+type namer struct {
+   d *data_article
+}
+
+func (n namer) Year() int {
+   if v, ok := n.d.year(); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
+}
+
+const query_article = `
+query($articleUrlSlug: String) {
+   Article(full_url_slug: $articleUrlSlug) {
+      ... on Article {
+         assets {
+            ... on Asset {
+               id
+               linked_type
+            }
+         }
+         canonical_title
+         id
+         metas(output: html) {
+            ... on ArticleMeta {
+               key
+               value
+            }
+         }
+      }
+   }
+}
+`
+
+func (d data_article) film() (*article_asset, bool) {
+   for _, asset := range d.Assets {
+      if asset.LinkedType == "film" {
+         return asset, true
+      }
+   }
+   return nil, false
+}
+
+type article_asset struct {
+   ID int
+   LinkedType string `json:"linked_type"`
+   article *data_article
 }
 
