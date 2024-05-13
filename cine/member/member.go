@@ -8,6 +8,15 @@ import (
 	"net/http"
 )
 
+func (a AssetPlay) DASH() (string, bool) {
+	for _, title := range a.Entitlements {
+		if title.Protocol == "dash" {
+			return title.Manifest, true
+		}
+	}
+	return "", false
+}
+
 // geo block - VPN not x-forwarded-for
 func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
 	body, err := func() ([]byte, error) {
@@ -128,15 +137,6 @@ mutation($email: String, $password: String) {
    }
 }
 `
-
-func (a AssetPlay) dash() (string, bool) {
-	for _, title := range a.Entitlements {
-		if title.Protocol == "dash" {
-			return title.Manifest, true
-		}
-	}
-	return "", false
-}
 
 type AssetPlay struct {
 	Entitlements []struct {

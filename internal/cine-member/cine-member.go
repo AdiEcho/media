@@ -1,14 +1,11 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/cine/member"
-   "154.pages.dev/media/internal"
-   "flag"
+   "errors"
    "fmt"
    "net/http"
    "os"
-   "path/filepath"
 )
 
 func (f flags) download() error {
@@ -29,13 +26,15 @@ func (f flags) download() error {
    if !ok {
       return errors.New("member.DataArticle.Film")
    }
-   
-   play, err := auth.play(asset)
+   play, err := auth.Play(asset)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   fmt.Println(play.dash())
-   req, err := http.NewRequest("", play.Stream_URL, nil)
+   dash, ok := play.DASH()
+   if !ok {
+      return errors.New("member.AssetPlay.DASH")
+   }
+   req, err := http.NewRequest("", dash, nil)
    if err != nil {
       return err
    }
@@ -45,16 +44,10 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         detail, err := auth.Details(deep)
-         if err != nil {
-            return err
-         }
-         f.s.Name = <-detail
-         f.s.Poster = play
+         f.s.Name = member.Namer{article}
          return f.s.Download(medium)
       }
    }
-   // 2 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()
