@@ -7,17 +7,17 @@ import (
 )
 
 func TestAsset(t *testing.T) {
-	article, err := american_hustle.article()
+	article, err := american_hustle.Article()
 	if err != nil {
 		t.Fatal(err)
 	}
 	var auth Authenticate
-	auth.data, err = os.ReadFile("authenticate.json")
+	auth.Data, err = os.ReadFile("authenticate.json")
 	if err != nil {
 		t.Fatal(err)
 	}
-	auth.unmarshal()
-	asset, ok := article.film()
+	auth.Unmarshal()
+	asset, ok := article.Film()
 	if !ok {
 		t.Fatal("data_article.film")
 	}
@@ -39,5 +39,5 @@ func TestAuthenticate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	os.WriteFile("authenticate.json", auth.data, 0666)
+	os.WriteFile("authenticate.json", auth.Data, 0666)
 }

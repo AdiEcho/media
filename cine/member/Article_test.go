@@ -10,7 +10,7 @@ import (
 const american_hustle ArticleSlug = "films/american-hustle"
 
 func TestArticle(t *testing.T) {
-	article, err := american_hustle.article()
+	article, err := american_hustle.Article()
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -11,33 +11,30 @@ import (
    "path/filepath"
 )
 
-func (f flags) authenticate() error {
-   var auth member.Authenticate
-   err := auth.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/cine-member.json", auth.Data, 0666)
-}
-
 func (f flags) download() error {
-   var (
-      auth member.Authenticate
-      err error
-   )
-   auth.Data, err = os.ReadFile(f.home + "/cine-member.json")
+   article, err := f.slug.Article()
    if err != nil {
       return err
    }
-   auth.Unmarshal()
-   deep, err := auth.DeepLink(f.cine)
+   var auth member.Authenticate
+   auth.Data, err = os.ReadFile(f.home + "cine-member.json")
    if err != nil {
       return err
    }
-   play, err := auth.Playlist(deep)
+   err = auth.Unmarshal()
    if err != nil {
       return err
    }
+   asset, ok := article.Film()
+   if !ok {
+      return errors.New("member.DataArticle.Film")
+   }
+   
+   play, err := auth.play(asset)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(play.dash())
    req, err := http.NewRequest("", play.Stream_URL, nil)
    if err != nil {
       return err
@@ -65,4 +62,13 @@ func (f flags) download() error {
       fmt.Println(medium)
    }
    return nil
+}
+
+func (f flags) authenticate() error {
+   var auth member.Authenticate
+   err := auth.New(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/cine-member.json", auth.Data, 0666)
 }

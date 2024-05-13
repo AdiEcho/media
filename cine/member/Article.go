@@ -8,24 +8,16 @@ import (
 	"strings"
 )
 
-// https://www.cinemember.nl/nl/films/american-hustle
-func (a *ArticleSlug) Set(s string) error {
-	s = strings.TrimPrefix(s, "https://")
-	s = strings.TrimPrefix(s, "www.")
-	s = strings.TrimPrefix(s, "cinemember.nl")
-	s = strings.TrimPrefix(s, "/nl")
-	s = strings.TrimPrefix(s, "/")
-	*a = ArticleSlug(s)
-	return nil
+func (d DataArticle) Film() (*ArticleAsset, bool) {
+	for _, asset := range d.Assets {
+		if asset.LinkedType == "film" {
+			return asset, true
+		}
+	}
+	return nil, false
 }
 
-func (a ArticleSlug) String() string {
-	return string(a)
-}
-
-type ArticleSlug string
-
-func (a ArticleSlug) article() (*data_article, error) {
+func (a ArticleSlug) Article() (*DataArticle, error) {
 	body, err := func() ([]byte, error) {
 		var s struct {
 			Query     string `json:"query"`
@@ -50,7 +42,7 @@ func (a ArticleSlug) article() (*data_article, error) {
 	defer res.Body.Close()
 	var s struct {
 		Data struct {
-			Article data_article
+			Article DataArticle
 		}
 	}
 	err = json.NewDecoder(res.Body).Decode(&s)
@@ -79,8 +71,8 @@ func (n namer) Title() string {
 	return n.d.CanonicalTitle
 }
 
-type data_article struct {
-	Assets         []*article_asset
+type DataArticle struct {
+	Assets         []*ArticleAsset
 	CanonicalTitle string `json:"canonical_title"`
 	ID             int
 	Metas          []struct {
@@ -89,7 +81,7 @@ type data_article struct {
 	}
 }
 
-func (d data_article) year() (string, bool) {
+func (d DataArticle) year() (string, bool) {
 	for _, meta := range d.Metas {
 		if meta.Key == "year" {
 			return meta.Value, true
@@ -99,7 +91,7 @@ func (d data_article) year() (string, bool) {
 }
 
 type namer struct {
-	d *data_article
+	d *DataArticle
 }
 
 func (n namer) Year() int {
@@ -134,17 +126,25 @@ query($articleUrlSlug: String) {
 }
 `
 
-func (d data_article) film() (*article_asset, bool) {
-	for _, asset := range d.Assets {
-		if asset.LinkedType == "film" {
-			return asset, true
-		}
-	}
-	return nil, false
-}
-
-type article_asset struct {
+type ArticleAsset struct {
 	ID         int
 	LinkedType string `json:"linked_type"`
-	article    *data_article
+	article    *DataArticle
 }
+
+// https://www.cinemember.nl/nl/films/american-hustle
+func (a *ArticleSlug) Set(s string) error {
+	s = strings.TrimPrefix(s, "https://")
+	s = strings.TrimPrefix(s, "www.")
+	s = strings.TrimPrefix(s, "cinemember.nl")
+	s = strings.TrimPrefix(s, "/nl")
+	s = strings.TrimPrefix(s, "/")
+	*a = ArticleSlug(s)
+	return nil
+}
+
+func (a ArticleSlug) String() string {
+	return string(a)
+}
+
+type ArticleSlug string
