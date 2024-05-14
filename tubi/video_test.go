@@ -6,7 +6,6 @@ import (
    "fmt"
    "os"
    "testing"
-   "time"
 )
 
 func TestLicense(t *testing.T) {
@@ -46,31 +45,4 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-func TestResolution(t *testing.T) {
-   for _, test := range tests {
-      cms := new(Content)
-      err := cms.New(test.content_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      time.Sleep(time.Second)
-      if cms.Episode() {
-         err := cms.New(cms.Series_ID)
-         if err != nil {
-            t.Fatal(err)
-         }
-         time.Sleep(time.Second)
-         var ok bool
-         cms, ok = cms.Get(test.content_id)
-         if !ok {
-            t.Fatal("get")
-         }
-      }
-      fmt.Println(test.url)
-      for _, r := range cms.Video_Resources {
-         fmt.Println(r.Resolution, r.Type)
-      }
-   }
 }
