@@ -8,6 +8,10 @@ import (
    "strings"
 )
 
+func (c Content) Marshal() ([]byte, error) {
+   return json.Marshal(c)
+}
+
 type Content struct {
    Children        []*Content
    Detailed_Type   string
@@ -22,33 +26,6 @@ type Content struct {
 
 func (c Content) Episode() bool {
    return c.Detailed_Type == "episode"
-}
-
-func (c *Content) New(id int) error {
-   req, err := http.NewRequest("GET", "https://uapi.adrise.tv/cms/content", nil)
-   if err != nil {
-      return err
-   }
-   req.URL.RawQuery = url.Values{
-      "content_id": {strconv.Itoa(id)},
-      "deviceId":   {"!"},
-      "platform":   {"android"},
-      "video_resources[]": {
-         "dash",
-         "dash_widevine",
-      },
-   }.Encode()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   err = json.NewDecoder(res.Body).Decode(c)
-   if err != nil {
-      return err
-   }
-   c.set(nil)
-   return nil
 }
 
 func (c Content) Get(id int) (*Content, bool) {
@@ -102,4 +79,39 @@ func (n Namer) Title() string {
 
 func (n Namer) Year() int {
    return n.C.Year
+}
+
+func (c *Content) New(id int) error {
+   req, err := http.NewRequest("GET", "https://uapi.adrise.tv/cms/content", nil)
+   if err != nil {
+      return err
+   }
+   req.URL.RawQuery = url.Values{
+      "content_id": {strconv.Itoa(id)},
+      "deviceId":   {"!"},
+      "platform":   {"android"},
+      "video_resources[]": {
+         "dash",
+         "dash_widevine",
+      },
+   }.Encode()
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   return c.Unmarshal(text)
+}
+
+func (c *Content) Unmarshal(text []byte) error {
+   err := json.Unmarshal(text, c)
+   if err != nil {
+      return err
+   }
+   c.set(nil)
+   return nil
 }
