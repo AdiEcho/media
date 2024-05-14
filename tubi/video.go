@@ -9,13 +9,13 @@ import (
 )
 
 func (c Content) Video() (*VideoResource, error) {
-   if len(c.V.VideoResources) == 0 {
+   if len(c.Video_Resources) == 0 {
       return nil, errors.New(".video_resources")
    }
-   slices.SortFunc(c.V.VideoResources, func(a, b VideoResource) int {
+   slices.SortFunc(c.Video_Resources, func(a, b VideoResource) int {
       return int(b.Resolution - a.Resolution)
    })
-   return &c.V.VideoResources[0], nil
+   return &c.Video_Resources[0], nil
 }
 
 type Resolution int
@@ -43,9 +43,9 @@ func (VideoResource) UnwrapResponse(b []byte) ([]byte, error) {
 }
 
 type VideoResource struct {
-   LicenseServer *struct {
+   License_Server *struct {
       URL string
-   } `json:"license_server"`
+   }
    Manifest struct {
       URL string
    }
@@ -54,7 +54,7 @@ type VideoResource struct {
 }
 
 func (v VideoResource) RequestUrl() (string, bool) {
-   if v := v.LicenseServer; v != nil {
+   if v := v.License_Server; v != nil {
       return v.URL, true
    }
    return "", false

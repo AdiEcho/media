@@ -13,6 +13,7 @@ type flags struct {
    s internal.Stream
    tubi int
    v log.Level
+   content bool
 }
 
 func (f *flags) New() error {
@@ -33,19 +34,26 @@ func main() {
       panic(err)
    }
    flag.IntVar(&f.tubi, "b", 0, "Tubi ID")
-   flag.StringVar(&f.representation, "i", "", "representation")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.BoolVar(&f.content, "w", false, "write content")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
-   if f.tubi >= 1 {
+   switch {
+   case f.content:
+      err := f.write_content()
+      if err != nil {
+         panic(err)
+      }
+   case f.tubi >= 1:
       err := f.download()
       if err != nil {
          panic(err)
       }
-   } else {
+   default:
       flag.Usage()
    }
 }
