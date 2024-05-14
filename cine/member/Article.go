@@ -8,6 +8,10 @@ import (
    "strings"
 )
 
+func (e Encoding) Marshal() ([]byte, error) {
+   return json.MarshalIndent(e, "", " ")
+}
+
 func (d DataArticle) Film() (*ArticleAsset, bool) {
    for _, asset := range d.Assets {
       if asset.LinkedType == "film" {
@@ -120,31 +124,36 @@ func (a ArticleSlug) String() string {
 
 type ArticleSlug string
 
-type Namer struct {
-   D *DataArticle
-}
-
-func (Namer) Show() string {
+func (Encoding) Show() string {
    return ""
 }
 
-func (Namer) Season() int {
+func (Encoding) Season() int {
    return 0
 }
 
-func (Namer) Episode() int {
+func (Encoding) Episode() int {
    return 0
 }
 
-func (n Namer) Title() string {
-   return n.D.CanonicalTitle
+func (e Encoding) Title() string {
+   return e.Article.CanonicalTitle
 }
 
-func (n Namer) Year() int {
-   if v, ok := n.D.year(); ok {
+func (e Encoding) Year() int {
+   if v, ok := e.Article.year(); ok {
       if v, err := strconv.Atoi(v); err == nil {
          return v
       }
    }
    return 0
+}
+
+type Encoding struct {
+   Article *DataArticle
+   Play *AssetPlay
+}
+
+func (e *Encoding) Unmarshal(text []byte) error {
+   return json.Unmarshal(text, e)
 }

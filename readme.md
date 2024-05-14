@@ -8,7 +8,7 @@
 Download media or send API requests
 
 1. Pluto TV: Watch Movies & TV
-2. Tubi: Movies & Live TV
+2. Tubi: Free Movies & Live TV
 3. Hulu: Stream TV shows & movies
 4. Plex: Stream Movies & TV
 5. Paramount+
@@ -19,6 +19,7 @@ Download media or send API requests
 10. AMC+
 11. The Roku Channel
 12. Draken Film
+13. CineMember
 
 [1]://f002.backblazeb2.com/file/ql8mlh/Paint.It.Black.2016.mp4
 

@@ -15,7 +15,7 @@ func TestArticle(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", article)
-   name, err := encoding.Name(Namer{article})
+   name, err := encoding.Name(Encoding{Article: article})
    if err != nil {
       t.Fatal(err)
    }

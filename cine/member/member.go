@@ -21,14 +21,6 @@ mutation($article_id: Int, $asset_id: Int) {
 }
 `
 
-func (a *AssetPlay) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, a)
-}
-
-func (a AssetPlay) Marshal() ([]byte, error) {
-   return json.Marshal(a)
-}
-
 // geo block - VPN not x-forwarded-for
 func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
    body, err := func() ([]byte, error) {
