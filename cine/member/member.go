@@ -8,13 +8,25 @@ import (
    "net/http"
 )
 
-func (a AssetPlay) DASH() (string, bool) {
-   for _, title := range a.Entitlements {
-      if title.Protocol == "dash" {
-         return title.Manifest, true
+const query_asset = `
+mutation($article_id: Int, $asset_id: Int) {
+   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
+      entitlements {
+         ... on ArticleAssetPlayEntitlement {
+            manifest
+            protocol
+         }
       }
    }
-   return "", false
+}
+`
+
+func (a *AssetPlay) Unmarshal(text []byte) error {
+   return json.Unmarshal(text, a)
+}
+
+func (a AssetPlay) Marshal() ([]byte, error) {
+   return json.Marshal(a)
 }
 
 // geo block - VPN not x-forwarded-for
@@ -70,18 +82,21 @@ func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
    return nil, errors.New(string(text))
 }
 
-const query_asset = `
-mutation($article_id: Int, $asset_id: Int) {
-   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
-      entitlements {
-         ... on ArticleAssetPlayEntitlement {
-            manifest
-            protocol
-         }
-      }
+type AssetPlay struct {
+   Entitlements []struct {
+      Manifest string
+      Protocol string
    }
 }
-`
+
+func (a AssetPlay) DASH() (string, bool) {
+   for _, title := range a.Entitlements {
+      if title.Protocol == "dash" {
+         return title.Manifest, true
+      }
+   }
+   return "", false
+}
 
 type Authenticate struct {
    Data []byte
@@ -137,10 +152,3 @@ mutation($email: String, $password: String) {
    }
 }
 `
-
-type AssetPlay struct {
-   Entitlements []struct {
-      Manifest string
-      Protocol string
-   }
-}

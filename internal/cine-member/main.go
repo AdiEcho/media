@@ -29,6 +29,7 @@ type flags struct {
    password string
    v log.Level
    slug member.ArticleSlug
+   play bool
 }
 
 func main() {
@@ -37,19 +38,25 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.StringVar(&f.email, "e", "", "email")
-   flag.StringVar(&f.representation, "i", "", "representation")
-   flag.StringVar(&f.password, "p", "", "password")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
-   flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
    flag.Var(&f.slug, "a", "address")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
+   flag.StringVar(&f.email, "email", "", "email")
+   flag.StringVar(&f.representation, "i", "", "representation")
+   flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
+   flag.BoolVar(&f.play, "p", false, "article asset play")
+   flag.StringVar(&f.password, "password", "", "password")
+   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
    log.Transport{}.Set()
    switch {
    case f.password != "":
       err := f.authenticate()
+      if err != nil {
+         panic(err)
+      }
+   case f.play:
+      err := f.play_write()
       if err != nil {
          panic(err)
       }

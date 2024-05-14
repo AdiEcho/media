@@ -1,11 +1,11 @@
-154.pages.dev/encoding v1.21.3 h1:kTcWdLh7A1kP2O7c3DNNKR0G6VHrUg/H0qmfqEEeE1Y=
-154.pages.dev/encoding v1.21.3/go.mod h1:fTySlfwgtzBCCjzr+f4ncnWleN3AGgUilIWjGy2MPcw=
+154.pages.dev/encoding v1.21.5 h1:v8MXr7DLZMOdkey/2rIEOeREC42zcIrsLyDJ9KeEFGE=
+154.pages.dev/encoding v1.21.5/go.mod h1:fTySlfwgtzBCCjzr+f4ncnWleN3AGgUilIWjGy2MPcw=
 154.pages.dev/log v1.2.0 h1:doEOOkUoXzZUYO9Fhh0tobniHhceIoVlOFR8RJkim/A=
 154.pages.dev/log v1.2.0/go.mod h1:Z9qlxtdp5E/B8HbH9ab/ySUgDpJvXINlS0zxsbryqZY=
 154.pages.dev/protobuf v1.2.0 h1:mA9M6BQ3kRQwy5hXq6vtKcvZWcvtBjGVLc7EIGvBkVc=
 154.pages.dev/protobuf v1.2.0/go.mod h1:kFM1NMn73gQZwDNqF24zulewOIORP/4Etn1L6qlTc3U=
-154.pages.dev/sofia v1.4.5 h1:zwRowhRF6bTTMvdNeQNwRj+5q96hPMUizEOU6XOILU4=
-154.pages.dev/sofia v1.4.5/go.mod h1:42KjYiPl7Vy50qEETAFgjZrDdJyg1MpqiZh3JdxMEGY=
+154.pages.dev/sofia v1.4.6 h1:M5q9TdamC2B86TXk7rreqwSEIc/T3li7aJfVhCCZ1oM=
+154.pages.dev/sofia v1.4.6/go.mod h1:42KjYiPl7Vy50qEETAFgjZrDdJyg1MpqiZh3JdxMEGY=
 154.pages.dev/widevine v1.4.1 h1:rVXPRfRgGUbmTkb7xKA2Bp4XXbHQ96CYngNvuUY3uCc=
 154.pages.dev/widevine v1.4.1/go.mod h1:z9A4GMJr1ZKS+OAoqUpM1XtKYqFOj219DLXX5R4CXbk=
 github.com/chmike/cmac-go v1.1.0 h1:aF73ZAEx9N2WdQc93DOJ2fMsBDAGqUtuenjMJMb3kEI=

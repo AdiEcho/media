@@ -8,26 +8,6 @@ import (
    "strings"
 )
 
-type Namer struct {
-   D *DataArticle
-}
-
-func (Namer) Show() string {
-   return ""
-}
-
-func (Namer) Season() int {
-   return 0
-}
-
-func (Namer) Episode() int {
-   return 0
-}
-
-func (n Namer) Title() string {
-   return n.D.CanonicalTitle
-}
-
 func (d DataArticle) Film() (*ArticleAsset, bool) {
    for _, asset := range d.Assets {
       if asset.LinkedType == "film" {
@@ -94,15 +74,6 @@ func (d DataArticle) year() (string, bool) {
    return "", false
 }
 
-func (n Namer) Year() int {
-   if v, ok := n.D.year(); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
-}
-
 const query_article = `
 query($articleUrlSlug: String) {
    Article(full_url_slug: $articleUrlSlug) {
@@ -148,3 +119,32 @@ func (a ArticleSlug) String() string {
 }
 
 type ArticleSlug string
+
+type Namer struct {
+   D *DataArticle
+}
+
+func (Namer) Show() string {
+   return ""
+}
+
+func (Namer) Season() int {
+   return 0
+}
+
+func (Namer) Episode() int {
+   return 0
+}
+
+func (n Namer) Title() string {
+   return n.D.CanonicalTitle
+}
+
+func (n Namer) Year() int {
+   if v, ok := n.D.year(); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
+}
