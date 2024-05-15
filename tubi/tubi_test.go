@@ -60,7 +60,7 @@ func TestContent(t *testing.T) {
       }
       time.Sleep(time.Second)
       if cms.Episode() {
-         err := cms.New(cms.Series_ID)
+         err := cms.New(cms.SeriesId)
          if err != nil {
             t.Fatal(err)
          }
