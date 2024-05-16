@@ -19,6 +19,7 @@ var Forward = ForwardedFor{
 {"Costa Rica", "201.192.0.0"},
 {"Denmark", "2.104.0.0"},
 {"Ecuador", "186.68.0.0"},
+{"Egypt", "197.32.0.0"},
 {"Germany", "53.0.0.0"},
 {"Guatemala", "190.56.0.0"},
 {"India", "106.192.0.0"},

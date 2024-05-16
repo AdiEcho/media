@@ -24,6 +24,7 @@ var countries = []struct{
    {"Costa Rica", "ipip_country_cr.netset"},
    {"Denmark", "ipip_country_dk.netset"},
    {"Ecuador", "ipip_country_ec.netset"},
+   {"Egypt", "ipip_country_eg.netset"},
    {"Germany", "ipip_country_de.netset"},
    {"Guatemala", "ipip_country_gt.netset"},
    {"India", "ipip_country_in.netset"},
