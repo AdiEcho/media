@@ -1,69 +1,6 @@
 # criterionchannel
 
-
-## android
-
-https://play.google.com/store/apps/details?id=com.criterionchannel
-
-~~~
-> play -i com.criterionchannel
-details[6] = The Criterion Collection
-details[8] = 0 USD
-details[13][1][4] = 8.701.1
-details[13][1][16] = Apr 8, 2024
-details[13][1][17] = APK APK APK APK
-details[13][1][82][1][1] = 5.0 and up
-downloads = 192.95 thousand
-name = The Criterion Channel
-size = 31.98 megabyte
-version code = 11271
-~~~
-
-Create Android 6 device. Install user certificate
-
-~~~xml
-<intent-filter>
-   <action android:name="android.intent.action.VIEW"/>
-   <category android:name="android.intent.category.DEFAULT"/>
-   <category android:name="android.intent.category.BROWSABLE"/>
-   <data android:scheme="@string/scheme"/>
-</intent-filter>
-~~~
-
-then:
-
-~~~
-res\values\strings.xml
-797:    <string name="scheme">vhxcriterionchannel</string>
-~~~
-
-login:
-
-~~~
-POST /v1/oauth/token HTTP/1.1
-Accept: application/json
-X-OTT-Agent: android site/59054 android-app/8.701.1
-User-Agent: Criterion/8.701.1(Unknown Android SDK built for x86, Android 6.0 (API 23))
-OTT-Client-Version: 8.701.1
-X-OTT-Language: en_US
-Content-Type: application/x-www-form-urlencoded
-Content-Length: 227
-Host: auth.vhx.com
-Connection: Keep-Alive
-Accept-Encoding: gzip
-
-username=USERNAME&password=PASSWORD&grant_type=password&client_id=9a87f110f79cd25250f6c7f3a6ec8b9851063ca156dae493bf362a7faf146c78&client_secret=145e2d9e209ae44a263069bb818a82ae39ceae64e7bc435d83028c094dcdae5f
-~~~
-
 ## web
-
-this is it:
-
-https://drm.vimeocdn.com/1716012602-0xd8dc2aae8f6068ef3453aacf8f1b88750c884748/01/115/13/325579370/1273684310,1273684307,1273684308,1273684313/1273684313-4-t1.m4s?assetId=325579370
-
-from:
-
-https://drm.vimeocdn.com/1716012602-0xd8dc2aae8f6068ef3453aacf8f1b88750c884748/01/115/13/325579370/1273684310,1273684307,1273684308,1273684313/master.mpd?assetId=325579370&pssh=0&subtitles=7433271-English-en-cc
 
 from (only good for one minute):
 
@@ -72,7 +9,7 @@ from (only good for one minute):
 from:
 
 ~~~
-GET https://embed.criterionchannel.com/videos/455774?api=1&auth-user-token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2NTc0NjE0NiwiZXhwIjoxNzE2MDA1ODAwfQ.w-9aX0vfcblyXo7Evya5gfFAvzIsV-7o36Mhsf20gao&autoplay=1&collection_id=95574&color=b9bcc7&context=https%3A%2F%2Fwww.criterionchannel.com%2Fmy-dinner-with-andre&is_trailer=false&live=0&locale=en&playsinline=1&product_id=39621&referrer=https%3A%2F%2Fwww.criterionchannel.com%2Fmy-dinner-with-andre&vimeo=1 HTTP/2.0
+GET https://embed.criterionchannel.com/videos/455774?api=1&auth-user-token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2NTc0NjE0NiwiZXhwIjoxNzE1OTkzMDAzfQ.OFddwkdAvKjriRtm07-9l-2Jn_j4f1_IsdeNKfr3ntE&autoplay=1&collection_id=95574&color=b9bcc7&context=https%3A%2F%2Fwww.criterionchannel.com%2Fmy-dinner-with-andre&is_trailer=false&live=0&locale=en&playsinline=1&product_id=39621&referrer=https%3A%2F%2Fwww.criterionchannel.com%2Fmy-dinner-with-andre&vimeo=1 HTTP/2.0
 referer: https://www.criterionchannel.com/
 ~~~
 
