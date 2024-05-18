@@ -36,15 +36,14 @@ res\values\strings.xml
 797:    <string name="scheme">vhxcriterionchannel</string>
 ~~~
 
-then:
+widevine:
 
 ~~~
-GET /v2/sites/59054/videos/455774/delivery?offline_license=0&model=Android%20SDK%20built%20for%20x86&max_width=1920&max_height=1080&max_fps=60&codecs=hevc%2Cavc&os_version=6.0 HTTP/1.1
-Host: api.vhx.com
-X-OTT-Agent: android site/59054 android-app/8.701.1
-User-Agent: Criterion/8.701.1(Unknown Android SDK built for x86, Android 6.0 (API 23))
-OTT-Client-Version: 8.701.1
-X-OTT-Language: en_US
+POST /v2/widevine?token=eyJhbGciOiJIUzI1NiJ9.eyJhc3NldF9pZCI6MzI1NTc5MzcwLCJ1c2VyX2lkIjo2NTc0NjE0NiwidmlkZW9faWQiOjQ1NTc3NCwiY2xpcF9pZCI6MzI1NTc5MzcwLCJleHAiOjE3MTYwMTEyNTMsIm9mZmxpbmVfbGljZW5zZSI6ZmFsc2UsImhkY3AiOmZhbHNlfQ.bVifzIrmAxtYw1iXKKrGe_oe3kBeLelE8CYz4yM8IGI HTTP/1.1
+Content-Type: application/octet-stream
+Accept-Encoding: gzip
+Content-Length: 2135
+User-Agent: Dalvik/2.1.0 (Linux; U; Android 6.0; Android SDK built for x86 Build/MASTER)
+Host: drm.vhx.com
 Connection: Keep-Alive
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImQ2YmZlZmMzNGIyNTdhYTE4Y2E2NDUzNDE2ZTlmZmRjNjk4MDAxMDdhZTQ2ZWJhODg0YTU2ZDBjOGQ4NTYzMzgifQ.eyJhcHBfaWQiOjM0NDksImV4cCI6MTcxNTk5NzcxMSwibm9uY2UiOiI0Y2Q4NzQ5OTQ2N2FhMDY4Iiwic2NvcGVzIjpbXSwic2Vzc2lvbl9pZCI6IlZ1STJoSlNXVnBYc0MxR3k4ejR3TGc9PSIsInNpdGVfaWQiOjU5MDU0LCJ1c2VyX2lkIjo2NTc0NjE0Nn0.Jf5JBUT8rV3zDOKeSUYdlZVOcA1_Y6d4sSCxfkNKMUKULfb4woaSWTykLmmi0-zWPKwFDeyhIiBXJCKciw0iXTDpZ2-CpXpgdiAYH9xmWaxPiqNW6feaoHc5L2n3NLS1jy5EP24RtmJQiXu-4VFSRdQh4H6_tE2LB5MEh0UP-N8w3mc8BJzZTgf_jOqTvhAfbge0OiIUodWuwqBAQinDLgQqTOz9RXcCpiG1VsuOimLGNAPsbuWy4-FL1bNPPs_x1VMhuW0ZS2buksWKJIXw8efh84ZXHrqWKC3y9FwNxs_piYCWktbtobjcehMjGQ5wn_0pPprIPKSjkpcD5PH6yP2UkMUKObmmanlRRkftq4jt2gq8mC5Jv84qhugJy1LHaIYDb40q8IVgpZOxS8ovC1Dzh-8ljnzLfQsHN2vHIOfYvcvGzaZ1c3-_bfMGwgz0J3qNBIgp81WR8pHxzSnjEcQ7CavBQdH2fOijnTf9To5t2xaQMXy-PFE25GPljarklIEl-SN3vk82mNAzfto64DG3q6tk2TGRtkI5EDJO2niIGW846unU6XfXCCiaFwhyWNCkhSkWbNho64r-itS9q1HycNmlXYjD7sKlXGdkE2u-PP_qEswwYi-oSZzSUtzGj-ZWUPy3NNiIv2mEXzi_k4X6hamNcAtg5LlfIlY3EFg
 ~~~
