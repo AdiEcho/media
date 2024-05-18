@@ -37,6 +37,24 @@ res\values\strings.xml
 797:    <string name="scheme">vhxcriterionchannel</string>
 ~~~
 
+login:
+
+~~~
+POST /v1/oauth/token HTTP/1.1
+Accept: application/json
+X-OTT-Agent: android site/59054 android-app/8.701.1
+User-Agent: Criterion/8.701.1(Unknown Android SDK built for x86, Android 6.0 (API 23))
+OTT-Client-Version: 8.701.1
+X-OTT-Language: en_US
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 227
+Host: auth.vhx.com
+Connection: Keep-Alive
+Accept-Encoding: gzip
+
+username=USERNAME&password=PASSWORD&grant_type=password&client_id=9a87f110f79cd25250f6c7f3a6ec8b9851063ca156dae493bf362a7faf146c78&client_secret=145e2d9e209ae44a263069bb818a82ae39ceae64e7bc435d83028c094dcdae5f
+~~~
+
 ## web
 
 this is it:
@@ -61,3 +79,30 @@ referer: https://www.criterionchannel.com/
 from:
 
 https://www.criterionchannel.com/my-dinner-with-andre
+
+login:
+
+~~~
+POST https://www.criterionchannel.com/login HTTP/2.0
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-language: en-US,en;q=0.5
+accept-encoding: gzip, deflate, br
+referer: https://www.criterionchannel.com/login
+content-type: application/x-www-form-urlencoded
+content-length: 181
+origin: https://www.criterionchannel.com
+cookie: locale_det=en
+cookie: _session=TEpHYVpYZ0M5dFVlQ0MzSVVtdVRJb1o3RTBFa2tOVWd3TUJaajA0THFUQ2svS09EUS82MDE1dnhacFVGQmpLYzUzZzFaWStoSnVaajJacnIwTGFucjdwZHU5bGpjU2EzK1REaVpNbFB6VGNCeEwyd3orenliejB2VVpyZXRSK3dSWE40NnNGS3lnR1p6eFBaQ2FwWHBTSm1ZR0gwK08reHZHNGZkaVpLUnNJNlQ2UUl2eHl3K0FsWkVBREdPZ1FSLS11endNQWlsY1Vqeld2VVFjSm55L2RRPT0%3D--2a64dbf1e5a4b48d3de0c3483692434fb59c9814
+cookie: __cf_bm=OKkRV.zgaf6ZgSq.fI00JT0bGDujOvnrA2ACOggJqZU-1715985763-1.0.1.1-NdxPIngecU15kKF54nQmqc9wbdZQvuZD4c8zysJcxhWymGewBpij4gYIkWvRacuswaR.XWmHlQ7f1TmX6wxNNQ
+cookie: tracker=%7B%22country%22%3A%22us%22%2C%22platform%22%3A%22windows%22%2C%22uid%22%3A6433832978435%2C%22site_id%22%3A%2259054%22%7D
+cookie: referrer_url=https%3A%2F%2Fwww.criterionchannel.com%2Fmy-dinner-with-andre
+upgrade-insecure-requests: 1
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+te: trailers
+
+email=EMAIL&authenticity_token=evo3lO59MN7AGAbYZMzCPYHn7Cvmr8Gw%2FKNge8wLgZ5KYD3DC6jKGdbgHuxRYvLWuHy%2BzAXOR6HzcsHaTvgnsQ%3D%3D&utf8=%E2%9C%93&password=PASSWORD
+~~~
