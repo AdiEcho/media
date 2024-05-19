@@ -35,3 +35,7 @@ then:
 res\values\strings.xml
 797:    <string name="scheme">vhxcriterionchannel</string>
 ~~~
+
+## thanks
+
+https://github.com/davegonzalez/ott-boilerplate/blob/master/actions.js
