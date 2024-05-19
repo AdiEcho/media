@@ -4,9 +4,32 @@ import (
    "encoding/json"
    "errors"
    "net/http"
-   "strconv"
    "strings"
 )
+
+func (a AuthToken) files(item *embed_item) (video_files, error) {
+   req, err := http.NewRequest("", item.Links.Files.Href, nil)
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("authorization", "Bearer " + a.v.AccessToken)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var files video_files
+   err = json.NewDecoder(res.Body).Decode(&files)
+   if err != nil {
+      return nil, err
+   }
+   return files, nil
+}
 
 type video_file struct {
    DrmAuthorizationToken string `json:"drm_authorization_token"`
@@ -45,34 +68,4 @@ func (v video_files) dash() (*video_file, bool) {
       }
    }
    return nil, false
-}
-
-func (a AuthToken) files(item *embed_item) (video_files, error) {
-   address := func() string {
-      b := []byte("https://api.vhx.com/videos/")
-      b = strconv.AppendInt(b, item.ID, 10)
-      b = append(b, "/files"...)
-      return string(b)
-   }()
-   req, err := http.NewRequest("", address, nil)
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("authorization", "Bearer " + a.v.AccessToken)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var files video_files
-   err = json.NewDecoder(res.Body).Decode(&files)
-   if err != nil {
-      return nil, err
-   }
-   return files, nil
 }
