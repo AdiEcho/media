@@ -6,7 +6,7 @@ import (
    "strconv"
 )
 
-func (a AuthToken) files(item embed_item) (*http.Response, error) {
+func (a AuthToken) files(item *embed_item) (*http.Response, error) {
    address := func() string {
       b := []byte("https://api.vhx.com/videos/")
       b = strconv.AppendInt(b, item.ID, 10)
