@@ -39,7 +39,11 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    token.unmarshal()
-   deliver, err := token.delivery(video_id)
+   item, err := token.item(my_dinner)
+   if err != nil {
+      t.Fatal(err)
+   }
+   deliver, err := token.delivery(item)
    if err != nil {
       t.Fatal(err)
    }

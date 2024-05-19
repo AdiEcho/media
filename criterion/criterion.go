@@ -8,14 +8,6 @@ import (
    "strings"
 )
 
-type embed_item struct {
-   ID int64
-   Metadata struct {
-      YearReleased int `json:"year_released"`
-   }
-   Name string
-}
-
 const client_id = "9a87f110f79cd25250f6c7f3a6ec8b9851063ca156dae493bf362a7faf146c78"
 
 type auth_token struct {
@@ -41,10 +33,6 @@ func (a *auth_token) New(username, password string) error {
       return err
    }
    return nil
-}
-
-func (a *auth_token) unmarshal() error {
-   return json.Unmarshal(a.data, &a.v)
 }
 
 func (a auth_token) item(slug string) (*embed_item, error) {
@@ -77,16 +65,28 @@ func (a auth_token) item(slug string) (*embed_item, error) {
    return &s.Embedded.Items[0], nil
 }
 
-func (embed_item) Show() string {
-   return ""
+func (a *auth_token) unmarshal() error {
+   return json.Unmarshal(a.data, &a.v)
+}
+
+type embed_item struct {
+   ID int64
+   Metadata struct {
+      YearReleased int `json:"year_released"`
+   }
+   Name string
+}
+
+func (embed_item) Episode() int {
+   return 0
 }
 
 func (embed_item) Season() int {
    return 0
 }
 
-func (embed_item) Episode() int {
-   return 0
+func (embed_item) Show() string {
+   return ""
 }
 
 func (e embed_item) Title() string {
