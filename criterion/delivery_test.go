@@ -8,31 +8,6 @@ import (
    "testing"
 )
 
-func TestDelivery(t *testing.T) {
-   var (
-      token AuthToken
-      err error
-   )
-   token.data, err = os.ReadFile("token.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   token.unmarshal()
-   item, err := token.item(my_dinner)
-   if err != nil {
-      t.Fatal(err)
-   }
-   deliver, err := token.delivery(item)
-   if err != nil {
-      t.Fatal(err)
-   }
-   stream, ok := deliver.dash()
-   if !ok {
-      t.Fatal("video_delivery.dash")
-   }
-   fmt.Printf("%+v\n", stream)
-}
-
 // criterionchannel.com/videos/my-dinner-with-andre
 const default_kid = "e4576465a745213f336c1ef1bf5d513e"
 
@@ -64,7 +39,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    token.unmarshal()
-   item, err := token.item(my_dinner)
+   item, err := token.video(my_dinner)
    if err != nil {
       t.Fatal(err)
    }
@@ -82,4 +57,3 @@ func TestLicense(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
-
