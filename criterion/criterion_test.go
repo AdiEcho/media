@@ -10,43 +10,6 @@ import (
    "time"
 )
 
-func TestSlug(t *testing.T) {
-   var (
-      token AuthToken
-      err   error
-   )
-   token.data, err = os.ReadFile("token.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   token.unmarshal()
-   for _, a := range slug_a {
-      for _, b := range slug_b {
-         for _, c := range slug_c {
-            for _, d := range slug_d {
-               for _, e := range slug_e {
-                  address := func() string {
-                     var f strings.Builder
-                     f.WriteString(a)
-                     f.WriteString(b)
-                     f.WriteString(c)
-                     f.WriteString(d)
-                     f.WriteString(e)
-                     return f.String()
-                  }()
-                  status, err := token.do(address)
-                  if err != nil {
-                     t.Fatal(err)
-                  }
-                  fmt.Println(status, address)
-                  time.Sleep(99 * time.Millisecond)
-               }
-            }
-         }
-      }
-   }
-}
-
 func (a AuthToken) do(address string) (string, error) {
    req, err := http.NewRequest("", address, nil)
    if err != nil {
