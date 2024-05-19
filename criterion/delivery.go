@@ -8,6 +8,23 @@ import (
    "strings"
 )
 
+type video_stream struct {
+   MaxHeight *int `json:"max_height"`
+   Method    string
+   URL       string
+   DRM struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string `json:"license_url"`
+         }
+      }
+   }
+}
+
+type video_delivery struct {
+   Streams []video_stream
+}
+
 func (a AuthToken) delivery(item *embed_item) (*video_delivery, error) {
    address := func() string {
       b := []byte("https://api.vhx.com/v2/sites/59054/videos/")
@@ -38,10 +55,6 @@ func (a AuthToken) delivery(item *embed_item) (*video_delivery, error) {
    return video, nil
 }
 
-type video_delivery struct {
-   Streams []video_stream
-}
-
 func (v video_delivery) dash() (*video_stream, bool) {
    for _, stream := range v.Streams {
       if stream.MaxHeight == nil {
@@ -51,19 +64,6 @@ func (v video_delivery) dash() (*video_stream, bool) {
       }
    }
    return nil, false
-}
-
-type video_stream struct {
-   DRM struct {
-      Schemes struct {
-         Widevine struct {
-            LicenseUrl string `json:"license_url"`
-         }
-      }
-   }
-   MaxHeight *int `json:"max_height"`
-   Method    string
-   URL       string
 }
 
 func (video_stream) RequestHeader() (http.Header, error) {

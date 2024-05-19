@@ -2,16 +2,48 @@
   {
     "_links": {
       "self": {
+        "href": "https://api.vhx.tv/videos/455774/files?format=m3u8&quality=adaptive"
+      },
+      "video": {
+        "href": "https://api.vhx.tv/videos/455774"
+      },
+      "source": {
+        "href": "https://player.vimeo.com/skyfire/redirect/325579370.m3u8?drm=1&expires=1716169594&f=ts&hevc=0&max_height=1080&pssh=0&sig=0fdaf8e879f62f242812315b385aacd17f03ad58&text_tracks=1"
+      },
+      "signature": {
+        "href": "https://player.vimeo.com/skyfire/redirect/325579370.m3u8?drm=1&expires=1716169594&f=ts&hevc=0&max_height=1080&pssh=0&sig=0fdaf8e879f62f242812315b385aacd17f03ad58&text_tracks=1"
+      }
+    },
+    "size": {
+      "bytes": 0,
+      "formatted": "0 Bytes"
+    },
+    "quality": "adaptive",
+    "format": "m3u8",
+    "method": "hls",
+    "codec": "h264",
+    "mime_type": "application/x-mpegURL",
+    "created_at": "2019-03-21T03:42:23Z",
+    "updated_at": "2024-05-06T15:41:46Z",
+    "id": null,
+    "current_time": 0,
+    "drm_authorization_token": "eyJhbGciOiJIUzI1NiJ9.eyJhc3NldF9pZCI6MzI1NTc5MzcwLCJ2aWRlb19pZCI6NDU1Nzc0LCJjbGlwX2lkIjozMjU1NzkzNzAsImV4cCI6MTcxNjE3MzE5NCwib2ZmbGluZV9saWNlbnNlIjpmYWxzZSwiaGRjcCI6dHJ1ZX0.IRXfK2IUfv7DSOpEC3Kl2PG84Ma5Dg1SbDXd7GphCzg",
+    "max_hdcp": "1.4",
+    "max_height": null
+  },
+  {
+    "_links": {
+      "self": {
         "href": "https://api.vhx.tv/videos/455774/files?format=mpd&quality=adaptive"
       },
       "video": {
         "href": "https://api.vhx.tv/videos/455774"
       },
       "source": {
-        "href": "https://player.vimeo.com/skyfire/redirect/325579370.mpd?drm=1&expires=1716167844&hevc=0&max_height=1080&pssh=0&sig=5750f3a314fff1c14a17bf320d79ae7898cabca8&text_tracks=1"
+        "href": "https://player.vimeo.com/skyfire/redirect/325579370.mpd?drm=1&expires=1716169594&hevc=0&max_height=1080&pssh=0&sig=03d7c1da7739f544c59b735fbf9dcb1b976345b1&text_tracks=1"
       },
       "signature": {
-        "href": "https://player.vimeo.com/skyfire/redirect/325579370.mpd?drm=1&expires=1716167844&hevc=0&max_height=1080&pssh=0&sig=5750f3a314fff1c14a17bf320d79ae7898cabca8&text_tracks=1"
+        "href": "https://player.vimeo.com/skyfire/redirect/325579370.mpd?drm=1&expires=1716169594&hevc=0&max_height=1080&pssh=0&sig=03d7c1da7739f544c59b735fbf9dcb1b976345b1&text_tracks=1"
       }
     },
     "size": {
@@ -27,7 +59,7 @@
     "updated_at": "2024-05-06T15:41:46Z",
     "id": null,
     "current_time": 0,
-    "drm_authorization_token": "eyJhbGciOiJIUzI1NiJ9.eyJhc3NldF9pZCI6MzI1NTc5MzcwLCJ2aWRlb19pZCI6NDU1Nzc0LCJjbGlwX2lkIjozMjU1NzkzNzAsImV4cCI6MTcxNjE3MTQ0NCwib2ZmbGluZV9saWNlbnNlIjpmYWxzZSwiaGRjcCI6dHJ1ZX0.Yc-x4r-RAKQMF3c7CanbKfO0hJOG1W2S7DllIZUotbM",
+    "drm_authorization_token": "eyJhbGciOiJIUzI1NiJ9.eyJhc3NldF9pZCI6MzI1NTc5MzcwLCJ2aWRlb19pZCI6NDU1Nzc0LCJjbGlwX2lkIjozMjU1NzkzNzAsImV4cCI6MTcxNjE3MzE5NCwib2ZmbGluZV9saWNlbnNlIjpmYWxzZSwiaGRjcCI6dHJ1ZX0.IRXfK2IUfv7DSOpEC3Kl2PG84Ma5Dg1SbDXd7GphCzg",
     "max_hdcp": "1.4",
     "max_height": null
   }

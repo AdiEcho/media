@@ -1,6 +1,7 @@
 package criterion
 
 import (
+   "fmt"
    "os"
    "testing"
 )
@@ -19,10 +20,9 @@ func TestFiles(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   res, err := token.files(item)
+   files, err := token.files(item)
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   fmt.Printf("%+v\n", files)
 }
