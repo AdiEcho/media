@@ -2,15 +2,11 @@ package criterion
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "strconv"
+   "strings"
 )
-
-func (v video_file) RequestUrl() (string, bool) {
-   b := []byte("https://drm.vhx.com/v2/widevine?token=")
-   b = append(b, v.DrmAuthorizationToken...)
-   return string(b), true
-}
 
 func (a AuthToken) files(item *embed_item) (video_files, error) {
    address := func() string {
@@ -29,6 +25,11 @@ func (a AuthToken) files(item *embed_item) (video_files, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
    var files video_files
    err = json.NewDecoder(res.Body).Decode(&files)
    if err != nil {
@@ -38,15 +39,6 @@ func (a AuthToken) files(item *embed_item) (video_files, error) {
 }
 
 type video_files []video_file
-
-func (v video_files) dash() (*video_file, bool) {
-   for _, file := range v {
-      if file.Method == "dash" {
-         return &file, true
-      }
-   }
-   return nil, false
-}
 
 func (video_file) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
@@ -68,4 +60,18 @@ type video_file struct {
       }
    } `json:"_links"`
    Method string
+}
+func (v video_files) dash() (*video_file, bool) {
+   for _, file := range v {
+      if file.Method == "dash" {
+         return &file, true
+      }
+   }
+   return nil, false
+}
+
+func (v video_file) RequestUrl() (string, bool) {
+   b := []byte("https://drm.vhx.com/v2/widevine?token=")
+   b = append(b, v.DrmAuthorizationToken...)
+   return string(b), true
 }
