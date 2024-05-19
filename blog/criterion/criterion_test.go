@@ -7,6 +7,9 @@ import (
    "testing"
 )
 
+// criterionchannel.com/videos/my-dinner-with-andre
+const video_id = 455774
+
 func TestVideo(t *testing.T) {
    var (
       token auth_token
@@ -17,7 +20,7 @@ func TestVideo(t *testing.T) {
       t.Fatal(err)
    }
    token.unmarshal()
-   video, err := token.video()
+   video, err := token.video(video_id)
    if err != nil {
       t.Fatal(err)
    }

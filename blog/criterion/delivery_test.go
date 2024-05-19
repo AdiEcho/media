@@ -39,7 +39,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    token.unmarshal()
-   deliver, err := token.delivery()
+   deliver, err := token.delivery(video_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -52,28 +52,4 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-func TestDelivery(t *testing.T) {
-   var (
-      token auth_token
-      err error
-   )
-   token.data, err = os.ReadFile("token.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = token.unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   deliver, err := token.delivery()
-   if err != nil {
-      t.Fatal(err)
-   }
-   stream, ok := deliver.dash()
-   if !ok {
-      t.Fatal("video_delivery.dash")
-   }
-   fmt.Printf("%+v %v\n", stream, ok)
 }

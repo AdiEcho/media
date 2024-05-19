@@ -8,12 +8,12 @@ import (
    "strconv"
 )
 
-func (a auth_token) video() (*site_video, error) {
+func (a auth_token) video(id int64) (*site_video, error) {
    req, err := http.NewRequest("", "https://api.vhx.com", nil)
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/v2/sites/59054/videos/455774"
+   req.URL.Path = "/v2/sites/59054/videos/" + strconv.FormatInt(id, 10)
    req.Header.Set("authorization", "Bearer " + a.v.AccessToken)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -75,6 +75,7 @@ func (n namer) Year() int {
    }
    return 0
 }
+
 const client_id = "9a87f110f79cd25250f6c7f3a6ec8b9851063ca156dae493bf362a7faf146c78"
 
 type auth_token struct {

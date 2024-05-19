@@ -3,7 +3,21 @@ package criterion
 import (
    "encoding/json"
    "net/http"
+   "strconv"
 )
+
+type video_stream struct {
+   DRM struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string `json:"license_url"`
+         }
+      }
+   }
+   MaxHeight *int `json:"max_height"`
+   Method string
+   URL string
+}
 
 func (v video_delivery) dash() (*video_stream, bool) {
    for _, stream := range v.Streams {
@@ -32,29 +46,21 @@ func (video_stream) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
-type video_stream struct {
-   DRM struct {
-      Schemes struct {
-         Widevine struct {
-            LicenseUrl string `json:"license_url"`
-         }
-      }
-   }
-   MaxHeight *int `json:"max_height"`
-   Method string
-   URL string
-}
-
 func (video_stream) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (a auth_token) delivery() (*video_delivery, error) {
+func (a auth_token) delivery(id int64) (*video_delivery, error) {
    req, err := http.NewRequest("", "https://api.vhx.com", nil)
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/v2/sites/59054/videos/455774/delivery"
+   req.URL.Path = func() string {
+      b := []byte("/v2/sites/59054/videos/")
+      b = strconv.AppendInt(b, id, 10)
+      b = append(b, "/delivery"...)
+      return string(b)
+   }()
    req.Header.Set("authorization", "Bearer " + a.v.AccessToken)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
