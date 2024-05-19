@@ -1,0 +1,241 @@
+{
+  "_embedded": {
+    "files": [
+      {
+        "_links": {
+          "self": {
+            "href": "https://api.vhx.tv/videos/455774/files?codec=h264&format=m3u8&quality=adaptive"
+          },
+          "video": {
+            "href": "https://api.vhx.tv/videos/455774"
+          },
+          "site": {
+            "href": "https://api.vhx.tv/sites/59054"
+          }
+        },
+        "size": {
+          "bytes": 0,
+          "formatted": "0 Bytes"
+        },
+        "quality": "adaptive",
+        "format": "m3u8",
+        "method": "hls",
+        "codec": "h264",
+        "mime_type": "application/x-mpegURL",
+        "created_at": "2019-03-21T03:42:23Z",
+        "updated_at": "2024-05-06T15:41:46Z",
+        "id": null
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "https://api.vhx.tv/videos/455774/files?codec=h264&format=mpd&quality=adaptive"
+          },
+          "video": {
+            "href": "https://api.vhx.tv/videos/455774"
+          },
+          "site": {
+            "href": "https://api.vhx.tv/sites/59054"
+          }
+        },
+        "size": {
+          "bytes": 0,
+          "formatted": "0 Bytes"
+        },
+        "quality": "adaptive",
+        "format": "mpd",
+        "method": "dash",
+        "codec": "h264",
+        "mime_type": "application/dash+xml",
+        "created_at": "2019-03-21T03:42:23Z",
+        "updated_at": "2024-05-06T15:41:46Z",
+        "id": null
+      }
+    ],
+    "site": {
+      "_links": {
+        "self": {
+          "href": "https://api.vhx.tv/sites/59054"
+        },
+        "home_page": {
+          "href": "http://www.criterionchannel.com"
+        }
+      },
+      "id": 59054,
+      "subdomain": "criterionchannel",
+      "color": "#b9bcc7",
+      "twitter_name": "criterionchannl",
+      "created_at": "2018-12-21T17:36:24Z",
+      "updated_at": "2024-05-19T11:54:28Z"
+    },
+    "subtitles": [
+      {
+        "_links": {
+          "self": {
+            "href": "https://dr56wvhu2c8zo.cloudfront.net/criterionchannelchartersu/assets/9219def9-5799-4a9e-afa7-f38dc57bb5a1-424417ab.vtt"
+          },
+          "video": {
+            "href": "https://api.vhx.tv/videos/455774"
+          }
+        },
+        "language": "English",
+        "type": "srt"
+      }
+    ]
+  },
+  "_links": {
+    "comments": {
+      "href": "https://api.vhx.tv/comments?video=https%3A%2F%2Fapi.vhx.tv%2Fvideos%2F455774"
+    },
+    "files": {
+      "href": "https://api.vhx.tv/videos/455774/files"
+    },
+    "self": {
+      "href": "https://api.vhx.tv/videos/455774"
+    },
+    "site": {
+      "href": "https://api.vhx.tv/sites/59054"
+    },
+    "video_page": {
+      "href": "https://www.criterionchannel.com/videos/my-dinner-with-andre"
+    }
+  },
+  "advertising": null,
+  "capabilities": [
+    "inline_resolution_data",
+    "skyfire_delivery"
+  ],
+  "created_at": "2019-03-21T03:42:23Z",
+  "description": "Directed by Louis Malle • 1981 • United States\nStarring Wallace Shawn, André Gregory\n\nIn this captivating and philosophical film directed by Louis Malle, actor and playwright Wallace Shawn sits down with his friend the theater director André Gregory at a restaurant on New York’s Upper West Side, and the pair proceed through an alternately whimsical and despairing confessional about love, death, money, and all the superstition in between. Playing variations on their own New York–honed personas, Shawn and Gregory, who also cowrote the screenplay, dive in with introspective intellectual gusto, and Malle captures it all with a delicate, artful detachment. A fascinating freeze-frame of cosmopolitan culture, MY DINNER WITH ANDRÉ remains a unique work in cinema history.",
+  "short_description": null,
+  "castlabs_drm": true,
+  "drm": {
+    "asset_id": "c-59054-v-455774",
+    "fairplay": {
+      "_links": {
+        "certificate": {
+          "href": "https://drm.vhx.com/v1/fairplay/cert/"
+        },
+        "license": {
+          "href": "https://drm.vhx.com/v1/fairplay/"
+        }
+      }
+    },
+    "merchant": "vimeo",
+    "playready": {
+      "_links": {
+        "license": {
+          "href": "https://drm.vhx.com/v1/playready/"
+        }
+      }
+    },
+    "widevine": {
+      "_links": {
+        "license": {
+          "href": "https://drm.vhx.com/v1/widevine/"
+        }
+      }
+    }
+  },
+  "duration": {
+    "seconds": 6699,
+    "formatted": "01:51:39"
+  },
+  "id": 455774,
+  "is_commenting_enabled": false,
+  "site_comments_optin": 2,
+  "is_free": false,
+  "metadata": {
+    "film_id": 1093,
+    "director": "Louis Malle",
+    "media_id": "1093_MYDINNERWITHANDRE",
+    "series_id": 1017661,
+    "season_name": "Directed by Louis Malle",
+    "series_name": "Directed by Louis Malle",
+    "collection_id": "1093_MYDINNERWITHANDRE",
+    "season_number": 1,
+    "year_released": 1981
+  },
+  "name": "My Dinner with André",
+  "season_number": 1,
+  "status": "complete",
+  "thumbnail": {
+    "small": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?auto=format%2Ccompress&fit=crop&h=135&q=20&w=240",
+    "medium": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?auto=format%2Ccompress&fit=crop&h=360&q=70&w=640",
+    "large": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?auto=format%2Ccompress&fit=crop&h=720&q=75&w=1280",
+    "source": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg",
+    "blurred": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=180"
+  },
+  "title": "My Dinner with André",
+  "tracks": {
+    "subtitles": [
+      {
+        "_links": {
+          "srt": {
+            "href": "https://dr56wvhu2c8zo.cloudfront.net/criterionchannelchartersu/assets/9219def9-5799-4a9e-afa7-f38dc57bb5a1-424417ab.vtt"
+          },
+          "vtt": {
+            "href": "https://track.vhx.tv/criterionchannelchartersu/assets/9219def9-5799-4a9e-afa7-f38dc57bb5a1-424417ab.vtt"
+          }
+        },
+        "label": "English",
+        "srclang": "eng",
+        "kind": "captions",
+        "failed": false
+      }
+    ]
+  },
+  "type": "video",
+  "updated_at": "2024-05-06T15:41:46Z",
+  "plans": [
+    "standard"
+  ],
+  "geo_available": "",
+  "geo_unavailable": "",
+  "time_available": null,
+  "time_unavailable": null,
+  "is_available": true,
+  "live_video": false,
+  "live_status": "pending",
+  "scheduled_at": null,
+  "slido_link": null,
+  "url": "my-dinner-with-andre",
+  "product_ids": [
+    39621
+  ],
+  "can_enable_drm": true,
+  "canonical_collection": null,
+  "canonical_collection_id": null,
+  "use_vimeo_player": true,
+  "additional_images": {
+    "aspect_ratio_1_1": {
+      "small": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=500&fill=blur&fit=fill&h=240&mark-align=middle%2Ccenter&mark-w=0.9&mark=https%3A%2F%2Fvhx.imgix.net%2Fcriterionchannelchartersu%2Fassets%2Fee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg%3Fauto%3Dformat%252Ccompress%26fit%3Dcrop%26h%3D135%26q%3D20%26w%3D240&w=240",
+      "medium": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=500&fill=blur&fit=fill&h=640&mark-align=middle%2Ccenter&mark-w=0.9&mark=https%3A%2F%2Fvhx.imgix.net%2Fcriterionchannelchartersu%2Fassets%2Fee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg%3Fauto%3Dformat%252Ccompress%26fit%3Dcrop%26h%3D360%26q%3D70%26w%3D640&w=640",
+      "large": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=500&fill=blur&fit=fill&h=1280&mark-align=middle%2Ccenter&mark-w=0.9&mark=https%3A%2F%2Fvhx.imgix.net%2Fcriterionchannelchartersu%2Fassets%2Fee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg%3Fauto%3Dformat%252Ccompress%26fit%3Dcrop%26h%3D720%26q%3D75%26w%3D1280&w=1280",
+      "blurred": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=180",
+      "source": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg"
+    },
+    "aspect_ratio_2_3": {
+      "small": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=500&fill=blur&fit=fill&h=360&mark-align=middle%2Ccenter&mark-w=0.9&mark=https%3A%2F%2Fvhx.imgix.net%2Fcriterionchannelchartersu%2Fassets%2Fee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg%3Fauto%3Dformat%252Ccompress%26fit%3Dcrop%26h%3D135%26q%3D20%26w%3D240&w=240",
+      "medium": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=500&fill=blur&fit=fill&h=960&mark-align=middle%2Ccenter&mark-w=0.9&mark=https%3A%2F%2Fvhx.imgix.net%2Fcriterionchannelchartersu%2Fassets%2Fee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg%3Fauto%3Dformat%252Ccompress%26fit%3Dcrop%26h%3D360%26q%3D70%26w%3D640&w=640",
+      "large": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=500&fill=blur&fit=fill&h=1920&mark-align=middle%2Ccenter&mark-w=0.9&mark=https%3A%2F%2Fvhx.imgix.net%2Fcriterionchannelchartersu%2Fassets%2Fee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg%3Fauto%3Dformat%252Ccompress%26fit%3Dcrop%26h%3D720%26q%3D75%26w%3D1280&w=1280",
+      "blurred": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=180",
+      "source": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg"
+    },
+    "aspect_ratio_2_3_featured": {
+      "small": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=500&fill=blur&fit=fill&h=360&mark-align=middle%2Ccenter&mark-w=0.9&mark=https%3A%2F%2Fvhx.imgix.net%2Fcriterionchannelchartersu%2Fassets%2Fee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg%3Fauto%3Dformat%252Ccompress%26fit%3Dcrop%26h%3D135%26q%3D20%26w%3D240&w=240",
+      "medium": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=500&fill=blur&fit=fill&h=960&mark-align=middle%2Ccenter&mark-w=0.9&mark=https%3A%2F%2Fvhx.imgix.net%2Fcriterionchannelchartersu%2Fassets%2Fee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg%3Fauto%3Dformat%252Ccompress%26fit%3Dcrop%26h%3D360%26q%3D70%26w%3D640&w=640",
+      "large": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=500&fill=blur&fit=fill&h=1920&mark-align=middle%2Ccenter&mark-w=0.9&mark=https%3A%2F%2Fvhx.imgix.net%2Fcriterionchannelchartersu%2Fassets%2Fee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg%3Fauto%3Dformat%252Ccompress%26fit%3Dcrop%26h%3D720%26q%3D75%26w%3D1280&w=1280",
+      "blurred": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg?blur=180",
+      "source": "https://vhx.imgix.net/criterionchannelchartersu/assets/ee2ba1d6-23e7-46d5-8ba8-4ed4373a289c.jpg"
+    },
+    "aspect_ratio_12_5_logo": null,
+    "aspect_ratio_16_6": null,
+    "aspect_ratio_16_14": null,
+    "aspect_ratio_16_9_background": null
+  },
+  "live_event_id": null,
+  "arena_chat_id": null,
+  "arena_chat_position": null,
+  "media_type": null
+}
