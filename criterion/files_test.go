@@ -11,7 +11,7 @@ import (
 // criterionchannel.com/videos/my-dinner-with-andre
 const default_kid = "e4576465a745213f336c1ef1bf5d513e"
 
-func TestLicenseFile(t *testing.T) {
+func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)

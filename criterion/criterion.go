@@ -9,21 +9,19 @@ import (
    "strings"
 )
 
-type embed_item struct {
-   Name string
-   Metadata struct {
-      YearReleased int `json:"year_released"`
-   }
-   ID       int64
-}
-
 func (a AuthToken) video(slug string) (*embed_item, error) {
-   req, err := http.NewRequest("", "https://api.vhx.com", nil)
+   address := func() string {
+      var b strings.Builder
+      b.WriteString("https://api.vhx.com/videos/")
+      b.WriteString(slug)
+      b.WriteString("?url=")
+      b.WriteString(slug)
+      return b.String()
+   }()
+   req, err := http.NewRequest("", address, nil)
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/videos/" + slug
-   req.URL.RawQuery = "url=" + slug
    req.Header.Set("authorization", "Bearer " + a.v.AccessToken)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -41,6 +39,14 @@ func (a AuthToken) video(slug string) (*embed_item, error) {
       return nil, err
    }
    return item, nil
+}
+
+type embed_item struct {
+   Name string
+   Metadata struct {
+      YearReleased int `json:"year_released"`
+   }
+   ID       int64
 }
 
 func (embed_item) Episode() int {
@@ -62,6 +68,7 @@ func (e embed_item) Title() string {
 func (e embed_item) Year() int {
    return e.Metadata.YearReleased
 }
+
 const client_id = "9a87f110f79cd25250f6c7f3a6ec8b9851063ca156dae493bf362a7faf146c78"
 
 type AuthToken struct {
