@@ -29,18 +29,18 @@ func (a *AuthToken) New(username, password string) error {
 	return nil
 }
 
-/////////////
-
 type AuthToken struct {
 	Data []byte
-	v    struct {
+	V    struct {
 		AccessToken string `json:"access_token"`
 	}
 }
 
-func (a *AuthToken) unmarshal() error {
-	return json.Unmarshal(a.Data, &a.v)
+func (a *AuthToken) Unmarshal() error {
+	return json.Unmarshal(a.Data, &a.V)
 }
+
+/////////////
 
 func (a AuthToken) video(slug string) (*embed_item, error) {
 	address := func() string {
@@ -55,7 +55,7 @@ func (a AuthToken) video(slug string) (*embed_item, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("authorization", "Bearer "+a.v.AccessToken)
+	req.Header.Set("authorization", "Bearer "+a.V.AccessToken)
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err

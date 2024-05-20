@@ -12,7 +12,7 @@ import (
 )
 
 func (f flags) authenticate() error {
-   var auth criterion.Authenticate
+   var token criterion.AuthToken
    err := auth.New(f.email, f.password)
    if err != nil {
       return err
@@ -22,21 +22,25 @@ func (f flags) authenticate() error {
 
 func (f flags) download() error {
    var (
-      auth criterion.Authenticate
+      token criterion.AuthToken
       err error
    )
-   auth.Data, err = os.ReadFile(f.home + "/criterion.json")
+   token.Data, err = os.ReadFile("token.json")
    if err != nil {
-      return err
+      t.Fatal(err)
    }
-   auth.Unmarshal()
-   deep, err := auth.DeepLink(f.criterion)
+   token.Unmarshal()
+   item, err := token.video(my_dinner)
    if err != nil {
-      return err
+      t.Fatal(err)
    }
-   play, err := auth.Playlist(deep)
+   files, err := token.files(item)
    if err != nil {
-      return err
+      t.Fatal(err)
+   }
+   file, ok := files.dash()
+   if !ok {
+      t.Fatal("video_files.dash")
    }
    req, err := http.NewRequest("", play.Stream_URL, nil)
    if err != nil {
@@ -48,7 +52,7 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         detail, err := auth.Details(deep)
+         detail, err := token.Details(deep)
          if err != nil {
             return err
          }
