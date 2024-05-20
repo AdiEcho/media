@@ -2,11 +2,8 @@ package main
 
 import (
    "154.pages.dev/log"
-   "154.pages.dev/media/criterion"
    "154.pages.dev/media/internal"
    "flag"
-   "fmt"
-   "net/http"
    "os"
    "path/filepath"
 )

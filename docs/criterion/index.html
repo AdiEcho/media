@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="doc2go">
+    <link href="../_/css/main.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../_/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="../_/icons/favicon.ico">
+    <title>criterion</title>
+</head>
+  <body>
+    <nav>
+        <a href="..">154.pages.dev/media</a>/criterion<span class="navbar-right">
+          v1.9.3 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+      </nav>
+    <main><h2 id="pkg-overview">package criterion</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/criterion&#34;</span></pre>
+<h3 id="pkg-index">Index</h3>
+<ul>
+  <li>
+      <a href="#AuthToken">type AuthToken</a>
+      <ul>
+          <li><a href="#AuthToken.Files">func (a AuthToken) Files(item *EmbedItem) (VideoFiles, error)</a></li>
+          <li><a href="#AuthToken.New">func (a *AuthToken) New(username, password string) error</a></li>
+          <li><a href="#AuthToken.Unmarshal">func (a *AuthToken) Unmarshal() error</a></li>
+          <li><a href="#AuthToken.Video">func (a AuthToken) Video(slug string) (*EmbedItem, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#EmbedItem">type EmbedItem</a>
+      <ul>
+          <li><a href="#EmbedItem.Episode">func (EmbedItem) Episode() int</a></li>
+          <li><a href="#EmbedItem.Season">func (EmbedItem) Season() int</a></li>
+          <li><a href="#EmbedItem.Show">func (EmbedItem) Show() string</a></li>
+          <li><a href="#EmbedItem.Title">func (e EmbedItem) Title() string</a></li>
+          <li><a href="#EmbedItem.Year">func (e EmbedItem) Year() int</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#VideoFile">type VideoFile</a>
+      <ul>
+          <li><a href="#VideoFile.RequestHeader">func (VideoFile) RequestHeader() (http.Header, error)</a></li>
+          <li><a href="#VideoFile.RequestUrl">func (v VideoFile) RequestUrl() (string, bool)</a></li>
+          <li><a href="#VideoFile.UnwrapResponse">func (VideoFile) UnwrapResponse(b []byte) ([]byte, error)</a></li>
+          <li><a href="#VideoFile.WrapRequest">func (VideoFile) WrapRequest(b []byte) ([]byte, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#VideoFiles">type VideoFiles</a>
+      <ul>
+          <li><a href="#VideoFiles.DASH">func (v VideoFiles) DASH() (*VideoFile, bool)</a></li>
+          </ul>
+      </li>
+  </ul><h3 id="pkg-types">Types</h3>
+  <h3 id="AuthToken">type AuthToken</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">AuthToken</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="AuthToken.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
+	<span id="AuthToken.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>
+		<span id="AuthToken.AccessToken"><span class="nx">AccessToken</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;access_token&#34;`</span>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
+    <h4 id="AuthToken.Files">func (AuthToken) Files</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AuthToken"><span class="nx">AuthToken</span></a><span class="p">)</span> <span class="nf">Files</span><span class="p">(</span><span class="nx">item</span> <span class="o">*</span><a href="#EmbedItem"><span class="nx">EmbedItem</span></a><span class="p">)</span> <span class="p">(</span><a href="#VideoFiles"><span class="nx">VideoFiles</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="AuthToken.New">func (*AuthToken) New</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AuthToken"><span class="nx">AuthToken</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">(</span><span class="nx">username</span><span class="p">,</span> <span class="nx">password</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="AuthToken.Unmarshal">func (*AuthToken) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AuthToken"><span class="nx">AuthToken</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="AuthToken.Video">func (AuthToken) Video</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AuthToken"><span class="nx">AuthToken</span></a><span class="p">)</span> <span class="nf">Video</span><span class="p">(</span><span class="nx">slug</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#EmbedItem"><span class="nx">EmbedItem</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="EmbedItem">type EmbedItem</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">EmbedItem</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="EmbedItem.Links"><span class="nx">Links</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="EmbedItem.Files"><span class="nx">Files</span></span> <span class="kd">struct</span> <span class="p">{</span>
+			<span id="EmbedItem.Href"><span class="nx">Href</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span class="p">}</span>
+	<span class="p">}</span> <span class="s">`json:&#34;_links&#34;`</span>
+	<span id="EmbedItem.Metadata"><span class="nx">Metadata</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="EmbedItem.YearReleased"><span class="nx">YearReleased</span></span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a> <span class="s">`json:&#34;year_released&#34;`</span>
+	<span class="p">}</span>
+	<span id="EmbedItem.Name"><span class="nx">Name</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="EmbedItem.Episode">func (EmbedItem) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#EmbedItem"><span class="nx">EmbedItem</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="EmbedItem.Season">func (EmbedItem) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#EmbedItem"><span class="nx">EmbedItem</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="EmbedItem.Show">func (EmbedItem) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#EmbedItem"><span class="nx">EmbedItem</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="EmbedItem.Title">func (EmbedItem) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <a href="#EmbedItem"><span class="nx">EmbedItem</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="EmbedItem.Year">func (EmbedItem) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <a href="#EmbedItem"><span class="nx">EmbedItem</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h3 id="VideoFile">type VideoFile</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">VideoFile</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="VideoFile.DrmAuthorizationToken"><span class="nx">DrmAuthorizationToken</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;drm_authorization_token&#34;`</span>
+	<span id="VideoFile.Links"><span class="nx">Links</span></span>                 <span class="kd">struct</span> <span class="p">{</span>
+		<span id="VideoFile.Source"><span class="nx">Source</span></span> <span class="kd">struct</span> <span class="p">{</span>
+			<span id="VideoFile.Href"><span class="nx">Href</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span class="p">}</span>
+	<span class="p">}</span> <span class="s">`json:&#34;_links&#34;`</span>
+	<span id="VideoFile.Method"><span class="nx">Method</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="VideoFile.RequestHeader">func (VideoFile) RequestHeader</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#VideoFile"><span class="nx">VideoFile</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="VideoFile.RequestUrl">func (VideoFile) RequestUrl</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <a href="#VideoFile"><span class="nx">VideoFile</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="VideoFile.UnwrapResponse">func (VideoFile) UnwrapResponse</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#VideoFile"><span class="nx">VideoFile</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="VideoFile.WrapRequest">func (VideoFile) WrapRequest</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#VideoFile"><span class="nx">VideoFile</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="VideoFiles">type VideoFiles</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">VideoFiles</span> <span class="p">[]</span><a href="#VideoFile"><span class="nx">VideoFile</span></a></pre>
+    <h4 id="VideoFiles.DASH">func (VideoFiles) DASH</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <a href="#VideoFiles"><span class="nx">VideoFiles</span></a><span class="p">)</span> <span class="nf">DASH</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#VideoFile"><span class="nx">VideoFile</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  </main>
+    <hr>
+    <footer>
+      <small id="generated-by-footer">
+        Generated with <a href="https://abhinav.github.io/doc2go/">doc2go</a>
+      </small>
+    </footer>
+    <script src="../_/js/permalink.js"></script>
+  </body>
+</html>

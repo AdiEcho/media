@@ -1,31 +1,20 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/criterion"
-   "154.pages.dev/media/internal"
-   "flag"
+   "errors"
    "fmt"
    "net/http"
    "os"
-   "path/filepath"
+   "path"
 )
-
-func (f flags) authenticate() error {
-   var token criterion.AuthToken
-   err := auth.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/criterion.json", auth.Data, 0666)
-}
 
 func (f flags) download() error {
    var (
       token criterion.AuthToken
       err error
    )
-   token.Data, err = os.ReadFile("token.json")
+   token.Data, err = os.ReadFile(f.home + "/criterion.json")
    if err != nil {
       return err
    }
@@ -36,14 +25,13 @@ func (f flags) download() error {
    }
    files, err := token.Files(item)
    if err != nil {
-      return errr
+      return err
    }
-   
-   file, ok := files.dash()
+   file, ok := files.DASH()
    if !ok {
-      t.Fatal("video_files.dash")
+      return errors.New("criterion.VideoFiles.DASH")
    }
-   req, err := http.NewRequest("", play.Stream_URL, nil)
+   req, err := http.NewRequest("", file.Links.Source.Href, nil)
    if err != nil {
       return err
    }
@@ -53,16 +41,11 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         detail, err := token.Details(deep)
-         if err != nil {
-            return err
-         }
-         f.s.Name = <-detail
-         f.s.Poster = play
+         f.s.Name = item
+         f.s.Poster = file
          return f.s.Download(medium)
       }
    }
-   // 2 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()
@@ -72,3 +55,11 @@ func (f flags) download() error {
    return nil
 }
 
+func (f flags) authenticate() error {
+   var token criterion.AuthToken
+   err := token.New(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/criterion.json", token.Data, 0666)
+}
