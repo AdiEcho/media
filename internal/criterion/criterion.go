@@ -27,13 +27,14 @@ func (f flags) download() error {
    )
    token.Data, err = os.ReadFile("token.json")
    if err != nil {
-      t.Fatal(err)
+      return err
    }
    token.Unmarshal()
-   item, err := token.video(my_dinner)
+   item, err := token.Video(path.Base(f.address))
    if err != nil {
-      t.Fatal(err)
+      return err
    }
+   
    files, err := token.files(item)
    if err != nil {
       t.Fatal(err)

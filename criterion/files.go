@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (a AuthToken) files(item *embed_item) (video_files, error) {
+func (a AuthToken) files(item *EmbedItem) (video_files, error) {
 	req, err := http.NewRequest("", item.Links.Files.Href, nil)
 	if err != nil {
 		return nil, err

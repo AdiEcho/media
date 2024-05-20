@@ -17,7 +17,7 @@ func TestVideo(t *testing.T) {
 		t.Fatal(err)
 	}
 	token.Unmarshal()
-	item, err := token.video(my_dinner)
+	item, err := token.Video(my_dinner)
 	if err != nil {
 		t.Fatal(err)
 	}
