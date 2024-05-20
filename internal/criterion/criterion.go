@@ -34,11 +34,11 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   
-   files, err := token.files(item)
+   files, err := token.Files(item)
    if err != nil {
-      t.Fatal(err)
+      return errr
    }
+   
    file, ok := files.dash()
    if !ok {
       t.Fatal("video_files.dash")
