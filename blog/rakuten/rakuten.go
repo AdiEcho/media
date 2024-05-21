@@ -8,11 +8,6 @@ import (
    "strconv"
 )
 
-var classification = map[string]int{
-   "fr": 23,
-   "se": 282,
-}
-
 func streamings(class int, content_id string) (*http.Response, error) {
    body, err := json.Marshal(map[string]string{
       "audio_language": "ENG",
@@ -41,4 +36,9 @@ func streamings(class int, content_id string) (*http.Response, error) {
    }.Encode()
    req.Header.Set("content-type", "application/json")
    return http.DefaultClient.Do(req)
+}
+
+var classification = map[string]int{
+   "fr": 23,
+   "se": 282,
 }
