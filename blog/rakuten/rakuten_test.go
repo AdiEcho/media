@@ -2,14 +2,17 @@ package rakuten
 
 import (
    "154.pages.dev/widevine"
-   "encoding/hex"
+   "encoding/base64"
    "fmt"
    "os"
    "testing"
 )
 
 // rakuten.tv/se/movies/i-heart-huckabees
-const default_kid = "9a534a1f12d68e1a2359f38710fddb65" 
+const (
+   raw_content_id = "OWE1MzRhMWYxMmQ2OGUxYTIzNTlmMzg3MTBmZGRiNjUtbWMtMC0xNDctMC0w"
+   raw_key_id = "mlNKHxLWjhojWfOHEP3bZQ=="
+)
 
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -24,12 +27,16 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key_id, err := hex.DecodeString(default_kid)
+   content_id, err := base64.StdEncoding.DecodeString(raw_content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   key_id, err := base64.StdEncoding.DecodeString(raw_key_id)
    if err != nil {
       t.Fatal(err)
    }
    var module widevine.CDM
-   err = module.New(private_key, client_id, widevine.PSSH(key_id, nil))
+   err = module.New(private_key, client_id, widevine.PSSH(key_id, content_id))
    if err != nil {
       t.Fatal(err)
    }

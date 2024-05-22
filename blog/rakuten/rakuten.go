@@ -7,6 +7,12 @@ import (
    "net/http"
 )
 
+type stream_info struct {
+   LicenseUrl string `json:"license_url"`
+   URL string
+   VideoQuality string `json:"video_quality"`
+}
+
 var classification = map[string]int{
    "fr": 23,
    "se": 282,
@@ -85,12 +91,6 @@ func (stream_info) RequestHeader() (http.Header, error) {
 
 func (stream_info) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
-}
-
-type stream_info struct {
-   LicenseUrl string `json:"license_url"`
-   URL string
-   VideoQuality string `json:"video_quality"`
 }
 
 func (stream_info) UnwrapResponse(b []byte) ([]byte, error) {
