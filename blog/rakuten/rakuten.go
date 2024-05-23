@@ -7,32 +7,35 @@ import (
    "net/http"
 )
 
+func (o *on_demand) fhd(class int, content string) {
+   o.DeviceStreamVideoQuality = "FHD"
+   o.set(class, content)
+}
+
+func (o *on_demand) hd(class int, content string) {
+   o.DeviceStreamVideoQuality = "HD"
+   o.set(class, content)
+}
+
+func (o *on_demand) set(class int, content string) {
+   o.AudioLanguage = "ENG"
+   o.AudioQuality = "2.0"
+   o.ClassificationId = class
+   o.ContentId = content
+   o.ContentType = "movies"
+   o.DeviceSerial = "!"
+   o.Player = "atvui40:DASH-CENC:WVM"
+   o.SubtitleLanguage = "MIS"
+   o.VideoType = "stream"
+   o.DeviceIdentifier = "atvui40"
+}
+
 var classification = map[string]int{
    "dk": 283,
    "fi": 284,
    "fr": 23,
    "no": 286,
    "se": 282,
-}
-
-// FHD, 1080p, L1 CDM
-// HD, FR, 720p, L3 CDM
-// HD, DK, 540p, L3 CDM
-// HD, FI, 540p, L3 CDM
-// HD, NO, 540p, L3 CDM
-// HD, SE, 540p, L3 CDM
-func (o *on_demand) New(class int, content_id string) {
-   o.AudioLanguage = "ENG"
-   o.AudioQuality = "2.0"
-   o.ClassificationId = class
-   o.ContentId = content_id
-   o.ContentType = "movies"
-   o.DeviceSerial = "!"
-   o.DeviceStreamVideoQuality = "HD"
-   o.Player = "atvui40:DASH-CENC:WVM"
-   o.SubtitleLanguage = "MIS"
-   o.VideoType = "stream"
-   o.DeviceIdentifier = "atvui40"
 }
 
 func (o on_demand) stream() (*stream_info, error) {
