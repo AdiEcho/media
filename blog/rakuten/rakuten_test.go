@@ -52,6 +52,35 @@ func TestLicense(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
+func TestNo(t *testing.T) {
+   var video on_demand
+   video.New(classification["no"], "i-heart-huckabees")
+   stream, err := video.stream()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", stream)
+}
+
+func TestFi(t *testing.T) {
+   var video on_demand
+   video.New(classification["fi"], "i-heart-huckabees")
+   stream, err := video.stream()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", stream)
+}
+
+func TestDk(t *testing.T) {
+   var video on_demand
+   video.New(classification["dk"], "i-heart-huckabees")
+   stream, err := video.stream()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", stream)
+}
 
 func TestSe(t *testing.T) {
    var video on_demand
@@ -59,9 +88,6 @@ func TestSe(t *testing.T) {
    stream, err := video.stream()
    if err != nil {
       t.Fatal(err)
-   }
-   if stream.VideoQuality != "FHD" {
-      t.Fatal(stream)
    }
    fmt.Printf("%+v\n", stream)
 }
@@ -73,7 +99,5 @@ func TestFr(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   if stream.VideoQuality != "FHD" {
-      t.Fatal(stream)
-   }
+   fmt.Printf("%+v\n", stream)
 }

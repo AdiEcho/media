@@ -7,43 +7,32 @@ import (
    "net/http"
 )
 
-type stream_info struct {
-   LicenseUrl string `json:"license_url"`
-   URL string
-   VideoQuality string `json:"video_quality"`
-}
-
 var classification = map[string]int{
+   "dk": 283,
+   "fi": 284,
    "fr": 23,
+   "no": 286,
    "se": 282,
 }
 
-type on_demand struct {
-   AudioLanguage string `json:"audio_language"`
-   AudioQuality string `json:"audio_quality"`
-   ClassificationId int `json:"classification_id"`
-   ContentId string `json:"content_id"`
-   ContentType string `json:"content_type"`
-   DeviceIdentifier string `json:"device_identifier"`
-   DeviceSerial string `json:"device_serial"`
-   DeviceStreamVideoQuality string `json:"device_stream_video_quality"`
-   Player string `json:"player"`
-   SubtitleLanguage string `json:"subtitle_language"`
-   VideoType string `json:"video_type"`
-}
-
+// FHD, 1080p, L1 CDM
+// HD, FR, 720p, L3 CDM
+// HD, DK, 540p, L3 CDM
+// HD, FI, 540p, L3 CDM
+// HD, NO, 540p, L3 CDM
+// HD, SE, 540p, L3 CDM
 func (o *on_demand) New(class int, content_id string) {
    o.AudioLanguage = "ENG"
    o.AudioQuality = "2.0"
    o.ClassificationId = class
    o.ContentId = content_id
    o.ContentType = "movies"
-   o.DeviceIdentifier = "atvui40"
    o.DeviceSerial = "!"
-   o.DeviceStreamVideoQuality = "FHD"
+   o.DeviceStreamVideoQuality = "HD"
    o.Player = "atvui40:DASH-CENC:WVM"
    o.SubtitleLanguage = "MIS"
    o.VideoType = "stream"
+   o.DeviceIdentifier = "atvui40"
 }
 
 func (o on_demand) stream() (*stream_info, error) {
@@ -79,6 +68,26 @@ func (o on_demand) stream() (*stream_info, error) {
       return nil, err
    }
    return &s.Data.StreamInfos[0], nil
+}
+
+type stream_info struct {
+   LicenseUrl string `json:"license_url"`
+   URL string
+   VideoQuality string `json:"video_quality"`
+}
+
+type on_demand struct {
+   AudioLanguage string `json:"audio_language"`
+   AudioQuality string `json:"audio_quality"`
+   ClassificationId int `json:"classification_id"`
+   ContentId string `json:"content_id"`
+   ContentType string `json:"content_type"`
+   DeviceIdentifier string `json:"device_identifier"`
+   DeviceSerial string `json:"device_serial"`
+   DeviceStreamVideoQuality string `json:"device_stream_video_quality"`
+   Player string `json:"player"`
+   SubtitleLanguage string `json:"subtitle_language"`
+   VideoType string `json:"video_type"`
 }
 
 func (s stream_info) RequestUrl() (string, bool) {
