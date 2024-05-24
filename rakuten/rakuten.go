@@ -8,8 +8,12 @@ import (
 	"net/http"
 )
 
+func (w WebAddress) fhd() OnDemand {
+	return w.video("FHD")
+}
+
 // geo block
-func (o on_demand) stream() (gizmo_stream, error) {
+func (o OnDemand) stream() (gizmo_stream, error) {
 	body, err := json.Marshal(o)
 	if err != nil {
 		return nil, err
@@ -56,12 +60,8 @@ type stream_info struct {
 	VideoQuality string `json:"video_quality"`
 }
 
-func (w WebAddress) hd() on_demand {
+func (w WebAddress) hd() OnDemand {
 	return w.video("HD")
-}
-
-func (w WebAddress) fhd() on_demand {
-	return w.video("FHD")
 }
 
 func (s stream_info) RequestUrl() (string, bool) {
@@ -80,7 +80,7 @@ func (stream_info) UnwrapResponse(b []byte) ([]byte, error) {
 	return b, nil
 }
 
-type on_demand struct {
+type OnDemand struct {
 	AudioLanguage            string `json:"audio_language"`
 	AudioQuality             string `json:"audio_quality"`
 	ClassificationId         int    `json:"classification_id"`
@@ -94,8 +94,8 @@ type on_demand struct {
 	VideoType                string `json:"video_type"`
 }
 
-func (w WebAddress) video(quality string) on_demand {
-	var v on_demand
+func (w WebAddress) video(quality string) OnDemand {
+	var v OnDemand
 	v.AudioLanguage = "ENG"
 	v.AudioQuality = "2.0"
 	v.ContentType = "movies"

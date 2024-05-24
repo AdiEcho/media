@@ -11,57 +11,9 @@ import (
    "path/filepath"
 )
 
-func (f *flags) New() error {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   home = filepath.ToSlash(home)
-   f.s.ClientId = home + "/widevine/client_id.bin"
-   f.s.PrivateKey = home + "/widevine/private_key.pem"
-   return nil
-}
-
-type flags struct {
-   s internal.Stream
-   representation string
-   v log.Level
-   address rakuten.web_address
-}
-
-func main() {
-   var f flags
-   err := f.New()
-   if err != nil {
-      panic(err)
-   }
-   flag.Var(&f.rakuten, "a", "address")
-   flag.StringVar(&f.email, "e", "", "email")
-   flag.StringVar(&f.representation, "i", "", "representation")
-   flag.StringVar(&f.password, "p", "", "password")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
-   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
-   flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
-   flag.Parse()
-   f.v.Set()
-   log.Transport{}.Set()
-   switch {
-   case f.password != "":
-      err := f.authenticate()
-      if err != nil {
-         panic(err)
-      }
-   case f.rakuten.String() != "":
-      err := f.download()
-      if err != nil {
-         panic(err)
-      }
-   default:
-      flag.Usage()
-   }
-}
-
-func (f flags) authenticate() error {
+func (f flags) write_stream() error {
+   stream, err := web.fhd().stream()
+   // OLD
    var auth rakuten.Authenticate
    err := auth.New(f.email, f.password)
    if err != nil {
@@ -107,7 +59,6 @@ func (f flags) download() error {
          return f.s.Download(medium)
       }
    }
-   // 2 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()
@@ -116,4 +67,3 @@ func (f flags) download() error {
    }
    return nil
 }
-
