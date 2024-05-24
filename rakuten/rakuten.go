@@ -4,8 +4,57 @@ import (
    "bytes"
    "encoding/json"
    "errors"
+   "io"
    "net/http"
 )
+
+// geo block
+func (o on_demand) stream() (gizmo_stream, error) {
+   body, err := json.Marshal(o)
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://gizmo.rakuten.tv/v3/avod/streamings",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("content-type", "application/json")
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   return io.ReadAll(res.Body)
+}
+
+type gizmo_stream []byte
+
+func (g gizmo_stream) info() (*stream_info, error) {
+   var s struct {
+      Data struct {
+         StreamInfos []stream_info `json:"stream_infos"`
+      }
+   }
+   err := json.Unmarshal(g, &s)
+   if err != nil {
+      return nil, err
+   }
+   return &s.Data.StreamInfos[0], nil
+}
+
+type stream_info struct {
+   LicenseUrl string `json:"license_url"`
+   URL string
+   VideoQuality string `json:"video_quality"`
+}
 
 func (w web_address) hd() on_demand {
    return w.video("HD")
@@ -13,12 +62,6 @@ func (w web_address) hd() on_demand {
 
 func (w web_address) fhd() on_demand {
    return w.video("FHD")
-}
-
-type stream_info struct {
-   LicenseUrl string `json:"license_url"`
-   URL string
-   VideoQuality string `json:"video_quality"`
 }
 
 func (s stream_info) RequestUrl() (string, bool) {
@@ -65,39 +108,4 @@ func (w web_address) video(quality string) on_demand {
    v.ContentId = w.content_id
    v.DeviceStreamVideoQuality = quality
    return v
-}
-
-func (o on_demand) stream() (*stream_info, error) {
-   body, err := json.Marshal(o)
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://gizmo.rakuten.tv/v3/avod/streamings",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("content-type", "application/json")
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var s struct {
-      Data struct {
-         StreamInfos []stream_info `json:"stream_infos"`
-      }
-   }
-   err = json.NewDecoder(res.Body).Decode(&s)
-   if err != nil {
-      return nil, err
-   }
-   return &s.Data.StreamInfos[0], nil
 }

@@ -40,7 +40,11 @@ func (m movie_test) license() ([]byte, error) {
    if err != nil {
       return nil, err
    }
-   return module.Key(stream, key_id)
+   info, err := stream.info()
+   if err != nil {
+      return nil, err
+   }
+   return module.Key(info, key_id)
 }
 
 func TestFr(t *testing.T) {
