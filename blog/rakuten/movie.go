@@ -1,28 +1,19 @@
-package main
+package rakuten
 
 import (
    "net/http"
    "net/url"
-   "os"
 )
 
-func main() {
-   var req http.Request
-   req.Header = make(http.Header)
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "gizmo.rakuten.tv"
-   req.URL.Path = "/v3/movies/jerry-maguire"
-   req.URL.Scheme = "https"
-   val := make(url.Values)
-   val["classification_id"] = []string{"23"}
-   val["market_code"] = []string{"fr"}
-   req.URL.RawQuery = val.Encode()
-   res, err := http.DefaultClient.Do(&req)
+func gizmo_movie() (*http.Response, error) {
+   req, err := http.NewRequest("", "https://gizmo.rakuten.tv", nil)
    if err != nil {
-      panic(err)
+      return nil, err
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   req.URL.Path = "/v3/movies/jerry-maguire"
+   req.URL.RawQuery = url.Values{
+      "classification_id": {"23"},
+      "market_code": {"fr"},
+   }.Encode()
+   return http.DefaultClient.Do(req)
 }
