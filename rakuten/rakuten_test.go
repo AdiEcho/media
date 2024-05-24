@@ -8,20 +8,45 @@ import (
    "testing"
 )
 
-func TestSe(t *testing.T) {
-   var video on_demand
-   video.fhd(classification["se"], "i-heart-huckabees")
-   stream, err := video.stream()
+func (m movie_test) license() ([]byte, error) {
+   home, err := os.UserHomeDir()
    if err != nil {
-      t.Fatal(err)
+      return nil, err
    }
-   fmt.Printf("%+v\n", stream)
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   if err != nil {
+      return nil, err
+   }
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
+   if err != nil {
+      return nil, err
+   }
+   content_id, err := base64.StdEncoding.DecodeString(m.content_id)
+   if err != nil {
+      return nil, err
+   }
+   key_id, err := base64.StdEncoding.DecodeString(m.key_id)
+   if err != nil {
+      return nil, err
+   }
+   var module widevine.CDM
+   err = module.New(private_key, client_id, widevine.PSSH(key_id, content_id))
+   if err != nil {
+      return nil, err
+   }
+   var web web_address
+   web.Set(m.url)
+   stream, err := web.hd().stream()
+   if err != nil {
+      return nil, err
+   }
+   return module.Key(stream, key_id)
 }
 
 func TestFr(t *testing.T) {
-   var video on_demand
-   video.fhd(classification["fr"], "jerry-maguire")
-   stream, err := video.stream()
+   var web web_address
+   web.Set(tests["fr"].url)
+   stream, err := web.fhd().stream()
    if err != nil {
       t.Fatal(err)
    }
@@ -29,98 +54,27 @@ func TestFr(t *testing.T) {
 }
 
 func TestLicenseFr(t *testing.T) {
-   home, err := os.UserHomeDir()
+   key, err := tests["fr"].license()
    if err != nil {
       t.Fatal(err)
    }
-   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   fmt.Printf("%x\n", key)
+}
+
+func TestSe(t *testing.T) {
+   var web web_address
+   web.Set(tests["se"].url)
+   stream, err := web.fhd().stream()
    if err != nil {
       t.Fatal(err)
    }
-   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
-   if err != nil {
-      t.Fatal(err)
-   }
-   test := tests["fr"]
-   content_id, err := base64.StdEncoding.DecodeString(test.content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   key_id, err := base64.StdEncoding.DecodeString(test.key_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   var module widevine.CDM
-   err = module.New(private_key, client_id, widevine.PSSH(key_id, content_id))
-   if err != nil {
-      t.Fatal(err)
-   }
-   var video on_demand
-   video.hd(classification["fr"], "jerry-maguire")
-   stream, err := video.stream()
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := module.Key(stream, key_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x:%x\n", key_id, key)
+   fmt.Printf("%+v\n", stream)
 }
 
 func TestLicenseSe(t *testing.T) {
-   home, err := os.UserHomeDir()
+   key, err := tests["se"].license()
    if err != nil {
       t.Fatal(err)
    }
-   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
-   if err != nil {
-      t.Fatal(err)
-   }
-   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
-   if err != nil {
-      t.Fatal(err)
-   }
-   test := tests["se"]
-   content_id, err := base64.StdEncoding.DecodeString(test.content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   key_id, err := base64.StdEncoding.DecodeString(test.key_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   var module widevine.CDM
-   err = module.New(private_key, client_id, widevine.PSSH(key_id, content_id))
-   if err != nil {
-      t.Fatal(err)
-   }
-   var video on_demand
-   video.hd(classification["se"], "i-heart-huckabees")
-   stream, err := video.stream()
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := module.Key(stream, key_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x:%x\n", key_id, key)
-}
-
-var tests = map[string]struct{
-   content_id string
-   key_id string
-   url string
-}{
-   "fr": {
-      content_id: "Y2YzNGEwM2JiYjRhYTg5OWRmNDJjM2NmN2E2Y2I5MjUtbWMtMC0xMzctMC0w",
-      key_id: "zzSgO7tKqJnfQsPPemy5JQ==",
-      url: "rakuten.tv/fr/movies/jerry-maguire",
-   },
-   "se": {
-      content_id: "OWE1MzRhMWYxMmQ2OGUxYTIzNTlmMzg3MTBmZGRiNjUtbWMtMC0xNDctMC0w",
-      key_id: "mlNKHxLWjhojWfOHEP3bZQ==",
-      url: "rakuten.tv/se/movies/i-heart-huckabees",
-   },
+   fmt.Printf("%x\n", key)
 }

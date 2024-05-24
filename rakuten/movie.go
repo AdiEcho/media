@@ -18,12 +18,18 @@ func (w web_address) movie() (*gizmo_movie, error) {
    req.URL.RawQuery = url.Values{
       "market_code": {w.market_code},
       "classification_id": {strconv.Itoa(w.classification_id)},
+      "device_identifier": {"atvui40"},
    }.Encode()
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
    movie := new(gizmo_movie)
    err = json.NewDecoder(res.Body).Decode(movie)
    if err != nil {

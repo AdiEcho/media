@@ -7,6 +7,14 @@ import (
    "net/http"
 )
 
+func (w web_address) hd() on_demand {
+   return w.video("HD")
+}
+
+func (w web_address) fhd() on_demand {
+   return w.video("FHD")
+}
+
 type stream_info struct {
    LicenseUrl string `json:"license_url"`
    URL string
@@ -57,14 +65,6 @@ func (w web_address) video(quality string) on_demand {
    v.ContentId = w.content_id
    v.DeviceStreamVideoQuality = quality
    return v
-}
-
-func (w web_address) hd() on_demand {
-   return w.video("HD")
-}
-
-func (w web_address) fhd() on_demand {
-   return w.video("FHD")
 }
 
 func (o on_demand) stream() (*stream_info, error) {

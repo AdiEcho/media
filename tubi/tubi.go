@@ -1,6 +1,7 @@
 package tubi
 
 import (
+   "bytes"
    "encoding/json"
    "errors"
    "io"
@@ -9,6 +10,18 @@ import (
    "strconv"
    "strings"
 )
+
+func (c Content) Marshal() ([]byte, error) {
+   var buf bytes.Buffer
+   enc := json.NewEncoder(&buf)
+   enc.SetEscapeHTML(false)
+   enc.SetIndent("", " ")
+   err := enc.Encode(c)
+   if err != nil {
+      return nil, err
+   }
+   return buf.Bytes(), nil
+}
 
 func (c *Content) New(id int) error {
    req, err := http.NewRequest("GET", "https://uapi.adrise.tv/cms/content", nil)
@@ -45,10 +58,6 @@ func (c *Content) New(id int) error {
 
 type Namer struct {
    C *Content
-}
-
-func (c Content) Marshal() ([]byte, error) {
-   return json.MarshalIndent(c, "", " ")
 }
 
 func (c *Content) Unmarshal(text []byte) error {
