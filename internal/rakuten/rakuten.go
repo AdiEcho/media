@@ -11,26 +11,22 @@ import (
    "path/filepath"
 )
 
-type flags struct {
-   email string
-   s internal.Stream
-   home string
-   rakuten rakuten.ID
-   representation string
-   password string
-   v log.Level
-}
-
 func (f *flags) New() error {
-   var err error
-   f.home, err = os.UserHomeDir()
+   home, err := os.UserHomeDir()
    if err != nil {
       return err
    }
-   f.home = filepath.ToSlash(f.home)
-   f.s.ClientId = f.home + "/widevine/client_id.bin"
-   f.s.PrivateKey = f.home + "/widevine/private_key.pem"
+   home = filepath.ToSlash(home)
+   f.s.ClientId = home + "/widevine/client_id.bin"
+   f.s.PrivateKey = home + "/widevine/private_key.pem"
    return nil
+}
+
+type flags struct {
+   s internal.Stream
+   representation string
+   v log.Level
+   address rakuten.web_address
 }
 
 func main() {
