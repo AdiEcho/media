@@ -2,14 +2,59 @@ package rakuten
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "net/url"
+   "strconv"
    "strings"
 )
 
-type web_address struct {
-   content_id string
-   market_code string
+func (w web_address) movie() (*gizmo_movie, error) {
+   req, err := http.NewRequest("", "https://gizmo.rakuten.tv", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/v3/movies/" + w.content_id
+   req.URL.RawQuery = url.Values{
+      "market_code": {w.market_code},
+      "classification_id": {strconv.Itoa(w.classification_id)},
+   }.Encode()
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   movie := new(gizmo_movie)
+   err = json.NewDecoder(res.Body).Decode(movie)
+   if err != nil {
+      return nil, err
+   }
+   return movie, nil
+}
+
+func (w *web_address) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   s = strings.TrimPrefix(s, "rakuten.tv")
+   s = strings.TrimPrefix(s, "/")
+   var found bool
+   w.market_code, w.content_id, found = strings.Cut(s, "/movies/")
+   if !found {
+      return errors.New("/movies/ not found")
+   }
+   w.classification_id, found = classification_id[w.market_code]
+   if !found {
+      return errors.New("market_code not found")
+   }
+   return nil
+}
+
+var classification_id = map[string]int{
+   "dk": 283,
+   "fi": 284,
+   "fr": 23,
+   "no": 286,
+   "se": 282,
 }
 
 func (w web_address) String() string {
@@ -19,24 +64,6 @@ func (w web_address) String() string {
    b.WriteString("/movies/")
    b.WriteString(w.content_id)
    return b.String()
-}
-
-func (g *gizmo_movie) New() error {
-   req, err := http.NewRequest("", "https://gizmo.rakuten.tv", nil)
-   if err != nil {
-      return err
-   }
-   req.URL.Path = "/v3/movies/jerry-maguire"
-   req.URL.RawQuery = url.Values{
-      "classification_id": {"23"},
-      "market_code": {"fr"},
-   }.Encode()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(g)
 }
 
 func (gizmo_movie) Show() string {
@@ -64,4 +91,10 @@ type gizmo_movie struct {
 
 func (g gizmo_movie) Year() int {
    return g.Data.Year
+}
+
+type web_address struct {
+   classification_id int
+   content_id string
+   market_code string
 }

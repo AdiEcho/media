@@ -7,22 +7,64 @@ import (
    "net/http"
 )
 
-func (o *on_demand) fhd(class int, content string) {
-   o.DeviceStreamVideoQuality = "FHD"
-   o.set(class, content)
+type stream_info struct {
+   LicenseUrl string `json:"license_url"`
+   URL string
+   VideoQuality string `json:"video_quality"`
 }
 
-func (o *on_demand) hd(class int, content string) {
-   o.DeviceStreamVideoQuality = "HD"
-   o.set(class, content)
+func (s stream_info) RequestUrl() (string, bool) {
+   return s.LicenseUrl, true
 }
 
-var classification = map[string]int{
-   "dk": 283,
-   "fi": 284,
-   "fr": 23,
-   "no": 286,
-   "se": 282,
+func (stream_info) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (stream_info) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (stream_info) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+type on_demand struct {
+   AudioLanguage string `json:"audio_language"`
+   AudioQuality string `json:"audio_quality"`
+   ClassificationId int `json:"classification_id"`
+   ContentId string `json:"content_id"`
+   ContentType string `json:"content_type"`
+   DeviceIdentifier string `json:"device_identifier"`
+   DeviceSerial string `json:"device_serial"`
+   DeviceStreamVideoQuality string `json:"device_stream_video_quality"`
+   Player string `json:"player"`
+   SubtitleLanguage string `json:"subtitle_language"`
+   VideoType string `json:"video_type"`
+}
+
+func (w web_address) video(quality string) on_demand {
+   var v on_demand
+   v.AudioLanguage = "ENG"
+   v.AudioQuality = "2.0"
+   v.ContentType = "movies"
+   v.DeviceSerial = "!"
+   v.Player = "atvui40:DASH-CENC:WVM"
+   v.SubtitleLanguage = "MIS"
+   v.VideoType = "stream"
+   v.DeviceIdentifier = "atvui40"
+   v.ClassificationId = w.classification_id
+   v.ContentId = w.content_id
+   v.DeviceStreamVideoQuality = quality
+   return v
+}
+
+func (w web_address) hd() on_demand {
+   return w.video("HD")
+}
+
+func (w web_address) fhd() on_demand {
+   return w.video("FHD")
 }
 
 func (o on_demand) stream() (*stream_info, error) {
@@ -58,53 +100,4 @@ func (o on_demand) stream() (*stream_info, error) {
       return nil, err
    }
    return &s.Data.StreamInfos[0], nil
-}
-
-type stream_info struct {
-   LicenseUrl string `json:"license_url"`
-   URL string
-   VideoQuality string `json:"video_quality"`
-}
-
-func (s stream_info) RequestUrl() (string, bool) {
-   return s.LicenseUrl, true
-}
-
-func (stream_info) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (stream_info) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (stream_info) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (o *on_demand) set(class int, content string) {
-   o.AudioLanguage = "ENG"
-   o.AudioQuality = "2.0"
-   o.ClassificationId = class
-   o.ContentId = content
-   o.ContentType = "movies"
-   o.DeviceSerial = "!"
-   o.Player = "atvui40:DASH-CENC:WVM"
-   o.SubtitleLanguage = "MIS"
-   o.VideoType = "stream"
-   o.DeviceIdentifier = "atvui40"
-}
-
-type on_demand struct {
-   AudioLanguage string `json:"audio_language"`
-   AudioQuality string `json:"audio_quality"`
-   ClassificationId int `json:"classification_id"`
-   ContentId string `json:"content_id"`
-   ContentType string `json:"content_type"`
-   DeviceIdentifier string `json:"device_identifier"`
-   DeviceSerial string `json:"device_serial"`
-   DeviceStreamVideoQuality string `json:"device_stream_video_quality"`
-   Player string `json:"player"`
-   SubtitleLanguage string `json:"subtitle_language"`
-   VideoType string `json:"video_type"`
 }
