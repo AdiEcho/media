@@ -1,10 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/rakuten"
-   "154.pages.dev/media/internal"
-   "flag"
    "fmt"
    "net/http"
    "os"
@@ -12,11 +9,11 @@ import (
 )
 
 func (f flags) write_stream() error {
-   fhd, err := web.FHD().Info()
+   fhd, err := f.address.FHD().Info()
    if err != nil {
       return err
    }
-   hd, err := web.HD().Info()
+   hd, err := f.address.HD().Info()
    if err != nil {
       return err
    }
@@ -29,7 +26,7 @@ func (f flags) write_stream() error {
 }
 
 func (f flags) name() string {
-   return path.Base(f.web.String()) + ".json"
+   return path.Base(f.address.String()) + ".json"
 }
 
 func (f flags) download() error {
@@ -52,14 +49,11 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         f.s.Poster = info
-         
-         // FIXME
-         detail, err := auth.Details(deep)
+         f.s.Name, err = f.address.Movie()
          if err != nil {
             return err
          }
-         f.s.Name = <-detail
+         f.s.Poster = info
          return f.s.Download(medium)
       }
    }
