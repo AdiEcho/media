@@ -11,16 +11,25 @@ import (
    "path"
 )
 
-func (f flags) name() string {
-   return path.Base(f.web.String()) + ".json"
-}
-
 func (f flags) write_stream() error {
-   stream, err := web.FHD().Stream()
+   fhd, err := web.FHD().Info()
    if err != nil {
       return err
    }
-   return os.WriteFile(f.name(), stream, 0666)
+   hd, err := web.HD().Info()
+   if err != nil {
+      return err
+   }
+   fhd.LicenseUrl = hd.LicenseUrl
+   text, err := fhd.Marshal()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.name(), text, 0666)
+}
+
+func (f flags) name() string {
+   return path.Base(f.web.String()) + ".json"
 }
 
 func (f flags) download() error {
@@ -28,7 +37,8 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   info, err := rakuten.GizmoStream.Info(text)
+   var info rakuten.StreamInfo
+   err = info.Unmarshal(text)
    if err != nil {
       return err
    }
@@ -43,6 +53,7 @@ func (f flags) download() error {
    for _, medium := range media {
       if medium.ID == f.representation {
          f.s.Poster = info
+         
          // FIXME
          detail, err := auth.Details(deep)
          if err != nil {

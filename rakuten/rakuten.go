@@ -4,9 +4,16 @@ import (
    "bytes"
    "encoding/json"
    "errors"
-   "io"
    "net/http"
 )
+
+func (s *StreamInfo) Unmarshal(text []byte) error {
+   return json.Unmarshal(text, s)
+}
+
+func (s StreamInfo) Marshal() ([]byte, error) {
+   return json.MarshalIndent(s, "", " ")
+}
 
 type StreamInfo struct {
    LicenseUrl   string `json:"license_url"`
@@ -14,27 +21,8 @@ type StreamInfo struct {
    VideoQuality string `json:"video_quality"`
 }
 
-func (g GizmoStream) Info() (*StreamInfo, error) {
-   var s struct {
-      Data struct {
-         StreamInfos []StreamInfo `json:"stream_infos"`
-      }
-   }
-   err := json.Unmarshal(g, &s)
-   if err != nil {
-      return nil, err
-   }
-   return &s.Data.StreamInfos[0], nil
-}
-
-type GizmoStream []byte
-
-func (w WebAddress) FHD() OnDemand {
-   return w.video("FHD")
-}
-
 // geo block
-func (o OnDemand) Stream() (GizmoStream, error) {
+func (o OnDemand) Info() (*StreamInfo, error) {
    body, err := json.Marshal(o)
    if err != nil {
       return nil, err
@@ -57,7 +45,20 @@ func (o OnDemand) Stream() (GizmoStream, error) {
       res.Write(&b)
       return nil, errors.New(b.String())
    }
-   return io.ReadAll(res.Body)
+   var s struct {
+      Data struct {
+         StreamInfos []StreamInfo `json:"stream_infos"`
+      }
+   }
+   err = json.NewDecoder(res.Body).Decode(&s)
+   if err != nil {
+      return nil, err
+   }
+   return &s.Data.StreamInfos[0], nil
+}
+
+func (w WebAddress) FHD() OnDemand {
+   return w.video("FHD")
 }
 
 func (w WebAddress) hd() OnDemand {
@@ -109,3 +110,4 @@ func (w WebAddress) video(quality string) OnDemand {
    v.DeviceStreamVideoQuality = quality
    return v
 }
+
