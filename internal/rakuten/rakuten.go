@@ -8,39 +8,31 @@ import (
    "fmt"
    "net/http"
    "os"
-   "path/filepath"
+   "path"
 )
 
+func (f flags) name() string {
+   return path.Base(f.web.String()) + ".json"
+}
+
 func (f flags) write_stream() error {
-   stream, err := web.fhd().stream()
-   // OLD
-   var auth rakuten.Authenticate
-   err := auth.New(f.email, f.password)
+   stream, err := web.FHD().Stream()
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/rakuten.json", auth.Data, 0666)
+   return os.WriteFile(f.name(), stream, 0666)
 }
 
 func (f flags) download() error {
-   var (
-      auth rakuten.Authenticate
-      err error
-   )
-   auth.Data, err = os.ReadFile(f.home + "/rakuten.json")
+   text, err := os.ReadFile(f.name())
    if err != nil {
       return err
    }
-   auth.Unmarshal()
-   deep, err := auth.DeepLink(f.rakuten)
+   info, err := rakuten.GizmoStream.Info(text)
    if err != nil {
       return err
    }
-   play, err := auth.Playlist(deep)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest("", play.Stream_URL, nil)
+   req, err := http.NewRequest("", info.URL, nil)
    if err != nil {
       return err
    }
@@ -50,12 +42,13 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
+         f.s.Poster = info
+         // FIXME
          detail, err := auth.Details(deep)
          if err != nil {
             return err
          }
          f.s.Name = <-detail
-         f.s.Poster = play
          return f.s.Download(medium)
       }
    }
