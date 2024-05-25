@@ -7,23 +7,23 @@ import (
    "time"
 )
 
+var tests = map[string]movie_test{
+   "fr": {
+      url:        "rakuten.tv/fr/movies/jerry-maguire",
+      content_id: "cf34a03bbb4aa899df42c3cf7a6cb925-mc-0-137-0-0",
+      key_id:     "00000000000000000000000000000000",
+   },
+   "se": {
+      url:        "rakuten.tv/se/movies/i-heart-huckabees",
+      content_id: "9a534a1f12d68e1a2359f38710fddb65-mc-0-147-0-0",
+      key_id:     "00000000000000000000000000000000",
+   },
+}
+
 type movie_test struct {
    content_id string
    key_id     string
    url        string
-}
-
-var tests = map[string]movie_test{
-   "fr": {
-      content_id: "Y2YzNGEwM2JiYjRhYTg5OWRmNDJjM2NmN2E2Y2I5MjUtbWMtMC0xMzctMC0w",
-      key_id:     "zzSgO7tKqJnfQsPPemy5JQ==",
-      url:        "rakuten.tv/fr/movies/jerry-maguire",
-   },
-   "se": {
-      content_id: "OWE1MzRhMWYxMmQ2OGUxYTIzNTlmMzg3MTBmZGRiNjUtbWMtMC0xNDctMC0w",
-      key_id:     "mlNKHxLWjhojWfOHEP3bZQ==",
-      url:        "rakuten.tv/se/movies/i-heart-huckabees",
-   },
 }
 
 func TestMovie(t *testing.T) {

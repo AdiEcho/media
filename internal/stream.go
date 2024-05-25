@@ -18,6 +18,20 @@ import (
    "strings"
 )
 
+func (s Stream) Download(rep *dash.Representation) error {
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
+   base := rep.GetAdaptationSet().GetPeriod().GetMpd().BaseUrl.URL
+   if v, ok := rep.GetSegmentTemplate(); ok {
+      if v, ok := v.GetInitialization(rep); ok {
+         return s.segment_template(rep, base, v, ext)
+      }
+   }
+   return s.segment_base(rep.SegmentBase, base, *rep.BaseUrl, ext)
+}
+
 func (s Stream) segment_base(
    segment *dash.SegmentBase,
    base *url.URL,
@@ -99,6 +113,7 @@ func (s Stream) segment_base(
    }
    return nil
 }
+
 func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error) {
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -205,19 +220,7 @@ type Stream struct {
    Name encoding.Namer
    Poster widevine.Poster
 }
-func (s Stream) Download(rep *dash.Representation) error {
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Representation.Ext")
-   }
-   base := rep.GetAdaptationSet().GetPeriod().GetMpd().BaseUrl.URL
-   if v, ok := rep.GetSegmentTemplate(); ok {
-      if v, ok := v.GetInitialization(rep); ok {
-         return s.segment_template(rep, base, v, ext)
-      }
-   }
-   return s.segment_base(rep.SegmentBase, base, *rep.BaseUrl, ext)
-}
+
 func (s Stream) segment_template(
    rep *dash.Representation,
    base *url.URL,

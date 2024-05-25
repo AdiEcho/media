@@ -2,7 +2,7 @@ package rakuten
 
 import (
    "154.pages.dev/widevine"
-   "encoding/base64"
+   "encoding/hex"
    "fmt"
    "os"
    "testing"
@@ -21,16 +21,14 @@ func (m movie_test) license() ([]byte, error) {
    if err != nil {
       return nil, err
    }
-   content_id, err := base64.StdEncoding.DecodeString(m.content_id)
-   if err != nil {
-      return nil, err
-   }
-   key_id, err := base64.StdEncoding.DecodeString(m.key_id)
+   key_id, err := hex.DecodeString(m.key_id)
    if err != nil {
       return nil, err
    }
    var module widevine.CDM
-   err = module.New(private_key, client_id, widevine.PSSH(key_id, content_id))
+   err = module.New(private_key, client_id, widevine.PSSH(
+      key_id, []byte(m.content_id),
+   ))
    if err != nil {
       return nil, err
    }
@@ -41,6 +39,14 @@ func (m movie_test) license() ([]byte, error) {
       return nil, err
    }
    return module.Key(info, key_id)
+}
+
+func TestLicenseSe(t *testing.T) {
+   key, err := tests["se"].license()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%x\n", key)
 }
 
 func TestFr(t *testing.T) {
@@ -69,12 +75,4 @@ func TestSe(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", stream)
-}
-
-func TestLicenseSe(t *testing.T) {
-   key, err := tests["se"].license()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
 }

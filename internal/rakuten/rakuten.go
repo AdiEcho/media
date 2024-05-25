@@ -8,27 +8,6 @@ import (
    "path"
 )
 
-func (f flags) write_stream() error {
-   fhd, err := f.address.FHD().Info()
-   if err != nil {
-      return err
-   }
-   hd, err := f.address.HD().Info()
-   if err != nil {
-      return err
-   }
-   fhd.LicenseUrl = hd.LicenseUrl
-   text, err := fhd.Marshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.name(), text, 0666)
-}
-
-func (f flags) name() string {
-   return path.Base(f.address.String()) + ".json"
-}
-
 func (f flags) download() error {
    text, err := os.ReadFile(f.name())
    if err != nil {
@@ -64,4 +43,25 @@ func (f flags) download() error {
       fmt.Println(medium)
    }
    return nil
+}
+
+func (f flags) write_stream() error {
+   fhd, err := f.address.FHD().Info()
+   if err != nil {
+      return err
+   }
+   hd, err := f.address.HD().Info()
+   if err != nil {
+      return err
+   }
+   fhd.LicenseUrl = hd.LicenseUrl
+   text, err := fhd.Marshal()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.name(), text, 0666)
+}
+
+func (f flags) name() string {
+   return path.Base(f.address.String()) + ".json"
 }
