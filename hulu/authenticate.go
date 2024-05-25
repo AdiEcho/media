@@ -10,50 +10,25 @@ import (
    "strings"
 )
 
-func (a *Authenticate) New(email, password string) error {
-   res, err := http.PostForm(
-      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
-         "friendly_name": {"!"},
-         "password": {password},
-         "serial_number": {"!"},
-         "user_email": {email},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b strings.Builder
-      res.Write(&b)
-      return errors.New(b.String())
-   }
-   a.Data, err = io.ReadAll(res.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
 func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    var p playlist_request
-   p.Content_EAB_ID = d.EAB_ID
-   p.Deejay_Device_ID = 166
-   p.Playback.Audio.Codecs.Selection_Mode = "ALL"
+   p.ContentEabId = d.EabId
+   p.DeejayDeviceId = 166
+   p.Playback.Audio.Codecs.SelectionMode = "ALL"
    p.Playback.Audio.Codecs.Values = []codec_value{
       {Type: "AAC"},
       {Type: "EC3"},
    }
-   p.Playback.DRM.Selection_Mode = "ALL"
+   p.Playback.DRM.SelectionMode = "ALL"
    p.Playback.DRM.Values = []drm_value{
       {
-         Security_Level: "L3",
+         SecurityLevel: "L3",
          Type: "WIDEVINE",
          Version: "MODULAR",
       },
    }
    p.Playback.Manifest.Type = "DASH"
-   p.Playback.Segments.Selection_Mode = "ALL"
+   p.Playback.Segments.SelectionMode = "ALL"
    p.Playback.Segments.Values = func() []segment_value {
       var s segment_value
       s.Encryption.Mode = "CENC"
@@ -62,7 +37,7 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       return []segment_value{s}
    }()
    p.Playback.Version = 2 // this is required for 1080p
-   p.Playback.Video.Codecs.Selection_Mode = "ALL"
+   p.Playback.Video.Codecs.SelectionMode = "ALL"
    p.Playback.Video.Codecs.Values = []codec_value{
       {
          Height: 9999,
@@ -85,7 +60,7 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.v.Data.User_Token},
+      "Authorization": {"Bearer " + a.v.Data.UserToken},
       "Content-Type": {"application/json"},
    }
    res, err := http.DefaultClient.Do(req)
@@ -106,19 +81,10 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    return play, nil
 }
 
-type Authenticate struct {
-   Data []byte
-   v struct {
-      Data struct {
-         User_Token string
-      }
-   }
-}
-
 func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
    body, err := func() ([]byte, error) {
       m := map[string][]string{
-         "eabs": {d.EAB_ID},
+         "eabs": {d.EabId},
       }
       return json.Marshal(m)
    }()
@@ -131,7 +97,7 @@ func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
    if err != nil {
       return nil, err
    }
-   req.Header.Set("Authorization", "Bearer " + a.v.Data.User_Token)
+   req.Header.Set("Authorization", "Bearer " + a.v.Data.UserToken)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -157,6 +123,15 @@ func (a Authenticate) Details(d *DeepLink) (chan Details, error) {
    return channel, nil
 }
 
+type Authenticate struct {
+   Data []byte
+   v struct {
+      Data struct {
+         UserToken string `json:"user_token"`
+      }
+   }
+}
+
 func (a *Authenticate) Unmarshal() error {
    return json.Unmarshal(a.Data, &a.v)
 }
@@ -171,7 +146,7 @@ func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
       "id": {watch.s},
       "namespace": {"entity"},
    }.Encode()
-   req.Header.Set("Authorization", "Bearer " + a.v.Data.User_Token)
+   req.Header.Set("Authorization", "Bearer " + a.v.Data.UserToken)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -188,4 +163,28 @@ func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
       return nil, err
    }
    return link, nil
+}
+func (a *Authenticate) New(email, password string) error {
+   res, err := http.PostForm(
+      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
+         "friendly_name": {"!"},
+         "password": {password},
+         "serial_number": {"!"},
+         "user_email": {email},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return errors.New(b.String())
+   }
+   a.Data, err = io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
 }

@@ -8,8 +8,8 @@ import (
 )
 
 type Playlist struct {
-   Stream_URL string
-   WV_Server string
+   StreamUrl string `json:"stream_url"`
+   WvServer string `json:"wv_server"`
 }
 
 func (Playlist) WrapRequest(b []byte) ([]byte, error) {
@@ -21,7 +21,7 @@ func (Playlist) RequestHeader() (http.Header, error) {
 }
 
 func (p Playlist) RequestUrl() (string, bool) {
-   return p.WV_Server, true
+   return p.WvServer, true
 }
 
 func (Playlist) UnwrapResponse(b []byte) ([]byte, error) {
@@ -29,7 +29,7 @@ func (Playlist) UnwrapResponse(b []byte) ([]byte, error) {
 }
 
 type DeepLink struct {
-   EAB_ID string
+   EabId string
 }
 
 type ID struct {
@@ -55,38 +55,38 @@ type codec_value struct {
 }
 
 type drm_value struct {
-   Security_Level string `json:"security_level"`
+   SecurityLevel string `json:"security_level"`
    Type          string `json:"type"`
    Version       string `json:"version"`
 }
 
 type playlist_request struct {
-   Content_EAB_ID   string `json:"content_eab_id"`
-   Deejay_Device_ID int    `json:"deejay_device_id"`
+   ContentEabId   string `json:"content_eab_id"`
+   DeejayDeviceId int    `json:"deejay_device_id"`
    Unencrypted    bool   `json:"unencrypted"`
    Version        int    `json:"version"`
    Playback       struct {
       Audio struct {
          Codecs struct {
-            Selection_Mode string `json:"selection_mode"`
+            SelectionMode string `json:"selection_mode"`
             Values []codec_value `json:"values"`
          } `json:"codecs"`
       } `json:"audio"`
       Video   struct {
          Codecs struct {
-            Selection_Mode string `json:"selection_mode"`
+            SelectionMode string `json:"selection_mode"`
             Values []codec_value `json:"values"`
          } `json:"codecs"`
       } `json:"video"`
       DRM struct {
-         Selection_Mode string `json:"selection_mode"`
+         SelectionMode string `json:"selection_mode"`
          Values []drm_value `json:"values"`
       } `json:"drm"`
       Manifest struct {
          Type string `json:"type"`
       } `json:"manifest"`
       Segments struct {
-         Selection_Mode string `json:"selection_mode"`
+         SelectionMode string `json:"selection_mode"`
          Values []segment_value `json:"values"`
       } `json:"segments"`
       Version int `json:"version"`
@@ -102,35 +102,35 @@ type segment_value struct {
 }
 
 type Details struct {
-   Episode_Name string
-   Episode_Number int
    Headline string
-   Premiere_Date string
-   Season_Number int
-   Series_Name string
+   EpisodeName string `json:"episode_name"`
+   EpisodeNumber int `json:"episode_number"`
+   PremiereDate string `json:"premiere_date"`
+   SeasonNumber int `json:"season_number"`
+   SeriesName string `json:"series_name"`
 }
 
 func (d Details) Show() string {
-   return d.Series_Name
+   return d.SeriesName
 }
 
 func (d Details) Season() int {
-   return d.Season_Number
+   return d.SeasonNumber
 }
 
 func (d Details) Episode() int {
-   return d.Episode_Number
+   return d.EpisodeNumber
 }
 
 func (d Details) Title() string {
-   if v := d.Episode_Name; v != "" {
+   if v := d.EpisodeName; v != "" {
       return v
    }
    return d.Headline
 }
 
 func (d Details) Year() int {
-   if v, _, ok := strings.Cut(d.Premiere_Date, "-"); ok {
+   if v, _, ok := strings.Cut(d.PremiereDate, "-"); ok {
       if v, err := strconv.Atoi(v); err == nil {
          return v
       }

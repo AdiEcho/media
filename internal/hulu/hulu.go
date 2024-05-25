@@ -34,7 +34,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", play.Stream_URL, nil)
+   req, err := http.NewRequest("", play.StreamUrl, nil)
    if err != nil {
       return err
    }

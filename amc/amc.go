@@ -76,11 +76,11 @@ func (c CurrentVideo) Year() int {
 }
 
 type DataSource struct {
-   Key_Systems *struct {
+   KeySystems *struct {
       Widevine struct {
-         License_URL string
+         LicenseUrl string `json:"license_url"`
       } `json:"com.widevine.alpha"`
-   }
+   } `json:"key_systems"`
    Src string
    Type string
 }
@@ -119,7 +119,7 @@ func (p Playback) RequestHeader() (http.Header, error) {
 
 func (p Playback) RequestUrl() (string, bool) {
    if v, ok := p.HttpsDash(); ok {
-      return v.Key_Systems.Widevine.License_URL, true
+      return v.KeySystems.Widevine.LicenseUrl, true
    }
    return "", false
 }
