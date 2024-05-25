@@ -105,11 +105,7 @@ func write_segment(to io.Writer, from io.Reader, key []byte) error {
    return file.Write(to)
 }
 
-func write_sidx(base_url string, bytes dash.Range) ([]sofia.Reference, error) {
-   req, err := http.NewRequest("GET", base_url, nil)
-   if err != nil {
-      return nil, err
-   }
+func write_sidx(req *http.Request, bytes dash.Range) ([]sofia.Reference, error) {
    req.Header.Set("Range", "bytes=" + string(bytes))
    res, err := http.DefaultClient.Do(req)
    if err != nil {

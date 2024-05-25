@@ -40,8 +40,8 @@ func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error) {
    if err != nil {
       return nil, err
    }
-   if media.BaseURL == "" {
-      media.BaseURL = res.Request.URL.String()
+   if media.BaseUrl == nil {
+      media.BaseUrl = &dash.URL{res.Request.URL}
    }
    var reps []*dash.Representation
    for _, v := range media.Period {
@@ -65,26 +65,86 @@ func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error) {
    return reps, nil
 }
 
-func (s Stream) Download(rep *dash.Representation) error {
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Ext")
-   }
-   if v, ok := rep.GetSegmentTemplate(); ok {
-      if v, ok := v.GetInitialization(rep); ok {
-         return s.segment_template(ext, v, rep)
-      }
-   }
-   return s.segment_base(ext, *rep.BaseURL, rep)
-}
-
-func (s Stream) segment_template(
-   ext, initial string, rep *dash.Representation,
-) error {
-   base, err := url.Parse(rep.GetAdaptationSet().GetPeriod().GetMpd().BaseURL)
+func (s Stream) TimedText(url string) error {
+   res, err := http.Get(url)
    if err != nil {
       return err
    }
+   defer res.Body.Close()
+   file, err := func() (*os.File, error) {
+      s, err := encoding.Name(s.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(encoding.Clean(s) + ".vtt")
+   }()
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   _, err = file.ReadFrom(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (s Stream) key(protect protection) ([]byte, error) {
+   if protect.key_id == nil {
+      return nil, nil
+   }
+   private_key, err := os.ReadFile(s.PrivateKey)
+   if err != nil {
+      return nil, err
+   }
+   client_id, err := os.ReadFile(s.ClientId)
+   if err != nil {
+      return nil, err
+   }
+   if protect.pssh == nil {
+      protect.pssh = widevine.PSSH(protect.key_id, nil)
+   }
+   var module widevine.CDM
+   err = module.New(private_key, client_id, protect.pssh)
+   if err != nil {
+      return nil, err
+   }
+   key, err := module.Key(s.Poster, protect.key_id)
+   if err != nil {
+      return nil, err
+   }
+   slog.Debug("CDM", "key", hex.EncodeToString(key))
+   return key, nil
+}
+
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type Stream struct {
+   ClientId string
+   PrivateKey string
+   Name encoding.Namer
+   Poster widevine.Poster
+}
+
+func (s Stream) Download(rep *dash.Representation) error {
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
+   base := rep.GetAdaptationSet().GetPeriod().GetMpd().BaseURL.URL
+   if v, ok := rep.GetSegmentTemplate(); ok {
+      if v, ok := v.GetInitialization(rep); ok {
+         return s.segment_template(rep, base, v, ext)
+      }
+   }
+   return s.segment_base(rep.SegmentBase, base, *rep.BaseUrl, ext)
+}
+
+func (s Stream) segment_template(
+   rep *dash.Representation,
+   base url.URL,
+   initial string,
+   ext string,
+) error {
    req, err := http.NewRequest("GET", initial, nil)
    if err != nil {
       return err
@@ -161,39 +221,18 @@ func (s Stream) segment_template(
    return nil
 }
 
-func (s Stream) TimedText(url string) error {
-   res, err := http.Get(url)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   file, err := func() (*os.File, error) {
-      s, err := encoding.Name(s.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(encoding.Clean(s) + ".vtt")
-   }()
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   _, err = file.ReadFrom(res.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
 func (s Stream) segment_base(
-   ext, base_url string, rep *dash.Representation,
+   segment *dash.SegmentBase,
+   base url.URL,
+   initial string,
+   ext string,
 ) error {
-   sb := rep.SegmentBase
-   req, err := http.NewRequest("GET", base_url, nil)
+   req, err := http.NewRequest("", initial, nil)
    if err != nil {
       return err
    }
-   req.Header.Set("Range", "bytes=" + string(sb.Initialization.Range))
+   req.URL = base.ResolveReference(req.URL)
+   req.Header.Set("Range", "bytes=" + string(segment.Initialization.Range))
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -219,7 +258,7 @@ func (s Stream) segment_base(
    if err != nil {
       return err
    }
-   references, err := write_sidx(base_url, sb.IndexRange)
+   references, err := write_sidx(req, segment.IndexRange)
    if err != nil {
       return err
    }
@@ -227,7 +266,7 @@ func (s Stream) segment_base(
    meter.Set(len(references))
    var start uint64
    end, err := func() (uint64, error) {
-      _, s, _ := sb.IndexRange.Cut()
+      _, s, _ := segment.IndexRange.Cut()
       return strconv.ParseUint(s, 10, 64)
    }()
    if err != nil {
@@ -246,10 +285,6 @@ func (s Stream) segment_base(
          return string(b)
       }()
       err := func() error {
-         req, err := http.NewRequest("GET", base_url, nil)
-         if err != nil {
-            return err
-         }
          req.Header.Set("Range", bytes)
          res, err := http.DefaultClient.Do(req)
          if err != nil {
@@ -267,39 +302,3 @@ func (s Stream) segment_base(
    }
    return nil
 }
-func (s Stream) key(protect protection) ([]byte, error) {
-   if protect.key_id == nil {
-      return nil, nil
-   }
-   private_key, err := os.ReadFile(s.PrivateKey)
-   if err != nil {
-      return nil, err
-   }
-   client_id, err := os.ReadFile(s.ClientId)
-   if err != nil {
-      return nil, err
-   }
-   if protect.pssh == nil {
-      protect.pssh = widevine.PSSH(protect.key_id, nil)
-   }
-   var module widevine.CDM
-   err = module.New(private_key, client_id, protect.pssh)
-   if err != nil {
-      return nil, err
-   }
-   key, err := module.Key(s.Poster, protect.key_id)
-   if err != nil {
-      return nil, err
-   }
-   slog.Debug("CDM", "key", hex.EncodeToString(key))
-   return key, nil
-}
-
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type Stream struct {
-   ClientId string
-   PrivateKey string
-   Name encoding.Namer
-   Poster widevine.Poster
-}
-
