@@ -18,113 +18,6 @@ import (
    "strings"
 )
 
-func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error) {
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   switch res.Status {
-   case "200 OK", "403 OK":
-   default:
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var media dash.MPD
-   text, err := io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   err = media.Unmarshal(text)
-   if err != nil {
-      return nil, err
-   }
-   if media.BaseUrl == nil {
-      media.BaseUrl = &dash.URL{res.Request.URL}
-   }
-   var reps []*dash.Representation
-   for _, v := range media.Period {
-      seconds, err := v.Seconds()
-      if err != nil {
-         return nil, err
-      }
-      for _, v := range v.AdaptationSet {
-         for _, v := range v.Representation {
-            if seconds > 9 {
-               if _, ok := v.Ext(); ok {
-                  reps = append(reps, v)
-               }
-            }
-         }
-      }
-   }
-   slices.SortFunc(reps, func(a, b *dash.Representation) int {
-      return int(a.Bandwidth - b.Bandwidth)
-   })
-   return reps, nil
-}
-
-func (s Stream) TimedText(url string) error {
-   res, err := http.Get(url)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   file, err := func() (*os.File, error) {
-      s, err := encoding.Name(s.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(encoding.Clean(s) + ".vtt")
-   }()
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   _, err = file.ReadFrom(res.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-func (s Stream) key(protect protection) ([]byte, error) {
-   if protect.key_id == nil {
-      return nil, nil
-   }
-   private_key, err := os.ReadFile(s.PrivateKey)
-   if err != nil {
-      return nil, err
-   }
-   client_id, err := os.ReadFile(s.ClientId)
-   if err != nil {
-      return nil, err
-   }
-   if protect.pssh == nil {
-      protect.pssh = widevine.PSSH(protect.key_id, nil)
-   }
-   var module widevine.CDM
-   err = module.New(private_key, client_id, protect.pssh)
-   if err != nil {
-      return nil, err
-   }
-   key, err := module.Key(s.Poster, protect.key_id)
-   if err != nil {
-      return nil, err
-   }
-   slog.Debug("CDM", "key", hex.EncodeToString(key))
-   return key, nil
-}
-
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type Stream struct {
-   ClientId string
-   PrivateKey string
-   Name encoding.Namer
-   Poster widevine.Poster
-}
-
 func (s Stream) Download(rep *dash.Representation) error {
    ext, ok := rep.Ext()
    if !ok {
@@ -301,4 +194,110 @@ func (s Stream) segment_base(
       }
    }
    return nil
+}
+func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error) {
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   switch res.Status {
+   case "200 OK", "403 OK":
+   default:
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var media dash.MPD
+   text, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   err = media.Unmarshal(text)
+   if err != nil {
+      return nil, err
+   }
+   if media.BaseUrl == nil {
+      media.BaseUrl = &dash.URL{res.Request.URL}
+   }
+   var reps []*dash.Representation
+   for _, v := range media.Period {
+      seconds, err := v.Seconds()
+      if err != nil {
+         return nil, err
+      }
+      for _, v := range v.AdaptationSet {
+         for _, v := range v.Representation {
+            if seconds > 9 {
+               if _, ok := v.Ext(); ok {
+                  reps = append(reps, v)
+               }
+            }
+         }
+      }
+   }
+   slices.SortFunc(reps, func(a, b *dash.Representation) int {
+      return int(a.Bandwidth - b.Bandwidth)
+   })
+   return reps, nil
+}
+
+func (s Stream) TimedText(url string) error {
+   res, err := http.Get(url)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   file, err := func() (*os.File, error) {
+      s, err := encoding.Name(s.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(encoding.Clean(s) + ".vtt")
+   }()
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   _, err = file.ReadFrom(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (s Stream) key(protect protection) ([]byte, error) {
+   if protect.key_id == nil {
+      return nil, nil
+   }
+   private_key, err := os.ReadFile(s.PrivateKey)
+   if err != nil {
+      return nil, err
+   }
+   client_id, err := os.ReadFile(s.ClientId)
+   if err != nil {
+      return nil, err
+   }
+   if protect.pssh == nil {
+      protect.pssh = widevine.PSSH(protect.key_id, nil)
+   }
+   var module widevine.CDM
+   err = module.New(private_key, client_id, protect.pssh)
+   if err != nil {
+      return nil, err
+   }
+   key, err := module.Key(s.Poster, protect.key_id)
+   if err != nil {
+      return nil, err
+   }
+   slog.Debug("CDM", "key", hex.EncodeToString(key))
+   return key, nil
+}
+
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type Stream struct {
+   ClientId string
+   PrivateKey string
+   Name encoding.Namer
+   Poster widevine.Poster
 }
