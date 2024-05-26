@@ -18,7 +18,7 @@ func (f flags) download() error {
    }
    secure.Unmarshal()
    // 1 VTT one
-   for _, text := range secure.V.Text_Track_URLs {
+   for _, text := range secure.V.TextTrackUrls {
       if text.ID == f.representation {
          film, err := f.web.Film()
          if err != nil {
@@ -54,7 +54,7 @@ func (f flags) download() error {
       }
    }
    // 3 VTT all
-   for _, text := range secure.V.Text_Track_URLs {
+   for _, text := range secure.V.TextTrackUrls {
       fmt.Print(text, "\n\n")
    }
    // 4 MPD all

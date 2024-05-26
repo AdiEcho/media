@@ -25,7 +25,7 @@ func (t TextTrack) String() string {
 type SecureUrl struct {
    Data []byte
    V struct {
-      Text_Track_URLs []TextTrack
+      TextTrackUrls []TextTrack `json:"text_track_urls"`
       URL string
    }
 }
@@ -90,16 +90,8 @@ func (a *Authenticate) Unmarshal() error {
    return json.Unmarshal(a.Data, &a.V)
 }
 
-type LinkCode struct {
-   Data []byte
-   V struct {
-      Auth_Token string
-      Link_Code string
-   }
-}
-
 func (c LinkCode) Authenticate() (*Authenticate, error) {
-   body, err := json.Marshal(map[string]string{"auth_token": c.V.Auth_Token})
+   body, err := json.Marshal(map[string]string{"auth_token": c.V.AuthToken})
    if err != nil {
       return nil, err
    }
@@ -164,12 +156,20 @@ func (c LinkCode) String() string {
    b.WriteString("Go to\n")
    b.WriteString("mubi.com/android\n")
    b.WriteString("and enter the code below\n")
-   b.WriteString(c.V.Link_Code)
+   b.WriteString(c.V.LinkCode)
    return b.String()
 }
 
 func (c *LinkCode) Unmarshal() error {
    return json.Unmarshal(c.Data, &c.V)
+}
+
+type LinkCode struct {
+   Data []byte
+   V struct {
+      AuthToken string `json:"auth_token"`
+      LinkCode string `json:"link_code"`
+   }
 }
 
 type WebAddress struct {

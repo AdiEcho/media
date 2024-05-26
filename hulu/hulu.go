@@ -29,7 +29,7 @@ func (Playlist) UnwrapResponse(b []byte) ([]byte, error) {
 }
 
 type DeepLink struct {
-   EabId string
+   EabId string `json:"eab_id"`
 }
 
 type ID struct {

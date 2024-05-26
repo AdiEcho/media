@@ -124,7 +124,7 @@ func location(content_id string, query url.Values) (string, error) {
 
 type SessionToken struct {
    URL string
-   LS_Session string
+   LsSession string `json:"ls_session"`
 }
 
 func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
@@ -133,7 +133,7 @@ func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
 
 func (s SessionToken) RequestHeader() (http.Header, error) {
    head := make(http.Header)
-   head.Set("authorization", "Bearer " + s.LS_Session)
+   head.Set("authorization", "Bearer " + s.LsSession)
    return head, nil
 }
 
