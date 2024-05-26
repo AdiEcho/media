@@ -2,22 +2,23 @@ package amc
 
 import (
    "154.pages.dev/widevine"
-   "encoding/hex"
+   "encoding/base64"
    "fmt"
    "os"
    "testing"
 )
 
 var tests = map[string]struct{
+   content_id string
    key_id string
    url string
 }{
    "movie": {
-      url: "http://amcplus.com/movies/nocebo--1061554",
+      url: "amcplus.com/movies/nocebo--1061554",
    },
    "show": {
-      url: "http://amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152",
-      key_id: "bc791d3b444f4aca83de23f37aea4f78",
+      key_id: "Xn02m57KRCakPhWnbwndfg==",
+      url: "amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152",
    },
 }
 
@@ -28,7 +29,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var auth Authorization
-   auth.Data, err = os.ReadFile(home + "/amc/auth.json")
+   auth.Data, err = os.ReadFile(home + "/amc.json")
    if err != nil {
       t.Fatal(err)
    }
@@ -47,12 +48,14 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key_id, err := hex.DecodeString(test.key_id)
+   key_id, err := base64.StdEncoding.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
    var module widevine.CDM
-   err = module.New(private_key, client_id, widevine.PSSH(key_id, nil))
+   err = module.New(private_key, client_id, widevine.PSSH(
+      key_id, nil,
+   ))
    if err != nil {
       t.Fatal(err)
    }

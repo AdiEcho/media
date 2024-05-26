@@ -7,22 +7,22 @@
 >
 > [Nightmares on Wax](//youtube.com/watch?v=Vc-XzhnwpVc) (2018)
 
-## TRY 7 DAYS FREE
-
-1. https://privacy.com
-2. https://amcplus.com/create
-3. EMAIL
-4. PASSWORD
-5. CREATE ACCOUNT
-6. ANNUAL AD-FREE
-7. CONTINUE TO PAYMENT
-8. Name ON CARD
-9. CARD NUMBER
-10. EXPIRATION DATE
-11. CVC
-12. POSTAL CODE
-13. START FREE TRIAL
-
-## Android client
+## Android
 
 https://play.google.com/store/apps/details?id=com.amcplus.amcfullepisodes
+
+## try 7 days free
+
+1. https://amcplus.com/create
+2. email
+   - 2024-5-26@mailsac.com
+3. password
+4. create account
+5. monthly with ads
+6. continue to payment
+7. name on card
+8. card number
+9. expiration date
+10. cvc
+11. postal code
+12. start free trial
