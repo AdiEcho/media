@@ -1,7 +1,7 @@
 package ctv
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/text"
    "154.pages.dev/widevine"
    "encoding/base64"
    "fmt"
@@ -76,7 +76,7 @@ func TestMedia(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := encoding.Name(MediaManifest{M: media})
+      name, err := text.Name(MediaManifest{M: media})
       if err != nil {
          t.Fatal(err)
       }

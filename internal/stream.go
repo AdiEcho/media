@@ -1,8 +1,8 @@
 package internal
 
 import (
-   "154.pages.dev/encoding"
-   "154.pages.dev/encoding/dash"
+   "154.pages.dev/text"
+   "154.pages.dev/dash"
    "154.pages.dev/log"
    "154.pages.dev/widevine"
    "crypto/tls"
@@ -50,11 +50,11 @@ func (s Stream) segment_base(
    }
    defer res.Body.Close()
    file, err := func() (*os.File, error) {
-      s, err := encoding.Name(s.Name)
+      s, err := text.Name(s.Name)
       if err != nil {
          return nil, err
       }
-      return os.Create(encoding.Clean(s) + ext)
+      return os.Create(text.Clean(s) + ext)
    }()
    if err != nil {
       return err
@@ -168,11 +168,11 @@ func (s Stream) TimedText(url string) error {
    }
    defer res.Body.Close()
    file, err := func() (*os.File, error) {
-      s, err := encoding.Name(s.Name)
+      s, err := text.Name(s.Name)
       if err != nil {
          return nil, err
       }
-      return os.Create(encoding.Clean(s) + ".vtt")
+      return os.Create(text.Clean(s) + ".vtt")
    }()
    if err != nil {
       return err
@@ -217,7 +217,7 @@ func (s Stream) key(protect protection) ([]byte, error) {
 type Stream struct {
    ClientId string
    PrivateKey string
-   Name encoding.Namer
+   Name text.Namer
    Poster widevine.Poster
 }
 
@@ -241,11 +241,11 @@ func (s Stream) segment_template(
       return errors.New(res.Status)
    }
    file, err := func() (*os.File, error) {
-      s, err := encoding.Name(s.Name)
+      s, err := text.Name(s.Name)
       if err != nil {
          return nil, err
       }
-      return os.Create(encoding.Clean(s) + ext)
+      return os.Create(text.Clean(s) + ext)
    }()
    if err != nil {
       return err

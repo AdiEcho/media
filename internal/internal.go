@@ -1,7 +1,7 @@
 package internal
 
 import (
-   "154.pages.dev/encoding/dash"
+   "154.pages.dev/dash"
    "154.pages.dev/sofia"
    "io"
    "net/http"

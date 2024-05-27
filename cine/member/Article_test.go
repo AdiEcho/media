@@ -1,7 +1,7 @@
 package member
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/text"
    "fmt"
    "testing"
 )
@@ -15,7 +15,7 @@ func TestArticle(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", article)
-   name, err := encoding.Name(Encoding{Article: article})
+   name, err := text.Name(Encoding{Article: article})
    if err != nil {
       t.Fatal(err)
    }

@@ -1,7 +1,7 @@
 package stan
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/text"
    "fmt"
    "os"
    "testing"
@@ -22,7 +22,7 @@ func TestProgram(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := encoding.Name(Namer{program})
+      name, err := text.Name(Namer{program})
       if err != nil {
          t.Fatal(err)
       }

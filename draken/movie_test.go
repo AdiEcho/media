@@ -1,7 +1,7 @@
 package draken
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/text"
    "fmt"
    "path"
    "testing"
@@ -15,7 +15,7 @@ func TestMovie(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", movie)
-      name, err := encoding.Name(Namer{movie})
+      name, err := text.Name(Namer{movie})
       if err != nil {
          t.Fatal(err)
       }

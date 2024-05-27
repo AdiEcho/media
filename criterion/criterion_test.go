@@ -1,7 +1,7 @@
 package criterion
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/text"
    "fmt"
    "os"
    "testing"
@@ -22,7 +22,7 @@ func TestVideo(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", item)
-   name, err := encoding.Name(item)
+   name, err := text.Name(item)
    if err != nil {
       t.Fatal(err)
    }

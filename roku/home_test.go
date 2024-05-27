@@ -1,7 +1,7 @@
 package roku
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/text"
    "fmt"
    "path"
    "testing"
@@ -31,7 +31,7 @@ func TestContent(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := encoding.Name(Namer{home})
+      name, err := text.Name(Namer{home})
       if err != nil {
          t.Fatal(err)
       }

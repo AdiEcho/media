@@ -1,7 +1,7 @@
 package rakuten
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/text"
    "fmt"
    "testing"
    "time"
@@ -38,7 +38,7 @@ func TestMovie(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", movie)
-      name, err := encoding.Name(movie)
+      name, err := text.Name(movie)
       if err != nil {
          t.Fatal(err)
       }
