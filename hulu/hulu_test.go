@@ -8,6 +8,14 @@ import (
    "testing"
 )
 
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+const default_kid = "21b82dc2ebb24d5aa9f8631f04726650"
+
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+var test_deep = &DeepLink{
+   "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
+}
+
 func TestLicense(t *testing.T) {
    var auth Authenticate
    err := auth.getenv()
@@ -44,12 +52,4 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-const default_kid = "21b82dc2ebb24d5aa9f8631f04726650"
-
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-var test_deep = &DeepLink{
-   "EAB::023c49bf-6a99-4c67-851c-4c9e7609cc1d::196861183::262714326",
 }

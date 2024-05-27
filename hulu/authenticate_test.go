@@ -6,6 +6,9 @@ import (
    "testing"
 )
 
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+var test_id = ID{"023c49bf-6a99-4c67-851c-4c9e7609cc1d"}
+
 func (a *Authenticate) getenv() error {
    err := a.New(os.Getenv("hulu_username"), os.Getenv("hulu_password"))
    if err != nil {
@@ -39,6 +42,3 @@ func TestDeepLink(t *testing.T) {
    }
    fmt.Printf("%+v\n", link)
 }
-
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-var test_id = ID{"023c49bf-6a99-4c67-851c-4c9e7609cc1d"}

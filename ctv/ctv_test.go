@@ -4,12 +4,52 @@ import (
    "154.pages.dev/encoding"
    "154.pages.dev/widevine"
    "encoding/base64"
-   "encoding/hex"
    "fmt"
    "os"
    "testing"
    "time"
 )
+
+// ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
+const (
+   raw_content_id = "ZmYtZDAxM2NhN2EtMjY0MjY1"
+   raw_key_id = "ywlXHuvLP3KHICZX9rn3pg=="
+)
+
+func TestLicense(t *testing.T) {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   if err != nil {
+      t.Fatal(err)
+   }
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
+   if err != nil {
+      t.Fatal(err)
+   }
+   content_id, err := base64.StdEncoding.DecodeString(raw_content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   key_id, err := base64.StdEncoding.DecodeString(raw_key_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   var module widevine.CDM
+   err = module.New(private_key, client_id, widevine.PSSH(
+      nil, content_id,
+   ))
+   if err != nil {
+      t.Fatal(err)
+   }
+   key, err := module.Key(Poster{}, key_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%x\n", key)
+}
 
 var test_paths = []string{
    // ctv.ca/shows/friends/the-one-with-the-chicken-pox-s2e23
@@ -72,43 +112,4 @@ func TestManifest(t *testing.T) {
       fmt.Println(string(text))
       time.Sleep(99 * time.Millisecond)
    }
-}
-
-// ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
-const (
-   raw_key_id = "cb09571eebcb3f7287202657f6b9f7a6"
-   raw_pssh   = "CAESEMsJVx7ryz9yhyAmV/a596YaCWJlbGxtZWRpYSISZmYtZDAxM2NhN2EtMjY0MjY1"
-)
-
-func TestLicense(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
-   if err != nil {
-      t.Fatal(err)
-   }
-   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
-   if err != nil {
-      t.Fatal(err)
-   }
-   pssh, err := base64.StdEncoding.DecodeString(raw_pssh)
-   if err != nil {
-      t.Fatal(err)
-   }
-   var module widevine.CDM
-   err = module.New(private_key, client_id, pssh)
-   if err != nil {
-      t.Fatal(err)
-   }
-   key_id, err := hex.DecodeString(raw_key_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := module.Key(Poster{}, key_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
 }

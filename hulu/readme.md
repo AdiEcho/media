@@ -2,21 +2,19 @@
 
 ## Sign up
 
-1. https://privacy.com
-2. might need VPN
-3. https://signup.hulu.com/plans
-4. Hulu
-5. EMAIL
-6. PASSWORD
-7. NAME
-8. BIRTHDATE January 1 2000
-9. GENDER
-10. CONTINUE
-11. CARD NUMBER
-12. EXPIRATION
-13. CVC
-14. ZIP CODE
-15. SUBMIT
+1. https://signup.hulu.com/plans
+2. select (hulu)
+3. email
+4. password
+5. name
+6. birthdate
+7. gender
+8. agree & continue
+9. card number
+10. expiration
+11. cvc
+12. zip code
+13. submit
 
 ## Android
 
