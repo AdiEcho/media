@@ -1,7 +1,7 @@
 package mubi
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/text"
    "fmt"
    "testing"
 )
@@ -27,7 +27,7 @@ func TestFilm(t *testing.T) {
          if err != nil {
             t.Fatal(err)
          }
-         fmt.Println(encoding.Name(Namer{film}))
+         fmt.Println(text.Name(Namer{film}))
       }
       fmt.Println(web)
    }

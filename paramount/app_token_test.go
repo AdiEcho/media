@@ -1,7 +1,7 @@
 package paramount
 
 import (
-   "154.pages.dev/encoding"
+   "154.pages.dev/text"
    "154.pages.dev/widevine"
    "encoding/hex"
    "fmt"
@@ -61,7 +61,7 @@ func TestItem(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(encoding.Name(<-item))
+      fmt.Println(text.Name(<-item))
       time.Sleep(time.Second)
    }
 }
