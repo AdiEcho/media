@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/internal"
+   "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
@@ -26,7 +26,7 @@ type flags struct {
    representation string
    email string
    password string
-   v log.Level
+   v text.Level
    address string
 }
 
@@ -45,7 +45,7 @@ func main() {
    flag.StringVar(&f.address, "a", "", "address")
    flag.Parse()
    f.v.Set()
-   log.Transport{}.Set()
+   text.Transport{}.Set()
    switch {
    case f.password != "":
       err := f.authenticate()

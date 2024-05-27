@@ -1,9 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/internal"
    "154.pages.dev/media/stan"
+   "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
@@ -18,7 +18,7 @@ type flags struct {
    representation string
    s internal.Stream
    token bool
-   v log.Level
+   v text.Level
 }
 
 func (f *flags) New() error {
@@ -51,7 +51,7 @@ func main() {
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
-   log.Transport{}.Set()
+   text.Transport{}.Set()
    switch {
    case f.code:
       err := f.write_code()

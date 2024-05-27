@@ -1,9 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/cine/member"
    "154.pages.dev/media/internal"
+   "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
@@ -27,7 +27,7 @@ type flags struct {
    home string
    representation string
    password string
-   v log.Level
+   v text.Level
    slug member.ArticleSlug
    play bool
 }
@@ -48,7 +48,7 @@ func main() {
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
-   log.Transport{}.Set()
+   text.Transport{}.Set()
    switch {
    case f.password != "":
       err := f.authenticate()

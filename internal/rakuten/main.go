@@ -1,9 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/log"
-   "154.pages.dev/media/rakuten"
    "154.pages.dev/media/internal"
+   "154.pages.dev/media/rakuten"
+   "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
@@ -23,7 +23,7 @@ func (f *flags) New() error {
 type flags struct {
    s internal.Stream
    representation string
-   v log.Level
+   v text.Level
    address rakuten.WebAddress
    streamings bool
 }
@@ -42,7 +42,7 @@ func main() {
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
-   log.Transport{}.Set()
+   text.Transport{}.Set()
    switch {
    case f.streamings:
       err := f.write_stream()

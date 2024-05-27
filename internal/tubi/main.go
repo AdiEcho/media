@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/internal"
+   "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
@@ -12,7 +12,7 @@ type flags struct {
    representation string
    s internal.Stream
    tubi int
-   v log.Level
+   v text.Level
    content bool
 }
 
@@ -41,7 +41,7 @@ func main() {
    flag.BoolVar(&f.content, "w", false, "write content")
    flag.Parse()
    f.v.Set()
-   log.Transport{}.Set()
+   text.Transport{}.Set()
    switch {
    case f.content:
       err := f.write_content()

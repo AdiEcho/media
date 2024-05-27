@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/internal"
+   "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
@@ -12,7 +12,7 @@ type flags struct {
    nbc int
    representation string
    s internal.Stream
-   v log.Level
+   v text.Level
 }
 
 func (f *flags) New() error {
@@ -39,7 +39,7 @@ func main() {
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
-   log.Transport{}.Set()
+   text.Transport{}.Set()
    if f.nbc >= 1 {
       err := f.download()
       if err != nil {

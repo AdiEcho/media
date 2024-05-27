@@ -1,9 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/internal"
    "154.pages.dev/media/pluto"
+   "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
@@ -32,7 +32,7 @@ func main() {
    flag.StringVar(&f.forward, "z", "", internal.Forward.String())
    flag.Parse()
    f.v.Set()
-   log.Transport{}.Set()
+   text.Transport{}.Set()
    if f.web.String() != "" {
       err := f.download()
       if err != nil {
@@ -47,7 +47,7 @@ type flags struct {
    base string
    s internal.Stream
    representation string
-   v log.Level
+   v text.Level
    web pluto.WebAddress
    forward string
 }

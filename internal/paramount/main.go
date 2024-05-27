@@ -1,9 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/internal"
    "154.pages.dev/media/paramount"
+   "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
@@ -13,7 +13,7 @@ type flags struct {
    representation string
    s internal.Stream
    paramount string
-   v log.Level
+   v text.Level
 }
 
 func (f *flags) New() error {
@@ -40,7 +40,7 @@ func main() {
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
-   log.Transport{}.Set()
+   text.Transport{}.Set()
    if f.paramount != "" {
       var app paramount.AppToken
       err := app.New()

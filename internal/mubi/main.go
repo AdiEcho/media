@@ -1,9 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/internal"
    "154.pages.dev/media/mubi"
+   "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
@@ -16,7 +16,7 @@ type flags struct {
    representation string
    s internal.Stream
    secure bool
-   v log.Level
+   v text.Level
    web mubi.WebAddress
 }
 
@@ -48,7 +48,7 @@ func main() {
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.Parse()
    f.v.Set()
-   log.Transport{}.Set()
+   text.Transport{}.Set()
    switch {
    case f.auth:
       err := f.write_auth()

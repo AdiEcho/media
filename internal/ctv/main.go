@@ -1,9 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/log"
    "154.pages.dev/media/ctv"
    "154.pages.dev/media/internal"
+   "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
@@ -24,7 +24,7 @@ type flags struct {
    path ctv.Path
    representation string
    s internal.Stream
-   v log.Level
+   v text.Level
    manifest bool
 }
 
@@ -42,7 +42,7 @@ func main() {
    flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
    flag.Parse()
    f.v.Set()
-   log.Transport{}.Set()
+   text.Transport{}.Set()
    switch {
    case f.manifest:
       err := f.get_manifest()

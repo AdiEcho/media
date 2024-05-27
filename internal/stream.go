@@ -1,9 +1,8 @@
 package internal
 
 import (
-   "154.pages.dev/text"
    "154.pages.dev/dash"
-   "154.pages.dev/log"
+   "154.pages.dev/text"
    "154.pages.dev/widevine"
    "crypto/tls"
    "encoding/hex"
@@ -73,7 +72,7 @@ func (s Stream) segment_base(
    if err != nil {
       return err
    }
-   var meter log.ProgressMeter
+   var meter text.ProgressMeter
    meter.Set(len(references))
    var start uint64
    end, err := func() (uint64, error) {
@@ -83,8 +82,8 @@ func (s Stream) segment_base(
    if err != nil {
       return err
    }
-   log.SetTransport(nil)
-   defer log.Transport{}.Set()
+   text.SetTransport(nil)
+   defer text.Transport{}.Set()
    for _, reference := range references {
       start = end + 1
       end += uint64(reference.ReferencedSize())
@@ -260,9 +259,9 @@ func (s Stream) segment_template(
    if err != nil {
       return err
    }
-   var meter log.ProgressMeter
-   log.SetTransport(nil)
-   defer log.Transport{}.Set()
+   var meter text.ProgressMeter
+   text.SetTransport(nil)
+   defer text.Transport{}.Set()
    template, ok := rep.GetSegmentTemplate()
    if !ok {
       return errors.New("GetSegmentTemplate")

@@ -8,6 +8,38 @@ import (
    "strings"
 )
 
+func write_sidx(req *http.Request, bytes dash.Range) ([]sofia.Reference, error) {
+   req.Header.Set("Range", "bytes=" + string(bytes))
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   var file sofia.File
+   err = file.Read(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   return file.SegmentIndex.Reference, nil
+}
+
+type ForwardedFor []struct {
+   Country string
+   IP string
+}
+
+func (f ForwardedFor) String() string {
+   var b strings.Builder
+   for _, each := range f {
+      if b.Len() >= 1 {
+         b.WriteByte('\n')
+      }
+      b.WriteString(each.Country)
+      b.WriteByte(' ')
+      b.WriteString(each.IP)
+   }
+   return b.String()
+}
 var Forward = ForwardedFor{
 {"Argentina", "186.128.0.0"},
 {"Australia", "1.128.0.0"},
@@ -103,37 +135,4 @@ func write_segment(to io.Writer, from io.Reader, key []byte) error {
       }
    }
    return file.Write(to)
-}
-
-func write_sidx(req *http.Request, bytes dash.Range) ([]sofia.Reference, error) {
-   req.Header.Set("Range", "bytes=" + string(bytes))
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   var file sofia.File
-   err = file.Read(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   return file.SegmentIndex.Reference, nil
-}
-
-type ForwardedFor []struct {
-   Country string
-   IP string
-}
-
-func (f ForwardedFor) String() string {
-   var b strings.Builder
-   for _, each := range f {
-      if b.Len() >= 1 {
-         b.WriteByte('\n')
-      }
-      b.WriteString(each.Country)
-      b.WriteByte(' ')
-      b.WriteString(each.IP)
-   }
-   return b.String()
 }
