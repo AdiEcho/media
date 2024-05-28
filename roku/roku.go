@@ -11,24 +11,28 @@ type AccountToken struct {
    AuthToken string
 }
 
-type Playback struct {
-   DRM struct {
-      Widevine struct {
-         LicenseServer string
-      }
+func (a *AccountToken) New() error {
+   req, err := http.NewRequest(
+      "GET", "https://googletv.web.roku.com/api/v1/account/token", nil,
+   )
+   if err != nil {
+      return err
    }
-   URL string
+   req.Header.Set("user-agent", user_agent)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   return json.NewDecoder(res.Body).Decode(a)
 }
 
 func (a AccountToken) Playback(roku_id string) (*Playback, error) {
-   body, err := func() ([]byte, error) {
-      m := map[string]string{
-         "mediaFormat": "DASH",
-         "providerId":  "rokuavod",
-         "rokuId":      roku_id,
-      }
-      return json.Marshal(m)
-   }()
+   body, err := json.Marshal(map[string]string{
+      "mediaFormat": "DASH",
+      "providerId":  "rokuavod",
+      "rokuId":      roku_id,
+   })
    if err != nil {
       return nil, err
    }
@@ -40,9 +44,9 @@ func (a AccountToken) Playback(roku_id string) (*Playback, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Content-Type":         {"application/json"},
-      "User-Agent":           {user_agent},
-      "X-Roku-Content-Token": {a.AuthToken},
+      "content-type":         {"application/json"},
+      "user-agent":           {user_agent},
+      "x-roku-content-token": {a.AuthToken},
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -60,20 +64,13 @@ func (a AccountToken) Playback(roku_id string) (*Playback, error) {
    return play, nil
 }
 
-func (a *AccountToken) New() error {
-   req, err := http.NewRequest(
-      "GET", "https://googletv.web.roku.com/api/v1/account/token", nil,
-   )
-   if err != nil {
-      return err
+type Playback struct {
+   DRM struct {
+      Widevine struct {
+         LicenseServer string
+      }
    }
-   req.Header.Set("user-agent", user_agent)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(a)
+   URL string
 }
 
 const user_agent = "trc-googletv; production; 0"

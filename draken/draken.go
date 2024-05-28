@@ -9,43 +9,6 @@ import (
    "strings"
 )
 
-type AuthLogin struct {
-   Data []byte
-   v    struct {
-      Token string
-   }
-}
-
-func (a *AuthLogin) New(identity, key string) error {
-   body, err := func() ([]byte, error) {
-      m := map[string]string{
-         "identity":  identity,
-         "accessKey": key,
-      }
-      return json.Marshal(m)
-   }()
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://drakenfilm.se/api/auth/login", bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   req.Header.Set("content-type", "application/json")
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   a.Data, err = io.ReadAll(res.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
 func (a AuthLogin) Entitlement(f *FullMovie) (*Entitlement, error) {
    req, err := http.NewRequest("POST", "https://client-api.magine.com", nil)
    if err != nil {
@@ -60,7 +23,9 @@ func (a AuthLogin) Entitlement(f *FullMovie) (*Entitlement, error) {
    }
    defer res.Body.Close()
    if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
    }
    title := new(Entitlement)
    err = json.NewDecoder(res.Body).Decode(title)
@@ -183,3 +148,40 @@ func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
 func (Poster) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
+type AuthLogin struct {
+   Data []byte
+   v    struct {
+      Token string
+   }
+}
+
+func (a *AuthLogin) New(identity, key string) error {
+   body, err := func() ([]byte, error) {
+      m := map[string]string{
+         "identity":  identity,
+         "accessKey": key,
+      }
+      return json.Marshal(m)
+   }()
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://drakenfilm.se/api/auth/login", bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   req.Header.Set("content-type", "application/json")
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   a.Data, err = io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
