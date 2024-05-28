@@ -8,6 +8,24 @@ import (
    "strings"
 )
 
+type Poster struct{}
+
+func (Poster) RequestUrl() (string, bool) {
+   return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
+}
+
+func (Poster) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (Poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
 func (v Video) Clip() (*EpisodeClip, error) {
    req, err := http.NewRequest("GET", "http://api.pluto.tv", nil)
    if err != nil {
@@ -38,24 +56,6 @@ func (v Video) Clip() (*EpisodeClip, error) {
       return nil, err
    }
    return &clips[0], nil
-}
-
-type Poster struct{}
-
-func (Poster) RequestUrl() (string, bool) {
-   return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
-}
-
-func (Poster) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (Poster) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
 }
 
 type EpisodeClip struct {

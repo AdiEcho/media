@@ -8,8 +8,9 @@ import (
    "strings"
 )
 
-func write_sidx(req *http.Request, bytes dash.Range) ([]sofia.Reference, error) {
-   req.Header.Set("Range", "bytes=" + string(bytes))
+func write_sidx(req *http.Request, r dash.Range) ([]sofia.Reference, error) {
+   data, _ := r.MarshalText()
+   req.Header.Set("Range", "bytes=" + string(data))
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err

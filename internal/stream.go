@@ -13,23 +13,8 @@ import (
    "net/url"
    "os"
    "slices"
-   "strconv"
    "strings"
 )
-
-func (s Stream) Download(rep *dash.Representation) error {
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Representation.Ext")
-   }
-   base := rep.GetAdaptationSet().GetPeriod().GetMpd().BaseUrl.URL
-   if v, ok := rep.GetSegmentTemplate(); ok {
-      if v, ok := v.GetInitialization(rep); ok {
-         return s.segment_template(rep, base, v, ext)
-      }
-   }
-   return s.segment_base(rep.SegmentBase, base, *rep.BaseUrl, ext)
-}
 
 func (s Stream) segment_base(
    segment *dash.SegmentBase,
@@ -42,7 +27,8 @@ func (s Stream) segment_base(
       return err
    }
    req.URL = base.ResolveReference(req.URL)
-   req.Header.Set("Range", "bytes=" + string(segment.Initialization.Range))
+   data, _ := segment.Initialization.Range.MarshalText()
+   req.Header.Set("Range", "bytes=" + string(data))
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -72,30 +58,16 @@ func (s Stream) segment_base(
    if err != nil {
       return err
    }
-   var meter text.ProgressMeter
-   meter.Set(len(references))
-   var start uint64
-   end, err := func() (uint64, error) {
-      _, s, _ := segment.IndexRange.Cut()
-      return strconv.ParseUint(s, 10, 64)
-   }()
-   if err != nil {
-      return err
-   }
    text.SetTransport(nil)
    defer text.Transport{}.Set()
+   var meter text.ProgressMeter
+   meter.Set(len(references))
    for _, reference := range references {
-      start = end + 1
-      end += uint64(reference.ReferencedSize())
-      bytes := func() string {
-         b := []byte("bytes=")
-         b = strconv.AppendUint(b, start, 10)
-         b = append(b, '-')
-         b = strconv.AppendUint(b, end, 10)
-         return string(b)
-      }()
+      segment.IndexRange.Start = segment.IndexRange.End + 1
+      segment.IndexRange.End += uint64(reference.ReferencedSize())
+      data, _ := segment.IndexRange.MarshalText()
       err := func() error {
-         req.Header.Set("Range", bytes)
+         req.Header.Set("Range", "bytes=" + string(data))
          res, err := http.DefaultClient.Do(req)
          if err != nil {
             return err
@@ -127,11 +99,11 @@ func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error) {
       return nil, errors.New(b.String())
    }
    var media dash.MPD
-   text, err := io.ReadAll(res.Body)
+   data, err := io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
-   err = media.Unmarshal(text)
+   err = media.Unmarshal(data)
    if err != nil {
       return nil, err
    }
@@ -302,3 +274,16 @@ func (s Stream) segment_template(
    return nil
 }
 
+func (s Stream) Download(rep *dash.Representation) error {
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
+   base := rep.GetAdaptationSet().GetPeriod().GetMpd().BaseUrl.URL
+   if v, ok := rep.GetSegmentTemplate(); ok {
+      if v, ok := v.GetInitialization(rep); ok {
+         return s.segment_template(rep, base, v, ext)
+      }
+   }
+   return s.segment_base(rep.SegmentBase, base, *rep.BaseUrl, ext)
+}
