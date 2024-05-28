@@ -55,9 +55,6 @@ func (s Stream) segment_template(
    if err != nil {
       return err
    }
-   var meter text.ProgressMeter
-   text.SetTransport(nil)
-   defer text.Transport{}.Set()
    template, ok := rep.GetSegmentTemplate()
    if !ok {
       return errors.New("GetSegmentTemplate")
@@ -66,13 +63,17 @@ func (s Stream) segment_template(
    if err != nil {
       return err
    }
-   meter.Set(len(media))
    client := http.Client{ // github.com/golang/go/issues/18639
       Transport: &http.Transport{
          Proxy: http.ProxyFromEnvironment,
          TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
       },
    }
+   var meter text.ProgressMeter
+   meter.Set(len(media))
+   var log text.LogLevel
+   log.SetTransport(false)
+   defer log.SetTransport(true)
    for _, medium := range media {
       req.URL, err = base.Parse(medium)
       if err != nil {

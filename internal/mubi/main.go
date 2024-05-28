@@ -16,7 +16,7 @@ type flags struct {
    representation string
    s internal.Stream
    secure bool
-   v text.Level
+   log text.LogLevel
    web mubi.WebAddress
 }
 
@@ -43,12 +43,12 @@ func main() {
    flag.BoolVar(&f.code, "code", false, "link code")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.BoolVar(&f.secure, "s", false, "secure URL")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.Parse()
-   f.v.Set()
-   text.Transport{}.Set()
+   f.log.Set()
+   f.log.SetTransport(true)
    switch {
    case f.auth:
       err := f.write_auth()

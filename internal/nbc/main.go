@@ -12,7 +12,7 @@ type flags struct {
    nbc int
    representation string
    s internal.Stream
-   v text.Level
+   log text.LogLevel
 }
 
 func (f *flags) New() error {
@@ -34,12 +34,12 @@ func main() {
    }
    flag.IntVar(&f.nbc, "b", 0, "NBC ID")
    flag.StringVar(&f.representation, "i", "", "representation")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.Parse()
-   f.v.Set()
-   text.Transport{}.Set()
+   f.log.Set()
+   f.log.SetTransport(true)
    if f.nbc >= 1 {
       err := f.download()
       if err != nil {

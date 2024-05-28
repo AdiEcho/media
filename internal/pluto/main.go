@@ -28,11 +28,11 @@ func main() {
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.StringVar(&f.forward, "z", "", internal.Forward.String())
    flag.Parse()
-   f.v.Set()
-   text.Transport{}.Set()
+   f.log.Set()
+   f.log.SetTransport(true)
    if f.web.String() != "" {
       err := f.download()
       if err != nil {
@@ -47,7 +47,7 @@ type flags struct {
    base string
    s internal.Stream
    representation string
-   v text.Level
+   log text.LogLevel
    web pluto.WebAddress
    forward string
 }

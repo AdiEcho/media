@@ -19,11 +19,11 @@ func main() {
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.StringVar(&f.forward, "z", "", internal.Forward.String())
    flag.Parse()
-   f.v.Set()
-   text.Transport{}.Set()
+   f.log.Set()
+   f.log.SetTransport(true)
    if f.address.String() != "" {
       err := f.download()
       if err != nil {
@@ -38,7 +38,7 @@ type flags struct {
    address plex.Path
    representation string
    s internal.Stream
-   v text.Level
+   log text.LogLevel
    forward string
 }
 

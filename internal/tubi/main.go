@@ -12,7 +12,7 @@ type flags struct {
    representation string
    s internal.Stream
    tubi int
-   v text.Level
+   log text.LogLevel
    content bool
 }
 
@@ -37,11 +37,11 @@ func main() {
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.BoolVar(&f.content, "w", false, "write content")
    flag.Parse()
-   f.v.Set()
-   text.Transport{}.Set()
+   f.log.Set()
+   f.log.SetTransport(true)
    switch {
    case f.content:
       err := f.write_content()

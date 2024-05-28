@@ -26,7 +26,7 @@ type flags struct {
    representation string
    email string
    password string
-   v text.Level
+   log text.LogLevel
    address string
 }
 
@@ -39,13 +39,13 @@ func main() {
    flag.StringVar(&f.email, "e", "", "email")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.password, "p", "", "password")
-   flag.TextVar(&f.v.Level, "v", f.v.Level, "level")
+   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
    flag.StringVar(&f.address, "a", "", "address")
    flag.Parse()
-   f.v.Set()
-   text.Transport{}.Set()
+   f.log.Set()
+   f.log.SetTransport(true)
    switch {
    case f.password != "":
       err := f.authenticate()
