@@ -5,7 +5,7 @@ go 1.22.0
 require (
 	154.pages.dev/dash v1.22.8
 	154.pages.dev/sofia v1.4.6
-	154.pages.dev/text v1.2.1
+	154.pages.dev/text v1.2.2
 	154.pages.dev/widevine v1.4.1
 )
 
