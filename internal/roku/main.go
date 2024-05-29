@@ -8,13 +8,6 @@ import (
    "path/filepath"
 )
 
-type flags struct {
-   roku string
-   representation string
-   s internal.Stream
-   log text.LogLevel
-}
-
 func (f *flags) New() error {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -24,6 +17,14 @@ func (f *flags) New() error {
    f.s.ClientId = home + "/widevine/client_id.bin"
    f.s.PrivateKey = home + "/widevine/private_key.pem"
    return nil
+}
+
+type flags struct {
+   roku string
+   representation string
+   s internal.Stream
+   log text.LogLevel
+   code bool
 }
 
 func main() {
@@ -37,15 +38,22 @@ func main() {
    flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
+   flag.BoolVar(&f.code, "code", false, "activation code")
    flag.Parse()
    f.log.Set()
    f.log.SetTransport(true)
-   if f.roku != "" {
+   switch {
+   case f.code:
+      err := f.get_code()
+      if err != nil {
+         panic(err)
+      }
+   case f.roku != "":
       err := f.download()
       if err != nil {
          panic(err)
       }
-   } else {
+   default:
       flag.Usage()
    }
 }

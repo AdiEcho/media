@@ -6,6 +6,22 @@ import (
    "net/http"
 )
 
+func (f flags) get_code() error {
+   var token roku.AccountToken
+   token.New(nil)
+   // FIXME
+   code, err := token.code()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(code)
+   text, err := code.marshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("code.json", text, 0666)
+}
+
 func (f flags) download() error {
    var token roku.AccountToken
    err := token.New(nil)
