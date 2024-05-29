@@ -1,0 +1,18 @@
+{
+  "code": "gbwtdx",
+  "token": "gGYqeHG716gvJZBVV45adR9dWXXumkiNI4DQLgDE3oImJ0gX0SkbjQkByHGgWJyvDHho169GtwtkhyTLS/0Apa0qPr8pnnUFdmGf3kiR/IOyOIDAJadCvVg0l+7XiXR9UUul+FNgMbDELzaInVolQvMbd0/7LKdcWnT8K47Xg0uqjCEqgWhDmjbUDGxgPDSAS/boqgYzW1drgCOVsoIIQZcB3/tgQjZHpA6dvF4xwXsEck803XzkHAubwyiQ01RJ1Pfc/jzFb4qixGwerQylB8gpGptWj+lRZpF9yiI7zqWUXVB4SyD5DRy1PnPtQYe/uzjoghbgITVxQfLS3EhIGFjQ+oxWjYt3eUeRBwd9ZDenpBy5xUuo5r4e+GDEve/XLj5am9Ivaa2CksA62tu0vEc88ypLCLjifWNNVJWmVLTtBElkb6+o7RVbQF3wQ4mwTnFwECUY5cIDBwux5ae0A2656idRaMmkYHK/riT4e6kAJ0AvLo3+ZCT9vypVeiw6oIuyegHt97EpJ3cUCUyoCCd1sr7BlmDGoggzFrMd1pI=",
+  "createdAt": 1716948335933,
+  "profiles": [
+    {
+      "id": "35b1214d-4c7d-4cd0-ba29-c00199d38593",
+      "isKids": false,
+      "isOwner": true
+    },
+    {
+      "id": "8bccdf02-b6fa-45a0-855f-a5d2ef496bce",
+      "isKids": true
+    }
+  ],
+  "platform": "googletv",
+  "status": "success"
+}

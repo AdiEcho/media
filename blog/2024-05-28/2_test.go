@@ -2,6 +2,7 @@ package roku
 
 import (
    "fmt"
+   "os"
    "testing"
 )
 
@@ -16,4 +17,9 @@ func TestTwo(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Println(two)
+   text, err := two.marshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("2.json", text, 0666)
 }

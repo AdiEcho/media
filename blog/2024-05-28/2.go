@@ -7,19 +7,19 @@ import (
    "strings"
 )
 
-func (t two_response) String() string {
-   var b strings.Builder
-   b.WriteString("1 Visit the URL\n")
-   b.WriteString("  therokuchannel.com/link\n")
-   b.WriteString("\n")
-   b.WriteString("2 Enter the activation code\n")
-   b.WriteString("  ")
-   b.WriteString(t.Code)
-   return b.String()
+func (t *two_response) unmarshal(text []byte) error {
+   return json.Unmarshal(text, t)
+}
+
+func (t two_response) marshal() ([]byte, error) {
+   return json.Marshal(t)
 }
 
 type two_response struct {
-   Code string
+   One one_response
+   Two struct {
+      Code string
+   }
 }
 
 func (o one_response) two() (*two_response, error) {
@@ -46,10 +46,21 @@ func (o one_response) two() (*two_response, error) {
       return nil, err
    }
    defer res.Body.Close()
-   two := new(two_response)
-   err = json.NewDecoder(res.Body).Decode(two)
+   two := two_response{One: o}
+   err = json.NewDecoder(res.Body).Decode(&two.Two)
    if err != nil {
       return nil, err
    }
-   return two, nil
+   return &two, nil
+}
+
+func (t two_response) String() string {
+   var b strings.Builder
+   b.WriteString("1 Visit the URL\n")
+   b.WriteString("  therokuchannel.com/link\n")
+   b.WriteString("\n")
+   b.WriteString("2 Enter the activation code\n")
+   b.WriteString("  ")
+   b.WriteString(t.Two.Code)
+   return b.String()
 }
