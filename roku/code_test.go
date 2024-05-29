@@ -21,5 +21,5 @@ func TestActivationCode(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("2.json", text, 0666)
+   os.WriteFile("code.json", text, 0666)
 }

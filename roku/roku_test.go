@@ -10,6 +10,43 @@ import (
    "time"
 )
 
+func TestActivationToken(t *testing.T) {
+   text, err := os.ReadFile("code.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var code activation_code
+   err = code.unmarshal(text)
+   if err != nil {
+      t.Fatal(err)
+   }
+   token, err := code.token()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("token.json", token.data, 0666)
+}
+
+func TestAccountToken(t *testing.T) {
+   var (
+      activate activation_token
+      err error
+   )
+   activate.data, err = os.ReadFile("token.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = activate.unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   var account account_token
+   err = account.New(&activate)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", account)
+}
 func TestLicense(t *testing.T) {
    test := tests["episode"]
    home, err := os.UserHomeDir()
