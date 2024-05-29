@@ -8,13 +8,13 @@ import (
 )
 
 type activation_code struct {
-   Token account_token
+   Token AccountToken
    V struct {
       Code string
    }
 }
 
-func (a account_token) code() (*activation_code, error) {
+func (a AccountToken) code() (*activation_code, error) {
    body, err := json.Marshal(map[string]string{
       "platform": "googletv",
    })

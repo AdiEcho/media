@@ -7,7 +7,7 @@ import (
 )
 
 func TestActivationCode(t *testing.T) {
-   var token account_token
+   var token AccountToken
    err := token.New(nil)
    if err != nil {
       t.Fatal(err)

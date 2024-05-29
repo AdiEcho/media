@@ -8,7 +8,7 @@ import (
 
 func (f flags) download() error {
    var token roku.AccountToken
-   err := token.New()
+   err := token.New(nil)
    if err != nil {
       return err
    }
