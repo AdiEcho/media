@@ -2,43 +2,40 @@ package roku
 
 import (
    "encoding/json"
+   "io"
    "net/http"
 )
 
-type three_response struct {
-   Token string
+type activation_token struct {
+   data []byte
+   v struct {
+      Token string
+   }
 }
 
-func (t two_response) three() (*three_response, error) {
+func (a activation_code) token() (*activation_token, error) {
    req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/api/v1/account/activation/" + t.Two.Code
+   req.URL.Path = "/api/v1/account/activation/" + a.V.Code
    req.Header = http.Header{
       "user-agent": {user_agent},
-      "x-roku-content-token": {t.One.AuthToken},
+      "x-roku-content-token": {a.Token.AuthToken},
    }
-   req.Header["Accept"] = []string{"*/*"}
-   req.Header["Accept-Language"] = []string{"en-US"}
-   req.Header["Content-Length"] = []string{"0"}
-   req.Header["X-Requested-With"] = []string{"com.roku.web.trc"}
-   req.Header["X-Roku-Code-Version"] = []string{"2"}
-   req.Header["X-Roku-Reserved-Channel-Store-Code"] = []string{"us"}
-   req.Header["X-Roku-Reserved-Culture-Code"] = []string{"en-US"}
-   req.Header["X-Roku-Reserved-Experiment-Configs"] = []string{"e30="}
-   req.Header["X-Roku-Reserved-Experiment-State"] = []string{"W10="}
-   req.Header["X-Roku-Reserved-Session-Id"] = []string{"f77813e1-a689-41e9-b058-097e8520f4d2"}
-   req.Header["X-Roku-Reserved-Time-Zone-Offset"] = []string{"+00:00"}
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer res.Body.Close()
-   three := new(three_response)
-   err = json.NewDecoder(res.Body).Decode(three)
+   var token activation_token
+   token.data, err = io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
-   return three, nil
+   return &token, nil
+}
+
+func (a *activation_token) unmarshal() error {
+   return json.Unmarshal(a.data, &a.v)
 }

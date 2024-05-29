@@ -7,22 +7,14 @@ import (
    "strings"
 )
 
-func (t *two_response) unmarshal(text []byte) error {
-   return json.Unmarshal(text, t)
-}
-
-func (t two_response) marshal() ([]byte, error) {
-   return json.Marshal(t)
-}
-
-type two_response struct {
-   One one_response
-   Two struct {
+type activation_code struct {
+   Token account_token
+   V struct {
       Code string
    }
 }
 
-func (o one_response) two() (*two_response, error) {
+func (a account_token) code() (*activation_code, error) {
    body, err := json.Marshal(map[string]string{
       "platform": "googletv",
    })
@@ -39,28 +31,36 @@ func (o one_response) two() (*two_response, error) {
    req.Header = http.Header{
       "content-type": {"application/json"},
       "user-agent": {user_agent},
-      "x-roku-content-token": {o.AuthToken},
+      "x-roku-content-token": {a.AuthToken},
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer res.Body.Close()
-   two := two_response{One: o}
-   err = json.NewDecoder(res.Body).Decode(&two.Two)
+   code := activation_code{Token: a}
+   err = json.NewDecoder(res.Body).Decode(&code.V)
    if err != nil {
       return nil, err
    }
-   return &two, nil
+   return &code, nil
 }
 
-func (t two_response) String() string {
+func (a activation_code) String() string {
    var b strings.Builder
    b.WriteString("1 Visit the URL\n")
    b.WriteString("  therokuchannel.com/link\n")
    b.WriteString("\n")
    b.WriteString("2 Enter the activation code\n")
    b.WriteString("  ")
-   b.WriteString(t.Two.Code)
+   b.WriteString(a.V.Code)
    return b.String()
+}
+
+func (a *activation_code) unmarshal(text []byte) error {
+   return json.Unmarshal(text, a)
+}
+
+func (a activation_code) marshal() ([]byte, error) {
+   return json.Marshal(a)
 }

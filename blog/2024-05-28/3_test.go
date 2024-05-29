@@ -5,20 +5,19 @@ import (
    "testing"
 )
 
-func TestThree(t *testing.T) {
+func TestActivationToken(t *testing.T) {
    text, err := os.ReadFile("2.json")
    if err != nil {
       t.Fatal(err)
    }
-   var two two_response
-   err = two.unmarshal(text)
+   var code activation_code
+   err = code.unmarshal(text)
    if err != nil {
       t.Fatal(err)
    }
-   res, err := two.three()
+   token, err := code.token()
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   os.WriteFile("3.json", token.data, 0666)
 }

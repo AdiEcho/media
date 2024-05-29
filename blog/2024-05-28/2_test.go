@@ -6,18 +6,18 @@ import (
    "testing"
 )
 
-func TestTwo(t *testing.T) {
-   var one one_response
-   err := one.New()
+func TestActivationCode(t *testing.T) {
+   var token account_token
+   err := token.New(nil)
    if err != nil {
       t.Fatal(err)
    }
-   two, err := one.two()
+   code, err := token.code()
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Println(two)
-   text, err := two.marshal()
+   fmt.Println(code)
+   text, err := code.marshal()
    if err != nil {
       t.Fatal(err)
    }
