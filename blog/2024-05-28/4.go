@@ -1,4 +1,4 @@
-package main
+package roku
 
 import (
    "net/http"
@@ -6,7 +6,7 @@ import (
    "os"
 )
 
-func main() {
+func four() {
    var req http.Request
    req.Header = make(http.Header)
    req.Header["User-Agent"] = []string{"Mozilla/5.0 (Linux; Android 9; sdk_google_atv_x86 Build/PSR1.180720.121; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.158 Mobile Safari/537.36 googletv; trc-googletv; production; 0.f901664681ba61e2"}
