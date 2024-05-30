@@ -8,6 +8,10 @@ import (
 	"net/http"
 )
 
+func (a *ActivationToken) Unmarshal() error {
+	return json.Unmarshal(a.Data, &a.V)
+}
+
 type ActivationToken struct {
 	Data []byte
 	V    struct {
@@ -36,10 +40,6 @@ func (a ActivationCode) Token() (*ActivationToken, error) {
 		return nil, err
 	}
 	return &token, nil
-}
-
-func (a *ActivationToken) unmarshal() error {
-	return json.Unmarshal(a.Data, &a.V)
 }
 
 // token can be nil

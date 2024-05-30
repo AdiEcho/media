@@ -8,12 +8,19 @@ import (
 )
 
 func (f flags) download() error {
-   var token roku.AccountToken
-   err := token.New(nil)
-   if err != nil {
-      return err
+   var activate *roku.ActivationToken
+   if f.token_read {
+      activate = new(roku.ActivationToken)
+      var err error
+      activate.Data, err = os.ReadFile(f.home + "/token.json")
+      if err != nil {
+         return err
+      }
+      activate.Unmarshal()
    }
-   play, err := token.Playback(f.roku)
+   var account roku.AccountToken
+   account.New(activate)
+   play, err := account.Playback(f.roku)
    if err != nil {
       return err
    }
@@ -45,6 +52,7 @@ func (f flags) download() error {
    }
    return nil
 }
+
 func (f flags) write_token() error {
    text, err := os.ReadFile("code.json")
    if err != nil {
