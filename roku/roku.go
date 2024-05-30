@@ -9,6 +9,10 @@ import (
    "strings"
 )
 
+func (a ActivationCode) Marshal() ([]byte, error) {
+   return json.MarshalIndent(a, "", " ")
+}
+
 const user_agent = "trc-googletv; production; 0"
 
 // token can be nil
@@ -123,10 +127,6 @@ func (a ActivationCode) String() string {
 
 func (a *ActivationCode) Unmarshal(text []byte) error {
    return json.Unmarshal(text, a)
-}
-
-func (a ActivationCode) Marshal() ([]byte, error) {
-   return json.Marshal(a)
 }
 
 func (a ActivationCode) Token() (*ActivationToken, error) {
