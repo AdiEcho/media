@@ -112,6 +112,7 @@ func (s Stream) Download(rep *dash.Representation) error {
    }
    return s.segment_base(rep.SegmentBase, base, *rep.BaseUrl, ext)
 }
+
 func (s Stream) segment_base(
    segment *dash.SegmentBase,
    base *url.URL,
