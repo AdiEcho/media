@@ -8,13 +8,13 @@ import (
 )
 
 type ActivationCode struct {
-	Token AccountToken
+	Account AccountToken
 	V     struct {
 		Code string
 	}
 }
 
-func (a AccountToken) code() (*ActivationCode, error) {
+func (a AccountToken) Code() (*ActivationCode, error) {
 	body, err := json.Marshal(map[string]string{
 		"platform": "googletv",
 	})
@@ -38,7 +38,7 @@ func (a AccountToken) code() (*ActivationCode, error) {
 		return nil, err
 	}
 	defer res.Body.Close()
-	code := ActivationCode{Token: a}
+	code := ActivationCode{Account: a}
 	err = json.NewDecoder(res.Body).Decode(&code.V)
 	if err != nil {
 		return nil, err
@@ -57,10 +57,10 @@ func (a ActivationCode) String() string {
 	return b.String()
 }
 
-func (a *ActivationCode) unmarshal(text []byte) error {
+func (a *ActivationCode) Unmarshal(text []byte) error {
 	return json.Unmarshal(text, a)
 }
 
-func (a ActivationCode) marshal() ([]byte, error) {
+func (a ActivationCode) Marshal() ([]byte, error) {
 	return json.Marshal(a)
 }

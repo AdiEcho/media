@@ -4,23 +4,8 @@ import (
    "154.pages.dev/media/roku"
    "fmt"
    "net/http"
+   "os"
 )
-
-func (f flags) get_code() error {
-   var token roku.AccountToken
-   token.New(nil)
-   // FIXME
-   code, err := token.code()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(code)
-   text, err := code.marshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("code.json", text, 0666)
-}
 
 func (f flags) download() error {
    var token roku.AccountToken
@@ -59,4 +44,32 @@ func (f flags) download() error {
       fmt.Println(medium)
    }
    return nil
+}
+func (f flags) write_token() error {
+   text, err := os.ReadFile("code.json")
+   if err != nil {
+      return err
+   }
+   var code roku.ActivationCode
+   code.Unmarshal(text)
+   token, err := code.Token()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/token.json", token.Data, 0666)
+}
+
+func write_code() error {
+   var token roku.AccountToken
+   token.New(nil)
+   code, err := token.Code()
+   if err != nil {
+      return err
+   }
+   fmt.Println(code)
+   text, err := code.Marshal()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile("code.json", text, 0666)
 }

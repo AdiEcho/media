@@ -10,6 +10,23 @@ import (
 	"time"
 )
 
+func TestActivationToken(t *testing.T) {
+	text, err := os.ReadFile("code.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var code ActivationCode
+	err = code.Unmarshal(text)
+	if err != nil {
+		t.Fatal(err)
+	}
+	token, err := code.Token()
+	if err != nil {
+		t.Fatal(err)
+	}
+	os.WriteFile("token.json", token.Data, 0666)
+}
+
 func TestPlayback(t *testing.T) {
 	var token AccountToken
 	err := token.New(nil)
@@ -26,29 +43,12 @@ func TestPlayback(t *testing.T) {
 	}
 }
 
-func TestActivationToken(t *testing.T) {
-	text, err := os.ReadFile("code.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var code ActivationCode
-	err = code.unmarshal(text)
-	if err != nil {
-		t.Fatal(err)
-	}
-	token, err := code.token()
-	if err != nil {
-		t.Fatal(err)
-	}
-	os.WriteFile("token.json", token.data, 0666)
-}
-
 func TestAccountToken(t *testing.T) {
 	var (
-		activate activation_token
+		activate ActivationToken
 		err      error
 	)
-	activate.data, err = os.ReadFile("token.json")
+	activate.Data, err = os.ReadFile("token.json")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -8,14 +8,14 @@ import (
 	"net/http"
 )
 
-type activation_token struct {
-	data []byte
-	v    struct {
+type ActivationToken struct {
+	Data []byte
+	V    struct {
 		Token string
 	}
 }
 
-func (a ActivationCode) token() (*activation_token, error) {
+func (a ActivationCode) Token() (*ActivationToken, error) {
 	req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
 	if err != nil {
 		return nil, err
@@ -23,27 +23,27 @@ func (a ActivationCode) token() (*activation_token, error) {
 	req.URL.Path = "/api/v1/account/activation/" + a.V.Code
 	req.Header = http.Header{
 		"user-agent":           {user_agent},
-		"x-roku-content-token": {a.Token.AuthToken},
+		"x-roku-content-token": {a.Account.AuthToken},
 	}
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer res.Body.Close()
-	var token activation_token
-	token.data, err = io.ReadAll(res.Body)
+	var token ActivationToken
+	token.Data, err = io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}
 	return &token, nil
 }
 
-func (a *activation_token) unmarshal() error {
-	return json.Unmarshal(a.data, &a.v)
+func (a *ActivationToken) unmarshal() error {
+	return json.Unmarshal(a.Data, &a.V)
 }
 
 // token can be nil
-func (a *AccountToken) New(token *activation_token) error {
+func (a *AccountToken) New(token *ActivationToken) error {
 	req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
 	if err != nil {
 		return err
@@ -51,7 +51,7 @@ func (a *AccountToken) New(token *activation_token) error {
 	req.URL.Path = "/api/v1/account/token"
 	req.Header.Set("user-agent", user_agent)
 	if token != nil {
-		req.Header.Set("x-roku-content-token", token.v.Token)
+		req.Header.Set("x-roku-content-token", token.V.Token)
 	}
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
