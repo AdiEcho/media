@@ -1,5 +1,11 @@
 # Roku
 
+free:
+
+https://therokuchannel.roku.com/watch/597a64a4a25c5bf6af4a8c7053049a6f
+
+paid:
+
 https://therokuchannel.roku.com/details/cc3aa3e3ea675a36b831ab58efb3301f
 
 ## Android

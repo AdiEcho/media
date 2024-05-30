@@ -12,7 +12,7 @@ func (f flags) download() error {
    if f.token_read {
       activate = new(roku.ActivationToken)
       var err error
-      activate.Data, err = os.ReadFile(f.home + "/token.json")
+      activate.Data, err = os.ReadFile(f.home + "/roku.json")
       if err != nil {
          return err
       }
@@ -64,7 +64,7 @@ func (f flags) write_token() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/token.json", token.Data, 0666)
+   return os.WriteFile(f.home + "/roku.json", token.Data, 0666)
 }
 
 func write_code() error {
