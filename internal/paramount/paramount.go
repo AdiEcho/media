@@ -1,6 +1,7 @@
 package main
 
 import (
+   "154.pages.dev/media/internal"
    "154.pages.dev/media/paramount"
    "fmt"
    "net/http"
@@ -15,7 +16,7 @@ func (f flags) dash(app paramount.AppToken) error {
    if err != nil {
       return err
    }
-   media, err := f.s.DASH(req)
+   media, err := internal.DASH(req)
    if err != nil {
       return err
    }

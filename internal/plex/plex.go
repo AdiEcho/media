@@ -1,6 +1,7 @@
 package main
 
 import (
+   "154.pages.dev/media/internal"
    "154.pages.dev/media/plex"
    "errors"
    "fmt"
@@ -32,7 +33,7 @@ func (f flags) download() error {
    if f.forward != "" {
       req.Header.Set("x-forwarded-for", f.forward)
    }
-   media, err := f.s.DASH(req)
+   media, err := internal.DASH(req)
    if err != nil {
       return err
    }

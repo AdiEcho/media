@@ -7,6 +7,17 @@ import (
    "net/http"
 )
 
+// github.com/mitmproxy/mitmproxy/blob/main/mitmproxy/contentviews/protobuf.py
+func (StreamInfo) RequestHeader() (http.Header, error) {
+   h := make(http.Header)
+   h.Set("content-type", "x-protobuf")
+   return h, nil
+}
+
+func (StreamInfo) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
 func (w WebAddress) HD() OnDemand {
    return w.video("HD")
 }
@@ -67,14 +78,6 @@ func (w WebAddress) FHD() OnDemand {
 
 func (s StreamInfo) RequestUrl() (string, bool) {
    return s.LicenseUrl, true
-}
-
-func (StreamInfo) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (StreamInfo) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
 }
 
 func (StreamInfo) UnwrapResponse(b []byte) ([]byte, error) {

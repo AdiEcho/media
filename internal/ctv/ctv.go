@@ -2,6 +2,7 @@ package main
 
 import (
    "154.pages.dev/media/ctv"
+   "154.pages.dev/media/internal"
    "fmt"
    "net/http"
    "os"
@@ -50,7 +51,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   represents, err := f.s.DASH(req)
+   represents, err := internal.DASH(req)
    if err != nil {
       return err
    }
