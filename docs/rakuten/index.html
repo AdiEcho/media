@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="doc2go">
+    <link href="../_/css/main.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../_/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="../_/icons/favicon.ico">
+    <title>rakuten</title>
+</head>
+  <body>
+    <nav>
+        <a href="..">154.pages.dev/media</a>/rakuten<span class="navbar-right">
+          v1.9.4 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+      </nav>
+    <main><h2 id="pkg-overview">package rakuten</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/rakuten&#34;</span></pre>
+<h3 id="pkg-index">Index</h3>
+<ul>
+  <li>
+      <a href="#GizmoMovie">type GizmoMovie</a>
+      <ul>
+          <li><a href="#GizmoMovie.Episode">func (GizmoMovie) Episode() int</a></li>
+          <li><a href="#GizmoMovie.Season">func (GizmoMovie) Season() int</a></li>
+          <li><a href="#GizmoMovie.Show">func (GizmoMovie) Show() string</a></li>
+          <li><a href="#GizmoMovie.Title">func (g GizmoMovie) Title() string</a></li>
+          <li><a href="#GizmoMovie.Year">func (g GizmoMovie) Year() int</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#OnDemand">type OnDemand</a>
+      <ul>
+          <li><a href="#OnDemand.Info">func (o OnDemand) Info() (*StreamInfo, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#StreamInfo">type StreamInfo</a>
+      <ul>
+          <li><a href="#StreamInfo.Marshal">func (s StreamInfo) Marshal() ([]byte, error)</a></li>
+          <li><a href="#StreamInfo.RequestHeader">func (StreamInfo) RequestHeader() (http.Header, error)</a></li>
+          <li><a href="#StreamInfo.RequestUrl">func (s StreamInfo) RequestUrl() (string, bool)</a></li>
+          <li><a href="#StreamInfo.Unmarshal">func (s *StreamInfo) Unmarshal(text []byte) error</a></li>
+          <li><a href="#StreamInfo.UnwrapResponse">func (StreamInfo) UnwrapResponse(b []byte) ([]byte, error)</a></li>
+          <li><a href="#StreamInfo.WrapRequest">func (StreamInfo) WrapRequest(b []byte) ([]byte, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#WebAddress">type WebAddress</a>
+      <ul>
+          <li><a href="#WebAddress.FHD">func (w WebAddress) FHD() OnDemand</a></li>
+          <li><a href="#WebAddress.HD">func (w WebAddress) HD() OnDemand</a></li>
+          <li><a href="#WebAddress.Movie">func (w WebAddress) Movie() (*GizmoMovie, error)</a></li>
+          <li><a href="#WebAddress.Set">func (w *WebAddress) Set(s string) error</a></li>
+          <li><a href="#WebAddress.String">func (w WebAddress) String() string</a></li>
+          </ul>
+      </li>
+  </ul><h3 id="pkg-types">Types</h3>
+  <h3 id="GizmoMovie">type GizmoMovie</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">GizmoMovie</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="GizmoMovie.Data"><span class="nx">Data</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="GizmoMovie.Title"><span class="nx">Title</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="GizmoMovie.Year"><span class="nx">Year</span></span>  <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
+    <h4 id="GizmoMovie.Episode">func (GizmoMovie) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="GizmoMovie.Season">func (GizmoMovie) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="GizmoMovie.Show">func (GizmoMovie) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="GizmoMovie.Title">func (GizmoMovie) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">g</span> <a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="GizmoMovie.Year">func (GizmoMovie) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">g</span> <a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h3 id="OnDemand">type OnDemand</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">OnDemand</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="OnDemand.AudioLanguage"><span class="nx">AudioLanguage</span></span>            <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;audio_language&#34;`</span>
+	<span id="OnDemand.AudioQuality"><span class="nx">AudioQuality</span></span>             <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;audio_quality&#34;`</span>
+	<span id="OnDemand.ClassificationId"><span class="nx">ClassificationId</span></span>         <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>    <span class="s">`json:&#34;classification_id&#34;`</span>
+	<span id="OnDemand.ContentId"><span class="nx">ContentId</span></span>                <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;content_id&#34;`</span>
+	<span id="OnDemand.ContentType"><span class="nx">ContentType</span></span>              <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;content_type&#34;`</span>
+	<span id="OnDemand.DeviceIdentifier"><span class="nx">DeviceIdentifier</span></span>         <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;device_identifier&#34;`</span>
+	<span id="OnDemand.DeviceSerial"><span class="nx">DeviceSerial</span></span>             <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;device_serial&#34;`</span>
+	<span id="OnDemand.DeviceStreamVideoQuality"><span class="nx">DeviceStreamVideoQuality</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;device_stream_video_quality&#34;`</span>
+	<span id="OnDemand.Player"><span class="nx">Player</span></span>                   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;player&#34;`</span>
+	<span id="OnDemand.SubtitleLanguage"><span class="nx">SubtitleLanguage</span></span>         <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;subtitle_language&#34;`</span>
+	<span id="OnDemand.VideoType"><span class="nx">VideoType</span></span>                <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;video_type&#34;`</span>
+<span class="p">}</span></pre>
+    <h4 id="OnDemand.Info">func (OnDemand) Info</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">)</span> <span class="nf">Info</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <p>geo block
+<h3 id="StreamInfo">type StreamInfo</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">StreamInfo</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="StreamInfo.LicenseUrl"><span class="nx">LicenseUrl</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;license_url&#34;`</span>
+	<span id="StreamInfo.URL"><span class="nx">URL</span></span>          <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="StreamInfo.VideoQuality"><span class="nx">VideoQuality</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;video_quality&#34;`</span>
+<span class="p">}</span></pre>
+    <h4 id="StreamInfo.Marshal">func (StreamInfo) Marshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">Marshal</span><span class="p">()</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="StreamInfo.RequestHeader">func (StreamInfo) RequestHeader</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <p>github.com/mitmproxy/mitmproxy/blob/main/mitmproxy/contentviews/protobuf.py
+<h4 id="StreamInfo.RequestUrl">func (StreamInfo) RequestUrl</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="StreamInfo.Unmarshal">func (*StreamInfo) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="StreamInfo.UnwrapResponse">func (StreamInfo) UnwrapResponse</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="StreamInfo.WrapRequest">func (StreamInfo) WrapRequest</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="WebAddress">type WebAddress</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">WebAddress</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">// contains filtered or unexported fields
+</span><span class="c1"></span><span class="p">}</span></pre>
+    <h4 id="WebAddress.FHD">func (WebAddress) FHD</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">FHD</span><span class="p">()</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a></pre>
+  <h4 id="WebAddress.HD">func (WebAddress) HD</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">HD</span><span class="p">()</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a></pre>
+  <h4 id="WebAddress.Movie">func (WebAddress) Movie</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">Movie</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="WebAddress.Set">func (*WebAddress) Set</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <span class="o">*</span><a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="WebAddress.String">func (WebAddress) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  </main>
+    <hr>
+    <footer>
+      <small id="generated-by-footer">
+        Generated with <a href="https://abhinav.github.io/doc2go/">doc2go</a>
+      </small>
+    </footer>
+    <script src="../_/js/permalink.js"></script>
+  </body>
+</html>

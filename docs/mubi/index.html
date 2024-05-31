@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/mubi<span class="navbar-right">
-          v1.9.3 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.9.4 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package mubi</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/mubi&#34;</span></pre>
@@ -117,8 +117,8 @@ tool it will error
     <pre class="chroma"><span class="kd">type</span> <span class="nx">LinkCode</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="LinkCode.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
 	<span id="LinkCode.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>
-		<span id="LinkCode.Auth_Token"><span class="nx">Auth_Token</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-		<span id="LinkCode.Link_Code"><span class="nx">Link_Code</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="LinkCode.AuthToken"><span class="nx">AuthToken</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;auth_token&#34;`</span>
+		<span id="LinkCode.LinkCode"><span class="nx">LinkCode</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;link_code&#34;`</span>
 	<span class="p">}</span>
 <span class="p">}</span></pre>
     <h4 id="LinkCode.Authenticate">func (LinkCode) Authenticate</h4>
@@ -147,8 +147,8 @@ tool it will error
     <pre class="chroma"><span class="kd">type</span> <span class="nx">SecureUrl</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="SecureUrl.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
 	<span id="SecureUrl.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>
-		<span id="SecureUrl.Text_Track_URLs"><span class="nx">Text_Track_URLs</span></span> <span class="p">[]</span><a href="#TextTrack"><span class="nx">TextTrack</span></a>
-		<span id="SecureUrl.URL"><span class="nx">URL</span></span>             <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="SecureUrl.TextTrackUrls"><span class="nx">TextTrackUrls</span></span> <span class="p">[]</span><a href="#TextTrack"><span class="nx">TextTrack</span></a> <span class="s">`json:&#34;text_track_urls&#34;`</span>
+		<span id="SecureUrl.URL"><span class="nx">URL</span></span>           <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span class="p">}</span>
 <span class="p">}</span></pre>
     <h4 id="SecureUrl.Unmarshal">func (*SecureUrl) Unmarshal</h4>

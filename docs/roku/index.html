@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/roku<span class="navbar-right">
-          v1.9.3 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.9.4 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package roku</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/roku&#34;</span></pre>
@@ -23,8 +23,24 @@
   <li>
       <a href="#AccountToken">type AccountToken</a>
       <ul>
-          <li><a href="#AccountToken.New">func (a *AccountToken) New() error</a></li>
+          <li><a href="#AccountToken.Code">func (a AccountToken) Code() (*ActivationCode, error)</a></li>
+          <li><a href="#AccountToken.New">func (a *AccountToken) New(token *ActivationToken) error</a></li>
           <li><a href="#AccountToken.Playback">func (a AccountToken) Playback(roku_id string) (*Playback, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#ActivationCode">type ActivationCode</a>
+      <ul>
+          <li><a href="#ActivationCode.Marshal">func (a ActivationCode) Marshal() ([]byte, error)</a></li>
+          <li><a href="#ActivationCode.String">func (a ActivationCode) String() string</a></li>
+          <li><a href="#ActivationCode.Token">func (a ActivationCode) Token() (*ActivationToken, error)</a></li>
+          <li><a href="#ActivationCode.Unmarshal">func (a *ActivationCode) Unmarshal(text []byte) error</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#ActivationToken">type ActivationToken</a>
+      <ul>
+          <li><a href="#ActivationToken.Unmarshal">func (a *ActivationToken) Unmarshal() error</a></li>
           </ul>
       </li>
   <li>
@@ -57,10 +73,37 @@
     <pre class="chroma"><span class="kd">type</span> <span class="nx">AccountToken</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="AccountToken.AuthToken"><span class="nx">AuthToken</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 <span class="p">}</span></pre>
-    <h4 id="AccountToken.New">func (*AccountToken) New</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AccountToken"><span class="nx">AccountToken</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="AccountToken.Playback">func (AccountToken) Playback</h4>
+    <h4 id="AccountToken.Code">func (AccountToken) Code</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AccountToken"><span class="nx">AccountToken</span></a><span class="p">)</span> <span class="nf">Code</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#ActivationCode"><span class="nx">ActivationCode</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="AccountToken.New">func (*AccountToken) New</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AccountToken"><span class="nx">AccountToken</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">(</span><span class="nx">token</span> <span class="o">*</span><a href="#ActivationToken"><span class="nx">ActivationToken</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <p>token can be nil
+<h4 id="AccountToken.Playback">func (AccountToken) Playback</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AccountToken"><span class="nx">AccountToken</span></a><span class="p">)</span> <span class="nf">Playback</span><span class="p">(</span><span class="nx">roku_id</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="ActivationCode">type ActivationCode</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">ActivationCode</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="ActivationCode.Account"><span class="nx">Account</span></span> <a href="#AccountToken"><span class="nx">AccountToken</span></a>
+	<span id="ActivationCode.V"><span class="nx">V</span></span>       <span class="kd">struct</span> <span class="p">{</span>
+		<span id="ActivationCode.Code"><span class="nx">Code</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
+    <h4 id="ActivationCode.Marshal">func (ActivationCode) Marshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#ActivationCode"><span class="nx">ActivationCode</span></a><span class="p">)</span> <span class="nf">Marshal</span><span class="p">()</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="ActivationCode.String">func (ActivationCode) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#ActivationCode"><span class="nx">ActivationCode</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="ActivationCode.Token">func (ActivationCode) Token</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#ActivationCode"><span class="nx">ActivationCode</span></a><span class="p">)</span> <span class="nf">Token</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#ActivationToken"><span class="nx">ActivationToken</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="ActivationCode.Unmarshal">func (*ActivationCode) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#ActivationCode"><span class="nx">ActivationCode</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h3 id="ActivationToken">type ActivationToken</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">ActivationToken</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="ActivationToken.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
+	<span id="ActivationToken.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>
+		<span id="ActivationToken.Token"><span class="nx">Token</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
+    <h4 id="ActivationToken.Unmarshal">func (*ActivationToken) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#ActivationToken"><span class="nx">ActivationToken</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h3 id="HomeScreen">type HomeScreen</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">HomeScreen</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="HomeScreen.EpisodeNumber"><span class="nx">EpisodeNumber</span></span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>    <span class="s">`json:&#34;,string&#34;`</span>

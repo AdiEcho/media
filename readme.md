@@ -14,15 +14,16 @@ Download media or send API requests
 5. Paramount+
 6. The NBC App - Stream TV Shows
 7. Stan.
-8. MUBI: Curated Cinema
-9. CTV
-10. AMC+
-11. The Roku Channel
-12. The Criterion Channel
-13. Draken Film
-14. CineMember
+8. Rakuten TV -Movies & TV Series
+9. MUBI: Curated Cinema
+10. CTV
+11. AMC+
+12. The Roku Channel
+13. The Criterion Channel
+14. Draken Film
+15. CineMember
 
-[1]://f002.backblazeb2.com/file/ql8mlh/Paint.It.Black.2016.mp4
+[1]://f002.backblazeb2.com/file/ql8mlh/videos/Paint.It.Black.2016.mp4
 
 ## Contact
 

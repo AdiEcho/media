@@ -14,13 +14,14 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/internal<span class="navbar-right">
-          v1.9.3 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.9.4 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package internal</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/internal&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
-  <li><a href="#pkg-variables">Variables</a></li><li>
+  <li><a href="#pkg-variables">Variables</a></li><li><a href="#DASH">func DASH(req *http.Request) ([]*dash.Representation, error)</a></li>
+  <li>
       <a href="#ForwardedFor">type ForwardedFor</a>
       <ul>
           <li><a href="#ForwardedFor.String">func (f ForwardedFor) String() string</a></li>
@@ -29,8 +30,7 @@
   <li>
       <a href="#Stream">type Stream</a>
       <ul>
-          <li><a href="#Stream.DASH">func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error)</a></li>
-          <li><a href="#Stream.Download">func (s Stream) Download(rep *dash.Representation) error</a></li>
+          <li><a href="#Stream.Download">func (s *Stream) Download(rep *dash.Representation) error</a></li>
           <li><a href="#Stream.TimedText">func (s Stream) TimedText(url string) error</a></li>
           </ul>
       </li>
@@ -69,7 +69,10 @@
 	<span class="p">{</span><span class="s">&#34;United Kingdom&#34;</span><span class="p">,</span> <span class="s">&#34;25.0.0.0&#34;</span><span class="p">},</span>
 	<span class="p">{</span><span class="s">&#34;Venezuela&#34;</span><span class="p">,</span> <span class="s">&#34;190.72.0.0&#34;</span><span class="p">},</span>
 <span class="p">}</span></pre>
-  <h3 id="pkg-types">Types</h3>
+  <h3 id="pkg-functions">Functions</h3>
+  <h3 id="DASH">func DASH</h3>
+    <pre class="chroma"><span class="kd">func</span> <span class="nf">DASH</span><span class="p">(</span><span class="nx">req</span> <span class="o">*</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Request"><span class="nx">Request</span></a><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><a href="https://pkg.go.dev/154.pages.dev/dash"><span class="nx">dash</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/dash#Representation"><span class="nx">Representation</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <h3 id="pkg-types">Types</h3>
   <h3 id="ForwardedFor">type ForwardedFor</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">ForwardedFor</span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
 	<span id="ForwardedFor.Country"><span class="nx">Country</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
@@ -81,14 +84,13 @@
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Stream</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Stream.ClientId"><span class="nx">ClientId</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span id="Stream.PrivateKey"><span class="nx">PrivateKey</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="Stream.Name"><span class="nx">Name</span></span>       <a href="https://pkg.go.dev/154.pages.dev/encoding"><span class="nx">encoding</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding#Namer"><span class="nx">Namer</span></a>
+	<span id="Stream.Name"><span class="nx">Name</span></span>       <a href="https://pkg.go.dev/154.pages.dev/text"><span class="nx">text</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/text#Namer"><span class="nx">Namer</span></a>
 	<span id="Stream.Poster"><span class="nx">Poster</span></span>     <a href="https://pkg.go.dev/154.pages.dev/widevine"><span class="nx">widevine</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/widevine#Poster"><span class="nx">Poster</span></a>
-<span class="p">}</span></pre>
+	<span class="c1">// contains filtered or unexported fields
+</span><span class="c1"></span><span class="p">}</span></pre>
     <p>wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-<h4 id="Stream.DASH">func (*Stream) DASH</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><a href="#Stream"><span class="nx">Stream</span></a><span class="p">)</span> <span class="nf">DASH</span><span class="p">(</span><span class="nx">req</span> <span class="o">*</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Request"><span class="nx">Request</span></a><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash"><span class="nx">dash</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash#Representation"><span class="nx">Representation</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Stream.Download">func (Stream) Download</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#Stream"><span class="nx">Stream</span></a><span class="p">)</span> <span class="nf">Download</span><span class="p">(</span><span class="nx">rep</span> <span class="o">*</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash"><span class="nx">dash</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/encoding/dash#Representation"><span class="nx">Representation</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+<h4 id="Stream.Download">func (*Stream) Download</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><a href="#Stream"><span class="nx">Stream</span></a><span class="p">)</span> <span class="nf">Download</span><span class="p">(</span><span class="nx">rep</span> <span class="o">*</span><a href="https://pkg.go.dev/154.pages.dev/dash"><span class="nx">dash</span></a><span class="p">.</span><a href="https://pkg.go.dev/154.pages.dev/dash#Representation"><span class="nx">Representation</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h4 id="Stream.TimedText">func (Stream) TimedText</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#Stream"><span class="nx">Stream</span></a><span class="p">)</span> <span class="nf">TimedText</span><span class="p">(</span><span class="nx">url</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h3 id="pkg-directories">Directories</h3>
@@ -137,6 +139,10 @@
       </tr>
     <tr>
         <td><a href="pluto">pluto</a></td>
+        <td></td>
+      </tr>
+    <tr>
+        <td><a href="rakuten">rakuten</a></td>
         <td></td>
       </tr>
     <tr>
