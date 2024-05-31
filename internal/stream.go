@@ -5,6 +5,7 @@ import (
    "154.pages.dev/text"
    "154.pages.dev/widevine"
    "crypto/tls"
+   "encoding/base64"
    "encoding/hex"
    "errors"
    "io"
@@ -15,6 +16,112 @@ import (
    "slices"
    "strings"
 )
+
+func (s Stream) key() ([]byte, error) {
+   if s.key_id == nil {
+      return nil, nil
+   }
+   private_key, err := os.ReadFile(s.PrivateKey)
+   if err != nil {
+      return nil, err
+   }
+   client_id, err := os.ReadFile(s.ClientId)
+   if err != nil {
+      return nil, err
+   }
+   if s.pssh == nil {
+      s.pssh = widevine.PSSH(s.key_id, nil)
+   }
+   var module widevine.CDM
+   err = module.New(private_key, client_id, s.pssh)
+   if err != nil {
+      return nil, err
+   }
+   key, err := module.Key(s.Poster, s.key_id)
+   if err != nil {
+      return nil, err
+   }
+   slog.Debug("CDM", "key", hex.EncodeToString(key))
+   return key, nil
+}
+
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type Stream struct {
+   ClientId string
+   PrivateKey string
+   Name text.Namer
+   Poster widevine.Poster
+   pssh []byte
+   key_id []byte
+}
+
+func (s *Stream) Download(rep *dash.Representation) error {
+   if v, ok := rep.Widevine(); ok {
+      var err error
+      s.pssh, err = base64.StdEncoding.DecodeString(v)
+      if err != nil {
+         return err
+      }
+   }
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
+   base := rep.GetAdaptationSet().GetPeriod().GetMpd().BaseUrl.URL
+   if v, ok := rep.GetSegmentTemplate(); ok {
+      if v, ok := v.GetInitialization(rep); ok {
+         return s.segment_template(rep, base, v, ext)
+      }
+   }
+   return s.segment_base(rep.SegmentBase, base, *rep.BaseUrl, ext)
+}
+
+func DASH(req *http.Request) ([]*dash.Representation, error) {
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   switch res.Status {
+   case "200 OK", "403 OK":
+   default:
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var media dash.MPD
+   data, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   err = media.Unmarshal(data)
+   if err != nil {
+      return nil, err
+   }
+   if media.BaseUrl == nil {
+      media.BaseUrl = &dash.URL{res.Request.URL}
+   }
+   var reps []*dash.Representation
+   for _, v := range media.Period {
+      seconds, err := v.Seconds()
+      if err != nil {
+         return nil, err
+      }
+      for _, v := range v.AdaptationSet {
+         for _, v := range v.Representation {
+            if seconds > 9 {
+               if _, ok := v.Ext(); ok {
+                  reps = append(reps, v)
+               }
+            }
+         }
+      }
+   }
+   slices.SortFunc(reps, func(a, b *dash.Representation) int {
+      return int(a.Bandwidth - b.Bandwidth)
+   })
+   return reps, nil
+}
 
 func (s Stream) segment_template(
    rep *dash.Representation,
@@ -46,12 +153,11 @@ func (s Stream) segment_template(
       return err
    }
    defer file.Close()
-   var protect protection
-   err = protect.init(file, res.Body)
+   err = s.init_protect(file, res.Body)
    if err != nil {
       return err
    }
-   key, err := s.key(protect)
+   key, err := s.key()
    if err != nil {
       return err
    }
@@ -99,20 +205,6 @@ func (s Stream) segment_template(
    return nil
 }
 
-func (s Stream) Download(rep *dash.Representation) error {
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Representation.Ext")
-   }
-   base := rep.GetAdaptationSet().GetPeriod().GetMpd().BaseUrl.URL
-   if v, ok := rep.GetSegmentTemplate(); ok {
-      if v, ok := v.GetInitialization(rep); ok {
-         return s.segment_template(rep, base, v, ext)
-      }
-   }
-   return s.segment_base(rep.SegmentBase, base, *rep.BaseUrl, ext)
-}
-
 func (s Stream) segment_base(
    segment *dash.SegmentBase,
    base *url.URL,
@@ -142,12 +234,11 @@ func (s Stream) segment_base(
       return err
    }
    defer file.Close()
-   var protect protection
-   err = protect.init(file, res.Body)
+   err = s.init_protect(file, res.Body)
    if err != nil {
       return err
    }
-   key, err := s.key(protect)
+   key, err := s.key()
    if err != nil {
       return err
    }
@@ -183,53 +274,6 @@ func (s Stream) segment_base(
    return nil
 }
 
-func (s *Stream) DASH(req *http.Request) ([]*dash.Representation, error) {
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   switch res.Status {
-   case "200 OK", "403 OK":
-   default:
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var media dash.MPD
-   data, err := io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   err = media.Unmarshal(data)
-   if err != nil {
-      return nil, err
-   }
-   if media.BaseUrl == nil {
-      media.BaseUrl = &dash.URL{res.Request.URL}
-   }
-   var reps []*dash.Representation
-   for _, v := range media.Period {
-      seconds, err := v.Seconds()
-      if err != nil {
-         return nil, err
-      }
-      for _, v := range v.AdaptationSet {
-         for _, v := range v.Representation {
-            if seconds > 9 {
-               if _, ok := v.Ext(); ok {
-                  reps = append(reps, v)
-               }
-            }
-         }
-      }
-   }
-   slices.SortFunc(reps, func(a, b *dash.Representation) int {
-      return int(a.Bandwidth - b.Bandwidth)
-   })
-   return reps, nil
-}
-
 func (s Stream) TimedText(url string) error {
    res, err := http.Get(url)
    if err != nil {
@@ -252,40 +296,4 @@ func (s Stream) TimedText(url string) error {
       return err
    }
    return nil
-}
-
-func (s Stream) key(protect protection) ([]byte, error) {
-   if protect.key_id == nil {
-      return nil, nil
-   }
-   private_key, err := os.ReadFile(s.PrivateKey)
-   if err != nil {
-      return nil, err
-   }
-   client_id, err := os.ReadFile(s.ClientId)
-   if err != nil {
-      return nil, err
-   }
-   if protect.pssh == nil {
-      protect.pssh = widevine.PSSH(protect.key_id, nil)
-   }
-   var module widevine.CDM
-   err = module.New(private_key, client_id, protect.pssh)
-   if err != nil {
-      return nil, err
-   }
-   key, err := module.Key(s.Poster, protect.key_id)
-   if err != nil {
-      return nil, err
-   }
-   slog.Debug("CDM", "key", hex.EncodeToString(key))
-   return key, nil
-}
-
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type Stream struct {
-   ClientId string
-   PrivateKey string
-   Name text.Namer
-   Poster widevine.Poster
 }

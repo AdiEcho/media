@@ -41,6 +41,7 @@ func (f ForwardedFor) String() string {
    }
    return b.String()
 }
+
 var Forward = ForwardedFor{
 {"Argentina", "186.128.0.0"},
 {"Australia", "1.128.0.0"},
@@ -76,12 +77,7 @@ var Forward = ForwardedFor{
 {"Venezuela", "190.72.0.0"},
 }
 
-type protection struct {
-   key_id []byte
-   pssh []byte
-}
-
-func (p *protection) init(to io.Writer, from io.Reader) error {
+func (p *Stream) init_protect(to io.Writer, from io.Reader) error {
    var file sofia.File
    err := file.Read(from)
    if err != nil {
