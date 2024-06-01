@@ -13,6 +13,18 @@ import (
    "time"
 )
 
+func Core() Video {
+   var v Video
+   v.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
+   v.DrmProxyUrl = func() string {
+      var b strings.Builder
+      b.WriteString("https://drmproxy.digitalsvc.apps.nbcuni.com")
+      b.WriteString("/drm-proxy/license")
+      return b.String()
+   }()
+   return v
+}
+
 func (v Video) RequestUrl() (string, bool) {
    t, h := func() (int64, []byte) {
       h := hmac.New(sha256.New, []byte(v.DrmProxySecret))
@@ -32,18 +44,6 @@ func (Video) RequestHeader() (http.Header, error) {
    head := make(http.Header)
    head.Set("content-type", "application/octet-stream")
    return head, nil
-}
-
-func Core() Video {
-   var v Video
-   v.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
-   v.DrmProxyUrl = func() string {
-      var b strings.Builder
-      b.WriteString("https://drmproxy.digitalsvc.apps.nbcuni.com")
-      b.WriteString("/drm-proxy/license")
-      return b.String()
-   }()
-   return v
 }
 
 type Video struct {
