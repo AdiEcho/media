@@ -2,11 +2,6 @@
 
 https://amazon.com/gp/video/detail/0NRT15S2XG06SG5HBV5NQAW3E3
 
-## android
-
-- https://play.google.com/store/apps/details?id=com.amazon.amazonvideo.livingroom
-- https://play.google.com/store/apps/details?id=com.amazon.avod.thirdpartyclient
-
 ## web
 
 1. watch with prime, start your 30-day free trial
@@ -70,3 +65,55 @@ get:
 ~~~json
 "videoQuality":"SD","videoResolution":"480p"
 ~~~
+
+## android phone
+
+https://play.google.com/store/apps/details?id=com.amazon.avod.thirdpartyclient
+
+~~~
+> play -i com.amazon.avod.thirdpartyclient  -b armeabi-v7a
+details[6] = Amazon Mobile LLC
+details[8] = 0 USD
+details[13][1][4] = 3.0.370.2045
+details[13][1][16] = May 28, 2024
+details[13][1][17] = APK
+details[13][1][82][1][1] = 5.0 and up
+downloads = 652.91 million
+name = Amazon Prime Video
+size = 46.66 megabyte
+version code = 370002045
+~~~
+
+Create Android 9 device. even without proxy, app fails after password
+
+https://apkmirror.com/apk/amazon-mobile-llc/amazon-prime-video
+
+Create Android 6 device. the `noarch` options just open the Amazon web page
+
+## android tv
+
+https://play.google.com/store/apps/details?id=com.amazon.amazonvideo.livingroom
+
+~~~
+> play -i com.amazon.amazonvideo.livingroom -t -b armeabi-v7a
+details[6] = Amazon Mobile LLC
+details[8] = 0 USD
+details[13][1][4] = 6.16.20+v15.1.0.240-armv7a
+details[13][1][16] = Apr 30, 2024
+details[13][1][17] = APK APK APK APK APK
+details[13][1][82][1][1] = 5.0 and up
+downloads = 245.72 million
+name = Prime Video - Android TV
+size = 42.93 megabyte
+version code = 606016201
+~~~
+
+Create Android 9 device:
+
+~~~
+INSTALL_FAILED_NO_MATCHING_ABIS
+~~~
+
+https://apkmirror.com/apk/amazon-mobile-llc/prime-video-android-tv-android-tv
+
+arm only

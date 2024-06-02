@@ -1,15 +1,21 @@
 # draken
 
-- https://drakenfilm.se/film/michael-clayton
-- https://justwatch.com/se/leverantör/draken-films
-
-241 LOC:
-
-https://github.com/kenil261615/VineTrimmeronColab/blob/main/vinetrimmer/services/flixole.py
-
-554 LOC:
-
-https://github.com/hypnotoad/kodinerds/blob/master/plugin.video.magine/default.py
+1. sweden VPN/proxy
+2. https://drakenfilm.se/offers
+3. Aktivera nu (activate now)
+4. Din e-postadress (your e-mail address)
+   - 2024-6-1@mailsac.com
+5. Gå vidare (go further)
+6. password
+7. Upprepa lösenord (repeat password)
+8. Jag godkänner användarvillkoren (I accept the terms of use)
+9. Skapa konto (create an account)
+10. Gå vidare (go further)
+11. card number
+12. Utgångsdatum (expiry date)
+13. CVC
+14. Namn på kort (name on card)
+15. Bekräfta förauktorisering (confirm pre-authorization)
 
 ## web
 
