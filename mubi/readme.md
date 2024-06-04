@@ -1,20 +1,20 @@
 # Mubi
 
-1. https://mubi.com
-2. try 7 days free
-3. Email address
-   - mailsac.com: Sorry, this isn't a valid email address
-4. GET STARTED
+1. mubi.com
+2. enable javascript
+3. email address
+   - email.ml
+   - mild.payday@hele.win
+4. get started
 5. enter code
-6. enable javascript
-7. mubi
-8. NEXT
-9. cardholder name
-10. card number
-11. Expiry Date
-12. CVV
-13. zip code
-14. START FREE TRIAL
+6. mubi
+7. next
+8. cardholder name
+9. card number
+10. expiry date
+11. CVV
+12. zip code
+13. start free trial
 
 ## Android
 

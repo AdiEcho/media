@@ -36,7 +36,9 @@ func (a AccountToken) Playback(roku_id string) (*Playback, error) {
    }
    defer res.Body.Close()
    if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
    }
    play := new(Playback)
    err = json.NewDecoder(res.Body).Decode(play)
