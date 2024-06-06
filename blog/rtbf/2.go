@@ -1,45 +1,22 @@
 package rtbf
 
-import (
-   "encoding/json"
-   "net/http"
-   "net/url"
-   "strings"
-)
+import "net/http"
 
-// hard coded in JavaScript
-const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
-
-type accounts_login struct {
-   SessionInfo struct {
-      CookieValue string
-   }
+type one struct {
+   cookie *http.Cookie
 }
 
-func (o one) login(id, password string) (*accounts_login, error) {
-   body := url.Values{
-      "APIKey": {api_key},
-      "loginID": {id},
-      "password": {password},
-   }.Encode()
-   req, err := http.NewRequest(
-      "POST", "https://login.auvio.rtbf.be/accounts.login",
-      strings.NewReader(body),
-   )
+func (o *one) New() error {
+   res, err := http.Get("https://login.auvio.rtbf.be/accounts.webSdkBootstrap")
    if err != nil {
-      return nil, err
-   }
-   req.AddCookie(o.cookie)
-   req.Header.Set("content-type", "application/x-www-form-urlencoded")
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
+      return err
    }
    defer res.Body.Close()
-   login := new(accounts_login)
-   err = json.NewDecoder(res.Body).Decode(login)
-   if err != nil {
-      return nil, err
+   for _, cookie := range res.Cookies() {
+      if cookie.Name == "gmid" {
+         o.cookie = cookie
+         return nil
+      }
    }
-   return login, nil
+   return http.ErrNoCookie
 }

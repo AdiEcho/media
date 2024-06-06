@@ -1,22 +1,24 @@
 package rtbf
 
-import "net/http"
+import (
+   "net/http"
+   "net/url"
+   "os"
+)
 
-type one struct {
-   cookie *http.Cookie
-}
-
-func (o *one) New() error {
-   res, err := http.Get("https://login.auvio.rtbf.be/accounts.webSdkBootstrap")
+func five() {
+   var req http.Request
+   req.Header = make(http.Header)
+   req.ProtoMajor = 1
+   req.ProtoMinor = 1
+   req.URL = new(url.URL)
+   req.URL.Host = "bff-service.rtbf.be"
+   req.URL.Path = "/auvio/v1.23/embed/media/3201987"
+   req.URL.Scheme = "https"
+   res, err := http.DefaultClient.Do(&req)
    if err != nil {
-      return err
+      panic(err)
    }
    defer res.Body.Close()
-   for _, cookie := range res.Cookies() {
-      if cookie.Name == "gmid" {
-         o.cookie = cookie
-         return nil
-      }
-   }
-   return http.ErrNoCookie
+   res.Write(os.Stdout)
 }

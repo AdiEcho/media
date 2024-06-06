@@ -1,34 +1,45 @@
 package rtbf
 
 import (
-   "io"
+   "encoding/json"
    "net/http"
    "net/url"
-   "os"
    "strings"
 )
 
-func (o one) three(login *accounts_login) (*http.Response, error) {
-   var body = strings.NewReader(url.Values{
-      "APIKey":[]string{api_key},
-      // from /accounts.login
-      "login_token":[]string{login.SessionInfo.CookieValue},
-   }.Encode())
-   var req http.Request
-   req.Header = make(http.Header)
-   req.Header["Accept"] = []string{"*/*"}
-   req.Method = "POST"
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "login.auvio.rtbf.be"
-   req.URL.Path = "/accounts.getJWT"
-   req.URL.Scheme = "https"
-   req.Body = io.NopCloser(body)
-   req.Header["Content-Type"] = []string{"application/x-www-form-urlencoded"}
-   req.Header["Cookie"] = []string{
-      // from /accounts.webSdkBootstrap
-      "gmid=gmid.ver4.AtLtH4HMHg.LMhRVRJCFKP7uqs-cOeQLiHO5p4Gnf0AKg759MRJG72Xj9AzXsw20ySPPDaOmdSQ.EUz7cp0LCa8ATNMrSxDy9DuG5UvI5e_ZRJxrvDjrtEZJu-MqTqAcWHIz5ImHzxjzpS5i_tzQ8OOrRWUG07wvDg.sc3",
+// hard coded in JavaScript
+const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
+
+type accounts_login struct {
+   SessionInfo struct {
+      CookieValue string
    }
-   return http.DefaultClient.Do(&req)
+}
+
+func (o one) login(id, password string) (*accounts_login, error) {
+   body := url.Values{
+      "APIKey": {api_key},
+      "loginID": {id},
+      "password": {password},
+   }.Encode()
+   req, err := http.NewRequest(
+      "POST", "https://login.auvio.rtbf.be/accounts.login",
+      strings.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.AddCookie(o.cookie)
+   req.Header.Set("content-type", "application/x-www-form-urlencoded")
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   login := new(accounts_login)
+   err = json.NewDecoder(res.Body).Decode(login)
+   if err != nil {
+      return nil, err
+   }
+   return login, nil
 }
