@@ -1,7 +1,6 @@
 # RTBF
 
 ~~~
-https://rtbf.be/auvio
 url = https://www.rtbf.be/auvio/detail_i-care-a-lot?id=3201987
 monetization = FREE
 country = Belgium
