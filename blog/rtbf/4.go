@@ -1,4 +1,4 @@
-package main
+package rtbf
 
 import (
    "io"
@@ -8,7 +8,15 @@ import (
    "strings"
 )
 
-func main() {
+func four() {
+   var body = strings.NewReader(`{
+    "jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJFUTBNVVE1TjBOQ1JUSkVNemszTTBVMVJrTkRRMFUwUTBNMVJFRkJSamhETWpkRU5VRkJRZyJ9.eyJpc3MiOiJodHRwczovL2ZpZG0uZ2lneWEuY29tL2p3dC80X01sX2ZKNDdHbkJBVzZGclB6TXhoMHcvIiwiYXBpS2V5IjoiNF9NbF9mSjQ3R25CQVc2RnJQek14aDB3IiwiaWF0IjoxNzE3NjM0Mzk0LCJleHAiOjE3MTc2MzQ2OTQsInJpc2tTY29yZSI6MC4wLCJzdWIiOiI4OTgyNjk5MDUwZWQ0MWY5OGZlZDA4NzdiZGE2ZjYxNiIsImVtYWlsIjoiMjAyNC02LTVAbWFpbHNhYy5jb20iLCJmaXJzdE5hbWUiOiJzdGV2ZW4iLCJsYXN0TmFtZSI6InBlbm55In0.MH7dkz4TuVu3RcqblnHBYBNMd2908uKBSUmFP6gGlMw3Of8HiYrHIVlz5zxhTX73y60RjjnvZJg_R6v5ovDwY2IE4JZVwCkgdW2_qeuarq_Sj-NJpGufzLY9iop2Q8cE3qXo9Sl20O3yDU852WXurTHr4WX-weO6bHAz-lDB1QH4nbzTM0qM4_IhV2iToa_NNbDhutYLvxJkPBtgfKm10xHMUmmM6dsmcr_tF2Ge4r_W63WiogioNmZG5Q4pZig9-B9dXFeJ0onI5cTTLBk1lzomvxNTG9ugxJOTRdUb7JMgx9SMoYsZTCuExcq4xWrQfVigqEs5l0Vh47LDQ5C-OA",
+    "device": {
+     "deviceId": "7f5cdd55-1cfe-4841-9e8e-ecd8b823cfad",
+     "name": "Browser",
+     "type": "WEB"
+    }
+   }`)
    var req http.Request
    req.Header = make(http.Header)
    req.Header["Accept"] = []string{"application/json"}
@@ -41,12 +49,3 @@ func main() {
    defer res.Body.Close()
    res.Write(os.Stdout)
 }
-
-var body = strings.NewReader(`{
- "jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJFUTBNVVE1TjBOQ1JUSkVNemszTTBVMVJrTkRRMFUwUTBNMVJFRkJSamhETWpkRU5VRkJRZyJ9.eyJpc3MiOiJodHRwczovL2ZpZG0uZ2lneWEuY29tL2p3dC80X01sX2ZKNDdHbkJBVzZGclB6TXhoMHcvIiwiYXBpS2V5IjoiNF9NbF9mSjQ3R25CQVc2RnJQek14aDB3IiwiaWF0IjoxNzE3NjM0Mzk0LCJleHAiOjE3MTc2MzQ2OTQsInJpc2tTY29yZSI6MC4wLCJzdWIiOiI4OTgyNjk5MDUwZWQ0MWY5OGZlZDA4NzdiZGE2ZjYxNiIsImVtYWlsIjoiMjAyNC02LTVAbWFpbHNhYy5jb20iLCJmaXJzdE5hbWUiOiJzdGV2ZW4iLCJsYXN0TmFtZSI6InBlbm55In0.MH7dkz4TuVu3RcqblnHBYBNMd2908uKBSUmFP6gGlMw3Of8HiYrHIVlz5zxhTX73y60RjjnvZJg_R6v5ovDwY2IE4JZVwCkgdW2_qeuarq_Sj-NJpGufzLY9iop2Q8cE3qXo9Sl20O3yDU852WXurTHr4WX-weO6bHAz-lDB1QH4nbzTM0qM4_IhV2iToa_NNbDhutYLvxJkPBtgfKm10xHMUmmM6dsmcr_tF2Ge4r_W63WiogioNmZG5Q4pZig9-B9dXFeJ0onI5cTTLBk1lzomvxNTG9ugxJOTRdUb7JMgx9SMoYsZTCuExcq4xWrQfVigqEs5l0Vh47LDQ5C-OA",
- "device": {
-  "deviceId": "7f5cdd55-1cfe-4841-9e8e-ecd8b823cfad",
-  "name": "Browser",
-  "type": "WEB"
- }
-}`)

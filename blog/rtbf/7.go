@@ -1,4 +1,4 @@
-package main
+package rtbf
 
 import (
    "154.pages.dev/widevine"
@@ -14,7 +14,7 @@ const (
    raw_key_id = "o1C37Tt5SzmHMmEgQViUEA=="
 )
 
-func main() {
+func seven() {
    home, err := os.UserHomeDir()
    if err != nil {
       panic(err)

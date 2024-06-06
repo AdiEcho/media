@@ -1,4 +1,4 @@
-package main
+package rtbf
 
 import (
    "net/http"
@@ -6,7 +6,7 @@ import (
    "os"
 )
 
-func main() {
+func six() {
    var req http.Request
    req.Header = make(http.Header)
    req.ProtoMajor = 1

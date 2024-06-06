@@ -1,4 +1,4 @@
-package main
+package rtbf
 
 import (
    "io"
@@ -8,7 +8,12 @@ import (
    "strings"
 )
 
-func main() {
+func (o one) three(login *accounts_login) (*http.Response, error) {
+   var body = strings.NewReader(url.Values{
+      "APIKey":[]string{api_key},
+      // from /accounts.login
+      "login_token":[]string{login.SessionInfo.CookieValue},
+   }.Encode())
    var req http.Request
    req.Header = make(http.Header)
    req.Header["Accept"] = []string{"*/*"}
@@ -25,16 +30,5 @@ func main() {
       // from /accounts.webSdkBootstrap
       "gmid=gmid.ver4.AtLtH4HMHg.LMhRVRJCFKP7uqs-cOeQLiHO5p4Gnf0AKg759MRJG72Xj9AzXsw20ySPPDaOmdSQ.EUz7cp0LCa8ATNMrSxDy9DuG5UvI5e_ZRJxrvDjrtEZJu-MqTqAcWHIz5ImHzxjzpS5i_tzQ8OOrRWUG07wvDg.sc3",
    }
-   res, err := http.DefaultClient.Do(&req)
-   if err != nil {
-      panic(err)
-   }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   return http.DefaultClient.Do(&req)
 }
-
-var body = strings.NewReader(url.Values{
-   // hard coded in JavaScript
-   "APIKey":[]string{"4_Ml_fJ47GnBAW6FrPzMxh0w"},
-   "login_token":[]string{"st2.s.AtLtBS9udg.1ffF43Ubf09YfsaQdTcRzd4RPJ0qbyfvqR7lCbSXlWV0k1ETD2BVwF8-g9zuJMiRldVEsMZTgKy_RdlvmPOfwHfJbqkDOCHq641uePzCzQ7s7Ono5pn6kUS6gWGsJihb.w39vNWpfCArOwaju-AsrD9_BFxWGDUQpS7ji4nOyAl9igpVXcf1xkiesRYHdQO9moEeq81t__56z6fP50Q4_JQ.sc3"},
-}.Encode())
