@@ -2,6 +2,7 @@ package rtbf
 
 import (
    "encoding/json"
+   "io"
    "net/http"
    "net/url"
    "strings"
@@ -9,12 +10,6 @@ import (
 
 // hard coded in JavaScript
 const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
-
-type accounts_login struct {
-   SessionInfo struct {
-      CookieValue string
-   }
-}
 
 func (o one) login(id, password string) (*accounts_login, error) {
    body := url.Values{
@@ -36,10 +31,23 @@ func (o one) login(id, password string) (*accounts_login, error) {
       return nil, err
    }
    defer res.Body.Close()
-   login := new(accounts_login)
-   err = json.NewDecoder(res.Body).Decode(login)
+   var login accounts_login
+   login.data, err = io.ReadAll(res.Body)
    if err != nil {
       return nil, err
    }
-   return login, nil
+   return &login, nil
+}
+
+func (a *accounts_login) unmarshal() error {
+   return json.Unmarshal(a.data, &a.v)
+}
+
+type accounts_login struct {
+   data []byte
+   v struct {
+      SessionInfo struct {
+         CookieValue string
+      }
+   }
 }
