@@ -15,7 +15,7 @@ func (o one) four(login *accounts_login) (*web_token, error) {
    body := url.Values{
       "APIKey": {api_key},
       // from /accounts.login
-      "login_token": {login.v.SessionInfo.CookieValue},
+      "login_token": {login.SessionInfo.CookieValue},
    }.Encode()
    req, err := http.NewRequest(
       "POST", "https://login.auvio.rtbf.be/accounts.getJWT",

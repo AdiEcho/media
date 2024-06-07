@@ -2,20 +2,35 @@ package rtbf
 
 import (
    "encoding/json"
-   "io"
+   "errors"
    "net/http"
    "net/url"
    "strings"
 )
+
+func (a *accounts_login) unmarshal(text []byte) error {
+   return json.Unmarshal(text, a)
+}
+
+func (a accounts_login) marshal() ([]byte, error) {
+   return json.Marshal(a)
+}
+
+type accounts_login struct {
+   ErrorDetails string
+   SessionInfo struct {
+      CookieValue string
+   }
+}
 
 // hard coded in JavaScript
 const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
 
 func (o one) login(id, password string) (*accounts_login, error) {
    body := url.Values{
-      "APIKey": {api_key},
       "loginID": {id},
       "password": {password},
+      "APIKey": {api_key},
    }.Encode()
    req, err := http.NewRequest(
       "POST", "https://login.auvio.rtbf.be/accounts.login",
@@ -31,23 +46,13 @@ func (o one) login(id, password string) (*accounts_login, error) {
       return nil, err
    }
    defer res.Body.Close()
-   var login accounts_login
-   login.data, err = io.ReadAll(res.Body)
+   login := new(accounts_login)
+   err = json.NewDecoder(res.Body).Decode(login)
    if err != nil {
       return nil, err
    }
-   return &login, nil
-}
-
-func (a *accounts_login) unmarshal() error {
-   return json.Unmarshal(a.data, &a.v)
-}
-
-type accounts_login struct {
-   data []byte
-   v struct {
-      SessionInfo struct {
-         CookieValue string
-      }
+   if login.ErrorDetails != "" {
+      return nil, errors.New(login.ErrorDetails)
    }
+   return login, nil
 }
