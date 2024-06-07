@@ -6,7 +6,7 @@ import (
    "testing"
 )
 
-func TestSix(t *testing.T) {
+func TestFour(t *testing.T) {
    text, err := os.ReadFile("account.json")
    if err != nil {
       t.Fatal(err)
@@ -20,13 +20,5 @@ func TestSix(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   gigya, err := token.login()
-   if err != nil {
-      t.Fatal(err)
-   }
-   title, err := gigya.entitlement()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", title)
+   fmt.Printf("%+v\n", token)
 }

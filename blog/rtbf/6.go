@@ -2,14 +2,10 @@ package rtbf
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "strings"
 )
-
-type entitlement struct {
-   AssetId string
-   PlayToken string
-}
 
 func (g gigya_login) entitlement() (*entitlement, error) {
    req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
@@ -31,10 +27,20 @@ func (g gigya_login) entitlement() (*entitlement, error) {
       return nil, err
    }
    defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
    title := new(entitlement)
    err = json.NewDecoder(res.Body).Decode(title)
    if err != nil {
       return nil, err
    }
    return title, nil
+}
+
+type entitlement struct {
+   AssetId string
+   PlayToken string
 }

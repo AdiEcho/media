@@ -16,13 +16,6 @@ func (a accounts_login) marshal() ([]byte, error) {
    return json.Marshal(a)
 }
 
-type accounts_login struct {
-   ErrorDetails string
-   SessionInfo struct {
-      CookieValue string
-   }
-}
-
 // hard coded in JavaScript
 const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
 
@@ -49,8 +42,15 @@ func (a *accounts_login) New(id, password string) error {
    if err != nil {
       return err
    }
-   if a.ErrorDetails != "" {
-      return errors.New(a.ErrorDetails)
+   if v := a.ErrorMessage; v != "" {
+      return errors.New(v)
    }
    return nil
+}
+
+type accounts_login struct {
+   ErrorMessage string
+   SessionInfo struct {
+      CookieValue string
+   }
 }

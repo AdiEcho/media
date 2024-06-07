@@ -2,20 +2,17 @@ package rtbf
 
 import (
    "encoding/json"
+   "errors"
    "net/http"
    "net/url"
    "strings"
 )
 
-type web_token struct {
-   IdToken string `json:"id_token"`
-}
-
-func (o one) four(login *accounts_login) (*web_token, error) {
+func (a accounts_login) token() (*web_token, error) {
    body := url.Values{
       "APIKey": {api_key},
       // from /accounts.login
-      "login_token": {login.SessionInfo.CookieValue},
+      "login_token": {a.SessionInfo.CookieValue},
    }.Encode()
    req, err := http.NewRequest(
       "POST", "https://login.auvio.rtbf.be/accounts.getJWT",
@@ -25,16 +22,23 @@ func (o one) four(login *accounts_login) (*web_token, error) {
       return nil, err
    }
    req.Header.Set("content-type", "application/x-www-form-urlencoded")
-   req.AddCookie(o.cookie) // from /accounts.webSdkBootstrap
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer res.Body.Close()
-   web := new(web_token)
-   err = json.NewDecoder(res.Body).Decode(web)
+   var web web_token
+   err = json.NewDecoder(res.Body).Decode(&web)
    if err != nil {
       return nil, err
    }
-   return web, nil
+   if v := web.ErrorMessage; v != "" {
+      return nil, errors.New(v)
+   }
+   return &web, nil
+}
+
+type web_token struct {
+   ErrorMessage string
+   IdToken string `json:"id_token"`
 }
