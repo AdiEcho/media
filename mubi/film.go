@@ -10,15 +10,15 @@ import (
 )
 
 func (a Authenticate) URL(film *FilmResponse) (*SecureUrl, error) {
-   address := func() string {
-      b := []byte("https://api.mubi.com/v3/films/")
+   req, err := http.NewRequest("", "https://api.mubi.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/v3/films/")
       b = strconv.AppendInt(b, film.ID, 10)
       b = append(b, "/viewing/secure_url"...)
       return string(b)
-   }
-   req, err := http.NewRequest("GET", address(), nil)
-   if err != nil {
-      return nil, err
    }
    req.Header = http.Header{
       "Authorization": {"Bearer " + a.V.Token},
@@ -69,15 +69,15 @@ func (n Namer) Year() int {
 // already viewed the video on the website that counts, but if you only use the
 // tool it will error
 func (a Authenticate) Viewing(film *FilmResponse) error {
-   address := func() string {
-      b := []byte("https://api.mubi.com/v3/films/")
+   req, err := http.NewRequest("POST", "https://api.mubi.com", nil)
+   if err != nil {
+      return err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/v3/films/")
       b = strconv.AppendInt(b, film.ID, 10)
       b = append(b, "/viewing"...)
       return string(b)
-   }
-   req, err := http.NewRequest("POST", address(), nil)
-   if err != nil {
-      return err
    }
    req.Header = http.Header{
       "Authorization": {"Bearer " + a.V.Token},

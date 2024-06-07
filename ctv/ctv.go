@@ -11,42 +11,6 @@ import (
    "time"
 )
 
-func (m MediaManifest) Title() string {
-   if strings.HasSuffix(m.M.Name, ")") {
-      return m.M.Name[:len(m.M.Name)-len(" (9999)")]
-   }
-   return m.M.Name
-}
-
-type MediaContent struct {
-   BroadcastDate   Date
-   ContentPackages []struct {
-      ID int64
-   }
-   Episode int
-   Media   struct {
-      Name string
-      Type string
-   }
-   Name   string
-   Season struct {
-      Number int
-   }
-}
-
-func (d Date) MarshalText() ([]byte, error) {
-   return d.T.AppendFormat(nil, time.DateOnly), nil
-}
-
-func (d *Date) UnmarshalText(text []byte) error {
-   var err error
-   d.T, err = time.Parse(time.DateOnly, string(text))
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
 func (a AxisContent) Media() (*MediaContent, error) {
    address := func() string {
       b := []byte("https://capi.9c9media.com/destinations/")
@@ -213,4 +177,39 @@ func (m MediaManifest) Show() string {
 
 func (m MediaManifest) Year() int {
    return m.M.BroadcastDate.T.Year()
+}
+func (m MediaManifest) Title() string {
+   if strings.HasSuffix(m.M.Name, ")") {
+      return m.M.Name[:len(m.M.Name)-len(" (9999)")]
+   }
+   return m.M.Name
+}
+
+type MediaContent struct {
+   BroadcastDate   Date
+   ContentPackages []struct {
+      ID int64
+   }
+   Episode int
+   Media   struct {
+      Name string
+      Type string
+   }
+   Name   string
+   Season struct {
+      Number int
+   }
+}
+
+func (d Date) MarshalText() ([]byte, error) {
+   return d.T.AppendFormat(nil, time.DateOnly), nil
+}
+
+func (d *Date) UnmarshalText(text []byte) error {
+   var err error
+   d.T, err = time.Parse(time.DateOnly, string(text))
+   if err != nil {
+      return err
+   }
+   return nil
 }

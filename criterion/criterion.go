@@ -9,50 +9,19 @@ import (
    "strings"
 )
 
-const client_id = "9a87f110f79cd25250f6c7f3a6ec8b9851063ca156dae493bf362a7faf146c78"
-
-func (a *AuthToken) New(username, password string) error {
-   res, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
-      "client_id":  {client_id},
-      "grant_type": {"password"},
-      "password":   {password},
-      "username":   {username},
-   })
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   a.Data, err = io.ReadAll(res.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-type AuthToken struct {
-   Data []byte
-   V    struct {
-      AccessToken string `json:"access_token"`
-   }
-}
-
-func (a *AuthToken) Unmarshal() error {
-   return json.Unmarshal(a.Data, &a.V)
-}
-
 func (a AuthToken) Video(slug string) (*EmbedItem, error) {
-   address := func() string {
+   req, err := http.NewRequest("", "https://api.vhx.com/videos", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
       var b strings.Builder
-      b.WriteString("https://api.vhx.com/videos/")
+      b.WriteByte('/')
       b.WriteString(slug)
       b.WriteString("?url=")
       b.WriteString(slug)
       return b.String()
    }()
-   req, err := http.NewRequest("", address, nil)
-   if err != nil {
-      return nil, err
-   }
    req.Header.Set("authorization", "Bearer "+a.V.AccessToken)
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -102,4 +71,34 @@ func (e EmbedItem) Title() string {
 
 func (e EmbedItem) Year() int {
    return e.Metadata.YearReleased
+}
+const client_id = "9a87f110f79cd25250f6c7f3a6ec8b9851063ca156dae493bf362a7faf146c78"
+
+func (a *AuthToken) New(username, password string) error {
+   res, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
+      "client_id":  {client_id},
+      "grant_type": {"password"},
+      "password":   {password},
+      "username":   {username},
+   })
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   a.Data, err = io.ReadAll(res.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+type AuthToken struct {
+   Data []byte
+   V    struct {
+      AccessToken string `json:"access_token"`
+   }
+}
+
+func (a *AuthToken) Unmarshal() error {
+   return json.Unmarshal(a.Data, &a.V)
 }
