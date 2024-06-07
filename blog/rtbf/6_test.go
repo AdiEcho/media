@@ -1,6 +1,7 @@
 package rtbf
 
 import (
+   "fmt"
    "os"
    "testing"
 )
@@ -28,10 +29,9 @@ func TestSix(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   res, err := gigya.six()
+   title, err := gigya.entitlement()
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   fmt.Printf("%+v\n", title)
 }
