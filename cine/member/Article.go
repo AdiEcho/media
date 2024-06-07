@@ -8,6 +8,38 @@ import (
    "strings"
 )
 
+func (e Encoding) Year() int {
+   if v, ok := e.Article.year(); ok {
+      v, _ := strconv.Atoi(v)
+      return v
+   }
+   return 0
+}
+
+func (d DataArticle) year() (string, bool) {
+   for _, meta := range d.Metas {
+      if meta.Key == "year" {
+         return meta.Value, true
+      }
+   }
+   return "", false
+}
+
+type DataArticle struct {
+   Assets         []*ArticleAsset
+   CanonicalTitle string `json:"canonical_title"`
+   ID             int
+   Metas          []struct {
+      Key   string
+      Value string
+   }
+}
+
+type Encoding struct {
+   Article *DataArticle
+   Play *AssetPlay
+}
+
 func (e Encoding) Marshal() ([]byte, error) {
    return json.MarshalIndent(e, "", " ")
 }
@@ -57,25 +89,6 @@ func (a ArticleSlug) Article() (*DataArticle, error) {
       asset.article = &s.Data.Article
    }
    return &s.Data.Article, nil
-}
-
-type DataArticle struct {
-   Assets         []*ArticleAsset
-   CanonicalTitle string `json:"canonical_title"`
-   ID             int
-   Metas          []struct {
-      Key   string
-      Value string
-   }
-}
-
-func (d DataArticle) year() (string, bool) {
-   for _, meta := range d.Metas {
-      if meta.Key == "year" {
-         return meta.Value, true
-      }
-   }
-   return "", false
 }
 
 const query_article = `
@@ -138,20 +151,6 @@ func (Encoding) Episode() int {
 
 func (e Encoding) Title() string {
    return e.Article.CanonicalTitle
-}
-
-func (e Encoding) Year() int {
-   if v, ok := e.Article.year(); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
-}
-
-type Encoding struct {
-   Article *DataArticle
-   Play *AssetPlay
 }
 
 func (e *Encoding) Unmarshal(text []byte) error {

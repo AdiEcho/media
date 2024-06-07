@@ -5,42 +5,13 @@ import (
    "encoding/json"
    "errors"
    "net/http"
-   "strconv"
    "strings"
+   "time"
 )
-
-func cache_hash() string {
-   return base64.StdEncoding.EncodeToString([]byte("ff="))
-}
-
-type ContentCompiler struct {
-   Data   struct {
-      Children []struct {
-         Properties json.RawMessage
-         Type string
-      }
-   }
-}
-
-func (c ContentCompiler) Video() (*CurrentVideo, error) {
-   for _, child := range c.Data.Children {
-      if child.Type == "video-player-ap" {
-         var s struct {
-            CurrentVideo CurrentVideo
-         }
-         err := json.Unmarshal(child.Properties, &s)
-         if err != nil {
-            return nil, err
-         }
-         return &s.CurrentVideo, nil
-      }
-   }
-   return nil, errors.New("video-player-ap")
-}
 
 type CurrentVideo struct {
    Meta struct {
-      Airdate string // 1996-01-01T00:00:00.000Z
+      Airdate time.Time // 1996-01-01T00:00:00.000Z
       EpisodeNumber int
       Season int `json:",string"`
       ShowTitle string
@@ -50,29 +21,8 @@ type CurrentVideo struct {
    }
 }
 
-func (c CurrentVideo) Episode() int {
-   return c.Meta.EpisodeNumber
-}
-
-func (c CurrentVideo) Show() string {
-   return c.Meta.ShowTitle
-}
-
-func (c CurrentVideo) Season() int {
-   return c.Meta.Season
-}
-
-func (c CurrentVideo) Title() string {
-   return c.Text.Title
-}
-
 func (c CurrentVideo) Year() int {
-   if v, _, ok := strings.Cut(c.Meta.Airdate, "-"); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
+   return c.Meta.Airdate.Year()
 }
 
 type DataSource struct {
@@ -148,4 +98,48 @@ func (w *WebAddress) Set(s string) error {
 
 func (w WebAddress) String() string {
    return w.Path
+}
+func cache_hash() string {
+   return base64.StdEncoding.EncodeToString([]byte("ff="))
+}
+
+type ContentCompiler struct {
+   Data   struct {
+      Children []struct {
+         Properties json.RawMessage
+         Type string
+      }
+   }
+}
+
+func (c ContentCompiler) Video() (*CurrentVideo, error) {
+   for _, child := range c.Data.Children {
+      if child.Type == "video-player-ap" {
+         var s struct {
+            CurrentVideo CurrentVideo
+         }
+         err := json.Unmarshal(child.Properties, &s)
+         if err != nil {
+            return nil, err
+         }
+         return &s.CurrentVideo, nil
+      }
+   }
+   return nil, errors.New("video-player-ap")
+}
+
+func (c CurrentVideo) Episode() int {
+   return c.Meta.EpisodeNumber
+}
+
+func (c CurrentVideo) Show() string {
+   return c.Meta.ShowTitle
+}
+
+func (c CurrentVideo) Season() int {
+   return c.Meta.Season
+}
+
+func (c CurrentVideo) Title() string {
+   return c.Text.Title
 }

@@ -14,7 +14,7 @@ func TestContent(t *testing.T) {
       t.Fatal(err)
    }
    var auth Authorization
-   auth.Data, err = os.ReadFile(home + "/amc/auth.json")
+   auth.Data, err = os.ReadFile(home + "/amc.json")
    if err != nil {
       t.Fatal(err)
    }
