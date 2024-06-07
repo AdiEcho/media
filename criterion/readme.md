@@ -1,5 +1,19 @@
 # criterion
 
+1. criterionchannel.com/checkout
+2. monthly
+3. email
+   - 2024-6-8@mailsac.com
+4. confirm email
+5. password
+6. name on card
+7. card number
+   - they check the card number, so must use new card
+8. expiration
+9. CVC
+10. zip
+11. start subscription
+
 ## android
 
 https://play.google.com/store/apps/details?id=com.criterionchannel
@@ -35,7 +49,3 @@ then:
 res\values\strings.xml
 797:    <string name="scheme">vhxcriterionchannel</string>
 ~~~
-
-## thanks
-
-https://github.com/davegonzalez/ott-boilerplate/blob/master/actions.js
