@@ -6,10 +6,12 @@ import (
    "strconv"
 )
 
-type embed_media struct {
-   Data struct {
-      AssetId string
-   }
+func (embed_media) Show() string {
+   return ""
+}
+
+func (embed_media) Season() int {
+   return 0
 }
 
 func (e *embed_media) New(media int64) error {
@@ -25,4 +27,24 @@ func (e *embed_media) New(media int64) error {
    }
    defer res.Body.Close()
    return json.NewDecoder(res.Body).Decode(e)
+}
+
+func (embed_media) Episode() int {
+   return 0
+}
+
+func (e embed_media) Title() string {
+   return e.Data.Title
+}
+
+type embed_media struct {
+   Data struct {
+      AssetId string
+      Title string
+   }
+}
+
+// its just not available from what I can tell
+func (embed_media) Year() int {
+   return 0
 }

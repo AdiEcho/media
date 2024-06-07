@@ -8,39 +8,6 @@ import (
    "testing"
 )
 
-func TestEntitlement(t *testing.T) {
-   text, err := os.ReadFile("account.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var account accounts_login
-   err = account.unmarshal(text)
-   if err != nil {
-      t.Fatal(err)
-   }
-   token, err := account.token()
-   if err != nil {
-      t.Fatal(err)
-   }
-   gigya, err := token.login()
-   if err != nil {
-      t.Fatal(err)
-   }
-   var embed embed_media
-   err = embed.New(i_care_a_lot)
-   if err != nil {
-      t.Fatal(err)
-   }
-   title, err := gigya.entitlement(embed)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", title)
-   fmt.Println(title.dash())
-}
-
-const raw_key_id = "o1C37Tt5SzmHMmEgQViUEA=="
-
 func TestSeven(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -54,7 +21,8 @@ func TestSeven(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key_id, err := base64.StdEncoding.DecodeString(raw_key_id)
+   medium := media["film"]
+   key_id, err := base64.StdEncoding.DecodeString(medium.key_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -81,7 +49,7 @@ func TestSeven(t *testing.T) {
       t.Fatal(err)
    }
    var embed embed_media
-   err = embed.New(i_care_a_lot)
+   err = embed.New(medium.id)
    if err != nil {
       t.Fatal(err)
    }
@@ -94,4 +62,34 @@ func TestSeven(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
+}
+func TestEntitlement(t *testing.T) {
+   text, err := os.ReadFile("account.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var account accounts_login
+   err = account.unmarshal(text)
+   if err != nil {
+      t.Fatal(err)
+   }
+   token, err := account.token()
+   if err != nil {
+      t.Fatal(err)
+   }
+   gigya, err := token.login()
+   if err != nil {
+      t.Fatal(err)
+   }
+   var embed embed_media
+   err = embed.New(media["film"].id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   title, err := gigya.entitlement(embed)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", title)
+   fmt.Println(title.dash())
 }
