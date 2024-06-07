@@ -1,7 +1,7 @@
 package rtbf
 
 import (
-   "os"
+   "fmt"
    "testing"
 )
 
@@ -9,10 +9,10 @@ import (
 const i_care_a_lot = 3201987
 
 func TestOne(t *testing.T) {
-   res, err := one(i_care_a_lot)
+   var embed embed_media
+   err := embed.New(i_care_a_lot)
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   fmt.Printf("%+v\n", embed)
 }

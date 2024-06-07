@@ -24,7 +24,12 @@ func TestSix(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   title, err := gigya.entitlement()
+   var embed embed_media
+   err = embed.New(i_care_a_lot)
+   if err != nil {
+      t.Fatal(err)
+   }
+   title, err := gigya.entitlement(embed)
    if err != nil {
       t.Fatal(err)
    }

@@ -7,15 +7,16 @@ import (
    "strings"
 )
 
-func (g gigya_login) entitlement() (*entitlement, error) {
+func (g gigya_login) entitlement(embed embed_media) (*entitlement, error) {
    req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
    if err != nil {
       return nil, err
    }
    req.URL.Path = func() string {
       var b strings.Builder
-      b.WriteString("/v2/customer/RTBF/businessunit/Auvio/entitlement")
-      b.WriteString("/3201987_6BA97Bb/play")
+      b.WriteString("/v2/customer/RTBF/businessunit/Auvio/entitlement/")
+      b.WriteString(embed.Data.AssetId)
+      b.WriteString("/play")
       return b.String()
    }()
    req.Header = http.Header{
