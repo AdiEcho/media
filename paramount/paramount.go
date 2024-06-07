@@ -10,6 +10,18 @@ import (
    "strings"
 )
 
+type Item struct {
+   AirDateIso string `json:"_airDateISO"`
+   Label string
+   MediaType string
+   SeriesTitle string
+   // these can be empty string, so we cannot use these:
+   // int `json:",string"`
+   // json.Number
+   SeasonNum string
+   EpisodeNum string
+}
+
 type app_details struct {
    version string
    code int
@@ -160,18 +172,6 @@ func (i Item) Year() int {
       }
    }
    return 0
-}
-
-type Item struct {
-   AirDateIso string `json:"_airDateISO"`
-   Label string
-   MediaType string
-   SeriesTitle string
-   // these can be empty string, so we cannot use these:
-   // int `json:",string"`
-   // json.Number
-   SeasonNum string
-   EpisodeNum string
 }
 
 func (i Item) Season() int {

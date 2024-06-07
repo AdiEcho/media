@@ -6,6 +6,25 @@ import (
    "strconv"
 )
 
+type embed_media struct {
+   Data struct {
+      AssetId string
+      Program struct {
+         Title string
+      }
+      Title string
+   }
+   Meta struct {
+      SmartAds struct {
+         // these can be empty string, so we cannot use these:
+         // int `json:",string"`
+         // json.Number
+         CTE string
+         CTS string
+      }
+   }
+}
+
 func (embed_media) Show() string {
    return ""
 }
@@ -35,13 +54,6 @@ func (embed_media) Episode() int {
 
 func (e embed_media) Title() string {
    return e.Data.Title
-}
-
-type embed_media struct {
-   Data struct {
-      AssetId string
-      Title string
-   }
 }
 
 // its just not available from what I can tell
