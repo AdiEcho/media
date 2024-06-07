@@ -6,8 +6,51 @@ import (
    "net/http"
    "net/url"
    "strconv"
+   "strings"
 )
 
+func (a AppSession) Stream(id int64) (*ProgramStream, error) {
+   req, err := http.NewRequest(
+      "GET", "https://api.stan.com.au/concurrency/v1/streams", nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("x-forwarded-for", "1.128.0.0")
+   req.URL.RawQuery = url.Values{
+      "drm": {"widevine"}, // need for .Media.DRM
+      "format": {"dash"}, // 404 otherwise
+      "jwToken": {a.JwToken},
+      "programId": {strconv.FormatInt(id, 10)},
+      "quality": {"auto"}, // note `high` or `ultra` should work too
+   }.Encode()
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   stream := new(ProgramStream)
+   err = json.NewDecoder(res.Body).Decode(stream)
+   if err != nil {
+      return nil, err
+   }
+   return stream, nil
+}
+
+type ProgramStream struct {
+   Media struct {
+      DRM *struct {
+         CustomData string
+         KeyId string
+      }
+      VideoUrl string
+   }
+}
 func (ProgramStream) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -48,45 +91,4 @@ func (p ProgramStream) BaseUrl(host string) (*url.URL, error) {
    }
    video.Host = host
    return video, nil
-}
-
-func (a AppSession) Stream(id int64) (*ProgramStream, error) {
-   req, err := http.NewRequest(
-      "GET", "https://api.stan.com.au/concurrency/v1/streams", nil,
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("x-forwarded-for", "1.128.0.0")
-   req.URL.RawQuery = url.Values{
-      "drm": {"widevine"}, // need for .Media.DRM
-      "format": {"dash"}, // 404 otherwise
-      "jwToken": {a.JwToken},
-      "programId": {strconv.FormatInt(id, 10)},
-      "quality": {"auto"}, // note `high` or `ultra` should work too
-   }.Encode()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
-   }
-   stream := new(ProgramStream)
-   err = json.NewDecoder(res.Body).Decode(stream)
-   if err != nil {
-      return nil, err
-   }
-   return stream, nil
-}
-
-type ProgramStream struct {
-   Media struct {
-      DRM *struct {
-         CustomData string
-         KeyId string
-      }
-      VideoUrl string
-   }
 }

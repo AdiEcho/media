@@ -1,11 +1,67 @@
 package hulu
 
 import (
+   "bytes"
+   "errors"
+   "encoding/json"
    "net/http"
    "path"
    "strconv"
    "strings"
 )
+
+func (a Authenticate) Details(d *DeepLink) ([]Details, error) {
+   body, err := func() ([]byte, error) {
+      m := map[string][]string{
+         "eabs": {d.EabId},
+      }
+      return json.Marshal(m)
+   }()
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://guide.hulu.com/guide/details", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("Authorization", "Bearer " + a.v.Data.UserToken)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return nil, errors.New(res.Status)
+   }
+   var s struct {
+      Items []Details
+   }
+   err = json.NewDecoder(res.Body).Decode(&s)
+   if err != nil {
+      return nil, err
+   }
+   return s.Items, nil
+}
+
+type Details struct {
+   Headline string
+   EpisodeName string `json:"episode_name"`
+   EpisodeNumber int `json:"episode_number"`
+   PremiereDate string `json:"premiere_date"`
+   SeasonNumber int `json:"season_number"`
+   SeriesName string `json:"series_name"`
+}
+
+func (d Details) Year() int {
+   if v, _, ok := strings.Cut(d.PremiereDate, "-"); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
+}
 
 type Playlist struct {
    StreamUrl string `json:"stream_url"`
@@ -101,15 +157,6 @@ type segment_value struct {
    Type string `json:"type"`
 }
 
-type Details struct {
-   Headline string
-   EpisodeName string `json:"episode_name"`
-   EpisodeNumber int `json:"episode_number"`
-   PremiereDate string `json:"premiere_date"`
-   SeasonNumber int `json:"season_number"`
-   SeriesName string `json:"series_name"`
-}
-
 func (d Details) Show() string {
    return d.SeriesName
 }
@@ -127,13 +174,4 @@ func (d Details) Title() string {
       return v
    }
    return d.Headline
-}
-
-func (d Details) Year() int {
-   if v, _, ok := strings.Cut(d.PremiereDate, "-"); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
 }
