@@ -1,6 +1,7 @@
 package rtbf
 
 import (
+   "154.pages.dev/text"
    "fmt"
    "testing"
    "time"
@@ -30,6 +31,11 @@ func TestEmbedMedia(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", embed)
+      name, err := text.Name(embed)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
 }
