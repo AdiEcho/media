@@ -23,14 +23,14 @@ func (a *Authenticate) Unmarshal() error {
    return json.Unmarshal(a.Data, &a.v)
 }
 
-func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
+func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
    req, err := http.NewRequest("GET", "https://discover.hulu.com", nil)
    if err != nil {
       return nil, err
    }
    req.URL.Path = "/content/v5/deeplink/playback"
    req.URL.RawQuery = url.Values{
-      "id": {watch.s},
+      "id": {id.s},
       "namespace": {"entity"},
    }.Encode()
    req.Header.Set("Authorization", "Bearer " + a.v.Data.UserToken)
@@ -51,6 +51,7 @@ func (a Authenticate) DeepLink(watch ID) (*DeepLink, error) {
    }
    return link, nil
 }
+
 func (a *Authenticate) New(email, password string) error {
    res, err := http.PostForm(
       "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{

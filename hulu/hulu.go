@@ -6,17 +6,40 @@ import (
    "encoding/json"
    "net/http"
    "path"
-   "strconv"
-   "strings"
+   "time"
 )
 
+type EntityId struct {
+   s string
+}
+
+func (e EntityId) String() string {
+   return e.s
+}
+
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+func (e *EntityId) Set(s string) error {
+   e.s = path.Base(s)
+   return nil
+}
+
+func (d Details) Year() int {
+   return d.PremiereDate.Year()
+}
+
+type Details struct {
+   Headline string
+   EpisodeName string `json:"episode_name"`
+   EpisodeNumber int `json:"episode_number"`
+   PremiereDate time.Time `json:"premiere_date"`
+   SeasonNumber int `json:"season_number"`
+   SeriesName string `json:"series_name"`
+}
+
 func (a Authenticate) Details(d *DeepLink) ([]Details, error) {
-   body, err := func() ([]byte, error) {
-      m := map[string][]string{
-         "eabs": {d.EabId},
-      }
-      return json.Marshal(m)
-   }()
+   body, err := json.Marshal(map[string][]string{
+      "eabs": {d.EabId},
+   })
    if err != nil {
       return nil, err
    }
@@ -45,24 +68,6 @@ func (a Authenticate) Details(d *DeepLink) ([]Details, error) {
    return s.Items, nil
 }
 
-type Details struct {
-   Headline string
-   EpisodeName string `json:"episode_name"`
-   EpisodeNumber int `json:"episode_number"`
-   PremiereDate string `json:"premiere_date"`
-   SeasonNumber int `json:"season_number"`
-   SeriesName string `json:"series_name"`
-}
-
-func (d Details) Year() int {
-   if v, _, ok := strings.Cut(d.PremiereDate, "-"); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
-}
-
 type Playlist struct {
    StreamUrl string `json:"stream_url"`
    WvServer string `json:"wv_server"`
@@ -86,20 +91,6 @@ func (Playlist) UnwrapResponse(b []byte) ([]byte, error) {
 
 type DeepLink struct {
    EabId string `json:"eab_id"`
-}
-
-type ID struct {
-   s string
-}
-
-func (i ID) String() string {
-   return i.s
-}
-
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-func (i *ID) Set(s string) error {
-   i.s = path.Base(s)
-   return nil
 }
 
 type codec_value struct {
