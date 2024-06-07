@@ -4,8 +4,23 @@ import (
    "encoding/json"
    "errors"
    "net/http"
+   "net/url"
    "strings"
 )
+
+func (entitlement) RequestHeader() (http.Header, error) {
+   h := make(http.Header)
+   h.Set("content-type", "application/x-protobuf")
+   return h, nil
+}
+
+func (entitlement) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (entitlement) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
 
 func (g gigya_login) entitlement(embed embed_media) (*entitlement, error) {
    req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
@@ -44,4 +59,16 @@ func (g gigya_login) entitlement(embed embed_media) (*entitlement, error) {
 type entitlement struct {
    AssetId string
    PlayToken string
+}
+
+func (e entitlement) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Host = "rbm-rtbf.live.ott.irdeto.com"
+   u.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
+   u.Scheme = "https"
+   u.RawQuery = url.Values{
+      "contentId": {e.AssetId},
+      "ls_session": {e.PlayToken},
+   }.Encode()
+   return u.String(), true
 }
