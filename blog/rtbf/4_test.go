@@ -1,6 +1,7 @@
 package rtbf
 
 import (
+   "fmt"
    "os"
    "testing"
 )
@@ -11,18 +12,18 @@ func TestFour(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   username, password := os.Getenv("rtbf_username"), os.Getenv("rtbf_password")
-   if username == "" {
-      t.Fatal("Getenv")
-   }
-   login, err := o.login(username, password)
+   var login accounts_login
+   login.data, err = os.ReadFile("login.json")
    if err != nil {
       t.Fatal(err)
    }
-   res, err := o.four(login)
+   err = login.unmarshal()
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   token, err := o.four(&login)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", token)
 }

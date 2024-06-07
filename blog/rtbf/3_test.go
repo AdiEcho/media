@@ -1,12 +1,11 @@
 package rtbf
 
 import (
-   "fmt"
    "os"
    "testing"
 )
 
-func TestTwo(t *testing.T) {
+func TestAccountsLogin(t *testing.T) {
    var o one
    err := o.New()
    if err != nil {
@@ -20,5 +19,5 @@ func TestTwo(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", login)
+   os.WriteFile("account.json", login.data, 0666)
 }
