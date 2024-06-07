@@ -1,10 +1,1 @@
-{
-  "callId": "b27d79483e0f4b06b816143097e7c275",
-  "errorCode": 400093,
-  "errorDetails": "Missing required parameter: ApiKey",
-  "errorMessage": "Invalid ApiKey parameter",
-  "apiVersion": 2,
-  "statusCode": 400,
-  "statusReason": "Bad Request",
-  "time": "2024-06-07T04:28:50.158Z"
-}
+{"ErrorDetails":"","SessionInfo":{"CookieValue":"st2.s.AtLtzSvn1A.geE0sixINm08yzkpVBTQeKBNZzv7QCGghMi34oAIKApjG5_rjiVOpO2_bV-vdzwWJGIfB5VLm4wa3l9jw-R3ld1Ru6NRNktJYRXxunsJxVp-6baXD8Q3Mo9wdZ51x9-n.HmsZHnocCzrxewTkS4qunA_GjTKIzAPPjmedDQrlWYDrk9ppfPEw8ujgArcQ2WWfx5n-BBRpyRctzh6yv77QLw.sc3"}}

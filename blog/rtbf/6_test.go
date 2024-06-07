@@ -12,12 +12,12 @@ func TestSix(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var account accounts_login
-   account.data, err = os.ReadFile("account.json")
+   text, err := os.ReadFile("account.json")
    if err != nil {
       t.Fatal(err)
    }
-   err = account.unmarshal()
+   var account accounts_login
+   err = account.unmarshal(text)
    if err != nil {
       t.Fatal(err)
    }

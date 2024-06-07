@@ -10,12 +10,8 @@ func TestAccountsLogin(t *testing.T) {
    if username == "" {
       t.Fatal("Getenv")
    }
-   var o one
-   err := o.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   login, err := o.login(username, password)
+   var login accounts_login
+   err := login.New(username, password)
    if err != nil {
       t.Fatal(err)
    }
