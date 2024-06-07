@@ -8,6 +8,36 @@ import (
    "strings"
 )
 
+func (e entitlement) dash() (string, bool) {
+   for _, format := range e.Formats {
+      if format.Format == "DASH" {
+         return format.MediaLocator, true
+      }
+   }
+   return "", false
+}
+
+type entitlement struct {
+   AssetId string
+   PlayToken string
+   Formats []struct {
+      Format string
+      MediaLocator string
+   }
+}
+
+func (e entitlement) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Host = "rbm-rtbf.live.ott.irdeto.com"
+   u.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
+   u.Scheme = "https"
+   u.RawQuery = url.Values{
+      "contentId": {e.AssetId},
+      "ls_session": {e.PlayToken},
+   }.Encode()
+   return u.String(), true
+}
+
 func (entitlement) RequestHeader() (http.Header, error) {
    h := make(http.Header)
    h.Set("content-type", "application/x-protobuf")
@@ -54,21 +84,4 @@ func (g gigya_login) entitlement(embed embed_media) (*entitlement, error) {
       return nil, err
    }
    return title, nil
-}
-
-type entitlement struct {
-   AssetId string
-   PlayToken string
-}
-
-func (e entitlement) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Host = "rbm-rtbf.live.ott.irdeto.com"
-   u.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
-   u.Scheme = "https"
-   u.RawQuery = url.Values{
-      "contentId": {e.AssetId},
-      "ls_session": {e.PlayToken},
-   }.Encode()
-   return u.String(), true
 }

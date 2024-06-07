@@ -36,6 +36,7 @@ func TestEntitlement(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", title)
+   fmt.Println(title.dash())
 }
 
 const raw_key_id = "o1C37Tt5SzmHMmEgQViUEA=="
