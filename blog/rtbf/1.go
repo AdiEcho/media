@@ -2,23 +2,15 @@ package rtbf
 
 import (
    "net/http"
-   "net/url"
-   "os"
+   "strconv"
 )
 
-func One() {
-   var req http.Request
-   req.Header = make(http.Header)
-   req.ProtoMajor = 1
-   req.ProtoMinor = 1
-   req.URL = new(url.URL)
-   req.URL.Host = "bff-service.rtbf.be"
-   req.URL.Path = "/auvio/v1.23/embed/media/3201987"
-   req.URL.Scheme = "https"
-   res, err := http.DefaultClient.Do(&req)
-   if err != nil {
-      panic(err)
-   }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+func one(media int64) (*http.Response, error) {
+   address := func() string {
+      b := []byte("https://bff-service.rtbf.be/auvio/v1.23/embed/media/")
+      b = strconv.AppendInt(b, media, 10)
+      b = append(b, "?userAgent"...)
+      return string(b)
+   }()
+   return http.Get(address)
 }
