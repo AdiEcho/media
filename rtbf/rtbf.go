@@ -130,7 +130,7 @@ func (a *AccountLogin) unmarshal(text []byte) error {
 	return json.Unmarshal(text, a)
 }
 
-func (a AccountLogin) marshal() ([]byte, error) {
+func (a AccountLogin) Marshal() ([]byte, error) {
 	return json.Marshal(a)
 }
 
