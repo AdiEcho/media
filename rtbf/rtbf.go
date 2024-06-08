@@ -126,7 +126,7 @@ type AccountLogin struct {
 	}
 }
 
-func (a *AccountLogin) unmarshal(text []byte) error {
+func (a *AccountLogin) Unmarshal(text []byte) error {
 	return json.Unmarshal(text, a)
 }
 

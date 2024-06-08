@@ -11,29 +11,17 @@ import (
    "path/filepath"
 )
 
-func (f flags) authenticate() error {
-   var login rtbf.AccountLogin
-   err := login.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   text, err := login.Marshal()
-   if err != nil {
-      return err
-   }
-   os.WriteFile(f.home + "/rtbf.json", text, 0666)
-}
-
 func (f flags) download() error {
-   text, err := os.ReadFile("account.json")
+   text, err := os.ReadFile(f.home + "/rtbf.json")
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   var account AccountLogin
-   err = account.unmarshal(text)
+   var account rtbf.AccountLogin
+   err = account.Unmarshal(text)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
+   
    token, err := account.token()
    if err != nil {
       t.Fatal(err)
@@ -77,4 +65,17 @@ func (f flags) download() error {
       fmt.Println(medium)
    }
    return nil
+}
+
+func (f flags) authenticate() error {
+   var login rtbf.AccountLogin
+   err := login.New(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   text, err := login.Marshal()
+   if err != nil {
+      return err
+   }
+   os.WriteFile(f.home + "/rtbf.json", text, 0666)
 }
