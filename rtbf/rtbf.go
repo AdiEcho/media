@@ -10,6 +10,23 @@ import (
    "strings"
 )
 
+func (e embed_media) Title() string {
+   if e.Data.Program != nil {
+      // json.data.subtitle = "06 - Les ombres de la guerre";
+      _, after, _ := strings.Cut(e.Data.Subtitle, " - ")
+      return after
+   }
+   // json.data.title = "I care a lot";
+   return e.Data.Title
+}
+
+func (e embed_media) Show() string {
+   if v := e.Data.Program; v != nil {
+      return v.Title
+   }
+   return ""
+}
+
 type embed_media struct {
    Data struct {
       AssetId string
@@ -128,23 +145,6 @@ func (e embed_media) Episode() int {
 
 func (e embed_media) Season() int {
    return int(e.Meta.SmartAds.CTS)
-}
-
-func (e embed_media) Show() string {
-   if v := e.Data.Program; v != nil {
-      return v.Title
-   }
-   return ""
-}
-
-func (e embed_media) Title() string {
-   if e.Data.Program != nil {
-      // json.data.subtitle = "06 - Les ombres de la guerre";
-      _, after, _ := strings.Cut(e.Data.Subtitle, " - ")
-      return after
-   }
-   // json.data.title = "I care a lot";
-   return e.Data.Title
 }
 
 // its just not available from what I can tell
