@@ -76,6 +76,7 @@ func (a *Authenticate) New(email, password string) error {
    }
    return nil
 }
+
 func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    var p playlist_request
    p.ContentEabId = d.EabId
@@ -146,4 +147,3 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    }
    return play, nil
 }
-

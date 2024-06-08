@@ -12,7 +12,7 @@ import (
    "strings"
 )
 
-func (at AppToken) Item(content_id string) ([]VideoItem, error) {
+func (at AppToken) Item(content_id string) (*VideoItem, error) {
    req, err := http.NewRequest("GET", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err
@@ -41,7 +41,7 @@ func (at AppToken) Item(content_id string) ([]VideoItem, error) {
    if err != nil {
       return nil, err
    }
-   return video.ItemList, nil
+   return &video.ItemList[0], nil
 }
 
 type AppToken string

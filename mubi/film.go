@@ -9,60 +9,6 @@ import (
    "strings"
 )
 
-func (a Authenticate) URL(film *FilmResponse) (*SecureUrl, error) {
-   req, err := http.NewRequest("", "https://api.mubi.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      b := []byte("/v3/films/")
-      b = strconv.AppendInt(b, film.ID, 10)
-      b = append(b, "/viewing/secure_url"...)
-      return string(b)
-   }
-   req.Header = http.Header{
-      "Authorization": {"Bearer " + a.V.Token},
-      "Client": {client},
-      "Client-Country": {ClientCountry},
-   }
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var secure SecureUrl
-   secure.Data, err = io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &secure, nil
-}
-
-func (Namer) Episode() int {
-   return 0
-}
-
-func (Namer) Season() int {
-   return 0
-}
-
-func (Namer) Show() string {
-   return ""
-}
-
-func (n Namer) Title() string {
-   return n.F.Title
-}
-
-func (n Namer) Year() int {
-   return n.F.Year
-}
-
 // Mubi do this sneaky thing. you cannot download a video unless you have told
 // the API that you are watching it. so you have to call
 // `/v3/films/%v/viewing`, otherwise it wont let you get the MPD. if you have
@@ -78,7 +24,7 @@ func (a Authenticate) Viewing(film *FilmResponse) error {
       b = strconv.AppendInt(b, film.ID, 10)
       b = append(b, "/viewing"...)
       return string(b)
-   }
+   }()
    req.Header = http.Header{
       "Authorization": {"Bearer " + a.V.Token},
       "Client": {client},
@@ -130,3 +76,57 @@ func (w WebAddress) Film() (*FilmResponse, error) {
    }
    return film, nil
 }
+func (a Authenticate) URL(film *FilmResponse) (*SecureUrl, error) {
+   req, err := http.NewRequest("GET", "https://api.mubi.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/v3/films/")
+      b = strconv.AppendInt(b, film.ID, 10)
+      b = append(b, "/viewing/secure_url"...)
+      return string(b)
+   }()
+   req.Header = http.Header{
+      "Authorization": {"Bearer " + a.V.Token},
+      "Client": {client},
+      "Client-Country": {ClientCountry},
+   }
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var secure SecureUrl
+   secure.Data, err = io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &secure, nil
+}
+
+func (Namer) Episode() int {
+   return 0
+}
+
+func (Namer) Season() int {
+   return 0
+}
+
+func (Namer) Show() string {
+   return ""
+}
+
+func (n Namer) Title() string {
+   return n.F.Title
+}
+
+func (n Namer) Year() int {
+   return n.F.Year
+}
+

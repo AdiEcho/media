@@ -9,34 +9,7 @@ import (
    "time"
 )
 
-func (d Details) Year() int {
-   return d.PremiereDate.Year()
-}
-
-type EntityId struct {
-   s string
-}
-
-func (e EntityId) String() string {
-   return e.s
-}
-
-// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
-func (e *EntityId) Set(s string) error {
-   e.s = path.Base(s)
-   return nil
-}
-
-type Details struct {
-   Headline string
-   EpisodeName string `json:"episode_name"`
-   EpisodeNumber int `json:"episode_number"`
-   PremiereDate time.Time `json:"premiere_date"`
-   SeasonNumber int `json:"season_number"`
-   SeriesName string `json:"series_name"`
-}
-
-func (a Authenticate) Details(d *DeepLink) ([]Details, error) {
+func (a Authenticate) Details(d *DeepLink) (*Details, error) {
    body, err := json.Marshal(map[string][]string{
       "eabs": {d.EabId},
    })
@@ -65,7 +38,7 @@ func (a Authenticate) Details(d *DeepLink) ([]Details, error) {
    if err != nil {
       return nil, err
    }
-   return s.Items, nil
+   return &s.Items[0], nil
 }
 
 type Playlist struct {
@@ -165,4 +138,30 @@ func (d Details) Title() string {
       return v
    }
    return d.Headline
+}
+func (d Details) Year() int {
+   return d.PremiereDate.Year()
+}
+
+type EntityId struct {
+   s string
+}
+
+func (e EntityId) String() string {
+   return e.s
+}
+
+// hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
+func (e *EntityId) Set(s string) error {
+   e.s = path.Base(s)
+   return nil
+}
+
+type Details struct {
+   Headline string
+   EpisodeName string `json:"episode_name"`
+   EpisodeNumber int `json:"episode_number"`
+   PremiereDate time.Time `json:"premiere_date"`
+   SeasonNumber int `json:"season_number"`
+   SeriesName string `json:"series_name"`
 }

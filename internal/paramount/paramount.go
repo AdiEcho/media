@@ -26,11 +26,10 @@ func (f flags) dash(app paramount.AppToken) error {
          if err != nil {
             return err
          }
-         item, err := app.Item(f.paramount)
+         f.s.Name, err = app.Item(f.paramount)
          if err != nil {
             return err
          }
-         f.s.Name = <-item
          return f.s.Download(medium)
       }
    }
