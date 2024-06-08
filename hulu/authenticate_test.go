@@ -9,11 +9,12 @@ import (
 )
 
 func TestDetails(t *testing.T) {
-   var (
-      auth Authenticate
-      err error
-   )
-   auth.Data, err = os.ReadFile("authenticate.json")
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   var auth Authenticate
+   auth.Data, err = os.ReadFile(home + "/hulu.json")
    if err != nil {
       t.Fatal(err)
    }
@@ -28,7 +29,7 @@ func TestDetails(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", details)
-      name, err := text.Name(details[0])
+      name, err := text.Name(details)
       if err != nil {
          t.Fatal(err)
       }

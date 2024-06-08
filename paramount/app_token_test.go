@@ -22,7 +22,7 @@ func TestItem(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := text.Name(item[0])
+      name, err := text.Name(item)
       if err != nil {
          t.Fatal(err)
       }

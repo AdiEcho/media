@@ -30,7 +30,11 @@ func TestContent(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(text.Name(video))
+      name, err := text.Name(video)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
 }
@@ -63,13 +67,13 @@ func TestRefresh(t *testing.T) {
       t.Fatal(err)
    }
    var auth Authorization
-   auth.Data, err = os.ReadFile(home + "/amc/auth.json")
+   auth.Data, err = os.ReadFile(home + "/amc.json")
    if err != nil {
       t.Fatal(err)
    }
    auth.Unmarshal()
    auth.Refresh()
-   os.WriteFile(home + "/amc/auth.json", auth.Data, 0666)
+   os.WriteFile(home + "/amc.json", auth.Data, 0666)
 }
 
 func TestPath(t *testing.T) {
