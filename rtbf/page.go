@@ -8,6 +8,14 @@ import (
    "strings"
 )
 
+type auvio_page struct {
+   Content struct {
+      AssetId string
+      Subtitle subtitle
+      Title title
+   }
+}
+
 // its just not available from what I can tell
 func (auvio_page) Year() int {
    return 0
@@ -30,13 +38,6 @@ func new_page(path string) (*auvio_page, error) {
       return nil, err
    }
    return &s.Data, nil
-}
-
-type auvio_page struct {
-   Content struct {
-      Title title
-      Subtitle subtitle
-   }
 }
 
 func (a auvio_page) Season() int {

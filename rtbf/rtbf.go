@@ -10,58 +10,6 @@ import (
    "strings"
 )
 
-func (e embed_media) Title() string {
-   if e.Data.Program != nil {
-      // json.data.subtitle = "06 - Les ombres de la guerre";
-      _, after, _ := strings.Cut(e.Data.Subtitle, " - ")
-      return after
-   }
-   // json.data.title = "I care a lot";
-   return e.Data.Title
-}
-
-func (e embed_media) Show() string {
-   if v := e.Data.Program; v != nil {
-      return v.Title
-   }
-   return ""
-}
-
-type embed_media struct {
-   Data struct {
-      AssetId string
-      Program *struct {
-         Title string
-      }
-      Subtitle string
-      Title string
-   }
-   Meta struct {
-      SmartAds struct {
-         CTE number
-         CTS number
-      }
-   }
-}
-
-func (e *embed_media) New(media int64) error {
-   address := func() string {
-      b := []byte("https://bff-service.rtbf.be/auvio/v1.23/embed/media/")
-      b = strconv.AppendInt(b, media, 10)
-      b = append(b, "?userAgent"...)
-      return string(b)
-   }()
-   res, err := http.Get(address)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
-   }
-   return json.NewDecoder(res.Body).Decode(e)
-}
-
 // hard coded in JavaScript
 const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
 
@@ -137,19 +85,6 @@ func (a accounts_login) token() (*web_token, error) {
       return nil, errors.New(v)
    }
    return &web, nil
-}
-
-func (e embed_media) Episode() int {
-   return int(e.Meta.SmartAds.CTE)
-}
-
-func (e embed_media) Season() int {
-   return int(e.Meta.SmartAds.CTS)
-}
-
-// its just not available from what I can tell
-func (embed_media) Year() int {
-   return 0
 }
 
 type gigya_login struct {
