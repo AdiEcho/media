@@ -8,24 +8,25 @@ import (
    "time"
 )
 
-/*
-auvio.rtbf.be/emission/i-care-a-lot-27462
-auvio.rtbf.be/media/i-care-a-lot-avec-rosamund-pike-3201987
-rtbf.be/auvio/detail_i-care-a-lot?id=3201987
-*/
-var media = map[string]struct{
+var media = []struct{
    id int64
    key_id string
+   path string
    url string
 }{
-   "episode": {
-      id: 3194636,
-      url: "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
-   },
-   "film": {
+   {
       id: 3201987,
       key_id: "o1C37Tt5SzmHMmEgQViUEA==",
+      path: "/media/i-care-a-lot-i-care-a-lot-3201987",
       url: "auvio.rtbf.be/media/i-care-a-lot-i-care-a-lot-3201987",
+   },
+   {
+      path: "/emission/i-care-a-lot-27462",
+      url: "auvio.rtbf.be/emission/i-care-a-lot-27462",
+   },
+   {
+      path: "/media/grantchester-grantchester-s01-3194636",
+      url: "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
    },
 }
 

@@ -21,7 +21,7 @@ func TestWidevine(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   medium := media["film"]
+   medium := media[0]
    key_id, err := base64.StdEncoding.DecodeString(medium.key_id)
    if err != nil {
       t.Fatal(err)
@@ -83,7 +83,7 @@ func TestEntitlement(t *testing.T) {
       t.Fatal(err)
    }
    var embed embed_media
-   err = embed.New(media["film"].id)
+   err = embed.New(media[0].id)
    if err != nil {
       t.Fatal(err)
    }
