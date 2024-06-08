@@ -37,14 +37,15 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   
-   title, err := gigya.entitlement(page)
+   title, err := gigya.Entitlement(page)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   fmt.Printf("%+v\n", title)
-   fmt.Println(title.dash())
-   req, err := http.NewRequest("", play.StreamUrl, nil)
+   locator, ok := title.DASH()
+   if !ok {
+      return errors.New("Entitlement.DASH")
+   }
+   req, err := http.NewRequest("GET", locator, nil)
    if err != nil {
       return err
    }
@@ -54,11 +55,8 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         f.s.Name, err = auth.Details(deep)
-         if err != nil {
-            return err
-         }
-         f.s.Poster = play
+         f.s.Name = page
+         f.s.Poster = title
          return f.s.Download(medium)
       }
    }

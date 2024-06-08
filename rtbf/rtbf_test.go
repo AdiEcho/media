@@ -8,54 +8,6 @@ import (
 	"testing"
 )
 
-func TestEntitlement(t *testing.T) {
-	text, err := os.ReadFile("account.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var account AccountLogin
-	err = account.Unmarshal(text)
-	if err != nil {
-		t.Fatal(err)
-	}
-	token, err := account.Token()
-	if err != nil {
-		t.Fatal(err)
-	}
-	gigya, err := token.Login()
-	if err != nil {
-		t.Fatal(err)
-	}
-	page, err := NewPage(media[0].path)
-	if err != nil {
-		t.Fatal(err)
-	}
-	title, err := gigya.Entitlement(page)
-	if err != nil {
-		t.Fatal(err)
-	}
-	fmt.Printf("%+v\n", title)
-	fmt.Println(title.dash())
-}
-
-func TestAccountsLogin(t *testing.T) {
-	username := os.Getenv("rtbf_username")
-	if username == "" {
-		t.Fatal("Getenv")
-	}
-	password := os.Getenv("rtbf_password")
-	var login AccountLogin
-	err := login.New(username, password)
-	if err != nil {
-		t.Fatal(err)
-	}
-	text, err := login.Marshal()
-	if err != nil {
-		t.Fatal(err)
-	}
-	os.WriteFile("account.json", text, 0666)
-}
-
 func TestWidevine(t *testing.T) {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -127,3 +79,51 @@ func TestWebToken(t *testing.T) {
 	}
 	fmt.Printf("%+v\n", token)
 }
+func TestEntitlement(t *testing.T) {
+	text, err := os.ReadFile("account.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var account AccountLogin
+	err = account.Unmarshal(text)
+	if err != nil {
+		t.Fatal(err)
+	}
+	token, err := account.Token()
+	if err != nil {
+		t.Fatal(err)
+	}
+	gigya, err := token.Login()
+	if err != nil {
+		t.Fatal(err)
+	}
+	page, err := NewPage(media[0].path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	title, err := gigya.Entitlement(page)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%+v\n", title)
+	fmt.Println(title.DASH())
+}
+
+func TestAccountsLogin(t *testing.T) {
+	username := os.Getenv("rtbf_username")
+	if username == "" {
+		t.Fatal("Getenv")
+	}
+	password := os.Getenv("rtbf_password")
+	var login AccountLogin
+	err := login.New(username, password)
+	if err != nil {
+		t.Fatal(err)
+	}
+	text, err := login.Marshal()
+	if err != nil {
+		t.Fatal(err)
+	}
+	os.WriteFile("account.json", text, 0666)
+}
+

@@ -9,6 +9,15 @@ import (
 	"strings"
 )
 
+func (e Entitlement) DASH() (string, bool) {
+	for _, format := range e.Formats {
+		if format.Format == "DASH" {
+			return format.MediaLocator, true
+		}
+	}
+	return "", false
+}
+
 func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
 	req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
 	if err != nil {
@@ -50,15 +59,6 @@ type Entitlement struct {
 		Format       string
 		MediaLocator string
 	}
-}
-
-func (e Entitlement) dash() (string, bool) {
-	for _, format := range e.Formats {
-		if format.Format == "DASH" {
-			return format.MediaLocator, true
-		}
-	}
-	return "", false
 }
 
 func (e Entitlement) RequestUrl() (string, bool) {
