@@ -11,6 +11,26 @@ import (
    "time"
 )
 
+func TestItem(t *testing.T) {
+   var token AppToken
+   err := token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      item, err := token.Item(path.Base(test.url))
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := text.Name(item[0])
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
+}
+
 func TestWidevine(t *testing.T) {
    test := tests["episode"]
    var token AppToken
@@ -48,20 +68,4 @@ func TestWidevine(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-func TestItem(t *testing.T) {
-   var token AppToken
-   err := token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      item, err := token.Item(path.Base(test.url))
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(text.Name(<-item))
-      time.Sleep(time.Second)
-   }
 }

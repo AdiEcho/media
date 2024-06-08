@@ -68,14 +68,6 @@ func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (i Item) Show() string {
-   return i.SeriesTitle
-}
-
-func (i Item) Title() string {
-   return i.Label
-}
-
 type app_details struct {
    version string
    code int
@@ -165,23 +157,34 @@ func (n *number) UnmarshalText(text []byte) error {
 
 type number int
 
-func (i Item) Year() int {
-   return i.AirDateIso.Year()
+func (v VideoItem) Season() int {
+   return int(v.SeasonNum)
 }
 
-func (i Item) Season() int {
-   return int(i.SeasonNum)
+func (v VideoItem) Episode() int {
+   return int(v.EpisodeNum)
 }
 
-type Item struct {
+func (v VideoItem) Title() string {
+   return v.Label
+}
+
+func (v VideoItem) Year() int {
+   return v.AirDateIso.Year()
+}
+
+type VideoItem struct {
    AirDateIso time.Time `json:"_airDateISO"`
    EpisodeNum number
    Label string
-   MediaType string
    SeasonNum number
    SeriesTitle string
+   MediaType string
 }
 
-func (i Item) Episode() int {
-   return int(i.EpisodeNum)
+func (v VideoItem) Show() string {
+   if v.MediaType == "Full Episode" {
+      return v.SeriesTitle
+   }
+   return ""
 }

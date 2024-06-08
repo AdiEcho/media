@@ -12,7 +12,7 @@ import (
    "strings"
 )
 
-func (at AppToken) Item(content_id string) (chan Item, error) {
+func (at AppToken) Item(content_id string) ([]VideoItem, error) {
    req, err := http.NewRequest("GET", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err
@@ -35,20 +35,13 @@ func (at AppToken) Item(content_id string) (chan Item, error) {
       return nil, errors.New(res.Status)
    }
    var video struct {
-      ItemList []Item
+      ItemList []VideoItem
    }
    err = json.NewDecoder(res.Body).Decode(&video)
    if err != nil {
       return nil, err
    }
-   channel := make(chan Item)
-   go func() {
-      for _, item := range video.ItemList {
-         channel <- item
-      }
-      close(channel)
-   }()
-   return channel, nil
+   return video.ItemList, nil
 }
 
 type AppToken string
