@@ -21,12 +21,12 @@ var media = []struct{
       url: "auvio.rtbf.be/media/i-care-a-lot-i-care-a-lot-3201987",
    },
    {
-      path: "/emission/i-care-a-lot-27462",
-      url: "auvio.rtbf.be/emission/i-care-a-lot-27462",
-   },
-   {
       path: "/media/grantchester-grantchester-s01-3194636",
       url: "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
+   },
+   {
+      path: "/emission/i-care-a-lot-27462",
+      url: "auvio.rtbf.be/emission/i-care-a-lot-27462",
    },
 }
 

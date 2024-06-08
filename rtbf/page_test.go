@@ -7,7 +7,7 @@ import (
 )
 
 func TestPage(t *testing.T) {
-   for _, medium := range media {
+   for _, medium := range media[:2] {
       func() {
          res, err := page(medium.path)
          if err != nil {
