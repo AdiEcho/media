@@ -3,12 +3,11 @@ package main
 import (
    "154.pages.dev/media/rtbf"
    "154.pages.dev/media/internal"
-   "154.pages.dev/text"
-   "flag"
+   "errors"
    "fmt"
    "net/http"
+   "net/url"
    "os"
-   "path/filepath"
 )
 
 func (f flags) download() error {
@@ -79,5 +78,5 @@ func (f flags) authenticate() error {
    if err != nil {
       return err
    }
-   os.WriteFile(f.home + "/rtbf.json", text, 0666)
+   return os.WriteFile(f.home + "/rtbf.json", text, 0666)
 }
