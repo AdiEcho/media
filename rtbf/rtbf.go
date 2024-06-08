@@ -9,15 +9,6 @@ import (
    "strings"
 )
 
-func (e Entitlement) DASH() (string, bool) {
-   for _, format := range e.Formats {
-      if format.Format == "DASH" {
-         return format.MediaLocator, true
-      }
-   }
-   return "", false
-}
-
 func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
    req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
    if err != nil {
@@ -26,7 +17,7 @@ func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
    req.URL.Path = func() string {
       var b strings.Builder
       b.WriteString("/v2/customer/RTBF/businessunit/Auvio/entitlement/")
-      b.WriteString(page.Content.AssetId)
+      b.WriteString(page.asset_id())
       b.WriteString("/play")
       return b.String()
    }()
@@ -207,4 +198,12 @@ func (w WebToken) Login() (*GigyaLogin, error) {
       return nil, err
    }
    return login, nil
+}
+func (e Entitlement) DASH() (string, bool) {
+   for _, format := range e.Formats {
+      if format.Format == "DASH" {
+         return format.MediaLocator, true
+      }
+   }
+   return "", false
 }

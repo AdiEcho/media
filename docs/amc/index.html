@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/amc<span class="navbar-right">
-          v1.9.4 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.9.5 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package amc</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/amc&#34;</span></pre>
@@ -104,7 +104,7 @@
   <h3 id="CurrentVideo">type CurrentVideo</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">CurrentVideo</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="CurrentVideo.Meta"><span class="nx">Meta</span></span> <span class="kd">struct</span> <span class="p">{</span>
-		<span id="CurrentVideo.Airdate"><span class="nx">Airdate</span></span>       <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="c1">// 1996-01-01T00:00:00.000Z
+		<span id="CurrentVideo.Airdate"><span class="nx">Airdate</span></span>       <a href="https://pkg.go.dev/time"><span class="nx">time</span></a><span class="p">.</span><a href="https://pkg.go.dev/time#Time"><span class="nx">Time</span></a> <span class="c1">// 1996-01-01T00:00:00.000Z
 </span><span class="c1"></span>		<span id="CurrentVideo.EpisodeNumber"><span class="nx">EpisodeNumber</span></span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
 		<span id="CurrentVideo.Season"><span class="nx">Season</span></span>        <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a> <span class="s">`json:&#34;,string&#34;`</span>
 		<span id="CurrentVideo.ShowTitle"><span class="nx">ShowTitle</span></span>     <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>

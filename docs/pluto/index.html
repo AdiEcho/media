@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/pluto<span class="navbar-right">
-          v1.9.4 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.9.5 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package pluto</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/pluto&#34;</span></pre>
@@ -23,7 +23,7 @@
   <li><a href="#pkg-variables">Variables</a></li><li>
       <a href="#EpisodeClip">type EpisodeClip</a>
       <ul>
-          <li><a href="#EpisodeClip.DASH">func (e EpisodeClip) DASH() (*Source, bool)</a></li>
+          <li><a href="#EpisodeClip.DASH">func (e EpisodeClip) DASH() (*url.URL, bool)</a></li>
           </ul>
       </li>
   <li>
@@ -55,9 +55,9 @@
           </ul>
       </li>
   <li>
-      <a href="#Source">type Source</a>
+      <a href="#URL">type URL</a>
       <ul>
-          <li><a href="#Source.Parse">func (s Source) Parse(base string) (*url.URL, error)</a></li>
+          <li><a href="#URL.UnmarshalText">func (u *URL) UnmarshalText(text []byte) error</a></li>
           </ul>
       </li>
   <li>
@@ -87,10 +87,13 @@
   <h3 id="pkg-types">Types</h3>
   <h3 id="EpisodeClip">type EpisodeClip</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">EpisodeClip</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="EpisodeClip.Sources"><span class="nx">Sources</span></span> <span class="p">[]</span><a href="#Source"><span class="nx">Source</span></a>
+	<span id="EpisodeClip.Sources"><span class="nx">Sources</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="EpisodeClip.File"><span class="nx">File</span></span> <a href="#URL"><span class="nx">URL</span></a>
+		<span id="EpisodeClip.Type"><span class="nx">Type</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
 <span class="p">}</span></pre>
     <h4 id="EpisodeClip.DASH">func (EpisodeClip) DASH</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <a href="#EpisodeClip"><span class="nx">EpisodeClip</span></a><span class="p">)</span> <span class="nf">DASH</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#Source"><span class="nx">Source</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <a href="#EpisodeClip"><span class="nx">EpisodeClip</span></a><span class="p">)</span> <span class="nf">DASH</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="https://pkg.go.dev/net/url"><span class="nx">url</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/url#URL"><span class="nx">URL</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h3 id="Namer">type Namer</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Namer</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Namer.V"><span class="nx">V</span></span> <span class="o">*</span><a href="#Video"><span class="nx">Video</span></a>
@@ -127,13 +130,12 @@
 </span><span class="c1"></span><span class="p">}</span></pre>
     <h4 id="Slug.UnmarshalText">func (*Slug) UnmarshalText</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><a href="#Slug"><span class="nx">Slug</span></a><span class="p">)</span> <span class="nf">UnmarshalText</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h3 id="Source">type Source</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">Source</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="Source.File"><span class="nx">File</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="Source.Type"><span class="nx">Type</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+  <h3 id="URL">type URL</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">URL</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="URL.URL"><span class="nx">URL</span></span> <a href="https://pkg.go.dev/net/url"><span class="nx">url</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/url#URL"><span class="nx">URL</span></a>
 <span class="p">}</span></pre>
-    <h4 id="Source.Parse">func (Source) Parse</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#Source"><span class="nx">Source</span></a><span class="p">)</span> <span class="nf">Parse</span><span class="p">(</span><span class="nx">base</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="https://pkg.go.dev/net/url"><span class="nx">url</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/url#URL"><span class="nx">URL</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <h4 id="URL.UnmarshalText">func (*URL) UnmarshalText</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">u</span> <span class="o">*</span><a href="#URL"><span class="nx">URL</span></a><span class="p">)</span> <span class="nf">UnmarshalText</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h3 id="Video">type Video</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Video</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Video.Name"><span class="nx">Name</span></span>    <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>

@@ -17,11 +17,12 @@ Download media or send API requests
 8. Rakuten TV -Movies & TV Series
 9. MUBI: Curated Cinema
 10. CTV
-11. AMC+
-12. The Roku Channel
-13. The Criterion Channel
-14. Draken Film
-15. CineMember
+11. RTBF Auvio : direct et replay
+12. AMC+
+13. The Roku Channel
+14. The Criterion Channel
+15. Draken Film
+16. CineMember
 
 [1]://f002.backblazeb2.com/file/ql8mlh/videos/Paint.It.Black.2016.mp4
 
