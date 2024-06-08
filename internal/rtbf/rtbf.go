@@ -29,11 +29,15 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   
-   page, err := new_page(media[0].path)
+   address, err := url.Parse(f.address)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
+   page, err := rtbf.NewPage(address.Path)
+   if err != nil {
+      return err
+   }
+   
    title, err := gigya.entitlement(page)
    if err != nil {
       t.Fatal(err)

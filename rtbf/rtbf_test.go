@@ -26,11 +26,11 @@ func TestEntitlement(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	page, err := new_page(media[0].path)
+	page, err := NewPage(media[0].path)
 	if err != nil {
 		t.Fatal(err)
 	}
-	title, err := gigya.entitlement(page)
+	title, err := gigya.Entitlement(page)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -96,11 +96,11 @@ func TestWidevine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	page, err := new_page(medium.path)
+	page, err := NewPage(medium.path)
 	if err != nil {
 		t.Fatal(err)
 	}
-	title, err := gigya.entitlement(page)
+	title, err := gigya.Entitlement(page)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -8,20 +8,7 @@ import (
 	"strings"
 )
 
-type AuvioPage struct {
-	Content struct {
-		AssetId  string
-		Subtitle subtitle
-		Title    title
-	}
-}
-
-// its just not available from what I can tell
-func (AuvioPage) Year() int {
-	return 0
-}
-
-func new_page(path string) (*AuvioPage, error) {
+func NewPage(path string) (*AuvioPage, error) {
 	res, err := http.Get("https://bff-service.rtbf.be/auvio/v1.23/pages" + path)
 	if err != nil {
 		return nil, err
@@ -96,4 +83,17 @@ func (a AuvioPage) Title() string {
 		return v.subtitle
 	}
 	return a.Content.Title.title
+}
+
+type AuvioPage struct {
+	Content struct {
+		AssetId  string
+		Subtitle subtitle
+		Title    title
+	}
+}
+
+// its just not available from what I can tell
+func (AuvioPage) Year() int {
+	return 0
 }
