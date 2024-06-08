@@ -21,15 +21,15 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
+   token, err := account.Token()
+   if err != nil {
+      return err
+   }
+   gigya, err := token.Login()
+   if err != nil {
+      return err
+   }
    
-   token, err := account.token()
-   if err != nil {
-      t.Fatal(err)
-   }
-   gigya, err := token.login()
-   if err != nil {
-      t.Fatal(err)
-   }
    page, err := new_page(media[0].path)
    if err != nil {
       t.Fatal(err)

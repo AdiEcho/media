@@ -18,11 +18,11 @@ func TestEntitlement(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	token, err := account.token()
+	token, err := account.Token()
 	if err != nil {
 		t.Fatal(err)
 	}
-	gigya, err := token.login()
+	gigya, err := token.Login()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -88,11 +88,11 @@ func TestWidevine(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	token, err := account.token()
+	token, err := account.Token()
 	if err != nil {
 		t.Fatal(err)
 	}
-	gigya, err := token.login()
+	gigya, err := token.Login()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -121,7 +121,7 @@ func TestWebToken(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	token, err := account.token()
+	token, err := account.Token()
 	if err != nil {
 		t.Fatal(err)
 	}
