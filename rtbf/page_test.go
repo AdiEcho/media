@@ -22,3 +22,25 @@ func TestPage(t *testing.T) {
       time.Sleep(time.Second)
    }
 }
+
+var media = []struct{
+   id int64
+   key_id string
+   path string
+   url string
+}{
+   {
+      id: 3201987,
+      key_id: "o1C37Tt5SzmHMmEgQViUEA==",
+      path: "/media/i-care-a-lot-i-care-a-lot-3201987",
+      url: "auvio.rtbf.be/media/i-care-a-lot-i-care-a-lot-3201987",
+   },
+   {
+      path: "/media/grantchester-grantchester-s01-3194636",
+      url: "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
+   },
+   {
+      path: "/emission/i-care-a-lot-27462",
+      url: "auvio.rtbf.be/emission/i-care-a-lot-27462",
+   },
+}
