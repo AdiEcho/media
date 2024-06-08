@@ -8,15 +8,6 @@ import (
    "strings"
 )
 
-func (e entitlement) dash() (string, bool) {
-   for _, format := range e.Formats {
-      if format.Format == "DASH" {
-         return format.MediaLocator, true
-      }
-   }
-   return "", false
-}
-
 type entitlement struct {
    AssetId string
    PlayToken string
@@ -24,6 +15,15 @@ type entitlement struct {
       Format string
       MediaLocator string
    }
+}
+
+func (e entitlement) dash() (string, bool) {
+   for _, format := range e.Formats {
+      if format.Format == "DASH" {
+         return format.MediaLocator, true
+      }
+   }
+   return "", false
 }
 
 func (e entitlement) RequestUrl() (string, bool) {
