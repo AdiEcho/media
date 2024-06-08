@@ -9,6 +9,42 @@ import (
    "strings"
 )
 
+type Metadata struct {
+   AirDate string
+   EpisodeNumber int `json:",string"`
+   MpxAccountId int64 `json:",string"`
+   MpxGuid int64 `json:",string"`
+   ProgrammingType string
+   SeasonNumber int `json:",string"`
+   SecondaryTitle string
+   SeriesShortTitle string
+}
+
+func (m Metadata) Show() string {
+   return m.SeriesShortTitle
+}
+
+func (m Metadata) Season() int {
+   return m.SeasonNumber
+}
+
+func (m Metadata) Episode() int {
+   return m.EpisodeNumber
+}
+
+func (m Metadata) Title() string {
+   return m.SecondaryTitle
+}
+
+func (m Metadata) Year() int {
+   if v, _, ok := strings.Cut(m.AirDate, "-"); ok {
+      if v, err := strconv.Atoi(v); err == nil {
+         return v
+      }
+   }
+   return 0
+}
+
 // this is better than strings.Replace and strings.ReplaceAll
 func graphql_compact(s string) string {
    f := strings.Fields(s)
@@ -56,40 +92,4 @@ func (m *Metadata) New(guid int) error {
    }
    *m = s.Data.BonanzaPage.Metadata
    return nil
-}
-
-type Metadata struct {
-   AirDate string
-   EpisodeNumber int `json:",string"`
-   MpxAccountId int64 `json:",string"`
-   MpxGuid int64 `json:",string"`
-   ProgrammingType string
-   SeasonNumber int `json:",string"`
-   SecondaryTitle string
-   SeriesShortTitle string
-}
-
-func (m Metadata) Show() string {
-   return m.SeriesShortTitle
-}
-
-func (m Metadata) Season() int {
-   return m.SeasonNumber
-}
-
-func (m Metadata) Episode() int {
-   return m.EpisodeNumber
-}
-
-func (m Metadata) Title() string {
-   return m.SecondaryTitle
-}
-
-func (m Metadata) Year() int {
-   if v, _, ok := strings.Cut(m.AirDate, "-"); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
 }

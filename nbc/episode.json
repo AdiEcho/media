@@ -1,0 +1,123 @@
+{
+  "__typename": "VideoPageData",
+  "title": "S49 E20 | 05/18/24",
+  "secondaryTitle": "May 18 - Jake Gyllenhaal",
+  "tertiaryTitle": null,
+  "playlistTitle": null,
+  "playlistMachineName": null,
+  "playlistImage": null,
+  "playlistCreated": null,
+  "playlistDescription": null,
+  "description": "Jake Gyllenhaal hosts Saturday Night Live on May 18, 2024, with musical guest Sabrina Carpenter.",
+  "shortDescription": "Jake Gyllenhaal hosts Saturday Night Live on May 18, 2024, with musical guest Sabrina Carpenter.",
+  "gradientStart": "#155A92",
+  "gradientEnd": "#232B40",
+  "lightPrimaryColor": "#208AF5",
+  "darkPrimaryColor": null,
+  "brandLightPrimaryColor": "#302B63",
+  "brandDarkPrimaryColor": "#0F0F1C",
+  "seasonNumber": "49",
+  "episodeNumber": "20",
+  "airDate": "2024-05-18T23:00:00.000Z",
+  "rating": "TV-14",
+  "copyright": null,
+  "locked": false,
+  "programmingType": "Full Episode",
+  "genre": "Comedy",
+  "amazonGenre": "Comedy",
+  "duration": 4164,
+  "permalink": "/saturday-night-live/video/may-18-jake-gyllenhaal/9000283438",
+  "percentViewed": 0,
+  "image": "https://img.nbc.com/files/SNL1864_S49E20_JakeGyllenhaal_20240518_29.jpg",
+  "labelBadge": null,
+  "mpxGuid": "9000283438",
+  "authEnds": null,
+  "externalAdvertiserId": "NBC_VOD_9000283438",
+  "mpxEntitlementWindows": [
+    {
+      "availStartDateTime": "2024-05-19T11:00:00.000Z",
+      "availEndDateTime": "2024-05-26T10:59:59.000Z",
+      "entitlement": "auth",
+      "device": [
+        "Web"
+      ]
+    },
+    {
+      "availStartDateTime": "2024-05-26T11:00:00.000Z",
+      "availEndDateTime": "2024-11-05T12:00:00.000Z",
+      "entitlement": "free",
+      "device": [
+        "Web"
+      ]
+    }
+  ],
+  "tveEntitlementWindows": [
+    {
+      "availStartDateTime": "2024-05-19T11:00:00.000Z",
+      "availEndDateTime": "2024-05-26T10:59:59.000Z",
+      "entitlement": "auth",
+      "device": [
+        "MobileApp",
+        "ConnectedTvDevice"
+      ]
+    },
+    {
+      "availStartDateTime": "2024-05-26T11:00:00.000Z",
+      "availEndDateTime": "2024-11-05T12:00:00.000Z",
+      "entitlement": "free",
+      "device": [
+        "MobileApp",
+        "ConnectedTvDevice"
+      ]
+    }
+  ],
+  "cast": null,
+  "v4ID": "8e0cfe97f5689bb496808e7a2ec1294f980098c5",
+  "seriesShortTitle": "Saturday Night Live",
+  "seriesShortDescription": "Saturdays at 11:30 p.m., live coast-to-coast. NBC's Emmy-winning late-night comedy showcase enters its 49th season.",
+  "multiPlatformLargeImage": "https://img.nbc.com/files/images/2022/10/06/SNL_S48-KeyArt-Lg-2048x1152_1.jpg",
+  "multiPlatformSmallImage": "https://img.nbc.com/files/images/2022/10/06/SNL_S48-KeyArt-Sm-2048x1152_1.jpg",
+  "urlAlias": "saturday-night-live",
+  "dartTag": null,
+  "seriesType": "Late Night",
+  "dayPart": "Late Night",
+  "sunrise": "2024-05-19T11:00:00.000Z",
+  "sunset": "2024-11-05T12:00:00.000Z",
+  "ratingAdvisories": [
+    "D",
+    "L",
+    "V"
+  ],
+  "width": 1920,
+  "height": 1080,
+  "selectedCountries": null,
+  "keywords": null,
+  "watchId": null,
+  "referenceUrl": "https://www.imdb.com/title/tt0072562/",
+  "numberOfEpisodes": 20,
+  "numberOfSeasons": 1,
+  "channelId": "nbc",
+  "resourceId": "nbcentertainment",
+  "mpxAccountId": "2410887629",
+  "mpxAdPolicy": "188569381",
+  "brandDisplayTitle": "NBC",
+  "brandMachineName": "nbc",
+  "colorBrandLogo": "https://img.nbc.com/files/images/2023/1/05/NBC-Logo-Stacked-ColorBlack-318x300.png",
+  "whiteBrandLogo": "https://img.nbc.com/files/images/2023/1/05/NBC-Logo-Stacked-White-318x300.png",
+  "cuePoint": null,
+  "startRecapTiming": null,
+  "endRecapTiming": null,
+  "startTeaserTiming": 0,
+  "endTeaserTiming": 0,
+  "startIntroTiming": 0,
+  "endIntroTiming": 0,
+  "allowSkipButtons": true,
+  "skipButtonsDuration": 10,
+  "allowMobileWebPlayback": false,
+  "canonicalUrl": "https://www.nbc.com/saturday-night-live/video/may-18-jake-gyllenhaal/9000283438",
+  "ariaLabel": "Saturday Night Live, May 18 - Jake Gyllenhaal, Season 49, Episode 20, Aired on 05/18/24",
+  "tmsId": "EP000037101488",
+  "movieShortTitle": null,
+  "headerTitle": null,
+  "tuneIn": null
+}

@@ -9,11 +9,11 @@ import (
 
 var mpx_guids = []int{
    // episode unlocked
-   // nbc.com/saturday-night-live/video/october-21-bad-bunny/9000283422
+   // nbc.com/saturday-night-live/video/may-18-jake-gyllenhaal/9000283438
    9000283422,
    // movie locked
-   // nbc.com/cowboys-aliens/video/cowboys-aliens/4340781
-   4340781,
+   // nbc.com/2-fast-2-furious/video/2-fast-2-furious/2957739
+   2957739,
 }
 
 func TestMetadata(t *testing.T) {

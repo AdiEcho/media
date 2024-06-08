@@ -5,19 +5,8 @@ import (
    "fmt"
    "os"
    "testing"
+   "time"
 )
-
-var tests = map[string]struct{
-   id string
-   key_id string
-   url string
-}{
-   "episode": {
-      id: "023c49bf-6a99-4c67-851c-4c9e7609cc1d",
-      key_id: "21b82dc2ebb24d5aa9f8631f04726650",
-      url: "hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d",
-   },
-}
 
 func TestDetails(t *testing.T) {
    var (
@@ -29,21 +18,39 @@ func TestDetails(t *testing.T) {
       t.Fatal(err)
    }
    auth.Unmarshal()
-   id := EntityId{tests["episode"].id}
-   link, err := auth.DeepLink(id)
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      link, err := auth.DeepLink(EntityId{test.id})
+      if err != nil {
+         t.Fatal(err)
+      }
+      details, err := auth.Details(link)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", details)
+      name, err := text.Name(details[0])
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
    }
-   details, err := auth.Details(link)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", details)
-   name, err := text.Name(details[0])
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%q\n", name)
+}
+
+var tests = map[string]struct{
+   id string
+   key_id string
+   url string
+}{
+   "episode": {
+      id: "023c49bf-6a99-4c67-851c-4c9e7609cc1d",
+      key_id: "21b82dc2ebb24d5aa9f8631f04726650",
+      url: "hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d",
+   },
+   "film": {
+      id: "f70dfd4d-dbfb-46b8-abb3-136c841bba11",
+      url: "hulu.com/watch/f70dfd4d-dbfb-46b8-abb3-136c841bba11",
+   },
 }
 
 func TestAuthenticate(t *testing.T) {

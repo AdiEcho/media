@@ -1,0 +1,162 @@
+{
+  "__typename": "VideoPageData",
+  "title": "2 Fast 2 Furious",
+  "secondaryTitle": "1 hr 38 min | 2003",
+  "tertiaryTitle": null,
+  "playlistTitle": null,
+  "playlistMachineName": null,
+  "playlistImage": null,
+  "playlistCreated": null,
+  "playlistDescription": null,
+  "description": "The Fast and the Furious's ex-cop on the run (Paul Walker) takes an explosive new turn into the outlaw street-racing scene in this adrenaline-fueled thrill ride!",
+  "shortDescription": "The Fast and the Furious's ex-cop on the run (Paul Walker) takes an explosive new turn into the outlaw street-racing scene in this adrenaline-fueled thrill ride!",
+  "gradientStart": "#6B7992",
+  "gradientEnd": "#1F1A27",
+  "lightPrimaryColor": "#6B7992",
+  "darkPrimaryColor": "#1F1A27",
+  "brandLightPrimaryColor": "#F83737",
+  "brandDarkPrimaryColor": "#350300",
+  "seasonNumber": null,
+  "episodeNumber": null,
+  "airDate": "2003-06-05T23:00:00.000Z",
+  "rating": "TV-14",
+  "copyright": null,
+  "locked": true,
+  "programmingType": "Movie",
+  "genre": "Drama",
+  "amazonGenre": "Drama",
+  "duration": 5859,
+  "permalink": "/2-fast-2-furious/video/2-fast-2-furious/2957739",
+  "percentViewed": 0,
+  "image": "https://img.nbc.com/files/images/2023/1/30/HD_TVE_2FAST2FURI_01142023_proxy_SD_thumb.jpg",
+  "labelBadge": "NEW",
+  "mpxGuid": "2957739",
+  "authEnds": null,
+  "externalAdvertiserId": "USA_ANV_2957739",
+  "mpxEntitlementWindows": [
+    {
+      "availStartDateTime": "2024-04-24T10:00:00.000Z",
+      "availEndDateTime": "2024-07-01T10:00:00.000Z",
+      "entitlement": "auth",
+      "device": [
+        "Web"
+      ]
+    }
+  ],
+  "tveEntitlementWindows": [
+    {
+      "availStartDateTime": "2024-04-24T10:00:00.000Z",
+      "availEndDateTime": "2024-07-01T10:00:00.000Z",
+      "entitlement": "auth",
+      "device": [
+        "MobileApp",
+        "ConnectedTvDevice"
+      ]
+    }
+  ],
+  "cast": [
+    {
+      "characterFirstName": null,
+      "characterLastName": null,
+      "talentFirstName": "Ludacris",
+      "talentMiddleName": "\"Ludacris\"",
+      "talentLastName": "Bridges"
+    },
+    {
+      "characterFirstName": null,
+      "characterLastName": null,
+      "talentFirstName": "Thom",
+      "talentMiddleName": null,
+      "talentLastName": "Barry"
+    },
+    {
+      "characterFirstName": null,
+      "characterLastName": null,
+      "talentFirstName": "Cole",
+      "talentMiddleName": null,
+      "talentLastName": "Hauser"
+    },
+    {
+      "characterFirstName": null,
+      "characterLastName": null,
+      "talentFirstName": "Tyrese",
+      "talentMiddleName": null,
+      "talentLastName": "Gibson"
+    },
+    {
+      "characterFirstName": null,
+      "characterLastName": null,
+      "talentFirstName": "Paul",
+      "talentMiddleName": null,
+      "talentLastName": "Walker"
+    },
+    {
+      "characterFirstName": null,
+      "characterLastName": null,
+      "talentFirstName": "Eva",
+      "talentMiddleName": null,
+      "talentLastName": "Mendes"
+    },
+    {
+      "characterFirstName": null,
+      "characterLastName": null,
+      "talentFirstName": "James",
+      "talentMiddleName": null,
+      "talentLastName": "Remar"
+    }
+  ],
+  "v4ID": "b2ec3e149a3eb68b7c4ea032d56ef2946d1828aa",
+  "seriesShortTitle": null,
+  "seriesShortDescription": null,
+  "multiPlatformLargeImage": "https://img.nbc.com/files/images/2019/8/02/2Fast2Furious-KeyArt-Lg-2048x1152.jpg",
+  "multiPlatformSmallImage": "https://img.nbc.com/files/images/2019/8/02/2Fast2Furious-KeyArt-Sm-2048x1152.jpg",
+  "urlAlias": "2-fast-2-furious",
+  "dartTag": null,
+  "seriesType": null,
+  "dayPart": null,
+  "sunrise": "2024-04-24T10:00:00.000Z",
+  "sunset": "2024-07-01T10:00:00.000Z",
+  "ratingAdvisories": null,
+  "width": 1920,
+  "height": 1080,
+  "selectedCountries": null,
+  "keywords": [
+    "Cole Hauser",
+    "Paul Walker",
+    "Chris \"Ludacris\" Bridges",
+    "Eva Mendes",
+    "USA Movies",
+    "Movies on USA",
+    "fast cars",
+    "usa",
+    "The Fast and The Furious"
+  ],
+  "watchId": null,
+  "referenceUrl": "https://www.imdb.com/title/tt0322259/?ref_=nv_sr_1%3Fref_%3Dnv_sr_1",
+  "numberOfEpisodes": null,
+  "numberOfSeasons": null,
+  "channelId": "usa",
+  "resourceId": "usa",
+  "mpxAccountId": "2304992029",
+  "mpxAdPolicy": "189593173",
+  "brandDisplayTitle": "USA",
+  "brandMachineName": "usa",
+  "colorBrandLogo": "https://img.nbc.com/files/USA-Logo-Color-f83837_450x198.png",
+  "whiteBrandLogo": "https://img.nbc.com/files/USA-Logo-White-450x198.png",
+  "cuePoint": null,
+  "startRecapTiming": null,
+  "endRecapTiming": null,
+  "startTeaserTiming": 0,
+  "endTeaserTiming": 0,
+  "startIntroTiming": 0,
+  "endIntroTiming": 0,
+  "allowSkipButtons": true,
+  "skipButtonsDuration": 10,
+  "allowMobileWebPlayback": false,
+  "canonicalUrl": "https://www.nbc.com/2-fast-2-furious/video/2-fast-2-furious/2957739",
+  "ariaLabel": "NEW, 2 Fast 2 Furious, Movie, Rated TV-14, 1 hours 38 minutes, Released 2003",
+  "tmsId": null,
+  "movieShortTitle": "2 Fast 2 Furious",
+  "headerTitle": null,
+  "tuneIn": null
+}

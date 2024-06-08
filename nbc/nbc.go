@@ -13,6 +13,40 @@ import (
    "time"
 )
 
+const query = `
+query(
+   $app: NBCUBrands!
+   $name: String!
+   $oneApp: Boolean
+   $platform: SupportedPlatforms!
+   $type: EntityPageType!
+   $userId: String!
+) {
+   bonanzaPage(
+      app: $app
+      name: $name
+      oneApp: $oneApp
+      platform: $platform
+      type: $type
+      userId: $userId
+   ) {
+      metadata {
+         ... on VideoPageData {
+            airDate
+            episodeNumber
+            mpxAccountId
+            mpxGuid
+            programmingType
+            seasonNumber
+            secondaryTitle
+            seriesShortTitle
+            title
+         }
+      }
+   }
+}
+`
+
 func Core() Video {
    var v Video
    v.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
@@ -94,39 +128,6 @@ func (Video) UnwrapResponse(b []byte) ([]byte, error) {
 type OnDemand struct {
    PlaybackUrl string
 }
-
-const query = `
-query bonanzaPage(
-   $app: NBCUBrands!
-   $name: String!
-   $oneApp: Boolean
-   $platform: SupportedPlatforms!
-   $type: EntityPageType!
-   $userId: String!
-) {
-   bonanzaPage(
-      app: $app
-      name: $name
-      oneApp: $oneApp
-      platform: $platform
-      type: $type
-      userId: $userId
-   ) {
-      metadata {
-         ... on VideoPageData {
-            airDate
-            episodeNumber
-            mpxAccountId
-            mpxGuid
-            programmingType
-            seasonNumber
-            secondaryTitle
-            seriesShortTitle
-         }
-      }
-   }
-}
-`
 
 type page_request struct {
    Query string `json:"query"`

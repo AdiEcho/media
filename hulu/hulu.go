@@ -9,6 +9,10 @@ import (
    "time"
 )
 
+func (d Details) Year() int {
+   return d.PremiereDate.Year()
+}
+
 type EntityId struct {
    s string
 }
@@ -21,10 +25,6 @@ func (e EntityId) String() string {
 func (e *EntityId) Set(s string) error {
    e.s = path.Base(s)
    return nil
-}
-
-func (d Details) Year() int {
-   return d.PremiereDate.Year()
 }
 
 type Details struct {
