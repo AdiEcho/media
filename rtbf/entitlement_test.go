@@ -8,7 +8,7 @@ import (
    "testing"
 )
 
-func TestSeven(t *testing.T) {
+func TestWidevine(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -63,6 +63,7 @@ func TestSeven(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
+
 func TestEntitlement(t *testing.T) {
    text, err := os.ReadFile("account.json")
    if err != nil {
