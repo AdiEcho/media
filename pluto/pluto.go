@@ -8,6 +8,30 @@ import (
    "strings"
 )
 
+func (e EpisodeClip) DASH() (*url.URL, bool) {
+   for _, s := range e.Sources {
+      if s.Type == "DASH" {
+         return &s.File.URL, true
+      }
+   }
+   return nil, false
+}
+
+type EpisodeClip struct {
+   Sources []struct {
+      File URL
+      Type string
+   }
+}
+
+type URL struct {
+   URL url.URL
+}
+
+func (u *URL) UnmarshalText(text []byte) error {
+   return u.URL.UnmarshalBinary(text)
+}
+
 type Poster struct{}
 
 func (Poster) RequestUrl() (string, bool) {
@@ -58,24 +82,6 @@ func (v Video) Clip() (*EpisodeClip, error) {
    return &clips[0], nil
 }
 
-type EpisodeClip struct {
-   Sources []Source
-}
-
-func (e EpisodeClip) DASH() (*Source, bool) {
-   for _, s := range e.Sources {
-      if s.Type == "DASH" {
-         return &s, true
-      }
-   }
-   return nil, false
-}
-
-type Source struct {
-   File string
-   Type string
-}
-
 var Base = []string{
    // these return `403 OK` with compressed content
    "http://siloh-fs.plutotv.net",
@@ -84,18 +90,4 @@ var Base = []string{
    "https://siloh-ns1.plutotv.net",
    // returns `200 OK` with plain content
    "http://silo-hybrik.pluto.tv.s3.amazonaws.com",
-}
-
-func (s Source) Parse(base string) (*url.URL, error) {
-   a, err := url.Parse(base)
-   if err != nil {
-      return nil, err
-   }
-   b, err := url.Parse(s.File)
-   if err != nil {
-      return nil, err
-   }
-   b.Scheme = a.Scheme
-   b.Host = a.Host
-   return b, nil
 }

@@ -17,16 +17,16 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   source, ok := clip.DASH()
+   file, ok := clip.DASH()
    if !ok {
-      return errors.New("pluto.EpisodeClip.DASH")
+      return errors.New("EpisodeClip.DASH")
    }
-   var req http.Request
-   req.URL, err = source.Parse(f.base)
+   req, err := http.NewRequest("GET", f.base, nil)
    if err != nil {
       return err
    }
-   media, err := internal.DASH(&req)
+   req.URL.Path = file.Path
+   media, err := internal.DASH(req)
    if err != nil {
       return err
    }

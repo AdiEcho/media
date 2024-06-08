@@ -7,8 +7,74 @@ import (
    "net/http"
    "net/url"
    "strconv"
-   "strings"
+   "time"
 )
+
+func location(content_id string, query url.Values) (string, error) {
+   client := http.Client{
+      CheckRedirect: func(*http.Request, []*http.Request) error {
+         return http.ErrUseLastResponse
+      },
+   }
+   req, err := http.NewRequest("GET", "http://link.theplatform.com", nil)
+   if err != nil {
+      return "", err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/s/")
+      b = append(b, cms_account_id...)
+      b = append(b, "/media/guid/"...)
+      b = strconv.AppendInt(b, aid, 10)
+      b = append(b, '/')
+      b = append(b, content_id...)
+      return string(b)
+   }()
+   req.URL.RawQuery = query.Encode()
+   res, err := client.Do(req)
+   if err != nil {
+      return "", err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusFound {
+      var s struct {
+         Description string
+      }
+      json.NewDecoder(res.Body).Decode(&s)
+      return "", errors.New(s.Description)
+   }
+   return res.Header.Get("Location"), nil
+}
+
+type SessionToken struct {
+   URL string
+   LsSession string `json:"ls_session"`
+}
+
+func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (s SessionToken) RequestHeader() (http.Header, error) {
+   head := make(http.Header)
+   head.Set("authorization", "Bearer " + s.LsSession)
+   return head, nil
+}
+
+func (s SessionToken) RequestUrl() (string, bool) {
+   return s.URL, true
+}
+
+func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (i Item) Show() string {
+   return i.SeriesTitle
+}
+
+func (i Item) Title() string {
+   return i.Label
+}
 
 type app_details struct {
    version string
@@ -86,8 +152,6 @@ func DashCenc(content_id string) (string, error) {
    return location(content_id, query)
 }
 
-type number int
-
 func (n *number) UnmarshalText(text []byte) error {
    if len(text) >= 1 {
       i, err := strconv.Atoi(string(text))
@@ -99,106 +163,25 @@ func (n *number) UnmarshalText(text []byte) error {
    return nil
 }
 
-///////////////////////
-
-type Item struct {
-   AirDateIso string `json:"_airDateISO"`
-   Label string
-   MediaType string
-   SeriesTitle string
-   // these can be empty string, so we cannot use these:
-   // int `json:",string"`
-   // json.Number
-   SeasonNum string
-   EpisodeNum string
-}
-
-func use_last_response(*http.Request, []*http.Request) error {
-   return http.ErrUseLastResponse
-}
-
-func location(content_id string, query url.Values) (string, error) {
-   req, err := http.NewRequest("GET", "http://link.theplatform.com", nil)
-   if err != nil {
-      return "", err
-   }
-   req.URL.RawQuery = query.Encode()
-   req.URL.Path = func() string {
-      b := []byte("/s/")
-      b = append(b, cms_account_id...)
-      b = append(b, "/media/guid/"...)
-      b = strconv.AppendInt(b, aid, 10)
-      b = append(b, '/')
-      b = append(b, content_id...)
-      return string(b)
-   }()
-   http.DefaultClient.CheckRedirect = use_last_response
-   defer func() { http.DefaultClient.CheckRedirect = nil }()
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return "", err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusFound {
-      var s struct {
-         Description string
-      }
-      json.NewDecoder(res.Body).Decode(&s)
-      return "", errors.New(s.Description)
-   }
-   return res.Header.Get("Location"), nil
-}
-
-type SessionToken struct {
-   URL string
-   LsSession string `json:"ls_session"`
-}
-
-func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (s SessionToken) RequestHeader() (http.Header, error) {
-   head := make(http.Header)
-   head.Set("authorization", "Bearer " + s.LsSession)
-   return head, nil
-}
-
-func (s SessionToken) RequestUrl() (string, bool) {
-   return s.URL, true
-}
-
-func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (i Item) Show() string {
-   return i.SeriesTitle
-}
-
-func (i Item) Title() string {
-   return i.Label
-}
+type number int
 
 func (i Item) Year() int {
-   if v, _, ok := strings.Cut(i.AirDateIso, "-"); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
+   return i.AirDateIso.Year()
 }
 
 func (i Item) Season() int {
-   if v, err := strconv.Atoi(i.SeasonNum); err == nil {
-      return v
-   }
-   return 0
+   return int(i.SeasonNum)
+}
+
+type Item struct {
+   AirDateIso time.Time `json:"_airDateISO"`
+   EpisodeNum number
+   Label string
+   MediaType string
+   SeasonNum number
+   SeriesTitle string
 }
 
 func (i Item) Episode() int {
-   if v, err := strconv.Atoi(i.EpisodeNum); err == nil {
-      return v
-   }
-   return 0
+   return int(i.EpisodeNum)
 }
