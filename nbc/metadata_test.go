@@ -23,7 +23,11 @@ func TestMetadata(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(text.Name(meta))
+      name, err := text.Name(meta)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
 }

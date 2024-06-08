@@ -34,13 +34,13 @@ query(
          ... on VideoPageData {
             airDate
             episodeNumber
+            movieShortTitle
             mpxAccountId
             mpxGuid
             programmingType
             seasonNumber
             secondaryTitle
             seriesShortTitle
-            title
          }
       }
    }

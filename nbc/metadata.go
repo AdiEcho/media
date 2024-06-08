@@ -7,11 +7,20 @@ import (
    "net/http"
    "strconv"
    "strings"
+   "time"
 )
 
+func (m Metadata) Title() string {
+   if v := m.MovieShortTitle; v != "" {
+      return v
+   }
+   return m.SecondaryTitle
+}
+
 type Metadata struct {
-   AirDate string
+   AirDate time.Time
    EpisodeNumber int `json:",string"`
+   MovieShortTitle string
    MpxAccountId int64 `json:",string"`
    MpxGuid int64 `json:",string"`
    ProgrammingType string
@@ -20,29 +29,8 @@ type Metadata struct {
    SeriesShortTitle string
 }
 
-func (m Metadata) Show() string {
-   return m.SeriesShortTitle
-}
-
-func (m Metadata) Season() int {
-   return m.SeasonNumber
-}
-
-func (m Metadata) Episode() int {
-   return m.EpisodeNumber
-}
-
-func (m Metadata) Title() string {
-   return m.SecondaryTitle
-}
-
 func (m Metadata) Year() int {
-   if v, _, ok := strings.Cut(m.AirDate, "-"); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
+   return m.AirDate.Year()
 }
 
 // this is better than strings.Replace and strings.ReplaceAll
@@ -92,4 +80,16 @@ func (m *Metadata) New(guid int) error {
    }
    *m = s.Data.BonanzaPage.Metadata
    return nil
+}
+
+func (m Metadata) Show() string {
+   return m.SeriesShortTitle
+}
+
+func (m Metadata) Season() int {
+   return m.SeasonNumber
+}
+
+func (m Metadata) Episode() int {
+   return m.EpisodeNumber
 }

@@ -5,13 +5,17 @@ import (
    "errors"
    "net/http"
    "net/url"
-   "strconv"
    "strings"
+   "time"
 )
+
+func (n Namer) Year() int {
+   return n.H.ReleaseDate.Year()
+}
 
 type HomeScreen struct {
    EpisodeNumber int `json:",string"`
-   ReleaseDate string // 2007-01-01T000000Z
+   ReleaseDate time.Time // 2007-01-01T000000Z
    SeasonNumber int `json:",string"`
    Series *struct {
       Title string
@@ -84,13 +88,4 @@ func (n Namer) Episode() int {
 
 func (n Namer) Title() string {
    return n.H.Title
-}
-
-func (n Namer) Year() int {
-   if v, _, ok := strings.Cut(n.H.ReleaseDate, "-"); ok {
-      if v, err := strconv.Atoi(v); err == nil {
-         return v
-      }
-   }
-   return 0
 }

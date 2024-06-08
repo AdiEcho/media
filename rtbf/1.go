@@ -7,6 +7,8 @@ import (
    "strings"
 )
 
+type number int
+
 func (n *number) UnmarshalText(text []byte) error {
    if len(text) >= 1 {
       i, err := strconv.Atoi(string(text))
@@ -79,5 +81,3 @@ func (e embed_media) Title() string {
 func (embed_media) Year() int {
    return 0
 }
-
-type number int

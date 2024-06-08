@@ -10,18 +10,6 @@ import (
    "strings"
 )
 
-type Item struct {
-   AirDateIso string `json:"_airDateISO"`
-   Label string
-   MediaType string
-   SeriesTitle string
-   // these can be empty string, so we cannot use these:
-   // int `json:",string"`
-   // json.Number
-   SeasonNum string
-   EpisodeNum string
-}
-
 type app_details struct {
    version string
    code int
@@ -96,6 +84,33 @@ func DashCenc(content_id string) (string, error) {
       "formats": {"MPEG-DASH"},
    }
    return location(content_id, query)
+}
+
+type number int
+
+func (n *number) UnmarshalText(text []byte) error {
+   if len(text) >= 1 {
+      i, err := strconv.Atoi(string(text))
+      if err != nil {
+         return err
+      }
+      *n = number(i)
+   }
+   return nil
+}
+
+///////////////////////
+
+type Item struct {
+   AirDateIso string `json:"_airDateISO"`
+   Label string
+   MediaType string
+   SeriesTitle string
+   // these can be empty string, so we cannot use these:
+   // int `json:",string"`
+   // json.Number
+   SeasonNum string
+   EpisodeNum string
 }
 
 func use_last_response(*http.Request, []*http.Request) error {
