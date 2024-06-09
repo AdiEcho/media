@@ -147,8 +147,8 @@ func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
       return b.String()
    }()
    req.Header = http.Header{
-      "x-forwarded-for": {"91.90.123.17"},
       "authorization":   {"Bearer " + g.SessionToken},
+      "x-forwarded-for": {"91.90.123.17"},
    }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
