@@ -6,13 +6,20 @@ monetization = FLATRATE
 country = United States
 ~~~
 
-then:
+https://play.google.com/store/apps/details?id=com.wbd.stream
 
-~~~xml
-<AdaptationSet frameRate="24000/1001" id="4" contentType="video" maxWidth="1024" maxHeight="554" subsegmentAlignment="true" subsegmentStartsWithSAP="1">
-   <ContentProtection schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cenc" cenc:default_KID="010162a0-1a07-c709-893c-ee5494680b89"/>
-<AdaptationSet frameRate="24000/1001" id="5" contentType="video" par="24:13" maxWidth="1280" maxHeight="692" subsegmentAlignment="true" subsegmentStartsWithSAP="1">
-   <ContentProtection schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cenc" cenc:default_KID="01021e5f-16aa-2c5e-d02c-550139b5ab82"/>
-<AdaptationSet frameRate="24000/1001" id="6" contentType="video" par="24:13" maxWidth="1920" maxHeight="1038" subsegmentAlignment="true" subsegmentStartsWithSAP="1">
-   <ContentProtection schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cenc" cenc:default_KID="01050c9f-d459-64c1-debd-e9ab3b5a515c"/>
 ~~~
+> play -i com.wbd.stream -s
+details[6] = WarnerMedia Global Digital Services, LLC
+details[8] = 0 USD
+details[13][1][4] = 4.1.1.2
+details[13][1][16] = Jun 5, 2024
+details[13][1][17] = APK
+details[13][1][82][1][1] = 5.0 and up
+downloads = 53.47 million
+name = Max: Stream HBO, TV, & Movies
+size = 37.77 megabyte
+version code = 35342589
+~~~
+
+Create Android 6 device. Install user certificate
