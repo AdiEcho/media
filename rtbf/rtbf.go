@@ -9,77 +9,38 @@ import (
    "strings"
 )
 
-func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
-   req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
+// hard coded in JavaScript
+const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
+
+func (a AccountLogin) Token() (*WebToken, error) {
+   body := url.Values{
+      "APIKey": {api_key},
+      // from /accounts.login
+      "login_token": {a.SessionInfo.CookieValue},
+   }.Encode()
+   req, err := http.NewRequest(
+      "POST", "https://login.auvio.rtbf.be/accounts.getJWT",
+      strings.NewReader(body),
+   )
    if err != nil {
       return nil, err
    }
-   req.URL.Path = func() string {
-      var b strings.Builder
-      b.WriteString("/v2/customer/RTBF/businessunit/Auvio/entitlement/")
-      b.WriteString(page.asset_id())
-      b.WriteString("/play")
-      return b.String()
-   }()
-   req.Header = http.Header{
-      "x-forwarded-for": {"91.90.123.17"},
-      "authorization":   {"Bearer " + g.SessionToken},
-   }
+   req.Header.Set("content-type", "application/x-www-form-urlencoded")
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   title := new(Entitlement)
-   err = json.NewDecoder(res.Body).Decode(title)
+   var web WebToken
+   err = json.NewDecoder(res.Body).Decode(&web)
    if err != nil {
       return nil, err
    }
-   return title, nil
-}
-
-type Entitlement struct {
-   AssetId   string
-   PlayToken string
-   Formats   []struct {
-      Format       string
-      MediaLocator string
+   if v := web.ErrorMessage; v != "" {
+      return nil, errors.New(v)
    }
+   return &web, nil
 }
-
-func (e Entitlement) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Host = "rbm-rtbf.live.ott.irdeto.com"
-   u.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
-   u.Scheme = "https"
-   u.RawQuery = url.Values{
-      "contentId":  {e.AssetId},
-      "ls_session": {e.PlayToken},
-   }.Encode()
-   return u.String(), true
-}
-
-func (Entitlement) RequestHeader() (http.Header, error) {
-   h := make(http.Header)
-   h.Set("content-type", "application/x-protobuf")
-   return h, nil
-}
-
-func (Entitlement) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Entitlement) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-// hard coded in JavaScript
-const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
 
 func (a *AccountLogin) New(id, password string) error {
    body := url.Values{
@@ -124,38 +85,87 @@ func (a *AccountLogin) Unmarshal(text []byte) error {
 func (a AccountLogin) Marshal() ([]byte, error) {
    return json.Marshal(a)
 }
-func (a AccountLogin) Token() (*WebToken, error) {
-   body := url.Values{
-      "APIKey": {api_key},
-      // from /accounts.login
-      "login_token": {a.SessionInfo.CookieValue},
+
+type Entitlement struct {
+   AssetId   string
+   PlayToken string
+   Formats   []struct {
+      Format       string
+      MediaLocator string
+   }
+}
+
+func (e Entitlement) DASH() (string, bool) {
+   for _, format := range e.Formats {
+      if format.Format == "DASH" {
+         return format.MediaLocator, true
+      }
+   }
+   return "", false
+}
+
+func (e Entitlement) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Host = "rbm-rtbf.live.ott.irdeto.com"
+   u.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
+   u.Scheme = "https"
+   u.RawQuery = url.Values{
+      "contentId":  {e.AssetId},
+      "ls_session": {e.PlayToken},
    }.Encode()
-   req, err := http.NewRequest(
-      "POST", "https://login.auvio.rtbf.be/accounts.getJWT",
-      strings.NewReader(body),
-   )
+   return u.String(), true
+}
+
+func (Entitlement) RequestHeader() (http.Header, error) {
+   h := make(http.Header)
+   h.Set("content-type", "application/x-protobuf")
+   return h, nil
+}
+
+func (Entitlement) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Entitlement) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+type GigyaLogin struct {
+   SessionToken string
+}
+
+func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
+   req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
    if err != nil {
       return nil, err
    }
-   req.Header.Set("content-type", "application/x-www-form-urlencoded")
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/v2/customer/RTBF/businessunit/Auvio/entitlement/")
+      b.WriteString(page.asset_id())
+      b.WriteString("/play")
+      return b.String()
+   }()
+   req.Header = http.Header{
+      "x-forwarded-for": {"91.90.123.17"},
+      "authorization":   {"Bearer " + g.SessionToken},
+   }
    res, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer res.Body.Close()
-   var web WebToken
-   err = json.NewDecoder(res.Body).Decode(&web)
+   if res.StatusCode != http.StatusOK {
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   title := new(Entitlement)
+   err = json.NewDecoder(res.Body).Decode(title)
    if err != nil {
       return nil, err
    }
-   if v := web.ErrorMessage; v != "" {
-      return nil, errors.New(v)
-   }
-   return &web, nil
-}
-
-type GigyaLogin struct {
-   SessionToken string
+   return title, nil
 }
 
 type WebToken struct {
@@ -198,12 +208,4 @@ func (w WebToken) Login() (*GigyaLogin, error) {
       return nil, err
    }
    return login, nil
-}
-func (e Entitlement) DASH() (string, bool) {
-   for _, format := range e.Formats {
-      if format.Format == "DASH" {
-         return format.MediaLocator, true
-      }
-   }
-   return "", false
 }

@@ -8,32 +8,34 @@ import (
    "strings"
 )
 
+func (a AuvioPage) Episode() int {
+   return a.Content.Subtitle.Episode
+}
+
+func (a AuvioPage) Show() string {
+   if v := a.Content.Title; v.Season >= 1 {
+      return v.Title
+   }
+   return ""
+}
+
+func (a AuvioPage) Title() string {
+   if v := a.Content.Subtitle; v.Episode >= 1 {
+      return v.Subtitle
+   }
+   return a.Content.Title.Title
+}
+
+// its just not available from what I can tell
+func (AuvioPage) Year() int {
+   return 0
+}
+
 func (a AuvioPage) asset_id() string {
    if v := a.Content.AssetId; v != "" {
       return v
    }
    return a.Content.Media.AssetId
-}
-
-type AuvioPage struct {
-   Content struct {
-      AssetId  string
-      Media struct {
-         AssetId string
-      }
-      Subtitle Subtitle
-      Title    Title
-   }
-}
-
-type Title struct {
-   Season int
-   Title  string
-}
-
-type Subtitle struct {
-   Episode  int
-   Subtitle string
 }
 
 func NewPage(path string) (*AuvioPage, error) {
@@ -59,17 +61,20 @@ func (a AuvioPage) Season() int {
    return a.Content.Title.Season
 }
 
-// json.data.content.title = "Grantchester S01";
-// json.data.content.title = "I care a lot";
-func (t *Title) UnmarshalText(text []byte) error {
-   t.Title = string(text)
-   if before, after, ok := strings.Cut(t.Title, " S"); ok {
-      if season, err := strconv.Atoi(after); err == nil {
-         t.Title = before
-         t.Season = season
+type AuvioPage struct {
+   Content struct {
+      AssetId  string
+      Media struct {
+         AssetId string
       }
+      Subtitle Subtitle
+      Title    Title
    }
-   return nil
+}
+
+type Subtitle struct {
+   Episode  int
+   Subtitle string
 }
 
 // json.data.content.subtitle = "06 - Les ombres de la guerre";
@@ -85,25 +90,20 @@ func (s *Subtitle) UnmarshalText(text []byte) error {
    return nil
 }
 
-func (a AuvioPage) Episode() int {
-   return a.Content.Subtitle.Episode
+type Title struct {
+   Season int
+   Title  string
 }
 
-func (a AuvioPage) Show() string {
-   if v := a.Content.Title; v.Season >= 1 {
-      return v.Title
+// json.data.content.title = "Grantchester S01";
+// json.data.content.title = "I care a lot";
+func (t *Title) UnmarshalText(text []byte) error {
+   t.Title = string(text)
+   if before, after, ok := strings.Cut(t.Title, " S"); ok {
+      if season, err := strconv.Atoi(after); err == nil {
+         t.Title = before
+         t.Season = season
+      }
    }
-   return ""
-}
-
-func (a AuvioPage) Title() string {
-   if v := a.Content.Subtitle; v.Episode >= 1 {
-      return v.Subtitle
-   }
-   return a.Content.Title.Title
-}
-
-// its just not available from what I can tell
-func (AuvioPage) Year() int {
-   return 0
+   return nil
 }
