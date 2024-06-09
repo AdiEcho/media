@@ -23,12 +23,13 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key_id, err := hex.DecodeString(test.key_id)
+   var pssh widevine.PSSH
+   pssh.KeyId, err = hex.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
    var module widevine.CDM
-   err = module.New(private_key, client_id, widevine.PSSH(key_id, nil))
+   err = module.New(private_key, client_id, pssh.Encode())
    if err != nil {
       t.Fatal(err)
    }
@@ -41,7 +42,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key, err := module.Key(video, key_id)
+   key, err := module.Key(video, pssh.KeyId)
    if err != nil {
       t.Fatal(err)
    }

@@ -12,7 +12,7 @@ import (
 
 // ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
 const (
-   raw_content_id = "ZmYtZDAxM2NhN2EtMjY0MjY1"
+   content_id = "ZmYtZDAxM2NhN2EtMjY0MjY1"
    raw_key_id = "ywlXHuvLP3KHICZX9rn3pg=="
 )
 
@@ -29,18 +29,17 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   content_id, err := base64.StdEncoding.DecodeString(raw_content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   key_id, err := base64.StdEncoding.DecodeString(raw_key_id)
+   var pssh widevine.PSSH
+   pssh.ContentId, err = base64.StdEncoding.DecodeString(content_id)
    if err != nil {
       t.Fatal(err)
    }
    var module widevine.CDM
-   err = module.New(private_key, client_id, widevine.PSSH(
-      nil, content_id,
-   ))
+   err = module.New(private_key, client_id, pssh.Encode())
+   if err != nil {
+      t.Fatal(err)
+   }
+   key_id, err := base64.StdEncoding.DecodeString(raw_key_id)
    if err != nil {
       t.Fatal(err)
    }

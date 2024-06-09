@@ -31,16 +31,17 @@ func main() {
    if err != nil {
       panic(err)
    }
-   key_id, err := hex.DecodeString(default_kid)
+   var pssh widevine.PSSH
+   pssh.KeyId, err = hex.DecodeString(default_kid)
    if err != nil {
       panic(err)
    }
    var module widevine.CDM
-   err = module.New(private_key, client_id, widevine.PSSH(key_id, nil))
+   err = module.New(private_key, client_id, pssh.Encode())
    if err != nil {
       panic(err)
    }
-   key, err := module.Key(poster{}, key_id)
+   key, err := module.Key(poster{}, pssh.KeyId)
    if err != nil {
       panic(err)
    }

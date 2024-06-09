@@ -10,7 +10,7 @@ import (
 
 // play.stan.com.au/programs/1768588
 const (
-   raw_key_id = "0b5c271e61c244a8ab81e8363a66aa35"
+   key_id = "0b5c271e61c244a8ab81e8363a66aa35"
    program_id = 1768588
 )
 
@@ -41,16 +41,17 @@ func TestStream(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key_id, err := hex.DecodeString(raw_key_id)
+   var pssh widevine.PSSH
+   pssh.KeyId, err = hex.DecodeString(key_id)
    if err != nil {
       t.Fatal(err)
    }
    var module widevine.CDM
-   err = module.New(private_key, client_id, widevine.PSSH(key_id, nil))
+   err = module.New(private_key, client_id, pssh.Encode())
    if err != nil {
       t.Fatal(err)
    }
-   key, err := module.Key(stream, key_id)
+   key, err := module.Key(stream, pssh.KeyId)
    if err != nil {
       t.Fatal(err)
    }
