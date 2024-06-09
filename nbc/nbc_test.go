@@ -9,7 +9,7 @@ import (
    "time"
 )
 
-const raw_key_id = "0552e44842654a4e81b326004be47be0"
+const key_id = "0552e44842654a4e81b326004be47be0"
 
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -24,16 +24,17 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key_id, err := hex.DecodeString(raw_key_id)
+   var pssh widevine.PSSH
+   pssh.KeyId, err = hex.DecodeString(key_id)
    if err != nil {
       t.Fatal(err)
    }
    var module widevine.CDM
-   err = module.New(private_key, client_id, widevine.PSSH(key_id, nil))
+   err = module.New(private_key, client_id, pssh.Encode())
    if err != nil {
       t.Fatal(err)
    }
-   key, err := module.Key(Core(), key_id)
+   key, err := module.Key(Core(), pssh.KeyId)
    if err != nil {
       t.Fatal(err)
    }
