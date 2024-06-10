@@ -13,6 +13,21 @@ import (
    "time"
 )
 
+func (v Video) RequestUrl() (string, bool) {
+   t, h := func() (int64, []byte) {
+      h := hmac.New(sha256.New, []byte(v.DrmProxySecret))
+      t := time.Now().UnixMilli()
+      fmt.Fprint(h, t, "widevine")
+      return t, h.Sum(nil)
+   }()
+   b := []byte(v.DrmProxyUrl)
+   b = append(b, "/widevine"...)
+   b = fmt.Append(b, "?time=", t)
+   b = fmt.Appendf(b, "&hash=%x", h)
+   b = append(b, "&device=web"...)
+   return string(b), true
+}
+
 const query = `
 query(
    $app: NBCUBrands!
@@ -57,21 +72,6 @@ func Core() Video {
       return b.String()
    }()
    return v
-}
-
-func (v Video) RequestUrl() (string, bool) {
-   t, h := func() (int64, []byte) {
-      h := hmac.New(sha256.New, []byte(v.DrmProxySecret))
-      t := time.Now().UnixMilli()
-      fmt.Fprint(h, t, "widevine")
-      return t, h.Sum(nil)
-   }()
-   b := []byte(v.DrmProxyUrl)
-   b = append(b, "/widevine"...)
-   b = fmt.Append(b, "?time=", t)
-   b = fmt.Appendf(b, "&hash=%x", h)
-   b = append(b, "&device=web"...)
-   return string(b), true
 }
 
 func (Video) RequestHeader() (http.Header, error) {
