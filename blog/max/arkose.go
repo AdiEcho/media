@@ -12,14 +12,45 @@ import (
    "time"
 )
 
-const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
-
-type default_login struct {
-   Credentials struct {
-      Username string `json:"username"`
-      Password string `json:"password"`
-   } `json:"credentials"`
+func (r login_request) login(
+   key public_key,
+   token default_token,
+) (*login_response, error) {
+   body, err := json.Marshal(r)
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://default.any-amer.prd.api.max.com/login",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.AddCookie(token.cookie)
+   req.Header.Set("content-type", "application/json")
+   req.Header.Set("x-disco-arkose-token", key.Token)
+   req.Header.Set("x-disco-client-id", func() string {
+      timestamp := time.Now().Unix()
+      hash := hmac.New(sha256.New, config.Key)
+      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
+      signature := hash.Sum(nil)
+      return fmt.Sprintf("%v:%v:%x", config.Id, timestamp, signature)
+   }())
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   login := new(login_response)
+   err = json.NewDecoder(resp.Body).Decode(login)
+   if err != nil {
+      return nil, err
+   }
+   return login, nil
 }
+
+const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
 
 func (d default_token) config() (*key_config, error) {
    body, err := json.Marshal(map[string]string{
@@ -116,30 +147,17 @@ func (p *public_key) New() error {
    return json.NewDecoder(resp.Body).Decode(p)
 }
 
-func (p public_key) login(
-   login default_login,
-   token default_token,
-) (*http.Response, error) {
-   body, err := json.Marshal(login)
-   if err != nil {
-      return nil, err
+type login_request struct {
+   Credentials struct {
+      Username string `json:"username"`
+      Password string `json:"password"`
+   } `json:"credentials"`
+}
+
+type login_response struct {
+   Data struct {
+      Attributes struct {
+         Token string
+      }
    }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-amer.prd.api.max.com/login",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.AddCookie(token.cookie)
-   req.Header.Set("content-type", "application/json")
-   req.Header.Set("x-disco-arkose-token", p.Token)
-   req.Header.Set("x-disco-client-id", func() string {
-      timestamp := time.Now().Unix()
-      hash := hmac.New(sha256.New, config.Key)
-      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
-      signature := hash.Sum(nil)
-      return fmt.Sprintf("%v:%v:%x", config.Id, timestamp, signature)
-   }())
-   return http.DefaultClient.Do(req)
 }

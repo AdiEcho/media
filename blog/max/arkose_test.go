@@ -7,12 +7,12 @@ import (
 )
 
 func TestLogin(t *testing.T) {
-   var login default_login
-   login.Credentials.Username = os.Getenv("max_username")
-   if login.Credentials.Username == "" {
+   var request login_request
+   request.Credentials.Username = os.Getenv("max_username")
+   if request.Credentials.Username == "" {
       t.Fatal("Getenv")
    }
-   login.Credentials.Password = os.Getenv("max_password")
+   request.Credentials.Password = os.Getenv("max_password")
    var key public_key
    err := key.New()
    if err != nil {
@@ -23,12 +23,11 @@ func TestLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   res, err := key.login(login, token)
+   login, err := request.login(key, token)
    if err != nil {
       t.Fatal(err)
    }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   fmt.Printf("%+v\n", login)
 }
 
 func TestConfig(t *testing.T) {
