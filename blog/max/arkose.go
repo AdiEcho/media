@@ -12,6 +12,18 @@ import (
    "time"
 )
 
+func (st st_cookie) marshal() ([]byte, error) {
+   return json.MarshalIndent(st, "", " ")
+}
+
+func (st *st_cookie) unmarshal(text []byte) error {
+   return json.Unmarshal(text, st)
+}
+
+type st_cookie struct {
+   Cookie *http.Cookie
+}
+
 func (st *st_cookie) login(key public_key, login default_login) error {
    body, err := json.Marshal(login)
    if err != nil {
@@ -24,7 +36,7 @@ func (st *st_cookie) login(key public_key, login default_login) error {
    if err != nil {
       return err
    }
-   req.AddCookie(st.cookie)
+   req.AddCookie(st.Cookie)
    req.Header.Set("content-type", "application/json")
    req.Header.Set("x-disco-arkose-token", key.Token)
    req.Header.Set("x-disco-client-id", func() string {
@@ -41,15 +53,11 @@ func (st *st_cookie) login(key public_key, login default_login) error {
    defer resp.Body.Close()
    for _, cookie := range resp.Cookies() {
       if cookie.Name == "st" {
-         st.cookie = cookie
+         st.Cookie = cookie
          return nil
       }
    }
    return http.ErrNoCookie
-}
-
-type st_cookie struct {
-   cookie *http.Cookie
 }
 
 type key_config struct {
@@ -104,7 +112,7 @@ func (st *st_cookie) New() error {
    }
    for _, cookie := range resp.Cookies() {
       if cookie.Name == "st" {
-         st.cookie = cookie
+         st.Cookie = cookie
          return nil
       }
    }
@@ -125,7 +133,7 @@ func (st st_cookie) config() (*key_config, error) {
       return nil, err
    }
    req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
-   req.AddCookie(st.cookie)
+   req.AddCookie(st.Cookie)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err

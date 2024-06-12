@@ -7,36 +7,40 @@ import (
 )
 
 func TestLogin(t *testing.T) {
-   var request login_request
-   request.Credentials.Username = os.Getenv("max_username")
-   if request.Credentials.Username == "" {
+   var login default_login
+   login.Credentials.Username = os.Getenv("max_username")
+   if login.Credentials.Username == "" {
       t.Fatal("Getenv")
    }
-   request.Credentials.Password = os.Getenv("max_password")
+   login.Credentials.Password = os.Getenv("max_password")
    var key public_key
    err := key.New()
    if err != nil {
       t.Fatal(err)
    }
-   var token default_token
-   err = token.New()
+   var st st_cookie
+   err = st.New()
    if err != nil {
       t.Fatal(err)
    }
-   login, err := request.login(key, token)
+   err = st.login(key, login)
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", login)
+   text, err := st.marshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("login.json", text, 0666)
 }
 
 func TestConfig(t *testing.T) {
-   var token default_token
-   err := token.New()
+   var st st_cookie
+   err := st.New()
    if err != nil {
       t.Fatal(err)
    }
-   config, err := token.config()
+   config, err := st.config()
    if err != nil {
       t.Fatal(err)
    }
