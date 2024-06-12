@@ -1,4 +1,4 @@
-package arkose
+package max
 
 import (
    "bytes"

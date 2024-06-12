@@ -1,14 +1,13 @@
-package main
+package max
 
 import (
    "io"
    "net/http"
    "net/url"
-   "os"
    "strings"
 )
 
-func main() {
+func playback() (*http.Response, error) {
    var req http.Request
    req.Header = make(http.Header)
    req.Method = "POST"
@@ -18,20 +17,15 @@ func main() {
    req.URL.Host = "default.any-any.prd.api.max.com"
    req.URL.Path = "/any/playback/v1/playbackInfo"
    req.URL.Scheme = "https"
-   req.Body = io.NopCloser(body)
+   req.Body = io.NopCloser(playback_body)
    req.Header["Content-Type"] = []string{"application/json"}
    req.Header["Cookie"] = []string{
       "st=eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJ0b2tlbi1iODRmOTIxMy0yMzA0LTQ4MGEtOGEzMy1lOTViMTNhOGFiZjgiLCJpc3MiOiJmcGEtaXNzdWVyIiwic3ViIjoiVVNFUklEOmJvbHQ6Y2YwMWI0ZDItZDIyNS00Njc4LThkOTItOGU0NTg1MDhkN2U4IiwiaWF0IjoxNzE3OTcwODYxLCJleHAiOjIwMzMzMzA4NjEsInR5cGUiOiJBQ0NFU1NfVE9LRU4iLCJzdWJkaXZpc2lvbiI6ImJlYW1fYW1lciIsInNjb3BlIjoiZGVmYXVsdCIsInZlcnNpb24iOiJ2MiIsImFub255bW91cyI6ZmFsc2UsImRldmljZUlkIjoiMDQxMzdhYTItMWUxZS02ZjUyLTdhMDgtMTIyNDljODY0NjkwIn0.adU124rWw6-B55slVSnAn7gyd6wJA8sdWv-c2ayXkdrlGmXSRIosAnxf582ABO2ZCmguG0Lbm2S2ZlKMuRSwdT-QXfG8-EFW4LAaawiMc3xKuRn-uUmMCAhaewg_4TauEFdpAPDXAFOdO_wItNt7MoN1nQaW8C1Sa7jJzDpQhCDqv8DfEeZYfx_jQopnVyw6vUmz_W4m52wJAlmh_kW2fCJuUahywMKRHSBOBriBm1LL51gIOIcFxfLM3G6f-yb_ar9xqFqSIyaSpQ5Wj1t2T3IQPNh8gjrPw0O6A2zGo91S4reQHDB18kc-IzCFfGA2scGbLWZE7rcUpeZjK6eRiQ",
    }
-   res, err := http.DefaultClient.Do(&req)
-   if err != nil {
-      panic(err)
-   }
-   defer res.Body.Close()
-   res.Write(os.Stdout)
+   return http.DefaultClient.Do(&req)
 }
 
-var body = strings.NewReader(`
+var playback_body = strings.NewReader(`
 {
    "appBundle": "beam",
    "applicationSessionId": "b7804758-3377-4190-b429-ea7dee273880",
