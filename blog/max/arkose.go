@@ -24,6 +24,31 @@ type st_cookie struct {
    Cookie *http.Cookie
 }
 
+type key_config struct {
+   Id string
+   Key []byte
+}
+
+var config = key_config{
+   Id: "web1_prd",
+   Key: []byte("9d697c21-2ec9-494b-a90d-e3de471e6e9f"),
+}
+
+type public_key struct {
+   Token string
+}
+
+const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
+
+type default_login struct {
+   Credentials struct {
+      Username string `json:"username"`
+      Password string `json:"password"`
+   } `json:"credentials"`
+}
+
+////////////
+
 func (st *st_cookie) login(key public_key, login default_login) error {
    body, err := json.Marshal(login)
    if err != nil {
@@ -60,20 +85,6 @@ func (st *st_cookie) login(key public_key, login default_login) error {
    return http.ErrNoCookie
 }
 
-type key_config struct {
-   Id string
-   Key []byte
-}
-
-var config = key_config{
-   Id: "web1_prd",
-   Key: []byte("9d697c21-2ec9-494b-a90d-e3de471e6e9f"),
-}
-
-type public_key struct {
-   Token string
-}
-
 func (p *public_key) New() error {
    resp, err := http.PostForm(
       "https://wbd-api.arkoselabs.com/fc/gt2/public_key/" + arkose_site_key,
@@ -87,8 +98,6 @@ func (p *public_key) New() error {
    defer resp.Body.Close()
    return json.NewDecoder(resp.Body).Decode(p)
 }
-
-const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
 
 func (st *st_cookie) New() error {
    req, err := http.NewRequest(
@@ -151,11 +160,4 @@ func (st st_cookie) config() (*key_config, error) {
       return nil, err
    }
    return &decision.HmacKeys.Config.Web, nil
-}
-
-type default_login struct {
-   Credentials struct {
-      Username string `json:"username"`
-      Password string `json:"password"`
-   } `json:"credentials"`
 }
