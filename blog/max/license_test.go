@@ -39,9 +39,11 @@ func TestLicense(t *testing.T) {
    }
    var token default_token
    token.unmarshal(text)
-   var request playback_request
-   request.New()
-   play, err := token.playback(request)
+   video, err := token.video()
+   if err != nil {
+      t.Fatal(err)
+   }
+   play, err := token.playback(video)
    if err != nil {
       t.Fatal(err)
    }

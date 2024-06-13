@@ -1,7 +1,7 @@
 package max
 
 import (
-   "os"
+   "fmt"
    "testing"
 )
 
@@ -11,10 +11,9 @@ func TestVideo(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   resp, err := token.video()
+   video, err := token.video()
    if err != nil {
       t.Fatal(err)
    }
-   defer resp.Body.Close()
-   resp.Write(os.Stdout)
+   fmt.Printf("%+v\n", video)
 }

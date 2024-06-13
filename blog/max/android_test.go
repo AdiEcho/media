@@ -16,9 +16,11 @@ func TestAndroidPlayback(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var request playback_request
-   request.New()
-   play, err := token.playback(request)
+   video, err := token.video()
+   if err != nil {
+      t.Fatal(err)
+   }
+   play, err := token.playback(video)
    if err != nil {
       t.Fatal(err)
    }

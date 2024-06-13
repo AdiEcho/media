@@ -1,11 +1,24 @@
 package max
 
 import (
+   "encoding/json"
    "net/http"
    "strings"
 )
 
-func (d default_token) video() (*http.Response, error) {
+type active_video struct {
+   Data struct {
+      Relationships struct {
+         Edit struct {
+            Data struct {
+               Id string
+            }
+         }
+      }
+   }
+}
+
+func (d default_token) video() (*active_video, error) {
    req, err := http.NewRequest(
       "", "https://default.any-amer.prd.api.discomax.com", nil,
    )
@@ -20,5 +33,15 @@ func (d default_token) video() (*http.Response, error) {
       return b.String()
    }()
    req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
-   return http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   video := new(active_video)
+   err = json.NewDecoder(resp.Body).Decode(video)
+   if err != nil {
+      return nil, err
+   }
+   return video, nil
 }

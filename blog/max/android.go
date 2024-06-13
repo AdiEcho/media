@@ -12,44 +12,6 @@ import (
    "time"
 )
 
-func (d default_token) playback(p playback_request) (*playback, error) {
-   body, err := json.Marshal(p)
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-any.prd.api.discomax.com",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("content-type", "application/json")
-   req.URL.Path = func() string {
-      var b bytes.Buffer
-      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
-      b.WriteString("/playbackInfo")
-      return b.String()
-   }()
-   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   play := new(playback)
-   err = json.NewDecoder(resp.Body).Decode(play)
-   if err != nil {
-      return nil, err
-   }
-   return play, nil
-}
-
-func (p *playback_request) New() {
-   p.ConsumptionType = "streaming"
-   p.EditId = "1623fe4c-ef6e-4dd1-a10c-4a181f5f6579"
-}
-
 type playback_request struct {
    AppBundle string `json:"appBundle"` // required
    ApplicationSessionId string `json:"applicationSessionId"` // required
@@ -161,6 +123,35 @@ func (d *default_token) New() error {
    return json.NewDecoder(resp.Body).Decode(d)
 }
 
+func (playback) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (playback) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (playback) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+type playback struct {
+   Drm struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string
+         }
+      }
+   }
+   Manifest struct {
+      Url string
+   }
+}
+
+func (p playback) RequestUrl() (string, bool) {
+   return p.Drm.Schemes.Widevine.LicenseUrl, true
+}
+
 func (d default_token) config() (*key_config, error) {
    body, err := json.Marshal(map[string]string{
       "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
@@ -226,31 +217,42 @@ func (d *default_token) login(key public_key, login default_login) error {
    return json.NewDecoder(resp.Body).Decode(d)
 }
 
-func (playback) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
+//////////
 
-func (playback) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (playback) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-type playback struct {
-   Drm struct {
-      Schemes struct {
-         Widevine struct {
-            LicenseUrl string
-         }
-      }
+func (d default_token) playback(video *active_video) (*playback, error) {
+   body, err := func() ([]byte, error) {
+      var p playback_request
+      p.ConsumptionType = "streaming"
+      p.EditId = video.Data.Relationships.Edit.Data.Id
+      return json.Marshal(p)
+   }()
+   if err != nil {
+      return nil, err
    }
-   Manifest struct {
-      Url string
+   req, err := http.NewRequest(
+      "POST", "https://default.any-any.prd.api.discomax.com",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
    }
-}
-
-func (p playback) RequestUrl() (string, bool) {
-   return p.Drm.Schemes.Widevine.LicenseUrl, true
+   req.Header.Set("content-type", "application/json")
+   req.URL.Path = func() string {
+      var b bytes.Buffer
+      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
+      b.WriteString("/playbackInfo")
+      return b.String()
+   }()
+   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   play := new(playback)
+   err = json.NewDecoder(resp.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
 }
