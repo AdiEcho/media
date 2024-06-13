@@ -7,17 +7,9 @@ import (
    "net/http"
 )
 
-type default_token struct {
-   Data struct {
-      Attributes struct {
-         Token string
-      }
-   }
-}
-
 func (d *default_token) New() error {
    req, err := http.NewRequest(
-      "", "https://default.any-any.prd.api.max.com/token?realm=bolt", nil,
+      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
    )
    if err != nil {
       return err
@@ -37,4 +29,47 @@ func (d *default_token) New() error {
       return errors.New(b.String())
    }
    return json.NewDecoder(resp.Body).Decode(d)
+}
+
+type default_token struct {
+   Data struct {
+      Attributes struct {
+         Token string
+      }
+   }
+}
+
+func (d default_token) config() (*key_config, error) {
+   body, err := json.Marshal(map[string]string{
+      "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
+   })
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://default.any-any.prd.api.discomax.com",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
+   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var decision struct {
+      HmacKeys struct {
+         Config struct {
+            Android key_config
+         }
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&decision)
+   if err != nil {
+      return nil, err
+   }
+   return &decision.HmacKeys.Config.Android, nil
 }

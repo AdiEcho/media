@@ -53,7 +53,11 @@ type st_cookie struct {
    Cookie *http.Cookie
 }
 
-//////////////////////////////
+type public_key struct {
+   Token string
+}
+
+const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
 
 func (p *public_key) New() error {
    resp, err := http.PostForm(
@@ -74,16 +78,46 @@ type key_config struct {
    Key []byte
 }
 
+//////////////////////////////
+
+func (st st_cookie) config() (*key_config, error) {
+   body, err := json.Marshal(map[string]string{
+      "projectId": "67e7aa0f-b186-4b85-9cb0-86d40a23636c",
+   })
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://default.beam-any.prd.api.max.com", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
+   req.AddCookie(st.Cookie)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var decision struct {
+      HmacKeys struct {
+         Config struct {
+            Web key_config
+         }
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&decision)
+   if err != nil {
+      return nil, err
+   }
+   return &decision.HmacKeys.Config.Web, nil
+}
+
 var config = key_config{
    Id: "web1_prd",
    Key: []byte("9d697c21-2ec9-494b-a90d-e3de471e6e9f"),
 }
-
-type public_key struct {
-   Token string
-}
-
-const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
 
 type default_login struct {
    Credentials struct {
@@ -126,38 +160,4 @@ func (st *st_cookie) login(key public_key, login default_login) error {
       }
    }
    return http.ErrNoCookie
-}
-
-func (st st_cookie) config() (*key_config, error) {
-   body, err := json.Marshal(map[string]string{
-      "projectId": "67e7aa0f-b186-4b85-9cb0-86d40a23636c",
-   })
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://default.beam-any.prd.api.max.com", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
-   req.AddCookie(st.Cookie)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var decision struct {
-      HmacKeys struct {
-         Config struct {
-            Web key_config
-         }
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&decision)
-   if err != nil {
-      return nil, err
-   }
-   return &decision.HmacKeys.Config.Web, nil
 }
