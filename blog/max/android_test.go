@@ -16,14 +16,13 @@ func TestAndroidPlayback(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var playback playback_request
-   playback.New()
-   resp, err := token.playback(playback)
+   var request playback_request
+   request.New()
+   play, err := token.playback(request)
    if err != nil {
       t.Fatal(err)
    }
-   defer resp.Body.Close()
-   resp.Write(os.Stdout)
+   fmt.Printf("%+v\n", play)
 }
 
 func TestAndroidLogin(t *testing.T) {

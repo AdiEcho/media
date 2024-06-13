@@ -12,7 +12,7 @@ import (
    "time"
 )
 
-func (d default_token) playback(p playback_request) (*http.Response, error) {
+func (d default_token) playback(p playback_request) (*playback, error) {
    body, err := json.Marshal(p)
    if err != nil {
       return nil, err
@@ -32,7 +32,17 @@ func (d default_token) playback(p playback_request) (*http.Response, error) {
       return b.String()
    }()
    req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
-   return http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   play := new(playback)
+   err = json.NewDecoder(resp.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
 }
 
 func (p *playback_request) New() {
@@ -214,4 +224,33 @@ func (d *default_token) login(key public_key, login default_login) error {
    }
    defer resp.Body.Close()
    return json.NewDecoder(resp.Body).Decode(d)
+}
+
+func (playback) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (playback) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (playback) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+type playback struct {
+   Drm struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string
+         }
+      }
+   }
+   Manifest struct {
+      Url string
+   }
+}
+
+func (p playback) RequestUrl() (string, bool) {
+   return p.Drm.Schemes.Widevine.LicenseUrl, true
 }

@@ -33,7 +33,19 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key, err := module.Key(poster{}, pssh.KeyId)
+   text, err := os.ReadFile("token.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var token default_token
+   token.unmarshal(text)
+   var request playback_request
+   request.New()
+   play, err := token.playback(request)
+   if err != nil {
+      t.Fatal(err)
+   }
+   key, err := module.Key(play, pssh.KeyId)
    if err != nil {
       t.Fatal(err)
    }
