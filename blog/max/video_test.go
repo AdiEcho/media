@@ -6,12 +6,12 @@ import (
 )
 
 func TestVideo(t *testing.T) {
-   var st st_cookie
-   err := st.New()
+   var token default_token
+   err := token.New()
    if err != nil {
       t.Fatal(err)
    }
-   resp, err := st.video()
+   resp, err := token.video()
    if err != nil {
       t.Fatal(err)
    }

@@ -5,9 +5,9 @@ import (
    "strings"
 )
 
-func video() (*http.Response, error) {
+func (d default_token) video() (*http.Response, error) {
    req, err := http.NewRequest(
-      "", "https://default.any-amer.prd.api.max.com", nil,
+      "", "https://default.any-amer.prd.api.discomax.com", nil,
    )
    if err != nil {
       return nil, err
@@ -19,6 +19,6 @@ func video() (*http.Response, error) {
       b.WriteString("/activeVideoForShow")
       return b.String()
    }()
-   // req.AddCookie(st.Cookie)
+   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
    return http.DefaultClient.Do(req)
 }
