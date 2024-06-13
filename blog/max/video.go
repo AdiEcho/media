@@ -27,15 +27,15 @@ func (d default_token) video(show string) (*active_video, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   var video struct {
-      Data active_video
-   }
-   err = json.NewDecoder(resp.Body).Decode(&video)
+   video := new(active_video)
+   err = json.NewDecoder(resp.Body).Decode(video)
    if err != nil {
       return nil, err
    }
-   return &video.Data, nil
+   return video, nil
 }
+
+///////////////////////////
 
 func (active_video) Show() string {
    return ""
@@ -50,23 +50,31 @@ func (active_video) Episode() int {
 }
 
 func (a active_video) Title() string {
-   return a.Attributes.Name
+   return a.Data.Attributes.Name
 }
 
 type active_video struct {
-   Attributes struct {
-      AirDate time.Time
-      Name string
-   }
-   Relationships struct {
-      Edit struct {
-         Data struct {
-            Id string
+   Data struct {
+      Attributes struct {
+         AirDate time.Time
+         Name string
+      }
+      Relationships struct {
+         Edit struct {
+            Data struct {
+               Id string
+            }
          }
       }
+   }
+   Included []struct {
+      Attributes struct {
+         Name string
+      }
+      Type string
    }
 }
 
 func (a active_video) Year() int {
-   return a.Attributes.AirDate.Year()
+   return a.Data.Attributes.AirDate.Year()
 }

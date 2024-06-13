@@ -16,7 +16,7 @@ func (d default_token) playback(video *active_video) (*playback, error) {
    body, err := func() ([]byte, error) {
       var p playback_request
       p.ConsumptionType = "streaming"
-      p.EditId = video.Relationships.Edit.Data.Id
+      p.EditId = video.Data.Relationships.Edit.Data.Id
       return json.Marshal(p)
    }()
    if err != nil {
