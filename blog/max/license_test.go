@@ -39,7 +39,7 @@ func TestLicense(t *testing.T) {
    }
    var token default_token
    token.unmarshal(text)
-   video, err := token.video()
+   video, err := token.video(show)
    if err != nil {
       t.Fatal(err)
    }

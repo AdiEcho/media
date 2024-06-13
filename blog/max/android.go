@@ -12,6 +12,44 @@ import (
    "time"
 )
 
+func (d default_token) playback(video *active_video) (*playback, error) {
+   body, err := func() ([]byte, error) {
+      var p playback_request
+      p.ConsumptionType = "streaming"
+      p.EditId = video.Relationships.Edit.Data.Id
+      return json.Marshal(p)
+   }()
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://default.any-any.prd.api.discomax.com",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("content-type", "application/json")
+   req.URL.Path = func() string {
+      var b bytes.Buffer
+      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
+      b.WriteString("/playbackInfo")
+      return b.String()
+   }()
+   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   play := new(playback)
+   err = json.NewDecoder(resp.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
+}
+
 type playback_request struct {
    AppBundle string `json:"appBundle"` // required
    ApplicationSessionId string `json:"applicationSessionId"` // required
@@ -215,44 +253,4 @@ func (d *default_token) login(key public_key, login default_login) error {
    }
    defer resp.Body.Close()
    return json.NewDecoder(resp.Body).Decode(d)
-}
-
-//////////
-
-func (d default_token) playback(video *active_video) (*playback, error) {
-   body, err := func() ([]byte, error) {
-      var p playback_request
-      p.ConsumptionType = "streaming"
-      p.EditId = video.Data.Relationships.Edit.Data.Id
-      return json.Marshal(p)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-any.prd.api.discomax.com",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("content-type", "application/json")
-   req.URL.Path = func() string {
-      var b bytes.Buffer
-      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
-      b.WriteString("/playbackInfo")
-      return b.String()
-   }()
-   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   play := new(playback)
-   err = json.NewDecoder(resp.Body).Decode(play)
-   if err != nil {
-      return nil, err
-   }
-   return play, nil
 }
