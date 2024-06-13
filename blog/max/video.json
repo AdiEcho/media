@@ -1,124 +1,918 @@
 {
-  "data" : {
-    "attributes" : {
-      "airDate" : "2011-04-01T00:01:00Z",
-      "alternateId" : "b3b1410a-0c85-457b-bcc7-e13299bea2a8",
-      "description" : "A soldier is transported into another man’s body aboard a commuter train, where he must foil a terrorist bombing plot within eight minutes.",
-      "firstAvailableDate" : "2024-04-01T07:01:00Z",
-      "isFamilyContent" : true,
-      "isKidsContent" : false,
-      "kidsContent" : false,
-      "longDescription" : "A soldier is transported into another man's body on a commuter train, where he must foil a terrorist plot within eight minutes. Learning more about the experimental military technology being deployed, he races against time to save the train passengers.",
-      "materialType" : "MOVIE",
-      "name" : "Source Code",
-      "originalName" : "Source Code",
-      "secondaryTitle" : "Source Code",
-      "videoType" : "MOVIE"
-    },
-    "id" : "b3b1410a-0c85-457b-bcc7-e13299bea2a8",
-    "relationships" : {
-      "contentPackages" : {
-        "data" : [ {
-          "id" : "VodEntertainment",
-          "type" : "package"
-        }, {
-          "id" : "Hbo",
-          "type" : "package"
-        } ]
-      },
-      "creditGroups" : {
-        "data" : [ {
-          "id" : "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-starring",
-          "type" : "creditGroup"
-        }, {
-          "id" : "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-director",
-          "type" : "creditGroup"
-        }, {
-          "id" : "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-writers",
-          "type" : "creditGroup"
-        }, {
-          "id" : "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-producers",
-          "type" : "creditGroup"
-        } ]
-      },
-      "edit" : {
-        "data" : {
-          "id" : "1623fe4c-ef6e-4dd1-a10c-4a181f5f6579",
-          "type" : "edit"
-        }
-      },
-      "images" : {
-        "data" : [ {
-          "id" : "b3b1410a-0c85-457b-bcc7-e13299bea2a8:video:centered-background-small",
-          "type" : "image"
-        }, {
-          "id" : "b3b1410a-0c85-457b-bcc7-e13299bea2a8:video:cover-artwork",
-          "type" : "image"
-        }, {
-          "id" : "b3b1410a-0c85-457b-bcc7-e13299bea2a8:video:default",
-          "type" : "image"
-        } ]
-      },
-      "primaryChannel" : {
-        "data" : {
-          "id" : "c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093",
-          "type" : "channel"
-        }
-      },
-      "ratingDescriptors" : {
-        "data" : [ {
-          "id" : "4062c194-0c80-4ceb-9de5-d7f7e6e302b8",
-          "type" : "contentDescriptor"
-        }, {
-          "id" : "582e60b9-b1f7-4398-9182-a8758856209d",
-          "type" : "contentDescriptor"
-        }, {
-          "id" : "f8e36188-362f-4a7b-9934-c7d77cb86e64",
-          "type" : "contentDescriptor"
-        } ]
-      },
-      "ratings" : {
-        "data" : [ {
-          "id" : "4d1bf7aa-ddc4-4641-b568-11f59abb4787",
-          "type" : "contentRating"
-        } ]
-      },
-      "show" : {
-        "data" : {
-          "id" : "127b00c5-0131-4bac-b2d1-40762deefe09",
-          "type" : "show"
-        }
-      },
-      "txGenres" : {
-        "data" : [ {
-          "id" : "0a34f929-1e10-4e53-ba8d-d0e2dbedfdfd",
-          "type" : "taxonomyNode"
-        }, {
-          "id" : "9df43ec7-cc1a-4d8f-b7f1-d024810aed66",
-          "type" : "taxonomyNode"
-        }, {
-          "id" : "b676b596-7a71-44fb-8222-ecd28becc276",
-          "type" : "taxonomyNode"
-        }, {
-          "id" : "cdc65854-4013-4c85-b2b5-c48290ad3b5c",
-          "type" : "taxonomyNode"
-        } ]
-      }
-    },
-    "type" : "video"
+ "data": {
+  "attributes": {
+   "airDate": "1999-01-01T00:01:00Z",
+   "alternateId": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8",
+   "description": "After suffering anxiety attacks, New Jersey mob boss Tony Soprano agrees to see a psychiatrist.",
+   "episodeNumber": 1,
+   "firstAvailableDate": "2023-02-08T05:00:00Z",
+   "isFamilyContent": false,
+   "isFavorite": false,
+   "isKidsContent": false,
+   "kidsContent": false,
+   "longDescription": "After suffering a series of mysterious anxiety attacks, New Jersey mob boss Tony Soprano agrees to see a psychiatrist, Dr. Jennifer Melfi. As he opens up to the doctor, Tony reveals details about his problems at home and at work.",
+   "materialType": "EPISODE",
+   "name": "Pilot",
+   "originalName": "Pilot",
+   "seasonNumber": 1,
+   "secondaryTitle": "Pilot",
+   "videoType": "EPISODE",
+   "viewingHistory": {
+    "viewed": false
+   }
   },
-  "included" : [ ],
-  "meta" : {
-    "site" : {
-      "attributes" : {
-        "brandId" : "beam",
-        "mainTerritoryCode" : "us",
-        "theme" : "beam",
-        "websiteHostName" : ""
-      },
-      "id" : "beam_us",
-      "type" : "site"
+  "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8",
+  "relationships": {
+   "contentPackages": {
+    "data": [
+     {
+      "id": "VodEntertainment",
+      "type": "package"
+     },
+     {
+      "id": "Hbo",
+      "type": "package"
+     }
+    ]
+   },
+   "creditGroups": {
+    "data": [
+     {
+      "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8-credit-group-starring",
+      "type": "creditGroup"
+     },
+     {
+      "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8-credit-group-director",
+      "type": "creditGroup"
+     },
+     {
+      "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8-credit-group-writers",
+      "type": "creditGroup"
+     },
+     {
+      "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8-credit-group-producers",
+      "type": "creditGroup"
+     },
+     {
+      "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8-credit-group-creators",
+      "type": "creditGroup"
+     }
+    ]
+   },
+   "edit": {
+    "data": {
+     "id": "48ba563a-e8c0-464f-9b25-1abb9719923c",
+     "type": "edit"
+    }
+   },
+   "images": {
+    "data": [
+     {
+      "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8:video:centered-background-small",
+      "type": "image"
+     },
+     {
+      "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8:video:cover-artwork",
+      "type": "image"
+     },
+     {
+      "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8:video:default",
+      "type": "image"
+     }
+    ]
+   },
+   "primaryChannel": {
+    "data": {
+     "id": "c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093",
+     "type": "channel"
+    }
+   },
+   "ratingDescriptors": {
+    "data": [
+     {
+      "id": "02a91282-d517-4f2a-a620-259ff2ba3408",
+      "type": "contentDescriptor"
+     },
+     {
+      "id": "582e60b9-b1f7-4398-9182-a8758856209d",
+      "type": "contentDescriptor"
+     },
+     {
+      "id": "b2c2a6f6-a992-4824-b43e-d0313b43c9ae",
+      "type": "contentDescriptor"
+     },
+     {
+      "id": "eb7063ee-e517-45d6-a816-16212f916850",
+      "type": "contentDescriptor"
+     }
+    ]
+   },
+   "ratings": {
+    "data": [
+     {
+      "id": "fbdd00c3-6c8f-4e27-be17-ac5997ebdfd2",
+      "type": "contentRating"
+     }
+    ]
+   },
+   "season": {
+    "data": {
+     "id": "8ac35ff8-81b3-4ec9-8784-647f7e87e560",
+     "type": "season"
+    }
+   },
+   "show": {
+    "data": {
+     "id": "818c3d9d-1831-48a6-9583-0364a7f98453",
+     "type": "show"
+    }
+   },
+   "txGenres": {
+    "data": [
+     {
+      "id": "1ef95565-d5d5-4793-9656-31207932bfe1",
+      "type": "taxonomyNode"
+     },
+     {
+      "id": "3e183de4-3108-4fb5-801f-66b9ca405f94",
+      "type": "taxonomyNode"
+     },
+     {
+      "id": "435e27a6-3026-42fb-8549-b560f7616360",
+      "type": "taxonomyNode"
+     },
+     {
+      "id": "8557a482-557e-4bec-bf53-814094c40392",
+      "type": "taxonomyNode"
+     },
+     {
+      "id": "cdc65854-4013-4c85-b2b5-c48290ad3b5c",
+      "type": "taxonomyNode"
+     }
+    ]
+   }
+  },
+  "type": "video"
+ },
+ "included": [
+  {
+   "attributes": {
+    "code": "Graphic Violence"
+   },
+   "id": "02a91282-d517-4f2a-a620-259ff2ba3408",
+   "relationships": {
+    "contentRatingSystem": {
+     "data": {
+      "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+      "type": "contentRatingSystem"
+     }
     },
-    "state" : "COLD_START"
+    "images": {
+     "data": []
+    }
+   },
+   "type": "contentDescriptor"
+  },
+  {
+   "attributes": {
+    "code": "Adult Content"
+   },
+   "id": "582e60b9-b1f7-4398-9182-a8758856209d",
+   "relationships": {
+    "contentRatingSystem": {
+     "data": {
+      "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+      "type": "contentRatingSystem"
+     }
+    },
+    "images": {
+     "data": []
+    }
+   },
+   "type": "contentDescriptor"
+  },
+  {
+   "attributes": {
+    "code": "Nudity"
+   },
+   "id": "b2c2a6f6-a992-4824-b43e-d0313b43c9ae",
+   "relationships": {
+    "contentRatingSystem": {
+     "data": {
+      "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+      "type": "contentRatingSystem"
+     }
+    },
+    "images": {
+     "data": []
+    }
+   },
+   "type": "contentDescriptor"
+  },
+  {
+   "attributes": {
+    "code": "Graphic Language"
+   },
+   "id": "eb7063ee-e517-45d6-a816-16212f916850",
+   "relationships": {
+    "contentRatingSystem": {
+     "data": {
+      "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+      "type": "contentRatingSystem"
+     }
+    },
+    "images": {
+     "data": []
+    }
+   },
+   "type": "contentDescriptor"
+  },
+  {
+   "attributes": {
+    "code": "TV-MA"
+   },
+   "id": "fbdd00c3-6c8f-4e27-be17-ac5997ebdfd2",
+   "relationships": {
+    "contentRatingSystem": {
+     "data": {
+      "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+      "type": "contentRatingSystem"
+     }
+    },
+    "images": {
+     "data": [
+      {
+       "id": "77962dc8-2a8e-440f-95f6-15ec9788e6d6",
+       "type": "image"
+      }
+     ]
+    }
+   },
+   "type": "contentRating"
+  },
+  {
+   "attributes": {
+    "system": "us-pay-tv-descriptors"
+   },
+   "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+   "type": "contentRatingSystem"
+  },
+  {
+   "attributes": {
+    "role": "executive-producer"
+   },
+   "id": "032dbb04-3f26-4926-8228-9e331a47223a",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "9ffcfa5b-1573-4990-81e1-5d55e6c9d00d",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "actor"
+   },
+   "id": "0d0784ba-1503-415c-a275-f6e847729acd",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "7fadd3b7-4d59-4b80-bbf4-8c2d9367db13",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "producer"
+   },
+   "id": "156df7ae-555f-4cf6-b995-653fff3a69bc",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "3e2ca7ca-2201-4d26-bae5-db8b3ec3c773",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "actor"
+   },
+   "id": "2dd65d57-032e-43b4-8ec1-a6162ba9a46f",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "5375e1b7-1822-4b87-bfbf-10d04ef83c7d",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "executive-producer"
+   },
+   "id": "43f4b246-e0af-4ef7-8353-950ae31b021e",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "8eb23059-cf30-46f0-8e55-19aa5ce94e42",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "created-by"
+   },
+   "id": "4e3cc780-8bbf-429c-8384-b29e0f24f535",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "8eb23059-cf30-46f0-8e55-19aa5ce94e42",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "writer"
+   },
+   "id": "4f5a7961-2d43-46ad-a442-76aafab4d1dd",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "3e2ca7ca-2201-4d26-bae5-db8b3ec3c773",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "executive-producer"
+   },
+   "id": "50c202f4-7d0f-4b75-b903-40e3a47cca63",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "1947f657-6846-43ff-9eb4-70d2290a6c7b",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "actor"
+   },
+   "id": "513b067d-8d64-4a8e-910d-f9e05a17982e",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "f8d54c22-7ace-4400-bf69-b32a11e07c12",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "actor"
+   },
+   "id": "5893302b-913c-413a-bc06-5417783571e5",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "f09fcedb-219e-4683-8e5c-3f82743da484",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "actor"
+   },
+   "id": "6a34d8f6-af47-4432-9a43-055d22b9798a",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "5d049132-78f0-49ca-a995-1de8d5fb1fc4",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "written-by"
+   },
+   "id": "6a45b30c-6990-4807-810b-c28db467b4f9",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "8eb23059-cf30-46f0-8e55-19aa5ce94e42",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "producer"
+   },
+   "id": "9caf0d4e-358a-45a1-b1f9-82bc42f1ce68",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "a42189ee-1478-4c4d-be34-53e629825288",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "actor"
+   },
+   "id": "b3d38556-67f5-469c-ad1d-67629aee2ffc",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "5ea57bde-0a64-423c-8f7b-e7670f730378",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "directed-by"
+   },
+   "id": "f6e624e2-8482-4b6e-a273-0d2ea8b71302",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "8eb23059-cf30-46f0-8e55-19aa5ce94e42",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "director"
+   },
+   "id": "f80b36eb-3a44-40be-b003-b1d941df7742",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "3e2ca7ca-2201-4d26-bae5-db8b3ec3c773",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "actor"
+   },
+   "id": "fe5acaa2-3677-4794-ac23-2568b469cb89",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "a1d6f747-010a-493a-a624-9742aeb0f8ea",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "executive-producer"
+   },
+   "id": "ff4b989f-f4b3-4abe-ab8d-b466eb91fc2b",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "b5fe91ce-3f2b-42dc-9379-95663b1ae868",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "name": "Created By"
+   },
+   "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8-credit-group-creators",
+   "relationships": {
+    "credits": {
+     "data": [
+      {
+       "id": "4e3cc780-8bbf-429c-8384-b29e0f24f535",
+       "type": "credit"
+      }
+     ]
+    }
+   },
+   "type": "creditGroup"
+  },
+  {
+   "attributes": {
+    "name": "Director"
+   },
+   "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8-credit-group-director",
+   "relationships": {
+    "credits": {
+     "data": [
+      {
+       "id": "f6e624e2-8482-4b6e-a273-0d2ea8b71302",
+       "type": "credit"
+      },
+      {
+       "id": "f80b36eb-3a44-40be-b003-b1d941df7742",
+       "type": "credit"
+      }
+     ]
+    }
+   },
+   "type": "creditGroup"
+  },
+  {
+   "attributes": {
+    "name": "Producers"
+   },
+   "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8-credit-group-producers",
+   "relationships": {
+    "credits": {
+     "data": [
+      {
+       "id": "43f4b246-e0af-4ef7-8353-950ae31b021e",
+       "type": "credit"
+      },
+      {
+       "id": "50c202f4-7d0f-4b75-b903-40e3a47cca63",
+       "type": "credit"
+      },
+      {
+       "id": "032dbb04-3f26-4926-8228-9e331a47223a",
+       "type": "credit"
+      },
+      {
+       "id": "ff4b989f-f4b3-4abe-ab8d-b466eb91fc2b",
+       "type": "credit"
+      },
+      {
+       "id": "9caf0d4e-358a-45a1-b1f9-82bc42f1ce68",
+       "type": "credit"
+      },
+      {
+       "id": "156df7ae-555f-4cf6-b995-653fff3a69bc",
+       "type": "credit"
+      }
+     ]
+    }
+   },
+   "type": "creditGroup"
+  },
+  {
+   "attributes": {
+    "name": "Starring"
+   },
+   "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8-credit-group-starring",
+   "relationships": {
+    "credits": {
+     "data": [
+      {
+       "id": "6a34d8f6-af47-4432-9a43-055d22b9798a",
+       "type": "credit"
+      },
+      {
+       "id": "513b067d-8d64-4a8e-910d-f9e05a17982e",
+       "type": "credit"
+      },
+      {
+       "id": "5893302b-913c-413a-bc06-5417783571e5",
+       "type": "credit"
+      },
+      {
+       "id": "b3d38556-67f5-469c-ad1d-67629aee2ffc",
+       "type": "credit"
+      },
+      {
+       "id": "2dd65d57-032e-43b4-8ec1-a6162ba9a46f",
+       "type": "credit"
+      },
+      {
+       "id": "fe5acaa2-3677-4794-ac23-2568b469cb89",
+       "type": "credit"
+      },
+      {
+       "id": "0d0784ba-1503-415c-a275-f6e847729acd",
+       "type": "credit"
+      }
+     ]
+    }
+   },
+   "type": "creditGroup"
+  },
+  {
+   "attributes": {
+    "name": "Writers"
+   },
+   "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8-credit-group-writers",
+   "relationships": {
+    "credits": {
+     "data": [
+      {
+       "id": "6a45b30c-6990-4807-810b-c28db467b4f9",
+       "type": "credit"
+      },
+      {
+       "id": "4f5a7961-2d43-46ad-a442-76aafab4d1dd",
+       "type": "credit"
+      }
+     ]
+    }
+   },
+   "type": "creditGroup"
+  },
+  {
+   "attributes": {
+    "audioTracks": [
+     "Spanish",
+     "English - Original",
+     "English - Audio Description"
+    ],
+    "contentActions": [
+     {
+      "availability": {
+       "to": "2025-02-28T04:59:00Z"
+      },
+      "code": "PLAY",
+      "requirements": []
+     }
+    ],
+    "duration": 3599000,
+    "playableEnd": "2025-02-28T04:59:00Z",
+    "playableStart": "2023-02-08T05:00:00Z",
+    "subtitles": [
+     "Spanish - SDH",
+     "English - SDH"
+    ]
+   },
+   "id": "48ba563a-e8c0-464f-9b25-1abb9719923c",
+   "relationships": {
+    "glyphs": {
+     "data": [
+      {
+       "id": "cad06e36-5bc6-4238-a566-901a86704238",
+       "type": "glyph"
+      }
+     ]
+    },
+    "routes": {
+     "data": [
+      {
+       "id": "dd0510fc375326336e1dfa5e4b146cbaa08d548c1bcd6df97dc2bab5bf7b9422",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "edit"
+  },
+  {
+   "attributes": {
+    "name": "AD",
+    "nameAccessibility": "Audio Description available"
+   },
+   "id": "cad06e36-5bc6-4238-a566-901a86704238",
+   "relationships": {
+    "images": {
+     "data": [
+      {
+       "id": "193621293162581184555840171345438048971",
+       "type": "image"
+      }
+     ]
+    }
+   },
+   "type": "glyph"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 56,
+    "kind": "default",
+    "src": "https://images.cdn.prd.api.discomax.com/2023%2F3%2F2%2Fc640b693-3eb2-4d77-8275-022185d21ebc.png",
+    "width": 137
+   },
+   "id": "193621293162581184555840171345438048971",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "height": 112,
+    "kind": "logo",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/02/21/4a755bac-2bdb-4082-9b8e-2bbdbc797bfc.png",
+    "width": 112
+   },
+   "id": "77962dc8-2a8e-440f-95f6-15ec9788e6d6",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3636,
+    "kind": "centered-background-small",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/01/18/ee98ca44-41c1-3864-b486-43a2d558108c.jpeg",
+    "width": 1680
+   },
+   "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8:video:centered-background-small",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3000,
+    "kind": "cover-artwork",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/01/18/c4f88128-e4d2-3634-a218-da537464071a.jpeg",
+    "width": 3000
+   },
+   "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8:video:cover-artwork",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 2160,
+    "kind": "default",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/01/18/1b5575b5-38df-3840-8122-c9ed1ad43cfb.jpeg",
+    "width": 3840
+   },
+   "id": "c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8:video:default",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "fullName": "Brad Grey"
+   },
+   "id": "1947f657-6846-43ff-9eb4-70d2290a6c7b",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "David Chase"
+   },
+   "id": "3e2ca7ca-2201-4d26-bae5-db8b3ec3c773",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "Dominic Chianese"
+   },
+   "id": "5375e1b7-1822-4b87-bfbf-10d04ef83c7d",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "James Gandolfini"
+   },
+   "id": "5d049132-78f0-49ca-a995-1de8d5fb1fc4",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "Michael Imperioli"
+   },
+   "id": "5ea57bde-0a64-423c-8f7b-e7670f730378",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "Jamie-Lynn Sigler"
+   },
+   "id": "7fadd3b7-4d59-4b80-bbf4-8c2d9367db13",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "David Chase"
+   },
+   "id": "8eb23059-cf30-46f0-8e55-19aa5ce94e42",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "Mitchell Burgess"
+   },
+   "id": "9ffcfa5b-1573-4990-81e1-5d55e6c9d00d",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "Nancy Marchand"
+   },
+   "id": "a1d6f747-010a-493a-a624-9742aeb0f8ea",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "Ilene S. Landress"
+   },
+   "id": "a42189ee-1478-4c4d-be34-53e629825288",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "Robin Green"
+   },
+   "id": "b5fe91ce-3f2b-42dc-9379-95663b1ae868",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "Lorraine Bracco"
+   },
+   "id": "f09fcedb-219e-4683-8e5c-3f82743da484",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "Edie Falco"
+   },
+   "id": "f8d54c22-7ace-4400-bf69-b32a11e07c12",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/video/watch/c0a1a9f6-2b2f-419a-8130-a9d7acbeaef8/48ba563a-e8c0-464f-9b25-1abb9719923c"
+   },
+   "id": "dd0510fc375326336e1dfa5e4b146cbaa08d548c1bcd6df97dc2bab5bf7b9422",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "displayName": "1",
+    "longDescription": "The Sopranos takes a realistic, darkly humorous look at members of a suburban New Jersey family, whose patriarch Tony Soprano happens to be a mob boss. James Gandolfini stars as the gangster whose stressed-out life forces him to seek therapy.",
+    "name": "The Sopranos",
+    "seasonNumber": 1,
+    "videoCountByType": {
+     "EPISODE": 13
+    }
+   },
+   "id": "8ac35ff8-81b3-4ec9-8784-647f7e87e560",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
   }
+ ],
+ "meta": {
+  "site": {
+   "attributes": {
+    "brandId": "beam",
+    "mainTerritoryCode": "us",
+    "theme": "beam",
+    "websiteHostName": ""
+   },
+   "id": "beam_us",
+   "type": "site"
+  },
+  "state": "COLD_START"
+ }
 }
