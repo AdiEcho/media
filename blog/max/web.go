@@ -78,8 +78,6 @@ type key_config struct {
    Key []byte
 }
 
-//////////////////////////////
-
 func (st st_cookie) config() (*key_config, error) {
    body, err := json.Marshal(map[string]string{
       "projectId": "67e7aa0f-b186-4b85-9cb0-86d40a23636c",

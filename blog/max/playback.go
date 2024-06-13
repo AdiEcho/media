@@ -6,11 +6,6 @@ import (
    "net/http"
 )
 
-func (p *playback_request) New() {
-   p.ConsumptionType = "streaming"
-   p.EditId = "1623fe4c-ef6e-4dd1-a10c-4a181f5f6579"
-}
-
 func (st st_cookie) playback(p playback_request) (*http.Response, error) {
    body, err := json.Marshal(p)
    if err != nil {
@@ -26,6 +21,11 @@ func (st st_cookie) playback(p playback_request) (*http.Response, error) {
    req.AddCookie(st.Cookie)
    req.Header.Set("content-type", "application/json")
    return http.DefaultClient.Do(req)
+}
+
+func (p *playback_request) New() {
+   p.ConsumptionType = "streaming"
+   p.EditId = "1623fe4c-ef6e-4dd1-a10c-4a181f5f6579"
 }
 
 type playback_request struct {
