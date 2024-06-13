@@ -5,7 +5,7 @@ import (
    "strings"
 )
 
-func (st st_cookie) video() (*http.Response, error) {
+func video() (*http.Response, error) {
    req, err := http.NewRequest(
       "", "https://default.any-amer.prd.api.max.com", nil,
    )
@@ -19,6 +19,6 @@ func (st st_cookie) video() (*http.Response, error) {
       b.WriteString("/activeVideoForShow")
       return b.String()
    }()
-   req.AddCookie(st.Cookie)
+   // req.AddCookie(st.Cookie)
    return http.DefaultClient.Do(req)
 }

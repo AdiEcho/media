@@ -6,6 +6,26 @@ import (
    "testing"
 )
 
+func TestAndroidPlayback(t *testing.T) {
+   text, err := os.ReadFile("token.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var token default_token
+   err = token.unmarshal(text)
+   if err != nil {
+      t.Fatal(err)
+   }
+   var playback playback_request
+   playback.New()
+   resp, err := token.playback(playback)
+   if err != nil {
+      t.Fatal(err)
+   }
+   defer resp.Body.Close()
+   resp.Write(os.Stdout)
+}
+
 func TestAndroidLogin(t *testing.T) {
    var login default_login
    login.Credentials.Username = os.Getenv("max_username")
