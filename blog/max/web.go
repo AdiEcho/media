@@ -12,6 +12,35 @@ import (
    "time"
 )
 
+func (st *st_cookie) New() error {
+   req, err := http.NewRequest(
+      "", "https://default.any-any.prd.api.max.com/token?realm=bolt", nil,
+   )
+   if err != nil {
+      return err
+   }
+   req.Header.Set(
+      "x-device-info", "beam/4.0.1 (desktop/desktop; Windows/10; !/!)",
+   )
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   for _, cookie := range resp.Cookies() {
+      if cookie.Name == "st" {
+         st.Cookie = cookie
+         return nil
+      }
+   }
+   return http.ErrNoCookie
+}
+
 func (st st_cookie) marshal() ([]byte, error) {
    return json.MarshalIndent(st, "", " ")
 }
@@ -22,6 +51,22 @@ func (st *st_cookie) unmarshal(text []byte) error {
 
 type st_cookie struct {
    Cookie *http.Cookie
+}
+
+//////////////////////////////
+
+func (p *public_key) New() error {
+   resp, err := http.PostForm(
+      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/" + arkose_site_key,
+      url.Values{
+         "public_key": {arkose_site_key},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   return json.NewDecoder(resp.Body).Decode(p)
 }
 
 type key_config struct {
@@ -46,8 +91,6 @@ type default_login struct {
       Password string `json:"password"`
    } `json:"credentials"`
 }
-
-////////////
 
 func (st *st_cookie) login(key public_key, login default_login) error {
    body, err := json.Marshal(login)
@@ -76,49 +119,6 @@ func (st *st_cookie) login(key public_key, login default_login) error {
       return err
    }
    defer resp.Body.Close()
-   for _, cookie := range resp.Cookies() {
-      if cookie.Name == "st" {
-         st.Cookie = cookie
-         return nil
-      }
-   }
-   return http.ErrNoCookie
-}
-
-func (p *public_key) New() error {
-   resp, err := http.PostForm(
-      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/" + arkose_site_key,
-      url.Values{
-         "public_key": {arkose_site_key},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   return json.NewDecoder(resp.Body).Decode(p)
-}
-
-func (st *st_cookie) New() error {
-   req, err := http.NewRequest(
-      "", "https://default.any-any.prd.api.max.com/token?realm=bolt", nil,
-   )
-   if err != nil {
-      return err
-   }
-   req.Header.Set(
-      "x-device-info", "beam/4.0.1 (desktop/desktop; Windows/10; !/!)",
-   )
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
    for _, cookie := range resp.Cookies() {
       if cookie.Name == "st" {
          st.Cookie = cookie
