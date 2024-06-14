@@ -35,22 +35,21 @@ func (d default_token) video(show string) (*active_video, error) {
    return video, nil
 }
 
-///////////////////////////
-
-func (active_video) Show() string {
-   return ""
-}
-
-func (active_video) Season() int {
-   return 0
-}
-
-func (active_video) Episode() int {
-   return 0
-}
-
 func (a active_video) Title() string {
    return a.Data.Attributes.Name
+}
+
+func (a active_video) Year() int {
+   return a.Data.Attributes.AirDate.Year()
+}
+
+func (a active_video) Show() string {
+   for _, include := range a.Included {
+      if include.Type == "season" {
+         return include.Attributes.Name
+      }
+   }
+   return ""
 }
 
 type active_video struct {
@@ -75,6 +74,11 @@ type active_video struct {
    }
 }
 
-func (a active_video) Year() int {
-   return a.Data.Attributes.AirDate.Year()
+func (active_video) Season() int {
+   return 0
 }
+
+func (active_video) Episode() int {
+   return 0
+}
+
