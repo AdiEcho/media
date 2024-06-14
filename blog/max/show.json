@@ -1,0 +1,283 @@
+{
+  "attributes": {
+    "alternateId": "818c3d9d-1831-48a6-9583-0364a7f98453",
+    "description": "James Gandolfini stars in this acclaimed series about a mob boss whose professional and private strains land him in therapy.",
+    "firstAvailableDate": "2023-02-08T05:00:00Z",
+    "isFamilyContent": false,
+    "isFavorite": false,
+    "isKidsContent": false,
+    "kidsContent": false,
+    "longDescription": "James Gandolfini stars in this acclaimed series about a mob boss whose professional and private strains land him in therapy.",
+    "name": "The Sopranos",
+    "numberOfNewEpisodes": 0,
+    "originalName": "The Sopranos",
+    "premiereDate": "1999-01-21T00:01:00Z",
+    "showType": "SERIES"
+  },
+  "id": "818c3d9d-1831-48a6-9583-0364a7f98453",
+  "relationships": {
+    "images": {
+      "data": [
+        {
+          "id": "i:14c",
+          "type": "image"
+        },
+        {
+          "id": "i:14d",
+          "type": "image"
+        },
+        {
+          "id": "i:14e",
+          "type": "image"
+        },
+        {
+          "id": "i:14f",
+          "type": "image"
+        },
+        {
+          "id": "i:150",
+          "type": "image"
+        },
+        {
+          "id": "i:151",
+          "type": "image"
+        },
+        {
+          "id": "i:152",
+          "type": "image"
+        },
+        {
+          "id": "i:153",
+          "type": "image"
+        },
+        {
+          "id": "i:154",
+          "type": "image"
+        },
+        {
+          "id": "i:155",
+          "type": "image"
+        },
+        {
+          "id": "i:156",
+          "type": "image"
+        }
+      ]
+    },
+    "primaryChannel": {
+      "data": {
+        "id": "c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093",
+        "type": "channel"
+      }
+    },
+    "ratingDescriptors": {
+      "data": [
+        {
+          "id": "02a91282-d517-4f2a-a620-259ff2ba3408",
+          "type": "contentDescriptor"
+        },
+        {
+          "id": "4062c194-0c80-4ceb-9de5-d7f7e6e302b8",
+          "type": "contentDescriptor"
+        },
+        {
+          "id": "582e60b9-b1f7-4398-9182-a8758856209d",
+          "type": "contentDescriptor"
+        },
+        {
+          "id": "585c3be5-2532-4756-85ea-d6d25b112fe0",
+          "type": "contentDescriptor"
+        },
+        {
+          "id": "b2c2a6f6-a992-4824-b43e-d0313b43c9ae",
+          "type": "contentDescriptor"
+        },
+        {
+          "id": "b46072e6-5627-4513-a7de-7b507ad4f3ee",
+          "type": "contentDescriptor"
+        },
+        {
+          "id": "eb7063ee-e517-45d6-a816-16212f916850",
+          "type": "contentDescriptor"
+        },
+        {
+          "id": "f8e36188-362f-4a7b-9934-c7d77cb86e64",
+          "type": "contentDescriptor"
+        },
+        {
+          "id": "fe2986cc-d959-41a2-9b94-9888527997cf",
+          "type": "contentDescriptor"
+        }
+      ]
+    },
+    "ratings": {
+      "data": [
+        {
+          "id": "fbdd00c3-6c8f-4e27-be17-ac5997ebdfd2",
+          "type": "contentRating"
+        }
+      ]
+    },
+    "routes": {
+      "data": [
+        {
+          "id": "ed01df35aae7ca31febef7d3b20dcc7539a52ea2814ab61e2430d95aabef922f",
+          "type": "route"
+        }
+      ]
+    },
+    "seasons": {
+      "data": [
+        {
+          "id": "8ac35ff8-81b3-4ec9-8784-647f7e87e560",
+          "type": "season"
+        },
+        {
+          "id": "12bb061d-6469-44be-8903-fff07143f63a",
+          "type": "season"
+        },
+        {
+          "id": "e5ede846-5f83-4f59-a4ee-9a46f713aae9",
+          "type": "season"
+        },
+        {
+          "id": "2320baa2-eede-44d0-b2c7-b6cbc31aa2a5",
+          "type": "season"
+        },
+        {
+          "id": "ec9e3a70-0d56-494b-845c-1ddef6f578cb",
+          "type": "season"
+        },
+        {
+          "id": "585dfe80-ac07-492e-8035-ca557da981be",
+          "type": "season"
+        }
+      ]
+    },
+    "shortPreviewVideo": {
+      "data": {
+        "id": "PROM685262-shortPreviewVideo",
+        "type": "video"
+      }
+    },
+    "trailerVideo": {
+      "data": {
+        "id": "PROM627216-trailerVideo",
+        "type": "video"
+      }
+    },
+    "txCategory": {
+      "data": [
+        {
+          "id": "0b0864fa-4eda-4033-a5d6-4266aa4ce337",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "10df4e7d-559a-435d-b49d-df62be4cfe77",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "13688524-d242-424e-b663-adee0b5fd572",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "2fb38513-c60e-45cc-9a7c-4b825f0590fd",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "3bf18352-cd15-4361-8bae-5488dc5d8fad",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "4135b838-ce30-48c7-beed-e02c12fb3908",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "52e6a6f1-ec86-4943-b3b7-4c23a4386f52",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "557460a1-35b7-4311-ad0e-257c90456807",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "6a076e8d-eb54-4ac1-af01-683fb652a858",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "7029e525-d10c-4110-b9e7-98f5c928892f",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "730add7c-2a49-42a2-9d79-c4bfc665e17e",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "7b03f756-bd84-4b98-b1f2-5510c58f8645",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "9516d69e-76c0-46c8-b0d8-2ba907f72d7c",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "c8eaae9e-2c3b-461c-a3c0-50a7aaebe242",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "cecbd5e9-64cb-4589-b72b-bcaaefb7a894",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "cfd49957-a339-494e-a394-749740f86a89",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "d1c242ca-7b29-427f-9b1e-a0045ef4d073",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "d234a353-290a-4933-bc01-744475f14d84",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "da8787d9-a195-4569-bd9c-4138e383e236",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "ee24a41d-371e-437a-b8d7-bc9f01d0f516",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "ef1d4b7f-d706-45cd-aa08-3aa5c8ebfbdc",
+          "type": "taxonomyNode"
+        }
+      ]
+    },
+    "txGenres": {
+      "data": [
+        {
+          "id": "1ef95565-d5d5-4793-9656-31207932bfe1",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "3e183de4-3108-4fb5-801f-66b9ca405f94",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "435e27a6-3026-42fb-8549-b560f7616360",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "8557a482-557e-4bec-bf53-814094c40392",
+          "type": "taxonomyNode"
+        },
+        {
+          "id": "cdc65854-4013-4c85-b2b5-c48290ad3b5c",
+          "type": "taxonomyNode"
+        }
+      ]
+    }
+  },
+  "type": "show"
+}
