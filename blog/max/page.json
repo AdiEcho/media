@@ -1,0 +1,44 @@
+{
+  "attributes": {
+    "alias": "generic-video-edit-blueprint-page",
+    "component": {
+      "id": "player-page",
+      "templateId": "primary"
+    },
+    "description": "A soldier is transported into another man’s body aboard a commuter train, where he must foil a terrorist bombing plot within eight minutes.",
+    "name": "generic-video-edit-blueprint-page",
+    "pageMetadataDescription": "A soldier is transported into another man’s body aboard a commuter train, where he must foil a terrorist bombing plot within eight minutes.",
+    "pageMetadataTitle": "Source Code",
+    "revision": 5,
+    "title": "Source Code"
+  },
+  "id": "215925083836394013750542481199525881753",
+  "meta": {
+    "itemsCurrentPage": 1,
+    "itemsPageSize": 2,
+    "itemsTotalPages": 1
+  },
+  "relationships": {
+    "images": {
+      "data": [
+        {
+          "id": "i:d",
+          "type": "image"
+        }
+      ]
+    },
+    "items": {
+      "data": [
+        {
+          "id": "dcb7a9b9d3da2f04ccdb46996a7f259430894b1fde56333c4fdd40710247775d",
+          "type": "pageItem"
+        },
+        {
+          "id": "752de3478bf59096e87ccafcfe249266285f7d70dfc4ddf319a53ac3cc022847",
+          "type": "pageItem"
+        }
+      ]
+    }
+  },
+  "type": "page"
+}
