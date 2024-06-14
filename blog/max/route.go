@@ -1,16 +1,12 @@
 package max
 
-import "net/http"
+import (
+   "encoding/json"
+   "net/http"
+   "time"
+)
 
-type default_routes struct {
-   Included []struct {
-      Attributes struct {
-         Type string
-      }
-   }
-}
-
-func (d default_token) route_android(path string) (*http.Response, error) {
+func (d default_token) routes(path string) (*default_routes, error) {
    req, err := http.NewRequest(
       "", "https://default.any-amer.prd.api.discomax.com/cms/routes"+path, nil,
    )
@@ -19,5 +15,27 @@ func (d default_token) route_android(path string) (*http.Response, error) {
    }
    req.URL.RawQuery = "include=default"
    req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
-   return http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   route := new(default_routes)
+   err = json.NewDecoder(resp.Body).Decode(route)
+   if err != nil {
+      return nil, err
+   }
+   return route, nil
+}
+
+type default_routes struct {
+   Included []struct {
+      Attributes struct {
+         AirDate time.Time
+         EpisodeNumber int
+         Name string
+         SeasonNumber int
+         Type string
+      }
+   }
 }
