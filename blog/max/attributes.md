@@ -243,30 +243,6 @@ episode:
               "type": "route"
             }
           ]
-        },
-        "txGenres": {
-          "data": [
-            {
-              "id": "1ef95565-d5d5-4793-9656-31207932bfe1",
-              "type": "taxonomyNode"
-            },
-            {
-              "id": "3e183de4-3108-4fb5-801f-66b9ca405f94",
-              "type": "taxonomyNode"
-            },
-            {
-              "id": "435e27a6-3026-42fb-8549-b560f7616360",
-              "type": "taxonomyNode"
-            },
-            {
-              "id": "8557a482-557e-4bec-bf53-814094c40392",
-              "type": "taxonomyNode"
-            },
-            {
-              "id": "cdc65854-4013-4c85-b2b5-c48290ad3b5c",
-              "type": "taxonomyNode"
-            }
-          ]
         }
       },
       "type": "show"
@@ -310,85 +286,17 @@ episode:
             }
           ]
         },
-        "creditGroups": {
-          "data": [
-            {
-              "id": "fbdd33a2-1189-4b9a-8c10-13244fb21b7f-credit-group-starring",
-              "type": "creditGroup"
-            },
-            {
-              "id": "fbdd33a2-1189-4b9a-8c10-13244fb21b7f-credit-group-director",
-              "type": "creditGroup"
-            },
-            {
-              "id": "fbdd33a2-1189-4b9a-8c10-13244fb21b7f-credit-group-writers",
-              "type": "creditGroup"
-            },
-            {
-              "id": "fbdd33a2-1189-4b9a-8c10-13244fb21b7f-credit-group-producers",
-              "type": "creditGroup"
-            },
-            {
-              "id": "fbdd33a2-1189-4b9a-8c10-13244fb21b7f-credit-group-creators",
-              "type": "creditGroup"
-            }
-          ]
-        },
         "edit": {
           "data": {
             "id": "6cc15a42-130f-4531-807a-b2c147d8ac68",
             "type": "edit"
           }
         },
-        "images": {
-          "data": [
-            {
-              "id": "i:d0",
-              "type": "image"
-            },
-            {
-              "id": "i:d1",
-              "type": "image"
-            },
-            {
-              "id": "i:d2",
-              "type": "image"
-            }
-          ]
-        },
         "primaryChannel": {
           "data": {
             "id": "c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093",
             "type": "channel"
           }
-        },
-        "ratingDescriptors": {
-          "data": [
-            {
-              "id": "02a91282-d517-4f2a-a620-259ff2ba3408",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "582e60b9-b1f7-4398-9182-a8758856209d",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "b2c2a6f6-a992-4824-b43e-d0313b43c9ae",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "eb7063ee-e517-45d6-a816-16212f916850",
-              "type": "contentDescriptor"
-            }
-          ]
-        },
-        "ratings": {
-          "data": [
-            {
-              "id": "fbdd00c3-6c8f-4e27-be17-ac5997ebdfd2",
-              "type": "contentRating"
-            }
-          ]
         },
         "season": {
           "data": {
@@ -401,30 +309,6 @@ episode:
             "id": "818c3d9d-1831-48a6-9583-0364a7f98453",
             "type": "show"
           }
-        },
-        "txGenres": {
-          "data": [
-            {
-              "id": "1ef95565-d5d5-4793-9656-31207932bfe1",
-              "type": "taxonomyNode"
-            },
-            {
-              "id": "3e183de4-3108-4fb5-801f-66b9ca405f94",
-              "type": "taxonomyNode"
-            },
-            {
-              "id": "435e27a6-3026-42fb-8549-b560f7616360",
-              "type": "taxonomyNode"
-            },
-            {
-              "id": "8557a482-557e-4bec-bf53-814094c40392",
-              "type": "taxonomyNode"
-            },
-            {
-              "id": "cdc65854-4013-4c85-b2b5-c48290ad3b5c",
-              "type": "taxonomyNode"
-            }
-          ]
         }
       },
       "type": "video"
