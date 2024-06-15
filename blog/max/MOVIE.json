@@ -1,0 +1,1611 @@
+{
+  "data": {
+    "attributes": {
+      "canonical": true,
+      "url": "/video/watch/b3b1410a-0c85-457b-bcc7-e13299bea2a8/1623fe4c-ef6e-4dd1-a10c-4a181f5f6579"
+    },
+    "id": "c65fc42b4caa4d290d40a9c3fcc192a4adf064b9870b677aa8aab2f8510072f1",
+    "relationships": {
+      "target": {
+        "data": {
+          "id": "215925083836394013750542481199525881753",
+          "type": "page"
+        }
+      }
+    },
+    "type": "route"
+  },
+  "included": [
+    {
+      "attributes": {
+        "alternateId": "c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093",
+        "channelCode": "HBOTV",
+        "name": "HBO"
+      },
+      "id": "c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093",
+      "relationships": {
+        "images": {
+          "data": [
+            {
+              "id": "i:3",
+              "type": "image"
+            },
+            {
+              "id": "i:4",
+              "type": "image"
+            },
+            {
+              "id": "i:5",
+              "type": "image"
+            },
+            {
+              "id": "i:6",
+              "type": "image"
+            },
+            {
+              "id": "i:7",
+              "type": "image"
+            },
+            {
+              "id": "i:8",
+              "type": "image"
+            },
+            {
+              "id": "i:9",
+              "type": "image"
+            },
+            {
+              "id": "i:a",
+              "type": "image"
+            }
+          ]
+        },
+        "ratingDescriptors": {
+          "data": []
+        },
+        "ratings": {
+          "data": []
+        },
+        "routes": {
+          "data": [
+            {
+              "id": "89e60c4543da3066b506eced1c4158d05445a48b3af540eee2f3fd6d495bec66",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "channel"
+    },
+    {
+      "attributes": {
+        "alias": "generic-video-edit-page-rail-player",
+        "component": {
+          "id": "player",
+          "mandatoryParams": "ph[video.id]=b3b1410a-0c85-457b-bcc7-e13299bea2a8",
+          "templateId": "primary"
+        },
+        "kind": "manual",
+        "name": "generic-video-edit-page-rail-player",
+        "revision": 3
+      },
+      "id": "305431749684302383590943441320435251293",
+      "meta": {
+        "itemsTotalPages": 1
+      },
+      "relationships": {
+        "items": {
+          "data": [
+            {
+              "id": "c:b",
+              "type": "collectionItem"
+            }
+          ]
+        }
+      },
+      "type": "collection"
+    },
+    {
+      "attributes": {},
+      "id": "c:b",
+      "relationships": {
+        "video": {
+          "data": {
+            "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8",
+            "type": "video"
+          }
+        }
+      },
+      "type": "collectionItem"
+    },
+    {
+      "attributes": {
+        "code": "Violence"
+      },
+      "id": "4062c194-0c80-4ceb-9de5-d7f7e6e302b8",
+      "relationships": {
+        "contentRatingSystem": {
+          "data": {
+            "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+            "type": "contentRatingSystem"
+          }
+        },
+        "images": {
+          "data": []
+        }
+      },
+      "type": "contentDescriptor"
+    },
+    {
+      "attributes": {
+        "code": "Adult Content"
+      },
+      "id": "582e60b9-b1f7-4398-9182-a8758856209d",
+      "relationships": {
+        "contentRatingSystem": {
+          "data": {
+            "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+            "type": "contentRatingSystem"
+          }
+        },
+        "images": {
+          "data": []
+        }
+      },
+      "type": "contentDescriptor"
+    },
+    {
+      "attributes": {
+        "code": "Adult Language"
+      },
+      "id": "f8e36188-362f-4a7b-9934-c7d77cb86e64",
+      "relationships": {
+        "contentRatingSystem": {
+          "data": {
+            "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+            "type": "contentRatingSystem"
+          }
+        },
+        "images": {
+          "data": []
+        }
+      },
+      "type": "contentDescriptor"
+    },
+    {
+      "attributes": {
+        "code": "PG-13"
+      },
+      "id": "4d1bf7aa-ddc4-4641-b568-11f59abb4787",
+      "relationships": {
+        "contentRatingSystem": {
+          "data": {
+            "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+            "type": "contentRatingSystem"
+          }
+        },
+        "images": {
+          "data": [
+            {
+              "id": "i:17",
+              "type": "image"
+            }
+          ]
+        }
+      },
+      "type": "contentRating"
+    },
+    {
+      "attributes": {
+        "system": "us-pay-tv-descriptors"
+      },
+      "id": "283674fa-ff82-4407-9cd5-b2fb924f2ff8",
+      "type": "contentRatingSystem"
+    },
+    {
+      "attributes": {
+        "role": "producer"
+      },
+      "id": "0b6afb69-10c4-457d-8b1e-be35bbf6ec2f",
+      "relationships": {
+        "person": {
+          "data": {
+            "id": "b7fea5bb-8249-4e19-be79-06900b100a40",
+            "type": "person"
+          }
+        }
+      },
+      "type": "credit"
+    },
+    {
+      "attributes": {
+        "role": "actor"
+      },
+      "id": "122f3ea1-8a2b-4e52-af95-fc0a92b62781",
+      "relationships": {
+        "person": {
+          "data": {
+            "id": "c9f70e49-0399-4108-a263-7d0b9da7173c",
+            "type": "person"
+          }
+        }
+      },
+      "type": "credit"
+    },
+    {
+      "attributes": {
+        "role": "screenplay-by"
+      },
+      "id": "46ce7fa5-24bf-467a-98ad-12203b9a3059",
+      "relationships": {
+        "person": {
+          "data": {
+            "id": "7813ca42-d204-40b0-9e37-63425915b60c",
+            "type": "person"
+          }
+        }
+      },
+      "type": "credit"
+    },
+    {
+      "attributes": {
+        "role": "actor"
+      },
+      "id": "6941459e-59a1-4b0b-a4d4-f1e57d12875a",
+      "relationships": {
+        "person": {
+          "data": {
+            "id": "b93c441a-f17f-4821-86c8-a53d7cd97a4d",
+            "type": "person"
+          }
+        }
+      },
+      "type": "credit"
+    },
+    {
+      "attributes": {
+        "role": "producer"
+      },
+      "id": "6dd7e8c9-6dca-49de-9e11-384ce2d11073",
+      "relationships": {
+        "person": {
+          "data": {
+            "id": "f5237269-7547-4d90-96ad-9301ffd66e11",
+            "type": "person"
+          }
+        }
+      },
+      "type": "credit"
+    },
+    {
+      "attributes": {
+        "role": "producer"
+      },
+      "id": "a8312e91-8afb-4d12-9884-7e3091d76c0d",
+      "relationships": {
+        "person": {
+          "data": {
+            "id": "52888ae2-7258-47b1-ab48-7b4c10647cea",
+            "type": "person"
+          }
+        }
+      },
+      "type": "credit"
+    },
+    {
+      "attributes": {
+        "role": "actor"
+      },
+      "id": "b996fe4f-49a0-4eb7-bb6c-6258d46ce647",
+      "relationships": {
+        "person": {
+          "data": {
+            "id": "33723033-f69c-43c7-8155-d0df165c2df7",
+            "type": "person"
+          }
+        }
+      },
+      "type": "credit"
+    },
+    {
+      "attributes": {
+        "role": "actor"
+      },
+      "id": "ecd97dea-db26-4328-8caa-5a8adad9ffb1",
+      "relationships": {
+        "person": {
+          "data": {
+            "id": "752c20d8-b1bc-4f5c-9b96-a11eb33ad01f",
+            "type": "person"
+          }
+        }
+      },
+      "type": "credit"
+    },
+    {
+      "attributes": {
+        "role": "director"
+      },
+      "id": "f75426a0-4b04-4a77-a84a-fb85c1bb867e",
+      "relationships": {
+        "person": {
+          "data": {
+            "id": "f4bd22cd-e9c9-4293-9c72-35459a16f0f7",
+            "type": "person"
+          }
+        }
+      },
+      "type": "credit"
+    },
+    {
+      "attributes": {
+        "name": "Director"
+      },
+      "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-director",
+      "relationships": {
+        "credits": {
+          "data": [
+            {
+              "id": "f75426a0-4b04-4a77-a84a-fb85c1bb867e",
+              "type": "credit"
+            }
+          ]
+        }
+      },
+      "type": "creditGroup"
+    },
+    {
+      "attributes": {
+        "name": "Producers"
+      },
+      "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-producers",
+      "relationships": {
+        "credits": {
+          "data": [
+            {
+              "id": "a8312e91-8afb-4d12-9884-7e3091d76c0d",
+              "type": "credit"
+            },
+            {
+              "id": "0b6afb69-10c4-457d-8b1e-be35bbf6ec2f",
+              "type": "credit"
+            },
+            {
+              "id": "6dd7e8c9-6dca-49de-9e11-384ce2d11073",
+              "type": "credit"
+            }
+          ]
+        }
+      },
+      "type": "creditGroup"
+    },
+    {
+      "attributes": {
+        "name": "Starring"
+      },
+      "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-starring",
+      "relationships": {
+        "credits": {
+          "data": [
+            {
+              "id": "122f3ea1-8a2b-4e52-af95-fc0a92b62781",
+              "type": "credit"
+            },
+            {
+              "id": "b996fe4f-49a0-4eb7-bb6c-6258d46ce647",
+              "type": "credit"
+            },
+            {
+              "id": "ecd97dea-db26-4328-8caa-5a8adad9ffb1",
+              "type": "credit"
+            },
+            {
+              "id": "6941459e-59a1-4b0b-a4d4-f1e57d12875a",
+              "type": "credit"
+            }
+          ]
+        }
+      },
+      "type": "creditGroup"
+    },
+    {
+      "attributes": {
+        "name": "Writers"
+      },
+      "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-writers",
+      "relationships": {
+        "credits": {
+          "data": [
+            {
+              "id": "46ce7fa5-24bf-467a-98ad-12203b9a3059",
+              "type": "credit"
+            }
+          ]
+        }
+      },
+      "type": "creditGroup"
+    },
+    {
+      "attributes": {
+        "audioTracks": [
+          "Spanish",
+          "English - Original"
+        ],
+        "duration": 5571000,
+        "playableEnd": "2024-07-01T03:59:00Z",
+        "playableStart": "2024-04-01T07:01:00Z",
+        "subtitles": [
+          "Spanish - CC",
+          "English - CC"
+        ]
+      },
+      "id": "1623fe4c-ef6e-4dd1-a10c-4a181f5f6579",
+      "relationships": {
+        "routes": {
+          "data": [
+            {
+              "id": "d4fc21172935c68ec1b0fb96844cba994676b4b06a504c0b5fbc625b0a107aa9",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "edit"
+    },
+    {
+      "attributes": {
+        "audioTracks": [
+          "English"
+        ],
+        "duration": 30000
+      },
+      "id": "PROM1082196",
+      "relationships": {
+        "routes": {
+          "data": [
+            {
+              "id": "7ed89652d4a1e8be874439432474fae8c1d883d2468014d99f1a2bbd013cb94b",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "edit"
+    },
+    {
+      "attributes": {
+        "audioTracks": [
+          "English"
+        ],
+        "duration": 119000,
+        "subtitles": [
+          "English - CC"
+        ]
+      },
+      "id": "PROM1083244",
+      "relationships": {
+        "routes": {
+          "data": [
+            {
+              "id": "38cc4a51ec52fd6aed26298a332b7f63d777260543b1a2da90b1f6dce4f022ba",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "edit"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 2160,
+        "kind": "default",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/c9696503-050f-3554-a19a-4dc1aa2a85a5.jpeg",
+        "width": 3840
+      },
+      "id": "i:0",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3636,
+        "kind": "centered-background-small",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/765e8b62-502b-3fe3-a92f-18f0150685c3.jpeg",
+        "width": 1680
+      },
+      "id": "i:1",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 2160,
+        "kind": "cover-artwork-horizontal",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/daf56e65-93bd-353d-b63f-234ba89d482b.jpeg",
+        "width": 3840
+      },
+      "id": "i:10",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3000,
+        "kind": "cover-artwork-square",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/ab066fae-9d45-3f31-bb60-a680c3a5cb97.jpeg",
+        "width": 3000
+      },
+      "id": "i:11",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 2160,
+        "kind": "default",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/5e88022b-03be-3ed8-98a7-4b5d2cbdbe7a.jpeg",
+        "width": 3840
+      },
+      "id": "i:12",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 1152,
+        "kind": "default-wide",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/642bd3b7-5a2a-324a-9977-d04dcada749d.jpeg",
+        "width": 3840
+      },
+      "id": "i:13",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 1300,
+        "kind": "logo-centered",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/4997d82a-26d6-35a8-9506-ac66c3390bfc.png",
+        "width": 4320
+      },
+      "id": "i:14",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 1300,
+        "kind": "logo-left",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/63688c50-c7e5-314c-8c14-cd2830428ccf.png",
+        "width": 4320
+      },
+      "id": "i:15",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3840,
+        "kind": "poster-with-logo",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/8673ccc5-87df-39fc-ad94-3b687b4fce83.jpeg",
+        "width": 2560
+      },
+      "id": "i:16",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "height": 112,
+        "kind": "logo",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/02/21/7734c738-2a4f-4ed4-bb70-e1cd4da4b391.png",
+        "width": 112
+      },
+      "id": "i:17",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3636,
+        "kind": "centered-background-small",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/02/14/7952ae2a-312d-4ac9-9407-545be1b15eaa.jpeg",
+        "width": 1680
+      },
+      "id": "i:18",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3000,
+        "kind": "cover-artwork-square",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/02/14/063c714d-403e-43eb-9578-d5452949d9b3.jpeg",
+        "width": 3000
+      },
+      "id": "i:19",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 2160,
+        "kind": "default",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/02/14/5e22db15-546d-42ff-b16e-bc0d5fc15a07.jpeg",
+        "width": 3840
+      },
+      "id": "i:1a",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3636,
+        "kind": "centered-background-small",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/02/14/f23ae4c9-f765-4d78-a9f8-fd0faed12b1e.jpeg",
+        "width": 1680
+      },
+      "id": "i:1b",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3000,
+        "kind": "cover-artwork-square",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/02/14/5ba8df42-211f-4c80-a14d-19d6e76a1878.jpeg",
+        "width": 3000
+      },
+      "id": "i:1c",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 2160,
+        "kind": "default",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/02/14/b6459a11-ee42-4710-a809-63f1e25eb259.jpeg",
+        "width": 3840
+      },
+      "id": "i:1d",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3000,
+        "kind": "cover-artwork",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/fe05ca8c-c784-3adb-b988-03f807a64ca5.jpeg",
+        "width": 3000
+      },
+      "id": "i:2",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3000,
+        "kind": "cover-artwork",
+        "src": "https://images.cdn.prd.api.discomax.com/2023/02/03/019c4eef-5ebb-3be9-9d61-be20d093f865.jpeg",
+        "width": 3000
+      },
+      "id": "i:3",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 2160,
+        "kind": "cover-artwork-horizontal",
+        "src": "https://images.cdn.prd.api.discomax.com/2023/02/03/a01ceb87-1f41-3f5c-a552-79e0abde6c91.jpeg",
+        "width": 3840
+      },
+      "id": "i:4",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3000,
+        "kind": "cover-artwork-square",
+        "src": "https://images.cdn.prd.api.discomax.com/2023/05/03/8ab1db1b-6ca0-3ebb-a145-2da8466f3e29.jpeg",
+        "width": 3000
+      },
+      "id": "i:5",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 2160,
+        "kind": "default",
+        "src": "https://images.cdn.prd.api.discomax.com/2023/02/03/2f37540c-0644-36ac-9c4b-54cbd4d3c9a2.jpeg",
+        "width": 3840
+      },
+      "id": "i:6",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 576,
+        "kind": "default-wide",
+        "src": "https://images.cdn.prd.api.discomax.com/2023/02/03/82046238-3992-30d5-82e9-a7234dac9e37.jpeg",
+        "width": 1920
+      },
+      "id": "i:7",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 1300,
+        "kind": "logo-centered",
+        "src": "https://images.cdn.prd.api.discomax.com/2023/05/03/8c28cd3f-518c-397e-863c-ee76e8977adb.png",
+        "width": 4320
+      },
+      "id": "i:8",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 1300,
+        "kind": "logo-left",
+        "src": "https://images.cdn.prd.api.discomax.com/2023/05/03/b86433c7-9bf1-30aa-955b-cde0838ee2a0.png",
+        "width": 4320
+      },
+      "id": "i:9",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3840,
+        "kind": "poster-with-logo",
+        "src": "https://images.cdn.prd.api.discomax.com/2023/02/03/6934c63b-6b4d-3603-8127-78b264f2d861.jpeg",
+        "width": 2560
+      },
+      "id": "i:a",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3240,
+        "kind": "centered-background",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/839a2483-6b8d-39a1-89ba-addf0e4f1be1.jpeg",
+        "width": 4320
+      },
+      "id": "i:c",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3636,
+        "kind": "centered-background-small",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/05f16ddc-d1fd-32fe-aae0-f5d13a1148b9.jpeg",
+        "width": 1680
+      },
+      "id": "i:d",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 1300,
+        "kind": "content-logo-monochromatic",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/01eb9e26-75ee-3ba9-8a64-b1028fab62fb.png",
+        "width": 4320
+      },
+      "id": "i:e",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "default": true,
+        "height": 3000,
+        "kind": "cover-artwork",
+        "src": "https://images.cdn.prd.api.discomax.com/2024/03/28/bb0dfc29-0693-35bc-ad24-7dcf01f75a33.jpeg",
+        "width": 3000
+      },
+      "id": "i:f",
+      "type": "image"
+    },
+    {
+      "attributes": {
+        "name": "Hbo"
+      },
+      "id": "Hbo",
+      "type": "package"
+    },
+    {
+      "attributes": {
+        "name": "VodEntertainment"
+      },
+      "id": "VodEntertainment",
+      "type": "package"
+    },
+    {
+      "attributes": {
+        "alias": "generic-video-edit-blueprint-page",
+        "component": {
+          "id": "player-page",
+          "templateId": "primary"
+        },
+        "description": "A soldier is transported into another man’s body aboard a commuter train, where he must foil a terrorist bombing plot within eight minutes.",
+        "name": "generic-video-edit-blueprint-page",
+        "pageMetadataDescription": "A soldier is transported into another man’s body aboard a commuter train, where he must foil a terrorist bombing plot within eight minutes.",
+        "pageMetadataTitle": "Source Code",
+        "revision": 5,
+        "title": "Source Code"
+      },
+      "id": "215925083836394013750542481199525881753",
+      "meta": {
+        "itemsCurrentPage": 1,
+        "itemsPageSize": 1,
+        "itemsTotalPages": 2
+      },
+      "relationships": {
+        "images": {
+          "data": [
+            {
+              "id": "i:0",
+              "type": "image"
+            }
+          ]
+        },
+        "items": {
+          "data": [
+            {
+              "id": "dcb7a9b9d3da2f04ccdb46996a7f259430894b1fde56333c4fdd40710247775d",
+              "type": "pageItem"
+            }
+          ]
+        }
+      },
+      "type": "page"
+    },
+    {
+      "attributes": {},
+      "id": "dcb7a9b9d3da2f04ccdb46996a7f259430894b1fde56333c4fdd40710247775d",
+      "relationships": {
+        "collection": {
+          "data": {
+            "id": "305431749684302383590943441320435251293",
+            "type": "collection"
+          }
+        }
+      },
+      "type": "pageItem"
+    },
+    {
+      "attributes": {
+        "fullName": "Michelle Monaghan"
+      },
+      "id": "33723033-f69c-43c7-8155-d0df165c2df7",
+      "type": "person"
+    },
+    {
+      "attributes": {
+        "fullName": "Mark Gordon"
+      },
+      "id": "52888ae2-7258-47b1-ab48-7b4c10647cea",
+      "type": "person"
+    },
+    {
+      "attributes": {
+        "fullName": "Vera Farmiga"
+      },
+      "id": "752c20d8-b1bc-4f5c-9b96-a11eb33ad01f",
+      "type": "person"
+    },
+    {
+      "attributes": {
+        "fullName": "Ben Ripley"
+      },
+      "id": "7813ca42-d204-40b0-9e37-63425915b60c",
+      "type": "person"
+    },
+    {
+      "attributes": {
+        "fullName": "Philippe Rousselet"
+      },
+      "id": "b7fea5bb-8249-4e19-be79-06900b100a40",
+      "type": "person"
+    },
+    {
+      "attributes": {
+        "fullName": "Jeffrey Wright"
+      },
+      "id": "b93c441a-f17f-4821-86c8-a53d7cd97a4d",
+      "type": "person"
+    },
+    {
+      "attributes": {
+        "fullName": "Jake Gyllenhaal"
+      },
+      "id": "c9f70e49-0399-4108-a263-7d0b9da7173c",
+      "type": "person"
+    },
+    {
+      "attributes": {
+        "fullName": "Duncan Jones"
+      },
+      "id": "f4bd22cd-e9c9-4293-9c72-35459a16f0f7",
+      "type": "person"
+    },
+    {
+      "attributes": {
+        "fullName": "Jordan Wynn"
+      },
+      "id": "f5237269-7547-4d90-96ad-9301ffd66e11",
+      "type": "person"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/editorial/2010s"
+      },
+      "id": "06fb03a7994f1da6bc744cea2f34bf43fc83b4dfdfa2ca28d2f36a1309e5cde3",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/genre/action"
+      },
+      "id": "0a5a86ce23a636f4329248c2cc5f54ab7efdf98f3fb8119d7e380754ce72a031",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/video/watch/PROM704681/PROM1083244"
+      },
+      "id": "38cc4a51ec52fd6aed26298a332b7f63d777260543b1a2da90b1f6dce4f022ba",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/editorial/indie"
+      },
+      "id": "41979499fc58485037e0d3105927abb1f8c2484c6cdd44059359d7c663c98a8c",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/genre/adventure"
+      },
+      "id": "53faa9f9792eaca5a0c8c6c1f3e1596e277cc753c180f538d0722c72fac099f9",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/editorial/dark-edgy"
+      },
+      "id": "65cddd13682072c14e7fceea90f3168a4862d2d4d040053cdfd43e24a48ab0b1",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/video/watch/PROM704203/PROM1082196"
+      },
+      "id": "7ed89652d4a1e8be874439432474fae8c1d883d2468014d99f1a2bbd013cb94b",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/channel/c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093"
+      },
+      "id": "89e60c4543da3066b506eced1c4158d05445a48b3af540eee2f3fd6d495bec66",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/genre/mystery-suspense"
+      },
+      "id": "a6e04bde26348ed4beddcaddbf1a6bfd15b3467ad196505030e30a4208ce82fa",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/editorial/women-behind-the-camera"
+      },
+      "id": "ac05132b323b18eb9c70f31a94b7b8abdd9d96fea94049fc1e380e117aa88fa5",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/movie/127b00c5-0131-4bac-b2d1-40762deefe09"
+      },
+      "id": "cac95a24dd71c85ca6151c6e846ee37442e787e3680aa7e20a25e0c5a11011ea",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/video/watch/b3b1410a-0c85-457b-bcc7-e13299bea2a8/1623fe4c-ef6e-4dd1-a10c-4a181f5f6579"
+      },
+      "id": "d4fc21172935c68ec1b0fb96844cba994676b4b06a504c0b5fbc625b0a107aa9",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/genre/drama"
+      },
+      "id": "d51d5bd3d2556e83673f365495ec6cde3ab21d67b921469dcfaf6e91ec13b7bb",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "canonical": true,
+        "url": "/editorial/time-travel"
+      },
+      "id": "f83b59554fd6770b5243602bc08c9eef430f2e54fefd59de473559ca6f459f1e",
+      "type": "route"
+    },
+    {
+      "attributes": {
+        "alternateId": "127b00c5-0131-4bac-b2d1-40762deefe09",
+        "description": "A soldier is transported into another man’s body aboard a commuter train, where he must foil a terrorist bombing plot within eight minutes.",
+        "firstAvailableDate": "2024-04-01T07:01:00Z",
+        "isFamilyContent": true,
+        "isKidsContent": false,
+        "kidsContent": false,
+        "longDescription": "A soldier is transported into another man's body on a commuter train, where he must foil a terrorist plot within eight minutes. Learning more about the experimental military technology being deployed, he races against time to save the train passengers.",
+        "name": "Source Code",
+        "numberOfNewEpisodes": 0,
+        "originalName": "Source Code",
+        "premiereDate": "2011-04-01T00:01:00Z",
+        "showType": "MOVIE"
+      },
+      "id": "127b00c5-0131-4bac-b2d1-40762deefe09",
+      "relationships": {
+        "images": {
+          "data": [
+            {
+              "id": "i:c",
+              "type": "image"
+            },
+            {
+              "id": "i:d",
+              "type": "image"
+            },
+            {
+              "id": "i:e",
+              "type": "image"
+            },
+            {
+              "id": "i:f",
+              "type": "image"
+            },
+            {
+              "id": "i:10",
+              "type": "image"
+            },
+            {
+              "id": "i:11",
+              "type": "image"
+            },
+            {
+              "id": "i:12",
+              "type": "image"
+            },
+            {
+              "id": "i:13",
+              "type": "image"
+            },
+            {
+              "id": "i:14",
+              "type": "image"
+            },
+            {
+              "id": "i:15",
+              "type": "image"
+            },
+            {
+              "id": "i:16",
+              "type": "image"
+            }
+          ]
+        },
+        "primaryChannel": {
+          "data": {
+            "id": "c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093",
+            "type": "channel"
+          }
+        },
+        "ratingDescriptors": {
+          "data": [
+            {
+              "id": "4062c194-0c80-4ceb-9de5-d7f7e6e302b8",
+              "type": "contentDescriptor"
+            },
+            {
+              "id": "582e60b9-b1f7-4398-9182-a8758856209d",
+              "type": "contentDescriptor"
+            },
+            {
+              "id": "f8e36188-362f-4a7b-9934-c7d77cb86e64",
+              "type": "contentDescriptor"
+            }
+          ]
+        },
+        "ratings": {
+          "data": [
+            {
+              "id": "4d1bf7aa-ddc4-4641-b568-11f59abb4787",
+              "type": "contentRating"
+            }
+          ]
+        },
+        "routes": {
+          "data": [
+            {
+              "id": "cac95a24dd71c85ca6151c6e846ee37442e787e3680aa7e20a25e0c5a11011ea",
+              "type": "route"
+            }
+          ]
+        },
+        "shortPreviewVideo": {
+          "data": {
+            "id": "PROM704203-shortPreviewVideo",
+            "type": "video"
+          }
+        },
+        "trailerVideo": {
+          "data": {
+            "id": "PROM704681-trailerVideo",
+            "type": "video"
+          }
+        },
+        "txCategory": {
+          "data": [
+            {
+              "id": "a9e00e81-55c6-4e5f-8a54-8bb8ba5bf5d6",
+              "type": "taxonomyNode"
+            },
+            {
+              "id": "b1dd027d-585a-415f-9c71-7537d691c2a3",
+              "type": "taxonomyNode"
+            },
+            {
+              "id": "c0d29af7-e5d0-46af-b14d-82e18235d5cb",
+              "type": "taxonomyNode"
+            },
+            {
+              "id": "cfd49957-a339-494e-a394-749740f86a89",
+              "type": "taxonomyNode"
+            },
+            {
+              "id": "e4c1e798-ab6e-4c17-958c-60b1e5479cea",
+              "type": "taxonomyNode"
+            }
+          ]
+        },
+        "txGenres": {
+          "data": [
+            {
+              "id": "0a34f929-1e10-4e53-ba8d-d0e2dbedfdfd",
+              "type": "taxonomyNode"
+            },
+            {
+              "id": "9df43ec7-cc1a-4d8f-b7f1-d024810aed66",
+              "type": "taxonomyNode"
+            },
+            {
+              "id": "b676b596-7a71-44fb-8222-ecd28becc276",
+              "type": "taxonomyNode"
+            },
+            {
+              "id": "cdc65854-4013-4c85-b2b5-c48290ad3b5c",
+              "type": "taxonomyNode"
+            }
+          ]
+        }
+      },
+      "type": "show"
+    },
+    {
+      "attributes": {
+        "alternateId": "adventure",
+        "kind": "genre",
+        "name": "Adventure"
+      },
+      "id": "0a34f929-1e10-4e53-ba8d-d0e2dbedfdfd",
+      "relationships": {
+        "routes": {
+          "data": [
+            {
+              "id": "53faa9f9792eaca5a0c8c6c1f3e1596e277cc753c180f538d0722c72fac099f9",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "taxonomyNode"
+    },
+    {
+      "attributes": {
+        "alternateId": "mystery-suspense",
+        "kind": "genre",
+        "name": "Mystery & Suspense"
+      },
+      "id": "9df43ec7-cc1a-4d8f-b7f1-d024810aed66",
+      "relationships": {
+        "routes": {
+          "data": [
+            {
+              "id": "a6e04bde26348ed4beddcaddbf1a6bfd15b3467ad196505030e30a4208ce82fa",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "taxonomyNode"
+    },
+    {
+      "attributes": {
+        "alternateId": "indie",
+        "kind": "editorial",
+        "name": "Indie"
+      },
+      "id": "a9e00e81-55c6-4e5f-8a54-8bb8ba5bf5d6",
+      "relationships": {
+        "routes": {
+          "data": [
+            {
+              "id": "41979499fc58485037e0d3105927abb1f8c2484c6cdd44059359d7c663c98a8c",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "taxonomyNode"
+    },
+    {
+      "attributes": {
+        "alternateId": "women-behind-the-camera",
+        "kind": "editorial",
+        "name": "Women Behind the Camera"
+      },
+      "id": "b1dd027d-585a-415f-9c71-7537d691c2a3",
+      "relationships": {
+        "routes": {
+          "data": [
+            {
+              "id": "ac05132b323b18eb9c70f31a94b7b8abdd9d96fea94049fc1e380e117aa88fa5",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "taxonomyNode"
+    },
+    {
+      "attributes": {
+        "alternateId": "action",
+        "kind": "genre",
+        "name": "Action"
+      },
+      "id": "b676b596-7a71-44fb-8222-ecd28becc276",
+      "relationships": {
+        "images": {
+          "data": [
+            {
+              "id": "i:1b",
+              "type": "image"
+            },
+            {
+              "id": "i:1c",
+              "type": "image"
+            },
+            {
+              "id": "i:1d",
+              "type": "image"
+            }
+          ]
+        },
+        "routes": {
+          "data": [
+            {
+              "id": "0a5a86ce23a636f4329248c2cc5f54ab7efdf98f3fb8119d7e380754ce72a031",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "taxonomyNode"
+    },
+    {
+      "attributes": {
+        "alternateId": "2010s",
+        "kind": "editorial",
+        "name": "2010s"
+      },
+      "id": "c0d29af7-e5d0-46af-b14d-82e18235d5cb",
+      "relationships": {
+        "routes": {
+          "data": [
+            {
+              "id": "06fb03a7994f1da6bc744cea2f34bf43fc83b4dfdfa2ca28d2f36a1309e5cde3",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "taxonomyNode"
+    },
+    {
+      "attributes": {
+        "alternateId": "drama",
+        "kind": "genre",
+        "name": "Drama"
+      },
+      "id": "cdc65854-4013-4c85-b2b5-c48290ad3b5c",
+      "relationships": {
+        "images": {
+          "data": [
+            {
+              "id": "i:18",
+              "type": "image"
+            },
+            {
+              "id": "i:19",
+              "type": "image"
+            },
+            {
+              "id": "i:1a",
+              "type": "image"
+            }
+          ]
+        },
+        "routes": {
+          "data": [
+            {
+              "id": "d51d5bd3d2556e83673f365495ec6cde3ab21d67b921469dcfaf6e91ec13b7bb",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "taxonomyNode"
+    },
+    {
+      "attributes": {
+        "alternateId": "dark-edgy",
+        "kind": "editorial",
+        "name": "Dark & Edgy"
+      },
+      "id": "cfd49957-a339-494e-a394-749740f86a89",
+      "relationships": {
+        "routes": {
+          "data": [
+            {
+              "id": "65cddd13682072c14e7fceea90f3168a4862d2d4d040053cdfd43e24a48ab0b1",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "taxonomyNode"
+    },
+    {
+      "attributes": {
+        "alternateId": "time-travel",
+        "kind": "editorial",
+        "name": "Time Travel"
+      },
+      "id": "e4c1e798-ab6e-4c17-958c-60b1e5479cea",
+      "relationships": {
+        "routes": {
+          "data": [
+            {
+              "id": "f83b59554fd6770b5243602bc08c9eef430f2e54fefd59de473559ca6f459f1e",
+              "type": "route"
+            }
+          ]
+        }
+      },
+      "type": "taxonomyNode"
+    },
+    {
+      "attributes": {
+        "alternateId": "PROM704203",
+        "videoType": "SHORT_PREVIEW"
+      },
+      "id": "PROM704203-shortPreviewVideo",
+      "relationships": {
+        "edit": {
+          "data": {
+            "id": "PROM1082196",
+            "type": "edit"
+          }
+        },
+        "ratingDescriptors": {
+          "data": []
+        },
+        "ratings": {
+          "data": []
+        }
+      },
+      "type": "video"
+    },
+    {
+      "attributes": {
+        "alternateId": "PROM704681",
+        "videoType": "TRAILER"
+      },
+      "id": "PROM704681-trailerVideo",
+      "relationships": {
+        "edit": {
+          "data": {
+            "id": "PROM1083244",
+            "type": "edit"
+          }
+        },
+        "ratingDescriptors": {
+          "data": []
+        },
+        "ratings": {
+          "data": []
+        }
+      },
+      "type": "video"
+    },
+    {
+      "attributes": {
+        "airDate": "2011-04-01T00:01:00Z",
+        "alternateId": "b3b1410a-0c85-457b-bcc7-e13299bea2a8",
+        "description": "A soldier is transported into another man’s body aboard a commuter train, where he must foil a terrorist bombing plot within eight minutes.",
+        "firstAvailableDate": "2024-04-01T07:01:00Z",
+        "isFamilyContent": true,
+        "isKidsContent": false,
+        "kidsContent": false,
+        "longDescription": "A soldier is transported into another man's body on a commuter train, where he must foil a terrorist plot within eight minutes. Learning more about the experimental military technology being deployed, he races against time to save the train passengers.",
+        "materialType": "MOVIE",
+        "name": "Source Code",
+        "originalName": "Source Code",
+        "secondaryTitle": "Source Code",
+        "videoType": "MOVIE"
+      },
+      "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8",
+      "relationships": {
+        "contentPackages": {
+          "data": [
+            {
+              "id": "VodEntertainment",
+              "type": "package"
+            },
+            {
+              "id": "Hbo",
+              "type": "package"
+            }
+          ]
+        },
+        "creditGroups": {
+          "data": [
+            {
+              "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-starring",
+              "type": "creditGroup"
+            },
+            {
+              "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-director",
+              "type": "creditGroup"
+            },
+            {
+              "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-writers",
+              "type": "creditGroup"
+            },
+            {
+              "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-producers",
+              "type": "creditGroup"
+            }
+          ]
+        },
+        "edit": {
+          "data": {
+            "id": "1623fe4c-ef6e-4dd1-a10c-4a181f5f6579",
+            "type": "edit"
+          }
+        },
+        "images": {
+          "data": [
+            {
+              "id": "i:1",
+              "type": "image"
+            },
+            {
+              "id": "i:2",
+              "type": "image"
+            },
+            {
+              "id": "i:0",
+              "type": "image"
+            }
+          ]
+        },
+        "primaryChannel": {
+          "data": {
+            "id": "c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093",
+            "type": "channel"
+          }
+        },
+        "ratingDescriptors": {
+          "data": [
+            {
+              "id": "4062c194-0c80-4ceb-9de5-d7f7e6e302b8",
+              "type": "contentDescriptor"
+            },
+            {
+              "id": "582e60b9-b1f7-4398-9182-a8758856209d",
+              "type": "contentDescriptor"
+            },
+            {
+              "id": "f8e36188-362f-4a7b-9934-c7d77cb86e64",
+              "type": "contentDescriptor"
+            }
+          ]
+        },
+        "ratings": {
+          "data": [
+            {
+              "id": "4d1bf7aa-ddc4-4641-b568-11f59abb4787",
+              "type": "contentRating"
+            }
+          ]
+        },
+        "show": {
+          "data": {
+            "id": "127b00c5-0131-4bac-b2d1-40762deefe09",
+            "type": "show"
+          }
+        },
+        "txGenres": {
+          "data": [
+            {
+              "id": "0a34f929-1e10-4e53-ba8d-d0e2dbedfdfd",
+              "type": "taxonomyNode"
+            },
+            {
+              "id": "9df43ec7-cc1a-4d8f-b7f1-d024810aed66",
+              "type": "taxonomyNode"
+            },
+            {
+              "id": "b676b596-7a71-44fb-8222-ecd28becc276",
+              "type": "taxonomyNode"
+            },
+            {
+              "id": "cdc65854-4013-4c85-b2b5-c48290ad3b5c",
+              "type": "taxonomyNode"
+            }
+          ]
+        }
+      },
+      "type": "video"
+    }
+  ],
+  "meta": {
+    "site": {
+      "attributes": {
+        "brandId": "beam",
+        "mainTerritoryCode": "us",
+        "theme": "beam",
+        "websiteHostName": ""
+      },
+      "id": "beam_us",
+      "type": "site"
+    }
+  }
+}
