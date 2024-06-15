@@ -1,0 +1,1916 @@
+{
+ "data": {
+  "attributes": {
+   "canonical": true,
+   "url": "/video/watch/39236faa-faaa-415d-a3d4-e383ee9c9833/ad653e8e-b3cd-4cfe-8b2a-e84d108c3caa"
+  },
+  "id": "b443b32127f51a46a92a2adf1e1e2d571b448e91bcca9bf48300d19874d48abc",
+  "relationships": {
+   "target": {
+    "data": {
+     "id": "215925083836394013750542481199525881753",
+     "type": "page"
+    }
+   }
+  },
+  "type": "route"
+ },
+ "included": [
+  {
+   "attributes": {
+    "alternateId": "3cd085cf-0f6d-447c-9a07-29132d9c4bd8",
+    "channelCode": "CCEN",
+    "name": "Comedy Central"
+   },
+   "id": "3cd085cf-0f6d-447c-9a07-29132d9c4bd8",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    },
+    "routes": {
+     "data": [
+      {
+       "id": "155ee556334deb74282f02838fd62bb6d461e9cc99f510aa67a051d5975a3463",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "channel"
+  },
+  {
+   "attributes": {
+    "alias": "generic-video-edit-page-rail-player",
+    "component": {
+     "id": "player",
+     "mandatoryParams": "ph[video.id]=39236faa-faaa-415d-a3d4-e383ee9c9833",
+     "templateId": "primary"
+    },
+    "kind": "manual",
+    "name": "generic-video-edit-page-rail-player",
+    "revision": 3
+   },
+   "id": "305431749684302383590943441320435251293",
+   "meta": {
+    "itemsTotalPages": 1
+   },
+   "relationships": {
+    "items": {
+     "data": [
+      {
+       "id": "c:d",
+       "type": "collectionItem"
+      }
+     ]
+    }
+   },
+   "type": "collection"
+  },
+  {
+   "attributes": {},
+   "id": "c:d",
+   "relationships": {
+    "video": {
+     "data": {
+      "id": "39236faa-faaa-415d-a3d4-e383ee9c9833",
+      "type": "video"
+     }
+    }
+   },
+   "type": "collectionItem"
+  },
+  {
+   "attributes": {
+    "code": "Coarse Language"
+   },
+   "id": "9f1fef78-0c80-463c-951f-f79e8e76b471",
+   "relationships": {
+    "contentRatingSystem": {
+     "data": {
+      "id": "a31ab627-5dbe-45b7-bfe2-30cab4f6215f",
+      "type": "contentRatingSystem"
+     }
+    },
+    "images": {
+     "data": []
+    }
+   },
+   "type": "contentDescriptor"
+  },
+  {
+   "attributes": {
+    "code": "TV-MA"
+   },
+   "id": "13578a18-51d9-4c62-a1ac-6f89e00cd18f",
+   "relationships": {
+    "contentRatingSystem": {
+     "data": {
+      "id": "a31ab627-5dbe-45b7-bfe2-30cab4f6215f",
+      "type": "contentRatingSystem"
+     }
+    },
+    "images": {
+     "data": [
+      {
+       "id": "i:11",
+       "type": "image"
+      }
+     ]
+    }
+   },
+   "type": "contentRating"
+  },
+  {
+   "attributes": {
+    "system": "us-fcc-tv"
+   },
+   "id": "a31ab627-5dbe-45b7-bfe2-30cab4f6215f",
+   "type": "contentRatingSystem"
+  },
+  {
+   "attributes": {
+    "role": "creator"
+   },
+   "id": "a7d001e9-87c4-4452-a5cf-57f664bc6875",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "61ec0c22-08f3-42d7-8d34-aafc8e6a6437",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "role": "creator"
+   },
+   "id": "ce80d85b-de33-4c63-9bba-0bb663993401",
+   "relationships": {
+    "person": {
+     "data": {
+      "id": "b3473c2c-1808-4838-84a5-fe0bd784332f",
+      "type": "person"
+     }
+    }
+   },
+   "type": "credit"
+  },
+  {
+   "attributes": {
+    "name": "Created By"
+   },
+   "id": "39236faa-faaa-415d-a3d4-e383ee9c9833-credit-group-creators",
+   "relationships": {
+    "credits": {
+     "data": [
+      {
+       "id": "a7d001e9-87c4-4452-a5cf-57f664bc6875",
+       "type": "credit"
+      },
+      {
+       "id": "ce80d85b-de33-4c63-9bba-0bb663993401",
+       "type": "credit"
+      }
+     ]
+    }
+   },
+   "type": "creditGroup"
+  },
+  {
+   "attributes": {
+    "message": "4K UHD, HDR, and Dolby Atmos availability depends on plan and device."
+   },
+   "id": "amer_glyphs_disclaimer",
+   "type": "disclaimer"
+  },
+  {
+   "attributes": {
+    "audioTracks": [
+     "English"
+    ],
+    "duration": 53000
+   },
+   "id": "PROM1082072",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "1c7ca49f30d70291fa8c74d9db8b9ad767e02c18826e3a0b149874065eeecd8b",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "edit"
+  },
+  {
+   "attributes": {
+    "audioTracks": [
+     "Spanish",
+     "English - Original"
+    ],
+    "duration": 1322000,
+    "playableEnd": "2025-06-24T03:59:00Z",
+    "playableStart": "2023-02-12T05:00:00Z",
+    "subtitles": [
+     "Spanish - CC",
+     "English - CC"
+    ]
+   },
+   "id": "ad653e8e-b3cd-4cfe-8b2a-e84d108c3caa",
+   "relationships": {
+    "glyphs": {
+     "data": [
+      {
+       "id": "5585c0c5-9ebc-4cd8-8803-edb5ec6606a2",
+       "type": "glyph"
+      }
+     ]
+    },
+    "routes": {
+     "data": [
+      {
+       "id": "4b4b8146246380b6732e25e0eb9d54183d18d8ce0d2cf6d4aaa5982506e483e5",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "edit"
+  },
+  {
+   "attributes": {
+    "name": "4K UHD",
+    "nameAccessibility": "4 K, U H D video"
+   },
+   "id": "5585c0c5-9ebc-4cd8-8803-edb5ec6606a2",
+   "type": "glyph"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 2160,
+    "kind": "default",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/13/06f3ebb0-5f89-3213-8f36-8544831116f5.jpeg",
+    "width": 3840
+   },
+   "id": "i:0",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3240,
+    "kind": "centered-background",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/17/b518a0f1-45a9-3f24-adb9-762a19d67081.jpeg",
+    "width": 4320
+   },
+   "id": "i:1",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3000,
+    "kind": "cover-artwork-square",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/05/14/64c29596-6a83-4719-a149-e811ae99e2db.jpeg",
+    "width": 3000
+   },
+   "id": "i:10",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "height": 112,
+    "kind": "logo",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/02/21/43da6c7d-c672-4c7e-ba9c-7f788d6195c3.png",
+    "width": 112
+   },
+   "id": "i:11",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3636,
+    "kind": "centered-background-small",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/02/14/ec170744-607f-42d3-a8db-37ece39a4a5d.jpeg",
+    "width": 1680
+   },
+   "id": "i:12",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3000,
+    "kind": "cover-artwork-square",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/02/14/a68000a2-84f6-4ebc-9afb-a09f70de7554.jpeg",
+    "width": 3000
+   },
+   "id": "i:13",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 2160,
+    "kind": "default",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/02/14/e8fc34cb-cd38-4994-80eb-7a9e11bbfae3.jpeg",
+    "width": 3840
+   },
+   "id": "i:14",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3636,
+    "kind": "centered-background-small",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/23/854b0457-88c9-3b95-a2b7-d5184adfc84b.jpeg",
+    "width": 1680
+   },
+   "id": "i:2",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 1300,
+    "kind": "content-logo-monochromatic",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/23/802794fb-ad52-3dd2-a61e-7b88705b1d51.png",
+    "width": 4320
+   },
+   "id": "i:3",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3000,
+    "kind": "cover-artwork",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/23/59fa1234-5519-3ffb-8fd6-d662f7325fe9.jpeg",
+    "width": 3000
+   },
+   "id": "i:4",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 2160,
+    "kind": "cover-artwork-horizontal",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/23/6186d8f9-b679-3ab4-816c-fe8343ccc5e7.jpeg",
+    "width": 3840
+   },
+   "id": "i:5",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3000,
+    "kind": "cover-artwork-square",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/23/5c5ed333-5bcf-30ea-8d6d-a4ea84986419.jpeg",
+    "width": 3000
+   },
+   "id": "i:6",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 2160,
+    "kind": "default",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/11/1238b9b5-6b39-355e-a2eb-50160096245e.jpeg",
+    "width": 3840
+   },
+   "id": "i:7",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 1300,
+    "kind": "logo-centered",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/23/802794fb-ad52-3dd2-a61e-7b88705b1d51.png",
+    "width": 4320
+   },
+   "id": "i:8",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 1300,
+    "kind": "logo-left",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/14/cecad2f7-1490-3f5e-82b9-9924c3f90d97.png",
+    "width": 4320
+   },
+   "id": "i:9",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3840,
+    "kind": "poster-with-logo",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/09/15/4da99ceb-74c7-3687-846b-b63e7f86b4ce.jpeg",
+    "width": 2560
+   },
+   "id": "i:a",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3636,
+    "kind": "centered-background-small",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/13/5c4bd2df-3ea5-3620-83b0-2a3f3fe2a63c.jpeg",
+    "width": 1680
+   },
+   "id": "i:b",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3000,
+    "kind": "cover-artwork",
+    "src": "https://images.cdn.prd.api.discomax.com/2023/02/13/c37cba60-e559-35b1-83b7-57a46ee1ed90.jpeg",
+    "width": 3000
+   },
+   "id": "i:c",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 3636,
+    "kind": "centered-background-small",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/01/29/e13d7be7-64fd-4726-9adf-3182408bbd2d.jpeg",
+    "width": 1680
+   },
+   "id": "i:e",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "default": true,
+    "height": 2160,
+    "kind": "default",
+    "src": "https://images.cdn.prd.api.discomax.com/2024/01/29/2ddbca7e-b4eb-49b1-adc0-a76fe49acd86.jpeg",
+    "width": 3840
+   },
+   "id": "i:f",
+   "type": "image"
+  },
+  {
+   "attributes": {
+    "name": "VodEntertainment"
+   },
+   "id": "VodEntertainment",
+   "type": "package"
+  },
+  {
+   "attributes": {
+    "alias": "generic-video-edit-blueprint-page",
+    "component": {
+     "id": "player-page",
+     "templateId": "primary"
+    },
+    "description": "Cartman realizes he's been tricked after the other boys explain that pubes don't count unless you grow your own.",
+    "name": "generic-video-edit-blueprint-page",
+    "pageMetadataDescription": "Cartman realizes he's been tricked after the other boys explain that pubes don't count unless you grow your own.",
+    "pageMetadataTitle": "Scott Tenorman Must Die",
+    "revision": 5,
+    "title": "Scott Tenorman Must Die"
+   },
+   "id": "215925083836394013750542481199525881753",
+   "meta": {
+    "itemsCurrentPage": 1,
+    "itemsPageSize": 1,
+    "itemsTotalPages": 2
+   },
+   "relationships": {
+    "images": {
+     "data": [
+      {
+       "id": "i:0",
+       "type": "image"
+      }
+     ]
+    },
+    "items": {
+     "data": [
+      {
+       "id": "dcb7a9b9d3da2f04ccdb46996a7f259430894b1fde56333c4fdd40710247775d",
+       "type": "pageItem"
+      }
+     ]
+    }
+   },
+   "type": "page"
+  },
+  {
+   "attributes": {},
+   "id": "dcb7a9b9d3da2f04ccdb46996a7f259430894b1fde56333c4fdd40710247775d",
+   "relationships": {
+    "collection": {
+     "data": {
+      "id": "305431749684302383590943441320435251293",
+      "type": "collection"
+     }
+    }
+   },
+   "type": "pageItem"
+  },
+  {
+   "attributes": {
+    "fullName": "Trey Parker"
+   },
+   "id": "61ec0c22-08f3-42d7-8d34-aafc8e6a6437",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "fullName": "Matt Stone"
+   },
+   "id": "b3473c2c-1808-4838-84a5-fe0bd784332f",
+   "type": "person"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/channel/3cd085cf-0f6d-447c-9a07-29132d9c4bd8"
+   },
+   "id": "155ee556334deb74282f02838fd62bb6d461e9cc99f510aa67a051d5975a3463",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/editorial/nsfw-comedies"
+   },
+   "id": "19ff81897b54823fba0b85efdbb37930b877eba5c27b10331bc133efa13bb6d5",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/genre/adult-animation"
+   },
+   "id": "1bd9035f3bf7e381907f84b9c3cc7540d1a8929378399e1816e79b7bb4ad4080",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/video/watch/PROM704177/PROM1082072"
+   },
+   "id": "1c7ca49f30d70291fa8c74d9db8b9ad767e02c18826e3a0b149874065eeecd8b",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/genre/offbeat"
+   },
+   "id": "2a4417b2ed81cea0b27eca8e2b5bf5cd39288bdbf1ed7cc7e51832e782209c0c",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/editorial/irreverent"
+   },
+   "id": "3774e7aea1de124d17e098e744d4e9511ac62d6f47849f526ba7944720fcffc2",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/genre/comedy"
+   },
+   "id": "3f38b953eb2abd7453c65d36688e0c57c2fc7efca9d1e44c12ed5891715c99c3",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/video/watch/39236faa-faaa-415d-a3d4-e383ee9c9833/ad653e8e-b3cd-4cfe-8b2a-e84d108c3caa"
+   },
+   "id": "4b4b8146246380b6732e25e0eb9d54183d18d8ce0d2cf6d4aaa5982506e483e5",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/editorial/dark-edgy"
+   },
+   "id": "65cddd13682072c14e7fceea90f3168a4862d2d4d040053cdfd43e24a48ab0b1",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/editorial/familiar-favorites"
+   },
+   "id": "6691eba1b1c70a5da769eb93cff91f89550eeffa04f9e65df279ba3170a5d23e",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/editorial/satires-parodies"
+   },
+   "id": "86a0ed208e513a1635296a6c77499538e89b735141c5b51d4c9bb7ddc4bc18f8",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/show/fd30a89f-173e-459a-a5bd-ad9748b7f07f"
+   },
+   "id": "884f9919660417be3c7fa75dba52ea6e10f508bf444b88f39ad500bd4c4e47de",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/editorial/friends"
+   },
+   "id": "beee9bf270871678eb95ca2b82378fbc29f5dd608478dd46d1acfc0cfaf9cee5",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/genre/dark-comedy"
+   },
+   "id": "c65db97c19b35cda2a0c0589a6614dc55326b7a16bca120af913750d3b8242a1",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/editorial/critically-acclaimed"
+   },
+   "id": "db4257c9f6f6966bc77dc94f7b573f77c3ccf723d2b63290bc0d8e796d90b7cb",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "canonical": true,
+    "url": "/editorial/zone-out"
+   },
+   "id": "db834bb3257e9967ac24b8a89672d785f223d3305f9023f324002e4b6cf745f5",
+   "type": "route"
+  },
+  {
+   "attributes": {
+    "displayName": "12",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 12,
+    "videoCountByType": {
+     "EPISODE": 14
+    }
+   },
+   "id": "05e623c8-a1dc-4ed9-b460-b970c559e4eb",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "18",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 18,
+    "videoCountByType": {
+     "EPISODE": 10
+    }
+   },
+   "id": "0ef1c4ca-5bb6-4e13-b814-dd663fcfc268",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "8",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 8,
+    "videoCountByType": {
+     "EPISODE": 14
+    }
+   },
+   "id": "1005e946-7247-4bd1-8a83-71aca23181d2",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "7",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 7,
+    "videoCountByType": {
+     "EPISODE": 15
+    }
+   },
+   "id": "12677b2e-f701-4f00-8ff1-df45e2594164",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "description": "The boys are back in South Park!",
+    "displayName": "26",
+    "longDescription": "The boys are back in South Park!",
+    "name": "South Park",
+    "seasonNumber": 26,
+    "videoCountByType": {
+     "EPISODE": 6
+    }
+   },
+   "id": "346e8b55-5dfe-45a4-887f-1a88de716cc0",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "10",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 10,
+    "videoCountByType": {
+     "EPISODE": 12
+    }
+   },
+   "id": "3a236560-fa7f-4097-be39-7dbabf9d3a3b",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "3",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 3,
+    "videoCountByType": {
+     "EPISODE": 17
+    }
+   },
+   "id": "407399cc-848b-48c2-b9e8-ce953e70378a",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "14",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 14,
+    "videoCountByType": {
+     "EPISODE": 12
+    }
+   },
+   "id": "557b35c0-5c65-4510-9a05-24261adfe4d1",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "16",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 16,
+    "videoCountByType": {
+     "EPISODE": 14
+    }
+   },
+   "id": "591ea8f9-2d8e-4c71-8119-cfc9018742ec",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "20",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 20,
+    "videoCountByType": {
+     "EPISODE": 10
+    }
+   },
+   "id": "5f55cc92-c1af-421e-bbbe-cb3e83492b27",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "25",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 25,
+    "videoCountByType": {
+     "EPISODE": 6
+    }
+   },
+   "id": "7327ed2d-0c29-48db-bfdf-7002106c52b0",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "6",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 6,
+    "videoCountByType": {
+     "EPISODE": 17
+    }
+   },
+   "id": "7730041f-3fa2-4c30-95da-73bbe1b09812",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "9",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 9,
+    "videoCountByType": {
+     "EPISODE": 14
+    }
+   },
+   "id": "798ece2e-8b5a-4f23-b091-39a930c86097",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "1",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 1,
+    "videoCountByType": {
+     "EPISODE": 13
+    }
+   },
+   "id": "9567457b-da7c-43be-b239-15b11a365940",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "24",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 24,
+    "videoCountByType": {
+     "EPISODE": 1
+    }
+   },
+   "id": "99168486-a566-46ce-a2a1-7233a1b848a5",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "2",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 2,
+    "videoCountByType": {
+     "EPISODE": 18
+    }
+   },
+   "id": "99192b3b-b4a6-4cc4-ba1e-34bd7210fa1f",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "17",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 17,
+    "videoCountByType": {
+     "EPISODE": 10
+    }
+   },
+   "id": "bded5b17-9545-41e3-8006-c5ec8b4694e6",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "13",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 13,
+    "videoCountByType": {
+     "EPISODE": 14
+    }
+   },
+   "id": "c21ef8a2-3b68-4f8e-860b-972e1b5064a4",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "4",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 4,
+    "videoCountByType": {
+     "EPISODE": 17
+    }
+   },
+   "id": "cb2a5142-cf06-49b4-a979-1afb1a83e50b",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "5",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 5,
+    "videoCountByType": {
+     "EPISODE": 13
+    }
+   },
+   "id": "dc2abc77-17e8-42ea-bf3e-75e827782256",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "19",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 19,
+    "videoCountByType": {
+     "EPISODE": 10
+    }
+   },
+   "id": "e263793a-8494-46bd-b761-30a637bb39a4",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "22",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 22,
+    "videoCountByType": {
+     "EPISODE": 10
+    }
+   },
+   "id": "e5a1ea8b-a3bc-4a6a-b524-ec55ff3fe21b",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "11",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 11,
+    "videoCountByType": {
+     "EPISODE": 14
+    }
+   },
+   "id": "f27cf6c6-9b4e-4175-9e92-f88144a32659",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "21",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 21,
+    "videoCountByType": {
+     "EPISODE": 10
+    }
+   },
+   "id": "f61b4a75-7ef5-4e1d-b87e-168552ed7ee2",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "23",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 23,
+    "videoCountByType": {
+     "EPISODE": 10
+    }
+   },
+   "id": "f93643d1-4718-483a-9345-75c18d7fe9e1",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "displayName": "15",
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone's favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "seasonNumber": 15,
+    "videoCountByType": {
+     "EPISODE": 14
+    }
+   },
+   "id": "fecc5ede-9c1c-404a-b540-59f0768a5535",
+   "relationships": {
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "season"
+  },
+  {
+   "attributes": {
+    "alternateId": "fd30a89f-173e-459a-a5bd-ad9748b7f07f",
+    "description": "Follow everyone’s favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "firstAvailableDate": "2023-02-05T05:00:00Z",
+    "isFamilyContent": false,
+    "isKidsContent": false,
+    "kidsContent": false,
+    "longDescription": "Relive the dawn of the South Park era, with legendary episodes of the Emmy Award-winning animated classic. Follow everyone’s favorite troublemakers - Stan, Kyle, Cartman and Kenny - from the very beginning of their unforgettable adventures.",
+    "name": "South Park",
+    "numberOfNewEpisodes": 0,
+    "originalName": "South Park",
+    "premiereDate": "1997-01-01T00:01:00Z",
+    "showType": "SERIES"
+   },
+   "id": "fd30a89f-173e-459a-a5bd-ad9748b7f07f",
+   "relationships": {
+    "images": {
+     "data": [
+      {
+       "id": "i:1",
+       "type": "image"
+      },
+      {
+       "id": "i:2",
+       "type": "image"
+      },
+      {
+       "id": "i:3",
+       "type": "image"
+      },
+      {
+       "id": "i:4",
+       "type": "image"
+      },
+      {
+       "id": "i:5",
+       "type": "image"
+      },
+      {
+       "id": "i:6",
+       "type": "image"
+      },
+      {
+       "id": "i:7",
+       "type": "image"
+      },
+      {
+       "id": "i:8",
+       "type": "image"
+      },
+      {
+       "id": "i:9",
+       "type": "image"
+      },
+      {
+       "id": "i:a",
+       "type": "image"
+      }
+     ]
+    },
+    "primaryChannel": {
+     "data": {
+      "id": "3cd085cf-0f6d-447c-9a07-29132d9c4bd8",
+      "type": "channel"
+     }
+    },
+    "ratingDescriptors": {
+     "data": [
+      {
+       "id": "66b9c994-7ca1-4322-81e2-c357d0f917b7",
+       "type": "contentDescriptor"
+      },
+      {
+       "id": "70591323-a48b-428c-801b-884d2fce3493",
+       "type": "contentDescriptor"
+      },
+      {
+       "id": "8fa8d5ae-446b-44c8-9ec7-48c1bdbbf3bf",
+       "type": "contentDescriptor"
+      },
+      {
+       "id": "9f1fef78-0c80-463c-951f-f79e8e76b471",
+       "type": "contentDescriptor"
+      }
+     ]
+    },
+    "ratings": {
+     "data": [
+      {
+       "id": "13578a18-51d9-4c62-a1ac-6f89e00cd18f",
+       "type": "contentRating"
+      }
+     ]
+    },
+    "routes": {
+     "data": [
+      {
+       "id": "884f9919660417be3c7fa75dba52ea6e10f508bf444b88f39ad500bd4c4e47de",
+       "type": "route"
+      }
+     ]
+    },
+    "seasons": {
+     "data": [
+      {
+       "id": "9567457b-da7c-43be-b239-15b11a365940",
+       "type": "season"
+      },
+      {
+       "id": "99192b3b-b4a6-4cc4-ba1e-34bd7210fa1f",
+       "type": "season"
+      },
+      {
+       "id": "407399cc-848b-48c2-b9e8-ce953e70378a",
+       "type": "season"
+      },
+      {
+       "id": "cb2a5142-cf06-49b4-a979-1afb1a83e50b",
+       "type": "season"
+      },
+      {
+       "id": "dc2abc77-17e8-42ea-bf3e-75e827782256",
+       "type": "season"
+      },
+      {
+       "id": "7730041f-3fa2-4c30-95da-73bbe1b09812",
+       "type": "season"
+      },
+      {
+       "id": "12677b2e-f701-4f00-8ff1-df45e2594164",
+       "type": "season"
+      },
+      {
+       "id": "1005e946-7247-4bd1-8a83-71aca23181d2",
+       "type": "season"
+      },
+      {
+       "id": "798ece2e-8b5a-4f23-b091-39a930c86097",
+       "type": "season"
+      },
+      {
+       "id": "3a236560-fa7f-4097-be39-7dbabf9d3a3b",
+       "type": "season"
+      },
+      {
+       "id": "f27cf6c6-9b4e-4175-9e92-f88144a32659",
+       "type": "season"
+      },
+      {
+       "id": "05e623c8-a1dc-4ed9-b460-b970c559e4eb",
+       "type": "season"
+      },
+      {
+       "id": "c21ef8a2-3b68-4f8e-860b-972e1b5064a4",
+       "type": "season"
+      },
+      {
+       "id": "557b35c0-5c65-4510-9a05-24261adfe4d1",
+       "type": "season"
+      },
+      {
+       "id": "fecc5ede-9c1c-404a-b540-59f0768a5535",
+       "type": "season"
+      },
+      {
+       "id": "591ea8f9-2d8e-4c71-8119-cfc9018742ec",
+       "type": "season"
+      },
+      {
+       "id": "bded5b17-9545-41e3-8006-c5ec8b4694e6",
+       "type": "season"
+      },
+      {
+       "id": "0ef1c4ca-5bb6-4e13-b814-dd663fcfc268",
+       "type": "season"
+      },
+      {
+       "id": "e263793a-8494-46bd-b761-30a637bb39a4",
+       "type": "season"
+      },
+      {
+       "id": "5f55cc92-c1af-421e-bbbe-cb3e83492b27",
+       "type": "season"
+      },
+      {
+       "id": "f61b4a75-7ef5-4e1d-b87e-168552ed7ee2",
+       "type": "season"
+      },
+      {
+       "id": "e5a1ea8b-a3bc-4a6a-b524-ec55ff3fe21b",
+       "type": "season"
+      },
+      {
+       "id": "f93643d1-4718-483a-9345-75c18d7fe9e1",
+       "type": "season"
+      },
+      {
+       "id": "99168486-a566-46ce-a2a1-7233a1b848a5",
+       "type": "season"
+      },
+      {
+       "id": "7327ed2d-0c29-48db-bfdf-7002106c52b0",
+       "type": "season"
+      },
+      {
+       "id": "346e8b55-5dfe-45a4-887f-1a88de716cc0",
+       "type": "season"
+      }
+     ]
+    },
+    "shortPreviewVideo": {
+     "data": {
+      "id": "PROM704177-shortPreviewVideo",
+      "type": "video"
+     }
+    },
+    "txCategory": {
+     "data": [
+      {
+       "id": "0b0864fa-4eda-4033-a5d6-4266aa4ce337",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "4193e201-d882-4629-be0c-ba6bb8946ed1",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "45ba76fd-a6aa-44c2-be20-9e6abba58b35",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "52e6a6f1-ec86-4943-b3b7-4c23a4386f52",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "567cc01f-0936-4812-935b-e5e7834211e8",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "8884f3d9-6fb4-48f7-a494-73a7a6bbd360",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "a709a914-48df-4c8f-a8f0-e874748e3e06",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "cfd49957-a339-494e-a394-749740f86a89",
+       "type": "taxonomyNode"
+      }
+     ]
+    },
+    "txGenres": {
+     "data": [
+      {
+       "id": "1d102815-7e5d-4820-bd51-16dc117789f6",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "a292c168-303e-4d05-83cd-e42d1a6c1fce",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "a6c090ff-61f9-4ec6-af11-9043c1eae9ac",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "e7a021a4-2708-4f41-939e-6177fef6eba7",
+       "type": "taxonomyNode"
+      }
+     ]
+    }
+   },
+   "type": "show"
+  },
+  {
+   "attributes": {
+    "alternateId": "familiar-favorites",
+    "kind": "editorial",
+    "name": "Familiar Favorites"
+   },
+   "id": "0b0864fa-4eda-4033-a5d6-4266aa4ce337",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "6691eba1b1c70a5da769eb93cff91f89550eeffa04f9e65df279ba3170a5d23e",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "comedy",
+    "kind": "genre",
+    "name": "Comedy"
+   },
+   "id": "1d102815-7e5d-4820-bd51-16dc117789f6",
+   "relationships": {
+    "images": {
+     "data": [
+      {
+       "id": "i:12",
+       "type": "image"
+      },
+      {
+       "id": "i:13",
+       "type": "image"
+      },
+      {
+       "id": "i:14",
+       "type": "image"
+      }
+     ]
+    },
+    "routes": {
+     "data": [
+      {
+       "id": "3f38b953eb2abd7453c65d36688e0c57c2fc7efca9d1e44c12ed5891715c99c3",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "satires-parodies",
+    "kind": "editorial",
+    "name": "Satires & Parodies"
+   },
+   "id": "4193e201-d882-4629-be0c-ba6bb8946ed1",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "86a0ed208e513a1635296a6c77499538e89b735141c5b51d4c9bb7ddc4bc18f8",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "irreverent",
+    "kind": "editorial",
+    "name": "Irreverent"
+   },
+   "id": "45ba76fd-a6aa-44c2-be20-9e6abba58b35",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "3774e7aea1de124d17e098e744d4e9511ac62d6f47849f526ba7944720fcffc2",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "critically-acclaimed",
+    "kind": "editorial",
+    "name": "Critically Acclaimed"
+   },
+   "id": "52e6a6f1-ec86-4943-b3b7-4c23a4386f52",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "db4257c9f6f6966bc77dc94f7b573f77c3ccf723d2b63290bc0d8e796d90b7cb",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "nsfw-comedies",
+    "kind": "editorial",
+    "name": "NSFW Comedies"
+   },
+   "id": "567cc01f-0936-4812-935b-e5e7834211e8",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "19ff81897b54823fba0b85efdbb37930b877eba5c27b10331bc133efa13bb6d5",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "friends",
+    "kind": "editorial",
+    "name": "Friends"
+   },
+   "id": "8884f3d9-6fb4-48f7-a494-73a7a6bbd360",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "beee9bf270871678eb95ca2b82378fbc29f5dd608478dd46d1acfc0cfaf9cee5",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "adult-animation",
+    "kind": "genre",
+    "name": "Adult Animation"
+   },
+   "id": "a292c168-303e-4d05-83cd-e42d1a6c1fce",
+   "relationships": {
+    "images": {
+     "data": [
+      {
+       "id": "i:e",
+       "type": "image"
+      },
+      {
+       "id": "i:f",
+       "type": "image"
+      },
+      {
+       "id": "i:10",
+       "type": "image"
+      }
+     ]
+    },
+    "routes": {
+     "data": [
+      {
+       "id": "1bd9035f3bf7e381907f84b9c3cc7540d1a8929378399e1816e79b7bb4ad4080",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "offbeat",
+    "kind": "genre",
+    "name": "Offbeat"
+   },
+   "id": "a6c090ff-61f9-4ec6-af11-9043c1eae9ac",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "2a4417b2ed81cea0b27eca8e2b5bf5cd39288bdbf1ed7cc7e51832e782209c0c",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "zone-out",
+    "kind": "editorial",
+    "name": "Zone Out"
+   },
+   "id": "a709a914-48df-4c8f-a8f0-e874748e3e06",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "db834bb3257e9967ac24b8a89672d785f223d3305f9023f324002e4b6cf745f5",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "dark-edgy",
+    "kind": "editorial",
+    "name": "Dark & Edgy"
+   },
+   "id": "cfd49957-a339-494e-a394-749740f86a89",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "65cddd13682072c14e7fceea90f3168a4862d2d4d040053cdfd43e24a48ab0b1",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "alternateId": "dark-comedy",
+    "kind": "genre",
+    "name": "Dark Comedy"
+   },
+   "id": "e7a021a4-2708-4f41-939e-6177fef6eba7",
+   "relationships": {
+    "routes": {
+     "data": [
+      {
+       "id": "c65db97c19b35cda2a0c0589a6614dc55326b7a16bca120af913750d3b8242a1",
+       "type": "route"
+      }
+     ]
+    }
+   },
+   "type": "taxonomyNode"
+  },
+  {
+   "attributes": {
+    "airDate": "2001-01-01T00:01:00Z",
+    "alternateId": "39236faa-faaa-415d-a3d4-e383ee9c9833",
+    "description": "Cartman realizes he's been tricked after the other boys explain that pubes don't count unless you grow your own.",
+    "episodeNumber": 3,
+    "firstAvailableDate": "2023-02-12T05:00:00Z",
+    "isFamilyContent": false,
+    "isKidsContent": false,
+    "kidsContent": false,
+    "longDescription": "After the other boys explain to Cartman that pubes don't count unless you grow your own, Cartman realizes he's been tricked by the school bully, Scott Tenorman.",
+    "materialType": "EPISODE",
+    "name": "Scott Tenorman Must Die",
+    "originalName": "Scott Tenorman Must Die",
+    "seasonNumber": 5,
+    "secondaryTitle": "Scott Tenorman Must Die",
+    "videoType": "EPISODE"
+   },
+   "id": "39236faa-faaa-415d-a3d4-e383ee9c9833",
+   "relationships": {
+    "contentPackages": {
+     "data": [
+      {
+       "id": "VodEntertainment",
+       "type": "package"
+      }
+     ]
+    },
+    "creditGroups": {
+     "data": [
+      {
+       "id": "39236faa-faaa-415d-a3d4-e383ee9c9833-credit-group-creators",
+       "type": "creditGroup"
+      }
+     ]
+    },
+    "disclaimers": {
+     "data": [
+      {
+       "id": "amer_glyphs_disclaimer",
+       "type": "disclaimer"
+      }
+     ]
+    },
+    "edit": {
+     "data": {
+      "id": "ad653e8e-b3cd-4cfe-8b2a-e84d108c3caa",
+      "type": "edit"
+     }
+    },
+    "images": {
+     "data": [
+      {
+       "id": "i:b",
+       "type": "image"
+      },
+      {
+       "id": "i:c",
+       "type": "image"
+      },
+      {
+       "id": "i:0",
+       "type": "image"
+      }
+     ]
+    },
+    "primaryChannel": {
+     "data": {
+      "id": "3cd085cf-0f6d-447c-9a07-29132d9c4bd8",
+      "type": "channel"
+     }
+    },
+    "ratingDescriptors": {
+     "data": [
+      {
+       "id": "9f1fef78-0c80-463c-951f-f79e8e76b471",
+       "type": "contentDescriptor"
+      }
+     ]
+    },
+    "ratings": {
+     "data": [
+      {
+       "id": "13578a18-51d9-4c62-a1ac-6f89e00cd18f",
+       "type": "contentRating"
+      }
+     ]
+    },
+    "season": {
+     "data": {
+      "id": "dc2abc77-17e8-42ea-bf3e-75e827782256",
+      "type": "season"
+     }
+    },
+    "show": {
+     "data": {
+      "id": "fd30a89f-173e-459a-a5bd-ad9748b7f07f",
+      "type": "show"
+     }
+    },
+    "txGenres": {
+     "data": [
+      {
+       "id": "1d102815-7e5d-4820-bd51-16dc117789f6",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "a292c168-303e-4d05-83cd-e42d1a6c1fce",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "a6c090ff-61f9-4ec6-af11-9043c1eae9ac",
+       "type": "taxonomyNode"
+      },
+      {
+       "id": "e7a021a4-2708-4f41-939e-6177fef6eba7",
+       "type": "taxonomyNode"
+      }
+     ]
+    }
+   },
+   "type": "video"
+  },
+  {
+   "attributes": {
+    "alternateId": "PROM704177",
+    "videoType": "SHORT_PREVIEW"
+   },
+   "id": "PROM704177-shortPreviewVideo",
+   "relationships": {
+    "edit": {
+     "data": {
+      "id": "PROM1082072",
+      "type": "edit"
+     }
+    },
+    "ratingDescriptors": {
+     "data": []
+    },
+    "ratings": {
+     "data": []
+    }
+   },
+   "type": "video"
+  }
+ ],
+ "meta": {
+  "site": {
+   "attributes": {
+    "brandId": "beam",
+    "mainTerritoryCode": "us",
+    "theme": "beam",
+    "websiteHostName": ""
+   },
+   "id": "beam_us",
+   "type": "site"
+  }
+ }
+}

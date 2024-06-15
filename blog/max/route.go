@@ -42,10 +42,10 @@ type default_routes struct {
          Url address
       }
    }
-   Included []include
+   Included []route_include
 }
 
-type include struct {
+type route_include struct {
    Attributes struct {
       AirDate time.Time
       EpisodeNumber int
