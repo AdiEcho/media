@@ -222,99 +222,11 @@ episode:
       },
       "id": "818c3d9d-1831-48a6-9583-0364a7f98453",
       "relationships": {
-        "images": {
-          "data": [
-            {
-              "id": "i:14c",
-              "type": "image"
-            },
-            {
-              "id": "i:14d",
-              "type": "image"
-            },
-            {
-              "id": "i:14e",
-              "type": "image"
-            },
-            {
-              "id": "i:14f",
-              "type": "image"
-            },
-            {
-              "id": "i:150",
-              "type": "image"
-            },
-            {
-              "id": "i:151",
-              "type": "image"
-            },
-            {
-              "id": "i:152",
-              "type": "image"
-            },
-            {
-              "id": "i:153",
-              "type": "image"
-            },
-            {
-              "id": "i:154",
-              "type": "image"
-            },
-            {
-              "id": "i:155",
-              "type": "image"
-            },
-            {
-              "id": "i:156",
-              "type": "image"
-            }
-          ]
-        },
         "primaryChannel": {
           "data": {
             "id": "c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093",
             "type": "channel"
           }
-        },
-        "ratingDescriptors": {
-          "data": [
-            {
-              "id": "02a91282-d517-4f2a-a620-259ff2ba3408",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "4062c194-0c80-4ceb-9de5-d7f7e6e302b8",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "582e60b9-b1f7-4398-9182-a8758856209d",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "585c3be5-2532-4756-85ea-d6d25b112fe0",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "b2c2a6f6-a992-4824-b43e-d0313b43c9ae",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "b46072e6-5627-4513-a7de-7b507ad4f3ee",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "eb7063ee-e517-45d6-a816-16212f916850",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "f8e36188-362f-4a7b-9934-c7d77cb86e64",
-              "type": "contentDescriptor"
-            },
-            {
-              "id": "fe2986cc-d959-41a2-9b94-9888527997cf",
-              "type": "contentDescriptor"
-            }
-          ]
         },
         "ratings": {
           "data": [
@@ -329,34 +241,6 @@ episode:
             {
               "id": "ed01df35aae7ca31febef7d3b20dcc7539a52ea2814ab61e2430d95aabef922f",
               "type": "route"
-            }
-          ]
-        },
-        "seasons": {
-          "data": [
-            {
-              "id": "8ac35ff8-81b3-4ec9-8784-647f7e87e560",
-              "type": "season"
-            },
-            {
-              "id": "12bb061d-6469-44be-8903-fff07143f63a",
-              "type": "season"
-            },
-            {
-              "id": "e5ede846-5f83-4f59-a4ee-9a46f713aae9",
-              "type": "season"
-            },
-            {
-              "id": "2320baa2-eede-44d0-b2c7-b6cbc31aa2a5",
-              "type": "season"
-            },
-            {
-              "id": "ec9e3a70-0d56-494b-845c-1ddef6f578cb",
-              "type": "season"
-            },
-            {
-              "id": "585dfe80-ac07-492e-8035-ca557da981be",
-              "type": "season"
             }
           ]
         },
