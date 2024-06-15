@@ -81,4 +81,3 @@ func (active_video) Season() int {
 func (active_video) Episode() int {
    return 0
 }
-
