@@ -8,8 +8,6 @@ import (
    "testing"
 )
 
-const default_kid = "01021e5f16aa2c5ed02c550139b5ab82"
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -39,11 +37,9 @@ func TestLicense(t *testing.T) {
    }
    var token default_token
    token.unmarshal(text)
-   video, err := token.video(show)
-   if err != nil {
-      t.Fatal(err)
-   }
-   play, err := token.playback(video)
+   var web address
+   web.UnmarshalText([]byte(tests[0].path))
+   play, err := token.playback(web)
    if err != nil {
       t.Fatal(err)
    }
@@ -53,3 +49,5 @@ func TestLicense(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
+
+const default_kid = "01021e5f16aa2c5ed02c550139b5ab82"

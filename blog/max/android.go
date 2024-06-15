@@ -12,81 +12,11 @@ import (
    "time"
 )
 
-var android_config = key_config{
-   Id: "android1_prd",
-   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
-}
-
-func (d default_token) config() (*key_config, error) {
-   body, err := json.Marshal(map[string]string{
-      "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
-   })
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-any.prd.api.discomax.com",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
-   req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var decision struct {
-      HmacKeys struct {
-         Config struct {
-            Android key_config
-         }
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&decision)
-   if err != nil {
-      return nil, err
-   }
-   return &decision.HmacKeys.Config.Android, nil
-}
-
-func (d *default_token) login(key public_key, login default_login) error {
-   body, err := json.Marshal(login)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-amer.prd.api.discomax.com/login",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   req.Header.Set("content-type", "application/json")
-   req.Header.Set("x-disco-arkose-token", key.Token)
-   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
-   req.Header.Set("x-disco-client-id", func() string {
-      timestamp := time.Now().Unix()
-      hash := hmac.New(sha256.New, android_config.Key)
-      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
-      signature := hash.Sum(nil)
-      return fmt.Sprintf("%v:%v:%x", android_config.Id, timestamp, signature)
-   }())
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   return json.NewDecoder(resp.Body).Decode(d)
-}
-
-func (d default_token) playback(video *active_video) (*playback, error) {
+func (d default_token) playback(web address) (*playback, error) {
    body, err := func() ([]byte, error) {
       var p playback_request
       p.ConsumptionType = "streaming"
-      p.EditId = video.Data.Relationships.Edit.Data.Id
+      p.EditId = web.edit_id
       return json.Marshal(p)
    }()
    if err != nil {
@@ -112,6 +42,11 @@ func (d default_token) playback(video *active_video) (*playback, error) {
       return nil, err
    }
    defer resp.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
    play := new(playback)
    err = json.NewDecoder(resp.Body).Decode(play)
    if err != nil {
@@ -253,4 +188,73 @@ type playback struct {
 
 func (p playback) RequestUrl() (string, bool) {
    return p.Drm.Schemes.Widevine.LicenseUrl, true
+}
+var android_config = key_config{
+   Id: "android1_prd",
+   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
+}
+
+func (d default_token) config() (*key_config, error) {
+   body, err := json.Marshal(map[string]string{
+      "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
+   })
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://default.any-any.prd.api.discomax.com",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
+   req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var decision struct {
+      HmacKeys struct {
+         Config struct {
+            Android key_config
+         }
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&decision)
+   if err != nil {
+      return nil, err
+   }
+   return &decision.HmacKeys.Config.Android, nil
+}
+
+func (d *default_token) login(key public_key, login default_login) error {
+   body, err := json.Marshal(login)
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://default.any-amer.prd.api.discomax.com/login",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   req.Header.Set("content-type", "application/json")
+   req.Header.Set("x-disco-arkose-token", key.Token)
+   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
+   req.Header.Set("x-disco-client-id", func() string {
+      timestamp := time.Now().Unix()
+      hash := hmac.New(sha256.New, android_config.Key)
+      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
+      signature := hash.Sum(nil)
+      return fmt.Sprintf("%v:%v:%x", android_config.Id, timestamp, signature)
+   }())
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   return json.NewDecoder(resp.Body).Decode(d)
 }

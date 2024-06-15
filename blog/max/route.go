@@ -8,6 +8,28 @@ import (
    "time"
 )
 
+type address struct {
+   video_id string
+   edit_id string
+}
+
+type route_include struct {
+   Attributes struct {
+      AirDate time.Time
+      Name string
+      EpisodeNumber int
+      SeasonNumber int
+   }
+   Id string
+   Relationships *struct {
+      Show *struct {
+         Data struct {
+            Id string
+         }
+      }
+   }
+}
+
 func (d default_token) routes(path string) (*default_routes, error) {
    req, err := http.NewRequest(
       "", "https://default.any-amer.prd.api.discomax.com/cms/routes"+path, nil,
@@ -48,11 +70,6 @@ type default_routes struct {
       }
    }
    Included []route_include
-}
-
-type address struct {
-   video_id string
-   edit_id string
 }
 
 func (d default_routes) video() (*route_include, bool) {
@@ -96,23 +113,6 @@ func (d default_routes) Title() string {
       return v.Attributes.Name
    }
    return ""
-}
-
-type route_include struct {
-   Attributes struct {
-      AirDate time.Time
-      Name string
-      EpisodeNumber int
-      SeasonNumber int
-   }
-   Id string
-   Relationships *struct {
-      Show *struct {
-         Data struct {
-            Id string
-         }
-      }
-   }
 }
 
 func (d default_routes) Year() int {
