@@ -3,8 +3,16 @@ package max
 import (
    "encoding/json"
    "net/http"
+   "strings"
    "time"
 )
+
+func (a *address) UnmarshalText(text []byte) error {
+   split := strings.Split(string(text), "/")
+   a.video_id = split[3]
+   a.edit_id = split[4]
+   return nil
+}
 
 func (d default_token) routes(path string) (*default_routes, error) {
    req, err := http.NewRequest(
@@ -29,13 +37,46 @@ func (d default_token) routes(path string) (*default_routes, error) {
 }
 
 type default_routes struct {
-   Included []struct {
+   Data struct {
       Attributes struct {
-         AirDate time.Time
-         EpisodeNumber int
-         Name string
-         SeasonNumber int
-         Type string
+         Url address
       }
    }
+   Included []include
+}
+
+type include struct {
+   Attributes struct {
+      AirDate time.Time
+      EpisodeNumber int
+      Name string
+      SeasonNumber int
+      Type string
+   }
+   Id string
+}
+
+type address struct {
+   video_id string
+   edit_id string
+}
+
+func (d default_routes) Show() string {
+   return ""
+}
+
+func (default_routes) Season() int {
+   return 0
+}
+
+func (default_routes) Episode() int {
+   return 0
+}
+
+func (default_routes) Title() string {
+   return ""
+}
+
+func (default_routes) Year() int {
+   return 0
 }

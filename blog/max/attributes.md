@@ -54,73 +54,17 @@ movie:
       },
       "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8",
       "relationships": {
-        "contentPackages": {
-          "data": [
-            {
-              "id": "VodEntertainment",
-              "type": "package"
-            },
-            {
-              "id": "Hbo",
-              "type": "package"
-            }
-          ]
-        },
-        "creditGroups": {
-          "data": [
-            {
-              "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-starring",
-              "type": "creditGroup"
-            },
-            {
-              "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-director",
-              "type": "creditGroup"
-            },
-            {
-              "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-writers",
-              "type": "creditGroup"
-            },
-            {
-              "id": "b3b1410a-0c85-457b-bcc7-e13299bea2a8-credit-group-producers",
-              "type": "creditGroup"
-            }
-          ]
-        },
         "edit": {
           "data": {
             "id": "1623fe4c-ef6e-4dd1-a10c-4a181f5f6579",
             "type": "edit"
           }
         },
-        "images": {
-          "data": [
-            {
-              "id": "i:b",
-              "type": "image"
-            },
-            {
-              "id": "i:c",
-              "type": "image"
-            },
-            {
-              "id": "i:d",
-              "type": "image"
-            }
-          ]
-        },
         "primaryChannel": {
           "data": {
             "id": "c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093",
             "type": "channel"
           }
-        },
-        "ratings": {
-          "data": [
-            {
-              "id": "4d1bf7aa-ddc4-4641-b568-11f59abb4787",
-              "type": "contentRating"
-            }
-          ]
         },
         "show": {
           "data": {
