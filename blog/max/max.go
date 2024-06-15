@@ -2,15 +2,127 @@ package max
 
 import (
    "bytes"
-   "crypto/hmac"
-   "crypto/sha256"
    "encoding/json"
    "errors"
-   "fmt"
    "net/http"
    "net/url"
+   "strings"
    "time"
 )
+
+type address struct {
+   video_id string
+   edit_id string
+}
+
+type route_include struct {
+   Attributes struct {
+      AirDate time.Time
+      Name string
+      EpisodeNumber int
+      SeasonNumber int
+   }
+   Id string
+   Relationships *struct {
+      Show *struct {
+         Data struct {
+            Id string
+         }
+      }
+   }
+}
+
+func (d default_token) routes(path string) (*default_routes, error) {
+   req, err := http.NewRequest(
+      "", "https://default.any-amer.prd.api.discomax.com/cms/routes"+path, nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
+   req.URL.RawQuery = url.Values{
+      "include": {"default"},
+      // this is not required, but results in a smaller response
+      "page[items.size]": {"1"},
+   }.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   route := new(default_routes)
+   err = json.NewDecoder(resp.Body).Decode(route)
+   if err != nil {
+      return nil, err
+   }
+   return route, nil
+}
+
+func (a *address) UnmarshalText(text []byte) error {
+   split := strings.Split(string(text), "/")
+   a.video_id = split[3]
+   a.edit_id = split[4]
+   return nil
+}
+
+type default_routes struct {
+   Data struct {
+      Attributes struct {
+         Url address
+      }
+   }
+   Included []route_include
+}
+
+func (d default_routes) video() (*route_include, bool) {
+   for _, include := range d.Included {
+      if include.Id == d.Data.Attributes.Url.video_id {
+         return &include, true
+      }
+   }
+   return nil, false
+}
+
+func (d default_routes) Show() string {
+   if v, ok := d.video(); ok {
+      if v.Attributes.SeasonNumber >= 1 {
+         for _, include := range d.Included {
+            if include.Id == v.Relationships.Show.Data.Id {
+               return include.Attributes.Name
+            }
+         }
+      }
+   }
+   return ""
+}
+
+func (d default_routes) Season() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.SeasonNumber
+   }
+   return 0
+}
+
+func (d default_routes) Episode() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.EpisodeNumber
+   }
+   return 0
+}
+
+func (d default_routes) Title() string {
+   if v, ok := d.video(); ok {
+      return v.Attributes.Name
+   }
+   return ""
+}
+
+func (d default_routes) Year() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.AirDate.Year()
+   }
+   return 0
+}
 
 func (d default_token) playback(web address) (*playback, error) {
    body, err := func() ([]byte, error) {
@@ -42,9 +154,9 @@ func (d default_token) playback(web address) (*playback, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   if resp.StatusCode != http.StatusOK {
       var b bytes.Buffer
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    play := new(playback)
@@ -89,39 +201,11 @@ type playback_request struct {
    UserPreferences struct{} `json:"userPreferences"` // required
 }
 
-type default_login struct {
-   Credentials struct {
-      Username string `json:"username"`
-      Password string `json:"password"`
-   } `json:"credentials"`
-}
-
 type public_key struct {
    Token string
 }
 
 const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
-
-func (d *default_token) unmarshal(text []byte) error {
-   return json.Unmarshal(text, d)
-}
-
-func (d default_token) marshal() ([]byte, error) {
-   return json.MarshalIndent(d, "", " ")
-}
-
-type default_token struct {
-   Data struct {
-      Attributes struct {
-         Token string
-      }
-   }
-}
-
-type key_config struct {
-   Id string
-   Key []byte
-}
 
 func (p *public_key) New() error {
    resp, err := http.PostForm(
@@ -135,30 +219,6 @@ func (p *public_key) New() error {
    }
    defer resp.Body.Close()
    return json.NewDecoder(resp.Body).Decode(p)
-}
-
-func (d *default_token) New() error {
-   req, err := http.NewRequest(
-      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
-   )
-   if err != nil {
-      return err
-   }
-   req.Header.Set(
-      "x-device-info",
-      "BEAM-Android/4.1.1 (unknown/Android SDK built for x86; ANDROID/6.0; bafeab496eee63aa/b6746ddc-7bc7-471f-a16c-f6aaf0c34d26)",
-   )
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   return json.NewDecoder(resp.Body).Decode(d)
 }
 
 func (playback) WrapRequest(b []byte) ([]byte, error) {
@@ -188,73 +248,4 @@ type playback struct {
 
 func (p playback) RequestUrl() (string, bool) {
    return p.Drm.Schemes.Widevine.LicenseUrl, true
-}
-var android_config = key_config{
-   Id: "android1_prd",
-   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
-}
-
-func (d default_token) config() (*key_config, error) {
-   body, err := json.Marshal(map[string]string{
-      "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
-   })
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-any.prd.api.discomax.com",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
-   req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var decision struct {
-      HmacKeys struct {
-         Config struct {
-            Android key_config
-         }
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&decision)
-   if err != nil {
-      return nil, err
-   }
-   return &decision.HmacKeys.Config.Android, nil
-}
-
-func (d *default_token) login(key public_key, login default_login) error {
-   body, err := json.Marshal(login)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-amer.prd.api.discomax.com/login",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   req.Header.Set("content-type", "application/json")
-   req.Header.Set("x-disco-arkose-token", key.Token)
-   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
-   req.Header.Set("x-disco-client-id", func() string {
-      timestamp := time.Now().Unix()
-      hash := hmac.New(sha256.New, android_config.Key)
-      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
-      signature := hash.Sum(nil)
-      return fmt.Sprintf("%v:%v:%x", android_config.Id, timestamp, signature)
-   }())
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   return json.NewDecoder(resp.Body).Decode(d)
 }
