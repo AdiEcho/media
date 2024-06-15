@@ -6,6 +6,19 @@ import (
    "testing"
 )
 
+func TestAndroidConfig(t *testing.T) {
+   var token default_token
+   err := token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   config, err := token.config()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%s\n", config)
+}
+
 func TestAndroidLogin(t *testing.T) {
    var login default_login
    login.Credentials.Username = os.Getenv("max_username")
@@ -32,17 +45,4 @@ func TestAndroidLogin(t *testing.T) {
       t.Fatal(err)
    }
    os.WriteFile("token.json", text, 0666)
-}
-
-func TestAndroidConfig(t *testing.T) {
-   var token default_token
-   err := token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   config, err := token.config()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%s\n", config)
 }
