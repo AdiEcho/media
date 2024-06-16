@@ -11,6 +11,14 @@ import (
    "time"
 )
 
+const home_market = "amer"
+
+// note you can use other keys, but you need to change home_market to match
+var default_key = hmac_key{
+   Id: "android1_prd",
+   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
+}
+
 type default_decision struct {
    HmacKeys struct {
       Config struct {
@@ -23,27 +31,6 @@ type default_decision struct {
          Web *hmac_key
       }
    }
-}
-
-// const home_market = "amer"
-// 
-// var default_key = hmac_key{
-//    Id: "web1_prd",
-//    Key: []byte("9d697c21-2ec9-494b-a90d-e3de471e6e9f"),
-// }
-
-// const home_market = "emea"
-// 
-// var default_key = hmac_key{
-//    Id: "web1_prd",
-//    Key: []byte("33668920-2d1d-46c9-845c-4a513c0ed6d3"),
-// }
-
-const home_market = "amer"
-
-var default_key = hmac_key{
-   Id: "android1_prd",
-   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
 }
 
 func (d *default_token) login(key public_key, login default_login) error {

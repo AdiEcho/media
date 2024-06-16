@@ -10,41 +10,25 @@ import (
    "time"
 )
 
-type address struct {
-   video_id string
-   edit_id string
-}
-
-type route_include struct {
-   Attributes struct {
-      AirDate time.Time
-      Name string
-      EpisodeNumber int
-      SeasonNumber int
-   }
-   Id string
-   Relationships *struct {
-      Show *struct {
-         Data struct {
-            Id string
-         }
-      }
-   }
-}
-
 func (d default_token) routes(path string) (*default_routes, error) {
-   req, err := http.NewRequest(
-      "", "https://default.any-amer.prd.api.discomax.com/cms/routes"+path, nil,
-   )
+   address := func() string {
+      var b strings.Builder
+      b.WriteString("https://default.any-")
+      b.WriteString(home_market)
+      b.WriteString(".prd.api.discomax.com/cms/routes")
+      b.WriteString(path)
+      return b.String()
+   }()
+   req, err := http.NewRequest("", address, nil)
    if err != nil {
       return nil, err
    }
-   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
    req.URL.RawQuery = url.Values{
       "include": {"default"},
       // this is not required, but results in a smaller response
       "page[items.size]": {"1"},
    }.Encode()
+   req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -248,4 +232,25 @@ type playback struct {
 
 func (p playback) RequestUrl() (string, bool) {
    return p.Drm.Schemes.Widevine.LicenseUrl, true
+}
+type address struct {
+   video_id string
+   edit_id string
+}
+
+type route_include struct {
+   Attributes struct {
+      AirDate time.Time
+      Name string
+      EpisodeNumber int
+      SeasonNumber int
+   }
+   Id string
+   Relationships *struct {
+      Show *struct {
+         Data struct {
+            Id string
+         }
+      }
+   }
 }
