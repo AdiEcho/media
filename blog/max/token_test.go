@@ -6,6 +6,19 @@ import (
    "testing"
 )
 
+func TestConfig(t *testing.T) {
+   var token default_token
+   err := token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   decision, err := token.decision()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", decision)
+}
+
 func TestToken(t *testing.T) {
    var token default_token
    err := token.New()
@@ -13,19 +26,6 @@ func TestToken(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", token)
-}
-
-func TestConfig(t *testing.T) {
-   var token default_token
-   err := token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   config, err := token.config()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%s\n", config)
 }
 
 func TestLogin(t *testing.T) {

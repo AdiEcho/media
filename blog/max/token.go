@@ -11,9 +11,13 @@ import (
    "time"
 )
 
-func (d default_token) config() (*key_config, error) {
+type key []byte
+
+func (d default_token) decision() (*default_decision, error) {
    body, err := json.Marshal(map[string]string{
+      // &{Id:android1_prd Key:6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c}
       "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
+      //"projectId":"67e7aa0f-b186-4b85-9cb0-86d40a23636c",
    })
    if err != nil {
       return nil, err
@@ -32,23 +36,27 @@ func (d default_token) config() (*key_config, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   var decision struct {
-      HmacKeys struct {
-         Config struct {
-            Android key_config
-         }
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&decision)
+   decision := new(default_decision)
+   err = json.NewDecoder(resp.Body).Decode(decision)
    if err != nil {
       return nil, err
    }
-   return &decision.HmacKeys.Config.Android, nil
+   return decision, nil
 }
 
-type key_config struct {
-   Id string
-   Key []byte
+type default_decision struct {
+   Config struct {
+      Config struct {
+         HmacKeys struct {
+            Android hmac_key
+         }
+      }
+   }
+   HmacKeys struct {
+      Config struct {
+         Android hmac_key
+      }
+   }
 }
 
 type default_login struct {
@@ -95,9 +103,18 @@ func (d *default_token) New() error {
    return json.NewDecoder(resp.Body).Decode(d)
 }
 
-var android_config = key_config{
+func (k key) String() string {
+   return string(k)
+}
+
+type hmac_key struct {
+   Id string
+   Key key
+}
+
+var default_key = hmac_key{
    Id: "android1_prd",
-   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
+   Key: key("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
 }
 
 func (d *default_token) login(key public_key, login default_login) error {
@@ -117,10 +134,10 @@ func (d *default_token) login(key public_key, login default_login) error {
    req.Header.Set("authorization", "Bearer " + d.Data.Attributes.Token)
    req.Header.Set("x-disco-client-id", func() string {
       timestamp := time.Now().Unix()
-      hash := hmac.New(sha256.New, android_config.Key)
+      hash := hmac.New(sha256.New, default_key.Key)
       fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
       signature := hash.Sum(nil)
-      return fmt.Sprintf("%v:%v:%x", android_config.Id, timestamp, signature)
+      return fmt.Sprintf("%v:%v:%x", default_key.Id, timestamp, signature)
    }())
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
