@@ -11,6 +11,34 @@ import (
    "path/filepath"
 )
 
+func (f flags) authenticate() error {
+   var login default_login
+   login.Credentials.Username = os.Getenv("max_username")
+   if login.Credentials.Username == "" {
+      t.Fatal("Getenv")
+   }
+   login.Credentials.Password = os.Getenv("max_password")
+   var key public_key
+   err := key.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   var token default_token
+   err = token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = token.login(key, login)
+   if err != nil {
+      t.Fatal(err)
+   }
+   text, err := token.marshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("token.json", text, 0666)
+}
+
 func (f flags) download() error {
    var (
       auth max.Authenticate
@@ -47,7 +75,6 @@ func (f flags) download() error {
          return f.s.Download(medium)
       }
    }
-   // 2 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()
@@ -55,13 +82,4 @@ func (f flags) download() error {
       fmt.Println(medium)
    }
    return nil
-}
-
-func (f flags) authenticate() error {
-   var auth max.Authenticate
-   err := auth.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/max.json", auth.Data, 0666)
 }
