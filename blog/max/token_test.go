@@ -7,30 +7,6 @@ import (
    "testing"
 )
 
-func TestConfig(t *testing.T) {
-   var token default_token
-   err := token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   decision, err := token.decision()
-   if err != nil {
-      t.Fatal(err)
-   }
-   enc := json.NewEncoder(os.Stdout)
-   enc.SetIndent("", " ")
-   enc.Encode(decision)
-}
-
-func TestToken(t *testing.T) {
-   var token default_token
-   err := token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", token)
-}
-
 func TestLogin(t *testing.T) {
    var login default_login
    login.Credentials.Username = os.Getenv("max_username")
@@ -57,4 +33,28 @@ func TestLogin(t *testing.T) {
       t.Fatal(err)
    }
    os.WriteFile("token.json", text, 0666)
+}
+
+func TestConfig(t *testing.T) {
+   var token default_token
+   err := token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   decision, err := token.decision()
+   if err != nil {
+      t.Fatal(err)
+   }
+   enc := json.NewEncoder(os.Stdout)
+   enc.SetIndent("", " ")
+   enc.Encode(decision)
+}
+
+func TestToken(t *testing.T) {
+   var token default_token
+   err := token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", token)
 }
