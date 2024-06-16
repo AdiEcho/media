@@ -1,6 +1,7 @@
 package max
 
 import (
+   "encoding/json"
    "fmt"
    "os"
    "testing"
@@ -16,7 +17,9 @@ func TestConfig(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", decision)
+   enc := json.NewEncoder(os.Stdout)
+   enc.SetIndent("", " ")
+   enc.Encode(decision)
 }
 
 func TestToken(t *testing.T) {

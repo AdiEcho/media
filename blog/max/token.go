@@ -11,12 +11,11 @@ import (
    "time"
 )
 
-type key []byte
-
 func (d default_token) decision() (*default_decision, error) {
    body, err := json.Marshal(map[string]string{
-      // &{Id:android1_prd Key:6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c}
+      // android1_prd
       "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
+      // web1_prd
       //"projectId":"67e7aa0f-b186-4b85-9cb0-86d40a23636c",
    })
    if err != nil {
@@ -42,21 +41,6 @@ func (d default_token) decision() (*default_decision, error) {
       return nil, err
    }
    return decision, nil
-}
-
-type default_decision struct {
-   Config struct {
-      Config struct {
-         HmacKeys struct {
-            Android hmac_key
-         }
-      }
-   }
-   HmacKeys struct {
-      Config struct {
-         Android hmac_key
-      }
-   }
 }
 
 type default_login struct {
@@ -103,20 +87,6 @@ func (d *default_token) New() error {
    return json.NewDecoder(resp.Body).Decode(d)
 }
 
-func (k key) String() string {
-   return string(k)
-}
-
-type hmac_key struct {
-   Id string
-   Key key
-}
-
-var default_key = hmac_key{
-   Id: "android1_prd",
-   Key: key("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
-}
-
 func (d *default_token) login(key public_key, login default_login) error {
    body, err := json.Marshal(login)
    if err != nil {
@@ -150,4 +120,35 @@ func (d *default_token) login(key public_key, login default_login) error {
       return errors.New(b.String())
    }
    return json.NewDecoder(resp.Body).Decode(d)
+}
+
+type hmac_keys struct {
+   Android *hmac_key
+   AndroidTv *hmac_key
+   FireTv *hmac_key
+   Hwa *hmac_key
+   Ios *hmac_key
+   TvOs *hmac_key
+   Web *hmac_key
+}
+
+type default_decision struct {
+   Config struct {
+      Config struct {
+         HmacKeys hmac_keys
+      }
+   }
+   HmacKeys struct {
+      Config hmac_keys
+   }
+}
+
+type hmac_key struct {
+   Id string
+   Key []byte
+}
+
+var default_key = hmac_key{
+   Id: "android1_prd",
+   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
 }
