@@ -16,7 +16,7 @@ type flags struct {
    representation string
    s internal.Stream
    log text.LogLevel
-   web amc.WebAddress
+   address amc.Address
 }
 
 func (f *flags) New() error {
@@ -37,7 +37,7 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.web, "a", "address")
+   flag.Var(&f.address, "a", "address")
    flag.StringVar(&f.email, "e", "", "email")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.password, "p", "", "password")
@@ -53,7 +53,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.web.NID != "":
+   case f.address.NID != "":
       err := f.download()
       if err != nil {
          panic(err)

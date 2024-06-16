@@ -18,8 +18,8 @@ func (StreamInfo) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (w WebAddress) HD() OnDemand {
-   return w.video("HD")
+func (a Address) HD() OnDemand {
+   return a.video("HD")
 }
 
 func (s *StreamInfo) Unmarshal(text []byte) error {
@@ -72,8 +72,8 @@ func (o OnDemand) Info() (*StreamInfo, error) {
    return &s.Data.StreamInfos[0], nil
 }
 
-func (w WebAddress) FHD() OnDemand {
-   return w.video("FHD")
+func (a Address) FHD() OnDemand {
+   return a.video("FHD")
 }
 
 func (s StreamInfo) RequestUrl() (string, bool) {
@@ -98,7 +98,7 @@ type OnDemand struct {
    VideoType                string `json:"video_type"`
 }
 
-func (w WebAddress) video(quality string) OnDemand {
+func (a Address) video(quality string) OnDemand {
    var v OnDemand
    v.AudioLanguage = "ENG"
    v.AudioQuality = "2.0"
@@ -108,8 +108,8 @@ func (w WebAddress) video(quality string) OnDemand {
    v.SubtitleLanguage = "MIS"
    v.VideoType = "stream"
    v.DeviceIdentifier = "atvui40"
-   v.ClassificationId = w.classification_id
-   v.ContentId = w.content_id
+   v.ClassificationId = a.classification_id
+   v.ContentId = a.content_id
    v.DeviceStreamVideoQuality = quality
    return v
 }

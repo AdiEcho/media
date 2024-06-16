@@ -17,7 +17,7 @@ type flags struct {
    s internal.Stream
    secure bool
    log text.LogLevel
-   web mubi.WebAddress
+   address mubi.Address
 }
 
 func (f *flags) New() error {
@@ -38,7 +38,7 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.web, "a", "address")
+   flag.Var(&f.address, "a", "address")
    flag.BoolVar(&f.auth, "auth", false, "authenticate")
    flag.BoolVar(&f.code, "code", false, "link code")
    flag.StringVar(&f.representation, "i", "", "representation")
@@ -65,7 +65,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.web.String() != "":
+   case f.address.String() != "":
       err := f.download()
       if err != nil {
          panic(err)

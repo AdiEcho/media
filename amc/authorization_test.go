@@ -20,7 +20,7 @@ func TestContent(t *testing.T) {
    }
    auth.Unmarshal()
    for _, test := range tests {
-      var web WebAddress
+      var web Address
       web.Set(test.url)
       content, err := auth.Content(web.Path)
       if err != nil {
@@ -78,7 +78,7 @@ func TestRefresh(t *testing.T) {
 
 func TestPath(t *testing.T) {
    for _, test := range path_tests {
-      var web WebAddress
+      var web Address
       err := web.Set(test)
       if err != nil {
          t.Fatal(err)

@@ -78,27 +78,28 @@ func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-type WebAddress struct {
+type Address struct {
    NID string
    Path string
 }
 
-func (w *WebAddress) Set(s string) error {
+func (a *Address) Set(text string) error {
    var found bool
-   _, w.Path, found = strings.Cut(s, "amcplus.com")
+   _, a.Path, found = strings.Cut(text, "amcplus.com")
    if !found {
       return errors.New("amcplus.com")
    }
-   _, w.NID, found = strings.Cut(w.Path, "--")
+   _, a.NID, found = strings.Cut(a.Path, "--")
    if !found {
       return errors.New("--")
    }
    return nil
 }
 
-func (w WebAddress) String() string {
-   return w.Path
+func (a Address) String() string {
+   return a.Path
 }
+
 func cache_hash() string {
    return base64.StdEncoding.EncodeToString([]byte("ff="))
 }

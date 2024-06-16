@@ -10,13 +10,22 @@ import (
    "strings"
 )
 
+type flags struct {
+   base string
+   s internal.Stream
+   representation string
+   log text.LogLevel
+   address pluto.Address
+   forward string
+}
+
 func main() {
    var f flags
    err := f.New()
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.web, "a", "address")
+   flag.Var(&f.address, "a", "address")
    flag.StringVar(&f.base, "b", pluto.Base[0], func() string {
       var b strings.Builder
       for _, base := range pluto.Base[1:] {
@@ -33,7 +42,7 @@ func main() {
    flag.Parse()
    f.log.Set()
    f.log.SetTransport(true)
-   if f.web.String() != "" {
+   if f.address.String() != "" {
       err := f.download()
       if err != nil {
          panic(err)
@@ -41,15 +50,6 @@ func main() {
    } else {
       flag.Usage()
    }
-}
-
-type flags struct {
-   base string
-   s internal.Stream
-   representation string
-   log text.LogLevel
-   web pluto.WebAddress
-   forward string
 }
 
 func (f *flags) New() error {

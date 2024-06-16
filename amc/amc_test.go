@@ -38,7 +38,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    auth.Unmarshal()
-   var web WebAddress
+   var web Address
    web.Set(test.url)
    play, err := auth.Playback(web.NID)
    if err != nil {

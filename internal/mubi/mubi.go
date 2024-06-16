@@ -13,7 +13,7 @@ func (f flags) download() error {
       secure mubi.SecureUrl
       err error
    )
-   secure.Data, err = os.ReadFile(f.web.String() + ".json")
+   secure.Data, err = os.ReadFile(f.address.String() + ".json")
    if err != nil {
       return err
    }
@@ -21,7 +21,7 @@ func (f flags) download() error {
    // 1 VTT one
    for _, text := range secure.V.TextTrackUrls {
       if text.ID == f.representation {
-         film, err := f.web.Film()
+         film, err := f.address.Film()
          if err != nil {
             return err
          }
@@ -39,7 +39,7 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
-         film, err := f.web.Film()
+         film, err := f.address.Film()
          if err != nil {
             return err
          }
@@ -107,7 +107,7 @@ func (f flags) write_secure() error {
       return err
    }
    auth.Unmarshal()
-   film, err := f.web.Film()
+   film, err := f.address.Film()
    if err != nil {
       return err
    }
@@ -119,5 +119,5 @@ func (f flags) write_secure() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.web.String() + ".json", secure.Data, 0666)
+   return os.WriteFile(f.address.String() + ".json", secure.Data, 0666)
 }

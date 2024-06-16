@@ -53,10 +53,8 @@ type Namer struct {
    F *FilmResponse
 }
 
-func (w WebAddress) Film() (*FilmResponse, error) {
-   req, err := http.NewRequest(
-      "GET", "https://api.mubi.com/v3/films/" + w.s, nil,
-   )
+func (a Address) Film() (*FilmResponse, error) {
+   req, err := http.NewRequest("", "https://api.mubi.com/v3/films/" + a.s, nil)
    if err != nil {
       return nil, err
    }

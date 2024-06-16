@@ -9,15 +9,15 @@ import (
    "strings"
 )
 
-func (w WebAddress) Movie() (*GizmoMovie, error) {
+func (a Address) Movie() (*GizmoMovie, error) {
    req, err := http.NewRequest("", "https://gizmo.rakuten.tv", nil)
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/v3/movies/" + w.content_id
+   req.URL.Path = "/v3/movies/" + a.content_id
    req.URL.RawQuery = url.Values{
-      "market_code":       {w.market_code},
-      "classification_id": {strconv.Itoa(w.classification_id)},
+      "market_code":       {a.market_code},
+      "classification_id": {strconv.Itoa(a.classification_id)},
       "device_identifier": {"atvui40"},
    }.Encode()
    res, err := http.DefaultClient.Do(req)
@@ -38,30 +38,30 @@ func (w WebAddress) Movie() (*GizmoMovie, error) {
    return movie, nil
 }
 
-func (w WebAddress) String() string {
+func (a Address) String() string {
    var b strings.Builder
-   if w.market_code != "" {
+   if a.market_code != "" {
       b.WriteString("https://www.rakuten.tv/")
-      b.WriteString(w.market_code)
+      b.WriteString(a.market_code)
    }
-   if w.content_id != "" {
+   if a.content_id != "" {
       b.WriteString("/movies/")
-      b.WriteString(w.content_id)
+      b.WriteString(a.content_id)
    }
    return b.String()
 }
 
-func (w *WebAddress) Set(s string) error {
+func (a *Address) Set(s string) error {
    s = strings.TrimPrefix(s, "https://")
    s = strings.TrimPrefix(s, "www.")
    s = strings.TrimPrefix(s, "rakuten.tv")
    s = strings.TrimPrefix(s, "/")
    var found bool
-   w.market_code, w.content_id, found = strings.Cut(s, "/movies/")
+   a.market_code, a.content_id, found = strings.Cut(s, "/movies/")
    if !found {
       return errors.New("/movies/ not found")
    }
-   w.classification_id, found = classification_id[w.market_code]
+   a.classification_id, found = classification_id[a.market_code]
    if !found {
       return errors.New("market_code not found")
    }
@@ -103,7 +103,7 @@ func (g GizmoMovie) Year() int {
    return g.Data.Year
 }
 
-type WebAddress struct {
+type Address struct {
    classification_id int
    content_id        string
    market_code       string

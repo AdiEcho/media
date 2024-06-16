@@ -9,6 +9,14 @@ import (
    "path/filepath"
 )
 
+type flags struct {
+   s internal.Stream
+   representation string
+   log text.LogLevel
+   address rakuten.Address
+   streamings bool
+}
+
 func (f *flags) New() error {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -18,14 +26,6 @@ func (f *flags) New() error {
    f.s.ClientId = home + "/widevine/client_id.bin"
    f.s.PrivateKey = home + "/widevine/private_key.pem"
    return nil
-}
-
-type flags struct {
-   s internal.Stream
-   representation string
-   log text.LogLevel
-   address rakuten.WebAddress
-   streamings bool
 }
 
 func main() {

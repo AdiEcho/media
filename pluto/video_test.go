@@ -34,7 +34,7 @@ var video_tests = []struct {
 
 func TestVideo(t *testing.T) {
    for _, test := range video_tests {
-      var web WebAddress
+      var web Address
       web.Set(test.url)
       video, err := web.Video("")
       if err != nil {
@@ -52,7 +52,7 @@ func TestVideo(t *testing.T) {
 
 func TestAddress(t *testing.T) {
    for _, test := range video_tests {
-      var web WebAddress
+      var web Address
       web.Set(test.url)
       fmt.Println(web)
    }

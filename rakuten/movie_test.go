@@ -28,7 +28,7 @@ type movie_test struct {
 
 func TestMovie(t *testing.T) {
    for _, test := range tests {
-      var web WebAddress
+      var web Address
       err := web.Set(test.url)
       if err != nil {
          t.Fatal(err)

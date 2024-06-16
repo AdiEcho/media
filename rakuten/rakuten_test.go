@@ -32,7 +32,7 @@ func (m movie_test) license() ([]byte, error) {
    if err != nil {
       return nil, err
    }
-   var web WebAddress
+   var web Address
    web.Set(m.url)
    info, err := web.HD().Info()
    if err != nil {
@@ -50,7 +50,7 @@ func TestLicenseSe(t *testing.T) {
 }
 
 func TestFr(t *testing.T) {
-   var web WebAddress
+   var web Address
    web.Set(tests["fr"].url)
    stream, err := web.FHD().Info()
    if err != nil {
@@ -68,7 +68,7 @@ func TestLicenseFr(t *testing.T) {
 }
 
 func TestSe(t *testing.T) {
-   var web WebAddress
+   var web Address
    web.Set(tests["se"].url)
    stream, err := web.FHD().Info()
    if err != nil {

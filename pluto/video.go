@@ -37,7 +37,7 @@ func (s *Slug) atoi() error {
    return nil
 }
 
-func (w WebAddress) Video(forward string) (*Video, error) {
+func (a Address) Video(forward string) (*Video, error) {
    req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
       return nil, err
@@ -51,7 +51,7 @@ func (w WebAddress) Video(forward string) (*Video, error) {
       "clientID":          {"9"},
       "clientModelNumber": {"9"},
       "drmCapabilities":   {"widevine:L3"},
-      "seriesIDs":         {w.series},
+      "seriesIDs":         {a.series},
    }.Encode()
    res, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -66,8 +66,8 @@ func (w WebAddress) Video(forward string) (*Video, error) {
       return nil, err
    }
    demand := start.VOD[0]
-   if demand.Slug.Slug != w.series {
-      if demand.ID != w.series {
+   if demand.Slug.Slug != a.series {
+      if demand.ID != a.series {
          return nil, errors.New(demand.Slug.Slug)
       }
    }
@@ -79,10 +79,10 @@ func (w WebAddress) Video(forward string) (*Video, error) {
             return nil, err
          }
          e.parent = s
-         if e.Episode == w.episode {
+         if e.Episode == a.episode {
             return e, nil
          }
-         if e.Slug.Slug == w.episode {
+         if e.Slug.Slug == a.episode {
             return e, nil
          }
       }
@@ -130,26 +130,26 @@ func (n Namer) Title() string {
 func (n Namer) Year() int {
    return n.V.Slug.year
 }
-func (w WebAddress) String() string {
+func (a Address) String() string {
    var b strings.Builder
-   if w.series != "" {
+   if a.series != "" {
       b.WriteString("https://pluto.tv/on-demand/")
-      if w.episode != "" {
+      if a.episode != "" {
          b.WriteString("series")
       } else {
          b.WriteString("movies")
       }
       b.WriteByte('/')
-      b.WriteString(w.series)
+      b.WriteString(a.series)
    }
-   if w.episode != "" {
+   if a.episode != "" {
       b.WriteString("/episode/")
-      b.WriteString(w.episode)
+      b.WriteString(a.episode)
    }
    return b.String()
 }
 
-type WebAddress struct {
+type Address struct {
    series  string
    episode string
 }
@@ -170,23 +170,23 @@ type Slug struct {
    year    int
 }
 
-func (w *WebAddress) Set(s string) error {
+func (a *Address) Set(text string) error {
    for {
       var (
          key string
          ok  bool
       )
-      key, s, ok = strings.Cut(s, "/")
+      key, text, ok = strings.Cut(text, "/")
       if !ok {
          return nil
       }
       switch key {
       case "episode":
-         w.episode = s
+         a.episode = text
       case "movies":
-         w.series = s
+         a.series = text
       case "series":
-         w.series, s, ok = strings.Cut(s, "/")
+         a.series, text, ok = strings.Cut(text, "/")
          if !ok {
             return errors.New("episode")
          }

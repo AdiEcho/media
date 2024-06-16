@@ -17,7 +17,7 @@ var dogvilles = []string{
 
 func TestFilm(t *testing.T) {
    for i, dogville := range dogvilles {
-      var web WebAddress
+      var web Address
       err := web.Set(dogville)
       if err != nil {
          t.Fatal(err)

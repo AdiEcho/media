@@ -172,19 +172,19 @@ type LinkCode struct {
    }
 }
 
-type WebAddress struct {
+type Address struct {
    s string
 }
 
-func (w *WebAddress) Set(s string) error {
+func (a *Address) Set(text string) error {
    var ok bool
-   _, w.s, ok = strings.Cut(s, "/films/")
+   _, a.s, ok = strings.Cut(text, "/films/")
    if !ok {
       return errors.New("/films/")
    }
    return nil
 }
 
-func (w WebAddress) String() string {
-   return w.s
+func (a Address) String() string {
+   return a.s
 }
