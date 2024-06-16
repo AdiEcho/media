@@ -14,21 +14,21 @@ func TestLogin(t *testing.T) {
 		t.Fatal("Getenv")
 	}
 	login.Credentials.Password = os.Getenv("max_password")
-	var key public_key
+	var key PublicKey
 	err := key.New()
 	if err != nil {
 		t.Fatal(err)
 	}
-	var token default_token
+	var token DefaultToken
 	err = token.New()
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = token.login(key, login)
+	err = token.Login(key, login)
 	if err != nil {
 		t.Fatal(err)
 	}
-	text, err := token.marshal()
+	text, err := token.Marshal()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -36,7 +36,7 @@ func TestLogin(t *testing.T) {
 }
 
 func TestConfig(t *testing.T) {
-	var token default_token
+	var token DefaultToken
 	err := token.New()
 	if err != nil {
 		t.Fatal(err)
@@ -51,7 +51,7 @@ func TestConfig(t *testing.T) {
 }
 
 func TestToken(t *testing.T) {
-	var token default_token
+	var token DefaultToken
 	err := token.New()
 	if err != nil {
 		t.Fatal(err)

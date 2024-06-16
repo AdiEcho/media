@@ -33,7 +33,7 @@ type default_decision struct {
 	}
 }
 
-func (d *default_token) login(key public_key, login DefaultLogin) error {
+func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
 	address := func() string {
 		var b bytes.Buffer
 		b.WriteString("https://default.any-")
@@ -77,7 +77,7 @@ type hmac_key struct {
 	Key []byte
 }
 
-func (d default_token) decision() (*default_decision, error) {
+func (d DefaultToken) decision() (*default_decision, error) {
 	body, err := json.Marshal(map[string]string{
 		"projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
 	})
@@ -113,15 +113,15 @@ type DefaultLogin struct {
 	} `json:"credentials"`
 }
 
-func (d *default_token) unmarshal(text []byte) error {
+func (d *DefaultToken) unmarshal(text []byte) error {
 	return json.Unmarshal(text, d)
 }
 
-func (d default_token) marshal() ([]byte, error) {
+func (d DefaultToken) Marshal() ([]byte, error) {
 	return json.MarshalIndent(d, "", " ")
 }
 
-type default_token struct {
+type DefaultToken struct {
 	Data struct {
 		Attributes struct {
 			Token string
@@ -129,7 +129,7 @@ type default_token struct {
 	}
 }
 
-func (d *default_token) New() error {
+func (d *DefaultToken) New() error {
 	req, err := http.NewRequest(
 		"", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
 	)

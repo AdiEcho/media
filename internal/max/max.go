@@ -12,31 +12,28 @@ import (
 )
 
 func (f flags) authenticate() error {
-   var login default_login
-   login.Credentials.Username = os.Getenv("max_username")
-   if login.Credentials.Username == "" {
-      t.Fatal("Getenv")
-   }
-   login.Credentials.Password = os.Getenv("max_password")
-   var key public_key
+   var login max.DefaultLogin
+   login.Credentials.Username = f.email
+   login.Credentials.Password = f.password
+   var key max.PublicKey
    err := key.New()
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   var token default_token
+   var token max.DefaultToken
    err = token.New()
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   err = token.login(key, login)
+   err = token.Login(key, login)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   text, err := token.marshal()
+   text, err := token.Marshal()
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   os.WriteFile("token.json", text, 0666)
+   return os.WriteFile(f.home + "/max.json", text, 0666)
 }
 
 func (f flags) download() error {

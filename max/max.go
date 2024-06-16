@@ -90,7 +90,7 @@ func (d default_routes) Year() int {
 	return 0
 }
 
-func (d default_token) playback(web WebAddress) (*playback, error) {
+func (d DefaultToken) playback(web WebAddress) (*playback, error) {
 	body, err := func() ([]byte, error) {
 		var p playback_request
 		p.ConsumptionType = "streaming"
@@ -167,13 +167,13 @@ type playback_request struct {
 	UserPreferences   struct{} `json:"userPreferences"`   // required
 }
 
-type public_key struct {
+type PublicKey struct {
 	Token string
 }
 
 const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
 
-func (p *public_key) New() error {
+func (p *PublicKey) New() error {
 	resp, err := http.PostForm(
 		"https://wbd-api.arkoselabs.com/fc/gt2/public_key/"+arkose_site_key,
 		url.Values{
@@ -242,7 +242,7 @@ func (w WebAddress) MarshalText() ([]byte, error) {
 	return b.Bytes(), nil
 }
 
-func (d default_token) routes(web WebAddress) (*default_routes, error) {
+func (d DefaultToken) routes(web WebAddress) (*default_routes, error) {
 	address := func() string {
 		path, _ := web.MarshalText()
 		var b strings.Builder
