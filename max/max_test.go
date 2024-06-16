@@ -77,7 +77,7 @@ func TestRoutes(t *testing.T) {
 	for _, test := range tests {
 		var web WebAddress
 		web.UnmarshalText([]byte(test.url))
-		routes, err := token.routes(web)
+		routes, err := token.Routes(web)
 		if err != nil {
 			t.Fatal(err)
 		}

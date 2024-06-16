@@ -10,6 +10,135 @@ import (
 	"time"
 )
 
+func (d DefaultToken) Routes(web WebAddress) (*DefaultRoutes, error) {
+	address := func() string {
+		path, _ := web.MarshalText()
+		var b strings.Builder
+		b.WriteString("https://default.any-")
+		b.WriteString(home_market)
+		b.WriteString(".prd.api.discomax.com/cms/routes")
+		b.Write(path)
+		return b.String()
+	}()
+	req, err := http.NewRequest("", address, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.URL.RawQuery = url.Values{
+		"include": {"default"},
+		// this is not required, but results in a smaller response
+		"page[items.size]": {"1"},
+	}.Encode()
+	req.Header.Set("authorization", "Bearer "+d.Data.Attributes.Token)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	route := new(DefaultRoutes)
+	err = json.NewDecoder(resp.Body).Decode(route)
+	if err != nil {
+		return nil, err
+	}
+	return route, nil
+}
+
+type WebAddress struct {
+	VideoId string
+	EditId  string
+}
+
+func (w *WebAddress) UnmarshalText(text []byte) error {
+	s := string(text)
+	if !strings.Contains(s, "/video/watch/") {
+		return errors.New("/video/watch/ not found")
+	}
+	s = strings.TrimPrefix(s, "https://")
+	s = strings.TrimPrefix(s, "play.max.com")
+	s = strings.TrimPrefix(s, "/video/watch/")
+	var found bool
+	w.VideoId, w.EditId, found = strings.Cut(s, "/")
+	if !found {
+		return errors.New("/ not found")
+	}
+	return nil
+}
+
+type DefaultRoutes struct {
+	Data struct {
+		Attributes struct {
+			Url WebAddress
+		}
+	}
+	Included []route_include
+}
+
+func (d DefaultRoutes) video() (*route_include, bool) {
+	for _, include := range d.Included {
+		if include.Id == d.Data.Attributes.Url.VideoId {
+			return &include, true
+		}
+	}
+	return nil, false
+}
+
+func (d DefaultRoutes) Season() int {
+	if v, ok := d.video(); ok {
+		return v.Attributes.SeasonNumber
+	}
+	return 0
+}
+
+func (d DefaultRoutes) Episode() int {
+	if v, ok := d.video(); ok {
+		return v.Attributes.EpisodeNumber
+	}
+	return 0
+}
+
+func (d DefaultRoutes) Title() string {
+	if v, ok := d.video(); ok {
+		return v.Attributes.Name
+	}
+	return ""
+}
+
+func (d DefaultRoutes) Year() int {
+	if v, ok := d.video(); ok {
+		return v.Attributes.AirDate.Year()
+	}
+	return 0
+}
+func (d DefaultRoutes) Show() string {
+	if v, ok := d.video(); ok {
+		if v.Attributes.SeasonNumber >= 1 {
+			for _, include := range d.Included {
+				if include.Id == v.Relationships.Show.Data.Id {
+					return include.Attributes.Name
+				}
+			}
+		}
+	}
+	return ""
+}
+
+func (Playback) WrapRequest(b []byte) ([]byte, error) {
+	return b, nil
+}
+
+type Playback struct {
+	Drm struct {
+		Schemes struct {
+			Widevine struct {
+				LicenseUrl string
+			}
+		}
+	}
+	Manifest struct {
+		Url string
+	}
+}
+
 func (d DefaultToken) Playback(web WebAddress) (*Playback, error) {
 	body, err := func() ([]byte, error) {
 		var p playback_request
@@ -107,10 +236,6 @@ func (p *PublicKey) New() error {
 	return json.NewDecoder(resp.Body).Decode(p)
 }
 
-func (Playback) WrapRequest(b []byte) ([]byte, error) {
-	return b, nil
-}
-
 func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
 	return b, nil
 }
@@ -147,130 +272,4 @@ func (w WebAddress) MarshalText() ([]byte, error) {
 	b.WriteByte('/')
 	b.WriteString(w.EditId)
 	return b.Bytes(), nil
-}
-
-func (d DefaultToken) routes(web WebAddress) (*default_routes, error) {
-	address := func() string {
-		path, _ := web.MarshalText()
-		var b strings.Builder
-		b.WriteString("https://default.any-")
-		b.WriteString(home_market)
-		b.WriteString(".prd.api.discomax.com/cms/routes")
-		b.Write(path)
-		return b.String()
-	}()
-	req, err := http.NewRequest("", address, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.URL.RawQuery = url.Values{
-		"include": {"default"},
-		// this is not required, but results in a smaller response
-		"page[items.size]": {"1"},
-	}.Encode()
-	req.Header.Set("authorization", "Bearer "+d.Data.Attributes.Token)
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	route := new(default_routes)
-	err = json.NewDecoder(resp.Body).Decode(route)
-	if err != nil {
-		return nil, err
-	}
-	return route, nil
-}
-
-type Playback struct {
-	Drm struct {
-		Schemes struct {
-			Widevine struct {
-				LicenseUrl string
-			}
-		}
-	}
-	Manifest struct {
-		Url string
-	}
-}
-
-type WebAddress struct {
-	VideoId string
-	EditId  string
-}
-
-func (w *WebAddress) UnmarshalText(text []byte) error {
-	s := string(text)
-	if !strings.Contains(s, "/video/watch/") {
-		return errors.New("/video/watch/ not found")
-	}
-	s = strings.TrimPrefix(s, "https://")
-	s = strings.TrimPrefix(s, "play.max.com")
-	s = strings.TrimPrefix(s, "/video/watch/")
-	var found bool
-	w.VideoId, w.EditId, found = strings.Cut(s, "/")
-	if !found {
-		return errors.New("/ not found")
-	}
-	return nil
-}
-
-type default_routes struct {
-	Data struct {
-		Attributes struct {
-			Url WebAddress
-		}
-	}
-	Included []route_include
-}
-
-func (d default_routes) video() (*route_include, bool) {
-	for _, include := range d.Included {
-		if include.Id == d.Data.Attributes.Url.VideoId {
-			return &include, true
-		}
-	}
-	return nil, false
-}
-
-func (d default_routes) Show() string {
-	if v, ok := d.video(); ok {
-		if v.Attributes.SeasonNumber >= 1 {
-			for _, include := range d.Included {
-				if include.Id == v.Relationships.Show.Data.Id {
-					return include.Attributes.Name
-				}
-			}
-		}
-	}
-	return ""
-}
-
-func (d default_routes) Season() int {
-	if v, ok := d.video(); ok {
-		return v.Attributes.SeasonNumber
-	}
-	return 0
-}
-
-func (d default_routes) Episode() int {
-	if v, ok := d.video(); ok {
-		return v.Attributes.EpisodeNumber
-	}
-	return 0
-}
-
-func (d default_routes) Title() string {
-	if v, ok := d.video(); ok {
-		return v.Attributes.Name
-	}
-	return ""
-}
-
-func (d default_routes) Year() int {
-	if v, ok := d.video(); ok {
-		return v.Attributes.AirDate.Year()
-	}
-	return 0
 }

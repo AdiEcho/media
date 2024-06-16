@@ -46,12 +46,11 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   
-   play, err := token.playback(f.address)
+   play, err := token.Playback(f.address)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   req, err := http.NewRequest("", play.StreamUrl, nil)
+   req, err := http.NewRequest("", play.Manifest.Url, nil)
    if err != nil {
       return err
    }
@@ -61,11 +60,12 @@ func (f flags) download() error {
    }
    for _, medium := range media {
       if medium.ID == f.representation {
+         f.s.Poster = play
+         
          f.s.Name, err = auth.Details(deep)
          if err != nil {
             return err
          }
-         f.s.Poster = play
          return f.s.Download(medium)
       }
    }
