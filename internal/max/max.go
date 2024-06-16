@@ -3,12 +3,9 @@ package main
 import (
    "154.pages.dev/media/max"
    "154.pages.dev/media/internal"
-   "154.pages.dev/text"
-   "flag"
    "fmt"
    "net/http"
    "os"
-   "path/filepath"
 )
 
 func (f flags) authenticate() error {
@@ -61,8 +58,7 @@ func (f flags) download() error {
    for _, medium := range media {
       if medium.ID == f.representation {
          f.s.Poster = play
-         
-         f.s.Name, err = auth.Details(deep)
+         f.s.Name, err = token.Routes(f.address)
          if err != nil {
             return err
          }

@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+func (d *DefaultToken) Unmarshal(text []byte) error {
+	return json.Unmarshal(text, d)
+}
+
 const home_market = "amer"
 
 // note you can use other keys, but you need to change home_market to match
@@ -111,10 +115,6 @@ type DefaultLogin struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	} `json:"credentials"`
-}
-
-func (d *DefaultToken) unmarshal(text []byte) error {
-	return json.Unmarshal(text, d)
 }
 
 func (d DefaultToken) Marshal() ([]byte, error) {

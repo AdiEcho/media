@@ -38,7 +38,7 @@ func TestLicense(t *testing.T) {
 		t.Fatal(err)
 	}
 	var token DefaultToken
-	token.unmarshal(text)
+	token.Unmarshal(text)
 	var web WebAddress
 	web.UnmarshalText([]byte(tests[0].url))
 	play, err := token.Playback(web)
