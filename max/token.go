@@ -136,6 +136,7 @@ func (d *default_token) New() error {
    if err != nil {
       return err
    }
+   // fuck you Max
    req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
    resp, err := http.DefaultClient.Do(req)
    if err != nil {

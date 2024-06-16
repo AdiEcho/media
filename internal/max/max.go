@@ -15,10 +15,11 @@ type flags struct {
    email string
    s internal.Stream
    home string
-   entity max.EntityId
    representation string
    password string
    log text.LogLevel
+   
+   entity max.EntityId
 }
 
 func (f *flags) New() error {
