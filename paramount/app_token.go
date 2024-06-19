@@ -12,6 +12,10 @@ import (
    "strings"
 )
 
+func (at *AppToken) New() error {
+   return at.with(app_secrets["15.0.26"])
+}
+
 func (at AppToken) Item(content_id string) (*VideoItem, error) {
    req, err := http.NewRequest("GET", "https://www.paramountplus.com", nil)
    if err != nil {
@@ -69,11 +73,6 @@ func (at *AppToken) with(app_secret string) error {
    dst = append(dst, src...)
    *at = AppToken(base64.StdEncoding.EncodeToString(dst))
    return nil
-}
-
-func (at *AppToken) New() error {
-   app := app_details{"12.0.44", 211204450}
-   return at.with(app_secrets[app])
 }
 
 func (at AppToken) Session(content_id string) (*SessionToken, error) {

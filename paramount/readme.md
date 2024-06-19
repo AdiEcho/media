@@ -7,20 +7,6 @@ https://play.google.com/store/apps/details?id=com.cbs.app
 Create device with Android API 23. Install user certificate. Start video. After
 the commercial you might get an error, try again.
 
-## CBS
-
-212,360 titles:
-
-https://justwatch.com/us/provider/cbs
-
-which is the same as no filters:
-
-https://justwatch.com/us
-
-3,183 titles:
-
-https://justwatch.com/us/provider/paramount-plus
-
 ## TRY PARAMOUNT+
 
 1. https://paramountplus.com
