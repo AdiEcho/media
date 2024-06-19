@@ -26,18 +26,20 @@ func (at AppToken) Item(content_id string) (*VideoItem, error) {
    }()
    // this needs to be encoded
    req.URL.RawQuery = "at=" + url.QueryEscape(string(at))
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
    }
    var video struct {
       ItemList []VideoItem
    }
-   err = json.NewDecoder(res.Body).Decode(&video)
+   err = json.NewDecoder(resp.Body).Decode(&video)
    if err != nil {
       return nil, err
    }
@@ -84,13 +86,13 @@ func (at AppToken) Session(content_id string) (*SessionToken, error) {
       // this needs to be encoded
       "at": {string(at)},
    }.Encode()
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    session := new(SessionToken)
-   err = json.NewDecoder(res.Body).Decode(session)
+   err = json.NewDecoder(resp.Body).Decode(session)
    if err != nil {
       return nil, err
    }
