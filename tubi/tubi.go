@@ -37,12 +37,12 @@ func (c *Content) New(id int) error {
          "dash_widevine",
       },
    }.Encode()
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   text, err := io.ReadAll(res.Body)
+   defer resp.Body.Close()
+   text, err := io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
