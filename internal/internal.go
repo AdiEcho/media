@@ -19,7 +19,7 @@ func (s Stream) segment_base(
    initial string,
    ext string,
 ) error {
-   req, err := http.NewRequest("GET", initial, nil)
+   req, err := http.NewRequest("", initial, nil)
    if err != nil {
       return err
    }
