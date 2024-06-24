@@ -13,139 +13,11 @@ import (
    "strings"
 )
 
-func DASH(req *http.Request) ([]*dash.Representation, error) {
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   switch res.Status {
-   case "200 OK", "403 OK":
-   default:
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var media dash.Mpd
-   data, err := io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   err = media.Unmarshal(data)
-   if err != nil {
-      return nil, err
-   }
-   if media.BaseUrl == nil {
-      media.BaseUrl = &dash.URL{res.Request.URL}
-   }
-   var reps []*dash.Representation
-   for _, v := range media.Period {
-      seconds, err := v.Seconds()
-      if err != nil {
-         return nil, err
-      }
-      for _, v := range v.AdaptationSet {
-         for _, v := range v.Representation {
-            if seconds > 9 {
-               if _, ok := v.Ext(); ok {
-                  reps = append(reps, v)
-               }
-            }
-         }
-      }
-   }
-   slices.SortFunc(reps, func(a, b *dash.Representation) int {
-      return int(a.Bandwidth - b.Bandwidth)
-   })
-   return reps, nil
-}
-
-func (s Stream) segment_template(
-   rep *dash.Representation,
-   base *url.URL,
-   initial string,
-   ext string,
-) error {
-   req, err := http.NewRequest("GET", initial, nil)
-   if err != nil {
-      return err
-   }
-   req.URL = base.ResolveReference(req.URL)
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
-   }
-   file, err := func() (*os.File, error) {
-      s, err := text.Name(s.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(text.Clean(s) + ext)
-   }()
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   err = s.init_protect(file, res.Body)
-   if err != nil {
-      return err
-   }
-   key, err := s.key()
-   if err != nil {
-      return err
-   }
-   template, ok := rep.GetSegmentTemplate()
-   if !ok {
-      return errors.New("GetSegmentTemplate")
-   }
-   media, err := template.GetMedia(rep)
-   if err != nil {
-      return err
-   }
-   client := http.Client{ // github.com/golang/go/issues/18639
-      Transport: &http.Transport{
-         Proxy: http.ProxyFromEnvironment,
-         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
-      },
-   }
-   var meter text.ProgressMeter
-   meter.Set(len(media))
-   var log text.LogLevel
-   log.SetTransport(false)
-   defer log.SetTransport(true)
-   for _, medium := range media {
-      req.URL, err = base.Parse(medium)
-      if err != nil {
-         return err
-      }
-      err := func() error {
-         res, err := client.Do(req)
-         if err != nil {
-            return err
-         }
-         defer res.Body.Close()
-         if res.StatusCode != http.StatusOK {
-            var b strings.Builder
-            res.Write(&b)
-            return errors.New(b.String())
-         }
-         return write_segment(file, meter.Reader(res), key)
-      }()
-      if err != nil {
-         return err
-      }
-   }
-   return nil
-}
 func (s Stream) segment_base(
+   ext string,
    segment *dash.SegmentBase,
    base *url.URL,
    initial string,
-   ext string,
 ) error {
    req, err := http.NewRequest("", initial, nil)
    if err != nil {
@@ -200,6 +72,81 @@ func (s Stream) segment_base(
          defer res.Body.Close()
          if res.StatusCode != http.StatusPartialContent {
             return errors.New(res.Status)
+         }
+         return write_segment(file, meter.Reader(res), key)
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
+
+func (s Stream) segment_template(
+   ext string,
+   rep *dash.Representation,
+   base *url.URL,
+   initial string,
+) error {
+   req, err := http.NewRequest("", initial, nil)
+   if err != nil {
+      return err
+   }
+   req.URL = base.ResolveReference(req.URL)
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer res.Body.Close()
+   if res.StatusCode != http.StatusOK {
+      return errors.New(res.Status)
+   }
+   file, err := func() (*os.File, error) {
+      s, err := text.Name(s.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(text.Clean(s) + ext)
+   }()
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   err = s.init_protect(file, res.Body)
+   if err != nil {
+      return err
+   }
+   key, err := s.key()
+   if err != nil {
+      return err
+   }
+   client := http.Client{ // github.com/golang/go/issues/18639
+      Transport: &http.Transport{
+         Proxy: http.ProxyFromEnvironment,
+         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
+      },
+   }
+   var meter text.ProgressMeter
+   var log text.LogLevel
+   log.SetTransport(false)
+   defer log.SetTransport(true)
+   media := rep.Media()
+   meter.Set(len(media))
+   for _, medium := range media {
+      req.URL, err = base.Parse(medium)
+      if err != nil {
+         return err
+      }
+      err := func() error {
+         res, err := client.Do(req)
+         if err != nil {
+            return err
+         }
+         defer res.Body.Close()
+         if res.StatusCode != http.StatusOK {
+            var b strings.Builder
+            res.Write(&b)
+            return errors.New(b.String())
          }
          return write_segment(file, meter.Reader(res), key)
       }()
@@ -285,4 +232,44 @@ var Forward = ForwardedFor{
 {"Taiwan", "120.96.0.0"},
 {"United Kingdom", "25.0.0.0"},
 {"Venezuela", "190.72.0.0"},
+}
+func DASH(req *http.Request) ([]*dash.Representation, error) {
+   res, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer res.Body.Close()
+   switch res.Status {
+   case "200 OK", "403 OK":
+   default:
+      var b strings.Builder
+      res.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var media dash.Mpd
+   data, err := io.ReadAll(res.Body)
+   if err != nil {
+      return nil, err
+   }
+   err = media.Unmarshal(data)
+   if err != nil {
+      return nil, err
+   }
+   if media.BaseUrl == nil {
+      media.BaseUrl = &dash.Url{res.Request.URL}
+   }
+   var reps []*dash.Representation
+   for _, v := range media.Period {
+      for _, v := range v.AdaptationSet {
+         for _, v := range v.Representation {
+            if _, ok := v.Ext(); ok {
+               reps = append(reps, v)
+            }
+         }
+      }
+   }
+   slices.SortFunc(reps, func(a, b *dash.Representation) int {
+      return int(a.Bandwidth - b.Bandwidth)
+   })
+   return reps, nil
 }

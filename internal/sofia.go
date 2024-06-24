@@ -4,41 +4,46 @@ import (
    "154.pages.dev/dash"
    "154.pages.dev/sofia"
    "bytes"
-   "encoding/base64"
    "errors"
    "io"
    "net/http"
 )
 
 func (s *Stream) Download(rep *dash.Representation) error {
-   if v, ok := rep.Widevine(); ok {
-      data, err := base64.StdEncoding.DecodeString(v)
-      if err != nil {
-         return err
-      }
-      r := bytes.NewReader(data)
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
+   if data, ok := rep.Widevine(); ok {
+      read := bytes.NewReader(data)
       var pssh sofia.ProtectionSystemSpecificHeader
-      err = pssh.BoxHeader.Read(r)
+      err := pssh.BoxHeader.Read(read)
       if err != nil {
          return err
       }
-      err = pssh.Read(r)
+      err = pssh.Read(read)
       if err != nil {
          return err
       }
       s.pssh = pssh.Data
    }
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Representation.Ext")
+   mpd := rep.GetAdaptationSet().GetPeriod().GetMpd()
+   if initial, ok := rep.Initialization(); ok {
+      return s.segment_template(
+         ext,
+         
+         rep,
+         mpd.BaseUrl.U,
+         initial,
+      )
    }
-   base := rep.GetAdaptationSet().GetPeriod().GetMpd().BaseUrl.URL
-   if v, ok := rep.GetSegmentTemplate(); ok {
-      if v, ok := v.GetInitialization(rep); ok {
-         return s.segment_template(rep, base, v, ext)
-      }
-   }
-   return s.segment_base(rep.SegmentBase, base, *rep.BaseUrl, ext)
+   return s.segment_base(
+      ext,
+      
+      rep.SegmentBase,
+      mpd.BaseUrl.U,
+      rep.BaseUrl.U.String(),
+   )
 }
 
 func (s *Stream) init_protect(to io.Writer, from io.Reader) error {
