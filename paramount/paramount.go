@@ -157,6 +157,7 @@ func (v VideoItem) Show() string {
    }
    return ""
 }
+
 func location(content_id string, query url.Values) (string, error) {
    client := http.Client{
       CheckRedirect: func(*http.Request, []*http.Request) error {
