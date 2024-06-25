@@ -13,24 +13,57 @@ import (
    "strings"
 )
 
+func DASH(req *http.Request) ([]*dash.Representation, error) {
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   switch resp.Status {
+   case "200 OK", "403 OK":
+   default:
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var media dash.Mpd
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   err = media.Unmarshal(data)
+   if err != nil {
+      return nil, err
+   }
+   if media.BaseUrl == nil {
+      media.BaseUrl = &dash.Url{resp.Request.URL}
+   }
+   var reps []*dash.Representation
+   for _, v := range media.Period {
+      for _, v := range v.AdaptationSet {
+         reps = append(reps, v.Representation...)
+      }
+   }
+   slices.SortFunc(reps, func(a, b *dash.Representation) int {
+      return int(a.Bandwidth - b.Bandwidth)
+   })
+   return reps, nil
+}
+
 func (s Stream) segment_base(
    ext string,
+   initial, base *url.URL,
    segment *dash.SegmentBase,
-   base *url.URL,
-   initial string,
 ) error {
-   req, err := http.NewRequest("", initial, nil)
-   if err != nil {
-      return err
-   }
-   req.URL = base.ResolveReference(req.URL)
+   req := new(http.Request)
+   req.URL = base.ResolveReference(initial)
    data, _ := segment.Initialization.Range.MarshalText()
    req.Header.Set("Range", "bytes=" + string(data))
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    file, err := func() (*os.File, error) {
       s, err := text.Name(s.Name)
       if err != nil {
@@ -42,7 +75,7 @@ func (s Stream) segment_base(
       return err
    }
    defer file.Close()
-   err = s.init_protect(file, res.Body)
+   err = s.init_protect(file, resp.Body)
    if err != nil {
       return err
    }
@@ -65,15 +98,15 @@ func (s Stream) segment_base(
       data, _ := segment.IndexRange.MarshalText()
       err := func() error {
          req.Header.Set("Range", "bytes=" + string(data))
-         res, err := http.DefaultClient.Do(req)
+         resp, err := http.DefaultClient.Do(req)
          if err != nil {
             return err
          }
-         defer res.Body.Close()
-         if res.StatusCode != http.StatusPartialContent {
-            return errors.New(res.Status)
+         defer resp.Body.Close()
+         if resp.StatusCode != http.StatusPartialContent {
+            return errors.New(resp.Status)
          }
-         return write_segment(file, meter.Reader(res), key)
+         return write_segment(file, meter.Reader(resp), key)
       }()
       if err != nil {
          return err
@@ -83,23 +116,22 @@ func (s Stream) segment_base(
 }
 
 func (s Stream) segment_template(
-   ext string,
-   rep *dash.Representation,
+   ext, initial string,
    base *url.URL,
-   initial string,
+   rep *dash.Representation,
 ) error {
    req, err := http.NewRequest("", initial, nil)
    if err != nil {
       return err
    }
    req.URL = base.ResolveReference(req.URL)
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
    }
    file, err := func() (*os.File, error) {
       s, err := text.Name(s.Name)
@@ -112,7 +144,7 @@ func (s Stream) segment_template(
       return err
    }
    defer file.Close()
-   err = s.init_protect(file, res.Body)
+   err = s.init_protect(file, resp.Body)
    if err != nil {
       return err
    }
@@ -138,17 +170,17 @@ func (s Stream) segment_template(
          return err
       }
       err := func() error {
-         res, err := client.Do(req)
+         resp, err := client.Do(req)
          if err != nil {
             return err
          }
-         defer res.Body.Close()
-         if res.StatusCode != http.StatusOK {
+         defer resp.Body.Close()
+         if resp.StatusCode != http.StatusOK {
             var b strings.Builder
-            res.Write(&b)
+            resp.Write(&b)
             return errors.New(b.String())
          }
-         return write_segment(file, meter.Reader(res), key)
+         return write_segment(file, meter.Reader(resp), key)
       }()
       if err != nil {
          return err
@@ -158,11 +190,11 @@ func (s Stream) segment_template(
 }
 
 func (s Stream) TimedText(url string) error {
-   res, err := http.Get(url)
+   resp, err := http.Get(url)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    file, err := func() (*os.File, error) {
       s, err := text.Name(s.Name)
       if err != nil {
@@ -174,7 +206,7 @@ func (s Stream) TimedText(url string) error {
       return err
    }
    defer file.Close()
-   _, err = file.ReadFrom(res.Body)
+   _, err = file.ReadFrom(resp.Body)
    if err != nil {
       return err
    }
@@ -232,44 +264,4 @@ var Forward = ForwardedFor{
 {"Taiwan", "120.96.0.0"},
 {"United Kingdom", "25.0.0.0"},
 {"Venezuela", "190.72.0.0"},
-}
-func DASH(req *http.Request) ([]*dash.Representation, error) {
-   res, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer res.Body.Close()
-   switch res.Status {
-   case "200 OK", "403 OK":
-   default:
-      var b strings.Builder
-      res.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var media dash.Mpd
-   data, err := io.ReadAll(res.Body)
-   if err != nil {
-      return nil, err
-   }
-   err = media.Unmarshal(data)
-   if err != nil {
-      return nil, err
-   }
-   if media.BaseUrl == nil {
-      media.BaseUrl = &dash.Url{res.Request.URL}
-   }
-   var reps []*dash.Representation
-   for _, v := range media.Period {
-      for _, v := range v.AdaptationSet {
-         for _, v := range v.Representation {
-            if _, ok := v.Ext(); ok {
-               reps = append(reps, v)
-            }
-         }
-      }
-   }
-   slices.SortFunc(reps, func(a, b *dash.Representation) int {
-      return int(a.Bandwidth - b.Bandwidth)
-   })
-   return reps, nil
 }

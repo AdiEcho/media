@@ -35,7 +35,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          f.s.Name, err = auth.Details(deep)
          if err != nil {
             return err

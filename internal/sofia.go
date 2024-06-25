@@ -30,19 +30,15 @@ func (s *Stream) Download(rep *dash.Representation) error {
    mpd := rep.GetAdaptationSet().GetPeriod().GetMpd()
    if initial, ok := rep.Initialization(); ok {
       return s.segment_template(
-         ext,
-         
-         rep,
+         ext, initial,
          mpd.BaseUrl.U,
-         initial,
+         rep,
       )
    }
    return s.segment_base(
       ext,
-      
+      rep.BaseUrl.U, mpd.BaseUrl.U,
       rep.SegmentBase,
-      mpd.BaseUrl.U,
-      rep.BaseUrl.U.String(),
    )
 }
 

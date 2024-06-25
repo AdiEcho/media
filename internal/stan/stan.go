@@ -36,7 +36,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          var program stan.LegacyProgram
          err := program.New(f.stan)
          if err != nil {

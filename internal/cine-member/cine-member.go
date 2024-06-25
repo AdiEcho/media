@@ -62,7 +62,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          f.s.Name = encode
          return f.s.Download(medium)
       }
@@ -75,6 +75,7 @@ func (f flags) download() error {
    }
    return nil
 }
+
 func (f flags) authenticate() error {
    var auth member.Authenticate
    err := auth.New(f.email, f.password)
@@ -87,4 +88,3 @@ func (f flags) authenticate() error {
 func (f flags) play_name() string {
    return path.Base(string(f.slug)) + ".json"
 }
-

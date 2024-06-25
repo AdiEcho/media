@@ -41,7 +41,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          f.s.Name = item
          f.s.Poster = file
          return f.s.Download(medium)

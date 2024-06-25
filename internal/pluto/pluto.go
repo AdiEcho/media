@@ -31,7 +31,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          f.s.Name = pluto.Namer{video}
          f.s.Poster = pluto.Poster{}
          return f.s.Download(medium)

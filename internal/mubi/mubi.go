@@ -18,7 +18,6 @@ func (f flags) download() error {
       return err
    }
    secure.Unmarshal()
-   // 1 VTT one
    for _, text := range secure.V.TextTrackUrls {
       if text.ID == f.representation {
          film, err := f.address.Film()
@@ -38,7 +37,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          film, err := f.address.Film()
          if err != nil {
             return err

@@ -38,7 +38,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          content, err := auth.Content(f.address.Path)
          if err != nil {
             return err

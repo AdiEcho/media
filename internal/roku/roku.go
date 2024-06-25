@@ -34,7 +34,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          var home roku.HomeScreen
          err := home.New(f.roku)
          if err != nil {

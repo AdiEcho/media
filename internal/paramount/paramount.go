@@ -21,7 +21,7 @@ func (f flags) dash(app paramount.AppToken) error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          f.s.Poster, err = app.Session(f.paramount)
          if err != nil {
             return err
@@ -33,7 +33,6 @@ func (f flags) dash(app paramount.AppToken) error {
          return f.s.Download(medium)
       }
    }
-   // 2 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()

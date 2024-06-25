@@ -24,18 +24,18 @@ func (a AppSession) Stream(id int64) (*ProgramStream, error) {
       "programId": {strconv.FormatInt(id, 10)},
       "quality": {"auto"}, // note `high` or `ultra` should work too
    }.Encode()
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    stream := new(ProgramStream)
-   err = json.NewDecoder(res.Body).Decode(stream)
+   err = json.NewDecoder(resp.Body).Decode(stream)
    if err != nil {
       return nil, err
    }

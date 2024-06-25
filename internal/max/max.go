@@ -56,7 +56,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          f.s.Poster = play
          f.s.Name, err = token.Routes(f.address)
          if err != nil {

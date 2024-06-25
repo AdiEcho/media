@@ -40,7 +40,7 @@ func (f flags) download() error {
       return err
    }
    for _, medium := range media {
-      if medium.ID == f.representation {
+      if medium.Id == f.representation {
          f.s.Name = draken.Namer{movie}
          f.s.Poster = draken.Poster{auth, play}
          return f.s.Download(medium)

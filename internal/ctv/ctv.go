@@ -56,7 +56,7 @@ func (f flags) download() error {
       return err
    }
    for _, represent := range represents {
-      if represent.ID == f.representation {
+      if represent.Id == f.representation {
          f.s.Name = manifest
          f.s.Poster = ctv.Poster{}
          return f.s.Download(represent)
