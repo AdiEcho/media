@@ -22,19 +22,19 @@ func (a Authenticate) Details(d *DeepLink) (*Details, error) {
    if err != nil {
       return nil, err
    }
-   req.Header.Set("Authorization", "Bearer " + a.v.Data.UserToken)
-   res, err := http.DefaultClient.Do(req)
+   req.Header.Set("authorization", "Bearer " + a.v.Data.UserToken)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
    }
    var s struct {
       Items []Details
    }
-   err = json.NewDecoder(res.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&s)
    if err != nil {
       return nil, err
    }

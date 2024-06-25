@@ -20,13 +20,13 @@ func (a AxisContent) Media() (*MediaContent, error) {
       b = append(b, "?$include=[ContentPackages,Media,Season]"...)
       return string(b)
    }()
-   res, err := http.Get(address)
+   resp, err := http.Get(address)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    media := new(MediaContent)
-   err = json.NewDecoder(res.Body).Decode(media)
+   err = json.NewDecoder(resp.Body).Decode(media)
    if err != nil {
       return nil, err
    }
@@ -79,17 +79,17 @@ func (r ResolvePath) Axis() (*AxisContent, error) {
    }
    // you need this for the first request, then can omit
    req.Header.Set("graphql-client-platform", "entpay_web")
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    var s struct {
       Data struct {
          AxisContent AxisContent
       }
    }
-   err = json.NewDecoder(res.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&s)
    if err != nil {
       return nil, err
    }
@@ -120,17 +120,17 @@ func (a AxisContent) Manifest(m *MediaContent) (*MediaManifest, error) {
       b = append(b, "/manifest.mpd?action=reference"...)
       return string(b)
    }()
-   res, err := http.Get(address)
+   resp, err := http.Get(address)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   text, err := io.ReadAll(res.Body)
+   text, err := io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }

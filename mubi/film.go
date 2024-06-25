@@ -30,14 +30,14 @@ func (a Authenticate) Viewing(film *FilmResponse) error {
       "Client": {client},
       "Client-Country": {ClientCountry},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return errors.New(b.String())
    }
    return nil
@@ -62,18 +62,19 @@ func (a Address) Film() (*FilmResponse, error) {
       "Client": {client},
       "Client-Country": {ClientCountry},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    film := new(FilmResponse)
-   err = json.NewDecoder(res.Body).Decode(film)
+   err = json.NewDecoder(resp.Body).Decode(film)
    if err != nil {
       return nil, err
    }
    return film, nil
 }
+
 func (a Authenticate) URL(film *FilmResponse) (*SecureUrl, error) {
    req, err := http.NewRequest("GET", "https://api.mubi.com", nil)
    if err != nil {
@@ -90,18 +91,18 @@ func (a Authenticate) URL(film *FilmResponse) (*SecureUrl, error) {
       "Client": {client},
       "Client-Country": {ClientCountry},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    var secure SecureUrl
-   secure.Data, err = io.ReadAll(res.Body)
+   secure.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }

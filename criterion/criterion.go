@@ -23,18 +23,18 @@ func (a AuthToken) Video(slug string) (*EmbedItem, error) {
       return b.String()
    }()
    req.Header.Set("authorization", "Bearer "+a.V.AccessToken)
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    item := new(EmbedItem)
-   err = json.NewDecoder(res.Body).Decode(item)
+   err = json.NewDecoder(resp.Body).Decode(item)
    if err != nil {
       return nil, err
    }
@@ -75,7 +75,7 @@ func (e EmbedItem) Year() int {
 const client_id = "9a87f110f79cd25250f6c7f3a6ec8b9851063ca156dae493bf362a7faf146c78"
 
 func (a *AuthToken) New(username, password string) error {
-   res, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
+   resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
       "client_id":  {client_id},
       "grant_type": {"password"},
       "password":   {password},
@@ -84,8 +84,8 @@ func (a *AuthToken) New(username, password string) error {
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   a.Data, err = io.ReadAll(res.Body)
+   defer resp.Body.Close()
+   a.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }

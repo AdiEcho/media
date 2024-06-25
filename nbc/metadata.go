@@ -53,14 +53,14 @@ func (m *Metadata) New(guid int) error {
    if err != nil {
       return err
    }
-   res, err := http.Post(
+   resp, err := http.Post(
       "https://friendship.nbc.co/v2/graphql", "application/json",
       bytes.NewReader(body),
    )
    if err != nil {
       return err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    var s struct {
       Data struct {
          BonanzaPage struct {
@@ -71,7 +71,7 @@ func (m *Metadata) New(guid int) error {
          Message string
       }
    }
-   err = json.NewDecoder(res.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&s)
    if err != nil {
       return err
    }

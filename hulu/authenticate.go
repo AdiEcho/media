@@ -34,18 +34,18 @@ func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
       "namespace": {"entity"},
    }.Encode()
    req.Header.Set("Authorization", "Bearer " + a.v.Data.UserToken)
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    link := new(DeepLink)
-   err = json.NewDecoder(res.Body).Decode(link)
+   err = json.NewDecoder(resp.Body).Decode(link)
    if err != nil {
       return nil, err
    }
@@ -53,7 +53,7 @@ func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
 }
 
 func (a *Authenticate) New(email, password string) error {
-   res, err := http.PostForm(
+   resp, err := http.PostForm(
       "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
          "friendly_name": {"!"},
          "password": {password},
@@ -64,13 +64,13 @@ func (a *Authenticate) New(email, password string) error {
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return errors.New(b.String())
    }
-   a.Data, err = io.ReadAll(res.Body)
+   a.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -130,18 +130,18 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       "Authorization": {"Bearer " + a.v.Data.UserToken},
       "Content-Type": {"application/json"},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b bytes.Buffer
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    play := new(Playlist)
-   err = json.NewDecoder(res.Body).Decode(play)
+   err = json.NewDecoder(resp.Body).Decode(play)
    if err != nil {
       return nil, err
    }

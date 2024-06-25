@@ -61,11 +61,11 @@ func NewMovie(custom_id string) (*FullMovie, error) {
    }
    magine_accesstoken.set(req.Header)
    x_forwarded_for.set(req.Header)
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    var s struct {
       Data struct {
          Viewer struct {
@@ -73,7 +73,7 @@ func NewMovie(custom_id string) (*FullMovie, error) {
          }
       }
    }
-   err = json.NewDecoder(res.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&s)
    if err != nil {
       return nil, err
    }

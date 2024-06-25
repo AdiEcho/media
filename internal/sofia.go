@@ -77,13 +77,13 @@ func (s *Stream) init_protect(to io.Writer, from io.Reader) error {
 func write_sidx(req *http.Request, r dash.Range) ([]sofia.Reference, error) {
    data, _ := r.MarshalText()
    req.Header.Set("Range", "bytes=" + string(data))
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    var file sofia.File
-   err = file.Read(res.Body)
+   err = file.Read(resp.Body)
    if err != nil {
       return nil, err
    }

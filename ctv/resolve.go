@@ -35,12 +35,12 @@ func (p Path) Resolve() (*ResolvePath, error) {
    }
    // you need this for the first request, then can omit
    req.Header.Set("graphql-client-platform", "entpay_web")
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   text, err := io.ReadAll(res.Body)
+   defer resp.Body.Close()
+   text, err := io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }

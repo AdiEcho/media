@@ -17,18 +17,18 @@ func (a AuthLogin) Entitlement(f *FullMovie) (*Entitlement, error) {
    req.URL.Path = "/api/entitlement/v2/asset/" + f.DefaultPlayable.ID
    req.Header.Set("authorization", "Bearer "+a.v.Token)
    magine_accesstoken.set(req.Header)
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    title := new(Entitlement)
-   err = json.NewDecoder(res.Body).Decode(title)
+   err = json.NewDecoder(resp.Body).Decode(title)
    if err != nil {
       return nil, err
    }
@@ -53,18 +53,18 @@ func (a AuthLogin) Playback(
    req.Header.Set("magine-play-deviceid", "!")
    req.Header.Set("magine-play-entitlementid", title.Token)
    x_forwarded_for.set(req.Header)
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    play := new(Playback)
-   err = json.NewDecoder(res.Body).Decode(play)
+   err = json.NewDecoder(resp.Body).Decode(play)
    if err != nil {
       return nil, err
    }
@@ -173,15 +173,14 @@ func (a *AuthLogin) New(identity, key string) error {
       return err
    }
    req.Header.Set("content-type", "application/json")
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   a.Data, err = io.ReadAll(res.Body)
+   defer resp.Body.Close()
+   a.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
    return nil
 }
-

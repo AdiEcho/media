@@ -43,18 +43,18 @@ func (a AuthToken) Files(item *EmbedItem) (VideoFiles, error) {
       return nil, err
    }
    req.Header.Set("authorization", "Bearer "+a.V.AccessToken)
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    var files VideoFiles
-   err = json.NewDecoder(res.Body).Decode(&files)
+   err = json.NewDecoder(resp.Body).Decode(&files)
    if err != nil {
       return nil, err
    }

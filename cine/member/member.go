@@ -50,12 +50,12 @@ func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
       "authorization": {"Bearer " + a.V.Data.UserAuthenticate.AccessToken},
       "content-type":  {"application/json"},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   text, err := io.ReadAll(res.Body)
+   defer resp.Body.Close()
+   text, err := io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
@@ -118,15 +118,15 @@ func (a *Authenticate) New(email, password string) error {
    if err != nil {
       return err
    }
-   res, err := http.Post(
+   resp, err := http.Post(
       "https://api.audienceplayer.com/graphql/2/user",
       "application/json", bytes.NewReader(body),
    )
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   a.Data, err = io.ReadAll(res.Body)
+   defer resp.Body.Close()
+   a.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }

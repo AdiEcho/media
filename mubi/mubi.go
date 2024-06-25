@@ -106,18 +106,18 @@ func (c LinkCode) Authenticate() (*Authenticate, error) {
       "Client-Country": {ClientCountry},
       "Content-Type": {"application/json"},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b bytes.Buffer
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    var auth Authenticate
-   auth.Data, err = io.ReadAll(res.Body)
+   auth.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
@@ -133,17 +133,17 @@ func (c *LinkCode) New() error {
       "Client": {client},
       "Client-Country": {ClientCountry},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return errors.New(b.String())
    }
-   c.Data, err = io.ReadAll(res.Body)
+   c.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
