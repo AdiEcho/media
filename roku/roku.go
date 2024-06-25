@@ -30,18 +30,18 @@ func (a AccountToken) Playback(roku_id string) (*Playback, error) {
       "user-agent":           {user_agent},
       "x-roku-content-token": {a.AuthToken},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    play := new(Playback)
-   err = json.NewDecoder(res.Body).Decode(play)
+   err = json.NewDecoder(resp.Body).Decode(play)
    if err != nil {
       return nil, err
    }
@@ -67,13 +67,13 @@ func (a AccountToken) Code() (*ActivationCode, error) {
       "user-agent":           {user_agent},
       "x-roku-content-token": {a.AuthToken},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    code := ActivationCode{Account: a}
-   err = json.NewDecoder(res.Body).Decode(&code.V)
+   err = json.NewDecoder(resp.Body).Decode(&code.V)
    if err != nil {
       return nil, err
    }
@@ -112,13 +112,13 @@ func (a ActivationCode) Token() (*ActivationToken, error) {
       "user-agent":           {user_agent},
       "x-roku-content-token": {a.Account.AuthToken},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    var token ActivationToken
-   token.Data, err = io.ReadAll(res.Body)
+   token.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
@@ -177,12 +177,12 @@ func (a *AccountToken) New(token *ActivationToken) error {
    if token != nil {
       req.Header.Set("x-roku-content-token", token.V.Token)
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(a)
+   defer resp.Body.Close()
+   return json.NewDecoder(resp.Body).Decode(a)
 }
 
 type AccountToken struct {

@@ -50,14 +50,14 @@ func (o OnDemand) Info() (*StreamInfo, error) {
       return nil, err
    }
    req.Header.Set("content-type", "application/json")
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b bytes.Buffer
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    var s struct {
@@ -65,7 +65,7 @@ func (o OnDemand) Info() (*StreamInfo, error) {
          StreamInfos []StreamInfo `json:"stream_infos"`
       }
    }
-   err = json.NewDecoder(res.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&s)
    if err != nil {
       return nil, err
    }

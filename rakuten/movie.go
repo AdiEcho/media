@@ -20,18 +20,18 @@ func (a Address) Movie() (*GizmoMovie, error) {
       "classification_id": {strconv.Itoa(a.classification_id)},
       "device_identifier": {"atvui40"},
    }.Encode()
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    movie := new(GizmoMovie)
-   err = json.NewDecoder(res.Body).Decode(movie)
+   err = json.NewDecoder(resp.Body).Decode(movie)
    if err != nil {
       return nil, err
    }

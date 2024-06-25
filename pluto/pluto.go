@@ -66,16 +66,16 @@ func (v Video) Clip() (*EpisodeClip, error) {
       b.WriteString("/clips.json")
       return b.String()
    }()
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
    }
    var clips []EpisodeClip
-   err = json.NewDecoder(res.Body).Decode(&clips)
+   err = json.NewDecoder(resp.Body).Decode(&clips)
    if err != nil {
       return nil, err
    }

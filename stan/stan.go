@@ -17,12 +17,12 @@ func (p *LegacyProgram) New(id int64) error {
       b = append(b, ".json"...)
       return string(b)
    }()
-   res, err := http.Get(address)
+   resp, err := http.Get(address)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(p)
+   defer resp.Body.Close()
+   return json.NewDecoder(resp.Body).Decode(p)
 }
 
 type Namer struct {
@@ -58,7 +58,7 @@ type WebToken struct {
 }
 
 func (w WebToken) Session() (*AppSession, error) {
-   res, err := http.PostForm(
+   resp, err := http.PostForm(
       "https://api.stan.com.au/login/v1/sessions/mobile/app", url.Values{
          "jwToken": {w.V.JwToken},
       },
@@ -66,14 +66,14 @@ func (w WebToken) Session() (*AppSession, error) {
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    session := new(AppSession)
-   err = json.NewDecoder(res.Body).Decode(session)
+   err = json.NewDecoder(resp.Body).Decode(session)
    if err != nil {
       return nil, err
    }
@@ -92,7 +92,7 @@ type ActivationCode struct {
 }
 
 func (a *ActivationCode) New() error {
-   res, err := http.PostForm(
+   resp, err := http.PostForm(
       "https://api.stan.com.au/login/v1/activation-codes/", url.Values{
          "generate": {"true"},
       },
@@ -100,8 +100,8 @@ func (a *ActivationCode) New() error {
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   a.Data, err = io.ReadAll(res.Body)
+   defer resp.Body.Close()
+   a.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -119,18 +119,18 @@ func (a ActivationCode) String() string {
 }
 
 func (a ActivationCode) Token() (*WebToken, error) {
-   res, err := http.Get(a.V.URL)
+   resp, err := http.Get(a.V.URL)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    var web WebToken
-   web.Data, err = io.ReadAll(res.Body)
+   web.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }

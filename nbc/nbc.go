@@ -101,16 +101,16 @@ func (m Metadata) OnDemand() (*OnDemand, error) {
       "platform": {"web"},
       "programmingType": {m.ProgrammingType},
    }.Encode()
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
    }
    video := new(OnDemand)
-   err = json.NewDecoder(res.Body).Decode(video)
+   err = json.NewDecoder(resp.Body).Decode(video)
    if err != nil {
       return nil, err
    }

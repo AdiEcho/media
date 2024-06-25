@@ -177,19 +177,19 @@ func location(content_id string, query url.Values) (string, error) {
       return string(b)
    }()
    req.URL.RawQuery = query.Encode()
-   res, err := client.Do(req)
+   resp, err := client.Do(req)
    if err != nil {
       return "", err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusFound {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusFound {
       var s struct {
          Description string
       }
-      json.NewDecoder(res.Body).Decode(&s)
+      json.NewDecoder(resp.Body).Decode(&s)
       return "", errors.New(s.Description)
    }
-   return res.Header.Get("Location"), nil
+   return resp.Header.Get("Location"), nil
 }
 
 type SessionToken struct {

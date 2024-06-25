@@ -54,17 +54,17 @@ func (h *HomeScreen) New(id string) error {
       }())
       return url.PathEscape(b.String())
    }())
-   res, err := client.Get(b.String())
+   resp, err := client.Get(b.String())
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return errors.New(b.String())
    }
-   return json.NewDecoder(res.Body).Decode(h)
+   return json.NewDecoder(resp.Body).Decode(h)
 }
 
 type Namer struct {

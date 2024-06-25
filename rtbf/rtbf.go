@@ -26,13 +26,13 @@ func (a AccountLogin) Token() (*WebToken, error) {
       return nil, err
    }
    req.Header.Set("content-type", "application/x-www-form-urlencoded")
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    var web WebToken
-   err = json.NewDecoder(res.Body).Decode(&web)
+   err = json.NewDecoder(resp.Body).Decode(&web)
    if err != nil {
       return nil, err
    }
@@ -56,12 +56,12 @@ func (a *AccountLogin) New(id, password string) error {
       return err
    }
    req.Header.Set("content-type", "application/x-www-form-urlencoded")
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   err = json.NewDecoder(res.Body).Decode(a)
+   defer resp.Body.Close()
+   err = json.NewDecoder(resp.Body).Decode(a)
    if err != nil {
       return err
    }
@@ -150,18 +150,18 @@ func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
       "authorization":   {"Bearer " + g.SessionToken},
       "x-forwarded-for": {"91.90.123.17"},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    title := new(Entitlement)
-   err = json.NewDecoder(res.Body).Decode(title)
+   err = json.NewDecoder(resp.Body).Decode(title)
    if err != nil {
       return nil, err
    }
@@ -197,13 +197,13 @@ func (w WebToken) Login() (*GigyaLogin, error) {
    }
    req.URL.Path = "/v2/customer/RTBF/businessunit/Auvio/auth/gigyaLogin"
    req.Header.Set("content-type", "application/json")
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    login := new(GigyaLogin)
-   err = json.NewDecoder(res.Body).Decode(login)
+   err = json.NewDecoder(resp.Body).Decode(login)
    if err != nil {
       return nil, err
    }

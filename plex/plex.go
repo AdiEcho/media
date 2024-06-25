@@ -18,20 +18,20 @@ func (a Anonymous) Video(d *DiscoverMatch, forward string) (*OnDemand, error) {
    if forward != "" {
       req.Header.Set("x-forwarded-for", forward)
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
    }
    var s struct {
       MediaContainer struct {
          Metadata []OnDemand
       }
    }
-   err = json.NewDecoder(res.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&s)
    if err != nil {
       return nil, err
    }
@@ -95,12 +95,12 @@ func (a *Anonymous) New() error {
       "X-Plex-Product": {"Plex Mediaverse"},
       "X-Plex-Client-Identifier": {"!"},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   return json.NewDecoder(res.Body).Decode(a)
+   defer resp.Body.Close()
+   return json.NewDecoder(resp.Body).Decode(a)
 }
 
 func (a Anonymous) abs(path string, query url.Values) string {

@@ -39,18 +39,18 @@ func (a AuvioPage) asset_id() string {
 }
 
 func NewPage(path string) (*AuvioPage, error) {
-   res, err := http.Get("https://bff-service.rtbf.be/auvio/v1.23/pages" + path)
+   resp, err := http.Get("https://bff-service.rtbf.be/auvio/v1.23/pages" + path)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
    }
    var s struct {
       Data AuvioPage
    }
-   err = json.NewDecoder(res.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&s)
    if err != nil {
       return nil, err
    }

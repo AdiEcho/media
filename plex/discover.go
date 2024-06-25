@@ -38,20 +38,20 @@ func (a Anonymous) Discover(p Path) (*DiscoverMatch, error) {
       "url": {p.s},
       "x-plex-token": {a.AuthToken},
    }.Encode()
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return nil, errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
    }
    var match struct {
       MediaContainer struct {
          Metadata []DiscoverMatch
       }
    }
-   err = json.NewDecoder(res.Body).Decode(&match)
+   err = json.NewDecoder(resp.Body).Decode(&match)
    if err != nil {
       return nil, err
    }

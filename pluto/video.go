@@ -53,15 +53,15 @@ func (a Address) Video(forward string) (*Video, error) {
       "drmCapabilities":   {"widevine:L3"},
       "seriesIDs":         {a.series},
    }.Encode()
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    var start struct {
       VOD []Video
    }
-   err = json.NewDecoder(res.Body).Decode(&start)
+   err = json.NewDecoder(resp.Body).Decode(&start)
    if err != nil {
       return nil, err
    }
