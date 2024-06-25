@@ -9,116 +9,13 @@ import (
    "net/http"
    "net/url"
    "os"
-   "slices"
    "strings"
 )
-
-func DASH(req *http.Request) ([]*dash.Representation, error) {
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   switch resp.Status {
-   case "200 OK", "403 OK":
-   default:
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var media dash.Mpd
-   data, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   err = media.Unmarshal(data)
-   if err != nil {
-      return nil, err
-   }
-   if media.BaseUrl == nil {
-      media.BaseUrl = &dash.Url{resp.Request.URL}
-   }
-   var reps []*dash.Representation
-   for _, v := range media.Period {
-      for _, v := range v.AdaptationSet {
-         reps = append(reps, v.Representation...)
-      }
-   }
-   slices.SortFunc(reps, func(a, b *dash.Representation) int {
-      return int(a.Bandwidth - b.Bandwidth)
-   })
-   return reps, nil
-}
-
-func (s Stream) segment_base(
-   ext string,
-   initial, base *url.URL,
-   segment *dash.SegmentBase,
-) error {
-   req := new(http.Request)
-   req.URL = base.ResolveReference(initial)
-   data, _ := segment.Initialization.Range.MarshalText()
-   req.Header.Set("Range", "bytes=" + string(data))
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   file, err := func() (*os.File, error) {
-      s, err := text.Name(s.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(text.Clean(s) + ext)
-   }()
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   err = s.init_protect(file, resp.Body)
-   if err != nil {
-      return err
-   }
-   key, err := s.key()
-   if err != nil {
-      return err
-   }
-   references, err := write_sidx(req, segment.IndexRange)
-   if err != nil {
-      return err
-   }
-   var meter text.ProgressMeter
-   meter.Set(len(references))
-   var log text.LogLevel
-   log.SetTransport(false)
-   defer log.SetTransport(true)
-   for _, reference := range references {
-      segment.IndexRange.Start = segment.IndexRange.End + 1
-      segment.IndexRange.End += uint64(reference.ReferencedSize())
-      data, _ := segment.IndexRange.MarshalText()
-      err := func() error {
-         req.Header.Set("Range", "bytes=" + string(data))
-         resp, err := http.DefaultClient.Do(req)
-         if err != nil {
-            return err
-         }
-         defer resp.Body.Close()
-         if resp.StatusCode != http.StatusPartialContent {
-            return errors.New(resp.Status)
-         }
-         return write_segment(file, meter.Reader(resp), key)
-      }()
-      if err != nil {
-         return err
-      }
-   }
-   return nil
-}
 
 func (s Stream) segment_template(
    ext, initial string,
    base *url.URL,
-   rep *dash.Representation,
+   rep dash.Representation,
 ) error {
    req, err := http.NewRequest("", initial, nil)
    if err != nil {
@@ -265,3 +162,96 @@ var Forward = ForwardedFor{
 {"United Kingdom", "25.0.0.0"},
 {"Venezuela", "190.72.0.0"},
 }
+func DASH(req *http.Request) (chan dash.Period, error) {
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   switch resp.Status {
+   case "200 OK", "403 OK":
+   default:
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var media dash.Mpd
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   err = media.Unmarshal(data)
+   if err != nil {
+      return nil, err
+   }
+   if media.BaseUrl == nil {
+      media.BaseUrl = &dash.Url{resp.Request.URL}
+   }
+   return media.GetPeriod(), nil
+}
+
+func (s Stream) segment_base(
+   ext string,
+   initial, base *url.URL,
+   segment *dash.SegmentBase,
+) error {
+   req := new(http.Request)
+   req.URL = base.ResolveReference(initial)
+   data, _ := segment.Initialization.Range.MarshalText()
+   req.Header.Set("Range", "bytes=" + string(data))
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   file, err := func() (*os.File, error) {
+      s, err := text.Name(s.Name)
+      if err != nil {
+         return nil, err
+      }
+      return os.Create(text.Clean(s) + ext)
+   }()
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   err = s.init_protect(file, resp.Body)
+   if err != nil {
+      return err
+   }
+   key, err := s.key()
+   if err != nil {
+      return err
+   }
+   references, err := write_sidx(req, segment.IndexRange)
+   if err != nil {
+      return err
+   }
+   var meter text.ProgressMeter
+   meter.Set(len(references))
+   var log text.LogLevel
+   log.SetTransport(false)
+   defer log.SetTransport(true)
+   for _, reference := range references {
+      segment.IndexRange.Start = segment.IndexRange.End + 1
+      segment.IndexRange.End += uint64(reference.ReferencedSize())
+      data, _ := segment.IndexRange.MarshalText()
+      err := func() error {
+         req.Header.Set("Range", "bytes=" + string(data))
+         resp, err := http.DefaultClient.Do(req)
+         if err != nil {
+            return err
+         }
+         defer resp.Body.Close()
+         if resp.StatusCode != http.StatusPartialContent {
+            return errors.New(resp.Status)
+         }
+         return write_segment(file, meter.Reader(resp), key)
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
+

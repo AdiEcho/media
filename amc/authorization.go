@@ -51,15 +51,15 @@ func (a *Authorization) Login(email, password string) error {
       "X-Amcn-Tenant": {"amcn"},
       "X-Ccpa-Do-Not-Sell": {"doNotPassData"},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
    }
-   a.Data, err = io.ReadAll(res.Body)
+   a.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -93,18 +93,18 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
       b.WriteString(path)
       return b.String()
    }()
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    content := new(ContentCompiler)
-   err = json.NewDecoder(res.Body).Decode(content)
+   err = json.NewDecoder(resp.Body).Decode(content)
    if err != nil {
       return nil, err
    }
@@ -148,19 +148,19 @@ func (a Authorization) Playback(nid string) (*Playback, error) {
       "X-Amcn-Tenant": {"amcn"},
       "X-Ccpa-Do-Not-Sell": {"doNotPassData"},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
       var b strings.Builder
-      res.Write(&b)
+      resp.Write(&b)
       return nil, errors.New(b.String())
    }
    var play Playback
-   play.header = res.Header
-   err = json.NewDecoder(res.Body).Decode(&play.body)
+   play.header = resp.Header
+   err = json.NewDecoder(resp.Body).Decode(&play.body)
    if err != nil {
       return nil, err
    }
@@ -174,15 +174,15 @@ func (a *Authorization) Refresh() error {
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
    req.Header.Set("Authorization", "Bearer " + a.V.Data.RefreshToken)
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
    }
-   a.Data, err = io.ReadAll(res.Body)
+   a.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -202,15 +202,15 @@ func (a *Authorization) Unauth() error {
       "X-Amcn-Platform": {"web"},
       "X-Amcn-Tenant": {"amcn"},
    }
-   res, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
-   defer res.Body.Close()
-   if res.StatusCode != http.StatusOK {
-      return errors.New(res.Status)
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
    }
-   a.Data, err = io.ReadAll(res.Body)
+   a.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }

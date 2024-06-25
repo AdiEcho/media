@@ -51,25 +51,33 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := internal.DASH(req)
+   periods, err := internal.DASH(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
-         f.s.Poster = play
-         f.s.Name, err = token.Routes(f.address)
-         if err != nil {
-            return err
+   set := map[string]struct{}{}
+   for period := range periods {
+      for adapt := range period.GetAdaptationSet() {
+         for represent := range adapt.GetRepresentation() {
+            if f.representation != "" {
+               if represent.Id == f.representation {
+                  f.s.Poster = play
+                  f.s.Name, err = token.Routes(f.address)
+                  if err != nil {
+                     return err
+                  }
+                  return f.s.Download(represent)
+               }
+            } else {
+               if _, ok := represent.Ext(); ok {
+                  if _, ok := set[represent.Id]; !ok {
+                     fmt.Print("\n", represent, "\n")
+                     set[represent.Id] = struct{}{}
+                  }
+               }
+            }
          }
-         return f.s.Download(medium)
       }
-   }
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
 }

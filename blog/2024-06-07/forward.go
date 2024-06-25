@@ -68,20 +68,17 @@ func main() {
          return len(a.ip) - len(b.ip)
       })
       fmt.Printf("{%q, %q},\n", country.country, blocks[0].ip)
-      // for _, block := range blocks[1:9] {
-      //    fmt.Println(block.ip)
-      // }
       time.Sleep(99 * time.Millisecond)
    }
 }
 
 func get(address string) ([]blocklist, error) {
-   res, err := http.Get(address)
+   resp, err := http.Get(address)
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
-   text, err := io.ReadAll(res.Body)
+   defer resp.Body.Close()
+   text, err := io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }

@@ -47,7 +47,6 @@ func (f flags) download() error {
          return f.s.Download(medium)
       }
    }
-   // 2 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()

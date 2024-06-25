@@ -9,7 +9,7 @@ import (
    "net/http"
 )
 
-func (s *Stream) Download(rep *dash.Representation) error {
+func (s *Stream) Download(rep dash.Representation) error {
    ext, ok := rep.Ext()
    if !ok {
       return errors.New("Representation.Ext")

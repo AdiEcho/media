@@ -68,20 +68,20 @@ func (a ArticleSlug) Article() (*DataArticle, error) {
    if err != nil {
       return nil, err
    }
-   res, err := http.Post(
+   resp, err := http.Post(
       "https://api.audienceplayer.com/graphql/2/user",
       "application/json", bytes.NewReader(body),
    )
    if err != nil {
       return nil, err
    }
-   defer res.Body.Close()
+   defer resp.Body.Close()
    var s struct {
       Data struct {
          Article DataArticle
       }
    }
-   err = json.NewDecoder(res.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&s)
    if err != nil {
       return nil, err
    }

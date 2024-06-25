@@ -3,7 +3,7 @@ module 154.pages.dev/media
 go 1.22.0
 
 require (
-	154.pages.dev/dash v1.23.3
+	154.pages.dev/dash v1.23.5
 	154.pages.dev/sofia v1.4.9
 	154.pages.dev/text v1.2.3
 	154.pages.dev/widevine v1.4.3
