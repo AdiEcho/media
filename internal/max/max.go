@@ -55,29 +55,34 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   set := map[string]struct{}{}
+   var reps []dash.Representation
    for period := range periods {
       for adapt := range period.GetAdaptationSet() {
-         for represent := range adapt.GetRepresentation() {
-            if f.representation != "" {
-               if represent.Id == f.representation {
-                  f.s.Poster = play
-                  f.s.Name, err = token.Routes(f.address)
-                  if err != nil {
-                     return err
-                  }
-                  return f.s.Download(represent)
+         for rep := range adapt.GetRepresentation() {
+            if rep.Id == f.representation {
+               f.s.Poster = play
+               f.s.Name, err = token.Routes(f.address)
+               if err != nil {
+                  return err
                }
-            } else {
-               if _, ok := represent.Ext(); ok {
-                  if _, ok := set[represent.Id]; !ok {
-                     fmt.Print("\n", represent, "\n")
-                     set[represent.Id] = struct{}{}
-                  }
-               }
+               return f.s.Download(rep)
+            }
+            if !slices.ContainsFunc(reps, func(r dash.Representation) bool {
+               return r.Id == rep.Id
+            }) {
+               reps = append(reps, rep)
             }
          }
       }
+   }
+   slices.SortFunc(reps, func(a, b dash.Representation) int {
+      return int(a.Bandwidth - b.Bandwidth)
+   })
+   for i, rep := range reps {
+      if i >= 1 {
+         fmt.Println()
+      }
+      fmt.Println(rep)
    }
    return nil
 }
