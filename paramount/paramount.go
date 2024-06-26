@@ -10,6 +10,63 @@ import (
    "time"
 )
 
+func location(content_id string, query url.Values) (string, error) {
+   client := http.Client{
+      CheckRedirect: func(*http.Request, []*http.Request) error {
+         return http.ErrUseLastResponse
+      },
+   }
+   req, err := http.NewRequest("", "http://link.theplatform.com", nil)
+   if err != nil {
+      return "", err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/s/")
+      b = append(b, cms_account_id...)
+      b = append(b, "/media/guid/"...)
+      b = strconv.AppendInt(b, aid, 10)
+      b = append(b, '/')
+      b = append(b, content_id...)
+      return string(b)
+   }()
+   req.URL.RawQuery = query.Encode()
+   resp, err := client.Do(req)
+   if err != nil {
+      return "", err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusFound {
+      var s struct {
+         Description string
+      }
+      json.NewDecoder(resp.Body).Decode(&s)
+      return "", errors.New(s.Description)
+   }
+   return resp.Header.Get("Location"), nil
+}
+
+type SessionToken struct {
+   URL string
+   LsSession string `json:"ls_session"`
+}
+
+func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (s SessionToken) RequestHeader() (http.Header, error) {
+   head := make(http.Header)
+   head.Set("authorization", "Bearer " + s.LsSession)
+   return head, nil
+}
+
+func (s SessionToken) RequestUrl() (string, bool) {
+   return s.URL, true
+}
+
+func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
 // apkmirror.com/apk/cbs-interactive-inc/paramount
 var app_secrets = map[string]string{
    "15.0.26": "2b2caa6373626591",
@@ -156,62 +213,4 @@ func (v VideoItem) Show() string {
       return v.SeriesTitle
    }
    return ""
-}
-
-func location(content_id string, query url.Values) (string, error) {
-   client := http.Client{
-      CheckRedirect: func(*http.Request, []*http.Request) error {
-         return http.ErrUseLastResponse
-      },
-   }
-   req, err := http.NewRequest("GET", "http://link.theplatform.com", nil)
-   if err != nil {
-      return "", err
-   }
-   req.URL.Path = func() string {
-      b := []byte("/s/")
-      b = append(b, cms_account_id...)
-      b = append(b, "/media/guid/"...)
-      b = strconv.AppendInt(b, aid, 10)
-      b = append(b, '/')
-      b = append(b, content_id...)
-      return string(b)
-   }()
-   req.URL.RawQuery = query.Encode()
-   resp, err := client.Do(req)
-   if err != nil {
-      return "", err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusFound {
-      var s struct {
-         Description string
-      }
-      json.NewDecoder(resp.Body).Decode(&s)
-      return "", errors.New(s.Description)
-   }
-   return resp.Header.Get("Location"), nil
-}
-
-type SessionToken struct {
-   URL string
-   LsSession string `json:"ls_session"`
-}
-
-func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (s SessionToken) RequestHeader() (http.Header, error) {
-   head := make(http.Header)
-   head.Set("authorization", "Bearer " + s.LsSession)
-   return head, nil
-}
-
-func (s SessionToken) RequestUrl() (string, bool) {
-   return s.URL, true
-}
-
-func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
 }
