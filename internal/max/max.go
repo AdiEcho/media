@@ -51,6 +51,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
+   // func Slice(x any, less func(i, j int) bool)
    periods, err := internal.DASH(req)
    if err != nil {
       return err
