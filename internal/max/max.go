@@ -6,7 +6,51 @@ import (
    "fmt"
    "net/http"
    "os"
+   "sort"
 )
+
+func (f flags) download() error {
+   text, err := os.ReadFile(f.home + "/max.json")
+   if err != nil {
+      return err
+   }
+   var token max.DefaultToken
+   err = token.Unmarshal(text)
+   if err != nil {
+      return err
+   }
+   play, err := token.Playback(f.address)
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest("", play.Manifest.Url, nil)
+   if err != nil {
+      return err
+   }
+   reps, err := internal.DASH(req)
+   if err != nil {
+      return err
+   }
+   sort.Slice(reps, func(i, j int) {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
+   id := map[string]struct{}{}
+   for _, rep := range reps {
+      if rep.Id == f.representation {
+         f.s.Name, err = token.Routes(f.address)
+         if err != nil {
+            return err
+         }
+         f.s.Poster = play
+         return f.s.Download(rep)
+      }
+      if _, ok := id[rep.Id]; !ok {
+         fmt.Print(rep, "\n\n")
+         id[rep.Id] = struct{}{}
+      }
+   }
+   return nil
+}
 
 func (f flags) authenticate() error {
    var login max.DefaultLogin
@@ -31,59 +75,4 @@ func (f flags) authenticate() error {
       return err
    }
    return os.WriteFile(f.home + "/max.json", text, 0666)
-}
-
-func (f flags) download() error {
-   text, err := os.ReadFile(f.home + "/max.json")
-   if err != nil {
-      return err
-   }
-   var token max.DefaultToken
-   err = token.Unmarshal(text)
-   if err != nil {
-      return err
-   }
-   play, err := token.Playback(f.address)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest("", play.Manifest.Url, nil)
-   if err != nil {
-      return err
-   }
-   // func Slice(x any, less func(i, j int) bool)
-   periods, err := internal.DASH(req)
-   if err != nil {
-      return err
-   }
-   var reps []dash.Representation
-   for period := range periods {
-      for adapt := range period.GetAdaptationSet() {
-         for rep := range adapt.GetRepresentation() {
-            if rep.Id == f.representation {
-               f.s.Poster = play
-               f.s.Name, err = token.Routes(f.address)
-               if err != nil {
-                  return err
-               }
-               return f.s.Download(rep)
-            }
-            if !slices.ContainsFunc(reps, func(r dash.Representation) bool {
-               return r.Id == rep.Id
-            }) {
-               reps = append(reps, rep)
-            }
-         }
-      }
-   }
-   slices.SortFunc(reps, func(a, b dash.Representation) int {
-      return int(a.Bandwidth - b.Bandwidth)
-   })
-   for i, rep := range reps {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(rep)
-   }
-   return nil
 }

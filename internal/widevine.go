@@ -3,8 +3,6 @@ package internal
 import (
    "154.pages.dev/text"
    "154.pages.dev/widevine"
-   "encoding/hex"
-   "log/slog"
    "os"
 )
 
@@ -28,12 +26,7 @@ func (s Stream) key() ([]byte, error) {
    if err != nil {
       return nil, err
    }
-   key, err := module.Key(s.Poster, s.key_id)
-   if err != nil {
-      return nil, err
-   }
-   slog.Debug("CDM", "key", hex.EncodeToString(key))
-   return key, nil
+   return module.Key(s.Poster, s.key_id)
 }
 
 // wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP

@@ -12,34 +12,6 @@ import (
    "strings"
 )
 
-func DASH(req *http.Request) (chan dash.Period, error) {
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   switch resp.Status {
-   case "200 OK", "403 OK":
-   default:
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var media dash.Mpd
-   data, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   err = media.Unmarshal(data)
-   if err != nil {
-      return nil, err
-   }
-   if media.BaseUrl == nil {
-      media.BaseUrl = &dash.Url{resp.Request.URL}
-   }
-   return media.GetPeriod(), nil
-}
-
 func (s Stream) segment_base(
    ext string,
    initial, base *url.URL,
@@ -79,9 +51,9 @@ func (s Stream) segment_base(
    }
    var meter text.ProgressMeter
    meter.Set(len(references))
-   var log text.LogLevel
-   log.SetTransport(false)
-   defer log.SetTransport(true)
+   var transport text.Transport
+   transport.Set(false)
+   defer transport.Set(true)
    for _, reference := range references {
       segment.IndexRange.Start = segment.IndexRange.End + 1
       segment.IndexRange.End += uint64(reference.ReferencedSize())
@@ -149,9 +121,6 @@ func (s Stream) segment_template(
       },
    }
    var meter text.ProgressMeter
-   var log text.LogLevel
-   log.SetTransport(false)
-   defer log.SetTransport(true)
    media := rep.Media()
    meter.Set(len(media))
    for _, medium := range media {
@@ -254,4 +223,24 @@ var Forward = ForwardedFor{
 {"Taiwan", "120.96.0.0"},
 {"United Kingdom", "25.0.0.0"},
 {"Venezuela", "190.72.0.0"},
+}
+
+func DASH(req *http.Request) ([]dash.Representation, error) {
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   switch resp.Status {
+   case "200 OK", "403 OK":
+   default:
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return dash.Unmarshal(data, resp.Request.URL)
 }

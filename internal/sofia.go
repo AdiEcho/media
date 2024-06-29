@@ -74,8 +74,8 @@ func (s *Stream) init_protect(to io.Writer, from io.Reader) error {
    return file.Write(to)
 }
 
-func write_sidx(req *http.Request, r dash.Range) ([]sofia.Reference, error) {
-   data, _ := r.MarshalText()
+func write_sidx(req *http.Request, index dash.Range) ([]sofia.Reference, error) {
+   data, _ := index.MarshalText()
    req.Header.Set("Range", "bytes=" + string(data))
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
