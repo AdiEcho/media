@@ -31,7 +31,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   sort.Slice(reps, func(i, j int) {
+   sort.Slice(reps, func(i, j int) bool {
       return reps[i].Bandwidth < reps[j].Bandwidth
    })
    id := map[string]struct{}{}
@@ -44,9 +44,13 @@ func (f flags) download() error {
          f.s.Poster = play
          return f.s.Download(rep)
       }
-      if _, ok := id[rep.Id]; !ok {
-         fmt.Print(rep, "\n\n")
-         id[rep.Id] = struct{}{}
+      if f.representation == "" {
+         if _, ok := id[rep.Id]; !ok {
+            if _, ok := rep.Ext(); ok {
+               fmt.Print(rep, "\n\n")
+               id[rep.Id] = struct{}{}
+            }
+         }
       }
    }
    return nil

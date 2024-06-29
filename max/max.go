@@ -10,6 +10,19 @@ import (
    "time"
 )
 
+type Playback struct {
+   Drm struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string
+         }
+      }
+   }
+   Manifest struct {
+      Url string
+   }
+}
+
 const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
 
 type DefaultRoutes struct {
@@ -161,19 +174,6 @@ func (Playback) RequestHeader() (http.Header, error) {
 
 func (p Playback) RequestUrl() (string, bool) {
    return p.Drm.Schemes.Widevine.LicenseUrl, true
-}
-
-type Playback struct {
-   Drm struct {
-      Schemes struct {
-         Widevine struct {
-            LicenseUrl string
-         }
-      }
-   }
-   Manifest struct {
-      Url string
-   }
 }
 
 type PublicKey struct {

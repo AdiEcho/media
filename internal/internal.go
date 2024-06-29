@@ -17,15 +17,21 @@ func (s Stream) segment_base(
    initial, base *url.URL,
    segment *dash.SegmentBase,
 ) error {
-   req := new(http.Request)
-   req.URL = base.ResolveReference(initial)
    data, _ := segment.Initialization.Range.MarshalText()
-   req.Header.Set("Range", "bytes=" + string(data))
+   req := &http.Request{
+      Header: http.Header{
+         "Range": {"bytes=" + string(data)},
+      },
+      URL: base.ResolveReference(initial),
+   }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
    defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
+   }
    file, err := func() (*os.File, error) {
       s, err := text.Name(s.Name)
       if err != nil {
