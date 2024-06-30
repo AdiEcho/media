@@ -3,6 +3,8 @@ package internal
 import (
    "154.pages.dev/text"
    "154.pages.dev/widevine"
+   "encoding/hex"
+   "log/slog"
    "os"
 )
 
@@ -26,7 +28,14 @@ func (s Stream) key() ([]byte, error) {
    if err != nil {
       return nil, err
    }
-   return module.Key(s.Poster, s.key_id)
+   key, err := module.Key(s.Poster, s.key_id)
+   if err != nil {
+      return nil, err
+   }
+   slog.Info(
+      "CDM", "id", hex.EncodeToString(s.key_id), "key", hex.EncodeToString(key),
+   )
+   return key, nil
 }
 
 // wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
@@ -37,4 +46,12 @@ type Stream struct {
    Poster widevine.Poster
    pssh []byte
    key_id []byte
+}
+
+func (s Stream) file(ext string) (*os.File, error) {
+   name, err := text.Name(s.Name)
+   if err != nil {
+      return nil, err
+   }
+   return os.Create(text.Clean(name) + ext)
 }

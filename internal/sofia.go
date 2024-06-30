@@ -10,10 +10,6 @@ import (
 )
 
 func (s *Stream) Download(rep dash.Representation) error {
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Representation.Ext")
-   }
    if data, ok := rep.Widevine(); ok {
       read := bytes.NewReader(data)
       var pssh sofia.ProtectionSystemSpecificHeader
@@ -27,19 +23,20 @@ func (s *Stream) Download(rep dash.Representation) error {
       }
       s.pssh = pssh.Data
    }
-   mpd := rep.GetAdaptationSet().GetPeriod().GetMpd()
+   base, ok := rep.GetBaseUrl()
+   if !ok {
+      return errors.New("Representation.GetBaseUrl")
+   }
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
    if initial, ok := rep.Initialization(); ok {
       return s.segment_template(
-         ext, initial,
-         mpd.BaseUrl.U,
-         rep,
+         ext, initial, base, rep.Media(),
       )
    }
-   return s.segment_base(
-      ext,
-      rep.BaseUrl.U, mpd.BaseUrl.U,
-      rep.SegmentBase,
-   )
+   return s.segment_base(ext, base, rep.SegmentBase)
 }
 
 func (s *Stream) init_protect(to io.Writer, from io.Reader) error {

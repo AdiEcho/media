@@ -7,38 +7,28 @@ import (
    "errors"
    "io"
    "net/http"
-   "net/url"
-   "os"
    "strings"
 )
 
 func (s Stream) segment_base(
-   ext string,
-   initial, base *url.URL,
-   segment *dash.SegmentBase,
+   ext string, base *dash.BaseUrl, segment *dash.SegmentBase,
 ) error {
    data, _ := segment.Initialization.Range.MarshalText()
    req := &http.Request{
       Header: http.Header{
          "Range": {"bytes=" + string(data)},
       },
-      URL: base.ResolveReference(initial),
+      URL: base.Url,
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
    }
    defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
+   if resp.StatusCode != http.StatusPartialContent {
       return errors.New(resp.Status)
    }
-   file, err := func() (*os.File, error) {
-      s, err := text.Name(s.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(text.Clean(s) + ext)
-   }()
+   file, err := s.file(ext)
    if err != nil {
       return err
    }
@@ -84,15 +74,13 @@ func (s Stream) segment_base(
 }
 
 func (s Stream) segment_template(
-   ext, initial string,
-   base *url.URL,
-   rep dash.Representation,
+   ext, initial string, base *dash.BaseUrl, media []string,
 ) error {
    req, err := http.NewRequest("", initial, nil)
    if err != nil {
       return err
    }
-   req.URL = base.ResolveReference(req.URL)
+   req.URL = base.Url.ResolveReference(req.URL)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -101,13 +89,7 @@ func (s Stream) segment_template(
    if resp.StatusCode != http.StatusOK {
       return errors.New(resp.Status)
    }
-   file, err := func() (*os.File, error) {
-      s, err := text.Name(s.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(text.Clean(s) + ext)
-   }()
+   file, err := s.file(ext)
    if err != nil {
       return err
    }
@@ -127,10 +109,9 @@ func (s Stream) segment_template(
       },
    }
    var meter text.ProgressMeter
-   media := rep.Media()
    meter.Set(len(media))
    for _, medium := range media {
-      req.URL, err = base.Parse(medium)
+      req.URL, err = base.Url.Parse(medium)
       if err != nil {
          return err
       }
@@ -160,13 +141,7 @@ func (s Stream) TimedText(url string) error {
       return err
    }
    defer resp.Body.Close()
-   file, err := func() (*os.File, error) {
-      s, err := text.Name(s.Name)
-      if err != nil {
-         return nil, err
-      }
-      return os.Create(text.Clean(s) + ".vtt")
-   }()
+   file, err := s.file(".vtt")
    if err != nil {
       return err
    }
