@@ -14,12 +14,19 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/amc<span class="navbar-right">
-          v1.9.5 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.9.6 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package amc</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/amc&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
+  <li>
+      <a href="#Address">type Address</a>
+      <ul>
+          <li><a href="#Address.Set">func (a *Address) Set(text string) error</a></li>
+          <li><a href="#Address.String">func (a Address) String() string</a></li>
+          </ul>
+      </li>
   <li>
       <a href="#Authorization">type Authorization</a>
       <ul>
@@ -60,14 +67,16 @@
           <li><a href="#Playback.WrapRequest">func (Playback) WrapRequest(b []byte) ([]byte, error)</a></li>
           </ul>
       </li>
-  <li>
-      <a href="#WebAddress">type WebAddress</a>
-      <ul>
-          <li><a href="#WebAddress.Set">func (w *WebAddress) Set(s string) error</a></li>
-          <li><a href="#WebAddress.String">func (w WebAddress) String() string</a></li>
-          </ul>
-      </li>
   </ul><h3 id="pkg-types">Types</h3>
+  <h3 id="Address">type Address</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Address</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Address.NID"><span class="nx">NID</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Address.Path"><span class="nx">Path</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Address.Set">func (*Address) Set</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">text</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Address.String">func (Address) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h3 id="Authorization">type Authorization</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Authorization</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Authorization.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
@@ -147,15 +156,6 @@
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Playback.WrapRequest">func (Playback) WrapRequest</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h3 id="WebAddress">type WebAddress</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">WebAddress</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="WebAddress.NID"><span class="nx">NID</span></span>  <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="WebAddress.Path"><span class="nx">Path</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-<span class="p">}</span></pre>
-    <h4 id="WebAddress.Set">func (*WebAddress) Set</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <span class="o">*</span><a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="WebAddress.String">func (WebAddress) String</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   </main>
     <hr>
     <footer>

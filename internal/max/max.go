@@ -34,22 +34,20 @@ func (f flags) download() error {
    sort.Slice(reps, func(i, j int) bool {
       return reps[i].Bandwidth < reps[j].Bandwidth
    })
-   id := map[string]struct{}{}
    for _, rep := range reps {
-      if rep.Id == f.representation {
-         f.s.Name, err = token.Routes(f.address)
-         if err != nil {
-            return err
-         }
-         f.s.Poster = play
-         return f.s.Download(rep)
-      }
-      if f.representation == "" {
-         if _, ok := id[rep.Id]; !ok {
+      if rep.GetAdaptationSet().GetPeriod().Id == "1" {
+         switch f.representation {
+         case "":
             if _, ok := rep.Ext(); ok {
                fmt.Print(rep, "\n\n")
-               id[rep.Id] = struct{}{}
             }
+         case rep.Id:
+            f.s.Name, err = token.Routes(f.address)
+            if err != nil {
+               return err
+            }
+            f.s.Poster = play
+            return f.s.Download(rep)
          }
       }
    }

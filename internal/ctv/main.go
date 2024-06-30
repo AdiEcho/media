@@ -24,7 +24,6 @@ type flags struct {
    path ctv.Path
    representation string
    s internal.Stream
-   log text.LogLevel
    manifest bool
 }
 
@@ -39,10 +38,8 @@ func main() {
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.BoolVar(&f.manifest, "m", false, "manifest")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.Parse()
-   f.log.Set()
-   f.log.SetTransport(true)
+   text.Transport{}.Set(true)
    switch {
    case f.manifest:
       err := f.get_manifest()

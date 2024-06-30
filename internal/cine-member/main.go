@@ -27,7 +27,6 @@ type flags struct {
    home string
    representation string
    password string
-   log text.LogLevel
    slug member.ArticleSlug
    play bool
 }
@@ -45,10 +44,8 @@ func main() {
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
    flag.BoolVar(&f.play, "p", false, "article asset play")
    flag.StringVar(&f.password, "password", "", "password")
-   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.Parse()
-   f.log.Set()
-   f.log.SetTransport(true)
+   text.Transport{}.Set(true)
    switch {
    case f.password != "":
       err := f.authenticate()

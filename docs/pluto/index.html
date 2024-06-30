@@ -14,13 +14,21 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/pluto<span class="navbar-right">
-          v1.9.5 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.9.6 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package pluto</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/pluto&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
   <li><a href="#pkg-variables">Variables</a></li><li>
+      <a href="#Address">type Address</a>
+      <ul>
+          <li><a href="#Address.Set">func (a *Address) Set(text string) error</a></li>
+          <li><a href="#Address.String">func (a Address) String() string</a></li>
+          <li><a href="#Address.Video">func (a Address) Video(forward string) (*Video, error)</a></li>
+          </ul>
+      </li>
+  <li>
       <a href="#EpisodeClip">type EpisodeClip</a>
       <ul>
           <li><a href="#EpisodeClip.DASH">func (e EpisodeClip) DASH() (*url.URL, bool)</a></li>
@@ -66,14 +74,6 @@
           <li><a href="#Video.Clip">func (v Video) Clip() (*EpisodeClip, error)</a></li>
           </ul>
       </li>
-  <li>
-      <a href="#WebAddress">type WebAddress</a>
-      <ul>
-          <li><a href="#WebAddress.Set">func (w *WebAddress) Set(s string) error</a></li>
-          <li><a href="#WebAddress.String">func (w WebAddress) String() string</a></li>
-          <li><a href="#WebAddress.Video">func (w WebAddress) Video(forward string) (*Video, error)</a></li>
-          </ul>
-      </li>
   </ul><h3 id="pkg-variables">Variables</h3>
   <pre class="chroma"><span class="kd">var</span> <span id="Base"><span class="nx">Base</span></span> <span class="p">=</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">{</span>
 
@@ -85,6 +85,16 @@
 	<span class="s">&#34;http://silo-hybrik.pluto.tv.s3.amazonaws.com&#34;</span><span class="p">,</span>
 <span class="p">}</span></pre>
   <h3 id="pkg-types">Types</h3>
+  <h3 id="Address">type Address</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Address</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">// contains filtered or unexported fields
+</span><span class="c1"></span><span class="p">}</span></pre>
+    <h4 id="Address.Set">func (*Address) Set</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">text</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Address.String">func (Address) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Address.Video">func (Address) Video</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Video</span><span class="p">(</span><span class="nx">forward</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Video"><span class="nx">Video</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h3 id="EpisodeClip">type EpisodeClip</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">EpisodeClip</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="EpisodeClip.Sources"><span class="nx">Sources</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
@@ -148,16 +158,6 @@
 </span><span class="c1"></span><span class="p">}</span></pre>
     <h4 id="Video.Clip">func (Video) Clip</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <a href="#Video"><span class="nx">Video</span></a><span class="p">)</span> <span class="nf">Clip</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#EpisodeClip"><span class="nx">EpisodeClip</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h3 id="WebAddress">type WebAddress</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">WebAddress</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="c1">// contains filtered or unexported fields
-</span><span class="c1"></span><span class="p">}</span></pre>
-    <h4 id="WebAddress.Set">func (*WebAddress) Set</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <span class="o">*</span><a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="WebAddress.String">func (WebAddress) String</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="WebAddress.Video">func (WebAddress) Video</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">Video</span><span class="p">(</span><span class="nx">forward</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Video"><span class="nx">Video</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   </main>
     <hr>
     <footer>

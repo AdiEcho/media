@@ -14,7 +14,6 @@ type flags struct {
    base string
    s internal.Stream
    representation string
-   log text.LogLevel
    address pluto.Address
    forward string
 }
@@ -37,11 +36,9 @@ func main() {
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.StringVar(&f.forward, "z", "", internal.Forward.String())
    flag.Parse()
-   f.log.Set()
-   f.log.SetTransport(true)
+   text.Transport{}.Set(true)
    if f.address.String() != "" {
       err := f.download()
       if err != nil {

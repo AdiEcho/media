@@ -13,7 +13,6 @@ type flags struct {
    representation string
    s internal.Stream
    paramount string
-   log text.LogLevel
 }
 
 func (f *flags) New() error {
@@ -35,12 +34,10 @@ func main() {
    }
    flag.StringVar(&f.paramount, "b", "", "Paramount ID")
    flag.StringVar(&f.representation, "i", "", "representation")
-   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.Parse()
-   f.log.Set()
-   f.log.SetTransport(true)
+   text.Transport{}.Set(true)
    if f.paramount != "" {
       var app paramount.AppToken
       err := app.New()

@@ -14,12 +14,22 @@
   <body>
     <nav>
         <a href="..">154.pages.dev/media</a>/rakuten<span class="navbar-right">
-          v1.9.5 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.9.6 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package rakuten</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/rakuten&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
+  <li>
+      <a href="#Address">type Address</a>
+      <ul>
+          <li><a href="#Address.FHD">func (a Address) FHD() OnDemand</a></li>
+          <li><a href="#Address.HD">func (a Address) HD() OnDemand</a></li>
+          <li><a href="#Address.Movie">func (a Address) Movie() (*GizmoMovie, error)</a></li>
+          <li><a href="#Address.Set">func (a *Address) Set(s string) error</a></li>
+          <li><a href="#Address.String">func (a Address) String() string</a></li>
+          </ul>
+      </li>
   <li>
       <a href="#GizmoMovie">type GizmoMovie</a>
       <ul>
@@ -47,17 +57,21 @@
           <li><a href="#StreamInfo.WrapRequest">func (StreamInfo) WrapRequest(b []byte) ([]byte, error)</a></li>
           </ul>
       </li>
-  <li>
-      <a href="#WebAddress">type WebAddress</a>
-      <ul>
-          <li><a href="#WebAddress.FHD">func (w WebAddress) FHD() OnDemand</a></li>
-          <li><a href="#WebAddress.HD">func (w WebAddress) HD() OnDemand</a></li>
-          <li><a href="#WebAddress.Movie">func (w WebAddress) Movie() (*GizmoMovie, error)</a></li>
-          <li><a href="#WebAddress.Set">func (w *WebAddress) Set(s string) error</a></li>
-          <li><a href="#WebAddress.String">func (w WebAddress) String() string</a></li>
-          </ul>
-      </li>
   </ul><h3 id="pkg-types">Types</h3>
+  <h3 id="Address">type Address</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Address</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">// contains filtered or unexported fields
+</span><span class="c1"></span><span class="p">}</span></pre>
+    <h4 id="Address.FHD">func (Address) FHD</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">FHD</span><span class="p">()</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a></pre>
+  <h4 id="Address.HD">func (Address) HD</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">HD</span><span class="p">()</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a></pre>
+  <h4 id="Address.Movie">func (Address) Movie</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Movie</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Address.Set">func (*Address) Set</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Address.String">func (Address) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h3 id="GizmoMovie">type GizmoMovie</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">GizmoMovie</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="GizmoMovie.Data"><span class="nx">Data</span></span> <span class="kd">struct</span> <span class="p">{</span>
@@ -111,20 +125,6 @@
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="StreamInfo.WrapRequest">func (StreamInfo) WrapRequest</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h3 id="WebAddress">type WebAddress</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">WebAddress</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="c1">// contains filtered or unexported fields
-</span><span class="c1"></span><span class="p">}</span></pre>
-    <h4 id="WebAddress.FHD">func (WebAddress) FHD</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">FHD</span><span class="p">()</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a></pre>
-  <h4 id="WebAddress.HD">func (WebAddress) HD</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">HD</span><span class="p">()</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a></pre>
-  <h4 id="WebAddress.Movie">func (WebAddress) Movie</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">Movie</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="WebAddress.Set">func (*WebAddress) Set</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <span class="o">*</span><a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="WebAddress.String">func (WebAddress) String</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebAddress"><span class="nx">WebAddress</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   </main>
     <hr>
     <footer>

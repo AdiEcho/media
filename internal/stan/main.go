@@ -18,7 +18,6 @@ type flags struct {
    representation string
    s internal.Stream
    token bool
-   log text.LogLevel
 }
 
 func (f *flags) New() error {
@@ -48,10 +47,8 @@ func main() {
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.BoolVar(&f.token, "token", false, "web token")
-   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.Parse()
-   f.log.Set()
-   f.log.SetTransport(true)
+   text.Transport{}.Set(true)
    switch {
    case f.code:
       err := f.write_code()

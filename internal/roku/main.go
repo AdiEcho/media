@@ -23,7 +23,6 @@ func (f *flags) New() error {
 type flags struct {
    code_write bool
    home string
-   log text.LogLevel
    representation string
    roku string
    s internal.Stream
@@ -41,13 +40,11 @@ func main() {
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
-   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.BoolVar(&f.code_write, "code", false, "write code")
    flag.BoolVar(&f.token_write, "token", false, "write token")
    flag.BoolVar(&f.token_read, "t", false, "read token")
    flag.Parse()
-   f.log.Set()
-   f.log.SetTransport(true)
+   text.Transport{}.Set(true)
    switch {
    case f.token_write:
       err := f.write_token()

@@ -12,7 +12,6 @@ import (
 type flags struct {
    s internal.Stream
    representation string
-   log text.LogLevel
    address rakuten.Address
    streamings bool
 }
@@ -39,10 +38,8 @@ func main() {
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
    flag.BoolVar(&f.streamings, "s", false, "streamings")
-   flag.TextVar(&f.log.Level, "v", f.log.Level, "level")
    flag.Parse()
-   f.log.Set()
-   f.log.SetTransport(true)
+   text.Transport{}.Set(true)
    switch {
    case f.streamings:
       err := f.write_stream()
