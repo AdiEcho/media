@@ -1,7 +1,6 @@
 package paramount
 
 import (
-   "crypto/aes"
    "encoding/json"
    "errors"
    "net/http"
@@ -10,13 +9,17 @@ import (
    "time"
 )
 
-func location(content_id string, query url.Values) (string, error) {
-   client := http.Client{
-      CheckRedirect: func(*http.Request, []*http.Request) error {
-         return http.ErrUseLastResponse
-      },
+func DashCenc(content_id string) (string, error) {
+   query := url.Values{
+      "formats": {"MPEG-DASH"},
+      "assetTypes": {"DASH_CENC"},
+      // "assetTypes": {"DASH_CENC_PRECON"},
    }
-   req, err := http.NewRequest("", "http://link.theplatform.com", nil)
+   return location(content_id, query)
+}
+
+func location(content_id string, query url.Values) (string, error) {
+   req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {
       return "", err
    }
@@ -30,7 +33,7 @@ func location(content_id string, query url.Values) (string, error) {
       return string(b)
    }()
    req.URL.RawQuery = query.Encode()
-   resp, err := client.Do(req)
+   resp, err := http.DefaultTransport.RoundTrip(req)
    if err != nil {
       return "", err
    }
@@ -67,40 +70,10 @@ func (s SessionToken) RequestUrl() (string, bool) {
 func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
+
 // apkmirror.com/apk/cbs-interactive-inc/paramount
 var app_secrets = map[string]string{
    "15.0.26": "2b2caa6373626591",
-   // "15.0.24": "",
-   // "15.0.23": "",
-   // "15.0.22": "",
-   // "15.0.20": "",
-   // "15.0.18": "",
-   // "15.0.16": "",
-   // "15.0.14": "",
-   // "15.0.12": "",
-   // "15.0.10": "",
-   // "12.0.79": "",
-   // "12.0.77": "",
-   // "12.0.76": "",
-   // "12.0.75": "",
-   // "12.0.74": "",
-   // "12.0.72": "",
-   // "12.0.70": "",
-   // "12.0.68": "",
-   // "12.0.66": "",
-   // "12.0.65": "",
-   // "12.0.64": "",
-   // "12.0.62": "",
-   // "12.0.60": "",
-   // "12.0.58": "",
-   // "12.0.57": "",
-   // "12.0.56": "",
-   // "12.0.53": "",
-   // "12.0.52": "",
-   // "12.0.51": "",
-   // "12.0.49": "",
-   // "12.0.48": "",
-   // "12.0.47": "",
    "12.0.44": "7297a39a244189d6",
    "12.0.40": "2c160dbae70b337f",
    "12.0.36": "a674920042c954d9",
@@ -147,28 +120,10 @@ var app_secrets = map[string]string{
     "4.8.06": "a958002817953588",
 }
 
-const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
-
-func pad(b []byte) []byte {
-   length := aes.BlockSize - len(b) % aes.BlockSize
-   for high := byte(length); length >= 1; length-- {
-      b = append(b, high)
-   }
-   return b
-}
-
 const (
    aid = 2198311517
    cms_account_id = "dJ5BDC"
 )
-
-func DashCenc(content_id string) (string, error) {
-   query := url.Values{
-      "assetTypes": {"DASH_CENC"},
-      "formats": {"MPEG-DASH"},
-   }
-   return location(content_id, query)
-}
 
 func (n *number) UnmarshalText(text []byte) error {
    if len(text) >= 1 {

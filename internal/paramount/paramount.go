@@ -5,6 +5,7 @@ import (
    "154.pages.dev/media/paramount"
    "fmt"
    "net/http"
+   "sort"
 )
 
 func (f flags) dash(app paramount.AppToken) error {
@@ -16,28 +17,30 @@ func (f flags) dash(app paramount.AppToken) error {
    if err != nil {
       return err
    }
-   media, err := internal.DASH(req)
+   reps, err := internal.DASH(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
-         f.s.Poster, err = app.Session(f.paramount)
-         if err != nil {
-            return err
+   sort.Slice(reps, func(i, j int) bool {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         if _, ok := rep.Ext(); ok {
+            fmt.Print(rep, "\n\n")
          }
+      case rep.Id:
          f.s.Name, err = app.Item(f.paramount)
          if err != nil {
             return err
          }
-         return f.s.Download(medium)
+         f.s.Poster, err = app.Session(f.paramount)
+         if err != nil {
+            return err
+         }
+         return f.s.Download(rep)
       }
-   }
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
 }
