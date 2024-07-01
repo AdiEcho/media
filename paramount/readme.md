@@ -31,8 +31,8 @@ the commercial you might get an error, try again.
 ## How to get app\_secret?
 
 ~~~
-com\cbs\app\dagger\DataLayerModule.java
-dataSourceConfiguration.setCbsAppSecret("6c70b33080758409");
+sources\com\cbs\app\dagger\DataLayerModule.java
+dataSourceConfiguration.setCbsAppSecret("a624d7b175f5626b");
 ~~~
 
 ## How to get secret\_key?

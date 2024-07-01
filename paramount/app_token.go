@@ -12,18 +12,6 @@ import (
    "strings"
 )
 
-func pad(b []byte) []byte {
-   length := aes.BlockSize - len(b) % aes.BlockSize
-   for high := byte(length); length >= 1; length-- {
-      b = append(b, high)
-   }
-   return b
-}
-
-type AppToken string
-
-const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
-
 func (at *AppToken) with(app_secret string) error {
    key, err := hex.DecodeString(secret_key)
    if err != nil {
@@ -108,3 +96,15 @@ func (at AppToken) Session(content_id string) (*SessionToken, error) {
    session.URL += content_id
    return session, nil
 }
+
+func pad(b []byte) []byte {
+   length := aes.BlockSize - len(b) % aes.BlockSize
+   for high := byte(length); length >= 1; length-- {
+      b = append(b, high)
+   }
+   return b
+}
+
+type AppToken string
+
+const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
