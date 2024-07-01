@@ -14,10 +14,12 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
+   //////////////////////////////////////////////////////////////////////////////
    address, err := paramount.DashCenc(f.paramount)
    if err != nil {
       return err
    }
+   //////////////////////////////////////////////////////////////////////////////
    req, err := http.NewRequest("", address, nil)
    if err != nil {
       return err
