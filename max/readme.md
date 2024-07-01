@@ -1,10 +1,10 @@
 # max.com
 
 1. auth.max.com/product
-2. ad-free
+2. with ads
 3. continue
 4. email
-   - 2024-6-16@mailsac.com
+   - 2024-7-1@mailsac.com
 5. confirm email
 6. password
 7. first name
