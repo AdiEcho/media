@@ -7,16 +7,6 @@ import (
    "encoding/hex"
 )
 
-/*
-|
-2b2caa6373626591
-\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f
-
-#\xca_\xc1\x0e\xae\x99\x1e\xd3x\xad\xac
-|
-ly\xa00d40b8f1ec1746
-\x02\x02
-*/
 func decode(s string) ([]byte, error) {
    data, err := base64.StdEncoding.DecodeString(s)
    if err != nil {
@@ -31,7 +21,7 @@ func decode(s string) ([]byte, error) {
       return nil, err
    }
    var iv [aes.BlockSize]byte
-   data = data[1 + 1 + aes.BlockSize:]
+   data = data[2:]
    cipher.NewCBCDecrypter(block, iv[:]).CryptBlocks(data, data)
    return data, nil
 }

@@ -8,7 +8,12 @@ import (
    "sort"
 )
 
-func (f flags) dash(app paramount.AppToken) error {
+func (f flags) download() error {
+   var app paramount.AppToken
+   err := app.Default()
+   if err != nil {
+      return err
+   }
    address, err := paramount.DashCenc(f.paramount)
    if err != nil {
       return err

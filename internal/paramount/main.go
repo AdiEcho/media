@@ -2,7 +2,6 @@ package main
 
 import (
    "154.pages.dev/media/internal"
-   "154.pages.dev/media/paramount"
    "154.pages.dev/text"
    "flag"
    "os"
@@ -39,12 +38,7 @@ func main() {
    flag.Parse()
    text.Transport{}.Set(true)
    if f.paramount != "" {
-      var app paramount.AppToken
-      err := app.New()
-      if err != nil {
-         panic(err)
-      }
-      err = f.dash(app)
+      err := f.download()
       if err != nil {
          panic(err)
       }

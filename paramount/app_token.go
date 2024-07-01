@@ -12,7 +12,7 @@ import (
    "strings"
 )
 
-func (at *AppToken) with(app_secret string) error {
+func (at *AppToken) New(app_secret string) error {
    key, err := hex.DecodeString(secret_key)
    if err != nil {
       return err
@@ -35,8 +35,8 @@ func (at *AppToken) with(app_secret string) error {
    return nil
 }
 
-func (at *AppToken) New() error {
-   return at.with(app_secrets["15.0.26"])
+func (at *AppToken) Default() error {
+   return at.New(app_secrets["15.0.26"])
 }
 
 func (at AppToken) Item(content_id string) (*VideoItem, error) {
