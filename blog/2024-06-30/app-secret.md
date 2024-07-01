@@ -16,7 +16,7 @@ private final String m8522a(String appSecret) {
    String str2 = System.currentTimeMillis() + "|" + appSecret;
 ~~~
 
-same file:
+call m8522a:
 
 ~~~
 public final String m8529g(String oldAppSecret) {

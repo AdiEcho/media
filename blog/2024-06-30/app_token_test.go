@@ -13,6 +13,7 @@ var secrets = []struct{
 }{
    {"google_mobile", "8c4edb1155a410e4"},
    {"intl", "710d40b8f1ec1746"},
+   {"com.cbs.ca_15.0.28", "c0b1d5d6ed27a3f6"},
 }
 
 func TestEncode(t *testing.T) {
@@ -25,7 +26,7 @@ func TestEncode(t *testing.T) {
       at := url.Values{
          "at": {string(token)},
       }.Encode()
-      fmt.Println(secret.key, at)
+      fmt.Print(secret.key, "\n", at, "\n\n")
    }
 }
 

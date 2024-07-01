@@ -10,6 +10,10 @@ pass:
 
 https://www.paramountplus.com/apps-api/v2.0/androidphone/video/cid/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ.json?at=ABAAAAAAAAAAAAAAAAAAAAAAhItPlp7hfffOLEvNQnGPQP9TT5T5VkV4heLW2ziwvhI%3D
 
+`com.cbs.ca_15.0.28`:
+
+https://www.paramountplus.com/apps-api/v2.0/androidphone/video/cid/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ.json?at=ABAAAAAAAAAAAAAAAAAAAAAAU%2FEmq2DGAxNGYi71fZdi2mb6UTU2%2BelcD3bGEhs6bo4%3D
+
 ## US
 
 must percent encode:

@@ -55,4 +55,9 @@ if (jSONObject.has(str)) {
 ((C8044h) this.f14799b).m13010i("cookie_migration_secret", str2);
 ~~~
 
-`google_mobile` not found.
+`google_mobile` not found for all versions. define `f31218b`:
+
+~~~
+sources\p462po\C11984b.java
+56:        this.f31218b = "c0b1d5d6ed27a3f6";
+~~~
