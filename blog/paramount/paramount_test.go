@@ -22,6 +22,7 @@ func TestWidevine(t *testing.T) {
       t.Fatal(err)
    }
    var pssh widevine.PSSH
+   pssh.ContentId = []byte(test.content_id)
    pssh.KeyId, err = hex.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
@@ -52,16 +53,6 @@ func TestMpd(t *testing.T) {
    fmt.Println(address)
 }
 
-var test = struct{
-   content_id string
-   key_id string
-   url string
-}{
-   content_id: "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
-   key_id: "06c3b7eea1ce45779faee2abc8d01a55",
-   url: "paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
-}
-
 func TestItem(t *testing.T) {
    var app AppToken
    err := app.New()
@@ -73,4 +64,14 @@ func TestItem(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", item)
+}
+
+var test = struct{
+   content_id string
+   key_id string
+   url string
+}{
+   content_id: "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
+   key_id: "06c3b7eea1ce45779faee2abc8d01a55",
+   url: "paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
 }

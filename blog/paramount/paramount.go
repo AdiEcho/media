@@ -14,19 +14,24 @@ import (
    "time"
 )
 
-// hard geo block
+// com.cbs.ca_15.0.28
+const app_secret = "c0b1d5d6ed27a3f6"
+
 func (at AppToken) Session(content_id string) (*SessionToken, error) {
+   // hard geo block
+   //req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
    req, err := http.NewRequest("", "https://www.intl.paramountplus.com", nil)
    if err != nil {
       return nil, err
    }
-   req.URL.RawQuery = at.v.Encode()
    req.URL.Path = func() string {
       var b strings.Builder
       b.WriteString("/apps-api/v3.0/androidphone/irdeto-control")
       b.WriteString("/anonymous-session-token.json")
       return b.String()
    }()
+   at.v.Set("contentId", content_id)
+   req.URL.RawQuery = at.v.Encode()
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -42,7 +47,6 @@ func (at AppToken) Session(content_id string) (*SessionToken, error) {
    if err != nil {
       return nil, err
    }
-   session.Url += content_id
    return session, nil
 }
 
@@ -58,6 +62,7 @@ func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
 func (s SessionToken) RequestHeader() (http.Header, error) {
    head := make(http.Header)
    head.Set("authorization", "Bearer " + s.LsSession)
+   head.Set("content-type", "application/x-protobuf")
    return head, nil
 }
 
@@ -173,9 +178,6 @@ func (at *AppToken) New() error {
    }
    return nil
 }
-
-// com.cbs.ca_15.0.28
-const app_secret = "c0b1d5d6ed27a3f6"
 
 // hard geo block
 func (at AppToken) Item(content_id string) (*VideoItem, error) {

@@ -2,31 +2,37 @@
 
 ## Android client
 
+create Android 6 device. install user certificate. start video. after the
+commercial you might get an error, try again.
+
+US:
+
 https://play.google.com/store/apps/details?id=com.cbs.app
 
-Create device with Android API 23. Install user certificate. Start video. After
-the commercial you might get an error, try again.
+INTL:
 
-## TRY PARAMOUNT+
+https://play.google.com/store/apps/details?id=com.cbs.ca
 
-1. https://paramountplus.com
-2. click TRY IT FREE
-3. click CONTINUE
+## try paramount+
+
+1. paramountplus.com
+2. TRY IT FREE
+3. CONTINUE
 4. make sure MONTHLY is selected, then under Essential click SELECT PLAN
 5. if you see a bundle screen, click MAYBE LATER
-6. click CONTINUE
+6. CONTINUE
 7. uncheck Yes, I would like to receive marketing
-8. click CONTINUE
-9. click START PARAMOUNT+
-10. https://paramountplus.com
+8. CONTINUE
+9. START PARAMOUNT+
+10. paramountplus.com
 11. select a profile
 12. under profile click Account
-13. click Cancel Subscription
-14. click CONTINUE TO CANCEL
-15. click I understand
-16. click YES, CANCEL
-17. click the first option
-18. click COMPLETE CANCELLATION
+13. Cancel Subscription
+14. CONTINUE TO CANCEL
+15. I understand
+16. YES, CANCEL
+17. the first option
+18. COMPLETE CANCELLATION
 
 ## How to get app\_secret?
 
