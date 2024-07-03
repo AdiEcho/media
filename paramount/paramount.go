@@ -107,11 +107,11 @@ func (v VideoItem) Show() string {
    }
    return ""
 }
+
 func DashCenc(content_id string) (string, error) {
    query := url.Values{
       "formats": {"MPEG-DASH"},
       "assetTypes": {"DASH_CENC"},
-      // "assetTypes": {"DASH_CENC_PRECON"},
    }
    return location(content_id, query)
 }

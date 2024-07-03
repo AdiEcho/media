@@ -14,17 +14,69 @@ import (
    "time"
 )
 
-// must use the token generation on the US zone
-func (at AppToken) Session(content_id string) (*SessionToken, error) {
-   // hard geo block
-   //req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
-   req, err := http.NewRequest("", "https://www.intl.paramountplus.com", nil)
+type VideoItem struct {
+   AirDateIso time.Time `json:"_airDateISO"`
+   EpisodeNum number
+   Label string
+   MediaType string
+   SeasonNum number
+   SeriesTitle string
+   StreamingUrl string
+}
+
+// must use the INTL zone
+func (at AppToken) Item(content_id string) (*VideoItem, error) {
+   req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err
    }
    req.URL.Path = func() string {
       var b strings.Builder
-      b.WriteString("/apps-api/v3.0/androidphone/irdeto-control")
+      b.WriteString("/apps-api/v2.0/androidphone/video/cid/")
+      b.WriteString(content_id)
+      b.WriteString(".json")
+      return b.String()
+   }()
+   req.URL.RawQuery = at.v.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var video struct {
+      Error string
+      ItemList []VideoItem
+   }
+   err = json.NewDecoder(resp.Body).Decode(&video)
+   if err != nil {
+      return nil, err
+   }
+   if v := video.Error; v != "" {
+      return nil, errors.New(v)
+   }
+   return &video.ItemList[0], nil
+}
+
+type SessionToken struct {
+   LsSession string `json:"ls_session"`
+   StreamingUrl string // US only
+   Url string
+}
+
+// must use the US zone
+func (at AppToken) Session(content_id string) (*SessionToken, error) {
+   req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/apps-api/v3.1/androidphone/irdeto-control")
       b.WriteString("/anonymous-session-token.json")
       return b.String()
    }()
@@ -48,47 +100,8 @@ func (at AppToken) Session(content_id string) (*SessionToken, error) {
    return session, nil
 }
 
-// hard geo block
-func location(content_id string, query url.Values) (string, error) {
-   req, err := http.NewRequest("", "https://link.theplatform.com", nil)
-   if err != nil {
-      return "", err
-   }
-   req.URL.Path = func() string {
-      b := []byte("/s/")
-      b = append(b, cms_account_id...)
-      b = append(b, "/media/guid/"...)
-      b = strconv.AppendInt(b, aid, 10)
-      b = append(b, '/')
-      b = append(b, content_id...)
-      return string(b)
-   }()
-   req.URL.RawQuery = query.Encode()
-   resp, err := http.DefaultTransport.RoundTrip(req)
-   if err != nil {
-      return "", err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusFound {
-      var s struct {
-         Description string
-      }
-      json.NewDecoder(resp.Body).Decode(&s)
-      return "", errors.New(s.Description)
-   }
-   return resp.Header.Get("Location"), nil
-}
-
 type AppToken struct {
    v url.Values
-}
-
-func DashCenc(content_id string) (string, error) {
-   query := url.Values{
-      "assetTypes": {"DASH_CENC_PRECON"},
-      "formats": {"MPEG-DASH"},
-   }
-   return location(content_id, query)
 }
 
 const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
@@ -101,21 +114,7 @@ func pad(b []byte) []byte {
    return b
 }
 
-const (
-   aid = 2198311517
-   cms_account_id = "dJ5BDC"
-)
-
 type number int
-
-type VideoItem struct {
-   AirDateIso time.Time `json:"_airDateISO"`
-   EpisodeNum number
-   Label string
-   SeasonNum number
-   SeriesTitle string
-   MediaType string
-}
 
 func (n *number) UnmarshalText(text []byte) error {
    if len(text) >= 1 {
@@ -126,11 +125,6 @@ func (n *number) UnmarshalText(text []byte) error {
       *n = number(i)
    }
    return nil
-}
-
-type SessionToken struct {
-   Url string
-   LsSession string `json:"ls_session"`
 }
 
 func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
@@ -150,16 +144,6 @@ func (s SessionToken) RequestUrl() (string, bool) {
 
 func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
-}
-
-// 15.0.26
-func (at *AppToken) com_cbs_app() error {
-   return at.New("2b2caa6373626591")
-}
-
-// 15.0.28
-func (at *AppToken) com_cbs_ca() error {
-   return at.New("c0b1d5d6ed27a3f6")
 }
 
 func (at *AppToken) New(app_secret string) error {
@@ -187,36 +171,51 @@ func (at *AppToken) New(app_secret string) error {
    return nil
 }
 
-// hard geo block
-func (at AppToken) Item(content_id string) (*VideoItem, error) {
-   req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
+const (
+   aid = 2198311517
+   cms_account_id = "dJ5BDC"
+)
+
+// must use the INTL zone
+func mpeg_dash(content_id string) (string, error) {
+   req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {
-      return nil, err
+      return "", err
    }
    req.URL.Path = func() string {
-      var b strings.Builder
-      b.WriteString("/apps-api/v2.0/androidphone/video/cid/")
-      b.WriteString(content_id)
-      b.WriteString(".json")
-      return b.String()
+      b := []byte("/s/")
+      b = append(b, cms_account_id...)
+      b = append(b, "/media/guid/"...)
+      b = strconv.AppendInt(b, aid, 10)
+      b = append(b, '/')
+      b = append(b, content_id...)
+      return string(b)
    }()
-   req.URL.RawQuery = at.v.Encode()
-   resp, err := http.DefaultClient.Do(req)
+   req.URL.RawQuery = url.Values{
+      "assetTypes": {"DASH_CENC_PRECON"},
+      "formats": {"MPEG-DASH"},
+   }.Encode()
+   resp, err := http.DefaultTransport.RoundTrip(req)
    if err != nil {
-      return nil, err
+      return "", err
    }
    defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
+   if resp.StatusCode != http.StatusFound {
+      var s struct {
+         Description string
+      }
+      json.NewDecoder(resp.Body).Decode(&s)
+      return "", errors.New(s.Description)
    }
-   var video struct {
-      ItemList []VideoItem
-   }
-   err = json.NewDecoder(resp.Body).Decode(&video)
-   if err != nil {
-      return nil, err
-   }
-   return &video.ItemList[0], nil
+   return resp.Header.Get("location"), nil
+}
+
+// 15.0.28
+func (at *AppToken) com_cbs_app() error {
+   return at.New("a624d7b175f5626b")
+}
+
+// 15.0.28
+func (at *AppToken) com_cbs_ca() error {
+   return at.New("c0b1d5d6ed27a3f6")
 }
