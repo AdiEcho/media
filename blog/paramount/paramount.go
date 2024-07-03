@@ -21,7 +21,13 @@ type VideoItem struct {
    MediaType string
    SeasonNum number
    SeriesTitle string
-   StreamingUrl string
+   StreamingUrl string // US only
+}
+
+type SessionToken struct {
+   LsSession string `json:"ls_session"`
+   StreamingUrl string // US only
+   Url string
 }
 
 // must use the INTL zone
@@ -56,16 +62,13 @@ func (at AppToken) Item(content_id string) (*VideoItem, error) {
    if err != nil {
       return nil, err
    }
-   if v := video.Error; v != "" {
-      return nil, errors.New(v)
+   if video.Error != "" {
+      return nil, errors.New(video.Error)
+   }
+   if len(video.ItemList) == 0 {
+      return nil, errors.New("len(itemList) == 0")
    }
    return &video.ItemList[0], nil
-}
-
-type SessionToken struct {
-   LsSession string `json:"ls_session"`
-   StreamingUrl string // US only
-   Url string
 }
 
 // must use the US zone

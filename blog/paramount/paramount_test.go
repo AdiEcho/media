@@ -9,6 +9,31 @@ import (
    "time"
 )
 
+func TestItem(t *testing.T) {
+   for _, test := range tests {
+      var app AppToken
+      // err := app.com_cbs_ca()
+      err := app.com_cbs_app()
+      if err != nil {
+         t.Fatal(err)
+      }
+      item, err := app.Item(test.content_id)
+      fmt.Printf("%v %+v %v\n", test.location, item, err)
+      time.Sleep(time.Second)
+   }
+}
+
+func TestSession(t *testing.T) {
+   for _, test := range tests {
+      var app AppToken
+      app.com_cbs_app()
+      // err := app.com_cbs_ca()
+      session, err := app.Session(test.content_id)
+      fmt.Printf("%v %+v %v\n", test.location, session, err)
+      time.Sleep(time.Second)
+   }
+}
+
 var tests = []struct{
    content_id string
    key_id string
@@ -26,36 +51,6 @@ var tests = []struct{
       location: "United States",
       url: "paramountplus.com/shows/video/esJvFlqdrcS_kFHnpxSuYp449E7tTexD",
    },
-}
-
-func TestItem(t *testing.T) {
-   for _, test := range tests {
-      var app AppToken
-      err := app.com_cbs_app()
-      //err := app.com_cbs_ca()
-      if err != nil {
-         t.Fatal(err)
-      }
-      item, err := app.Item(test.content_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%v %+v\n", test.location, item)
-      time.Sleep(time.Second)
-   }
-}
-
-func TestSession(t *testing.T) {
-   for _, test := range tests {
-      var app AppToken
-      app.com_cbs_app()
-      session, err := app.Session(test.content_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%v %+v\n", test.location, session)
-      time.Sleep(time.Second)
-   }
 }
 
 func TestWidevine(t *testing.T) {
