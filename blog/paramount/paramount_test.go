@@ -8,6 +8,16 @@ import (
    "testing"
 )
 
+var test = struct{
+   content_id string
+   key_id string
+   url string
+}{
+   content_id: "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
+   key_id: "06c3b7eea1ce45779faee2abc8d01a55",
+   url: "paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
+}
+
 func TestWidevine(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -33,7 +43,7 @@ func TestWidevine(t *testing.T) {
       t.Fatal(err)
    }
    var app AppToken
-   app.New()
+   app.com_cbs_app()
    session, err := app.Session(test.content_id)
    if err != nil {
       t.Fatal(err)
@@ -55,7 +65,7 @@ func TestMpd(t *testing.T) {
 
 func TestItem(t *testing.T) {
    var app AppToken
-   err := app.New()
+   err := app.com_cbs_ca()
    if err != nil {
       t.Fatal(err)
    }
@@ -64,14 +74,4 @@ func TestItem(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", item)
-}
-
-var test = struct{
-   content_id string
-   key_id string
-   url string
-}{
-   content_id: "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
-   key_id: "06c3b7eea1ce45779faee2abc8d01a55",
-   url: "paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
 }

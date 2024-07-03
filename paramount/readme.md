@@ -16,23 +16,14 @@ https://play.google.com/store/apps/details?id=com.cbs.ca
 ## try paramount+
 
 1. paramountplus.com
-2. TRY IT FREE
-3. CONTINUE
-4. make sure MONTHLY is selected, then under Essential click SELECT PLAN
-5. if you see a bundle screen, click MAYBE LATER
-6. CONTINUE
-7. uncheck Yes, I would like to receive marketing
-8. CONTINUE
-9. START PARAMOUNT+
-10. paramountplus.com
-11. select a profile
-12. under profile click Account
-13. Cancel Subscription
-14. CONTINUE TO CANCEL
-15. I understand
-16. YES, CANCEL
-17. the first option
-18. COMPLETE CANCELLATION
+2. try it free
+3. continue
+4. make sure monthly is selected, then under essential click select plan
+5. if you see a bundle screen, click maybe later
+6. continue
+7. uncheck yes, i would like to receive marketing
+8. continue
+9. start paramount+
 
 ## How to get app\_secret?
 

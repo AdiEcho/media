@@ -14,9 +14,7 @@ import (
    "time"
 )
 
-// com.cbs.ca_15.0.28
-const app_secret = "c0b1d5d6ed27a3f6"
-
+// must use the token generation on the US zone
 func (at AppToken) Session(content_id string) (*SessionToken, error) {
    // hard geo block
    //req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
@@ -48,30 +46,6 @@ func (at AppToken) Session(content_id string) (*SessionToken, error) {
       return nil, err
    }
    return session, nil
-}
-
-type SessionToken struct {
-   Url string
-   LsSession string `json:"ls_session"`
-}
-
-func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (s SessionToken) RequestHeader() (http.Header, error) {
-   head := make(http.Header)
-   head.Set("authorization", "Bearer " + s.LsSession)
-   head.Set("content-type", "application/x-protobuf")
-   return head, nil
-}
-
-func (s SessionToken) RequestUrl() (string, bool) {
-   return s.Url, true
-}
-
-func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
 }
 
 // hard geo block
@@ -154,7 +128,41 @@ func (n *number) UnmarshalText(text []byte) error {
    return nil
 }
 
-func (at *AppToken) New() error {
+type SessionToken struct {
+   Url string
+   LsSession string `json:"ls_session"`
+}
+
+func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (s SessionToken) RequestHeader() (http.Header, error) {
+   head := make(http.Header)
+   head.Set("authorization", "Bearer " + s.LsSession)
+   head.Set("content-type", "application/x-protobuf")
+   return head, nil
+}
+
+func (s SessionToken) RequestUrl() (string, bool) {
+   return s.Url, true
+}
+
+func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+// 15.0.26
+func (at *AppToken) com_cbs_app() error {
+   return at.New("2b2caa6373626591")
+}
+
+// 15.0.28
+func (at *AppToken) com_cbs_ca() error {
+   return at.New("c0b1d5d6ed27a3f6")
+}
+
+func (at *AppToken) New(app_secret string) error {
    key, err := hex.DecodeString(secret_key)
    if err != nil {
       return err
