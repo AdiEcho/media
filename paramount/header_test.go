@@ -5,6 +5,24 @@ import (
    "testing"
 )
 
+func TestMpdFr(t *testing.T) {
+   var head Header
+   err := head.New(tests["fr"].content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", head)
+}
+
+func TestMpdUs(t *testing.T) {
+   var head Header
+   err := head.New(tests["us"].content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", head)
+}
+
 var tests = map[string]struct{
    content_id string
    key_id string
@@ -20,20 +38,4 @@ var tests = map[string]struct{
       key_id: "1fde0154d72a4f45912b34f0ce0777eb",
       url: "paramountplus.com/shows/video/esJvFlqdrcS_kFHnpxSuYp449E7tTexD",
    },
-}
-
-func TestMpdUs(t *testing.T) {
-   address, err := MpegDash(tests["us"].content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(address)
-}
-
-func TestMpdFr(t *testing.T) {
-   address, err := MpegDash(tests["fr"].content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(address)
 }

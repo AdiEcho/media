@@ -15,7 +15,7 @@ func TestItemUs(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   items, err := app.items(tests["us"].content_id)
+   items, err := app.Items(tests["us"].content_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -28,7 +28,7 @@ func TestItemFr(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   items, err := app.items(tests["fr"].content_id)
+   items, err := app.Items(tests["fr"].content_id)
    if err != nil {
       t.Fatal(err)
    }

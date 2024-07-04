@@ -3,10 +3,15 @@ package main
 import (
    "154.pages.dev/media/internal"
    "154.pages.dev/media/paramount"
+   "errors"
    "fmt"
    "net/http"
    "sort"
 )
+
+func (f flags) do_write() error {
+   return nil
+}
 
 func (f flags) download() error {
    var app paramount.AppToken
@@ -15,11 +20,12 @@ func (f flags) download() error {
       return err
    }
    // GEO
-   address, err := paramount.MpegDash(f.paramount)
+   var head paramount.Header
+   err = head.New(f.paramount)
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", address, nil)
+   req, err := http.NewRequest("", head.Location(), nil)
    if err != nil {
       return err
    }
@@ -37,14 +43,19 @@ func (f flags) download() error {
             fmt.Print(rep, "\n\n")
          }
       case rep.Id:
-         // GEO
-         f.s.Name, err = app.Item(f.paramount)
-         if err != nil {
-            return err
-         }
          f.s.Poster, err = app.Session(f.paramount)
          if err != nil {
             return err
+         }
+         // GEO
+         items, err := app.Items(f.paramount)
+         if err != nil {
+            return err
+         }
+         var ok bool
+         f.s.Name, ok = items.Item()
+         if !ok {
+            return errors.New("VideoItems.Item")
          }
          return f.s.Download(rep)
       }

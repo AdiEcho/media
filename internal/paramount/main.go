@@ -12,6 +12,7 @@ type flags struct {
    representation string
    s internal.Stream
    paramount string
+   write bool
 }
 
 func (f *flags) New() error {
@@ -35,14 +36,21 @@ func main() {
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
+   flag.BoolVar(&f.write, "w", false, "write")
    flag.Parse()
    text.Transport{}.Set(true)
-   if f.paramount != "" {
+   switch {
+   case f.write:
+      err := f.do_write()
+      if err != nil {
+         panic(err)
+      }
+   case f.paramount != "":
       err := f.download()
       if err != nil {
          panic(err)
       }
-   } else {
+   default:
       flag.Usage()
    }
 }
