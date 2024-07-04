@@ -14,6 +14,79 @@ import (
    "time"
 )
 
+// must use app token and IP address for correct location
+func (at AppToken) Item(content_id string) (*VideoItem, error) {
+   req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/apps-api/v2.0/androidphone/video/cid/")
+      b.WriteString(content_id)
+      b.WriteString(".json")
+      return b.String()
+   }()
+   req.URL.RawQuery = at.v.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var video struct {
+      Error string
+      ItemList []VideoItem
+   }
+   err = json.NewDecoder(resp.Body).Decode(&video)
+   if err != nil {
+      return nil, err
+   }
+   if video.Error != "" {
+      return nil, errors.New(video.Error)
+   }
+   if len(video.ItemList) == 0 {
+      return nil, errors.New("len(itemList) == 0")
+   }
+   return &video.ItemList[0], nil
+}
+
+// must use app token and IP address for US
+func (at AppToken) Session(content_id string) (*SessionToken, error) {
+   req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/apps-api/v3.1/androidphone/irdeto-control")
+      b.WriteString("/anonymous-session-token.json")
+      return b.String()
+   }()
+   at.v.Set("contentId", content_id)
+   req.URL.RawQuery = at.v.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   session := new(SessionToken)
+   err = json.NewDecoder(resp.Body).Decode(session)
+   if err != nil {
+      return nil, err
+   }
+   return session, nil
+}
+
 type VideoItem struct {
    AirDateIso time.Time `json:"_airDateISO"`
    EpisodeNum number
@@ -115,9 +188,7 @@ func (s SessionToken) RequestHeader() (http.Header, error) {
    return head, nil
 }
 
-////////////////
-
-// hard geo block based on content ID
+// must use IP address for correct location
 func mpeg_dash(content_id string) (string, error) {
    req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {
@@ -149,77 +220,4 @@ func mpeg_dash(content_id string) (string, error) {
       return "", errors.New(s.Description)
    }
    return resp.Header.Get("location"), nil
-}
-
-// hard geo block based on content ID
-func (at AppToken) Item(content_id string) (*VideoItem, error) {
-   req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      var b strings.Builder
-      b.WriteString("/apps-api/v2.0/androidphone/video/cid/")
-      b.WriteString(content_id)
-      b.WriteString(".json")
-      return b.String()
-   }()
-   req.URL.RawQuery = at.v.Encode()
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var video struct {
-      Error string
-      ItemList []VideoItem
-   }
-   err = json.NewDecoder(resp.Body).Decode(&video)
-   if err != nil {
-      return nil, err
-   }
-   if video.Error != "" {
-      return nil, errors.New(video.Error)
-   }
-   if len(video.ItemList) == 0 {
-      return nil, errors.New("len(itemList) == 0")
-   }
-   return &video.ItemList[0], nil
-}
-
-// hard geo block US
-func (at AppToken) Session(content_id string) (*SessionToken, error) {
-   req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      var b strings.Builder
-      b.WriteString("/apps-api/v3.1/androidphone/irdeto-control")
-      b.WriteString("/anonymous-session-token.json")
-      return b.String()
-   }()
-   at.v.Set("contentId", content_id)
-   req.URL.RawQuery = at.v.Encode()
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   session := new(SessionToken)
-   err = json.NewDecoder(resp.Body).Decode(session)
-   if err != nil {
-      return nil, err
-   }
-   return session, nil
 }

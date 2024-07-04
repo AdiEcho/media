@@ -9,48 +9,63 @@ import (
    "time"
 )
 
-func TestItem(t *testing.T) {
-   for _, test := range tests {
-      var app AppToken
-      // err := app.com_cbs_ca()
-      err := app.com_cbs_app()
-      if err != nil {
-         t.Fatal(err)
-      }
-      item, err := app.Item(test.content_id)
-      fmt.Printf("%v %+v %v\n", test.location, item, err)
-      time.Sleep(time.Second)
-   }
-}
-
-func TestSession(t *testing.T) {
-   for _, test := range tests {
-      var app AppToken
-      app.com_cbs_app()
-      // err := app.com_cbs_ca()
-      session, err := app.Session(test.content_id)
-      fmt.Printf("%v %+v %v\n", test.location, session, err)
-      time.Sleep(time.Second)
-   }
-}
-
-var tests = []struct{
+var tests = map[string]struct{
    content_id string
    key_id string
-   location string
    url string
 }{
-   {
+   "fr": {
       content_id: "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
       key_id: "06c3b7eea1ce45779faee2abc8d01a55",
-      location: "France",
       url: "paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
    },
-   {
+   "us": {
       content_id: "esJvFlqdrcS_kFHnpxSuYp449E7tTexD",
-      location: "United States",
+      key_id: "1fde0154d72a4f45912b34f0ce0777eb",
       url: "paramountplus.com/shows/video/esJvFlqdrcS_kFHnpxSuYp449E7tTexD",
    },
+}
+
+func TestMpdUs(t *testing.T) {
+   address, err := mpeg_dash(tests["us"].content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(address)
+}
+
+func TestMpdFr(t *testing.T) {
+   address, err := mpeg_dash(tests["fr"].content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(address)
+}
+
+func TestItemUs(t *testing.T) {
+   var app AppToken
+   err := app.com_cbs_app()
+   if err != nil {
+      t.Fatal(err)
+   }
+   item, err := app.Item(tests["us"].content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", item)
+}
+
+func TestItemFr(t *testing.T) {
+   var app AppToken
+   err := app.com_cbs_ca()
+   if err != nil {
+      t.Fatal(err)
+   }
+   item, err := app.Item(tests["fr"].content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", item)
 }
 
 func TestWidevine(t *testing.T) {
@@ -66,35 +81,29 @@ func TestWidevine(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var pssh widevine.PSSH
-   test := tests[0]
-   pssh.ContentId = []byte(test.content_id)
-   pssh.KeyId, err = hex.DecodeString(test.key_id)
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      var pssh widevine.PSSH
+      pssh.ContentId = []byte(test.content_id)
+      pssh.KeyId, err = hex.DecodeString(test.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var module widevine.CDM
+      err = module.New(private_key, client_id, pssh.Encode())
+      if err != nil {
+         t.Fatal(err)
+      }
+      var app AppToken
+      app.com_cbs_app()
+      session, err := app.Session(test.content_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, err := module.Key(session, pssh.KeyId)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
    }
-   var module widevine.CDM
-   err = module.New(private_key, client_id, pssh.Encode())
-   if err != nil {
-      t.Fatal(err)
-   }
-   var app AppToken
-   app.com_cbs_app()
-   session, err := app.Session(test.content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := module.Key(session, pssh.KeyId)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
-}
-
-func TestMpd(t *testing.T) {
-   address, err := mpeg_dash(tests[0].content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(address)
 }
