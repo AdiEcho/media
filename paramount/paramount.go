@@ -11,12 +11,104 @@ import (
    "net/url"
    "strconv"
    "strings"
+   "time"
 )
 
-const (
-   aid = 2198311517
-   cms_account_id = "dJ5BDC"
-)
+// must use app token and IP address for correct location
+func (at AppToken) items(content_id string) (video_items, error) {
+   req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/apps-api/v2.0/androidphone/video/cid/")
+      b.WriteString(content_id)
+      b.WriteString(".json")
+      return b.String()
+   }()
+   req.URL.RawQuery = at.v.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var video struct {
+      Error string
+      ItemList video_items
+   }
+   err = json.NewDecoder(resp.Body).Decode(&video)
+   if err != nil {
+      return nil, err
+   }
+   if video.Error != "" {
+      return nil, errors.New(video.Error)
+   }
+   return video.ItemList, nil
+}
+
+func (n *number) UnmarshalText(text []byte) error {
+   if len(text) >= 1 {
+      i, err := strconv.Atoi(string(text))
+      if err != nil {
+         return err
+      }
+      *n = number(i)
+   }
+   return nil
+}
+
+func (v video_item) Season() int {
+   return int(v.SeasonNum)
+}
+
+func (v video_item) Episode() int {
+   return int(v.EpisodeNum)
+}
+
+func (v video_item) Title() string {
+   return v.Label
+}
+
+func (v video_item) Year() int {
+   return v.AirDateIso.Year()
+}
+
+func (v video_item) Show() string {
+   if v.MediaType == "Full Episode" {
+      return v.SeriesTitle
+   }
+   return ""
+}
+
+func (v video_item) marshal() ([]byte, error) {
+   return json.MarshalIndent(v, "", " ")
+}
+
+type video_item struct {
+   SeriesTitle string
+   SeasonNum number
+   EpisodeNum number
+   Label string
+   AirDateIso time.Time `json:"_airDateISO"`
+   MediaType string
+}
+
+type number int
+
+type video_items []video_item
+
+func (v video_items) item() (*video_item, bool) {
+   if len(v) >= 1 {
+      return &v[0], true
+   }
+   return nil, false
+}
 
 const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
 
@@ -122,38 +214,4 @@ func (s SessionToken) RequestHeader() (http.Header, error) {
       "content-type": {"application/x-protobuf"},
    }
    return head, nil
-}
-
-// must use IP address for correct location
-func MpegDash(content_id string) (string, error) {
-   req, err := http.NewRequest("", "https://link.theplatform.com", nil)
-   if err != nil {
-      return "", err
-   }
-   req.URL.Path = func() string {
-      b := []byte("/s/")
-      b = append(b, cms_account_id...)
-      b = append(b, "/media/guid/"...)
-      b = strconv.AppendInt(b, aid, 10)
-      b = append(b, '/')
-      b = append(b, content_id...)
-      return string(b)
-   }()
-   req.URL.RawQuery = url.Values{
-      "assetTypes": {"DASH_CENC_PRECON"},
-      "formats": {"MPEG-DASH"},
-   }.Encode()
-   resp, err := http.DefaultTransport.RoundTrip(req)
-   if err != nil {
-      return "", err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusFound {
-      var s struct {
-         Description string
-      }
-      json.NewDecoder(resp.Body).Decode(&s)
-      return "", errors.New(s.Description)
-   }
-   return resp.Header.Get("location"), nil
 }

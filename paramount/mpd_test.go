@@ -22,28 +22,18 @@ var tests = map[string]struct{
    },
 }
 
-func TestItemUs(t *testing.T) {
-   var app AppToken
-   err := app.ComCbsApp()
+func TestMpdUs(t *testing.T) {
+   address, err := MpegDash(tests["us"].content_id)
    if err != nil {
       t.Fatal(err)
    }
-   item, err := app.Item(tests["us"].content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", item)
+   fmt.Println(address)
 }
 
-func TestItemFr(t *testing.T) {
-   var app AppToken
-   err := app.com_cbs_ca()
+func TestMpdFr(t *testing.T) {
+   address, err := MpegDash(tests["fr"].content_id)
    if err != nil {
       t.Fatal(err)
    }
-   item, err := app.Item(tests["fr"].content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", item)
+   fmt.Println(address)
 }

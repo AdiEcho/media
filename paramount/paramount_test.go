@@ -9,20 +9,30 @@ import (
    "time"
 )
 
-func TestMpdUs(t *testing.T) {
-   address, err := MpegDash(tests["us"].content_id)
+func TestItemUs(t *testing.T) {
+   var app AppToken
+   err := app.ComCbsApp()
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Println(address)
+   items, err := app.items(tests["us"].content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", items)
 }
 
-func TestMpdFr(t *testing.T) {
-   address, err := MpegDash(tests["fr"].content_id)
+func TestItemFr(t *testing.T) {
+   var app AppToken
+   err := app.com_cbs_ca()
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Println(address)
+   items, err := app.items(tests["fr"].content_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", items)
 }
 
 func TestWidevine(t *testing.T) {
