@@ -22,7 +22,7 @@ const (
 const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
 
 // must use IP address for correct location
-func mpeg_dash(content_id string) (string, error) {
+func MpegDash(content_id string) (string, error) {
    req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {
       return "", err
@@ -130,7 +130,7 @@ func (at AppToken) Item(content_id string) (*VideoItem, error) {
 }
 
 // 15.0.28
-func (at *AppToken) com_cbs_app() error {
+func (at *AppToken) ComCbsApp() error {
    return at.New("a624d7b175f5626b")
 }
 

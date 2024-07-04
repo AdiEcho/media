@@ -27,7 +27,7 @@ var tests = map[string]struct{
 }
 
 func TestMpdUs(t *testing.T) {
-   address, err := mpeg_dash(tests["us"].content_id)
+   address, err := MpegDash(tests["us"].content_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -35,7 +35,7 @@ func TestMpdUs(t *testing.T) {
 }
 
 func TestMpdFr(t *testing.T) {
-   address, err := mpeg_dash(tests["fr"].content_id)
+   address, err := MpegDash(tests["fr"].content_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -44,7 +44,7 @@ func TestMpdFr(t *testing.T) {
 
 func TestItemUs(t *testing.T) {
    var app AppToken
-   err := app.com_cbs_app()
+   err := app.ComCbsApp()
    if err != nil {
       t.Fatal(err)
    }
@@ -94,7 +94,7 @@ func TestWidevine(t *testing.T) {
          t.Fatal(err)
       }
       var app AppToken
-      app.com_cbs_app()
+      app.ComCbsApp()
       session, err := app.Session(test.content_id)
       if err != nil {
          t.Fatal(err)

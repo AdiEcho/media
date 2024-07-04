@@ -10,16 +10,15 @@ import (
 
 func (f flags) download() error {
    var app paramount.AppToken
-   err := app.Default()
+   err := app.ComCbsApp()
    if err != nil {
       return err
    }
-   //////////////////////////////////////////////////////////////////////////////
-   address, err := paramount.DashCenc(f.paramount)
+   // GEO
+   address, err := paramount.MpegDash(f.paramount)
    if err != nil {
       return err
    }
-   //////////////////////////////////////////////////////////////////////////////
    req, err := http.NewRequest("", address, nil)
    if err != nil {
       return err
@@ -38,6 +37,7 @@ func (f flags) download() error {
             fmt.Print(rep, "\n\n")
          }
       case rep.Id:
+         // GEO
          f.s.Name, err = app.Item(f.paramount)
          if err != nil {
             return err
