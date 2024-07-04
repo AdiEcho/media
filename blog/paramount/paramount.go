@@ -14,6 +14,80 @@ import (
    "time"
 )
 
+const (
+   aid = 2198311517
+   cms_account_id = "dJ5BDC"
+)
+
+const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
+
+// must use IP address for correct location
+func mpeg_dash(content_id string) (string, error) {
+   req, err := http.NewRequest("", "https://link.theplatform.com", nil)
+   if err != nil {
+      return "", err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/s/")
+      b = append(b, cms_account_id...)
+      b = append(b, "/media/guid/"...)
+      b = strconv.AppendInt(b, aid, 10)
+      b = append(b, '/')
+      b = append(b, content_id...)
+      return string(b)
+   }()
+   req.URL.RawQuery = url.Values{
+      "assetTypes": {"DASH_CENC_PRECON"},
+      "formats": {"MPEG-DASH"},
+   }.Encode()
+   resp, err := http.DefaultTransport.RoundTrip(req)
+   if err != nil {
+      return "", err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusFound {
+      var s struct {
+         Description string
+      }
+      json.NewDecoder(resp.Body).Decode(&s)
+      return "", errors.New(s.Description)
+   }
+   return resp.Header.Get("location"), nil
+}
+
+func pad(b []byte) []byte {
+   length := aes.BlockSize - len(b) % aes.BlockSize
+   for high := byte(length); length >= 1; length-- {
+      b = append(b, high)
+   }
+   return b
+}
+
+func (at *AppToken) New(app_secret string) error {
+   key, err := hex.DecodeString(secret_key)
+   if err != nil {
+      return err
+   }
+   block, err := aes.NewCipher(key)
+   if err != nil {
+      return err
+   }
+   var src []byte
+   src = append(src, '|')
+   src = append(src, app_secret...)
+   src = pad(src)
+   var iv [aes.BlockSize]byte
+   cipher.NewCBCEncrypter(block, iv[:]).CryptBlocks(src, src)
+   var dst []byte
+   dst = append(dst, 0, aes.BlockSize)
+   dst = append(dst, iv[:]...)
+   dst = append(dst, src...)
+   at.v = url.Values{
+      "at": {base64.StdEncoding.EncodeToString(dst)},
+   }
+   return nil
+}
+
 // must use app token and IP address for correct location
 func (at AppToken) Item(content_id string) (*VideoItem, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
@@ -55,6 +129,20 @@ func (at AppToken) Item(content_id string) (*VideoItem, error) {
    return &video.ItemList[0], nil
 }
 
+// 15.0.28
+func (at *AppToken) com_cbs_app() error {
+   return at.New("a624d7b175f5626b")
+}
+
+// 15.0.28
+func (at *AppToken) com_cbs_ca() error {
+   return at.New("c0b1d5d6ed27a3f6")
+}
+
+type AppToken struct {
+   v url.Values
+}
+
 // must use app token and IP address for US
 func (at AppToken) Session(content_id string) (*SessionToken, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
@@ -87,13 +175,16 @@ func (at AppToken) Session(content_id string) (*SessionToken, error) {
    return session, nil
 }
 
-type VideoItem struct {
-   AirDateIso time.Time `json:"_airDateISO"`
-   EpisodeNum number
-   Label string
-   MediaType string
-   SeasonNum number
-   SeriesTitle string
+func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (s SessionToken) RequestUrl() (string, bool) {
+   return s.Url, true
+}
+
+func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
 }
 
 type SessionToken struct {
@@ -101,28 +192,21 @@ type SessionToken struct {
    Url string
 }
 
-// 15.0.28
-func (at *AppToken) com_cbs_app() error {
-   return at.New("a624d7b175f5626b")
-}
-
-// 15.0.28
-func (at *AppToken) com_cbs_ca() error {
-   return at.New("c0b1d5d6ed27a3f6")
-}
-
-type AppToken struct {
-   v url.Values
-}
-
-const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
-
-func pad(b []byte) []byte {
-   length := aes.BlockSize - len(b) % aes.BlockSize
-   for high := byte(length); length >= 1; length-- {
-      b = append(b, high)
+func (s SessionToken) RequestHeader() (http.Header, error) {
+   head := http.Header{
+      "authorization": {"Bearer " + s.LsSession},
+      "content-type": {"application/x-protobuf"},
    }
-   return b
+   return head, nil
+}
+
+type VideoItem struct {
+   AirDateIso time.Time `json:"_airDateISO"`
+   EpisodeNum number
+   Label string
+   MediaType string
+   SeasonNum number
+   SeriesTitle string
 }
 
 type number int
@@ -136,88 +220,4 @@ func (n *number) UnmarshalText(text []byte) error {
       *n = number(i)
    }
    return nil
-}
-
-func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (s SessionToken) RequestUrl() (string, bool) {
-   return s.Url, true
-}
-
-func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (at *AppToken) New(app_secret string) error {
-   key, err := hex.DecodeString(secret_key)
-   if err != nil {
-      return err
-   }
-   block, err := aes.NewCipher(key)
-   if err != nil {
-      return err
-   }
-   var src []byte
-   src = append(src, '|')
-   src = append(src, app_secret...)
-   src = pad(src)
-   var iv [aes.BlockSize]byte
-   cipher.NewCBCEncrypter(block, iv[:]).CryptBlocks(src, src)
-   var dst []byte
-   dst = append(dst, 0, aes.BlockSize)
-   dst = append(dst, iv[:]...)
-   dst = append(dst, src...)
-   at.v = url.Values{
-      "at": {base64.StdEncoding.EncodeToString(dst)},
-   }
-   return nil
-}
-
-const (
-   aid = 2198311517
-   cms_account_id = "dJ5BDC"
-)
-
-func (s SessionToken) RequestHeader() (http.Header, error) {
-   head := http.Header{
-      "authorization": {"Bearer " + s.LsSession},
-      "content-type": {"application/x-protobuf"},
-   }
-   return head, nil
-}
-
-// must use IP address for correct location
-func mpeg_dash(content_id string) (string, error) {
-   req, err := http.NewRequest("", "https://link.theplatform.com", nil)
-   if err != nil {
-      return "", err
-   }
-   req.URL.Path = func() string {
-      b := []byte("/s/")
-      b = append(b, cms_account_id...)
-      b = append(b, "/media/guid/"...)
-      b = strconv.AppendInt(b, aid, 10)
-      b = append(b, '/')
-      b = append(b, content_id...)
-      return string(b)
-   }()
-   req.URL.RawQuery = url.Values{
-      "assetTypes": {"DASH_CENC_PRECON"},
-      "formats": {"MPEG-DASH"},
-   }.Encode()
-   resp, err := http.DefaultTransport.RoundTrip(req)
-   if err != nil {
-      return "", err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusFound {
-      var s struct {
-         Description string
-      }
-      json.NewDecoder(resp.Body).Decode(&s)
-      return "", errors.New(s.Description)
-   }
-   return resp.Header.Get("location"), nil
 }
