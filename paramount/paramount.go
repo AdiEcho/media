@@ -14,6 +14,32 @@ import (
    "time"
 )
 
+func (n Number) MarshalText() ([]byte, error) {
+   return strconv.AppendInt(nil, int64(n), 10), nil
+}
+
+func (n *Number) UnmarshalText(text []byte) error {
+   if len(text) >= 1 {
+      i, err := strconv.ParseInt(string(text), 10, 64)
+      if err != nil {
+         return err
+      }
+      *n = Number(i)
+   }
+   return nil
+}
+
+type Number int64
+
+type VideoItem struct {
+   SeriesTitle string
+   SeasonNum Number
+   EpisodeNum Number
+   Label string
+   AirDateIso time.Time `json:"_airDateISO"`
+   MediaType string
+}
+
 func (v *VideoItem) Json(text []byte) error {
    return json.Unmarshal(text, v)
 }
@@ -30,15 +56,6 @@ func (at *AppToken) ComCbsApp() error {
 // 15.0.28
 func (at *AppToken) ComCbsCa() error {
    return at.New("c0b1d5d6ed27a3f6")
-}
-
-type VideoItem struct {
-   SeriesTitle string
-   SeasonNum number
-   EpisodeNum number
-   Label string
-   AirDateIso time.Time `json:"_airDateISO"`
-   MediaType string
 }
 
 func (v VideoItems) Item() (*VideoItem, bool) {
@@ -86,17 +103,6 @@ func (at AppToken) Items(content_id string) (VideoItems, error) {
    return video.ItemList, nil
 }
 
-func (n *number) UnmarshalText(text []byte) error {
-   if len(text) >= 1 {
-      i, err := strconv.Atoi(string(text))
-      if err != nil {
-         return err
-      }
-      *n = number(i)
-   }
-   return nil
-}
-
 func (v VideoItem) Season() int {
    return int(v.SeasonNum)
 }
@@ -119,8 +125,6 @@ func (v VideoItem) Show() string {
    }
    return ""
 }
-
-type number int
 
 type VideoItems []VideoItem
 

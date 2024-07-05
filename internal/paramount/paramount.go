@@ -32,32 +32,34 @@ func (f flags) do_read() error {
       return reps[i].Bandwidth < reps[j].Bandwidth
    })
    for _, rep := range reps {
-      switch f.representation {
-      case "":
-         if _, ok := rep.Ext(); ok {
-            fmt.Print(rep, "\n\n")
+      if rep.GetAdaptationSet().GetPeriod().Id == "0" {
+         switch f.representation {
+         case "":
+            if _, ok := rep.Ext(); ok {
+               fmt.Print(rep, "\n\n")
+            }
+         case rep.Id:
+            var app paramount.AppToken
+            err := app.ComCbsApp()
+            if err != nil {
+               return err
+            }
+            f.s.Poster, err = app.Session(f.paramount)
+            if err != nil {
+               return err
+            }
+            text, err := os.ReadFile(f.paramount + "/item.json")
+            if err != nil {
+               return err
+            }
+            var item paramount.VideoItem
+            err = item.Json(text)
+            if err != nil {
+               return err
+            }
+            f.s.Name = item
+            return f.s.Download(rep)
          }
-      case rep.Id:
-         var app paramount.AppToken
-         err := app.ComCbsApp()
-         if err != nil {
-            return err
-         }
-         f.s.Poster, err = app.Session(f.paramount)
-         if err != nil {
-            return err
-         }
-         text, err := os.ReadFile(f.paramount + "/item.json")
-         if err != nil {
-            return err
-         }
-         var item paramount.VideoItem
-         err = item.Json(text)
-         if err != nil {
-            return err
-         }
-         f.s.Name = item
-         return f.s.Download(rep)
       }
    }
    return nil
