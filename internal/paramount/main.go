@@ -8,13 +8,6 @@ import (
    "path/filepath"
 )
 
-type flags struct {
-   representation string
-   s internal.Stream
-   paramount string
-   write bool
-}
-
 func (f *flags) New() error {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -26,6 +19,14 @@ func (f *flags) New() error {
    return nil
 }
 
+type flags struct {
+   representation string
+   s internal.Stream
+   paramount string
+   write bool
+   intl bool
+}
+
 func main() {
    var f flags
    err := f.New()
@@ -33,9 +34,10 @@ func main() {
       panic(err)
    }
    flag.StringVar(&f.paramount, "b", "", "Paramount ID")
-   flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
+   flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
+   flag.BoolVar(&f.intl, "n", false, "intl")
    flag.BoolVar(&f.write, "w", false, "write")
    flag.Parse()
    text.Transport{}.Set(true)
@@ -46,7 +48,7 @@ func main() {
          panic(err)
       }
    case f.paramount != "":
-      err := f.download()
+      err := f.do_read()
       if err != nil {
          panic(err)
       }

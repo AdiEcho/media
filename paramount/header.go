@@ -8,14 +8,6 @@ import (
    "strconv"
 )
 
-func (h *Header) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, h)
-}
-
-func (h Header) Marshal() ([]byte, error) {
-   return json.MarshalIndent(h, "", " ")
-}
-
 type Header struct {
    Header http.Header
 }
@@ -62,4 +54,12 @@ func (h *Header) New(content_id string) error {
    }
    h.Header = resp.Header
    return nil
+}
+
+func (h Header) JsonMarshal() ([]byte, error) {
+   return json.MarshalIndent(h, "", " ")
+}
+
+func (h *Header) Json(text []byte) error {
+   return json.Unmarshal(text, h)
 }

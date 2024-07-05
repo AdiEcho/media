@@ -14,12 +14,22 @@ import (
    "time"
 )
 
-func (v *VideoItem) Unmarshal(text []byte) error {
+func (v *VideoItem) Json(text []byte) error {
    return json.Unmarshal(text, v)
 }
 
-func (v VideoItem) Marshal() ([]byte, error) {
+func (v VideoItem) JsonMarshal() ([]byte, error) {
    return json.MarshalIndent(v, "", " ")
+}
+
+// 15.0.28
+func (at *AppToken) ComCbsApp() error {
+   return at.New("a624d7b175f5626b")
+}
+
+// 15.0.28
+func (at *AppToken) ComCbsCa() error {
+   return at.New("c0b1d5d6ed27a3f6")
 }
 
 type VideoItem struct {
@@ -147,16 +157,6 @@ func (at *AppToken) New(app_secret string) error {
       "at": {base64.StdEncoding.EncodeToString(dst)},
    }
    return nil
-}
-
-// 15.0.28
-func (at *AppToken) ComCbsApp() error {
-   return at.New("a624d7b175f5626b")
-}
-
-// 15.0.28
-func (at *AppToken) com_cbs_ca() error {
-   return at.New("c0b1d5d6ed27a3f6")
 }
 
 type AppToken struct {

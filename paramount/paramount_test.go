@@ -24,7 +24,7 @@ func TestItemUs(t *testing.T) {
 
 func TestItemFr(t *testing.T) {
    var app AppToken
-   err := app.com_cbs_ca()
+   err := app.ComCbsCa()
    if err != nil {
       t.Fatal(err)
    }
