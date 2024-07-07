@@ -10,6 +10,23 @@ import (
    "time"
 )
 
+var tests = []struct {
+   key_id string
+   url        string
+   video_type string
+}{
+   {
+      key_id: "0102f83e95fac43cf1662dd8e5b08d90",
+      url: "play.max.com/video/watch/c9e9bde1-1463-4c92-a25a-21451f3c5894/f1d899ac-1780-494a-a20d-caee55c9e262",
+      video_type: "MOVIE",
+   },
+   {
+      key_id: "0102d949c44f81b28fdb98d535c8bade",
+      url:        "play.max.com/video/watch/d0938760-d3ca-4c59-aea2-74ecbed42d17/2e7d1db4-2fd7-47fb-a7c3-a65b7c2e5d6f",
+      video_type: "EPISODE",
+   },
+}
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -23,49 +40,36 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var pssh widevine.PSSH
-   pssh.KeyId, err = hex.DecodeString(default_kid)
-   if err != nil {
-      t.Fatal(err)
-   }
-   var module widevine.CDM
-   err = module.New(private_key, client_id, pssh.Encode())
-   if err != nil {
-      t.Fatal(err)
-   }
-   text, err := os.ReadFile("token.json")
+   text, err := os.ReadFile(home + "/max.json")
    if err != nil {
       t.Fatal(err)
    }
    var token DefaultToken
    token.Unmarshal(text)
-   var web WebAddress
-   web.UnmarshalText([]byte(tests[0].url))
-   play, err := token.Playback(web)
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      var pssh widevine.PSSH
+      pssh.KeyId, err = hex.DecodeString(test.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var module widevine.CDM
+      err = module.New(private_key, client_id, pssh.Encode())
+      if err != nil {
+         t.Fatal(err)
+      }
+      var web WebAddress
+      web.UnmarshalText([]byte(test.url))
+      play, err := token.Playback(web)
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, err := module.Key(play, pssh.KeyId)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
    }
-   key, err := module.Key(play, pssh.KeyId)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
-}
-
-const default_kid = "01021e5f16aa2c5ed02c550139b5ab82"
-
-var tests = []struct {
-   video_type string
-   url        string
-}{
-   {
-      url:        "play.max.com/video/watch/b3b1410a-0c85-457b-bcc7-e13299bea2a8/1623fe4c-ef6e-4dd1-a10c-4a181f5f6579",
-      video_type: "MOVIE",
-   },
-   {
-      url:        "play.max.com/video/watch/d0938760-d3ca-4c59-aea2-74ecbed42d17/2e7d1db4-2fd7-47fb-a7c3-a65b7c2e5d6f",
-      video_type: "EPISODE",
-   },
 }
 
 func TestRoutes(t *testing.T) {

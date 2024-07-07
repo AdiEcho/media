@@ -35,7 +35,7 @@ func (f flags) download() error {
       return reps[i].Bandwidth < reps[j].Bandwidth
    })
    for _, rep := range reps {
-      if rep.GetAdaptationSet().GetPeriod().Id == "1" {
+      if rep.GetAdaptationSet().GetPeriod().Id == "2" {
          switch f.representation {
          case "":
             if _, ok := rep.Ext(); ok {
