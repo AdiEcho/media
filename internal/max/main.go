@@ -9,27 +9,6 @@ import (
    "path/filepath"
 )
 
-func (f *flags) New() error {
-   var err error
-   f.home, err = os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   f.home = filepath.ToSlash(f.home)
-   f.s.ClientId = f.home + "/widevine/client_id.bin"
-   f.s.PrivateKey = f.home + "/widevine/private_key.pem"
-   return nil
-}
-
-type flags struct {
-   email string
-   s internal.Stream
-   home string
-   representation string
-   password string
-   address max.WebAddress
-}
-
 func main() {
    var f flags
    err := f.New()
@@ -58,4 +37,25 @@ func main() {
    default:
       flag.Usage()
    }
+}
+
+func (f *flags) New() error {
+   var err error
+   f.home, err = os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   f.home = filepath.ToSlash(f.home)
+   f.s.ClientId = f.home + "/widevine/client_id.bin"
+   f.s.PrivateKey = f.home + "/widevine/private_key.pem"
+   return nil
+}
+
+type flags struct {
+   email string
+   s internal.Stream
+   home string
+   representation string
+   password string
+   address max.WebAddress
 }

@@ -33,7 +33,7 @@ func (s Stream) key() ([]byte, error) {
       return nil, err
    }
    slog.Info(
-      "CDM", "id", hex.EncodeToString(s.key_id), "key", hex.EncodeToString(key),
+      "CDM", "ID", hex.EncodeToString(s.key_id), "key", hex.EncodeToString(key),
    )
    return key, nil
 }

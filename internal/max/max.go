@@ -23,11 +23,9 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", play.Manifest.Url, nil)
-   if err != nil {
-      return err
-   }
-   reps, err := internal.DASH(req)
+   var req http.Request
+   req.URL = play.Manifest.Url.Url
+   reps, err := internal.DASH(&req)
    if err != nil {
       return err
    }
@@ -35,7 +33,7 @@ func (f flags) download() error {
       return reps[i].Bandwidth < reps[j].Bandwidth
    })
    for _, rep := range reps {
-      if rep.GetAdaptationSet().GetPeriod().Id == "2" {
+      if rep.GetAdaptationSet().GetPeriod().Id == "0" {
          switch f.representation {
          case "":
             if _, ok := rep.Ext(); ok {

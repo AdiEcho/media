@@ -10,6 +10,23 @@ import (
    "time"
 )
 
+func (u *Url) UnmarshalText(text []byte) error {
+   u.Url = new(url.URL)
+   err := u.Url.UnmarshalBinary(text)
+   if err != nil {
+      return err
+   }
+   query := u.Url.Query()
+   manifest := u.Url.Query()["r.manifest"]
+   query["r.manifest"] = manifest[len(manifest)-1:]
+   u.Url.RawQuery = query.Encode()
+   return nil
+}
+
+type Url struct {
+   Url *url.URL
+}
+
 type Playback struct {
    Drm struct {
       Schemes struct {
@@ -19,7 +36,7 @@ type Playback struct {
       }
    }
    Manifest struct {
-      Url string
+      Url Url
    }
 }
 
