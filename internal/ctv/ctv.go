@@ -7,44 +7,49 @@ import (
    "net/http"
    "os"
    "path"
+   "sort"
 )
 
 func (f flags) download() error {
-   text, err := os.ReadFile(f.base())
+   manifest, err := os.ReadFile(f.base() + "/manifest.txt")
    if err != nil {
       return err
    }
-   var manifest ctv.MediaManifest
-   err = manifest.Unmarshal(text)
+   text, err := os.ReadFile(f.base() + "/media.json")
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", manifest.Url, nil)
+   var media ctv.MediaContent
+   err = media.Json(text)
    if err != nil {
       return err
    }
-   represents, err := internal.DASH(req)
+   req, err := http.NewRequest("", string(manifest), nil)
    if err != nil {
       return err
    }
-   for _, represent := range represents {
-      if represent.Id == f.representation {
-         f.s.Name = manifest
+   reps, err := internal.DASH(req)
+   if err != nil {
+      return err
+   }
+   sort.Slice(reps, func(i, j int) bool {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
+         f.s.Name = ctv.Namer{&media}
          f.s.Poster = ctv.Poster{}
-         return f.s.Download(represent)
+         return f.s.Download(rep)
       }
-   }
-   for i, represent := range represents {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(represent)
    }
    return nil
 }
 
 func (f flags) base() string {
-   return path.Base(string(f.path)) + ".json"
+   return path.Base(string(f.path))
 }
 
 func (f flags) get_manifest() error {
@@ -60,13 +65,21 @@ func (f flags) get_manifest() error {
    if err != nil {
       return err
    }
+   err = os.MkdirAll(f.base(), 0666)
+   if err != nil {
+      return err
+   }
+   text, err := media.JsonMarshal()
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(f.base() + "/media.json", text, 0666)
+   if err != nil {
+      return err
+   }
    manifest, err := axis.Manifest(media)
    if err != nil {
       return err
    }
-   text, err := manifest.Marshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.base(), text, 0666)
+   return os.WriteFile(f.base() + "/manifest.txt", []byte(manifest), 0666)
 }
