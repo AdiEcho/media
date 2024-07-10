@@ -17,7 +17,7 @@ func (u *Url) UnmarshalText(text []byte) error {
       return err
    }
    query := u.Url.Query()
-   manifest := u.Url.Query()["r.manifest"]
+   manifest := query["r.manifest"]
    query["r.manifest"] = manifest[len(manifest)-1:]
    u.Url.RawQuery = query.Encode()
    return nil

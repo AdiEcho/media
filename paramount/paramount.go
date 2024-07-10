@@ -14,23 +14,6 @@ import (
    "time"
 )
 
-func (n Number) MarshalText() ([]byte, error) {
-   return strconv.AppendInt(nil, int64(n), 10), nil
-}
-
-func (n *Number) UnmarshalText(text []byte) error {
-   if len(text) >= 1 {
-      i, err := strconv.ParseInt(string(text), 10, 64)
-      if err != nil {
-         return err
-      }
-      *n = Number(i)
-   }
-   return nil
-}
-
-type Number int64
-
 type VideoItem struct {
    SeriesTitle string
    SeasonNum Number
@@ -38,31 +21,6 @@ type VideoItem struct {
    Label string
    AirDateIso time.Time `json:"_airDateISO"`
    MediaType string
-}
-
-func (v *VideoItem) Json(text []byte) error {
-   return json.Unmarshal(text, v)
-}
-
-func (v VideoItem) JsonMarshal() ([]byte, error) {
-   return json.MarshalIndent(v, "", " ")
-}
-
-// 15.0.28
-func (at *AppToken) ComCbsApp() error {
-   return at.New("a624d7b175f5626b")
-}
-
-// 15.0.28
-func (at *AppToken) ComCbsCa() error {
-   return at.New("c0b1d5d6ed27a3f6")
-}
-
-func (v VideoItems) Item() (*VideoItem, bool) {
-   if len(v) >= 1 {
-      return &v[0], true
-   }
-   return nil, false
 }
 
 // must use app token and IP address for correct location
@@ -101,6 +59,85 @@ func (at AppToken) Items(content_id string) (VideoItems, error) {
       return nil, errors.New(video.Error)
    }
    return video.ItemList, nil
+}
+
+type SessionToken struct {
+   LsSession string `json:"ls_session"`
+   Url string
+}
+
+// must use app token and IP address for US
+func (at AppToken) Session(content_id string) (*SessionToken, error) {
+   req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/apps-api/v3.1/androidphone/irdeto-control")
+      b.WriteString("/anonymous-session-token.json")
+      return b.String()
+   }()
+   at.v.Set("contentId", content_id)
+   req.URL.RawQuery = at.v.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   session := new(SessionToken)
+   err = json.NewDecoder(resp.Body).Decode(session)
+   if err != nil {
+      return nil, err
+   }
+   return session, nil
+}
+
+func (n Number) MarshalText() ([]byte, error) {
+   return strconv.AppendInt(nil, int64(n), 10), nil
+}
+
+func (n *Number) UnmarshalText(text []byte) error {
+   if len(text) >= 1 {
+      i, err := strconv.ParseInt(string(text), 10, 64)
+      if err != nil {
+         return err
+      }
+      *n = Number(i)
+   }
+   return nil
+}
+
+type Number int64
+
+func (v *VideoItem) Json(text []byte) error {
+   return json.Unmarshal(text, v)
+}
+
+func (v VideoItem) JsonMarshal() ([]byte, error) {
+   return json.MarshalIndent(v, "", " ")
+}
+
+// 15.0.28
+func (at *AppToken) ComCbsApp() error {
+   return at.New("a624d7b175f5626b")
+}
+
+// 15.0.28
+func (at *AppToken) ComCbsCa() error {
+   return at.New("c0b1d5d6ed27a3f6")
+}
+
+func (v VideoItems) Item() (*VideoItem, bool) {
+   if len(v) >= 1 {
+      return &v[0], true
+   }
+   return nil, false
 }
 
 func (v VideoItem) Season() int {
@@ -167,38 +204,6 @@ type AppToken struct {
    v url.Values
 }
 
-// must use app token and IP address for US
-func (at AppToken) Session(content_id string) (*SessionToken, error) {
-   req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      var b strings.Builder
-      b.WriteString("/apps-api/v3.1/androidphone/irdeto-control")
-      b.WriteString("/anonymous-session-token.json")
-      return b.String()
-   }()
-   at.v.Set("contentId", content_id)
-   req.URL.RawQuery = at.v.Encode()
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   session := new(SessionToken)
-   err = json.NewDecoder(resp.Body).Decode(session)
-   if err != nil {
-      return nil, err
-   }
-   return session, nil
-}
-
 func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -209,11 +214,6 @@ func (s SessionToken) RequestUrl() (string, bool) {
 
 func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
-}
-
-type SessionToken struct {
-   LsSession string `json:"ls_session"`
-   Url string
 }
 
 func (s SessionToken) RequestHeader() (http.Header, error) {

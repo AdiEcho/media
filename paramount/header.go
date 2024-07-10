@@ -4,21 +4,7 @@ import (
    "encoding/json"
    "errors"
    "net/http"
-   "net/url"
    "strconv"
-)
-
-type Header struct {
-   Header http.Header
-}
-
-func (h Header) Location() string {
-   return h.Header.Get("location")
-}
-
-const (
-   aid = 2198311517
-   cms_account_id = "dJ5BDC"
 )
 
 // must use IP address for correct location
@@ -36,10 +22,7 @@ func (h *Header) New(content_id string) error {
       b = append(b, content_id...)
       return string(b)
    }()
-   req.URL.RawQuery = url.Values{
-      "assetTypes": {"DASH_CENC_PRECON"},
-      "formats": {"MPEG-DASH"},
-   }.Encode()
+   req.URL.RawQuery = "formats=MPEG-DASH"
    resp, err := http.DefaultTransport.RoundTrip(req)
    if err != nil {
       return err
@@ -55,6 +38,19 @@ func (h *Header) New(content_id string) error {
    h.Header = resp.Header
    return nil
 }
+
+type Header struct {
+   Header http.Header
+}
+
+func (h Header) Location() string {
+   return h.Header.Get("location")
+}
+
+const (
+   aid = 2198311517
+   cms_account_id = "dJ5BDC"
+)
 
 func (h Header) JsonMarshal() ([]byte, error) {
    return json.MarshalIndent(h, "", " ")

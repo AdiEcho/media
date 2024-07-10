@@ -66,7 +66,7 @@ func (f flags) do_read() error {
 }
 
 func (f flags) do_write() error {
-   err := os.Mkdir(f.paramount, 0666)
+   err := os.MkdirAll(f.paramount, 0666)
    if err != nil {
       return err
    }
