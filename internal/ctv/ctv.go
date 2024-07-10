@@ -19,7 +19,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", manifest.URL, nil)
+   req, err := http.NewRequest("", manifest.Url, nil)
    if err != nil {
       return err
    }
