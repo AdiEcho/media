@@ -2,7 +2,7 @@
 
 ## Sign up
 
-1. https://signup.hulu.com/plans
+1. signup.hulu.com/plans
 2. select (hulu)
 3. email
 4. password
