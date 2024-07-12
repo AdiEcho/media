@@ -9,6 +9,14 @@ import (
    "strings"
 )
 
+var classification_id = map[string]int{
+   "dk": 283,
+   "fi": 284,
+   "fr": 23,
+   "no": 286,
+   "se": 282,
+}
+
 func (a Address) Movie() (*GizmoMovie, error) {
    req, err := http.NewRequest("", "https://gizmo.rakuten.tv", nil)
    if err != nil {
@@ -66,14 +74,6 @@ func (a *Address) Set(s string) error {
       return errors.New("market_code not found")
    }
    return nil
-}
-
-var classification_id = map[string]int{
-   "dk": 283,
-   "fi": 284,
-   "fr": 23,
-   "no": 286,
-   "se": 282,
 }
 
 func (GizmoMovie) Show() string {
