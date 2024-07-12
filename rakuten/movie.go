@@ -13,8 +13,33 @@ var classification_id = map[string]int{
    "dk": 283,
    "fi": 284,
    "fr": 23,
+   "ie": 41,
    "no": 286,
    "se": 282,
+   "uk": 18,
+}
+
+func (a *Address) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   s = strings.TrimPrefix(s, "rakuten.tv")
+   s = strings.TrimPrefix(s, "/")
+   var found bool
+   a.market_code, a.content_id, found = strings.Cut(s, "/movies/")
+   if !found {
+      return errors.New("/movies/ not found")
+   }
+   a.classification_id, found = classification_id[a.market_code]
+   if !found {
+      return errors.New("market_code not found")
+   }
+   return nil
+}
+
+type Address struct {
+   classification_id int
+   content_id        string
+   market_code       string
 }
 
 func (a Address) Movie() (*GizmoMovie, error) {
@@ -59,23 +84,6 @@ func (a Address) String() string {
    return b.String()
 }
 
-func (a *Address) Set(s string) error {
-   s = strings.TrimPrefix(s, "https://")
-   s = strings.TrimPrefix(s, "www.")
-   s = strings.TrimPrefix(s, "rakuten.tv")
-   s = strings.TrimPrefix(s, "/")
-   var found bool
-   a.market_code, a.content_id, found = strings.Cut(s, "/movies/")
-   if !found {
-      return errors.New("/movies/ not found")
-   }
-   a.classification_id, found = classification_id[a.market_code]
-   if !found {
-      return errors.New("market_code not found")
-   }
-   return nil
-}
-
 func (GizmoMovie) Show() string {
    return ""
 }
@@ -101,10 +109,4 @@ type GizmoMovie struct {
 
 func (g GizmoMovie) Year() int {
    return g.Data.Year
-}
-
-type Address struct {
-   classification_id int
-   content_id        string
-   market_code       string
 }

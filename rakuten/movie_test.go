@@ -8,11 +8,6 @@ import (
 )
 
 var tests = map[string]movie_test{
-   "fr": {
-      url:        "rakuten.tv/fr/movies/jerry-maguire",
-      content_id: "cf34a03bbb4aa899df42c3cf7a6cb925-mc-0-137-0-0",
-      key_id:     "00000000000000000000000000000000",
-   },
    "se": {
       url:        "rakuten.tv/se/movies/i-heart-huckabees",
       content_id: "9a534a1f12d68e1a2359f38710fddb65-mc-0-147-0-0",

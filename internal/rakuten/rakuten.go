@@ -2,67 +2,44 @@ package main
 
 import (
    "154.pages.dev/media/internal"
-   "154.pages.dev/media/rakuten"
    "fmt"
    "net/http"
-   "os"
-   "path"
+   "sort"
 )
 
 func (f flags) download() error {
-   text, err := os.ReadFile(f.name())
+   fhd, err := f.address.Fhd().Info()
    if err != nil {
       return err
    }
-   var info rakuten.StreamInfo
-   err = info.Unmarshal(text)
+   req, err := http.NewRequest("", fhd.Url, nil)
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", info.URL, nil)
+   reps, err := internal.DASH(req)
    if err != nil {
       return err
    }
-   media, err := internal.DASH(req)
-   if err != nil {
-      return err
-   }
-   for _, medium := range media {
-      if medium.Id == f.representation {
+   sort.Slice(reps, func(i, j int) bool {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
          f.s.Name, err = f.address.Movie()
          if err != nil {
             return err
          }
-         f.s.Poster = info
-         return f.s.Download(medium)
+         hd, err := f.address.Hd().Info()
+         if err != nil {
+            return err
+         }
+         fhd.LicenseUrl = hd.LicenseUrl
+         f.s.Poster = fhd
+         return f.s.Download(rep)
       }
-   }
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
-}
-
-func (f flags) write_stream() error {
-   fhd, err := f.address.FHD().Info()
-   if err != nil {
-      return err
-   }
-   hd, err := f.address.HD().Info()
-   if err != nil {
-      return err
-   }
-   fhd.LicenseUrl = hd.LicenseUrl
-   text, err := fhd.Marshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.name(), text, 0666)
-}
-
-func (f flags) name() string {
-   return path.Base(f.address.String()) + ".json"
 }

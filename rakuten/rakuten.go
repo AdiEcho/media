@@ -18,21 +18,13 @@ func (StreamInfo) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (a Address) HD() OnDemand {
+func (a Address) Hd() OnDemand {
    return a.video("HD")
-}
-
-func (s *StreamInfo) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, s)
-}
-
-func (s StreamInfo) Marshal() ([]byte, error) {
-   return json.MarshalIndent(s, "", " ")
 }
 
 type StreamInfo struct {
    LicenseUrl   string `json:"license_url"`
-   URL          string
+   Url          string
    VideoQuality string `json:"video_quality"`
 }
 
@@ -72,7 +64,7 @@ func (o OnDemand) Info() (*StreamInfo, error) {
    return &s.Data.StreamInfos[0], nil
 }
 
-func (a Address) FHD() OnDemand {
+func (a Address) Fhd() OnDemand {
    return a.video("FHD")
 }
 

@@ -11,48 +11,6 @@ import (
    "time"
 )
 
-const query_axis = `
-query axisContent($id: ID!) {
-   axisContent(id: $id) {
-      axisId
-      axisPlaybackLanguages {
-         ... on AxisPlayback {
-            destinationCode
-         }
-      }
-   }
-}
-`
-
-func (a AxisContent) Media() (*MediaContent, error) {
-   address := func() string {
-      b := []byte("https://capi.9c9media.com/destinations/")
-      b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
-      b = append(b, "/platforms/desktop/contents/"...)
-      b = strconv.AppendInt(b, a.AxisId, 10)
-      b = append(b, "?$include=[ContentPackages,Media,Season]"...)
-      return string(b)
-   }()
-   resp, err := http.Get(address)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   media := new(MediaContent)
-   err = json.NewDecoder(resp.Body).Decode(media)
-   if err != nil {
-      return nil, err
-   }
-   return media, nil
-}
-
-type AxisContent struct {
-   AxisId                int64
-   AxisPlaybackLanguages []struct {
-      DestinationCode string
-   }
-}
-
 // wikipedia.org/wiki/Geo-blocking
 func (a AxisContent) Manifest(media *MediaContent) (string, error) {
    address := func() string {
@@ -213,3 +171,45 @@ func (r ResolvePath) Axis() (*AxisContent, error) {
    }
    return &value.Data.AxisContent, nil
 }
+const query_axis = `
+query axisContent($id: ID!) {
+   axisContent(id: $id) {
+      axisId
+      axisPlaybackLanguages {
+         ... on AxisPlayback {
+            destinationCode
+         }
+      }
+   }
+}
+`
+
+func (a AxisContent) Media() (*MediaContent, error) {
+   address := func() string {
+      b := []byte("https://capi.9c9media.com/destinations/")
+      b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
+      b = append(b, "/platforms/desktop/contents/"...)
+      b = strconv.AppendInt(b, a.AxisId, 10)
+      b = append(b, "?$include=[ContentPackages,Media,Season]"...)
+      return string(b)
+   }()
+   resp, err := http.Get(address)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   media := new(MediaContent)
+   err = json.NewDecoder(resp.Body).Decode(media)
+   if err != nil {
+      return nil, err
+   }
+   return media, nil
+}
+
+type AxisContent struct {
+   AxisId                int64
+   AxisPlaybackLanguages []struct {
+      DestinationCode string
+   }
+}
+
