@@ -85,7 +85,7 @@ func TestSecure(t *testing.T) {
       t.Fatal(err)
    }
    auth.Unmarshal()
-   secure, err := auth.URL(&FilmResponse{ID: passages_2022})
+   secure, err := auth.Url(&FilmResponse{Id: passages_2022})
    if err != nil {
       t.Fatal(err)
    }

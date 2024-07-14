@@ -86,7 +86,7 @@ type Video struct {
 }
 
 func (m Metadata) OnDemand() (*OnDemand, error) {
-   req, err := http.NewRequest("GET", "https://lemonade.nbc.com", nil)
+   req, err := http.NewRequest("", "https://lemonade.nbc.com", nil)
    if err != nil {
       return nil, err
    }

@@ -21,10 +21,10 @@ func (VideoResource) UnwrapResponse(b []byte) ([]byte, error) {
 
 type VideoResource struct {
    LicenseServer *struct {
-      URL string
+      Url string
    } `json:"license_server"`
    Manifest struct {
-      URL string
+      Url string
    }
    Resolution Resolution
    Type string
@@ -32,7 +32,7 @@ type VideoResource struct {
 
 func (v VideoResource) RequestUrl() (string, bool) {
    if v := v.LicenseServer; v != nil {
-      return v.URL, true
+      return v.Url, true
    }
    return "", false
 }

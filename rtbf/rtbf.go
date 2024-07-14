@@ -95,7 +95,7 @@ type Entitlement struct {
    }
 }
 
-func (e Entitlement) DASH() (string, bool) {
+func (e Entitlement) Dash() (string, bool) {
    for _, format := range e.Formats {
       if format.Format == "DASH" {
          return format.MediaLocator, true
@@ -180,10 +180,10 @@ func (w WebToken) Login() (*GigyaLogin, error) {
             DeviceId string `json:"deviceId"`
             Type     string `json:"type"`
          } `json:"device"`
-         JWT string `json:"jwt"`
+         Jwt string `json:"jwt"`
       }
       s.Device.Type = "WEB"
-      s.JWT = w.IdToken
+      s.Jwt = w.IdToken
       return json.Marshal(s)
    }()
    if err != nil {

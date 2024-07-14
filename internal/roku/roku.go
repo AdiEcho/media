@@ -25,7 +25,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", play.URL, nil)
+   req, err := http.NewRequest("", play.Url, nil)
    if err != nil {
       return err
    }

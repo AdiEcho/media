@@ -98,7 +98,7 @@ type playlist_request struct {
             Values []codec_value `json:"values"`
          } `json:"codecs"`
       } `json:"video"`
-      DRM struct {
+      Drm struct {
          SelectionMode string `json:"selection_mode"`
          Values []drm_value `json:"values"`
       } `json:"drm"`

@@ -24,7 +24,7 @@ func (c Content) Marshal() ([]byte, error) {
 }
 
 func (c *Content) New(id int) error {
-   req, err := http.NewRequest("GET", "https://uapi.adrise.tv/cms/content", nil)
+   req, err := http.NewRequest("", "https://uapi.adrise.tv/cms/content", nil)
    if err != nil {
       return err
    }
@@ -73,7 +73,7 @@ type Content struct {
    Children        []*Content
    DetailedType   string `json:"detailed_type"`
    EpisodeNumber  int `json:"episode_number,string"`
-   ID              int `json:",string"`
+   Id              int `json:",string"`
    SeriesId       int `json:"series_id,string"`
    Title           string
    VideoResources []VideoResource `json:"video_resources"`
@@ -86,7 +86,7 @@ func (c Content) Episode() bool {
 }
 
 func (c Content) Get(id int) (*Content, bool) {
-   if c.ID == id {
+   if c.Id == id {
       return &c, true
    }
    for _, child := range c.Children {
@@ -110,7 +110,7 @@ func (n Namer) Episode() int {
 
 func (n Namer) Season() int {
    if v := n.C.parent; v != nil {
-      return v.ID
+      return v.Id
    }
    return 0
 }

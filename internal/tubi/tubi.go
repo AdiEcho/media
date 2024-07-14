@@ -23,7 +23,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", video.Manifest.URL, nil)
+   req, err := http.NewRequest("", video.Manifest.Url, nil)
    if err != nil {
       return err
    }

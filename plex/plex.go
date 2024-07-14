@@ -8,7 +8,7 @@ import (
 )
 
 func (a Anonymous) Video(d *DiscoverMatch, forward string) (*OnDemand, error) {
-   req, err := http.NewRequest("GET", "https://vod.provider.plex.tv", nil)
+   req, err := http.NewRequest("", "https://vod.provider.plex.tv", nil)
    if err != nil {
       return nil, err
    }
@@ -66,7 +66,7 @@ type OnDemand struct {
    }
 }
 
-func (o OnDemand) DASH(a Anonymous) (*MediaPart, bool) {
+func (o OnDemand) Dash(a Anonymous) (*MediaPart, bool) {
    for _, media := range o.Media {
       if media.Protocol == "dash" {
          p := media.Part[0]

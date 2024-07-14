@@ -9,7 +9,7 @@ import (
 )
 
 const get_custom_id = `
-query GetCustomIdFullMovie($customId: ID!) {
+query($customId: ID!) {
    viewer {
       viewableCustomId(customId: $customId) {
          ... on Movie {
@@ -31,7 +31,7 @@ func graphql_compact(s string) string {
 
 type FullMovie struct {
    DefaultPlayable struct {
-      ID string
+      Id string
    }
    ProductionYear int `json:",string"`
    Title          string

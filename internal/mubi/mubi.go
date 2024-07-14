@@ -19,16 +19,16 @@ func (f flags) download() error {
    }
    secure.Unmarshal()
    for _, text := range secure.V.TextTrackUrls {
-      if text.ID == f.representation {
+      if text.Id == f.representation {
          film, err := f.address.Film()
          if err != nil {
             return err
          }
          f.s.Name = mubi.Namer{film}
-         return f.s.TimedText(text.URL)
+         return f.s.TimedText(text.Url)
       }
    }
-   req, err := http.NewRequest("", secure.V.URL, nil)
+   req, err := http.NewRequest("", secure.V.Url, nil)
    if err != nil {
       return err
    }
@@ -53,11 +53,9 @@ func (f flags) download() error {
          return f.s.Download(medium)
       }
    }
-   // 3 VTT all
    for _, text := range secure.V.TextTrackUrls {
       fmt.Print(text, "\n\n")
    }
-   // 4 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()
@@ -114,7 +112,7 @@ func (f flags) write_secure() error {
    if err != nil {
       return err
    }
-   secure, err := auth.URL(film)
+   secure, err := auth.Url(film)
    if err != nil {
       return err
    }

@@ -38,7 +38,7 @@ func (s *Slug) atoi() error {
 }
 
 func (a Address) Video(forward string) (*Video, error) {
-   req, err := http.NewRequest("GET", "https://boot.pluto.tv/v4/start", nil)
+   req, err := http.NewRequest("", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
       return nil, err
    }
@@ -59,15 +59,15 @@ func (a Address) Video(forward string) (*Video, error) {
    }
    defer resp.Body.Close()
    var start struct {
-      VOD []Video
+      Vod []Video
    }
    err = json.NewDecoder(resp.Body).Decode(&start)
    if err != nil {
       return nil, err
    }
-   demand := start.VOD[0]
+   demand := start.Vod[0]
    if demand.Slug.Slug != a.series {
-      if demand.ID != a.series {
+      if demand.Id != a.series {
          return nil, errors.New(demand.Slug.Slug)
       }
    }
@@ -160,7 +160,7 @@ type Video struct {
    parent  *Season
    Slug    Slug
    Episode string `json:"_id"`
-   ID      string
+   Id      string
 }
 
 type Slug struct {

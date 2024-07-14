@@ -89,18 +89,19 @@ query resolvePath($path: String!) {
 `
 
 type ResolvePath struct {
-   ID                   string
+   Id                   string
    FirstPlayableContent *struct {
-      ID string
+      Id string
    }
 }
 
 func (r ResolvePath) id() string {
    if v := r.FirstPlayableContent; v != nil {
-      return v.ID
+      return v.Id
    }
-   return r.ID
+   return r.Id
 }
+
 type Path string
 
 func (p Path) String() string {

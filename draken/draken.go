@@ -14,7 +14,7 @@ func (a AuthLogin) Entitlement(f *FullMovie) (*Entitlement, error) {
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/api/entitlement/v2/asset/" + f.DefaultPlayable.ID
+   req.URL.Path = "/api/entitlement/v2/asset/" + f.DefaultPlayable.Id
    req.Header.Set("authorization", "Bearer "+a.v.Token)
    magine_accesstoken.set(req.Header)
    resp, err := http.DefaultClient.Do(req)
@@ -42,7 +42,7 @@ func (a AuthLogin) Playback(
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/api/playback/v1/preflight/asset/" + movie.DefaultPlayable.ID
+   req.URL.Path = "/api/playback/v1/preflight/asset/" + movie.DefaultPlayable.Id
    magine_accesstoken.set(req.Header)
    magine_play_devicemodel.set(req.Header)
    magine_play_deviceplatform.set(req.Header)

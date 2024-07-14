@@ -28,9 +28,9 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   file, ok := files.DASH()
+   file, ok := files.Dash()
    if !ok {
-      return errors.New("criterion.VideoFiles.DASH")
+      return errors.New("VideoFiles.Dash")
    }
    req, err := http.NewRequest("", file.Links.Source.Href, nil)
    if err != nil {

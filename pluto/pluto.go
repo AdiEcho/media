@@ -8,10 +8,10 @@ import (
    "strings"
 )
 
-func (e EpisodeClip) DASH() (*url.URL, bool) {
+func (e EpisodeClip) Dash() (*url.URL, bool) {
    for _, s := range e.Sources {
       if s.Type == "DASH" {
-         return &s.File.URL, true
+         return &s.File.Url, true
       }
    }
    return nil, false
@@ -19,17 +19,17 @@ func (e EpisodeClip) DASH() (*url.URL, bool) {
 
 type EpisodeClip struct {
    Sources []struct {
-      File URL
+      File Url
       Type string
    }
 }
 
-type URL struct {
-   URL url.URL
+type Url struct {
+   Url url.URL
 }
 
-func (u *URL) UnmarshalText(text []byte) error {
-   return u.URL.UnmarshalBinary(text)
+func (u *Url) UnmarshalText(text []byte) error {
+   return u.Url.UnmarshalBinary(text)
 }
 
 type Poster struct{}
@@ -51,15 +51,15 @@ func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
 }
 
 func (v Video) Clip() (*EpisodeClip, error) {
-   req, err := http.NewRequest("GET", "http://api.pluto.tv", nil)
+   req, err := http.NewRequest("", "http://api.pluto.tv", nil)
    if err != nil {
       return nil, err
    }
    req.URL.Path = func() string {
       var b strings.Builder
       b.WriteString("/v2/episodes/")
-      if v.ID != "" {
-         b.WriteString(v.ID)
+      if v.Id != "" {
+         b.WriteString(v.Id)
       } else {
          b.WriteString(v.Episode)
       }

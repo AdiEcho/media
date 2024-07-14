@@ -28,7 +28,7 @@ func (p Path) String() string {
 
 func (a Anonymous) Discover(p Path) (*DiscoverMatch, error) {
    req, err := http.NewRequest(
-      "GET", "https://discover.provider.plex.tv/library/metadata/matches", nil,
+      "", "https://discover.provider.plex.tv/library/metadata/matches", nil,
    )
    if err != nil {
       return nil, err

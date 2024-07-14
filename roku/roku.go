@@ -137,12 +137,12 @@ type ActivationToken struct {
 }
 
 type Playback struct {
-   DRM struct {
+   Drm struct {
       Widevine struct {
          LicenseServer string
       }
    }
-   URL string
+   Url string
 }
 
 func (Playback) RequestHeader() (http.Header, error) {
@@ -150,7 +150,7 @@ func (Playback) RequestHeader() (http.Header, error) {
 }
 
 func (p Playback) RequestUrl() (string, bool) {
-   return p.DRM.Widevine.LicenseServer, true
+   return p.Drm.Widevine.LicenseServer, true
 }
 
 func (Playback) WrapRequest(b []byte) ([]byte, error) {

@@ -24,7 +24,7 @@ func (a *Authenticate) Unmarshal() error {
 }
 
 func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
-   req, err := http.NewRequest("GET", "https://discover.hulu.com", nil)
+   req, err := http.NewRequest("", "https://discover.hulu.com", nil)
    if err != nil {
       return nil, err
    }
@@ -86,8 +86,8 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       {Type: "AAC"},
       {Type: "EC3"},
    }
-   p.Playback.DRM.SelectionMode = "ALL"
-   p.Playback.DRM.Values = []drm_value{
+   p.Playback.Drm.SelectionMode = "ALL"
+   p.Playback.Drm.Values = []drm_value{
       {
          SecurityLevel: "L3",
          Type: "WIDEVINE",

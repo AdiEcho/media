@@ -42,13 +42,13 @@ func TestLicense(t *testing.T) {
 func TestClip(t *testing.T) {
    for _, test := range video_tests {
       if test.clips != "" {
-         clip, err := Video{ID: test.clips}.Clip()
+         clip, err := Video{Id: test.clips}.Clip()
          if err != nil {
             t.Fatal(err)
          }
-         manifest, ok := clip.DASH()
+         manifest, ok := clip.Dash()
          if !ok {
-            t.Fatal("episode_clip.dash")
+            t.Fatal("EpisodeClip.Dash")
          }
          url, err := manifest.Parse(Base[0])
          if err != nil {

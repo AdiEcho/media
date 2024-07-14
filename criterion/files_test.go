@@ -48,9 +48,9 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   file, ok := files.DASH()
+   file, ok := files.Dash()
    if !ok {
-      t.Fatal("video_files.dash")
+      t.Fatal("VideoFiles.Dash")
    }
    key, err := module.Key(file, pssh.KeyId)
    if err != nil {

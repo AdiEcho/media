@@ -107,7 +107,7 @@ func TestEntitlement(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", title)
-   fmt.Println(title.DASH())
+   fmt.Println(title.Dash())
 }
 
 func TestAccountsLogin(t *testing.T) {

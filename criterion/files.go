@@ -61,7 +61,7 @@ func (a AuthToken) Files(item *EmbedItem) (VideoFiles, error) {
    return files, nil
 }
 
-func (v VideoFiles) DASH() (*VideoFile, bool) {
+func (v VideoFiles) Dash() (*VideoFile, bool) {
    for _, file := range v {
       if file.Method == "dash" {
          return &file, true

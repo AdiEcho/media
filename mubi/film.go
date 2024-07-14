@@ -21,7 +21,7 @@ func (a Authenticate) Viewing(film *FilmResponse) error {
    }
    req.URL.Path = func() string {
       b := []byte("/v3/films/")
-      b = strconv.AppendInt(b, film.ID, 10)
+      b = strconv.AppendInt(b, film.Id, 10)
       b = append(b, "/viewing"...)
       return string(b)
    }()
@@ -44,7 +44,7 @@ func (a Authenticate) Viewing(film *FilmResponse) error {
 }
 
 type FilmResponse struct {
-   ID int64
+   Id int64
    Title string
    Year int
 }
@@ -75,14 +75,14 @@ func (a Address) Film() (*FilmResponse, error) {
    return film, nil
 }
 
-func (a Authenticate) URL(film *FilmResponse) (*SecureUrl, error) {
-   req, err := http.NewRequest("GET", "https://api.mubi.com", nil)
+func (a Authenticate) Url(film *FilmResponse) (*SecureUrl, error) {
+   req, err := http.NewRequest("", "https://api.mubi.com", nil)
    if err != nil {
       return nil, err
    }
    req.URL.Path = func() string {
       b := []byte("/v3/films/")
-      b = strconv.AppendInt(b, film.ID, 10)
+      b = strconv.AppendInt(b, film.Id, 10)
       b = append(b, "/viewing/secure_url"...)
       return string(b)
    }()

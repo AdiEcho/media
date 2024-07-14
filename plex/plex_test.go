@@ -44,9 +44,9 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   part, ok := video.DASH(anon)
+   part, ok := video.Dash(anon)
    if !ok {
-      t.Fatal("metadata.dash")
+      t.Fatal("Metadata.Dash")
    }
    key, err := module.Key(part, pssh.KeyId)
    if err != nil {

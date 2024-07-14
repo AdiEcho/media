@@ -17,11 +17,11 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   file, ok := clip.DASH()
+   file, ok := clip.Dash()
    if !ok {
-      return errors.New("EpisodeClip.DASH")
+      return errors.New("EpisodeClip.Dash")
    }
-   req, err := http.NewRequest("GET", f.base, nil)
+   req, err := http.NewRequest("", f.base, nil)
    if err != nil {
       return err
    }
@@ -37,7 +37,6 @@ func (f flags) download() error {
          return f.s.Download(medium)
       }
    }
-   // 2 MPD all
    for i, medium := range media {
       if i >= 1 {
          fmt.Println()

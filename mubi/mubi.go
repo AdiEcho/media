@@ -11,14 +11,14 @@ import (
 )
 
 type TextTrack struct {
-   ID string
-   URL string
+   Id string
+   Url string
 }
 
 func (t TextTrack) String() string {
    var b strings.Builder
    b.WriteString("id = ")
-   b.WriteString(t.ID)
+   b.WriteString(t.Id)
    return b.String()
 }
 
@@ -26,7 +26,7 @@ type SecureUrl struct {
    Data []byte
    V struct {
       TextTrackUrls []TextTrack `json:"text_track_urls"`
-      URL string
+      Url string
    }
 }
 
@@ -46,7 +46,7 @@ type Authenticate struct {
    V struct {
       Token string
       User struct {
-         ID int
+         Id int
       }
    }
 }
@@ -59,7 +59,7 @@ func (a Authenticate) RequestHeader() (http.Header, error) {
    value := map[string]any{
       "merchant": "mubi",
       "sessionId": a.V.Token,
-      "userId": a.V.User.ID,
+      "userId": a.V.User.Id,
    }
    text, err := json.Marshal(value)
    if err != nil {
@@ -125,7 +125,7 @@ func (c LinkCode) Authenticate() (*Authenticate, error) {
 }
 
 func (c *LinkCode) New() error {
-   req, err := http.NewRequest("GET", "https://api.mubi.com/v3/link_code", nil)
+   req, err := http.NewRequest("", "https://api.mubi.com/v3/link_code", nil)
    if err != nil {
       return err
    }

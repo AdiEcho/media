@@ -40,11 +40,11 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   locator, ok := title.DASH()
+   locator, ok := title.Dash()
    if !ok {
-      return errors.New("Entitlement.DASH")
+      return errors.New("Entitlement.Dash")
    }
-   req, err := http.NewRequest("GET", locator, nil)
+   req, err := http.NewRequest("", locator, nil)
    if err != nil {
       return err
    }

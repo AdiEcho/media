@@ -22,9 +22,9 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   part, ok := video.DASH(anon)
+   part, ok := video.Dash(anon)
    if !ok {
-      return errors.New("plex.OnDemand.DASH")
+      return errors.New("OnDemand.Dash")
    }
    req, err := http.NewRequest("", part.Key, nil)
    if err != nil {
