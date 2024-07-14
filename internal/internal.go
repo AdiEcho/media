@@ -10,7 +10,7 @@ import (
    "strings"
 )
 
-func DASH(req *http.Request) ([]dash.Representation, error) {
+func Dash(req *http.Request) ([]dash.Representation, error) {
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
