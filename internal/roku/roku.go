@@ -29,7 +29,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := internal.DASH(req)
+   media, err := internal.Dash(req)
    if err != nil {
       return err
    }

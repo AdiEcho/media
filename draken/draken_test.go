@@ -30,7 +30,7 @@ func TestLicense(t *testing.T) {
    }
    auth.Unmarshal()
    for _, film := range films {
-      var pssh widevine.PSSH
+      var pssh widevine.Pssh
       pssh.ContentId, err = base64.StdEncoding.DecodeString(film.content_id)
       if err != nil {
          t.Fatal(err)
@@ -39,7 +39,7 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      var module widevine.CDM
+      var module widevine.Cdm
       err = module.New(private_key, client_id, pssh.Encode())
       if err != nil {
          t.Fatal(err)

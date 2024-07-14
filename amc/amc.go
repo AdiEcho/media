@@ -63,7 +63,7 @@ func (Playback) WrapRequest(b []byte) ([]byte, error) {
 
 func (p Playback) RequestHeader() (http.Header, error) {
    head := make(http.Header)
-   head.Set("bcov-auth", p.header.Get("X-AMCN-BC-JWT"))
+   head.Set("bcov-auth", p.header.Get("x-amcn-bc-jwt"))
    return head, nil
 }
 
@@ -79,7 +79,7 @@ func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
 }
 
 type Address struct {
-   NID string
+   Nid string
    Path string
 }
 
@@ -89,7 +89,7 @@ func (a *Address) Set(text string) error {
    if !found {
       return errors.New("amcplus.com")
    }
-   _, a.NID, found = strings.Cut(a.Path, "--")
+   _, a.Nid, found = strings.Cut(a.Path, "--")
    if !found {
       return errors.New("--")
    }

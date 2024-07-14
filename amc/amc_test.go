@@ -22,12 +22,12 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    test := tests["show"]
-   var pssh widevine.PSSH
+   var pssh widevine.Pssh
    pssh.KeyId, err = base64.StdEncoding.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
-   var module widevine.CDM
+   var module widevine.Cdm
    err = module.New(private_key, client_id, pssh.Encode())
    if err != nil {
       t.Fatal(err)
@@ -40,7 +40,7 @@ func TestLicense(t *testing.T) {
    auth.Unmarshal()
    var web Address
    web.Set(test.url)
-   play, err := auth.Playback(web.NID)
+   play, err := auth.Playback(web.Nid)
    if err != nil {
       t.Fatal(err)
    }

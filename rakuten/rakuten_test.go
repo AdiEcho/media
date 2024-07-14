@@ -21,13 +21,13 @@ func (m movie_test) license() ([]byte, error) {
    if err != nil {
       return nil, err
    }
-   var pssh widevine.PSSH
+   var pssh widevine.Pssh
    pssh.KeyId, err = hex.DecodeString(m.key_id)
    if err != nil {
       return nil, err
    }
    pssh.ContentId = []byte(m.content_id)
-   var module widevine.CDM
+   var module widevine.Cdm
    err = module.New(private_key, client_id, pssh.Encode())
    if err != nil {
       return nil, err

@@ -47,12 +47,12 @@ func TestLicense(t *testing.T) {
    var token DefaultToken
    token.Unmarshal(text)
    for _, test := range tests {
-      var pssh widevine.PSSH
+      var pssh widevine.Pssh
       pssh.KeyId, err = hex.DecodeString(test.key_id)
       if err != nil {
          t.Fatal(err)
       }
-      var module widevine.CDM
+      var module widevine.Cdm
       err = module.New(private_key, client_id, pssh.Encode())
       if err != nil {
          t.Fatal(err)

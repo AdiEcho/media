@@ -33,7 +33,7 @@ func (f flags) download() error {
    if f.forward != "" {
       req.Header.Set("x-forwarded-for", f.forward)
    }
-   media, err := internal.DASH(req)
+   media, err := internal.Dash(req)
    if err != nil {
       return err
    }

@@ -25,7 +25,7 @@ func TestAsset(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Println(play.DASH())
+   fmt.Println(play.Dash())
 }
 
 func TestAuthenticate(t *testing.T) {

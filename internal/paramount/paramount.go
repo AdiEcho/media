@@ -24,7 +24,7 @@ func (f flags) do_read() error {
    if err != nil {
       return err
    }
-   reps, err := internal.DASH(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }

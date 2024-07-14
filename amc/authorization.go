@@ -39,17 +39,17 @@ func (a *Authorization) Login(email, password string) error {
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/login"
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.V.Data.AccessToken},
-      "Content-Type": {"application/json"},
-      "X-Amcn-Device-Ad-ID": {"-"},
-      "X-Amcn-Device-ID": {"-"},
-      "X-Amcn-Language": {"en"},
-      "X-Amcn-Network": {"amcplus"},
-      "X-Amcn-Platform": {"web"},
-      "X-Amcn-Service-Group-ID": {"10"},
-      "X-Amcn-Service-ID": {"amcplus"},
-      "X-Amcn-Tenant": {"amcn"},
-      "X-Ccpa-Do-Not-Sell": {"doNotPassData"},
+      "authorization": {"Bearer " + a.V.Data.AccessToken},
+      "content-type": {"application/json"},
+      "x-amcn-device-ad-id": {"-"},
+      "x-amcn-device-id": {"-"},
+      "x-amcn-language": {"en"},
+      "x-amcn-network": {"amcplus"},
+      "x-amcn-platform": {"web"},
+      "x-amcn-service-group-id": {"10"},
+      "x-amcn-service-id": {"amcplus"},
+      "x-amcn-tenant": {"amcn"},
+      "x-ccpa-do-not-sell": {"doNotPassData"},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -67,7 +67,7 @@ func (a *Authorization) Login(email, password string) error {
 }
 
 func (a Authorization) Content(path string) (*ContentCompiler, error) {
-   req, err := http.NewRequest("GET", "https://gw.cds.amcn.com", nil)
+   req, err := http.NewRequest("", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return nil, err
    }
@@ -117,14 +117,14 @@ func (a Authorization) Playback(nid string) (*Playback, error) {
          AdTags struct {
             Lat int `json:"lat"`
             Mode string `json:"mode"`
-            PPID int `json:"ppid"`
+            Ppid int `json:"ppid"`
             PlayerHeight int `json:"playerHeight"`
             PlayerWidth int `json:"playerWidth"`
-            URL string `json:"url"`
+            Url string `json:"url"`
          } `json:"adtags"`
       }
       v.AdTags.Mode = "on-demand"
-      v.AdTags.URL = "-"
+      v.AdTags.Url = "-"
       return json.Marshal(v)
    }()
    if err != nil {
@@ -138,15 +138,15 @@ func (a Authorization) Playback(nid string) (*Playback, error) {
    }
    req.URL.Path = "/playback-id/api/v1/playback/" + nid
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.V.Data.AccessToken},
-      "Content-Type": {"application/json"},
-      "X-Amcn-Device-Ad-ID": {"-"},
-      "X-Amcn-Language": {"en"},
-      "X-Amcn-Network": {"amcplus"},
-      "X-Amcn-Platform": {"web"},
-      "X-Amcn-Service-ID": {"amcplus"},
-      "X-Amcn-Tenant": {"amcn"},
-      "X-Ccpa-Do-Not-Sell": {"doNotPassData"},
+      "authorization": {"Bearer " + a.V.Data.AccessToken},
+      "content-type": {"application/json"},
+      "x-amcn-device-ad-id": {"-"},
+      "x-amcn-language": {"en"},
+      "x-amcn-network": {"amcplus"},
+      "x-amcn-platform": {"web"},
+      "x-amcn-service-id": {"amcplus"},
+      "x-amcn-tenant": {"amcn"},
+      "x-ccpa-do-not-sell": {"doNotPassData"},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -196,11 +196,11 @@ func (a *Authorization) Unauth() error {
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
    req.Header = http.Header{
-      "X-Amcn-Device-ID": {"-"},
-      "X-Amcn-Language": {"en"},
-      "X-Amcn-Network": {"amcplus"},
-      "X-Amcn-Platform": {"web"},
-      "X-Amcn-Tenant": {"amcn"},
+      "x-amcn-device-id": {"-"},
+      "x-amcn-language": {"en"},
+      "x-amcn-network": {"amcplus"},
+      "x-amcn-platform": {"web"},
+      "x-amcn-tenant": {"amcn"},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {

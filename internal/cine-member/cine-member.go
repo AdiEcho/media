@@ -49,15 +49,15 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   dash, ok := encode.Play.DASH()
+   dash, ok := encode.Play.Dash()
    if !ok {
-      return errors.New("AssetPlay.DASH")
+      return errors.New("AssetPlay.Dash")
    }
    req, err := http.NewRequest("", dash, nil)
    if err != nil {
       return err
    }
-   media, err := internal.DASH(req)
+   media, err := internal.Dash(req)
    if err != nil {
       return err
    }

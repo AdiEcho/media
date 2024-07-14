@@ -28,7 +28,7 @@ func (d DataArticle) year() (string, bool) {
 type DataArticle struct {
    Assets         []*ArticleAsset
    CanonicalTitle string `json:"canonical_title"`
-   ID             int
+   Id             int
    Metas          []struct {
       Key   string
       Value string
@@ -115,7 +115,7 @@ query($articleUrlSlug: String) {
 `
 
 type ArticleAsset struct {
-   ID         int
+   Id         int
    LinkedType string `json:"linked_type"`
    article    *DataArticle
 }

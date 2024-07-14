@@ -26,7 +26,7 @@ func (f flags) download() error {
       return err
    }
    req.URL.Path = file.Path
-   media, err := internal.DASH(req)
+   media, err := internal.Dash(req)
    if err != nil {
       return err
    }

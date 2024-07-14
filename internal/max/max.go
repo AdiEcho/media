@@ -25,7 +25,7 @@ func (f flags) download() error {
    }
    var req http.Request
    req.URL = play.Manifest.Url.Url
-   reps, err := internal.DASH(&req)
+   reps, err := internal.Dash(&req)
    if err != nil {
       return err
    }

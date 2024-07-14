@@ -21,7 +21,7 @@ func (f flags) download() error {
    auth.Unmarshal()
    auth.Refresh()
    os.WriteFile(f.home + "/amc.json", auth.Data, 0666)
-   play, err := auth.Playback(f.address.NID)
+   play, err := auth.Playback(f.address.Nid)
    if err != nil {
       return err
    }
@@ -33,7 +33,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := internal.DASH(req)
+   media, err := internal.Dash(req)
    if err != nil {
       return err
    }

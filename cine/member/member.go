@@ -32,8 +32,8 @@ func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
          } `json:"variables"`
       }
       s.Query = query_asset
-      s.Variables.ArticleId = asset.article.ID
-      s.Variables.AssetId = asset.ID
+      s.Variables.ArticleId = asset.article.Id
+      s.Variables.AssetId = asset.Id
       return json.Marshal(s)
    }()
    if err != nil {
@@ -81,7 +81,7 @@ type AssetPlay struct {
    }
 }
 
-func (a AssetPlay) DASH() (string, bool) {
+func (a AssetPlay) Dash() (string, bool) {
    for _, title := range a.Entitlements {
       if title.Protocol == "dash" {
          return title.Manifest, true

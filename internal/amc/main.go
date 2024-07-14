@@ -50,7 +50,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.address.NID != "":
+   case f.address.Nid != "":
       err := f.download()
       if err != nil {
          panic(err)

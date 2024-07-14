@@ -22,12 +22,12 @@ func TestWidevine(t *testing.T) {
       t.Fatal(err)
    }
    medium := media[0]
-   var pssh widevine.PSSH
+   var pssh widevine.Pssh
    pssh.KeyId, err = base64.StdEncoding.DecodeString(medium.key_id)
    if err != nil {
       t.Fatal(err)
    }
-   var module widevine.CDM
+   var module widevine.Cdm
    err = module.New(private_key, client_id, pssh.Encode())
    if err != nil {
       t.Fatal(err)
