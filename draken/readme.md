@@ -1,10 +1,10 @@
 # draken
 
 1. sweden VPN/proxy
-2. https://drakenfilm.se/offers
-3. Aktivera nu (activate now)
+2. drakenfilm.se/offers
+3. Månadsprenumeration, Aktivera nu (monthly subscription, activate now)
 4. Din e-postadress (your e-mail address)
-   - 2024-6-1@mailsac.com
+   - 2024-7-16@mailsac.com
 5. Gå vidare (go further)
 6. password
 7. Upprepa lösenord (repeat password)
