@@ -9,6 +9,26 @@ import (
    "time"
 )
 
+func (CurrentVideo) Error() string {
+   return "CurrentVideo"
+}
+
+func (c ContentCompiler) Video() (*CurrentVideo, error) {
+   for _, child := range c.Data.Children {
+      if child.Type == "video-player-ap" {
+         var s struct {
+            CurrentVideo CurrentVideo
+         }
+         err := json.Unmarshal(child.Properties, &s)
+         if err != nil {
+            return nil, err
+         }
+         return &s.CurrentVideo, nil
+      }
+   }
+   return nil, CurrentVideo{}
+}
+
 type CurrentVideo struct {
    Meta struct {
       Airdate time.Time // 1996-01-01T00:00:00.000Z
@@ -111,22 +131,6 @@ type ContentCompiler struct {
          Type string
       }
    }
-}
-
-func (c ContentCompiler) Video() (*CurrentVideo, error) {
-   for _, child := range c.Data.Children {
-      if child.Type == "video-player-ap" {
-         var s struct {
-            CurrentVideo CurrentVideo
-         }
-         err := json.Unmarshal(child.Properties, &s)
-         if err != nil {
-            return nil, err
-         }
-         return &s.CurrentVideo, nil
-      }
-   }
-   return nil, errors.New("video-player-ap")
 }
 
 func (c CurrentVideo) Episode() int {

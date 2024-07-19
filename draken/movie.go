@@ -3,39 +3,9 @@ package draken
 import (
    "bytes"
    "encoding/json"
-   "errors"
    "net/http"
    "strings"
 )
-
-const get_custom_id = `
-query($customId: ID!) {
-   viewer {
-      viewableCustomId(customId: $customId) {
-         ... on Movie {
-            defaultPlayable {
-               id
-            }
-            productionYear
-            title
-         }
-      }
-   }
-}
-`
-
-func graphql_compact(s string) string {
-   f := strings.Fields(s)
-   return strings.Join(f, " ")
-}
-
-type FullMovie struct {
-   DefaultPlayable struct {
-      Id string
-   }
-   ProductionYear int `json:",string"`
-   Title          string
-}
 
 func NewMovie(custom_id string) (*FullMovie, error) {
    body, err := func() ([]byte, error) {
@@ -80,11 +50,23 @@ func NewMovie(custom_id string) (*FullMovie, error) {
    if v := s.Data.Viewer.ViewableCustomId; v != nil {
       return v, nil
    }
-   return nil, errors.New(`"viewableCustomId": null`)
+   return nil, FullMovie{}
+}
+
+func (FullMovie) Error() string {
+   return "FullMovie"
+}
+
+type FullMovie struct {
+   DefaultPlayable struct {
+      Id string
+   }
+   ProductionYear int `json:",string"`
+   Title          string
 }
 
 type Namer struct {
-   F *FullMovie
+   Movie *FullMovie
 }
 
 func (Namer) Episode() int {
@@ -100,9 +82,30 @@ func (Namer) Show() string {
 }
 
 func (n Namer) Title() string {
-   return n.F.Title
+   return n.Movie.Title
 }
 
 func (n Namer) Year() int {
-   return n.F.ProductionYear
+   return n.Movie.ProductionYear
+}
+
+const get_custom_id = `
+query($customId: ID!) {
+   viewer {
+      viewableCustomId(customId: $customId) {
+         ... on Movie {
+            defaultPlayable {
+               id
+            }
+            productionYear
+            title
+         }
+      }
+   }
+}
+`
+
+func graphql_compact(s string) string {
+   f := strings.Fields(s)
+   return strings.Join(f, " ")
 }
