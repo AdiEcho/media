@@ -49,16 +49,16 @@ func (a Anonymous) Video(d *DiscoverMatch, forward string) (*OnDemand, error) {
    if resp.StatusCode != http.StatusOK {
       return nil, errors.New(resp.Status)
    }
-   var s struct {
+   var data struct {
       MediaContainer struct {
          Metadata []OnDemand
       }
    }
-   err = json.NewDecoder(resp.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&data)
    if err != nil {
       return nil, err
    }
-   return &s.MediaContainer.Metadata[0], nil
+   return &data.MediaContainer.Metadata[0], nil
 }
 
 func (MediaPart) WrapRequest(b []byte) ([]byte, error) {

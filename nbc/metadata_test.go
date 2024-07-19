@@ -18,8 +18,7 @@ var mpx_guids = []int{
 
 func TestMetadata(t *testing.T) {
    for _, mpx_guid := range mpx_guids {
-      var meta Metadata
-      err := meta.New(mpx_guid)
+      meta, err := NewMetadata(mpx_guid)
       if err != nil {
          t.Fatal(err)
       }

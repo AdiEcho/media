@@ -47,14 +47,14 @@ func NewPage(path string) (*AuvioPage, error) {
    if resp.StatusCode != http.StatusOK {
       return nil, errors.New(resp.Status)
    }
-   var s struct {
+   var data struct {
       Data AuvioPage
    }
-   err = json.NewDecoder(resp.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&data)
    if err != nil {
       return nil, err
    }
-   return &s.Data, nil
+   return &data.Data, nil
 }
 
 func (a AuvioPage) Season() int {

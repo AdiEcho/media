@@ -76,14 +76,14 @@ func (Authenticate) RequestUrl() (string, bool) {
 }
 
 func (Authenticate) UnwrapResponse(b []byte) ([]byte, error) {
-   var v struct {
+   var data struct {
       License []byte
    }
-   err := json.Unmarshal(b, &v)
+   err := json.Unmarshal(b, &data)
    if err != nil {
       return nil, err
    }
-   return v.License, nil
+   return data.License, nil
 }
 
 func (a *Authenticate) Unmarshal() error {

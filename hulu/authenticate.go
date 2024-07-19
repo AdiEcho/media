@@ -12,7 +12,7 @@ import (
 
 type Authenticate struct {
    Data []byte
-   v struct {
+   V struct {
       Data struct {
          UserToken string `json:"user_token"`
       }
@@ -20,7 +20,7 @@ type Authenticate struct {
 }
 
 func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Data, &a.v)
+   return json.Unmarshal(a.Data, &a.V)
 }
 
 func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
@@ -33,7 +33,7 @@ func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
       "id": {id.s},
       "namespace": {"entity"},
    }.Encode()
-   req.Header.Set("Authorization", "Bearer " + a.v.Data.UserToken)
+   req.Header.Set("Authorization", "Bearer " + a.V.Data.UserToken)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -127,7 +127,7 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.v.Data.UserToken},
+      "Authorization": {"Bearer " + a.V.Data.UserToken},
       "Content-Type": {"application/json"},
    }
    resp, err := http.DefaultClient.Do(req)

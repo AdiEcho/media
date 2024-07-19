@@ -160,19 +160,20 @@ func (r ResolvePath) Axis() (*AxisContent, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   var value struct {
+   var data struct {
       Data struct {
          AxisContent AxisContent
       }
    }
-   err = json.NewDecoder(resp.Body).Decode(&value)
+   err = json.NewDecoder(resp.Body).Decode(&data)
    if err != nil {
       return nil, err
    }
-   return &value.Data.AxisContent, nil
+   return &data.Data.AxisContent, nil
 }
+
 const query_axis = `
-query axisContent($id: ID!) {
+query($id: ID!) {
    axisContent(id: $id) {
       axisId
       axisPlaybackLanguages {

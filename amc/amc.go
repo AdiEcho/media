@@ -9,6 +9,93 @@ import (
    "time"
 )
 
+func cache_hash() string {
+   return base64.StdEncoding.EncodeToString([]byte("ff="))
+}
+
+type Address struct {
+   Nid string
+   Path string
+}
+
+func (a *Address) Set(text string) error {
+   var found bool
+   _, a.Path, found = strings.Cut(text, "amcplus.com")
+   if !found {
+      return errors.New("amcplus.com")
+   }
+   _, a.Nid, found = strings.Cut(a.Path, "--")
+   if !found {
+      return errors.New("--")
+   }
+   return nil
+}
+
+func (a Address) String() string {
+   return a.Path
+}
+
+type ContentCompiler struct {
+   Data   struct {
+      Children []struct {
+         Properties json.RawMessage
+         Type string
+      }
+   }
+}
+
+func (c ContentCompiler) Video() (*CurrentVideo, error) {
+   for _, child := range c.Data.Children {
+      if child.Type == "video-player-ap" {
+         var s struct {
+            CurrentVideo CurrentVideo
+         }
+         err := json.Unmarshal(child.Properties, &s)
+         if err != nil {
+            return nil, err
+         }
+         return &s.CurrentVideo, nil
+      }
+   }
+   return nil, CurrentVideo{}
+}
+
+func (c CurrentVideo) Episode() int {
+   return c.Meta.EpisodeNumber
+}
+
+func (c CurrentVideo) Show() string {
+   return c.Meta.ShowTitle
+}
+
+func (c CurrentVideo) Season() int {
+   return c.Meta.Season
+}
+
+func (c CurrentVideo) Title() string {
+   return c.Text.Title
+}
+
+type CurrentVideo struct {
+   Meta struct {
+      Airdate time.Time // 1996-01-01T00:00:00.000Z
+      EpisodeNumber int
+      Season int `json:",string"`
+      ShowTitle string
+   }
+   Text struct {
+      Title string
+   }
+}
+
+func (c CurrentVideo) Year() int {
+   return c.Meta.Airdate.Year()
+}
+
+func (CurrentVideo) Error() string {
+   return "CurrentVideo"
+}
+
 func (DataSource) Error() string {
    return "DataSource"
 }
@@ -32,42 +119,6 @@ func (p Playback) HttpsDash() (*DataSource, bool) {
       }
    }
    return nil, false
-}
-
-func (CurrentVideo) Error() string {
-   return "CurrentVideo"
-}
-
-func (c ContentCompiler) Video() (*CurrentVideo, error) {
-   for _, child := range c.Data.Children {
-      if child.Type == "video-player-ap" {
-         var s struct {
-            CurrentVideo CurrentVideo
-         }
-         err := json.Unmarshal(child.Properties, &s)
-         if err != nil {
-            return nil, err
-         }
-         return &s.CurrentVideo, nil
-      }
-   }
-   return nil, CurrentVideo{}
-}
-
-type CurrentVideo struct {
-   Meta struct {
-      Airdate time.Time // 1996-01-01T00:00:00.000Z
-      EpisodeNumber int
-      Season int `json:",string"`
-      ShowTitle string
-   }
-   Text struct {
-      Title string
-   }
-}
-
-func (c CurrentVideo) Year() int {
-   return c.Meta.Airdate.Year()
 }
 
 type Playback struct {
@@ -100,55 +151,4 @@ func (p Playback) RequestUrl() (string, bool) {
 
 func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
-}
-
-type Address struct {
-   Nid string
-   Path string
-}
-
-func (a *Address) Set(text string) error {
-   var found bool
-   _, a.Path, found = strings.Cut(text, "amcplus.com")
-   if !found {
-      return errors.New("amcplus.com")
-   }
-   _, a.Nid, found = strings.Cut(a.Path, "--")
-   if !found {
-      return errors.New("--")
-   }
-   return nil
-}
-
-func (a Address) String() string {
-   return a.Path
-}
-
-func cache_hash() string {
-   return base64.StdEncoding.EncodeToString([]byte("ff="))
-}
-
-type ContentCompiler struct {
-   Data   struct {
-      Children []struct {
-         Properties json.RawMessage
-         Type string
-      }
-   }
-}
-
-func (c CurrentVideo) Episode() int {
-   return c.Meta.EpisodeNumber
-}
-
-func (c CurrentVideo) Show() string {
-   return c.Meta.ShowTitle
-}
-
-func (c CurrentVideo) Season() int {
-   return c.Meta.Season
-}
-
-func (c CurrentVideo) Title() string {
-   return c.Text.Title
 }

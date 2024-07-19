@@ -86,19 +86,19 @@ func (a ArticleSlug) Article() (*DataArticle, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   var s struct {
+   var data struct {
       Data struct {
          Article DataArticle
       }
    }
-   err = json.NewDecoder(resp.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&data)
    if err != nil {
       return nil, err
    }
-   for _, asset := range s.Data.Article.Assets {
-      asset.article = &s.Data.Article
+   for _, asset := range data.Data.Article.Assets {
+      asset.article = &data.Data.Article
    }
-   return &s.Data.Article, nil
+   return &data.Data.Article, nil
 }
 
 const query_article = `

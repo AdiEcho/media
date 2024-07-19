@@ -36,18 +36,18 @@ func NewMovie(custom_id string) (*FullMovie, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   var s struct {
+   var data struct {
       Data struct {
          Viewer struct {
             ViewableCustomId *FullMovie
          }
       }
    }
-   err = json.NewDecoder(resp.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&data)
    if err != nil {
       return nil, err
    }
-   if v := s.Data.Viewer.ViewableCustomId; v != nil {
+   if v := data.Data.Viewer.ViewableCustomId; v != nil {
       return v, nil
    }
    return nil, FullMovie{}

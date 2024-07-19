@@ -52,16 +52,16 @@ func (o OnDemand) Info() (*StreamInfo, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   var s struct {
+   var data struct {
       Data struct {
          StreamInfos []StreamInfo `json:"stream_infos"`
       }
    }
-   err = json.NewDecoder(resp.Body).Decode(&s)
+   err = json.NewDecoder(resp.Body).Decode(&data)
    if err != nil {
       return nil, err
    }
-   return &s.Data.StreamInfos[0], nil
+   return &data.Data.StreamInfos[0], nil
 }
 
 func (a Address) Fhd() OnDemand {

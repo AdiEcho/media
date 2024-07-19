@@ -9,6 +9,21 @@ import (
    "time"
 )
 
+func TestOnDemand(t *testing.T) {
+   for _, mpx_guid := range mpx_guids {
+      meta, err := NewMetadata(mpx_guid)
+      if err != nil {
+         t.Fatal(err)
+      }
+      video, err := meta.OnDemand()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", video)
+      time.Sleep(time.Second)
+   }
+}
+
 const key_id = "0552e44842654a4e81b326004be47be0"
 
 func TestLicense(t *testing.T) {
@@ -44,20 +59,4 @@ func TestLicense(t *testing.T) {
 func TestVideo(t *testing.T) {
    v, ok := Core().RequestUrl()
    fmt.Println(v, ok)
-}
-
-func TestOnDemand(t *testing.T) {
-   for _, mpx_guid := range mpx_guids {
-      var meta Metadata
-      err := meta.New(mpx_guid)
-      if err != nil {
-         t.Fatal(err)
-      }
-      video, err := meta.OnDemand()
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", video)
-      time.Sleep(time.Second)
-   }
 }

@@ -44,7 +44,7 @@ func (p Path) Resolve() (*ResolvePath, error) {
    if err != nil {
       return nil, err
    }
-   var value struct {
+   var data struct {
       Data struct {
          ResolvedPath *struct {
             LastSegment struct {
@@ -53,11 +53,11 @@ func (p Path) Resolve() (*ResolvePath, error) {
          }
       }
    }
-   err = json.Unmarshal(text, &value)
+   err = json.Unmarshal(text, &data)
    if err != nil {
       return nil, err
    }
-   if v := value.Data.ResolvedPath; v != nil {
+   if v := data.Data.ResolvedPath; v != nil {
       return &v.LastSegment.Content, nil
    }
    return nil, errors.New(string(text))

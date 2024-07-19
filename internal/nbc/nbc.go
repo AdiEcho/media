@@ -8,8 +8,7 @@ import (
 )
 
 func (f flags) download() error {
-   var meta nbc.Metadata
-   err := meta.New(f.nbc)
+   meta, err := nbc.NewMetadata(f.nbc)
    if err != nil {
       return err
    }

@@ -59,16 +59,16 @@ func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
    if err != nil {
       return nil, err
    }
-   var s struct {
+   var data struct {
       Data struct {
          ArticleAssetPlay *AssetPlay
       }
    }
-   err = json.Unmarshal(text, &s)
+   err = json.Unmarshal(text, &data)
    if err != nil {
       return nil, err
    }
-   if v := s.Data.ArticleAssetPlay; v != nil {
+   if v := data.Data.ArticleAssetPlay; v != nil {
       return v, nil
    }
    return nil, errors.New(string(text))
