@@ -8,6 +8,25 @@ import (
    "strings"
 )
 
+func (ArticleAsset) Error() string {
+   return "ArticleAsset"
+}
+
+type ArticleAsset struct {
+   Id         int
+   LinkedType string `json:"linked_type"`
+   article    *DataArticle
+}
+
+func (d DataArticle) Film() (*ArticleAsset, bool) {
+   for _, asset := range d.Assets {
+      if asset.LinkedType == "film" {
+         return asset, true
+      }
+   }
+   return nil, false
+}
+
 func (e Encoding) Year() int {
    if v, ok := e.Article.year(); ok {
       v, _ := strconv.Atoi(v)
@@ -42,15 +61,6 @@ type Encoding struct {
 
 func (e Encoding) Marshal() ([]byte, error) {
    return json.MarshalIndent(e, "", " ")
-}
-
-func (d DataArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range d.Assets {
-      if asset.LinkedType == "film" {
-         return asset, true
-      }
-   }
-   return nil, false
 }
 
 func (a ArticleSlug) Article() (*DataArticle, error) {
@@ -113,12 +123,6 @@ query($articleUrlSlug: String) {
    }
 }
 `
-
-type ArticleAsset struct {
-   Id         int
-   LinkedType string `json:"linked_type"`
-   article    *DataArticle
-}
 
 // https://www.cinemember.nl/nl/films/american-hustle
 func (a *ArticleSlug) Set(s string) error {

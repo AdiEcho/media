@@ -3,7 +3,6 @@ package main
 import (
    "154.pages.dev/media/amc"
    "154.pages.dev/media/internal"
-   "errors"
    "fmt"
    "net/http"
    "os"
@@ -27,7 +26,7 @@ func (f flags) download() error {
    }
    source, ok := play.HttpsDash()
    if !ok {
-      return errors.New("amc.Playback.HttpsDash")
+      return amc.DataSource{}
    }
    req, err := http.NewRequest("", source.Src, nil)
    if err != nil {

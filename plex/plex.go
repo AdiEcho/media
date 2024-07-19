@@ -7,6 +7,29 @@ import (
    "net/url"
 )
 
+func (MediaPart) Error() string {
+   return "MediaPart"
+}
+
+type MediaPart struct {
+   Key string
+   License string
+}
+
+func (o OnDemand) Dash(a Anonymous) (*MediaPart, bool) {
+   for _, media := range o.Media {
+      if media.Protocol == "dash" {
+         p := media.Part[0]
+         p.Key = a.abs(p.Key, url.Values{})
+         p.License = a.abs(p.License, url.Values{
+            "x-plex-drm": {"widevine"},
+         })
+         return &p, true
+      }
+   }
+   return nil, false
+}
+
 func (a Anonymous) Video(d *DiscoverMatch, forward string) (*OnDemand, error) {
    req, err := http.NewRequest("", "https://vod.provider.plex.tv", nil)
    if err != nil {
@@ -38,11 +61,6 @@ func (a Anonymous) Video(d *DiscoverMatch, forward string) (*OnDemand, error) {
    return &s.MediaContainer.Metadata[0], nil
 }
 
-type MediaPart struct {
-   Key string
-   License string
-}
-
 func (MediaPart) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -66,19 +84,6 @@ type OnDemand struct {
    }
 }
 
-func (o OnDemand) Dash(a Anonymous) (*MediaPart, bool) {
-   for _, media := range o.Media {
-      if media.Protocol == "dash" {
-         p := media.Part[0]
-         p.Key = a.abs(p.Key, url.Values{})
-         p.License = a.abs(p.License, url.Values{
-            "x-plex-drm": {"widevine"},
-         })
-         return &p, true
-      }
-   }
-   return nil, false
-}
 type Anonymous struct {
    AuthToken string
 }

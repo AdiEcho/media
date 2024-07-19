@@ -3,7 +3,6 @@ package main
 import (
    "154.pages.dev/media/internal"
    "154.pages.dev/media/tubi"
-   "errors"
    "fmt"
    "net/http"
    "os"
@@ -65,7 +64,7 @@ func (f flags) write_content() error {
       var ok bool
       content, ok = content.Get(f.tubi)
       if !ok {
-         return errors.New("tubi.Content.Get")
+         return tubi.Content{}
       }
    }
    text, err := content.Marshal()

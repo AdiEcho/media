@@ -3,7 +3,6 @@ package main
 import (
    "154.pages.dev/media/internal"
    "154.pages.dev/media/plex"
-   "errors"
    "fmt"
    "net/http"
 )
@@ -24,7 +23,7 @@ func (f flags) download() error {
    }
    part, ok := video.Dash(anon)
    if !ok {
-      return errors.New("OnDemand.Dash")
+      return plex.MediaPart{}
    }
    req, err := http.NewRequest("", part.Key, nil)
    if err != nil {

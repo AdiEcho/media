@@ -9,6 +9,15 @@ import (
    "strings"
 )
 
+func (e Entitlement) Dash() (string, bool) {
+   for _, format := range e.Formats {
+      if format.Format == "DASH" {
+         return format.MediaLocator, true
+      }
+   }
+   return "", false
+}
+
 // hard coded in JavaScript
 const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
 
@@ -93,15 +102,6 @@ type Entitlement struct {
       Format       string
       MediaLocator string
    }
-}
-
-func (e Entitlement) Dash() (string, bool) {
-   for _, format := range e.Formats {
-      if format.Format == "DASH" {
-         return format.MediaLocator, true
-      }
-   }
-   return "", false
 }
 
 func (e Entitlement) RequestUrl() (string, bool) {

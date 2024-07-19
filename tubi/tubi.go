@@ -11,6 +11,22 @@ import (
    "strings"
 )
 
+func (Content) Error() string {
+   return "Content"
+}
+
+func (c Content) Get(id int) (*Content, bool) {
+   if c.Id == id {
+      return &c, true
+   }
+   for _, child := range c.Children {
+      if v, ok := child.Get(id); ok {
+         return v, true
+      }
+   }
+   return nil, false
+}
+
 func (c Content) Marshal() ([]byte, error) {
    var buf bytes.Buffer
    enc := json.NewEncoder(&buf)
@@ -57,7 +73,7 @@ func (c *Content) New(id int) error {
 }
 
 type Namer struct {
-   C *Content
+   Content *Content
 }
 
 func (c *Content) Unmarshal(text []byte) error {
@@ -85,18 +101,6 @@ func (c Content) Episode() bool {
    return c.DetailedType == "episode"
 }
 
-func (c Content) Get(id int) (*Content, bool) {
-   if c.Id == id {
-      return &c, true
-   }
-   for _, child := range c.Children {
-      if v, ok := child.Get(id); ok {
-         return v, true
-      }
-   }
-   return nil, false
-}
-
 func (c *Content) set(parent *Content) {
    c.parent = parent
    for _, child := range c.Children {
@@ -105,18 +109,18 @@ func (c *Content) set(parent *Content) {
 }
 
 func (n Namer) Episode() int {
-   return n.C.EpisodeNumber
+   return n.Content.EpisodeNumber
 }
 
 func (n Namer) Season() int {
-   if v := n.C.parent; v != nil {
+   if v := n.Content.parent; v != nil {
       return v.Id
    }
    return 0
 }
 
 func (n Namer) Show() string {
-   if v := n.C.parent; v != nil {
+   if v := n.Content.parent; v != nil {
       return v.parent.Title
    }
    return ""
@@ -124,12 +128,12 @@ func (n Namer) Show() string {
 
 // S01:E03 - Hell Hath No Fury
 func (n Namer) Title() string {
-   if _, v, ok := strings.Cut(n.C.Title, " - "); ok {
+   if _, v, ok := strings.Cut(n.Content.Title, " - "); ok {
       return v
    }
-   return n.C.Title
+   return n.Content.Title
 }
 
 func (n Namer) Year() int {
-   return n.C.Year
+   return n.Content.Year
 }

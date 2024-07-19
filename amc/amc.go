@@ -9,6 +9,31 @@ import (
    "time"
 )
 
+func (DataSource) Error() string {
+   return "DataSource"
+}
+
+type DataSource struct {
+   KeySystems *struct {
+      Widevine struct {
+         LicenseUrl string `json:"license_url"`
+      } `json:"com.widevine.alpha"`
+   } `json:"key_systems"`
+   Src string
+   Type string
+}
+
+func (p Playback) HttpsDash() (*DataSource, bool) {
+   for _, s := range p.body.Data.PlaybackJsonData.Sources {
+      if strings.HasPrefix(s.Src, "https://") {
+         if s.Type == "application/dash+xml" {
+            return &s, true
+         }
+      }
+   }
+   return nil, false
+}
+
 func (CurrentVideo) Error() string {
    return "CurrentVideo"
 }
@@ -45,16 +70,6 @@ func (c CurrentVideo) Year() int {
    return c.Meta.Airdate.Year()
 }
 
-type DataSource struct {
-   KeySystems *struct {
-      Widevine struct {
-         LicenseUrl string `json:"license_url"`
-      } `json:"com.widevine.alpha"`
-   } `json:"key_systems"`
-   Src string
-   Type string
-}
-
 type Playback struct {
    header http.Header
    body struct {
@@ -64,17 +79,6 @@ type Playback struct {
          }
       }
    }
-}
-
-func (p Playback) HttpsDash() (*DataSource, bool) {
-   for _, s := range p.body.Data.PlaybackJsonData.Sources {
-      if strings.HasPrefix(s.Src, "https://") {
-         if s.Type == "application/dash+xml" {
-            return &s, true
-         }
-      }
-   }
-   return nil, false
 }
 
 func (Playback) WrapRequest(b []byte) ([]byte, error) {

@@ -17,7 +17,7 @@ func (f flags) play_write() error {
    }
    asset, ok := article.Film()
    if !ok {
-      return errors.New("member.DataArticle.Film")
+      return member.ArticleAsset{}
    }
    var auth member.Authenticate
    auth.Data, err = os.ReadFile(f.home + "/cine-member.json")
