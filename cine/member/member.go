@@ -8,6 +8,17 @@ import (
    "net/http"
 )
 
+type Authenticate struct {
+   Data []byte
+   V    struct {
+      Data struct {
+         UserAuthenticate struct {
+            AccessToken string `json:"access_token"`
+         }
+      }
+   }
+}
+
 const query_asset = `
 mutation($article_id: Int, $asset_id: Int) {
    ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
@@ -88,17 +99,6 @@ func (a AssetPlay) Dash() (string, bool) {
       }
    }
    return "", false
-}
-
-type Authenticate struct {
-   Data []byte
-   V    struct {
-      Data struct {
-         UserAuthenticate struct {
-            AccessToken string `json:"access_token"`
-         }
-      }
-   }
 }
 
 func (a *Authenticate) New(email, password string) error {

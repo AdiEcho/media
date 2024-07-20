@@ -10,16 +10,26 @@ import (
 
 func (f flags) download() error {
    var (
-      auth amc.Authorization
+      text amc.RawAuthorization
       err error
    )
-   auth.Data, err = os.ReadFile(f.home + "/amc.json")
+   text, err = os.ReadFile(f.home + "/amc.json")
    if err != nil {
       return err
    }
-   auth.Unmarshal()
-   auth.Refresh()
-   os.WriteFile(f.home + "/amc.json", auth.Data, 0666)
+   auth, err := text.Authorization()
+   if err != nil {
+      return err
+   }
+   text, err = auth.Refresh()
+   if err != nil {
+      return err
+   }
+   os.WriteFile(f.home + "/amc.json", text, 0666)
+   auth, err = text.Authorization()
+   if err != nil {
+      return err
+   }
    play, err := auth.Playback(f.address.Nid)
    if err != nil {
       return err
@@ -32,39 +42,39 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := internal.Dash(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
+         f.s.Poster = play
          content, err := auth.Content(f.address.Path)
          if err != nil {
             return err
          }
-         video, err := content.Video()
+         f.s.Name, err = content.Video()
          if err != nil {
             return err
          }
-         f.s.Name = video
-         f.s.Poster = play
-         return f.s.Download(medium)
+         return f.s.Download(rep)
       }
-   }
-   // 2 MPD all
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
 }
 
 func (f flags) login() error {
    var auth amc.Authorization
-   auth.Unauth()
-   auth.Unmarshal()
-   auth.Login(f.email, f.password)
-   return os.WriteFile(f.home + "/amc.json", auth.Data, 0666)
+   err := auth.Unauth()
+   if err != nil {
+      return err
+   }
+   text, err := auth.Login(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/amc.json", text, 0666)
 }
