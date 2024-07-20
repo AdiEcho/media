@@ -10,6 +10,14 @@ import (
    "path"
 )
 
+func (f flags) authenticate() error {
+   text, err := member.NewAuthenticate(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/cine-member.json", text, 0666)
+}
+
 func (f flags) play_write() error {
    article, err := f.slug.Article()
    if err != nil {
@@ -19,12 +27,12 @@ func (f flags) play_write() error {
    if !ok {
       return member.ArticleAsset{}
    }
-   var auth member.Authenticate
-   auth.Data, err = os.ReadFile(f.home + "/cine-member.json")
+   text, err := os.ReadFile(f.home + "/cine-member.json")
    if err != nil {
       return err
    }
-   err = auth.Unmarshal()
+   var auth member.Authenticate
+   err = auth.Unmarshal(text)
    if err != nil {
       return err
    }
@@ -32,7 +40,7 @@ func (f flags) play_write() error {
    if err != nil {
       return err
    }
-   text, err := member.Encoding{article, play}.Marshal()
+   text, err = member.Encoding{article, play}.Marshal()
    if err != nil {
       return err
    }
@@ -74,15 +82,6 @@ func (f flags) download() error {
       fmt.Println(medium)
    }
    return nil
-}
-
-func (f flags) authenticate() error {
-   var auth member.Authenticate
-   err := auth.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/cine-member.json", auth.Data, 0666)
 }
 
 func (f flags) play_name() string {

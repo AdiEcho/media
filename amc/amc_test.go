@@ -32,12 +32,14 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var auth Authorization
-   auth.Data, err = os.ReadFile(home + "/amc.json")
+   text, err := os.ReadFile(home + "/amc.json")
    if err != nil {
       t.Fatal(err)
    }
-   auth.Unmarshal()
+   auth, err := RawAuthorization.Authorization(text)
+   if err != nil {
+      t.Fatal(err)
+   }
    var web Address
    web.Set(test.url)
    play, err := auth.Playback(web.Nid)

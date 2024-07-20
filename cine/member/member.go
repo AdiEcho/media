@@ -8,17 +8,6 @@ import (
    "net/http"
 )
 
-type Authenticate struct {
-   Data []byte
-   V    struct {
-      Data struct {
-         UserAuthenticate struct {
-            AccessToken string `json:"access_token"`
-         }
-      }
-   }
-}
-
 const query_asset = `
 mutation($article_id: Int, $asset_id: Int) {
    ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
@@ -58,7 +47,7 @@ func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.V.Data.UserAuthenticate.AccessToken},
+      "authorization": {"Bearer " + a.Data.UserAuthenticate.AccessToken},
       "content-type":  {"application/json"},
    }
    resp, err := http.DefaultClient.Do(req)
@@ -101,7 +90,27 @@ func (a AssetPlay) Dash() (string, bool) {
    return "", false
 }
 
-func (a *Authenticate) New(email, password string) error {
+const user_authenticate = `
+mutation($email: String, $password: String) {
+   UserAuthenticate(email: $email, password: $password) {
+      access_token
+   }
+}
+`
+
+func (a *Authenticate) Unmarshal(text []byte) error {
+   return json.Unmarshal(text, a)
+}
+
+type Authenticate struct {
+   Data struct {
+      UserAuthenticate struct {
+         AccessToken string `json:"access_token"`
+      }
+   }
+}
+
+func NewAuthenticate(email, password string) ([]byte, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Query     string `json:"query"`
@@ -116,31 +125,15 @@ func (a *Authenticate) New(email, password string) error {
       return json.Marshal(s)
    }()
    if err != nil {
-      return err
+      return nil, err
    }
    resp, err := http.Post(
       "https://api.audienceplayer.com/graphql/2/user",
       "application/json", bytes.NewReader(body),
    )
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
-   a.Data, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
+   return io.ReadAll(resp.Body)
 }
-
-func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Data, &a.V)
-}
-
-const user_authenticate = `
-mutation($email: String, $password: String) {
-   UserAuthenticate(email: $email, password: $password) {
-      access_token
-   }
-}
-`
