@@ -6,6 +6,7 @@ import (
    "fmt"
    "net/http"
    "os"
+   "sort"
 )
 
 func (f flags) download() error {
@@ -30,26 +31,27 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := internal.Dash(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
-         f.s.Name, err = auth.Details(deep)
-         if err != nil {
-            return err
+   sort.Slice(reps, func(i, j int) bool {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
+   for _, rep := range reps {
+      if rep.GetAdaptationSet().GetPeriod().Id == "content-0" {
+         switch f.representation {
+         case "":
+            fmt.Print(rep, "\n\n")
+         case rep.Id:
+            f.s.Name, err = auth.Details(deep)
+            if err != nil {
+               return err
+            }
+            f.s.Poster = play
+            return f.s.Download(rep)
          }
-         f.s.Poster = play
-         return f.s.Download(medium)
       }
-   }
-   // 2 MPD all
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
 }
