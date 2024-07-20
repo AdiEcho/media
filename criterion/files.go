@@ -42,7 +42,7 @@ func (a AuthToken) Files(item *EmbedItem) (VideoFiles, error) {
    if err != nil {
       return nil, err
    }
-   req.Header.Set("authorization", "Bearer "+a.V.AccessToken)
+   req.Header.Set("authorization", "Bearer "+a.AccessToken)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err

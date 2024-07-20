@@ -34,12 +34,15 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var token AuthToken
-   token.Data, err = os.ReadFile("token.json")
+   text, err := os.ReadFile("token.json")
    if err != nil {
       t.Fatal(err)
    }
-   token.Unmarshal()
+   var token AuthToken
+   err = token.Unmarshal(text)
+   if err != nil {
+      t.Fatal(err)
+   }
    item, err := token.Video(my_dinner)
    if err != nil {
       t.Fatal(err)

@@ -10,16 +10,24 @@ import (
    "path"
 )
 
-func (f flags) download() error {
-   var (
-      token criterion.AuthToken
-      err error
-   )
-   token.Data, err = os.ReadFile(f.home + "/criterion.json")
+func (f flags) authenticate() error {
+   text, err := criterion.NewAuthToken(f.email, f.password)
    if err != nil {
       return err
    }
-   token.Unmarshal()
+   return os.WriteFile(f.home + "/criterion.json", text, 0666)
+}
+
+func (f flags) download() error {
+   text, err := os.ReadFile(f.home + "/criterion.json")
+   if err != nil {
+      return err
+   }
+   var token criterion.AuthToken
+   err = token.Unmarshal(text)
+   if err != nil {
+      return err
+   }
    item, err := token.Video(path.Base(f.address))
    if err != nil {
       return err
@@ -36,31 +44,19 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := internal.Dash(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
          f.s.Name = item
          f.s.Poster = file
-         return f.s.Download(medium)
+         return f.s.Download(rep)
       }
-   }
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
-}
-
-func (f flags) authenticate() error {
-   var token criterion.AuthToken
-   err := token.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/criterion.json", token.Data, 0666)
 }

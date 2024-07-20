@@ -12,12 +12,11 @@ func TestAuthenticate(t *testing.T) {
       t.Fatal("Getenv")
    }
    password := os.Getenv("cineMember_password")
-   var auth Authenticate
-   err := auth.New(username, password)
+   text, err := NewAuthenticate(username, password)
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("authenticate.json", auth.Data, 0666)
+   os.WriteFile("authenticate.json", text, 0666)
 }
 
 func TestAsset(t *testing.T) {
