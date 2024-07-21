@@ -21,10 +21,10 @@ func (f *flags) New() error {
 }
 
 type flags struct {
+   roku string
    code_write bool
    home string
    representation string
-   roku string
    s internal.Stream
    token_read bool
    token_write bool
@@ -46,13 +46,13 @@ func main() {
    flag.Parse()
    text.Transport{}.Set(true)
    switch {
-   case f.token_write:
-      err := f.write_token()
+   case f.code_write:
+      err := f.write_code()
       if err != nil {
          panic(err)
       }
-   case f.code_write:
-      err := write_code()
+   case f.token_write:
+      err := f.write_token()
       if err != nil {
          panic(err)
       }

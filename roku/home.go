@@ -10,7 +10,7 @@ import (
 )
 
 func (n Namer) Year() int {
-   return n.H.ReleaseDate.Year()
+   return n.Home.ReleaseDate.Year()
 }
 
 type HomeScreen struct {
@@ -68,24 +68,24 @@ func (h *HomeScreen) New(id string) error {
 }
 
 type Namer struct {
-   H HomeScreen
+   Home HomeScreen
 }
 
 func (n Namer) Show() string {
-   if v := n.H.Series; v != nil {
+   if v := n.Home.Series; v != nil {
       return v.Title
    }
    return ""
 }
 
 func (n Namer) Season() int {
-   return n.H.SeasonNumber
+   return n.Home.SeasonNumber
 }
 
 func (n Namer) Episode() int {
-   return n.H.EpisodeNumber
+   return n.Home.EpisodeNumber
 }
 
 func (n Namer) Title() string {
-   return n.H.Title
+   return n.Home.Title
 }
