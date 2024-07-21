@@ -10,6 +10,63 @@ import (
    "time"
 )
 
+func TestActivationCode(t *testing.T) {
+   // AccountToken
+   var account AccountToken
+   err := account.New(nil)
+   if err != nil {
+      t.Fatal(err)
+   }
+   
+   
+   
+   account.Unmarshal()
+   // ActivationCode
+   code, err := account.Code()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("code.json", code.Data, 0666)
+   code.Unmarshal()
+   fmt.Println(code)
+}
+
+func TestActivationToken(t *testing.T) {
+   var (
+      code ActivationCode
+      err error
+   )
+   code.Data, err = os.ReadFile("code.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = code.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   
+   activation_token, err := code.Token()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("activation_token.json", activation_token.Data, 0666)
+}
+
+func TestPlayback(t *testing.T) {
+   var account AccountToken
+   err := account.New(nil)
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      play, err := account.Playback(path.Base(test.url))
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", play)
+      time.Sleep(time.Second)
+   }
+}
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -34,12 +91,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var token AccountToken
-   err = token.New(nil)
+   var account AccountToken
+   err = account.New(nil)
    if err != nil {
       t.Fatal(err)
    }
-   play, err := token.Playback(path.Base(test.url))
+   play, err := account.Playback(path.Base(test.url))
    if err != nil {
       t.Fatal(err)
    }
@@ -50,30 +107,12 @@ func TestLicense(t *testing.T) {
    fmt.Printf("%x\n", key)
 }
 
-func TestActivationCode(t *testing.T) {
-   var token AccountToken
-   err := token.New(nil)
-   if err != nil {
-      t.Fatal(err)
-   }
-   code, err := token.Code()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(code)
-   text, err := code.Marshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("code.json", text, 0666)
-}
-
 func TestAccountToken(t *testing.T) {
    var (
       activate ActivationToken
       err      error
    )
-   activate.Data, err = os.ReadFile("token.json")
+   activate.Data, err = os.ReadFile("activate.json")
    if err != nil {
       t.Fatal(err)
    }
@@ -87,37 +126,4 @@ func TestAccountToken(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", account)
-}
-
-func TestActivationToken(t *testing.T) {
-   text, err := os.ReadFile("code.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var code ActivationCode
-   err = code.Unmarshal(text)
-   if err != nil {
-      t.Fatal(err)
-   }
-   token, err := code.Token()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("token.json", token.Data, 0666)
-}
-
-func TestPlayback(t *testing.T) {
-   var token AccountToken
-   err := token.New(nil)
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      play, err := token.Playback(path.Base(test.url))
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", play)
-      time.Sleep(time.Second)
-   }
 }

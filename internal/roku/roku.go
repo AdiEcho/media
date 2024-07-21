@@ -37,8 +37,6 @@ func (f flags) write_code() error {
    return os.WriteFile(f.roku + "/code.json", code.Data, 0666)
 }
 
-////////////
-
 func (f flags) write_token() error {
    var err error
    // AccountToken
@@ -56,11 +54,11 @@ func (f flags) write_token() error {
    }
    code.Unmarshal()
    // ActivationToken
-   token, err := code.ActivationToken()
+   activation_token, err := account.ActivationToken(code)
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/roku.json", token.Data, 0666)
+   return os.WriteFile(f.home + "/roku.json", activation_token.Data, 0666)
 }
 
 func (f flags) download() error {
@@ -84,12 +82,15 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := internal.Dash(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
          var home roku.HomeScreen
          err := home.New(f.roku)
          if err != nil {
@@ -97,14 +98,8 @@ func (f flags) download() error {
          }
          f.s.Name = roku.Namer{home}
          f.s.Poster = play
-         return f.s.Download(medium)
+         return f.s.Download(rep)
       }
-   }
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
 }
