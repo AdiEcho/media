@@ -10,63 +10,6 @@ import (
    "time"
 )
 
-func TestActivationCode(t *testing.T) {
-   // AccountToken
-   var account AccountToken
-   err := account.New(nil)
-   if err != nil {
-      t.Fatal(err)
-   }
-   
-   
-   
-   account.Unmarshal()
-   // ActivationCode
-   code, err := account.Code()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("code.json", code.Data, 0666)
-   code.Unmarshal()
-   fmt.Println(code)
-}
-
-func TestActivationToken(t *testing.T) {
-   var (
-      code ActivationCode
-      err error
-   )
-   code.Data, err = os.ReadFile("code.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = code.Unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   
-   activation_token, err := code.Token()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("activation_token.json", activation_token.Data, 0666)
-}
-
-func TestPlayback(t *testing.T) {
-   var account AccountToken
-   err := account.New(nil)
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      play, err := account.Playback(path.Base(test.url))
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", play)
-      time.Sleep(time.Second)
-   }
-}
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -80,50 +23,89 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   test := tests["episode"]
-   var pssh widevine.Pssh
-   pssh.KeyId, err = hex.DecodeString(test.key_id)
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests{
+      var pssh widevine.Pssh
+      pssh.KeyId, err = hex.DecodeString(test.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var module widevine.Cdm
+      err = module.New(private_key, client_id, pssh.Encode())
+      if err != nil {
+         t.Fatal(err)
+      }
+      var auth AccountAuth
+      auth.New(nil)
+      play, err := auth.Playback(path.Base(test.url))
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, err := module.Key(play, pssh.KeyId)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
    }
-   var module widevine.Cdm
-   err = module.New(private_key, client_id, pssh.Encode())
-   if err != nil {
-      t.Fatal(err)
-   }
-   var account AccountToken
-   err = account.New(nil)
-   if err != nil {
-      t.Fatal(err)
-   }
-   play, err := account.Playback(path.Base(test.url))
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := module.Key(play, pssh.KeyId)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
 }
 
-func TestAccountToken(t *testing.T) {
-   var (
-      activate ActivationToken
-      err      error
-   )
-   activate.Data, err = os.ReadFile("activate.json")
+func TestCode(t *testing.T) {
+   // AccountAuth
+   var auth AccountAuth
+   err := auth.New(nil)
    if err != nil {
       t.Fatal(err)
    }
-   err = activate.Unmarshal()
+   os.WriteFile("auth.json", auth.Data, 0666)
+   auth.Unmarshal()
+   // AccountCode
+   code, err := auth.Code()
    if err != nil {
       t.Fatal(err)
    }
-   var account AccountToken
-   err = account.New(&activate)
+   os.WriteFile("code.json", code.Data, 0666)
+   code.Unmarshal()
+   fmt.Println(code)
+}
+
+func TestTokenWrite(t *testing.T) {
+   var err error
+   // AccountAuth
+   var auth AccountAuth
+   auth.Data, err = os.ReadFile("auth.json")
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", account)
+   auth.Unmarshal()
+   // AccountCode
+   var code AccountCode
+   code.Data, err = os.ReadFile("code.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   code.Unmarshal()
+   // AccountToken
+   token, err := auth.Token(code)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("token.json", token.Data, 0666)
+}
+
+func TestTokenRead(t *testing.T) {
+   var err      error
+   // AccountToken
+   var token AccountToken
+   token.Data, err = os.ReadFile("token.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   token.Unmarshal()
+   // AccountAuth
+   var auth AccountAuth
+   err = auth.New(&token)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", auth)
 }

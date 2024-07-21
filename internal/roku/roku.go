@@ -8,73 +8,20 @@ import (
    "os"
 )
 
-func (f flags) write_code() error {
-   os.Mkdir(f.roku, 0666)
-   // AccountToken
-   var account roku.AccountToken
-   err := account.New(nil)
-   if err != nil {
-      return err
-   }
-   err = account.Unmarshal()
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(f.roku + "/account.json", account.Data, 0666)
-   if err != nil {
-      return err
-   }
-   // ActivationCode
-   code, err := account.Code()
-   if err != nil {
-      return err
-   }
-   err = code.Unmarshal()
-   if err != nil {
-      return err
-   }
-   fmt.Println(code)
-   return os.WriteFile(f.roku + "/code.json", code.Data, 0666)
-}
-
-func (f flags) write_token() error {
-   var err error
-   // AccountToken
-   var account roku.AccountToken
-   account.Data, err = os.ReadFile(f.roku + "/account.json")
-   if err != nil {
-      return err
-   }
-   account.Unmarshal()
-   // ActivationCode
-   var code roku.ActivationCode
-   code.Data, err = os.ReadFile(f.roku + "/code.json")
-   if err != nil {
-      return err
-   }
-   code.Unmarshal()
-   // ActivationToken
-   activation_token, err := account.ActivationToken(code)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/roku.json", activation_token.Data, 0666)
-}
-
 func (f flags) download() error {
-   var activate *roku.ActivationToken
+   var token *roku.AccountToken
    if f.token_read {
-      activate = new(roku.ActivationToken)
+      token = new(roku.AccountToken)
       var err error
-      activate.Data, err = os.ReadFile(f.home + "/roku.json")
+      token.Data, err = os.ReadFile(f.home + "/roku.json")
       if err != nil {
          return err
       }
-      activate.Unmarshal()
+      token.Unmarshal()
    }
-   var account roku.AccountToken
-   account.New(activate)
-   play, err := account.Playback(f.roku)
+   var auth roku.AccountAuth
+   auth.New(token)
+   play, err := auth.Playback(f.roku)
    if err != nil {
       return err
    }
@@ -102,4 +49,61 @@ func (f flags) download() error {
       }
    }
    return nil
+}
+
+func (f flags) write_code() error {
+   os.Mkdir(f.roku, 0666)
+   // AccountAuth
+   var auth roku.AccountAuth
+   err := auth.New(nil)
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(f.roku + "/auth.json", auth.Data, 0666)
+   if err != nil {
+      return err
+   }
+   err = auth.Unmarshal()
+   if err != nil {
+      return err
+   }
+   // AccountCode
+   code, err := auth.Code()
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(f.roku + "/code.json", code.Data, 0666)
+   if err != nil {
+      return err
+   }
+   err = code.Unmarshal()
+   if err != nil {
+      return err
+   }
+   fmt.Println(code)
+   return nil
+}
+
+func (f flags) write_token() error {
+   var err error
+   // AccountAuth
+   var auth roku.AccountAuth
+   auth.Data, err = os.ReadFile(f.roku + "/auth.json")
+   if err != nil {
+      return err
+   }
+   auth.Unmarshal()
+   // AccountCode
+   var code roku.AccountCode
+   code.Data, err = os.ReadFile(f.roku + "/code.json")
+   if err != nil {
+      return err
+   }
+   code.Unmarshal()
+   // AccountToken
+   token, err := auth.Token(code)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/roku.json", token.Data, 0666)
 }
