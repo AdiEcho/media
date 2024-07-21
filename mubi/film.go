@@ -101,12 +101,11 @@ func (a Authenticate) Url(film *FilmResponse) (*SecureUrl, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   var secure SecureUrl
-   secure.Data, err = io.ReadAll(resp.Body)
+   data, err := io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
-   return &secure, nil
+   return &SecureUrl{Data: data}, nil
 }
 
 func (Namer) Episode() int {

@@ -117,12 +117,11 @@ func (a ActivationCode) Token() (*ActivationToken, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   var token ActivationToken
-   token.Data, err = io.ReadAll(resp.Body)
+   data, err := io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
-   return &token, nil
+   return &ActivationToken{Data: data}, nil
 }
 
 func (a *ActivationToken) Unmarshal() error {

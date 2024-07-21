@@ -66,7 +66,7 @@ func (a Authenticate) RequestHeader() (http.Header, error) {
       return nil, err
    }
    head := make(http.Header)
-   head.Set("Dt-Custom-Data", base64.StdEncoding.EncodeToString(text))
+   head.Set("dt-custom-data", base64.StdEncoding.EncodeToString(text))
    return head, nil
 }
 
@@ -102,9 +102,9 @@ func (c LinkCode) Authenticate() (*Authenticate, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Client": {client},
-      "Client-Country": {ClientCountry},
-      "Content-Type": {"application/json"},
+      "client": {client},
+      "client-country": {ClientCountry},
+      "content-type": {"application/json"},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -116,12 +116,11 @@ func (c LinkCode) Authenticate() (*Authenticate, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   var auth Authenticate
-   auth.Data, err = io.ReadAll(resp.Body)
+   data, err := io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
-   return &auth, nil
+   return &Authenticate{Data: data}, nil
 }
 
 func (c *LinkCode) New() error {
@@ -130,8 +129,8 @@ func (c *LinkCode) New() error {
       return err
    }
    req.Header = http.Header{
-      "Client": {client},
-      "Client-Country": {ClientCountry},
+      "client": {client},
+      "client-country": {ClientCountry},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
