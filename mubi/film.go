@@ -26,9 +26,9 @@ func (a Authenticate) Viewing(film *FilmResponse) error {
       return string(b)
    }()
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.V.Token},
-      "Client": {client},
-      "Client-Country": {ClientCountry},
+      "authorization": {"Bearer " + a.V.Token},
+      "client": {client},
+      "client-country": {ClientCountry},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -59,8 +59,8 @@ func (a Address) Film() (*FilmResponse, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Client": {client},
-      "Client-Country": {ClientCountry},
+      "client": {client},
+      "client-country": {ClientCountry},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -87,9 +87,9 @@ func (a Authenticate) Url(film *FilmResponse) (*SecureUrl, error) {
       return string(b)
    }()
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.V.Token},
-      "Client": {client},
-      "Client-Country": {ClientCountry},
+      "authorization": {"Bearer " + a.V.Token},
+      "client": {client},
+      "client-country": {ClientCountry},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {

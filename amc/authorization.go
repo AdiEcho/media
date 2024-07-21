@@ -15,7 +15,7 @@ func (a Authorization) Refresh() (RawAuthorization, error) {
       return nil, err
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
-   req.Header.Set("Authorization", "Bearer " + a.Data.RefreshToken)
+   req.Header.Set("authorization", "Bearer " + a.Data.RefreshToken)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -114,11 +114,11 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
    // If you request once with headers, you can request again without any
    // headers for 10 minutes, but then headers are required again
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.Data.AccessToken},
-      "X-Amcn-Cache-Hash": {cache_hash()},
-      "X-Amcn-Network": {"amcplus"},
-      "X-Amcn-Tenant": {"amcn"},
-      "X-Amcn-User-Cache-Hash": {cache_hash()},
+      "authorization": {"Bearer " + a.Data.AccessToken},
+      "x-amcn-cache-hash": {cache_hash()},
+      "x-amcn-network": {"amcplus"},
+      "x-amcn-tenant": {"amcn"},
+      "x-amcn-user-cache-hash": {cache_hash()},
    }
    // Shows must use `path`, and movies must use `path/watch`. If trial has
    // expired, you will get `.data.type` of `redirect`. You can remove the

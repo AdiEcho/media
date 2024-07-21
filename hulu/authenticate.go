@@ -33,7 +33,7 @@ func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
       "id": {id.s},
       "namespace": {"entity"},
    }.Encode()
-   req.Header.Set("Authorization", "Bearer " + a.V.Data.UserToken)
+   req.Header.Set("authorization", "Bearer " + a.V.Data.UserToken)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -127,8 +127,8 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Authorization": {"Bearer " + a.V.Data.UserToken},
-      "Content-Type": {"application/json"},
+      "authorization": {"Bearer " + a.V.Data.UserToken},
+      "content-type": {"application/json"},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {

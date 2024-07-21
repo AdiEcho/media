@@ -128,7 +128,7 @@ func (s Stream) segment_base(
    data, _ := segment.Initialization.Range.MarshalText()
    req := &http.Request{
       Header: http.Header{
-         "Range": {"bytes=" + string(data)},
+         "range": {"bytes=" + string(data)},
       },
       URL: base.Url,
    }
@@ -167,7 +167,7 @@ func (s Stream) segment_base(
       segment.IndexRange.End += uint64(reference.ReferencedSize())
       data, _ := segment.IndexRange.MarshalText()
       err := func() error {
-         req.Header.Set("Range", "bytes=" + string(data))
+         req.Header.Set("range", "bytes=" + string(data))
          resp, err := http.DefaultClient.Do(req)
          if err != nil {
             return err
@@ -319,7 +319,7 @@ var Forward = ForwardedFor{
 
 func write_sidx(req *http.Request, index dash.Range) ([]sofia.Reference, error) {
    data, _ := index.MarshalText()
-   req.Header.Set("Range", "bytes=" + string(data))
+   req.Header.Set("range", "bytes=" + string(data))
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err

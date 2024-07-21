@@ -96,9 +96,9 @@ func (a *Anonymous) New() error {
       return err
    }
    req.Header = http.Header{
-      "Accept": {"application/json"},
-      "X-Plex-Product": {"Plex Mediaverse"},
-      "X-Plex-Client-Identifier": {"!"},
+      "accept": {"application/json"},
+      "x-plex-product": {"Plex Mediaverse"},
+      "x-plex-client-identifier": {"!"},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
