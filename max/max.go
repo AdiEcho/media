@@ -34,9 +34,9 @@ func (d DefaultToken) Playback(web WebAddress) (*Playback, error) {
       return b.String()
    }()
    req.Header = http.Header{
-      "authorization": {"Bearer "+d.Data.Attributes.Token},
+      "authorization": {"Bearer "+d.Body.Data.Attributes.Token},
       "content-type": {"application/json"},
-      "x-wbd-session-state": {""},
+      "x-wbd-session-state": {d.SessionState},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -75,7 +75,7 @@ func (d DefaultToken) Routes(web WebAddress) (*DefaultRoutes, error) {
       // this is not required, but results in a smaller response
       "page[items.size]": {"1"},
    }.Encode()
-   req.Header.Set("authorization", "Bearer "+d.Data.Attributes.Token)
+   req.Header.Set("authorization", "Bearer "+d.Body.Data.Attributes.Token)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
