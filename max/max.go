@@ -10,97 +10,6 @@ import (
    "time"
 )
 
-func (u *Url) UnmarshalText(text []byte) error {
-   u.Url = new(url.URL)
-   err := u.Url.UnmarshalBinary(text)
-   if err != nil {
-      return err
-   }
-   query := u.Url.Query()
-   manifest := query["r.manifest"]
-   query["r.manifest"] = manifest[len(manifest)-1:]
-   u.Url.RawQuery = query.Encode()
-   return nil
-}
-
-type Url struct {
-   Url *url.URL
-}
-
-type Playback struct {
-   Drm struct {
-      Schemes struct {
-         Widevine struct {
-            LicenseUrl string
-         }
-      }
-   }
-   Manifest struct {
-      Url Url
-   }
-}
-
-const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
-
-type DefaultRoutes struct {
-   Data struct {
-      Attributes struct {
-         Url WebAddress
-      }
-   }
-   Included []route_include
-}
-
-func (d DefaultRoutes) video() (*route_include, bool) {
-   for _, include := range d.Included {
-      if include.Id == d.Data.Attributes.Url.VideoId {
-         return &include, true
-      }
-   }
-   return nil, false
-}
-
-func (d DefaultRoutes) Season() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.SeasonNumber
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Episode() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.EpisodeNumber
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Title() string {
-   if v, ok := d.video(); ok {
-      return v.Attributes.Name
-   }
-   return ""
-}
-
-func (d DefaultRoutes) Year() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.AirDate.Year()
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Show() string {
-   if v, ok := d.video(); ok {
-      if v.Attributes.SeasonNumber >= 1 {
-         for _, include := range d.Included {
-            if include.Id == v.Relationships.Show.Data.Id {
-               return include.Attributes.Name
-            }
-         }
-      }
-   }
-   return ""
-}
-
 func (d DefaultToken) Playback(web WebAddress) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var p playback_request
@@ -118,14 +27,17 @@ func (d DefaultToken) Playback(web WebAddress) (*Playback, error) {
    if err != nil {
       return nil, err
    }
-   req.Header.Set("content-type", "application/json")
    req.URL.Path = func() string {
       var b bytes.Buffer
       b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
       b.WriteString("/playbackInfo")
       return b.String()
    }()
-   req.Header.Set("authorization", "Bearer "+d.Data.Attributes.Token)
+   req.Header = http.Header{
+      "authorization": {"Bearer "+d.Data.Attributes.Token},
+      "content-type": {"application/json"},
+      "x-wbd-session-state": {""},
+   }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -294,4 +206,94 @@ type route_include struct {
          }
       }
    }
+}
+func (u *Url) UnmarshalText(text []byte) error {
+   u.Url = new(url.URL)
+   err := u.Url.UnmarshalBinary(text)
+   if err != nil {
+      return err
+   }
+   query := u.Url.Query()
+   manifest := query["r.manifest"]
+   query["r.manifest"] = manifest[len(manifest)-1:]
+   u.Url.RawQuery = query.Encode()
+   return nil
+}
+
+type Url struct {
+   Url *url.URL
+}
+
+type Playback struct {
+   Drm struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string
+         }
+      }
+   }
+   Manifest struct {
+      Url Url
+   }
+}
+
+const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
+
+type DefaultRoutes struct {
+   Data struct {
+      Attributes struct {
+         Url WebAddress
+      }
+   }
+   Included []route_include
+}
+
+func (d DefaultRoutes) video() (*route_include, bool) {
+   for _, include := range d.Included {
+      if include.Id == d.Data.Attributes.Url.VideoId {
+         return &include, true
+      }
+   }
+   return nil, false
+}
+
+func (d DefaultRoutes) Season() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.SeasonNumber
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Episode() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.EpisodeNumber
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Title() string {
+   if v, ok := d.video(); ok {
+      return v.Attributes.Name
+   }
+   return ""
+}
+
+func (d DefaultRoutes) Year() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.AirDate.Year()
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Show() string {
+   if v, ok := d.video(); ok {
+      if v.Attributes.SeasonNumber >= 1 {
+         for _, include := range d.Included {
+            if include.Id == v.Relationships.Show.Data.Id {
+               return include.Attributes.Name
+            }
+         }
+      }
+   }
+   return ""
 }

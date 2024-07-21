@@ -11,32 +11,6 @@ import (
    "time"
 )
 
-func (d *DefaultToken) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, d)
-}
-
-const home_market = "amer"
-
-// note you can use other keys, but you need to change home_market to match
-var default_key = hmac_key{
-   Id:  "android1_prd",
-   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
-}
-
-type default_decision struct {
-   HmacKeys struct {
-      Config struct {
-         Android   *hmac_key
-         AndroidTv *hmac_key
-         FireTv    *hmac_key
-         Hwa       *hmac_key
-         Ios       *hmac_key
-         TvOs      *hmac_key
-         Web       *hmac_key
-      }
-   }
-}
-
 func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    address := func() string {
       var b bytes.Buffer
@@ -149,4 +123,30 @@ func (d *DefaultToken) New() error {
       return errors.New(b.String())
    }
    return json.NewDecoder(resp.Body).Decode(d)
+}
+
+func (d *DefaultToken) Unmarshal(text []byte) error {
+   return json.Unmarshal(text, d)
+}
+
+const home_market = "amer"
+
+// note you can use other keys, but you need to change home_market to match
+var default_key = hmac_key{
+   Id:  "android1_prd",
+   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
+}
+
+type default_decision struct {
+   HmacKeys struct {
+      Config struct {
+         Android   *hmac_key
+         AndroidTv *hmac_key
+         FireTv    *hmac_key
+         Hwa       *hmac_key
+         Ios       *hmac_key
+         TvOs      *hmac_key
+         Web       *hmac_key
+      }
+   }
 }
