@@ -83,6 +83,7 @@ type DefaultToken struct {
       }
    }
 }
+
 type hmac_key struct {
    Id  string
    Key []byte
