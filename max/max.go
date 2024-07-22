@@ -10,6 +10,113 @@ import (
    "time"
 )
 
+const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
+
+type DefaultRoutes struct {
+   Data struct {
+      Attributes struct {
+         Url WebAddress
+      }
+   }
+   Included []route_include
+}
+
+func (d DefaultRoutes) video() (*route_include, bool) {
+   for _, include := range d.Included {
+      if include.Id == d.Data.Attributes.Url.VideoId {
+         return &include, true
+      }
+   }
+   return nil, false
+}
+
+func (d DefaultRoutes) Season() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.SeasonNumber
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Episode() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.EpisodeNumber
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Title() string {
+   if v, ok := d.video(); ok {
+      return v.Attributes.Name
+   }
+   return ""
+}
+
+func (d DefaultRoutes) Year() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.AirDate.Year()
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Show() string {
+   if v, ok := d.video(); ok {
+      if v.Attributes.SeasonNumber >= 1 {
+         for _, include := range d.Included {
+            if include.Id == v.Relationships.Show.Data.Id {
+               return include.Attributes.Name
+            }
+         }
+      }
+   }
+   return ""
+}
+
+func (d DefaultToken) Playback(web WebAddress) (*Playback, error) {
+   body, err := func() ([]byte, error) {
+      var p playback_request
+      p.ConsumptionType = "streaming"
+      p.EditId = web.EditId
+      return json.MarshalIndent(p, "", " ")
+   }()
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://default.any-any.prd.api.discomax.com",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b bytes.Buffer
+      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
+      b.WriteString("/playbackInfo")
+      return b.String()
+   }()
+   req.Header = http.Header{
+      "authorization": {"Bearer "+d.Body.Data.Attributes.Token},
+      "content-type": {"application/json"},
+      "x-wbd-session-state": {d.SessionState},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   play := new(Playback)
+   err = json.NewDecoder(resp.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
+}
+
 func (d DefaultToken) Routes(web WebAddress) (*DefaultRoutes, error) {
    address := func() string {
       path, _ := web.MarshalText()
@@ -29,7 +136,10 @@ func (d DefaultToken) Routes(web WebAddress) (*DefaultRoutes, error) {
       // this is not required, but results in a smaller response
       "page[items.size]": {"1"},
    }.Encode()
-   req.Header.Set("authorization", "Bearer "+d.Body.Data.Attributes.Token)
+   req.Header = http.Header{
+      "authorization": {"Bearer "+d.Body.Data.Attributes.Token},
+      "x-wbd-session-state": {d.SessionState},
+   }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -46,6 +156,19 @@ func (d DefaultToken) Routes(web WebAddress) (*DefaultRoutes, error) {
       return nil, err
    }
    return route, nil
+}
+
+type Playback struct {
+   Drm struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string
+         }
+      }
+   }
+   Manifest struct {
+      Url Url
+   }
 }
 
 func (Playback) WrapRequest(b []byte) ([]byte, error) {
@@ -80,6 +203,23 @@ func (p *PublicKey) New() error {
    }
    defer resp.Body.Close()
    return json.NewDecoder(resp.Body).Decode(p)
+}
+
+func (u *Url) UnmarshalText(text []byte) error {
+   u.Url = new(url.URL)
+   err := u.Url.UnmarshalBinary(text)
+   if err != nil {
+      return err
+   }
+   query := u.Url.Query()
+   manifest := query["r.manifest"]
+   query["r.manifest"] = manifest[len(manifest)-1:]
+   u.Url.RawQuery = query.Encode()
+   return nil
+}
+
+type Url struct {
+   Url *url.URL
 }
 
 func (w WebAddress) MarshalText() ([]byte, error) {
@@ -165,139 +305,4 @@ type route_include struct {
          }
       }
    }
-}
-func (u *Url) UnmarshalText(text []byte) error {
-   u.Url = new(url.URL)
-   err := u.Url.UnmarshalBinary(text)
-   if err != nil {
-      return err
-   }
-   query := u.Url.Query()
-   manifest := query["r.manifest"]
-   query["r.manifest"] = manifest[len(manifest)-1:]
-   u.Url.RawQuery = query.Encode()
-   return nil
-}
-
-type Url struct {
-   Url *url.URL
-}
-
-type Playback struct {
-   Drm struct {
-      Schemes struct {
-         Widevine struct {
-            LicenseUrl string
-         }
-      }
-   }
-   Manifest struct {
-      Url Url
-   }
-}
-
-const arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
-
-type DefaultRoutes struct {
-   Data struct {
-      Attributes struct {
-         Url WebAddress
-      }
-   }
-   Included []route_include
-}
-
-func (d DefaultRoutes) video() (*route_include, bool) {
-   for _, include := range d.Included {
-      if include.Id == d.Data.Attributes.Url.VideoId {
-         return &include, true
-      }
-   }
-   return nil, false
-}
-
-func (d DefaultRoutes) Season() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.SeasonNumber
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Episode() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.EpisodeNumber
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Title() string {
-   if v, ok := d.video(); ok {
-      return v.Attributes.Name
-   }
-   return ""
-}
-
-func (d DefaultRoutes) Year() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.AirDate.Year()
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Show() string {
-   if v, ok := d.video(); ok {
-      if v.Attributes.SeasonNumber >= 1 {
-         for _, include := range d.Included {
-            if include.Id == v.Relationships.Show.Data.Id {
-               return include.Attributes.Name
-            }
-         }
-      }
-   }
-   return ""
-}
-func (d DefaultToken) Playback(web WebAddress) (*Playback, error) {
-   body, err := func() ([]byte, error) {
-      var p playback_request
-      p.ConsumptionType = "streaming"
-      p.EditId = web.EditId
-      return json.MarshalIndent(p, "", " ")
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-any.prd.api.discomax.com",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      var b bytes.Buffer
-      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
-      b.WriteString("/playbackInfo")
-      return b.String()
-   }()
-   req.Header = http.Header{
-      "authorization": {"Bearer "+d.Body.Data.Attributes.Token},
-      "content-type": {"application/json"},
-      "x-wbd-session-state": {d.SessionState},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   play := new(Playback)
-   err = json.NewDecoder(resp.Body).Decode(play)
-   if err != nil {
-      return nil, err
-   }
-   return play, nil
 }
