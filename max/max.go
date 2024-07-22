@@ -10,52 +10,6 @@ import (
    "time"
 )
 
-func (d DefaultToken) Playback(web WebAddress) (*Playback, error) {
-   body, err := func() ([]byte, error) {
-      var p playback_request
-      p.ConsumptionType = "streaming"
-      p.EditId = web.EditId
-      return json.Marshal(p)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-any.prd.api.discomax.com",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      var b bytes.Buffer
-      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
-      b.WriteString("/playbackInfo")
-      return b.String()
-   }()
-   req.Header = http.Header{
-      "authorization": {"Bearer "+d.Body.Data.Attributes.Token},
-      "content-type": {"application/json"},
-      "x-wbd-session-state": {d.SessionState},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   play := new(Playback)
-   err = json.NewDecoder(resp.Body).Decode(play)
-   if err != nil {
-      return nil, err
-   }
-   return play, nil
-}
-
 func (d DefaultToken) Routes(web WebAddress) (*DefaultRoutes, error) {
    address := func() string {
       path, _ := web.MarshalText()
@@ -81,6 +35,11 @@ func (d DefaultToken) Routes(web WebAddress) (*DefaultRoutes, error) {
       return nil, err
    }
    defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
    route := new(DefaultRoutes)
    err = json.NewDecoder(resp.Body).Decode(route)
    if err != nil {
@@ -296,4 +255,49 @@ func (d DefaultRoutes) Show() string {
       }
    }
    return ""
+}
+func (d DefaultToken) Playback(web WebAddress) (*Playback, error) {
+   body, err := func() ([]byte, error) {
+      var p playback_request
+      p.ConsumptionType = "streaming"
+      p.EditId = web.EditId
+      return json.MarshalIndent(p, "", " ")
+   }()
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://default.any-any.prd.api.discomax.com",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b bytes.Buffer
+      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
+      b.WriteString("/playbackInfo")
+      return b.String()
+   }()
+   req.Header = http.Header{
+      "authorization": {"Bearer "+d.Body.Data.Attributes.Token},
+      "content-type": {"application/json"},
+      "x-wbd-session-state": {d.SessionState},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   play := new(Playback)
+   err = json.NewDecoder(resp.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
 }
