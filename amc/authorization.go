@@ -9,6 +9,16 @@ import (
    "strings"
 )
 
+type Authorization struct {
+   Data []byte
+   v *struct {
+      Data struct {
+         AccessToken string `json:"access_token"`
+         RefreshToken string `json:"refresh_token"`
+      }
+   }
+}
+
 func pointer[T any](value *T) *T {
    return new(T)
 }
@@ -167,16 +177,6 @@ func (a *Authorization) Refresh() error {
       return err
    }
    return nil
-}
-
-type Authorization struct {
-   Data []byte
-   v *struct {
-      Data struct {
-         AccessToken string `json:"access_token"`
-         RefreshToken string `json:"refresh_token"`
-      }
-   }
 }
 
 func (a *Authorization) Login(email, password string) error {
