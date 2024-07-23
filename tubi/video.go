@@ -27,7 +27,7 @@ type VideoResource struct {
       Url string
    }
    Resolution Resolution
-   Type string
+   Type       string
 }
 
 func (v VideoResource) RequestUrl() (string, bool) {

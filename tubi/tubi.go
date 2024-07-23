@@ -86,15 +86,15 @@ func (c *Content) Unmarshal(text []byte) error {
 }
 
 type Content struct {
-   Children        []*Content
+   Children       []*Content
    DetailedType   string `json:"detailed_type"`
-   EpisodeNumber  int `json:"episode_number,string"`
-   Id              int `json:",string"`
-   SeriesId       int `json:"series_id,string"`
-   Title           string
+   EpisodeNumber  int    `json:"episode_number,string"`
+   Id             int    `json:",string"`
+   SeriesId       int    `json:"series_id,string"`
+   Title          string
    VideoResources []VideoResource `json:"video_resources"`
-   Year            int
-   parent          *Content
+   Year           int
+   parent         *Content
 }
 
 func (c Content) Episode() bool {
