@@ -14,6 +14,7 @@ var classification_id = map[string]int{
    "fi": 284,
    "fr": 23,
    "ie": 41,
+   "it": 36,
    "no": 286,
    "se": 282,
    "ua": 276,

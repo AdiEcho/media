@@ -9,31 +9,6 @@ import (
    "sort"
 )
 
-func (f flags) authenticate() error {
-   var login max.DefaultLogin
-   login.Credentials.Username = f.email
-   login.Credentials.Password = f.password
-   var key max.PublicKey
-   err := key.New()
-   if err != nil {
-      return err
-   }
-   var token max.DefaultToken
-   err = token.New()
-   if err != nil {
-      return err
-   }
-   err = token.Login(key, login)
-   if err != nil {
-      return err
-   }
-   text, err := token.Marshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/max.json", text, 0666)
-}
-
 func (f flags) download() error {
    text, err := os.ReadFile(f.home + "/max.json")
    if err != nil {
@@ -75,4 +50,29 @@ func (f flags) download() error {
       }
    }
    return nil
+}
+
+func (f flags) authenticate() error {
+   var login max.DefaultLogin
+   login.Credentials.Username = f.email
+   login.Credentials.Password = f.password
+   var key max.PublicKey
+   err := key.New()
+   if err != nil {
+      return err
+   }
+   var token max.DefaultToken
+   err = token.New()
+   if err != nil {
+      return err
+   }
+   err = token.Login(key, login)
+   if err != nil {
+      return err
+   }
+   text, err := token.Marshal()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/max.json", text, 0666)
 }

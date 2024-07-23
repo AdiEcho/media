@@ -6,70 +6,8 @@ import (
    "errors"
    "io"
    "net/http"
+   "strings"
 )
-
-const query_article = `
-query($articleUrlSlug: String) {
-   Article(full_url_slug: $articleUrlSlug) {
-      ... on Article {
-         assets {
-            ... on Asset {
-               id
-               linked_type
-            }
-         }
-         canonical_title
-         id
-         metas(output: html) {
-            ... on ArticleMeta {
-               key
-               value
-            }
-         }
-      }
-   }
-}
-`
-
-func (ArticleAsset) Error() string {
-   return "ArticleAsset"
-}
-
-// https://www.cinemember.nl/nl/films/american-hustle
-func (a *ArticleSlug) Set(s string) error {
-   s = strings.TrimPrefix(s, "https://")
-   s = strings.TrimPrefix(s, "www.")
-   s = strings.TrimPrefix(s, "cinemember.nl")
-   s = strings.TrimPrefix(s, "/nl")
-   s = strings.TrimPrefix(s, "/")
-   *a = ArticleSlug(s)
-   return nil
-}
-
-func (a ArticleSlug) String() string {
-   return string(a)
-}
-
-type ArticleSlug string
-
-type ArticleAsset struct {
-   Id         int
-   LinkedType string `json:"linked_type"`
-   article    *DataArticle
-}
-
-const query_asset = `
-mutation($article_id: Int, $asset_id: Int) {
-   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
-      entitlements {
-         ... on ArticleAssetPlayEntitlement {
-            manifest
-            protocol
-         }
-      }
-   }
-}
-`
 
 // geo block - VPN not x-forwarded-for
 func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
@@ -187,3 +125,65 @@ func NewAuthenticate(email, password string) ([]byte, error) {
    defer resp.Body.Close()
    return io.ReadAll(resp.Body)
 }
+const query_article = `
+query($articleUrlSlug: String) {
+   Article(full_url_slug: $articleUrlSlug) {
+      ... on Article {
+         assets {
+            ... on Asset {
+               id
+               linked_type
+            }
+         }
+         canonical_title
+         id
+         metas(output: html) {
+            ... on ArticleMeta {
+               key
+               value
+            }
+         }
+      }
+   }
+}
+`
+
+func (ArticleAsset) Error() string {
+   return "ArticleAsset"
+}
+
+// https://www.cinemember.nl/nl/films/american-hustle
+func (a *ArticleSlug) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   s = strings.TrimPrefix(s, "cinemember.nl")
+   s = strings.TrimPrefix(s, "/nl")
+   s = strings.TrimPrefix(s, "/")
+   *a = ArticleSlug(s)
+   return nil
+}
+
+func (a ArticleSlug) String() string {
+   return string(a)
+}
+
+type ArticleSlug string
+
+type ArticleAsset struct {
+   Id         int
+   LinkedType string `json:"linked_type"`
+   article    *DataArticle
+}
+
+const query_asset = `
+mutation($article_id: Int, $asset_id: Int) {
+   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
+      entitlements {
+         ... on ArticleAssetPlayEntitlement {
+            manifest
+            protocol
+         }
+      }
+   }
+}
+`

@@ -3,22 +3,10 @@ package member
 import (
    "bytes"
    "encoding/json"
+   "io"
    "net/http"
    "strconv"
-   "strings"
 )
-
-func (e DataArticle) Title() string {
-   return e.Article.CanonicalTitle
-}
-
-func (e DataArticle) Year() int {
-   if v, ok := e.Article.year(); ok {
-      v, _ := strconv.Atoi(v)
-      return v
-   }
-   return 0
-}
 
 func (DataArticle) Episode() int {
    return 0
@@ -28,8 +16,20 @@ func (DataArticle) Season() int {
    return 0
 }
 
+func (DataArticle) Show() string {
+   return ""
+}
+
+func pointer[T any](value *T) *T {
+   return new(T)
+}
+
+func (d DataArticle) Title() string {
+   return d.v.CanonicalTitle
+}
+
 func (d DataArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range d.Assets {
+   for _, asset := range d.v.Assets {
       if asset.LinkedType == "film" {
          return asset, true
       }
@@ -37,35 +37,15 @@ func (d DataArticle) Film() (*ArticleAsset, bool) {
    return nil, false
 }
 
-func (d DataArticle) year() (string, bool) {
-   for _, meta := range d.Metas {
+func (d DataArticle) Year() int {
+   for _, meta := range d.v.Metas {
       if meta.Key == "year" {
-         return meta.Value, true
+         if v, err := strconv.Atoi(meta.Value); err == nil {
+            return v
+         }
       }
    }
-   return "", false
-}
-
-func (DataArticle) Show() string {
-   return ""
-}
-
-type DataArticle struct {
-   Assets         []*ArticleAsset
-   CanonicalTitle string `json:"canonical_title"`
-   Id             int
-   Metas          []struct {
-      Key   string
-      Value string
-   }
-}
-
-func (e DataArticle) Marshal() ([]byte, error) {
-   return json.MarshalIndent(e, "", " ")
-}
-
-func (e *DataArticle) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, e)
+   return 0
 }
 
 func (a ArticleSlug) Article() (*DataArticle, error) {
@@ -91,17 +71,44 @@ func (a ArticleSlug) Article() (*DataArticle, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   var data struct {
-      Data struct {
-         Article DataArticle
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&data)
+   var article DataArticle
+   article.Data, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
-   for _, asset := range data.Data.Article.Assets {
-      asset.article = &data.Data.Article
+   return &article, nil
+}
+
+type DataArticle struct {
+   Data []byte
+   v *struct {
+      Assets         []*ArticleAsset
+      CanonicalTitle string `json:"canonical_title"`
+      Id             int
+      Metas          []struct {
+         Key   string
+         Value string
+      }
    }
-   return &data.Data.Article, nil
+}
+
+func (d *DataArticle) Unmarshal() error {
+   var data struct {
+      Data struct {
+         Article json.RawMessage
+      }
+   }
+   err := json.Unmarshal(d.Data, &data)
+   if err != nil {
+      return err
+   }
+   d.v = pointer(d.v)
+   err = json.Unmarshal(data.Data.Article, d.v)
+   if err != nil {
+      return err
+   }
+   for _, asset := range d.v.Assets {
+      asset.article = d.v
+   }
+   return nil
 }

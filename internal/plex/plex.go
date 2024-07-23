@@ -5,6 +5,7 @@ import (
    "154.pages.dev/media/plex"
    "fmt"
    "net/http"
+   "sort"
 )
 
 func (f flags) download() error {
@@ -32,23 +33,24 @@ func (f flags) download() error {
    if f.forward != "" {
       req.Header.Set("x-forwarded-for", f.forward)
    }
-   media, err := internal.Dash(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
-         f.s.Poster = part
+   sort.Slice(reps, func(i, j int) bool {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         if _, ok := rep.Ext(); ok {
+            fmt.Print(rep, "\n\n")
+         }
+      case rep.Id:
          f.s.Name = plex.Namer{match}
-         return f.s.Download(medium)
+         f.s.Poster = part
+         return f.s.Download(rep)
       }
-   }
-   // 2 MPD all
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
 }
