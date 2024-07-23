@@ -9,6 +9,10 @@ import (
    "strings"
 )
 
+func pointer[T any](value *T) *T {
+   return new(T)
+}
+
 func (a Authorization) Playback(nid string) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -136,10 +140,6 @@ func (a *Authorization) Unauth() error {
       return err
    }
    return nil
-}
-
-func pointer[T any](value *T) *T {
-   return new(T)
 }
 
 func (a *Authorization) Unmarshal() error {

@@ -8,53 +8,17 @@ import (
    "time"
 )
 
-func TestRefresh(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   data, err := os.ReadFile(home + "/amc.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth, err := RawAuthorization.Authorization(data)
-   if err != nil {
-      t.Fatal(err)
-   }
-   data, err = auth.Refresh()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile(home + "/amc.json", data, 0666)
-}
-
-func TestLogin(t *testing.T) {
-   username := os.Getenv("amc_username")
-   if username == "" {
-      t.Fatal("Getenv")
-   }
-   password := os.Getenv("amc_password")
-   var auth Authorization
-   err := auth.Unauth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   _, err = auth.Login(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-}
-
 func TestContent(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   data, err := os.ReadFile(home + "/amc.json")
+   var auth Authorization
+   auth.Data, err = os.ReadFile(home + "/amc.json")
    if err != nil {
       t.Fatal(err)
    }
-   auth, err := RawAuthorization.Authorization(data)
+   err = auth.Unmarshal()
    if err != nil {
       t.Fatal(err)
    }
@@ -92,4 +56,45 @@ func TestPath(t *testing.T) {
       }
       fmt.Println(web)
    }
+}
+func TestLogin(t *testing.T) {
+   username := os.Getenv("amc_username")
+   if username == "" {
+      t.Fatal("Getenv")
+   }
+   password := os.Getenv("amc_password")
+   var auth Authorization
+   err := auth.Unauth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.Login(username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+}
+
+func TestRefresh(t *testing.T) {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   var auth Authorization
+   auth.Data, err = os.ReadFile(home + "/amc.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.Refresh()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile(home + "/amc.json", auth.Data, 0666)
 }

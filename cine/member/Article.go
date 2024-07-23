@@ -8,6 +8,29 @@ import (
    "strings"
 )
 
+const query_article = `
+query($articleUrlSlug: String) {
+   Article(full_url_slug: $articleUrlSlug) {
+      ... on Article {
+         assets {
+            ... on Asset {
+               id
+               linked_type
+            }
+         }
+         canonical_title
+         id
+         metas(output: html) {
+            ... on ArticleMeta {
+               key
+               value
+            }
+         }
+      }
+   }
+}
+`
+
 func (ArticleAsset) Error() string {
    return "ArticleAsset"
 }
@@ -18,50 +41,22 @@ type ArticleAsset struct {
    article    *DataArticle
 }
 
-func (d DataArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range d.Assets {
-      if asset.LinkedType == "film" {
-         return asset, true
-      }
-   }
-   return nil, false
+// https://www.cinemember.nl/nl/films/american-hustle
+func (a *ArticleSlug) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   s = strings.TrimPrefix(s, "cinemember.nl")
+   s = strings.TrimPrefix(s, "/nl")
+   s = strings.TrimPrefix(s, "/")
+   *a = ArticleSlug(s)
+   return nil
 }
 
-func (e Encoding) Year() int {
-   if v, ok := e.Article.year(); ok {
-      v, _ := strconv.Atoi(v)
-      return v
-   }
-   return 0
+func (a ArticleSlug) String() string {
+   return string(a)
 }
 
-func (d DataArticle) year() (string, bool) {
-   for _, meta := range d.Metas {
-      if meta.Key == "year" {
-         return meta.Value, true
-      }
-   }
-   return "", false
-}
-
-type DataArticle struct {
-   Assets         []*ArticleAsset
-   CanonicalTitle string `json:"canonical_title"`
-   Id             int
-   Metas          []struct {
-      Key   string
-      Value string
-   }
-}
-
-type Encoding struct {
-   Article *DataArticle
-   Play *AssetPlay
-}
-
-func (e Encoding) Marshal() ([]byte, error) {
-   return json.MarshalIndent(e, "", " ")
-}
+type ArticleSlug string
 
 func (a ArticleSlug) Article() (*DataArticle, error) {
    body, err := func() ([]byte, error) {
@@ -101,45 +96,50 @@ func (a ArticleSlug) Article() (*DataArticle, error) {
    return &data.Data.Article, nil
 }
 
-const query_article = `
-query($articleUrlSlug: String) {
-   Article(full_url_slug: $articleUrlSlug) {
-      ... on Article {
-         assets {
-            ... on Asset {
-               id
-               linked_type
-            }
-         }
-         canonical_title
-         id
-         metas(output: html) {
-            ... on ArticleMeta {
-               key
-               value
-            }
-         }
+func (d DataArticle) Film() (*ArticleAsset, bool) {
+   for _, asset := range d.Assets {
+      if asset.LinkedType == "film" {
+         return asset, true
       }
    }
-}
-`
-
-// https://www.cinemember.nl/nl/films/american-hustle
-func (a *ArticleSlug) Set(s string) error {
-   s = strings.TrimPrefix(s, "https://")
-   s = strings.TrimPrefix(s, "www.")
-   s = strings.TrimPrefix(s, "cinemember.nl")
-   s = strings.TrimPrefix(s, "/nl")
-   s = strings.TrimPrefix(s, "/")
-   *a = ArticleSlug(s)
-   return nil
+   return nil, false
 }
 
-func (a ArticleSlug) String() string {
-   return string(a)
+func (d DataArticle) year() (string, bool) {
+   for _, meta := range d.Metas {
+      if meta.Key == "year" {
+         return meta.Value, true
+      }
+   }
+   return "", false
 }
 
-type ArticleSlug string
+type DataArticle struct {
+   Assets         []*ArticleAsset
+   CanonicalTitle string `json:"canonical_title"`
+   Id             int
+   Metas          []struct {
+      Key   string
+      Value string
+   }
+}
+
+func (e Encoding) Year() int {
+   if v, ok := e.Article.year(); ok {
+      v, _ := strconv.Atoi(v)
+      return v
+   }
+   return 0
+}
+
+type Encoding struct {
+   Article *DataArticle
+   Play *AssetPlay
+}
+
+func (e Encoding) Marshal() ([]byte, error) {
+   return json.MarshalIndent(e, "", " ")
+}
 
 func (Encoding) Show() string {
    return ""

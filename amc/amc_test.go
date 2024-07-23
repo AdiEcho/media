@@ -32,11 +32,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   text, err := os.ReadFile(home + "/amc.json")
+   var auth Authorization
+   auth.Data, err = os.ReadFile(home + "/amc.json")
    if err != nil {
       t.Fatal(err)
    }
-   auth, err := RawAuthorization.Authorization(text)
+   err = auth.Unmarshal()
    if err != nil {
       t.Fatal(err)
    }
