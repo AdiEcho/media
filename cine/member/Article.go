@@ -3,10 +3,34 @@ package member
 import (
    "bytes"
    "encoding/json"
-   "io"
    "net/http"
    "strconv"
 )
+
+type DataArticle struct {
+   Data []byte
+   v *struct {
+      Assets         []*ArticleAsset
+      CanonicalTitle string `json:"canonical_title"`
+      Id             int
+      Metas          []struct {
+         Key   string
+         Value string
+      }
+   }
+}
+
+func (d *DataArticle) Unmarshal() error {
+   d.v = pointer(d.v)
+   err := json.Unmarshal(d.Data, d.v)
+   if err != nil {
+      return err
+   }
+   for _, asset := range d.v.Assets {
+      asset.article = d
+   }
+   return nil
+}
 
 func (DataArticle) Episode() int {
    return 0
@@ -71,44 +95,14 @@ func (a ArticleSlug) Article() (*DataArticle, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   var article DataArticle
-   article.Data, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &article, nil
-}
-
-type DataArticle struct {
-   Data []byte
-   v *struct {
-      Assets         []*ArticleAsset
-      CanonicalTitle string `json:"canonical_title"`
-      Id             int
-      Metas          []struct {
-         Key   string
-         Value string
-      }
-   }
-}
-
-func (d *DataArticle) Unmarshal() error {
    var data struct {
       Data struct {
          Article json.RawMessage
       }
    }
-   err := json.Unmarshal(d.Data, &data)
+   err = json.NewDecoder(resp.Body).Decode(&data)
    if err != nil {
-      return err
+      return nil, err
    }
-   d.v = pointer(d.v)
-   err = json.Unmarshal(data.Data.Article, d.v)
-   if err != nil {
-      return err
-   }
-   for _, asset := range d.v.Assets {
-      asset.article = d.v
-   }
-   return nil
+   return &DataArticle{Data: data.Data.Article}, nil
 }

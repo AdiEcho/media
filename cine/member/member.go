@@ -20,7 +20,7 @@ func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
          } `json:"variables"`
       }
       s.Query = query_asset
-      s.Variables.ArticleId = asset.article.Id
+      s.Variables.ArticleId = asset.article.v.Id
       s.Variables.AssetId = asset.Id
       return json.Marshal(s)
    }()
