@@ -8,29 +8,38 @@ import (
    "errors"
    "fmt"
    "net/http"
+   "strings"
    "time"
 )
 
-func (d *DefaultToken) New() error {
-   req, err := http.NewRequest(
-      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
+type session_state map[string]string
+
+func (s session_state) Set(text string) error {
+   for text != "" {
+      var key string
+      key, text, _ = strings.Cut(text, ";")
+      key, value, _ := strings.Cut(key, ":")
+      s[key] = value
+   }
+   return nil
+}
+
+func (s session_state) String() string {
+   var (
+      b strings.Builder
+      sep bool
    )
-   if err != nil {
-      return err
+   for key, value := range s {
+      if sep {
+         b.WriteByte(';')
+      } else {
+         sep = true
+      }
+      b.WriteString(key)
+      b.WriteByte(':')
+      b.WriteString(value)
    }
-   // fuck you Max
-   req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   return json.NewDecoder(resp.Body).Decode(&d.Body)
+   return b.String()
 }
 
 func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
@@ -69,7 +78,38 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
       resp.Write(&b)
       return errors.New(b.String())
    }
-   d.SessionState = resp.Header.Get("x-wbd-session-state")
+   session := make(session_state)
+   session.Set(resp.Header.Get("x-wbd-session-state"))
+   for key := range session {
+      switch key {
+      case "device", "token", "user":
+      default:
+         delete(session, key)
+      }
+   }
+   d.SessionState = session.String()
+   return json.NewDecoder(resp.Body).Decode(&d.Body)
+}
+
+func (d *DefaultToken) New() error {
+   req, err := http.NewRequest(
+      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
+   )
+   if err != nil {
+      return err
+   }
+   // fuck you Max
+   req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
    return json.NewDecoder(resp.Body).Decode(&d.Body)
 }
 

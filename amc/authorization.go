@@ -9,6 +9,72 @@ import (
    "strings"
 )
 
+func (a Authorization) Content(path string) (*ContentCompiler, error) {
+   req, err := http.NewRequest("", "https://gw.cds.amcn.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   // If you request once with headers, you can request again without any
+   // headers for 10 minutes, but then headers are required again
+   req.Header = http.Header{
+      "authorization": {"Bearer " + a.v.Data.AccessToken},
+      "x-amcn-cache-hash": {cache_hash()},
+      "x-amcn-network": {"amcplus"},
+      "x-amcn-tenant": {"amcn"},
+      "x-amcn-user-cache-hash": {cache_hash()},
+   }
+   // Shows must use `path`, and movies must use `path/watch`. If trial has
+   // expired, you will get `.data.type` of `redirect`. You can remove the
+   // `/watch` to resolve this, but the resultant response will still be
+   // missing `video-player-ap`.
+   req.URL.Path = func() string {
+      var b strings.Builder
+      b.WriteString("/content-compiler-cr/api/v1/content/amcn/amcplus/path")
+      if strings.HasPrefix(path, "/movies/") {
+         b.WriteString("/watch")
+      }
+      b.WriteString(path)
+      return b.String()
+   }()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   content := new(ContentCompiler)
+   err = json.NewDecoder(resp.Body).Decode(content)
+   if err != nil {
+      return nil, err
+   }
+   return content, nil
+}
+
+type Authorization struct {
+   Data []byte
+   v *struct {
+      Data struct {
+         AccessToken string `json:"access_token"`
+         RefreshToken string `json:"refresh_token"`
+      }
+   }
+}
+
+/////////
+
+func (r RawAuthorization) Authorization() (*Authorization, error) {
+   auth := new(Authorization)
+   err := json.Unmarshal(r, auth)
+   if err != nil {
+      return nil, err
+   }
+   return auth, nil
+}
+
 func (a Authorization) Refresh() (RawAuthorization, error) {
    req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
@@ -25,22 +91,6 @@ func (a Authorization) Refresh() (RawAuthorization, error) {
       return nil, errors.New(resp.Status)
    }
    return io.ReadAll(resp.Body)
-}
-
-type Authorization struct {
-   Data struct {
-      AccessToken string `json:"access_token"`
-      RefreshToken string `json:"refresh_token"`
-   }
-}
-
-func (r RawAuthorization) Authorization() (*Authorization, error) {
-   auth := new(Authorization)
-   err := json.Unmarshal(r, auth)
-   if err != nil {
-      return nil, err
-   }
-   return auth, nil
 }
 
 func (a Authorization) Login(email, password string) (RawAuthorization, error) {
@@ -104,51 +154,6 @@ func (a *Authorization) Unauth() error {
       return errors.New(resp.Status)
    }
    return json.NewDecoder(resp.Body).Decode(a)
-}
-
-func (a Authorization) Content(path string) (*ContentCompiler, error) {
-   req, err := http.NewRequest("", "https://gw.cds.amcn.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   // If you request once with headers, you can request again without any
-   // headers for 10 minutes, but then headers are required again
-   req.Header = http.Header{
-      "authorization": {"Bearer " + a.Data.AccessToken},
-      "x-amcn-cache-hash": {cache_hash()},
-      "x-amcn-network": {"amcplus"},
-      "x-amcn-tenant": {"amcn"},
-      "x-amcn-user-cache-hash": {cache_hash()},
-   }
-   // Shows must use `path`, and movies must use `path/watch`. If trial has
-   // expired, you will get `.data.type` of `redirect`. You can remove the
-   // `/watch` to resolve this, but the resultant response will still be
-   // missing `video-player-ap`.
-   req.URL.Path = func() string {
-      var b strings.Builder
-      b.WriteString("/content-compiler-cr/api/v1/content/amcn/amcplus/path")
-      if strings.HasPrefix(path, "/movies/") {
-         b.WriteString("/watch")
-      }
-      b.WriteString(path)
-      return b.String()
-   }()
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   content := new(ContentCompiler)
-   err = json.NewDecoder(resp.Body).Decode(content)
-   if err != nil {
-      return nil, err
-   }
-   return content, nil
 }
 
 func (a Authorization) Playback(nid string) (*Playback, error) {
