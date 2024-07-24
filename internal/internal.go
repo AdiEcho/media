@@ -16,6 +16,124 @@ import (
    "strings"
 )
 
+func (s *Stream) Download(rep dash.Representation) error {
+   if data, ok := rep.Widevine(); ok {
+      read := bytes.NewReader(data)
+      var pssh sofia.ProtectionSystemSpecificHeader
+      err := pssh.BoxHeader.Read(read)
+      if err != nil {
+         return err
+      }
+      err = pssh.Read(read)
+      if err != nil {
+         return err
+      }
+      s.pssh = pssh.Data
+   }
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
+   base, ok := rep.GetBaseUrl()
+   if !ok {
+      return errors.New("Representation.GetBaseUrl")
+   }
+   if rep.SegmentBase != nil {
+      return s.segment_base(ext, base, rep.SegmentBase)
+   }
+   initial, _ := rep.Initialization()
+   return s.segment_template(ext, initial, base, rep.Media())
+}
+
+func (s Stream) segment_template(
+   ext, initial string, base *dash.BaseUrl, media []string,
+) error {
+   file, err := s.file(ext)
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   req, err := http.NewRequest("", initial, nil)
+   if err != nil {
+      return err
+   }
+   if initial != "" {
+      req.URL = base.Url.ResolveReference(req.URL)
+      resp, err := http.DefaultClient.Do(req)
+      if err != nil {
+         return err
+      }
+      defer resp.Body.Close()
+      if resp.StatusCode != http.StatusOK {
+         return errors.New(resp.Status)
+      }
+      err = s.init_protect(file, resp.Body)
+      if err != nil {
+         return err
+      }
+   }
+   key, err := s.key()
+   if err != nil {
+      return err
+   }
+   client := http.Client{ // github.com/golang/go/issues/18639
+      Transport: &http.Transport{
+         Proxy: http.ProxyFromEnvironment,
+         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
+      },
+   }
+   var meter text.ProgressMeter
+   meter.Set(len(media))
+   for _, medium := range media {
+      req.URL, err = base.Url.Parse(medium)
+      if err != nil {
+         return err
+      }
+      err := func() error {
+         resp, err := client.Do(req)
+         if err != nil {
+            return err
+         }
+         defer resp.Body.Close()
+         if resp.StatusCode != http.StatusOK {
+            var b strings.Builder
+            resp.Write(&b)
+            return errors.New(b.String())
+         }
+         return write_segment(file, meter.Reader(resp), key)
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
+
+func write_segment(to io.Writer, from io.Reader, key []byte) error {
+   if key == nil {
+      _, err := io.Copy(to, from)
+      if err != nil {
+         return err
+      }
+      return nil
+   }
+   var file sofia.File
+   err := file.Read(from)
+   if err != nil {
+      return err
+   }
+   track := file.MovieFragment.TrackFragment
+   if encrypt := track.SampleEncryption; encrypt != nil {
+      for i, data := range file.MediaData.Data(track) {
+         err := encrypt.Samples[i].DecryptCenc(data, key)
+         if err != nil {
+            return err
+         }
+      }
+   }
+   return file.Write(to)
+}
+
 func (s Stream) segment_base(
    ext string, base *dash.BaseUrl, segment *dash.SegmentBase,
 ) error {
@@ -77,87 +195,6 @@ func (s Stream) segment_base(
    }
    return nil
 }
-
-func (s Stream) segment_template(
-   ext, initial string, base *dash.BaseUrl, media []string,
-) error {
-   req, err := http.NewRequest("", initial, nil)
-   if err != nil {
-      return err
-   }
-   req.URL = base.Url.ResolveReference(req.URL)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return errors.New(resp.Status)
-   }
-   file, err := s.file(ext)
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   err = s.init_protect(file, resp.Body)
-   if err != nil {
-      return err
-   }
-   key, err := s.key()
-   if err != nil {
-      return err
-   }
-   client := http.Client{ // github.com/golang/go/issues/18639
-      Transport: &http.Transport{
-         Proxy: http.ProxyFromEnvironment,
-         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
-      },
-   }
-   var meter text.ProgressMeter
-   meter.Set(len(media))
-   for _, medium := range media {
-      req.URL, err = base.Url.Parse(medium)
-      if err != nil {
-         return err
-      }
-      err := func() error {
-         resp, err := client.Do(req)
-         if err != nil {
-            return err
-         }
-         defer resp.Body.Close()
-         if resp.StatusCode != http.StatusOK {
-            var b strings.Builder
-            resp.Write(&b)
-            return errors.New(b.String())
-         }
-         return write_segment(file, meter.Reader(resp), key)
-      }()
-      if err != nil {
-         return err
-      }
-   }
-   return nil
-}
-
-func (s Stream) TimedText(url string) error {
-   resp, err := http.Get(url)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   file, err := s.file(".vtt")
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   _, err = file.ReadFrom(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
 type ForwardedFor []struct {
    Country string
    IP string
@@ -175,6 +212,7 @@ func (f ForwardedFor) String() string {
    }
    return b.String()
 }
+
 var Forward = ForwardedFor{
 {"Argentina", "186.128.0.0"},
 {"Australia", "1.128.0.0"},
@@ -273,35 +311,6 @@ func (s Stream) file(ext string) (*os.File, error) {
    }
    return os.Create(text.Clean(name) + ext)
 }
-func (s *Stream) Download(rep dash.Representation) error {
-   if data, ok := rep.Widevine(); ok {
-      read := bytes.NewReader(data)
-      var pssh sofia.ProtectionSystemSpecificHeader
-      err := pssh.BoxHeader.Read(read)
-      if err != nil {
-         return err
-      }
-      err = pssh.Read(read)
-      if err != nil {
-         return err
-      }
-      s.pssh = pssh.Data
-   }
-   base, ok := rep.GetBaseUrl()
-   if !ok {
-      return errors.New("Representation.GetBaseUrl")
-   }
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Representation.Ext")
-   }
-   if initial, ok := rep.Initialization(); ok {
-      return s.segment_template(
-         ext, initial, base, rep.Media(),
-      )
-   }
-   return s.segment_base(ext, base, rep.SegmentBase)
-}
 
 func (s *Stream) init_protect(to io.Writer, from io.Reader) error {
    var file sofia.File
@@ -329,31 +338,6 @@ func (s *Stream) init_protect(to io.Writer, from io.Reader) error {
          if sample, ok := description.SampleEntry(); ok {
             // Firefox
             copy(sample.BoxHeader.Type[:], protect.OriginalFormat.DataFormat[:])
-         }
-      }
-   }
-   return file.Write(to)
-}
-
-func write_segment(to io.Writer, from io.Reader, key []byte) error {
-   if key == nil {
-      _, err := io.Copy(to, from)
-      if err != nil {
-         return err
-      }
-      return nil
-   }
-   var file sofia.File
-   err := file.Read(from)
-   if err != nil {
-      return err
-   }
-   if v := file.MovieFragment.TrackFragment.SampleEncryption; v != nil {
-      run := file.MovieFragment.TrackFragment.TrackRun
-      for i, data := range file.MediaData.Data(run) {
-         err := v.Samples[i].DecryptCenc(data, key)
-         if err != nil {
-            return err
          }
       }
    }
