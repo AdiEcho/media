@@ -4,7 +4,6 @@
 2. enable javascript
 3. email address
    - email.ml
-   - mild.payday@hele.win
 4. get started
 5. enter code
 6. mubi
