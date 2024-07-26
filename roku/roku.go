@@ -9,27 +9,6 @@ import (
    "strings"
 )
 
-type AccountCode struct {
-   Data []byte
-   v *struct {
-      Code string
-   }
-}
-
-type AccountToken struct {
-   Data []byte
-   V    *struct {
-      Token string
-   }
-}
-
-type AccountAuth struct {
-   Data []byte
-   v *struct {
-      AuthToken string
-   }
-}
-
 // token can be nil
 func (a *AccountAuth) New(token *AccountToken) error {
    req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
@@ -51,6 +30,11 @@ func (a *AccountAuth) New(token *AccountToken) error {
       return err
    }
    return nil
+}
+
+func (a *AccountAuth) Unmarshal() error {
+   a.v = pointer(a.v)
+   return json.Unmarshal(a.Data, a.v)
 }
 
 func (a AccountAuth) Token(code AccountCode) (*AccountToken, error) {
@@ -105,7 +89,6 @@ func (a AccountAuth) Code() (*AccountCode, error) {
    }
    return &AccountCode{Data: data}, nil
 }
-
 func (a AccountAuth) Playback(roku_id string) (*Playback, error) {
    body, err := json.Marshal(map[string]string{
       "mediaFormat": "DASH",
@@ -187,11 +170,6 @@ func pointer[T any](value *T) *T {
    return new(T)
 }
 
-func (a *AccountAuth) Unmarshal() error {
-   a.v = pointer(a.v)
-   return json.Unmarshal(a.Data, a.v)
-}
-
 func (a *AccountCode) Unmarshal() error {
    a.v = pointer(a.v)
    return json.Unmarshal(a.Data, a.v)
@@ -201,3 +179,24 @@ func (a *AccountToken) Unmarshal() error {
    a.V = pointer(a.V)
    return json.Unmarshal(a.Data, a.V)
 }
+type AccountCode struct {
+   Data []byte
+   v *struct {
+      Code string
+   }
+}
+
+type AccountToken struct {
+   Data []byte
+   V    *struct {
+      Token string
+   }
+}
+
+type AccountAuth struct {
+   Data []byte
+   v *struct {
+      AuthToken string
+   }
+}
+

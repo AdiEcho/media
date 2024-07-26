@@ -20,7 +20,14 @@ func (f flags) download() error {
       token.Unmarshal()
    }
    var auth roku.AccountAuth
-   auth.New(token)
+   err := auth.New(token)
+   if err != nil {
+      return err
+   }
+   err = auth.Unmarshal()
+   if err != nil {
+      return err
+   }
    play, err := auth.Playback(f.roku)
    if err != nil {
       return err
