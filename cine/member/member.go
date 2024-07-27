@@ -10,19 +10,6 @@ import (
    "strings"
 )
 
-type DataArticle struct {
-   Data []byte
-   v *struct {
-      Assets         []*ArticleAsset
-      CanonicalTitle string `json:"canonical_title"`
-      Id             int
-      Metas          []struct {
-         Key   string
-         Value string
-      }
-   }
-}
-
 func (d *DataArticle) Unmarshal() error {
    d.v = pointer(d.v)
    err := json.Unmarshal(d.Data, d.v)
@@ -71,63 +58,6 @@ func (d DataArticle) Year() int {
    return 0
 }
 
-func (a ArticleSlug) Article() (*DataArticle, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Query     string `json:"query"`
-         Variables struct {
-            ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
-         } `json:"variables"`
-      }
-      s.Variables.ArticleUrlSlug = a
-      s.Query = query_article
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var data struct {
-      Data struct {
-         Article json.RawMessage
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&data)
-   if err != nil {
-      return nil, err
-   }
-   return &DataArticle{Data: data.Data.Article}, nil
-}
-const query_article = `
-query($articleUrlSlug: String) {
-   Article(full_url_slug: $articleUrlSlug) {
-      ... on Article {
-         assets {
-            ... on Asset {
-               id
-               linked_type
-            }
-         }
-         canonical_title
-         id
-         metas(output: html) {
-            ... on ArticleMeta {
-               key
-               value
-            }
-         }
-      }
-   }
-}
-`
-
 func (ArticleAsset) Error() string {
    return "ArticleAsset"
 }
@@ -147,14 +77,6 @@ func (a ArticleSlug) String() string {
    return string(a)
 }
 
-type ArticleSlug string
-
-type ArticleAsset struct {
-   Id         int
-   LinkedType string `json:"linked_type"`
-   article    *DataArticle
-}
-
 const query_asset = `
 mutation($article_id: Int, $asset_id: Int) {
    ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
@@ -167,12 +89,6 @@ mutation($article_id: Int, $asset_id: Int) {
    }
 }
 `
-type AssetPlay struct {
-   Entitlements []struct {
-      Manifest string
-      Protocol string
-   }
-}
 
 func (a AssetPlay) Dash() (string, bool) {
    for _, title := range a.Entitlements {
@@ -182,14 +98,6 @@ func (a AssetPlay) Dash() (string, bool) {
    }
    return "", false
 }
-
-const user_authenticate = `
-mutation($email: String, $password: String) {
-   UserAuthenticate(email: $email, password: $password) {
-      access_token
-   }
-}
-`
 
 // geo block - VPN not x-forwarded-for
 func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
@@ -253,17 +161,6 @@ func (a *Authenticate) Unmarshal() error {
    return json.Unmarshal(a.Data, a.v)
 }
 
-type Authenticate struct {
-   Data []byte
-   v *struct {
-      Data struct {
-         UserAuthenticate struct {
-            AccessToken string `json:"access_token"`
-         }
-      }
-   }
-}
-
 func (a *Authenticate) New(email, password string) error {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -295,3 +192,110 @@ func (a *Authenticate) New(email, password string) error {
    }
    return nil
 }
+
+const user_authenticate = `
+mutation($email: String, $password: String) {
+   UserAuthenticate(email: $email, password: $password) {
+      access_token
+   }
+}
+`
+
+type Authenticate struct {
+   Data []byte
+   v *struct {
+      Data struct {
+         UserAuthenticate struct {
+            AccessToken string `json:"access_token"`
+         }
+      }
+   }
+}
+
+func (a ArticleSlug) Article() (*DataArticle, error) {
+   body, err := func() ([]byte, error) {
+      var s struct {
+         Query     string `json:"query"`
+         Variables struct {
+            ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
+         } `json:"variables"`
+      }
+      s.Variables.ArticleUrlSlug = a
+      s.Query = query_article
+      return json.Marshal(s)
+   }()
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.Post(
+      "https://api.audienceplayer.com/graphql/2/user",
+      "application/json", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var data struct {
+      Data struct {
+         Article json.RawMessage
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&data)
+   if err != nil {
+      return nil, err
+   }
+   return &DataArticle{Data: data.Data.Article}, nil
+}
+
+const query_article = `
+query($articleUrlSlug: String) {
+   Article(full_url_slug: $articleUrlSlug) {
+      ... on Article {
+         assets {
+            ... on Asset {
+               id
+               linked_type
+            }
+         }
+         canonical_title
+         id
+         metas(output: html) {
+            ... on ArticleMeta {
+               key
+               value
+            }
+         }
+      }
+   }
+}
+`
+
+/////////////
+
+type DataArticle struct {
+   Data []byte
+   v *struct {
+      Assets         []*ArticleAsset
+      CanonicalTitle string `json:"canonical_title"`
+      Id             int
+      Metas          []struct {
+         Key   string
+         Value string
+      }
+   }
+}
+
+type AssetPlay struct {
+   Entitlements []struct {
+      Manifest string
+      Protocol string
+   }
+}
+
+type ArticleAsset struct {
+   Id         int
+   LinkedType string `json:"linked_type"`
+   article    *DataArticle
+}
+
+type ArticleSlug string
