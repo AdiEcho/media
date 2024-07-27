@@ -5,44 +5,91 @@ import (
    "encoding/json"
    "io"
    "net/http"
-   "strconv"
    "strings"
 )
 
-func (o *OperationArticle) Unmarshal() error {
-   o.v = pointer(o.v)
-   err := json.Unmarshal(o.Data, o.v)
-   if err != nil {
-      return err
-   }
-   for _, asset := range o.v.Assets {
-      asset.article = o
-   }
-   return nil
-}
-
-const query_article = `
-query($articleUrlSlug: String) {
-   Article(full_url_slug: $articleUrlSlug) {
-      ... on Article {
-         assets {
-            ... on Asset {
-               id
-               linked_type
-            }
-         }
-         canonical_title
-         id
-         metas(output: html) {
-            ... on ArticleMeta {
-               key
-               value
-            }
+const query_play = `
+mutation($article_id: Int, $asset_id: Int) {
+   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
+      entitlements {
+         ... on ArticleAssetPlayEntitlement {
+            manifest
+            protocol
          }
       }
    }
 }
 `
+
+// geo block, not x-forwarded-for
+func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
+   body, err := func() ([]byte, error) {
+      var s struct {
+         Query     string `json:"query"`
+         Variables struct {
+            ArticleId int `json:"article_id"`
+            AssetId   int `json:"asset_id"`
+         } `json:"variables"`
+      }
+      s.Query = query_play
+      s.Variables.ArticleId = asset.article.v.Id
+      s.Variables.AssetId = asset.Id
+      return json.Marshal(s)
+   }()
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://api.audienceplayer.com/graphql/2/user",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "authorization": {"Bearer " + o.v.Data.UserAuthenticate.AccessToken},
+      "content-type":  {"application/json"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var play OperationPlay
+   play.Data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &play, nil
+}
+
+func (o *OperationPlay) Unmarshal() error {
+   o.v = pointer(o.v)
+   return json.Unmarshal(o.Data, o.v)
+}
+
+type OperationPlay struct {
+   Data []byte
+   v *struct {
+      Data struct {
+         ArticleAssetPlay struct {
+            Entitlements []struct {
+               Manifest string
+               Protocol string
+            }
+         }
+      }
+   }
+}
+
+func (o OperationPlay) Dash() (string, bool) {
+   for _, title := range o.v.Data.ArticleAssetPlay.Entitlements {
+      if title.Protocol == "dash" {
+         return title.Manifest, true
+      }
+   }
+   return "", false
+}
 
 const query_user = `
 mutation($email: String, $password: String) {
@@ -75,42 +122,6 @@ func (a *ArticleSlug) Set(s string) error {
 
 func (a ArticleSlug) String() string {
    return string(a)
-}
-
-func (OperationArticle) Episode() int {
-   return 0
-}
-
-func (OperationArticle) Season() int {
-   return 0
-}
-
-func (OperationArticle) Show() string {
-   return ""
-}
-
-func (o OperationArticle) Title() string {
-   return o.v.CanonicalTitle
-}
-
-func (o OperationArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range o.v.Assets {
-      if asset.LinkedType == "film" {
-         return asset, true
-      }
-   }
-   return nil, false
-}
-
-func (o OperationArticle) Year() int {
-   for _, meta := range o.v.Metas {
-      if meta.Key == "year" {
-         if v, err := strconv.Atoi(meta.Value); err == nil {
-            return v
-         }
-      }
-   }
-   return 0
 }
 
 func (o *OperationUser) New(email, password string) error {
@@ -165,52 +176,4 @@ type OperationUser struct {
 func (o *OperationUser) Unmarshal() error {
    o.v = pointer(o.v)
    return json.Unmarshal(o.Data, o.v)
-}
-
-type OperationArticle struct {
-   Data []byte
-   v *struct {
-      Assets         []*ArticleAsset
-      CanonicalTitle string `json:"canonical_title"`
-      Id             int
-      Metas          []struct {
-         Key   string
-         Value string
-      }
-   }
-}
-
-func (a ArticleSlug) Article() (*OperationArticle, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Query     string `json:"query"`
-         Variables struct {
-            ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
-         } `json:"variables"`
-      }
-      s.Variables.ArticleUrlSlug = a
-      s.Query = query_article
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var data struct {
-      Data struct {
-         Article json.RawMessage
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&data)
-   if err != nil {
-      return nil, err
-   }
-   return &OperationArticle{Data: data.Data.Article}, nil
 }
