@@ -39,21 +39,21 @@ func main() {
    }
    flag.Var(&f.slug, "a", "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
-   flag.StringVar(&f.email, "email", "", "email")
+   flag.StringVar(&f.email, "e", "", "email")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
-   flag.BoolVar(&f.play, "p", false, "article asset play")
-   flag.StringVar(&f.password, "password", "", "password")
+   flag.BoolVar(&f.play, "o", false, "operation play")
+   flag.StringVar(&f.password, "p", "", "password")
    flag.Parse()
    text.Transport{}.Set(true)
    switch {
    case f.password != "":
-      err := f.authenticate()
+      err := f.write_user()
       if err != nil {
          panic(err)
       }
    case f.play:
-      err := f.play_write()
+      err := f.write_play()
       if err != nil {
          panic(err)
       }

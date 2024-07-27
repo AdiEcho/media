@@ -32,8 +32,8 @@ func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
          } `json:"variables"`
       }
       s.Query = query_play
-      s.Variables.ArticleId = asset.article.v.Id
       s.Variables.AssetId = asset.Id
+      s.Variables.ArticleId = asset.article.v.Data.Article.Id
       return json.Marshal(s)
    }()
    if err != nil {
@@ -70,7 +70,7 @@ func (o *OperationPlay) Unmarshal() error {
 
 type OperationPlay struct {
    Data []byte
-   v *struct {
+   v    *struct {
       Data struct {
          ArticleAssetPlay struct {
             Entitlements []struct {
@@ -164,7 +164,7 @@ type ArticleAsset struct {
 
 type OperationUser struct {
    Data []byte
-   v *struct {
+   v    *struct {
       Data struct {
          UserAuthenticate struct {
             AccessToken string `json:"access_token"`
