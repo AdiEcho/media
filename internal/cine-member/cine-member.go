@@ -10,7 +10,41 @@ import (
    "path"
 )
 
+func (f flags) play_write() error {
+   var auth member.Authenticate
+   auth.Data, err = os.ReadFile(f.home + "/cine-member.json")
+   if err != nil {
+      return err
+   }
+   err = auth.Unmarshal()
+   if err != nil {
+      return err
+   }
+   // DataArticle
+   article, err := f.slug.Article()
+   if err != nil {
+      return err
+   }
+   // ArticleAsset
+   asset, ok := article.Film()
+   if !ok {
+      return member.ArticleAsset{}
+   }
+   // AssetPlay
+   play, err := auth.Play(asset)
+   if err != nil {
+      return err
+   }
+   text, err = member.Encoding{article, play}.Marshal()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.play_name(), text, 0666)
+}
+
 func (f flags) download() error {
+   // AssetPlay
+   // DataArticle
    text, err := os.ReadFile(f.play_name())
    if err != nil {
       return err
@@ -55,34 +89,4 @@ func (f flags) authenticate() error {
       return err
    }
    return os.WriteFile(f.home + "/cine-member.json", auth.Data, 0666)
-}
-
-func (f flags) play_write() error {
-   article, err := f.slug.Article()
-   if err != nil {
-      return err
-   }
-   asset, ok := article.Film()
-   if !ok {
-      return member.ArticleAsset{}
-   }
-   var auth member.Authenticate
-   auth.Data, err = os.ReadFile(f.home + "/cine-member.json")
-   if err != nil {
-      return err
-   }
-   err = auth.Unmarshal()
-   if err != nil {
-      return err
-   }
-   play, err := auth.Play(asset)
-   if err != nil {
-      return err
-   }
-   
-   text, err = member.Encoding{article, play}.Marshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.play_name(), text, 0666)
 }
