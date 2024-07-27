@@ -10,28 +10,52 @@ import (
    "path"
 )
 
+// write OperationUser
+func (f flags) authenticate() error {
+   var user member.OperationUser
+   err := user.New(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/cine-member.json", user.Data, 0666)
+}
+
+func (f flags) base() string {
+   return path.Base(string(f.slug))
+}
+
+////////////
+
 func (f flags) play_write() error {
-   var auth member.Authenticate
-   auth.Data, err = os.ReadFile(f.home + "/cine-member.json")
-   if err != nil {
-      return err
-   }
-   err = auth.Unmarshal()
-   if err != nil {
-      return err
-   }
-   // DataArticle
+   os.Mkdir(f.base(), 0666)
+   // 1. write OperationArticle
    article, err := f.slug.Article()
    if err != nil {
       return err
    }
-   // ArticleAsset
+   err = os.WriteFile(f.base(), article.Data, 0666)
+   if err != nil {
+      return err
+   }
+   // 2. write OperationPlay
+   err = article.Unmarshal()
+   if err != nil {
+      return err
+   }
    asset, ok := article.Film()
    if !ok {
       return member.ArticleAsset{}
    }
-   // AssetPlay
-   play, err := auth.Play(asset)
+   var user member.Authenticate
+   user.Data, err = os.ReadFile(f.home + "/cine-member.json")
+   if err != nil {
+      return err
+   }
+   err = user.Unmarshal()
+   if err != nil {
+      return err
+   }
+   play, err := user.Play(asset)
    if err != nil {
       return err
    }
@@ -43,8 +67,8 @@ func (f flags) play_write() error {
 }
 
 func (f flags) download() error {
-   // AssetPlay
-   // DataArticle
+   // OperationArticle
+   // OperationPlay
    text, err := os.ReadFile(f.play_name())
    if err != nil {
       return err
@@ -76,17 +100,4 @@ func (f flags) download() error {
       }
    }
    return nil
-}
-
-func (f flags) play_name() string {
-   return path.Base(string(f.slug)) + ".json"
-}
-
-func (f flags) authenticate() error {
-   var auth member.Authenticate
-   err := auth.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/cine-member.json", auth.Data, 0666)
 }

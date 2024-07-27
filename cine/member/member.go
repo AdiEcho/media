@@ -10,7 +10,19 @@ import (
    "strings"
 )
 
-const query_asset = `
+func (o *OperationArticle) Unmarshal() error {
+   o.v = pointer(o.v)
+   err := json.Unmarshal(o.Data, o.v)
+   if err != nil {
+      return err
+   }
+   for _, asset := range o.v.Assets {
+      asset.article = o
+   }
+   return nil
+}
+
+const query_play = `
 mutation($article_id: Int, $asset_id: Int) {
    ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
       entitlements {
@@ -46,7 +58,7 @@ query($articleUrlSlug: String) {
 }
 `
 
-const user_authenticate = `
+const query_user = `
 mutation($email: String, $password: String) {
    UserAuthenticate(email: $email, password: $password) {
       access_token
@@ -56,12 +68,6 @@ mutation($email: String, $password: String) {
 
 func pointer[T any](value *T) *T {
    return new(T)
-}
-
-type ArticleAsset struct {
-   Id         int
-   LinkedType string `json:"linked_type"`
-   article    *OperationArticle
 }
 
 func (ArticleAsset) Error() string {
@@ -120,37 +126,12 @@ func (a ArticleSlug) String() string {
    return string(a)
 }
 
-func (o *OperationArticle) Unmarshal() error {
-   o.v = pointer(o.v)
-   err := json.Unmarshal(o.Data, o.v)
-   if err != nil {
-      return err
-   }
-   for _, asset := range o.v.Assets {
-      asset.article = o
-   }
-   return nil
-}
-
 func (OperationArticle) Episode() int {
    return 0
 }
 
 func (OperationArticle) Season() int {
    return 0
-}
-
-type OperationArticle struct {
-   Data []byte
-   v *struct {
-      Assets         []*ArticleAsset
-      CanonicalTitle string `json:"canonical_title"`
-      Id             int
-      Metas          []struct {
-         Key   string
-         Value string
-      }
-   }
 }
 
 func (OperationArticle) Show() string {
@@ -181,27 +162,6 @@ func (o OperationArticle) Year() int {
    return 0
 }
 
-type OperationPlay struct {
-   Entitlements []struct {
-      Manifest string
-      Protocol string
-   }
-}
-
-func (o OperationPlay) Dash() (string, bool) {
-   for _, title := range o.Entitlements {
-      if title.Protocol == "dash" {
-         return title.Manifest, true
-      }
-   }
-   return "", false
-}
-
-func (o *OperationUser) Unmarshal() error {
-   o.v = pointer(o.v)
-   return json.Unmarshal(o.Data, o.v)
-}
-
 func (o *OperationUser) New(email, password string) error {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -211,7 +171,7 @@ func (o *OperationUser) New(email, password string) error {
             Password string `json:"password"`
          } `json:"variables"`
       }
-      s.Query = user_authenticate
+      s.Query = query_user
       s.Variables.Email = email
       s.Variables.Password = password
       return json.Marshal(s)
@@ -234,6 +194,12 @@ func (o *OperationUser) New(email, password string) error {
    return nil
 }
 
+type ArticleAsset struct {
+   Id         int
+   LinkedType string `json:"linked_type"`
+   article    *OperationArticle
+}
+
 type OperationUser struct {
    Data []byte
    v *struct {
@@ -245,7 +211,29 @@ type OperationUser struct {
    }
 }
 
-// geo block - VPN not x-forwarded-for
+type OperationArticle struct {
+   Data []byte
+   v *struct {
+      Assets         []*ArticleAsset
+      CanonicalTitle string `json:"canonical_title"`
+      Id             int
+      Metas          []struct {
+         Key   string
+         Value string
+      }
+   }
+}
+
+func (o OperationPlay) Dash() (string, bool) {
+   for _, title := range o.v.Entitlements {
+      if title.Protocol == "dash" {
+         return title.Manifest, true
+      }
+   }
+   return "", false
+}
+
+// geo block, not x-forwarded-for
 func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -255,7 +243,7 @@ func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
             AssetId   int `json:"asset_id"`
          } `json:"variables"`
       }
-      s.Query = query_asset
+      s.Query = query_play
       s.Variables.ArticleId = asset.article.v.Id
       s.Variables.AssetId = asset.Id
       return json.Marshal(s)
@@ -285,7 +273,7 @@ func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
    }
    var data struct {
       Data struct {
-         ArticleAssetPlay *OperationPlay
+         ArticleAssetPlay json.RawMessage
       }
    }
    err = json.Unmarshal(text, &data)
@@ -293,7 +281,27 @@ func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
       return nil, err
    }
    if v := data.Data.ArticleAssetPlay; v != nil {
-      return v, nil
+      return &OperationPlay{Data: v}, nil
    }
    return nil, errors.New(string(text))
+}
+
+func (o *OperationUser) Unmarshal() error {
+   o.v = pointer(o.v)
+   return json.Unmarshal(o.Data, o.v)
+}
+
+func (o *OperationPlay) Unmarshal() error {
+   o.v = pointer(o.v)
+   return json.Unmarshal(o.Data, o.v)
+}
+
+type OperationPlay struct {
+   Data []byte
+   v *struct {
+      Entitlements []struct {
+         Manifest string
+         Protocol string
+      }
+   }
 }
