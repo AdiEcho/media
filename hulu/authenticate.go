@@ -10,13 +10,25 @@ import (
    "strings"
 )
 
-// width, height = (3840, 2160) if settings.getBool('4k') else (1920, 1080)
-// vid_types.append({
-//    'type':'H265','width':width,'height':height,'framerate':60,'level':'5.1',
-//    'profile':'MAIN_10','tier':'MAIN'
-// })
 func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    var p playlist_request
+   p.Playback.Video.Codecs.Values = []codec_value{
+      {
+         Height: 9999,
+         Level: "9",
+         Profile: "MAIN_10",
+         Tier: "MAIN",
+         Type: "H265",
+         Width: 9999,
+      },
+      {
+         Height: 9999,
+         Level: "9",
+         Profile: "HIGH",
+         Type: "H264",
+         Width: 9999,
+      },
+   }
    p.ContentEabId = d.EabId
    p.DeejayDeviceId = 166
    p.Playback.Audio.Codecs.SelectionMode = "ALL"
@@ -43,18 +55,9 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    }()
    p.Playback.Version = 2 // this is required for 1080p
    p.Playback.Video.Codecs.SelectionMode = "ALL"
-   p.Playback.Video.Codecs.Values = []codec_value{
-      {
-         Height: 9999,
-         Width: 9999,
-         Level: "5.2",
-         Profile: "HIGH",
-         Type: "H264",
-      },
-   }
    p.Unencrypted = true
    p.Version = 5012541
-   body, err := json.Marshal(p)
+   body, err := json.MarshalIndent(p, "", " ")
    if err != nil {
       return nil, err
    }

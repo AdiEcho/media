@@ -9,6 +9,15 @@ import (
    "time"
 )
 
+type codec_value struct {
+   Height int `json:"height,omitempty"`
+   Level   string `json:"level,omitempty"`
+   Profile string `json:"profile,omitempty"`
+   Tier string `json:"tier,omitempty"`
+   Type    string `json:"type"`
+   Width int `json:"width,omitempty"`
+}
+
 func (a Authenticate) Details(d *DeepLink) (*Details, error) {
    body, err := json.Marshal(map[string][]string{
       "eabs": {d.EabId},
@@ -64,14 +73,6 @@ func (Playlist) UnwrapResponse(b []byte) ([]byte, error) {
 
 type DeepLink struct {
    EabId string `json:"eab_id"`
-}
-
-type codec_value struct {
-   Height int `json:"height,omitempty"`
-   Level   string `json:"level,omitempty"`
-   Profile string `json:"profile,omitempty"`
-   Type    string `json:"type"`
-   Width int `json:"width,omitempty"`
 }
 
 type drm_value struct {
