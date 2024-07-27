@@ -16,6 +16,14 @@ import (
    "strings"
 )
 
+func (s Stream) Create(ext string) (*os.File, error) {
+   name, err := text.Name(s.Name)
+   if err != nil {
+      return nil, err
+   }
+   return os.Create(text.Clean(name) + ext)
+}
+
 func (s *Stream) Download(rep dash.Representation) error {
    if data, ok := rep.Widevine(); ok {
       read := bytes.NewReader(data)
@@ -48,7 +56,7 @@ func (s *Stream) Download(rep dash.Representation) error {
 func (s Stream) segment_template(
    ext, initial string, base *dash.BaseUrl, media []string,
 ) error {
-   file, err := s.file(ext)
+   file, err := s.Create(ext)
    if err != nil {
       return err
    }
@@ -151,7 +159,7 @@ func (s Stream) segment_base(
    if resp.StatusCode != http.StatusPartialContent {
       return errors.New(resp.Status)
    }
-   file, err := s.file(ext)
+   file, err := s.Create(ext)
    if err != nil {
       return err
    }
@@ -302,14 +310,6 @@ type Stream struct {
    Poster widevine.Poster
    pssh []byte
    key_id []byte
-}
-
-func (s Stream) file(ext string) (*os.File, error) {
-   name, err := text.Name(s.Name)
-   if err != nil {
-      return nil, err
-   }
-   return os.Create(text.Clean(name) + ext)
 }
 
 func (s *Stream) init_protect(to io.Writer, from io.Reader) error {

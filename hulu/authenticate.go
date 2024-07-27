@@ -30,7 +30,6 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       },
    }
    p.ContentEabId = d.EabId
-   p.DeejayDeviceId = 166
    p.Playback.Audio.Codecs.SelectionMode = "ALL"
    p.Playback.Audio.Codecs.Values = []codec_value{
       {Type: "AAC"},
@@ -53,10 +52,11 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       s.Type = "FMP4"
       return []segment_value{s}
    }()
-   p.Playback.Version = 2 // this is required for 1080p
    p.Playback.Video.Codecs.SelectionMode = "ALL"
    p.Unencrypted = true
-   p.Version = 5012541
+   p.Playback.Version = 9 // this is required for 1080p
+   p.DeejayDeviceId = 166
+   p.Version = 9999999
    body, err := json.MarshalIndent(p, "", " ")
    if err != nil {
       return nil, err

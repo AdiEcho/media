@@ -95,16 +95,6 @@ mutation($email: String, $password: String) {
 }
 `
 
-////////////
-
-type Authenticate struct {
-   Data struct {
-      UserAuthenticate struct {
-         AccessToken string `json:"access_token"`
-      }
-   }
-}
-
 // geo block - VPN not x-forwarded-for
 func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
    body, err := func() ([]byte, error) {
@@ -131,7 +121,7 @@ func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.Data.UserAuthenticate.AccessToken},
+      "authorization": {"Bearer " + a.v.Data.UserAuthenticate.AccessToken},
       "content-type":  {"application/json"},
    }
    resp, err := http.DefaultClient.Do(req)
@@ -158,11 +148,27 @@ func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error) {
    return nil, errors.New(string(text))
 }
 
-func (a *Authenticate) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, a)
+func pointer[T any](value *T) *T {
+   return new(T)
 }
 
-func NewAuthenticate(email, password string) ([]byte, error) {
+func (a *Authenticate) Unmarshal() error {
+   a.v = pointer(a.v)
+   return json.Unmarshal(a.Data, a.v)
+}
+
+type Authenticate struct {
+   Data []byte
+   v *struct {
+      Data struct {
+         UserAuthenticate struct {
+            AccessToken string `json:"access_token"`
+         }
+      }
+   }
+}
+
+func (a *Authenticate) New(email, password string) error {
    body, err := func() ([]byte, error) {
       var s struct {
          Query     string `json:"query"`
@@ -177,15 +183,19 @@ func NewAuthenticate(email, password string) ([]byte, error) {
       return json.Marshal(s)
    }()
    if err != nil {
-      return nil, err
+      return err
    }
    resp, err := http.Post(
       "https://api.audienceplayer.com/graphql/2/user",
       "application/json", bytes.NewReader(body),
    )
    if err != nil {
-      return nil, err
+      return err
    }
    defer resp.Body.Close()
-   return io.ReadAll(resp.Body)
+   a.Data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
 }

@@ -44,10 +44,6 @@ func (DataArticle) Show() string {
    return ""
 }
 
-func pointer[T any](value *T) *T {
-   return new(T)
-}
-
 func (d DataArticle) Title() string {
    return d.v.CanonicalTitle
 }

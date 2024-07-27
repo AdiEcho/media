@@ -8,6 +8,26 @@ import (
    "os"
 )
 
+func (f flags) timed_text(url string) error {
+   resp, err := http.Get(url)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   film, err := f.address.Film()
+   if err != nil {
+      return err
+   }
+   f.s.Name = mubi.Namer{film}
+   file, err := f.s.Create(".vtt")
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   file.ReadFrom(resp.Body)
+   return nil
+}
+
 func (f flags) download() error {
    var (
       secure mubi.SecureUrl
@@ -18,26 +38,27 @@ func (f flags) download() error {
       return err
    }
    secure.Unmarshal()
-   for _, text := range secure.V.TextTrackUrls {
-      if text.Id == f.representation {
-         film, err := f.address.Film()
-         if err != nil {
-            return err
-         }
-         f.s.Name = mubi.Namer{film}
-         return f.s.TimedText(text.Url)
+   for _, rep := range secure.V.TextTrackUrls {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
+         return f.timed_text(rep.Url)
       }
    }
    req, err := http.NewRequest("", secure.V.Url, nil)
    if err != nil {
       return err
    }
-   media, err := internal.Dash(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
          film, err := f.address.Film()
          if err != nil {
             return err
@@ -50,17 +71,8 @@ func (f flags) download() error {
          }
          auth.Unmarshal()
          f.s.Poster = auth
-         return f.s.Download(medium)
+         return f.s.Download(rep)
       }
-   }
-   for _, text := range secure.V.TextTrackUrls {
-      fmt.Print(text, "\n\n")
-   }
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
 }
