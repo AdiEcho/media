@@ -22,6 +22,7 @@ func TestArticle(t *testing.T) {
    }
    fmt.Printf("%q\n", name)
 }
+
 func TestAuthenticate(t *testing.T) {
    username := os.Getenv("cineMember_username")
    if username == "" {
