@@ -1,18 +1,17 @@
 package member
 
 import (
-   "154.pages.dev/text"
    "fmt"
    "os"
    "testing"
 )
 
 func TestAuthenticate(t *testing.T) {
-   username := os.Getenv("cineMember_username")
+   username := os.Getenv("cine_member_username")
    if username == "" {
       t.Fatal("Getenv")
    }
-   password := os.Getenv("cineMember_password")
+   password := os.Getenv("cine_member_password")
    text, err := NewAuthenticate(username, password)
    if err != nil {
       t.Fatal(err)
