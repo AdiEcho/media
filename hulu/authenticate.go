@@ -10,73 +10,11 @@ import (
    "strings"
 )
 
-type Authenticate struct {
-   Data []byte
-   V struct {
-      Data struct {
-         UserToken string `json:"user_token"`
-      }
-   }
-}
-
-func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Data, &a.V)
-}
-
-func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
-   req, err := http.NewRequest("", "https://discover.hulu.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/content/v5/deeplink/playback"
-   req.URL.RawQuery = url.Values{
-      "id": {id.s},
-      "namespace": {"entity"},
-   }.Encode()
-   req.Header.Set("authorization", "Bearer " + a.V.Data.UserToken)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   link := new(DeepLink)
-   err = json.NewDecoder(resp.Body).Decode(link)
-   if err != nil {
-      return nil, err
-   }
-   return link, nil
-}
-
-func (a *Authenticate) New(email, password string) error {
-   resp, err := http.PostForm(
-      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
-         "friendly_name": {"!"},
-         "password": {password},
-         "serial_number": {"!"},
-         "user_email": {email},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   a.Data, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
+// width, height = (3840, 2160) if settings.getBool('4k') else (1920, 1080)
+// vid_types.append({
+//    'type':'H265','width':width,'height':height,'framerate':60,'level':'5.1',
+//    'profile':'MAIN_10','tier':'MAIN'
+// })
 func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    var p playlist_request
    p.ContentEabId = d.EabId
@@ -146,4 +84,71 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       return nil, err
    }
    return play, nil
+}
+
+type Authenticate struct {
+   Data []byte
+   V struct {
+      Data struct {
+         UserToken string `json:"user_token"`
+      }
+   }
+}
+
+func (a *Authenticate) Unmarshal() error {
+   return json.Unmarshal(a.Data, &a.V)
+}
+
+func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
+   req, err := http.NewRequest("", "https://discover.hulu.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/content/v5/deeplink/playback"
+   req.URL.RawQuery = url.Values{
+      "id": {id.s},
+      "namespace": {"entity"},
+   }.Encode()
+   req.Header.Set("authorization", "Bearer " + a.V.Data.UserToken)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   link := new(DeepLink)
+   err = json.NewDecoder(resp.Body).Decode(link)
+   if err != nil {
+      return nil, err
+   }
+   return link, nil
+}
+
+func (a *Authenticate) New(email, password string) error {
+   resp, err := http.PostForm(
+      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
+         "friendly_name": {"!"},
+         "password": {password},
+         "serial_number": {"!"},
+         "user_email": {email},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   a.Data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
 }
