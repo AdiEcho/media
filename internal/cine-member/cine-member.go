@@ -10,51 +10,6 @@ import (
    "path"
 )
 
-func (f flags) download() error {
-   raw, err := os.ReadFile(f.base() + "/play.json")
-   if err != nil {
-      return err
-   }
-   var play member.OperationPlay
-   play.SetRaw(raw)
-   err = play.Unmarshal()
-   if err != nil {
-      return err
-   }
-   dash, ok := play.Dash()
-   if !ok {
-      return errors.New("OperationPlay.Dash")
-   }
-   req, err := http.NewRequest("", dash, nil)
-   if err != nil {
-      return err
-   }
-   reps, err := internal.Dash(req)
-   if err != nil {
-      return err
-   }
-   for _, rep := range reps {
-      switch f.representation {
-      case "":
-         fmt.Print(rep, "\n\n")
-      case rep.Id:
-         raw, err = os.ReadFile(f.base() + "/article.json")
-         if err != nil {
-            return err
-         }
-         var article member.OperationArticle
-         article.SetRaw(raw)
-         err = article.Unmarshal()
-         if err != nil {
-            return err
-         }
-         f.s.Name = article
-         return f.s.Download(rep)
-      }
-   }
-   return nil
-}
-
 func (f flags) write_user() error {
    var user member.OperationUser
    err := user.New(f.email, f.password)
@@ -103,4 +58,46 @@ func (f flags) write_play() error {
 
 func (f flags) base() string {
    return path.Base(string(f.slug))
+}
+func (f flags) download() error {
+   raw, err := os.ReadFile(f.base() + "/play.json")
+   if err != nil {
+      return err
+   }
+   var play member.OperationPlay
+   err = play.Unmarshal(raw)
+   if err != nil {
+      return err
+   }
+   dash, ok := play.Dash()
+   if !ok {
+      return errors.New("OperationPlay.Dash")
+   }
+   req, err := http.NewRequest("", dash, nil)
+   if err != nil {
+      return err
+   }
+   reps, err := internal.Dash(req)
+   if err != nil {
+      return err
+   }
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
+         raw, err = os.ReadFile(f.base() + "/article.json")
+         if err != nil {
+            return err
+         }
+         var article member.OperationArticle
+         err = article.Unmarshal(raw)
+         if err != nil {
+            return err
+         }
+         f.s.Name = article
+         return f.s.Download(rep)
+      }
+   }
+   return nil
 }

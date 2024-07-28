@@ -7,6 +7,14 @@ import (
    "net/http"
 )
 
+const query_user = `
+mutation($email: String, $password: String) {
+   UserAuthenticate(email: $email, password: $password) {
+      access_token
+   }
+}
+`
+
 func (o *OperationUser) New(email, password string) error {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -39,16 +47,8 @@ func (o *OperationUser) New(email, password string) error {
    return nil
 }
 
-const query_user = `
-mutation($email: String, $password: String) {
-   UserAuthenticate(email: $email, password: $password) {
-      access_token
-   }
-}
-`
-
-func (o *OperationUser) Unmarshal() error {
-   return json.Unmarshal(o.raw, o)
+func (o OperationUser) Marshal() []byte {
+   return o.raw
 }
 
 type OperationUser struct {
@@ -60,10 +60,6 @@ type OperationUser struct {
    raw []byte
 }
 
-func (o *OperationUser) SetRaw(raw []byte) {
-   o.raw = raw
-}
-
-func (o OperationUser) GetRaw() []byte {
-   return o.raw
+func (o *OperationUser) Unmarshal(raw []byte) error {
+   return json.Unmarshal(raw, o)
 }

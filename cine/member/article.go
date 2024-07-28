@@ -36,52 +36,6 @@ type ArticleAsset struct {
    article    *OperationArticle
 }
 
-type OperationArticle struct {
-   Data *struct {
-      Article struct {
-         Assets         []*ArticleAsset
-         CanonicalTitle string `json:"canonical_title"`
-         Id             int
-         Metas          []struct {
-            Key   string
-            Value string
-         }
-      }
-   }
-   raw []byte
-}
-
-func (a ArticleSlug) Article() (*OperationArticle, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Query     string `json:"query"`
-         Variables struct {
-            ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
-         } `json:"variables"`
-      }
-      s.Variables.ArticleUrlSlug = a
-      s.Query = query_article
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var article OperationArticle
-   article.raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &article, nil
-}
-
 const query_article = `
 query($articleUrlSlug: String) {
    Article(full_url_slug: $articleUrlSlug) {
@@ -141,8 +95,54 @@ func (o OperationArticle) Year() int {
    return 0
 }
 
+func (a ArticleSlug) Article() (*OperationArticle, error) {
+   body, err := func() ([]byte, error) {
+      var s struct {
+         Query     string `json:"query"`
+         Variables struct {
+            ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
+         } `json:"variables"`
+      }
+      s.Variables.ArticleUrlSlug = a
+      s.Query = query_article
+      return json.Marshal(s)
+   }()
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.Post(
+      "https://api.audienceplayer.com/graphql/2/user",
+      "application/json", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var article OperationArticle
+   article.raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &article, nil
+}
+
 func (o OperationArticle) Marshal() []byte {
    return o.raw
+}
+
+type OperationArticle struct {
+   Data *struct {
+      Article struct {
+         Assets         []*ArticleAsset
+         CanonicalTitle string `json:"canonical_title"`
+         Id             int
+         Metas          []struct {
+            Key   string
+            Value string
+         }
+      }
+   }
+   raw []byte
 }
 
 func (o *OperationArticle) Unmarshal(raw []byte) error {

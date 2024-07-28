@@ -20,10 +20,6 @@ mutation($article_id: Int, $asset_id: Int) {
 }
 `
 
-func (o *OperationPlay) Unmarshal() error {
-   return json.Unmarshal(o.raw, o)
-}
-
 func (o OperationPlay) Dash() (string, bool) {
    for _, title := range o.Data.ArticleAssetPlay.Entitlements {
       if title.Protocol == "dash" {
@@ -31,18 +27,6 @@ func (o OperationPlay) Dash() (string, bool) {
       }
    }
    return "", false
-}
-
-type OperationPlay struct {
-   Data *struct {
-      ArticleAssetPlay struct {
-         Entitlements []struct {
-            Manifest string
-            Protocol string
-         }
-      }
-   }
-   raw []byte
 }
 
 // geo block, not x-forwarded-for
@@ -87,10 +71,22 @@ func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
    return &play, nil
 }
 
-func (o *OperationPlay) SetRaw(raw []byte) {
-   o.raw = raw
+func (o OperationPlay) Marshal() []byte {
+   return o.raw
 }
 
-func (o OperationPlay) GetRaw() []byte {
-   return o.raw
+type OperationPlay struct {
+   Data *struct {
+      ArticleAssetPlay struct {
+         Entitlements []struct {
+            Manifest string
+            Protocol string
+         }
+      }
+   }
+   raw []byte
+}
+
+func (o *OperationPlay) Unmarshal(raw []byte) error {
+   return json.Unmarshal(raw, o)
 }
