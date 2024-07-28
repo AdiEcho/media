@@ -34,7 +34,3 @@ func (h response) marshal() []byte {
 func (h *response) unmarshal(raw []byte) error {
    return json.Unmarshal(raw, h)
 }
-
-func (h *response) unmarshal_raw() error {
-   return h.unmarshal(h.raw)
-}

@@ -9,26 +9,6 @@ import (
    "strings"
 )
 
-func (a Authorization) Marshal() []byte {
-   return a.raw
-}
-
-func (a *Authorization) UnmarshalRaw() error {
-   return a.Unmarshal(a.raw)
-}
-
-func (a *Authorization) Unmarshal(raw []byte) error {
-   return json.Unmarshal(raw, a)
-}
-
-type Authorization struct {
-   Data *struct {
-      AccessToken string `json:"access_token"`
-      RefreshToken string `json:"refresh_token"`
-   }
-   raw []byte
-}
-
 func (a *Authorization) Login(email, password string) error {
    body, err := json.Marshal(map[string]string{
       "email": email,
@@ -221,4 +201,20 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
       return nil, err
    }
    return content, nil
+}
+
+func (a Authorization) Marshal() []byte {
+   return a.raw
+}
+
+type Authorization struct {
+   Data *struct {
+      AccessToken string `json:"access_token"`
+      RefreshToken string `json:"refresh_token"`
+   }
+   raw []byte
+}
+
+func (a *Authorization) Unmarshal(raw []byte) error {
+   return json.Unmarshal(raw, a)
 }
