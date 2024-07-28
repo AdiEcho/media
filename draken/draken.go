@@ -9,6 +9,36 @@ import (
    "strings"
 )
 
+func (a *AuthLogin) New(identity, key string) error {
+   body, err := func() ([]byte, error) {
+      m := map[string]string{
+         "identity":  identity,
+         "accessKey": key,
+      }
+      return json.Marshal(m)
+   }()
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://drakenfilm.se/api/auth/login", bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   req.Header.Set("content-type", "application/json")
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   a.Data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
 func (a AuthLogin) Entitlement(movie *FullMovie) (*Entitlement, error) {
    req, err := http.NewRequest("POST", "https://client-api.magine.com", nil)
    if err != nil {
@@ -128,14 +158,14 @@ type Playback struct {
 }
 
 type Poster struct {
-   Auth AuthLogin
+   Login AuthLogin
    Play *Playback
 }
 
 func (p Poster) RequestHeader() (http.Header, error) {
    head := make(http.Header)
    magine_accesstoken.set(head)
-   head.Set("authorization", "Bearer "+p.Auth.v.Token)
+   head.Set("authorization", "Bearer "+p.Login.v.Token)
    for key, value := range p.Play.Headers {
       head.Set(key, value)
    }
@@ -159,34 +189,4 @@ type AuthLogin struct {
    v *struct {
       Token string
    }
-}
-
-func (a *AuthLogin) New(identity, key string) error {
-   body, err := func() ([]byte, error) {
-      m := map[string]string{
-         "identity":  identity,
-         "accessKey": key,
-      }
-      return json.Marshal(m)
-   }()
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://drakenfilm.se/api/auth/login", bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   req.Header.Set("content-type", "application/json")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   a.Data, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
 }

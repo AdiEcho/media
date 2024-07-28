@@ -1,7 +1,5 @@
 # AMC+
 
-## try 7 days free
-
 1. amcplus.com/create
 2. email
    - 2024-5-26@mailsac.com

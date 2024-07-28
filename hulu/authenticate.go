@@ -10,6 +10,31 @@ import (
    "strings"
 )
 
+func (a *Authenticate) New(email, password string) error {
+   resp, err := http.PostForm(
+      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
+         "friendly_name": {"!"},
+         "password": {password},
+         "serial_number": {"!"},
+         "user_email": {email},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   a.Data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
 func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    var p playlist_request
    p.Playback.Video.Codecs.Values = []codec_value{
@@ -129,29 +154,4 @@ func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
       return nil, err
    }
    return link, nil
-}
-
-func (a *Authenticate) New(email, password string) error {
-   resp, err := http.PostForm(
-      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
-         "friendly_name": {"!"},
-         "password": {password},
-         "serial_number": {"!"},
-         "user_email": {email},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   a.Data, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
 }

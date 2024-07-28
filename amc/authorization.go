@@ -9,6 +9,99 @@ import (
    "strings"
 )
 
+func (a *Authorization) Login(email, password string) error {
+   body, err := json.Marshal(map[string]string{
+      "email": email,
+      "password": password,
+   })
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://gw.cds.amcn.com", bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   req.URL.Path = "/auth-orchestration-id/api/v1/login"
+   req.Header = http.Header{
+      "authorization": {"Bearer " + a.Data.AccessToken},
+      "content-type": {"application/json"},
+      "x-amcn-device-ad-id": {"-"},
+      "x-amcn-device-id": {"-"},
+      "x-amcn-language": {"en"},
+      "x-amcn-network": {"amcplus"},
+      "x-amcn-platform": {"web"},
+      "x-amcn-service-group-id": {"10"},
+      "x-amcn-service-id": {"amcplus"},
+      "x-amcn-tenant": {"amcn"},
+      "x-ccpa-do-not-sell": {"doNotPassData"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
+   }
+   a.raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a *Authorization) Unauth() error {
+   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
+   if err != nil {
+      return err
+   }
+   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
+   req.Header = http.Header{
+      "x-amcn-device-id": {"-"},
+      "x-amcn-language": {"en"},
+      "x-amcn-network": {"amcplus"},
+      "x-amcn-platform": {"web"},
+      "x-amcn-tenant": {"amcn"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
+   }
+   a.raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a *Authorization) Refresh() error {
+   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
+   if err != nil {
+      return err
+   }
+   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
+   req.Header.Set("authorization", "Bearer " + a.Data.RefreshToken)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
+   }
+   a.raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
 func (a Authorization) Playback(nid string) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -108,99 +201,6 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
       return nil, err
    }
    return content, nil
-}
-
-func (a *Authorization) Unauth() error {
-   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
-   if err != nil {
-      return err
-   }
-   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
-   req.Header = http.Header{
-      "x-amcn-device-id": {"-"},
-      "x-amcn-language": {"en"},
-      "x-amcn-network": {"amcplus"},
-      "x-amcn-platform": {"web"},
-      "x-amcn-tenant": {"amcn"},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return errors.New(resp.Status)
-   }
-   a.raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-func (a *Authorization) Login(email, password string) error {
-   body, err := json.Marshal(map[string]string{
-      "email": email,
-      "password": password,
-   })
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://gw.cds.amcn.com", bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   req.URL.Path = "/auth-orchestration-id/api/v1/login"
-   req.Header = http.Header{
-      "authorization": {"Bearer " + a.Data.AccessToken},
-      "content-type": {"application/json"},
-      "x-amcn-device-ad-id": {"-"},
-      "x-amcn-device-id": {"-"},
-      "x-amcn-language": {"en"},
-      "x-amcn-network": {"amcplus"},
-      "x-amcn-platform": {"web"},
-      "x-amcn-service-group-id": {"10"},
-      "x-amcn-service-id": {"amcplus"},
-      "x-amcn-tenant": {"amcn"},
-      "x-ccpa-do-not-sell": {"doNotPassData"},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return errors.New(resp.Status)
-   }
-   a.raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-func (a *Authorization) Refresh() error {
-   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
-   if err != nil {
-      return err
-   }
-   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
-   req.Header.Set("authorization", "Bearer " + a.Data.RefreshToken)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return errors.New(resp.Status)
-   }
-   a.raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
 }
 
 type Authorization struct {

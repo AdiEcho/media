@@ -23,12 +23,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var auth AuthLogin
-   auth.Data, err = os.ReadFile("login.json")
+   var login AuthLogin
+   login.Data, err = os.ReadFile("login.json")
    if err != nil {
       t.Fatal(err)
    }
-   auth.Unmarshal()
+   login.Unmarshal()
    for _, film := range films {
       var pssh widevine.Pssh
       pssh.ContentId, err = base64.StdEncoding.DecodeString(film.content_id)
@@ -48,15 +48,15 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      title, err := auth.Entitlement(movie)
+      title, err := login.Entitlement(movie)
       if err != nil {
          t.Fatal(err)
       }
-      play, err := auth.Playback(movie, title)
+      play, err := login.Playback(movie, title)
       if err != nil {
          t.Fatal(err)
       }
-      key, err := module.Key(Poster{auth, play}, pssh.KeyId)
+      key, err := module.Key(Poster{login, play}, pssh.KeyId)
       if err != nil {
          t.Fatal(err)
       }
@@ -71,10 +71,10 @@ func TestLogin(t *testing.T) {
       t.Fatal("Getenv")
    }
    password := os.Getenv("draken_password")
-   var auth AuthLogin
-   err := auth.New(username, password)
+   var login AuthLogin
+   err := login.New(username, password)
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("login.json", auth.Data, 0666)
+   os.WriteFile("login.json", login.Data, 0666)
 }
