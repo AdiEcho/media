@@ -7,7 +7,7 @@ import (
 )
 
 type response struct {
-   Slideshow struct {
+   Slideshow *struct {
       Date string
       Title string
    }
@@ -23,11 +23,16 @@ func (h *response) New() error {
    return nil
 }
 
-func (h response) write(dst io.Writer) (int64, error) {
+func (h response) write(body io.Writer) (int64, error) {
    defer h.body.Close()
-   return io.Copy(dst, h.body)
+   return io.Copy(body, h.body)
 }
 
-func (h *response) read(src io.Reader) error {
-   return json.NewDecoder(src).Decode(h)
+func (h *response) read(body io.Reader) error {
+   return json.NewDecoder(body).Decode(h)
+}
+
+func (h *response) read_body() error {
+   defer h.body.Close()
+   return json.NewDecoder(h.body).Decode(h)
 }
