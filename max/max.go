@@ -13,34 +13,10 @@ import (
    "time"
 )
 
-type session_state map[string]string
-
-func (s session_state) Set(text string) error {
-   for text != "" {
-      var key string
-      key, text, _ = strings.Cut(text, ";")
-      key, value, _ := strings.Cut(key, ":")
-      s[key] = value
-   }
-   return nil
-}
-
-func (s session_state) String() string {
-   var (
-      b strings.Builder
-      sep bool
-   )
-   for key, value := range s {
-      if sep {
-         b.WriteByte(';')
-      } else {
-         sep = true
-      }
-      b.WriteString(key)
-      b.WriteByte(':')
-      b.WriteString(value)
-   }
-   return b.String()
+// note you can use other keys, but you need to change home_market to match
+var default_key = hmac_key{
+   Id:  "android1_prd",
+   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
 }
 
 func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
@@ -92,6 +68,36 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    return json.NewDecoder(resp.Body).Decode(&d.Body)
 }
 
+type session_state map[string]string
+
+func (s session_state) Set(text string) error {
+   for text != "" {
+      var key string
+      key, text, _ = strings.Cut(text, ";")
+      key, value, _ := strings.Cut(key, ":")
+      s[key] = value
+   }
+   return nil
+}
+
+func (s session_state) String() string {
+   var (
+      b strings.Builder
+      sep bool
+   )
+   for key, value := range s {
+      if sep {
+         b.WriteByte(';')
+      } else {
+         sep = true
+      }
+      b.WriteString(key)
+      b.WriteByte(':')
+      b.WriteString(value)
+   }
+   return b.String()
+}
+
 func (d *DefaultToken) New() error {
    req, err := http.NewRequest(
       "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
@@ -138,12 +144,6 @@ type DefaultLogin struct {
 }
 
 const home_market = "amer"
-
-// note you can use other keys, but you need to change home_market to match
-var default_key = hmac_key{
-   Id:  "android1_prd",
-   Key: []byte("6fd2c4b9-7b43-49ee-a62e-57ffd7bdfe9c"),
-}
 
 type default_decision struct {
    HmacKeys struct {
