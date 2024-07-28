@@ -1,13 +1,5 @@
 # Roku
 
-free:
-
-https://therokuchannel.roku.com/watch/597a64a4a25c5bf6af4a8c7053049a6f
-
-paid:
-
-https://therokuchannel.roku.com/details/cc3aa3e3ea675a36b831ab58efb3301f
-
 ## Android
 
 com.roku.web.trc is The Roku Channel (Android TV):
@@ -29,3 +21,33 @@ version code = 10017
 ~~~
 
 create Android 9 device. install system certificate.
+
+## starz
+
+1. therokuchannel.roku.com/details/d2989094bc415a71b704fc4f86db22c6
+2. create a free account
+3. email
+   - 2024-7-28@mailsac.com
+4. first name
+5. last name
+6. password
+7. month
+8. date
+9. year
+10. gender
+11. I agree to the terms
+12. I'm not a robot
+13. continue
+14. see plans
+15. confirm selection
+16. add a payment method
+17. card number
+18. month
+19. year
+20. security code
+21. address
+22. city
+23. state
+24. zip
+25. save
+26. start free trial

@@ -6,6 +6,7 @@ import (
    "fmt"
    "net/http"
    "os"
+   "sort"
 )
 
 func (f flags) download() error {
@@ -40,6 +41,9 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
+   sort.Slice(reps, func(i, j int) bool {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
    for _, rep := range reps {
       switch f.representation {
       case "":
@@ -58,15 +62,38 @@ func (f flags) download() error {
    return nil
 }
 
+func (f flags) write_token() error {
+   var err error
+   // AccountAuth
+   var auth roku.AccountAuth
+   auth.Data, err = os.ReadFile("auth.json")
+   if err != nil {
+      return err
+   }
+   auth.Unmarshal()
+   // AccountCode
+   var code roku.AccountCode
+   code.Data, err = os.ReadFile("code.json")
+   if err != nil {
+      return err
+   }
+   code.Unmarshal()
+   // AccountToken
+   token, err := auth.Token(code)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/roku.json", token.Data, 0666)
+}
+
 func (f flags) write_code() error {
-   os.Mkdir(f.roku, 0666)
    // AccountAuth
    var auth roku.AccountAuth
    err := auth.New(nil)
    if err != nil {
       return err
    }
-   err = os.WriteFile(f.roku + "/auth.json", auth.Data, 0666)
+   err = os.WriteFile("auth.json", auth.Data, 0666)
    if err != nil {
       return err
    }
@@ -79,7 +106,7 @@ func (f flags) write_code() error {
    if err != nil {
       return err
    }
-   err = os.WriteFile(f.roku + "/code.json", code.Data, 0666)
+   err = os.WriteFile("code.json", code.Data, 0666)
    if err != nil {
       return err
    }
@@ -89,28 +116,4 @@ func (f flags) write_code() error {
    }
    fmt.Println(code)
    return nil
-}
-
-func (f flags) write_token() error {
-   var err error
-   // AccountAuth
-   var auth roku.AccountAuth
-   auth.Data, err = os.ReadFile(f.roku + "/auth.json")
-   if err != nil {
-      return err
-   }
-   auth.Unmarshal()
-   // AccountCode
-   var code roku.AccountCode
-   code.Data, err = os.ReadFile(f.roku + "/code.json")
-   if err != nil {
-      return err
-   }
-   code.Unmarshal()
-   // AccountToken
-   token, err := auth.Token(code)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/roku.json", token.Data, 0666)
 }

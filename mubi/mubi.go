@@ -37,37 +37,12 @@ func (s *SecureUrl) Unmarshal() error {
 var ClientCountry = "US"
 
 // "android" requires headers:
-// Client-Device-Identifier
-// Client-Version
+// client-device-identifier
+// client-version
 const client = "web"
-
-type Authenticate struct {
-   Data []byte
-   V struct {
-      Token string
-      User struct {
-         Id int
-      }
-   }
-}
 
 func (Authenticate) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
-}
-
-func (a Authenticate) RequestHeader() (http.Header, error) {
-   value := map[string]any{
-      "merchant": "mubi",
-      "sessionId": a.V.Token,
-      "userId": a.V.User.Id,
-   }
-   text, err := json.Marshal(value)
-   if err != nil {
-      return nil, err
-   }
-   head := make(http.Header)
-   head.Set("dt-custom-data", base64.StdEncoding.EncodeToString(text))
-   return head, nil
 }
 
 // final slash is needed
@@ -88,39 +63,6 @@ func (Authenticate) UnwrapResponse(b []byte) ([]byte, error) {
 
 func (a *Authenticate) Unmarshal() error {
    return json.Unmarshal(a.Data, &a.V)
-}
-
-func (c LinkCode) Authenticate() (*Authenticate, error) {
-   body, err := json.Marshal(map[string]string{"auth_token": c.V.AuthToken})
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header = http.Header{
-      "client": {client},
-      "client-country": {ClientCountry},
-      "content-type": {"application/json"},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   data, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &Authenticate{Data: data}, nil
 }
 
 func (c *LinkCode) New() error {
@@ -186,4 +128,62 @@ func (a *Address) Set(text string) error {
 
 func (a Address) String() string {
    return a.s
+}
+
+func (a Authenticate) RequestHeader() (http.Header, error) {
+   value := map[string]any{
+      "merchant": "mubi",
+      "sessionId": a.V.Token,
+      "userId": a.V.User.Id,
+   }
+   text, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   head := make(http.Header)
+   head.Set("dt-custom-data", base64.StdEncoding.EncodeToString(text))
+   return head, nil
+}
+
+type Authenticate struct {
+   Data []byte
+   V struct {
+      Token string
+      User struct {
+         Id int
+      }
+   }
+}
+
+func (c LinkCode) Authenticate() (*Authenticate, error) {
+   body, err := json.Marshal(map[string]string{"auth_token": c.V.AuthToken})
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "client": {client},
+      "client-country": {ClientCountry},
+      "content-type": {"application/json"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &Authenticate{Data: data}, nil
 }

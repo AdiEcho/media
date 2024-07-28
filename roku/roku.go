@@ -89,6 +89,7 @@ func (a AccountAuth) Code() (*AccountCode, error) {
    }
    return &AccountCode{Data: data}, nil
 }
+
 func (a AccountAuth) Playback(roku_id string) (*Playback, error) {
    body, err := json.Marshal(map[string]string{
       "mediaFormat": "DASH",
@@ -179,6 +180,7 @@ func (a *AccountToken) Unmarshal() error {
    a.V = pointer(a.V)
    return json.Unmarshal(a.Data, a.V)
 }
+
 type AccountCode struct {
    Data []byte
    v *struct {
@@ -199,4 +201,3 @@ type AccountAuth struct {
       AuthToken string
    }
 }
-
