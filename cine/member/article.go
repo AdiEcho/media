@@ -8,10 +8,6 @@ import (
    "strconv"
 )
 
-func (o *OperationArticle) SetRaw(raw []byte) {
-   o.raw = raw
-}
-
 const query_article = `
 query($articleUrlSlug: String) {
    Article(full_url_slug: $articleUrlSlug) {
@@ -45,18 +41,6 @@ func (OperationArticle) Season() int {
 
 func (OperationArticle) Show() string {
    return ""
-}
-
-func (o *OperationArticle) Unmarshal() error {
-   o.Data = pointer(o.Data)
-   err := json.Unmarshal(o.raw, o)
-   if err != nil {
-      return err
-   }
-   for _, asset := range o.Data.Article.Assets {
-      asset.article = o
-   }
-   return nil
 }
 
 func (o OperationArticle) Title() string {
@@ -127,4 +111,24 @@ type OperationArticle struct {
       }
    }
    raw []byte
+}
+
+func (o *OperationArticle) Unmarshal() error {
+   o.Data = pointer(o.Data)
+   err := json.Unmarshal(o.raw, o)
+   if err != nil {
+      return err
+   }
+   for _, asset := range o.Data.Article.Assets {
+      asset.article = o
+   }
+   return nil
+}
+
+func (o *OperationArticle) SetRaw(raw []byte) {
+   o.raw = raw
+}
+
+func (o OperationArticle) GetRaw() []byte {
+   return o.raw
 }

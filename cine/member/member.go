@@ -41,59 +41,12 @@ func (a ArticleSlug) String() string {
    return string(a)
 }
 
-func (o *OperationUser) New(email, password string) error {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Query     string `json:"query"`
-         Variables struct {
-            Email    string `json:"email"`
-            Password string `json:"password"`
-         } `json:"variables"`
-      }
-      s.Query = query_user
-      s.Variables.Email = email
-      s.Variables.Password = password
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      return err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   o.Data, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
 type ArticleAsset struct {
    Id         int
    LinkedType string `json:"linked_type"`
    article    *OperationArticle
 }
 
-type OperationUser struct {
-   Data []byte
-   v    *struct {
-      Data struct {
-         UserAuthenticate struct {
-            AccessToken string `json:"access_token"`
-         }
-      }
-   }
-}
-
-func (o *OperationUser) Unmarshal() error {
-   o.v = pointer(o.v)
-   return json.Unmarshal(o.Data, o.v)
-}
 const query_play = `
 mutation($article_id: Int, $asset_id: Int) {
    ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
@@ -106,6 +59,21 @@ mutation($article_id: Int, $asset_id: Int) {
    }
 }
 `
+
+func (o *OperationPlay) Unmarshal() error {
+   o.Data = pointer(o.Data)
+   return json.Unmarshal(o.raw, o)
+}
+
+func (o OperationPlay) Dash() (string, bool) {
+   for _, title := range o.Data.ArticleAssetPlay.Entitlements {
+      if title.Protocol == "dash" {
+         return title.Manifest, true
+      }
+   }
+   return "", false
+}
+
 type OperationPlay struct {
    Data *struct {
       ArticleAssetPlay struct {
@@ -118,7 +86,10 @@ type OperationPlay struct {
    raw []byte
 }
 
-/////////
+func (o *OperationUser) Unmarshal() error {
+   o.Data = pointer(o.Data)
+   return json.Unmarshal(o.raw, o)
+}
 
 // geo block, not x-forwarded-for
 func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
@@ -146,7 +117,7 @@ func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "authorization": {"Bearer " + o.v.Data.UserAuthenticate.AccessToken},
+      "authorization": {"Bearer " + o.Data.UserAuthenticate.AccessToken},
       "content-type":  {"application/json"},
    }
    resp, err := http.DefaultClient.Do(req)
@@ -155,23 +126,66 @@ func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
    }
    defer resp.Body.Close()
    var play OperationPlay
-   play.Data, err = io.ReadAll(resp.Body)
+   play.raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
    return &play, nil
 }
 
-func (o *OperationPlay) Unmarshal() error {
-   o.v = pointer(o.v)
-   return json.Unmarshal(o.Data, o.v)
+func (o *OperationUser) New(email, password string) error {
+   body, err := func() ([]byte, error) {
+      var s struct {
+         Query     string `json:"query"`
+         Variables struct {
+            Email    string `json:"email"`
+            Password string `json:"password"`
+         } `json:"variables"`
+      }
+      s.Query = query_user
+      s.Variables.Email = email
+      s.Variables.Password = password
+      return json.Marshal(s)
+   }()
+   if err != nil {
+      return err
+   }
+   resp, err := http.Post(
+      "https://api.audienceplayer.com/graphql/2/user",
+      "application/json", bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   o.raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
 }
 
-func (o OperationPlay) Dash() (string, bool) {
-   for _, title := range o.v.Data.ArticleAssetPlay.Entitlements {
-      if title.Protocol == "dash" {
-         return title.Manifest, true
+type OperationUser struct {
+   Data *struct {
+      UserAuthenticate struct {
+         AccessToken string `json:"access_token"`
       }
    }
-   return "", false
+   raw []byte
+}
+
+func (o *OperationPlay) SetRaw(raw []byte) {
+   o.raw = raw
+}
+
+func (o OperationPlay) GetRaw() []byte {
+   return o.raw
+}
+
+func (o *OperationUser) SetRaw(raw []byte) {
+   o.raw = raw
+}
+
+func (o OperationUser) GetRaw() []byte {
+   return o.raw
 }
