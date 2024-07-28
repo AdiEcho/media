@@ -5,79 +5,7 @@ import (
    "encoding/json"
    "io"
    "net/http"
-   "strings"
 )
-
-func (o *OperationUser) New(email, password string) error {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Query     string `json:"query"`
-         Variables struct {
-            Email    string `json:"email"`
-            Password string `json:"password"`
-         } `json:"variables"`
-      }
-      s.Query = query_user
-      s.Variables.Email = email
-      s.Variables.Password = password
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      return err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   o.raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-const query_user = `
-mutation($email: String, $password: String) {
-   UserAuthenticate(email: $email, password: $password) {
-      access_token
-   }
-}
-`
-
-func pointer[T any](value *T) *T {
-   return new(T)
-}
-
-func (ArticleAsset) Error() string {
-   return "ArticleAsset"
-}
-
-type ArticleSlug string
-
-// https://www.cinemember.nl/nl/films/american-hustle
-func (a *ArticleSlug) Set(s string) error {
-   s = strings.TrimPrefix(s, "https://")
-   s = strings.TrimPrefix(s, "www.")
-   s = strings.TrimPrefix(s, "cinemember.nl")
-   s = strings.TrimPrefix(s, "/nl")
-   s = strings.TrimPrefix(s, "/")
-   *a = ArticleSlug(s)
-   return nil
-}
-
-func (a ArticleSlug) String() string {
-   return string(a)
-}
-
-type ArticleAsset struct {
-   Id         int
-   LinkedType string `json:"linked_type"`
-   article    *OperationArticle
-}
 
 const query_play = `
 mutation($article_id: Int, $asset_id: Int) {
@@ -93,7 +21,6 @@ mutation($article_id: Int, $asset_id: Int) {
 `
 
 func (o *OperationPlay) Unmarshal() error {
-   o.Data = pointer(o.Data)
    return json.Unmarshal(o.raw, o)
 }
 
@@ -116,11 +43,6 @@ type OperationPlay struct {
       }
    }
    raw []byte
-}
-
-func (o *OperationUser) Unmarshal() error {
-   o.Data = pointer(o.Data)
-   return json.Unmarshal(o.raw, o)
 }
 
 // geo block, not x-forwarded-for
@@ -165,27 +87,10 @@ func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
    return &play, nil
 }
 
-type OperationUser struct {
-   Data *struct {
-      UserAuthenticate struct {
-         AccessToken string `json:"access_token"`
-      }
-   }
-   raw []byte
-}
-
 func (o *OperationPlay) SetRaw(raw []byte) {
    o.raw = raw
 }
 
 func (o OperationPlay) GetRaw() []byte {
-   return o.raw
-}
-
-func (o *OperationUser) SetRaw(raw []byte) {
-   o.raw = raw
-}
-
-func (o OperationUser) GetRaw() []byte {
    return o.raw
 }

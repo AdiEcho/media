@@ -30,17 +30,3 @@ func TestAsset(t *testing.T) {
    }
    fmt.Println(play.Dash())
 }
-
-func TestAuthenticate(t *testing.T) {
-   username := os.Getenv("cine_member_username")
-   if username == "" {
-      t.Fatal("Getenv")
-   }
-   password := os.Getenv("cine_member_password")
-   var user OperationUser
-   err := user.New(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("user.json", user.raw, 0666)
-}

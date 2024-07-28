@@ -8,38 +8,17 @@ import (
    "time"
 )
 
-func TestLogin(t *testing.T) {
-   username := os.Getenv("amc_username")
-   if username == "" {
-      t.Fatal("Getenv")
-   }
-   password := os.Getenv("amc_password")
-   var auth Authorization
-   err := auth.Unauth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = auth.Unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = auth.Login(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-}
-
 func TestRefresh(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
    }
-   var auth Authorization
-   auth.Data, err = os.ReadFile(home + "/amc.json")
+   raw, err := os.ReadFile(home + "/amc.json")
    if err != nil {
       t.Fatal(err)
    }
-   err = auth.Unmarshal()
+   var auth Authorization
+   err = auth.Unmarshal(raw)
    if err != nil {
       t.Fatal(err)
    }
@@ -47,8 +26,9 @@ func TestRefresh(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile(home + "/amc.json", auth.Data, 0666)
+   os.WriteFile(home + "/amc.json", auth.Marshal(), 0666)
 }
+
 func TestContent(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -93,5 +73,25 @@ func TestPath(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Println(web)
+   }
+}
+func TestLogin(t *testing.T) {
+   username := os.Getenv("amc_username")
+   if username == "" {
+      t.Fatal("Getenv")
+   }
+   password := os.Getenv("amc_password")
+   var auth Authorization
+   err := auth.Unauth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.UnmarshalRaw()
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.Login(username, password)
+   if err != nil {
+      t.Fatal(err)
    }
 }
