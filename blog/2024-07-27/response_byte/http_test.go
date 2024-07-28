@@ -1,4 +1,4 @@
-package hello
+package http
 
 import (
    "fmt"
@@ -16,7 +16,7 @@ const text = `
 `
 
 func TestWrite(t *testing.T) {
-   var bin http_bin
+   var bin response_byte
    err := bin.New()
    if err != nil {
       t.Fatal(err)
@@ -29,7 +29,7 @@ func TestWrite(t *testing.T) {
 }
 
 func TestRead(t *testing.T) {
-   var bin http_bin
+   var bin response_byte
    err := bin.unmarshal([]byte(text))
    if err != nil {
       t.Fatal(err)
