@@ -15,12 +15,12 @@ func TestAsset(t *testing.T) {
    if !ok {
       t.Fatal(ArticleAsset{})
    }
-   var user OperationUser
-   user.raw, err = os.ReadFile("authenticate.json")
+   raw, err := os.ReadFile("authenticate.json")
    if err != nil {
       t.Fatal(err)
    }
-   err = user.Unmarshal()
+   var user OperationUser
+   err = user.Unmarshal(raw)
    if err != nil {
       t.Fatal(err)
    }

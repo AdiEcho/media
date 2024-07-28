@@ -10,15 +10,6 @@ import (
    "path"
 )
 
-func (f flags) write_user() error {
-   var user member.OperationUser
-   err := user.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/cine-member.json", user.GetRaw(), 0666)
-}
-
 func (f flags) write_play() error {
    os.Mkdir(f.base(), 0666)
    // 1. write OperationArticle
@@ -26,11 +17,11 @@ func (f flags) write_play() error {
    if err != nil {
       return err
    }
-   err = os.WriteFile(f.base() + "/article.json", article.GetRaw(), 0666)
+   err = os.WriteFile(f.base() + "/article.json", article.Marshal(), 0666)
    if err != nil {
       return err
    }
-   err = article.Unmarshal()
+   err = article.UnmarshalRaw()
    if err != nil {
       return err
    }
@@ -44,8 +35,7 @@ func (f flags) write_play() error {
       return err
    }
    var user member.OperationUser
-   user.SetRaw(raw)
-   err = user.Unmarshal()
+   err = user.Unmarshal(raw)
    if err != nil {
       return err
    }
@@ -53,7 +43,7 @@ func (f flags) write_play() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.base() + "/play.json", play.GetRaw(), 0666)
+   return os.WriteFile(f.base() + "/play.json", play.Marshal(), 0666)
 }
 
 func (f flags) base() string {
@@ -100,4 +90,13 @@ func (f flags) download() error {
       }
    }
    return nil
+}
+
+func (f flags) write_user() error {
+   var user member.OperationUser
+   err := user.New(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/cine-member.json", user.Marshal(), 0666)
 }
