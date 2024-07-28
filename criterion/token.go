@@ -65,15 +65,7 @@ func (a AuthToken) Video(slug string) (*EmbedItem, error) {
    return item, nil
 }
 
-func (a *AuthToken) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, a)
-}
-
-type AuthToken struct {
-   AccessToken string `json:"access_token"`
-}
-
-func NewAuthToken(username, password string) ([]byte, error) {
+func (a *AuthToken) New(username, password string) error {
    resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
       "client_id":  {client_id},
       "grant_type": {"password"},
@@ -81,8 +73,25 @@ func NewAuthToken(username, password string) ([]byte, error) {
       "username":   {username},
    })
    if err != nil {
-      return nil, err
+      return err
    }
    defer resp.Body.Close()
-   return io.ReadAll(resp.Body)
+   a.raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a AuthToken) Marshal() []byte {
+   return a.raw
+}
+
+type AuthToken struct {
+   AccessToken string `json:"access_token"`
+   raw []byte
+}
+
+func (a *AuthToken) Unmarshal(raw []byte) error {
+   return json.Unmarshal(raw, a)
 }

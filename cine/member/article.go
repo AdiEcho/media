@@ -145,10 +145,6 @@ type OperationArticle struct {
    raw []byte
 }
 
-func (o *OperationArticle) UnmarshalRaw() error {
-   return o.Unmarshal(o.raw)
-}
-
 func (o *OperationArticle) Unmarshal(raw []byte) error {
    err := json.Unmarshal(raw, o)
    if err != nil {

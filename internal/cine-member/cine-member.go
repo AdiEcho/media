@@ -17,11 +17,12 @@ func (f flags) write_play() error {
    if err != nil {
       return err
    }
-   err = os.WriteFile(f.base() + "/article.json", article.Marshal(), 0666)
+   raw := article.Marshal()
+   err = os.WriteFile(f.base() + "/article.json", raw, 0666)
    if err != nil {
       return err
    }
-   err = article.UnmarshalRaw()
+   err = article.Unmarshal(raw)
    if err != nil {
       return err
    }
@@ -30,7 +31,7 @@ func (f flags) write_play() error {
    if !ok {
       return member.ArticleAsset{}
    }
-   raw, err := os.ReadFile(f.home + "/cine-member.json")
+   raw, err = os.ReadFile(f.home + "/cine-member.json")
    if err != nil {
       return err
    }
@@ -49,6 +50,7 @@ func (f flags) write_play() error {
 func (f flags) base() string {
    return path.Base(string(f.slug))
 }
+
 func (f flags) download() error {
    raw, err := os.ReadFile(f.base() + "/play.json")
    if err != nil {

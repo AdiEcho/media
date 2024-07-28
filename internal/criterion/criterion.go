@@ -11,11 +11,12 @@ import (
 )
 
 func (f flags) authenticate() error {
-   text, err := criterion.NewAuthToken(f.email, f.password)
+   var token criterion.AuthToken
+   err := token.New(f.email, f.password)
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/criterion.json", text, 0666)
+   return os.WriteFile(f.home + "/criterion.json", token.Marshal(), 0666)
 }
 
 func (f flags) download() error {

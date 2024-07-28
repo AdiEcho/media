@@ -11,9 +11,10 @@ func TestToken(t *testing.T) {
       t.Fatal("Getenv")
    }
    password := os.Getenv("criterion_password")
-   data, err := NewAuthToken(username, password)
+   var token AuthToken
+   err := token.New(username, password)
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("token.json", data, 0666)
+   os.WriteFile("token.json", token.Marshal(), 0666)
 }

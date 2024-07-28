@@ -19,7 +19,7 @@ func TestLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   err = auth.UnmarshalRaw()
+   err = auth.Unmarshal(auth.Marshal())
    if err != nil {
       t.Fatal(err)
    }
