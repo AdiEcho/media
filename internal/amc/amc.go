@@ -8,33 +8,13 @@ import (
    "os"
 )
 
-func (f flags) login() error {
-   var auth amc.Authorization
-   err := auth.Unauth()
-   if err != nil {
-      return err
-   }
-   err = auth.Unmarshal()
-   if err != nil {
-      return err
-   }
-   err = auth.Login(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/amc.json", auth.Data, 0666)
-}
-
 func (f flags) download() error {
-   var (
-      auth amc.Authorization
-      err error
-   )
-   auth.Data, err = os.ReadFile(f.home + "/amc.json")
+   raw, err := os.ReadFile(f.home + "/amc.json")
    if err != nil {
       return err
    }
-   err = auth.Unmarshal()
+   var auth amc.Authorization
+   err = auth.Unmarshal(raw)
    if err != nil {
       return err
    }
@@ -42,8 +22,8 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   os.WriteFile(f.home + "/amc.json", auth.Data, 0666)
-   err = auth.Unmarshal()
+   os.WriteFile(f.home + "/amc.json", auth.Marshal(), 0666)
+   err = auth.UnmarshalRaw()
    if err != nil {
       return err
    }
@@ -81,4 +61,21 @@ func (f flags) download() error {
       }
    }
    return nil
+}
+
+func (f flags) login() error {
+   var auth amc.Authorization
+   err := auth.Unauth()
+   if err != nil {
+      return err
+   }
+   err = auth.UnmarshalRaw()
+   if err != nil {
+      return err
+   }
+   err = auth.Login(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/amc.json", auth.Marshal(), 0666)
 }
