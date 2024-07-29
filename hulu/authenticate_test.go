@@ -4,9 +4,44 @@ import (
    "154.pages.dev/text"
    "fmt"
    "os"
+   "path"
    "testing"
    "time"
 )
+
+func TestDetails(t *testing.T) {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   raw, err := os.ReadFile(home + "/hulu.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var auth Authenticate
+   err = auth.Unmarshal(raw)
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      base := path.Base(test.url)
+      link, err := auth.DeepLink(EntityId{base})
+      if err != nil {
+         t.Fatal(err)
+      }
+      details, err := auth.Details(link)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", details)
+      name, err := text.Name(details)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
+}
 
 var tests = []struct{
    content string
@@ -36,37 +71,4 @@ func TestAuthenticate(t *testing.T) {
       t.Fatal(err)
    }
    os.WriteFile("authenticate.json", auth.Marshal(), 0666)
-}
-
-func TestDetails(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   raw, err := os.ReadFile(home + "/hulu.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var auth Authenticate
-   err = auth.Unmarshal(raw)
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      link, err := auth.DeepLink(EntityId{test.id})
-      if err != nil {
-         t.Fatal(err)
-      }
-      details, err := auth.Details(link)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", details)
-      name, err := text.Name(details)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
-   }
 }

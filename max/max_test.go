@@ -2,12 +2,59 @@ package max
 
 import (
    "154.pages.dev/text"
+   "154.pages.dev/widevine"
+   "encoding/hex"
    "encoding/json"
    "fmt"
    "os"
    "testing"
    "time"
 )
+
+func TestLicense(t *testing.T) {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   if err != nil {
+      t.Fatal(err)
+   }
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
+   if err != nil {
+      t.Fatal(err)
+   }
+   text, err := os.ReadFile(home + "/max.json")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var token DefaultToken
+   token.Unmarshal(text)
+   for _, test := range tests {
+      var pssh widevine.Pssh
+      pssh.KeyId, err = hex.DecodeString(test.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var module widevine.Cdm
+      err = module.New(private_key, client_id, pssh.Encode())
+      if err != nil {
+         t.Fatal(err)
+      }
+      var web WebAddress
+      web.UnmarshalText([]byte(test.url))
+      play, err := token.Playback(web)
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, err := module.Key(play, pssh.KeyId)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
+   }
+}
 
 var tests = []struct {
    key_id string
@@ -26,34 +73,6 @@ var tests = []struct {
    },
 }
 
-func TestLogin(t *testing.T) {
-   var login DefaultLogin
-   login.Credentials.Username = os.Getenv("max_username")
-   if login.Credentials.Username == "" {
-      t.Fatal("Getenv")
-   }
-   login.Credentials.Password = os.Getenv("max_password")
-   var key PublicKey
-   err := key.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   var token DefaultToken
-   err = token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = token.Login(key, login)
-   if err != nil {
-      t.Fatal(err)
-   }
-   text, err := token.Marshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("token.json", text, 0666)
-}
-
 func TestConfig(t *testing.T) {
    var token DefaultToken
    err := token.New()
@@ -67,15 +86,6 @@ func TestConfig(t *testing.T) {
    enc := json.NewEncoder(os.Stdout)
    enc.SetIndent("", " ")
    enc.Encode(decision)
-}
-
-func TestToken(t *testing.T) {
-   var token DefaultToken
-   err := token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", token)
 }
 
 func TestRoutes(t *testing.T) {

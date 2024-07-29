@@ -5,7 +5,9 @@ import (
    "encoding/hex"
    "fmt"
    "os"
+   "path"
    "testing"
+   "time"
 )
 
 func TestLicense(t *testing.T) {
@@ -32,13 +34,17 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      var auth Authenticate
-      auth.Data, err = os.ReadFile("authenticate.json")
+      raw, err := os.ReadFile("authenticate.json")
       if err != nil {
          t.Fatal(err)
       }
-      auth.Unmarshal()
-      link, err := auth.DeepLink(EntityId{test.id})
+      var auth Authenticate
+      err = auth.Unmarshal(raw)
+      if err != nil {
+         t.Fatal(err)
+      }
+      base := path.Base(test.url)
+      link, err := auth.DeepLink(EntityId{base})
       if err != nil {
          t.Fatal(err)
       }
