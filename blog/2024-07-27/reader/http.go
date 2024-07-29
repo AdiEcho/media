@@ -11,7 +11,7 @@ type response struct {
       Date string
       Title string
    }
-   raw []byte
+   body io.ReadCloser
 }
 
 func (r *response) New() error {
@@ -19,18 +19,14 @@ func (r *response) New() error {
    if err != nil {
       return err
    }
-   defer resp.Body.Close()
-   r.raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
+   r.body = resp.Body
    return nil
 }
 
-func (r response) marshal() []byte {
-   return r.raw
+func (r response) get_body() io.ReadCloser {
+   return r.body
 }
 
-func (r *response) unmarshal(raw []byte) error {
-   return json.Unmarshal(raw, r)
+func (r *response) set_body(body io.Reader) error {
+   return json.NewDecoder(body).Decode(r)
 }
