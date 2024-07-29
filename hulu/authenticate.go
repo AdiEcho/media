@@ -12,29 +12,15 @@ import (
 
 func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
    var p playlist_request
-   p.Playback.Video.Codecs.Values = []codec_value{
-      {
-         Height: 9999,
-         Level: "9",
-         Profile: "MAIN_10",
-         Tier: "MAIN",
-         Type: "H265",
-         Width: 9999,
-      },
-      {
-         Height: 9999,
-         Level: "9",
-         Profile: "HIGH",
-         Type: "H264",
-         Width: 9999,
-      },
-   }
    p.ContentEabId = d.EabId
+   p.DeejayDeviceId = 166
+   p.Unencrypted = true
    p.Playback.Audio.Codecs.SelectionMode = "ALL"
    p.Playback.Audio.Codecs.Values = []codec_value{
       {Type: "AAC"},
       {Type: "EC3"},
    }
+   p.Playback.Video.Codecs.SelectionMode = "ALL"
    p.Playback.Drm.SelectionMode = "ALL"
    p.Playback.Drm.Values = []drm_value{
       {
@@ -52,11 +38,25 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       s.Type = "FMP4"
       return []segment_value{s}
    }()
-   p.Playback.Video.Codecs.SelectionMode = "ALL"
-   p.Unencrypted = true
-   p.Playback.Version = 9 // this is required for 1080p
-   p.DeejayDeviceId = 166
+   p.Playback.Version = 2 // needs to be exactly 2 for 1080p
    p.Version = 9999999
+   p.Playback.Video.Codecs.Values = []codec_value{
+      {
+         Height: 9999,
+         Level: "9",
+         Profile: "HIGH",
+         Type: "H264",
+         Width: 9999,
+      },
+      {
+         Height: 9999,
+         Level: "9",
+         Profile: "MAIN_10",
+         Tier: "MAIN",
+         Type: "H265",
+         Width: 9999,
+      },
+   }
    body, err := json.MarshalIndent(p, "", " ")
    if err != nil {
       return nil, err
