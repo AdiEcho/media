@@ -9,25 +9,34 @@ import (
    "path"
 )
 
-func (f flags) download() error {
-   var (
-      auth draken.AuthLogin
-      err error
-   )
-   auth.Data, err = os.ReadFile(f.home + "/draken.json")
+func (f flags) authenticate() error {
+   var login draken.AuthLogin
+   err := login.New(f.email, f.password)
    if err != nil {
       return err
    }
-   auth.Unmarshal()
+   return os.WriteFile(f.home + "/draken.json", login.Marshal(), 0666)
+}
+
+func (f flags) download() error {
+   raw, err := os.ReadFile(f.home + "/draken.json")
+   if err != nil {
+      return err
+   }
+   var login draken.AuthLogin
+   err = login.Unmarshal(raw)
+   if err != nil {
+      return err
+   }
    movie, err := draken.NewMovie(path.Base(f.address))
    if err != nil {
       return err
    }
-   title, err := auth.Entitlement(movie)
+   title, err := login.Entitlement(movie)
    if err != nil {
       return err
    }
-   play, err := auth.Playback(movie, title)
+   play, err := login.Playback(movie, title)
    if err != nil {
       return err
    }
@@ -35,31 +44,19 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := internal.Dash(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
          f.s.Name = draken.Namer{movie}
-         f.s.Poster = draken.Poster{auth, play}
-         return f.s.Download(medium)
+         f.s.Poster = draken.Poster{login, play}
+         return f.s.Download(rep)
       }
-   }
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
-}
-
-func (f flags) authenticate() error {
-   var auth draken.AuthLogin
-   err := auth.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/draken.json", auth.Data, 0666)
 }

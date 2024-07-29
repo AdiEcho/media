@@ -165,7 +165,7 @@ type Poster struct {
 func (p Poster) RequestHeader() (http.Header, error) {
    head := make(http.Header)
    magine_accesstoken.set(head)
-   head.Set("authorization", "Bearer "+p.Login.v.Token)
+   head.Set("authorization", "Bearer "+p.Login.Token)
    for key, value := range p.Play.Headers {
       head.Set(key, value)
    }
