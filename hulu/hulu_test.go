@@ -21,34 +21,36 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   test := tests["episode"]
-   var pssh widevine.Pssh
-   pssh.KeyId, err = hex.DecodeString(test.key_id)
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      var pssh widevine.Pssh
+      pssh.KeyId, err = hex.DecodeString(test.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var module widevine.Cdm
+      err = module.New(private_key, client_id, pssh.Encode())
+      if err != nil {
+         t.Fatal(err)
+      }
+      var auth Authenticate
+      auth.Data, err = os.ReadFile("authenticate.json")
+      if err != nil {
+         t.Fatal(err)
+      }
+      auth.Unmarshal()
+      link, err := auth.DeepLink(EntityId{test.id})
+      if err != nil {
+         t.Fatal(err)
+      }
+      play, err := auth.Playlist(link)
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, err := module.Key(play, pssh.KeyId)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
    }
-   var module widevine.Cdm
-   err = module.New(private_key, client_id, pssh.Encode())
-   if err != nil {
-      t.Fatal(err)
-   }
-   var auth Authenticate
-   auth.Data, err = os.ReadFile("authenticate.json")
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth.Unmarshal()
-   link, err := auth.DeepLink(EntityId{test.id})
-   if err != nil {
-      t.Fatal(err)
-   }
-   play, err := auth.Playlist(link)
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := module.Key(play, pssh.KeyId)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
 }

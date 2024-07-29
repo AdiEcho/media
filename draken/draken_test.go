@@ -24,12 +24,15 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var login AuthLogin
-   login.Data, err = os.ReadFile("login.json")
+   raw, err := os.ReadFile("login.json")
    if err != nil {
       t.Fatal(err)
    }
-   login.Unmarshal()
+   var login AuthLogin
+   err = login.Unmarshal(raw)
+   if err != nil {
+      t.Fatal(err)
+   }
    for _, film := range films {
       var pssh widevine.Pssh
       pssh.ContentId, err = base64.StdEncoding.DecodeString(film.content_id)

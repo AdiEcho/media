@@ -31,7 +31,7 @@ func (a Authenticate) Details(d *DeepLink) (*Details, error) {
    if err != nil {
       return nil, err
    }
-   req.Header.Set("authorization", "Bearer " + a.V.Data.UserToken)
+   req.Header.Set("authorization", "Bearer " + a.Data.UserToken)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err

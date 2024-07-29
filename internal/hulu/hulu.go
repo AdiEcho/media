@@ -9,16 +9,25 @@ import (
    "sort"
 )
 
-func (f flags) download() error {
-   var (
-      auth hulu.Authenticate
-      err error
-   )
-   auth.Data, err = os.ReadFile(f.home + "/hulu.json")
+func (f flags) authenticate() error {
+   var auth hulu.Authenticate
+   err := auth.New(f.email, f.password)
    if err != nil {
       return err
    }
-   auth.Unmarshal()
+   return os.WriteFile(f.home + "/hulu.json", auth.Marshal(), 0666)
+}
+
+func (f flags) download() error {
+   raw, err := os.ReadFile(f.home + "/hulu.json")
+   if err != nil {
+      return err
+   }
+   var auth hulu.Authenticate
+   err = auth.Unmarshal(raw)
+   if err != nil {
+      return err
+   }
    deep, err := auth.DeepLink(f.entity)
    if err != nil {
       return err
@@ -54,13 +63,4 @@ func (f flags) download() error {
       }
    }
    return nil
-}
-
-func (f flags) authenticate() error {
-   var auth hulu.Authenticate
-   err := auth.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/hulu.json", auth.Data, 0666)
 }

@@ -16,5 +16,5 @@ func TestLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("login.json", login.Data, 0666)
+   os.WriteFile("login.json", login.Marshal(), 0666)
 }
