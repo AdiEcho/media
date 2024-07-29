@@ -1,18 +1,18 @@
 package main
 
 import (
-   "net"
+   "crypto/tls"
    "net/http"
    "os"
 )
 
 func main() {
-   req, err := http.NewRequest("", "http://example.com", nil)
+   req, err := http.NewRequest("", "https://example.com", nil)
    if err != nil {
       panic(err)
    }
    req.Close = true
-   conn, err := net.Dial("tcp", "example.com:http")
+   conn, err := tls.Dial("tcp", "example.com:https", nil)
    if err != nil {
       panic(err)
    }
