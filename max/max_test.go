@@ -1,7 +1,6 @@
 package max
 
 import (
-   "154.pages.dev/text"
    "154.pages.dev/widevine"
    "encoding/hex"
    "encoding/json"
@@ -11,6 +10,33 @@ import (
    "time"
 )
 
+func TestLogin(t *testing.T) {
+   var login DefaultLogin
+   login.Credentials.Username = os.Getenv("max_username")
+   if login.Credentials.Username == "" {
+      t.Fatal("Getenv")
+   }
+   login.Credentials.Password = os.Getenv("max_password")
+   var key PublicKey
+   err := key.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   var token DefaultToken
+   err = token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = token.Login(key, login)
+   if err != nil {
+      t.Fatal(err)
+   }
+   text, err := token.Marshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("token.json", text, 0666)
+}
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -86,27 +112,4 @@ func TestConfig(t *testing.T) {
    enc := json.NewEncoder(os.Stdout)
    enc.SetIndent("", " ")
    enc.Encode(decision)
-}
-
-func TestRoutes(t *testing.T) {
-   var token DefaultToken
-   err := token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      var web WebAddress
-      web.UnmarshalText([]byte(test.url))
-      routes, err := token.Routes(web)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", routes)
-      name, err := text.Name(routes)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
-   }
 }
