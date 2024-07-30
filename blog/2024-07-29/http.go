@@ -7,12 +7,16 @@ import (
 )
 
 type response struct {
-   Slideshow *struct {
-      Date string
-      Title string
+   header struct {
+      fly_request_id string
    }
-   body []byte
-   fly_request_id string
+   body struct {
+      Slideshow *struct {
+         Date string
+         Title string
+      }
+      raw []byte
+   }
 }
 
 func (r *response) New() error {
@@ -21,8 +25,8 @@ func (r *response) New() error {
       return err
    }
    defer resp.Body.Close()
-   r.fly_request_id = resp.Header.Get("fly-request-id")
-   r.body, err = io.ReadAll(resp.Body)
+   r.header.fly_request_id = resp.Header.Get("fly-request-id")
+   r.body.raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -30,9 +34,9 @@ func (r *response) New() error {
 }
 
 func (r response) get_body() []byte {
-   return r.body
+   return r.body.raw
 }
 
-func (r *response) set_body(body []byte) error {
-   return json.Unmarshal(body, r)
+func (r *response) set_body(raw []byte) error {
+   return json.Unmarshal(raw, &r.body)
 }
