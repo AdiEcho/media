@@ -6,7 +6,7 @@ import (
    "net/http"
 )
 
-type response struct {
+type response_body struct {
    Slideshow *struct {
       Date string
       Title string
@@ -14,7 +14,7 @@ type response struct {
    raw []byte
 }
 
-func (r *response) New() error {
+func (r *response_body) New() error {
    resp, err := http.Get("http://httpbingo.org/json")
    if err != nil {
       return err
@@ -27,10 +27,10 @@ func (r *response) New() error {
    return nil
 }
 
-func (r response) marshal() []byte {
+func (r response_body) get() []byte {
    return r.raw
 }
 
-func (r *response) unmarshal(raw []byte) error {
+func (r *response_body) set(raw []byte) error {
    return json.Unmarshal(raw, r)
 }

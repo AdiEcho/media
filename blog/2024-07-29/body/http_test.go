@@ -7,17 +7,17 @@ import (
 )
 
 func TestWrite(t *testing.T) {
-   var resp response
-   err := resp.New()
+   var body response_body
+   err := body.New()
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("http.json", resp.marshal(), 0666)
-   err = resp.unmarshal(resp.marshal())
+   os.WriteFile("http.json", body.get(), 0666)
+   err = body.set(body.get())
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", resp.Slideshow)
+   fmt.Printf("%+v\n", body.Slideshow)
 }
 
 func TestRead(t *testing.T) {
@@ -25,10 +25,10 @@ func TestRead(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var resp response
-   err = resp.unmarshal(raw)
+   var body response_body
+   err = body.set(raw)
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", resp.Slideshow)
+   fmt.Printf("%+v\n", body.Slideshow)
 }
