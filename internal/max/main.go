@@ -9,6 +9,15 @@ import (
    "path/filepath"
 )
 
+type flags struct {
+   email string
+   s internal.Stream
+   home string
+   representation string
+   password string
+   address max.AddressFlag
+}
+
 func main() {
    var f flags
    err := f.New()
@@ -49,13 +58,4 @@ func (f *flags) New() error {
    f.s.ClientId = f.home + "/widevine/client_id.bin"
    f.s.PrivateKey = f.home + "/widevine/private_key.pem"
    return nil
-}
-
-type flags struct {
-   email string
-   s internal.Stream
-   home string
-   representation string
-   password string
-   address max.WebAddress
 }

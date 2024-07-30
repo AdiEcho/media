@@ -37,6 +37,7 @@ func TestLogin(t *testing.T) {
    }
    os.WriteFile("token.json", text, 0666)
 }
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -67,9 +68,9 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      var web WebAddress
-      web.UnmarshalText([]byte(test.url))
-      play, err := token.Playback(web)
+      var flag AddressFlag
+      flag.UnmarshalText([]byte(test.url))
+      play, err := token.Playback(flag)
       if err != nil {
          t.Fatal(err)
       }

@@ -23,9 +23,11 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   var req http.Request
-   req.URL = play.Manifest.Url.Url
-   reps, err := internal.Dash(&req)
+   req, err := http.NewRequest("", play.Fallback.Manifest.Url.Text, nil)
+   if err != nil {
+      return err
+   }
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
