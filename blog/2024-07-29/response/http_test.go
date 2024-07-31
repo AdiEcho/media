@@ -12,13 +12,13 @@ func TestWrite(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("header.txt", []byte(resp.header.fly_request_id), 0666)
-   os.WriteFile("body.json", resp.body.raw, 0666)
-   err = resp.set_body(resp.get_body())
+   os.WriteFile("header.txt", []byte(resp.fly_request_id), 0666)
+   os.WriteFile("body.json", resp.raw_body, 0666)
+   err = resp.unmarshal_body()
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", resp.body.Slideshow)
+   fmt.Printf("%+v\n", resp.body)
 }
 
 func TestRead(t *testing.T) {
@@ -27,14 +27,14 @@ func TestRead(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   resp.header.fly_request_id = string(raw)
-   raw, err = os.ReadFile("body.json")
+   resp.fly_request_id = string(raw)
+   resp.raw_body, err = os.ReadFile("body.json")
    if err != nil {
       t.Fatal(err)
    }
-   err = resp.set_body(raw)
+   err = resp.unmarshal_body()
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", resp.body.Slideshow)
+   fmt.Printf("%+v\n", resp.body)
 }

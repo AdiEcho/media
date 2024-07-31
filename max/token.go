@@ -13,6 +13,47 @@ import (
    "time"
 )
 
+type DefaultToken struct {
+   body struct {
+      Data struct {
+         Attributes struct {
+            Token string
+         }
+      }
+   }
+   SessionState string
+}
+
+func (d *DefaultToken) New() error {
+   req, err := http.NewRequest(
+      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
+   )
+   if err != nil {
+      return err
+   }
+   // fuck you Max
+   req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   return json.NewDecoder(resp.Body).Decode(&d.body)
+}
+
+func (d DefaultToken) Marshal() ([]byte, error) {
+   return json.Marshal(d)
+}
+
+func (d *DefaultToken) Unmarshal(text []byte) error {
+   return json.Unmarshal(text, d)
+}
+
 func (d DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
    address := func() string {
       path, _ := flag.MarshalText()
@@ -33,7 +74,7 @@ func (d DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
       "page[items.size]": {"1"},
    }.Encode()
    req.Header = http.Header{
-      "authorization": {"Bearer "+d.Body.Data.Attributes.Token},
+      "authorization": {"Bearer "+d.body.Data.Attributes.Token},
       "x-wbd-session-state": {d.SessionState},
    }
    resp, err := http.DefaultClient.Do(req)
@@ -78,7 +119,7 @@ func (d DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
       return b.String()
    }()
    req.Header = http.Header{
-      "authorization": {"Bearer "+d.Body.Data.Attributes.Token},
+      "authorization": {"Bearer "+d.body.Data.Attributes.Token},
       "content-type": {"application/json"},
       "x-wbd-session-state": {d.SessionState},
    }
@@ -116,7 +157,7 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    if err != nil {
       return err
    }
-   req.Header.Set("authorization", "Bearer "+d.Body.Data.Attributes.Token)
+   req.Header.Set("authorization", "Bearer "+d.body.Data.Attributes.Token)
    req.Header.Set("content-type", "application/json")
    req.Header.Set("x-disco-arkose-token", key.Token)
    req.Header.Set("x-disco-client-id", func() string {
@@ -146,48 +187,7 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
       }
    }
    d.SessionState = session.String()
-   return json.NewDecoder(resp.Body).Decode(&d.Body)
-}
-
-func (d *DefaultToken) New() error {
-   req, err := http.NewRequest(
-      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
-   )
-   if err != nil {
-      return err
-   }
-   // fuck you Max
-   req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   return json.NewDecoder(resp.Body).Decode(&d.Body)
-}
-
-type DefaultToken struct {
-   SessionState string
-   Body struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-}
-
-func (d DefaultToken) Marshal() ([]byte, error) {
-   return json.Marshal(d)
-}
-
-func (d *DefaultToken) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, d)
+   return json.NewDecoder(resp.Body).Decode(&d.body)
 }
 
 func (d DefaultToken) decision() (*default_decision, error) {
@@ -204,7 +204,7 @@ func (d DefaultToken) decision() (*default_decision, error) {
    if err != nil {
       return nil, err
    }
-   req.Header.Set("authorization", "Bearer "+d.Body.Data.Attributes.Token)
+   req.Header.Set("authorization", "Bearer "+d.body.Data.Attributes.Token)
    req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
    resp, err := http.DefaultClient.Do(req)
    if err != nil {

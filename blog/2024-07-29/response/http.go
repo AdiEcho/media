@@ -6,17 +6,19 @@ import (
    "net/http"
 )
 
+func pointer[T any](value *T) *T {
+   return new(T)
+}
+
 type response struct {
-   header struct {
-      fly_request_id string
-   }
-   body struct {
-      Slideshow *struct {
+   fly_request_id string
+   body *struct {
+      Slideshow struct {
          Date string
          Title string
       }
-      raw []byte
    }
+   raw_body []byte
 }
 
 func (r *response) New() error {
@@ -25,18 +27,15 @@ func (r *response) New() error {
       return err
    }
    defer resp.Body.Close()
-   r.header.fly_request_id = resp.Header.Get("fly-request-id")
-   r.body.raw, err = io.ReadAll(resp.Body)
+   r.fly_request_id = resp.Header.Get("fly-request-id")
+   r.raw_body, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
    return nil
 }
 
-func (r response) get_body() []byte {
-   return r.body.raw
-}
-
-func (r *response) set_body(raw []byte) error {
-   return json.Unmarshal(raw, &r.body)
+func (r *response) unmarshal_body() error {
+   r.body = pointer(r.body)
+   return json.Unmarshal(r.raw_body, r.body)
 }
