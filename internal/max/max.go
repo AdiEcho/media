@@ -36,18 +36,20 @@ func (f flags) download() error {
    })
    for _, rep := range reps {
       if rep.GetAdaptationSet().GetPeriod().Id == "0" {
-         switch f.representation {
-         case "":
-            if _, ok := rep.Ext(); ok {
-               fmt.Print(rep, "\n\n")
+         if rep.GetAdaptationSet().MaxHeight <= f.max_height {
+            switch f.representation {
+            case "":
+               if _, ok := rep.Ext(); ok {
+                  fmt.Print(rep, "\n\n")
+               }
+            case rep.Id:
+               f.s.Name, err = token.Routes(f.address)
+               if err != nil {
+                  return err
+               }
+               f.s.Poster = play
+               return f.s.Download(rep)
             }
-         case rep.Id:
-            f.s.Name, err = token.Routes(f.address)
-            if err != nil {
-               return err
-            }
-            f.s.Poster = play
-            return f.s.Download(rep)
          }
       }
    }

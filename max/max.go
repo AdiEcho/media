@@ -2,16 +2,80 @@ package max
 
 import (
    "bytes"
-   "crypto/hmac"
-   "crypto/sha256"
    "encoding/json"
    "errors"
-   "fmt"
    "net/http"
    "net/url"
    "strings"
    "time"
 )
+
+type AddressFlag struct {
+   EditId  string
+   VideoId string
+}
+
+func (a *AddressFlag) UnmarshalText(text []byte) error {
+   s := string(text)
+   if !strings.Contains(s, "/video/watch/") {
+      return errors.New("/video/watch/ not found")
+   }
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "play.max.com")
+   s = strings.TrimPrefix(s, "/video/watch/")
+   var found bool
+   a.VideoId, a.EditId, found = strings.Cut(s, "/")
+   if !found {
+      return errors.New("/ not found")
+   }
+   return nil
+}
+
+func (a AddressFlag) MarshalText() ([]byte, error) {
+   var b bytes.Buffer
+   if a.VideoId != "" {
+      b.WriteString("/video/watch/")
+      b.WriteString(a.VideoId)
+   }
+   if a.EditId != "" {
+      b.WriteByte('/')
+      b.WriteString(a.EditId)
+   }
+   return b.Bytes(), nil
+}
+
+type AddressManifest struct {
+   Text string
+}
+
+func (a *AddressManifest) UnmarshalText(text []byte) error {
+   a.Text = strings.Replace(string(text), "_fallback", "", 1)
+   return nil
+}
+
+type DefaultRoutes struct {
+   Data struct {
+      Attributes struct {
+         Url AddressFlag
+      }
+   }
+   Included []route_include
+}
+
+type Playback struct {
+   Drm struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string
+         }
+      }
+   }
+   Fallback struct {
+      Manifest struct {
+         Url AddressManifest
+      }
+   }
+}
 
 const (
    arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
@@ -75,125 +139,6 @@ func (d DefaultRoutes) Show() string {
    return ""
 }
 
-func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
-   address := func() string {
-      var b bytes.Buffer
-      b.WriteString("https://default.any-")
-      b.WriteString(home_market)
-      b.WriteString(".prd.api.discomax.com/login")
-      return b.String()
-   }()
-   body, err := json.Marshal(login)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest("POST", address, bytes.NewReader(body))
-   if err != nil {
-      return err
-   }
-   req.Header.Set("authorization", "Bearer "+d.Body.Data.Attributes.Token)
-   req.Header.Set("content-type", "application/json")
-   req.Header.Set("x-disco-arkose-token", key.Token)
-   req.Header.Set("x-disco-client-id", func() string {
-      timestamp := time.Now().Unix()
-      hash := hmac.New(sha256.New, default_key.Key)
-      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
-      signature := hash.Sum(nil)
-      return fmt.Sprintf("%v:%v:%x", default_key.Id, timestamp, signature)
-   }())
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   session := make(session_state)
-   session.Set(resp.Header.Get("x-wbd-session-state"))
-   for key := range session {
-      switch key {
-      case "device", "token", "user":
-      default:
-         delete(session, key)
-      }
-   }
-   d.SessionState = session.String()
-   return json.NewDecoder(resp.Body).Decode(&d.Body)
-}
-
-func (d *DefaultToken) New() error {
-   req, err := http.NewRequest(
-      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
-   )
-   if err != nil {
-      return err
-   }
-   // fuck you Max
-   req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   return json.NewDecoder(resp.Body).Decode(&d.Body)
-}
-
-type DefaultToken struct {
-   SessionState string
-   Body struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-}
-
-func (d DefaultToken) Marshal() ([]byte, error) {
-   return json.Marshal(d)
-}
-
-func (d *DefaultToken) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, d)
-}
-
-func (d DefaultToken) decision() (*default_decision, error) {
-   body, err := json.Marshal(map[string]string{
-      "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
-   })
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-any.prd.api.discomax.com",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("authorization", "Bearer "+d.Body.Data.Attributes.Token)
-   req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   decision := new(default_decision)
-   err = json.NewDecoder(resp.Body).Decode(decision)
-   if err != nil {
-      return nil, err
-   }
-   return decision, nil
-}
-
 func (Playback) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -209,7 +154,6 @@ func (Playback) RequestHeader() (http.Header, error) {
 func (p Playback) RequestUrl() (string, bool) {
    return p.Drm.Schemes.Widevine.LicenseUrl, true
 }
-
 
 type PublicKey struct {
    Token string

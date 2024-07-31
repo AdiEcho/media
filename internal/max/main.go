@@ -10,12 +10,13 @@ import (
 )
 
 type flags struct {
-   email string
-   s internal.Stream
-   home string
-   representation string
-   password string
    address max.AddressFlag
+   email string
+   home string
+   max_height int
+   password string
+   representation string
+   s internal.Stream
 }
 
 func main() {
@@ -24,12 +25,13 @@ func main() {
    if err != nil {
       panic(err)
    }
+   flag.TextVar(&f.address, "a", f.address, "address")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.email, "e", "", "email")
    flag.StringVar(&f.representation, "i", "", "representation")
-   flag.StringVar(&f.password, "p", "", "password")
-   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
-   flag.TextVar(&f.address, "a", f.address, "address")
+   flag.IntVar(&f.max_height, "m", 1079, "max height")
+   flag.StringVar(&f.password, "p", "", "password")
    flag.Parse()
    text.Transport{}.Set(true)
    switch {
