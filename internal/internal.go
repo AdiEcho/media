@@ -6,7 +6,6 @@ import (
    "154.pages.dev/text"
    "154.pages.dev/widevine"
    "bytes"
-   "crypto/tls"
    "encoding/hex"
    "errors"
    "io"
@@ -84,12 +83,6 @@ func (s Stream) segment_template(
    if err != nil {
       return err
    }
-   client := http.Client{ // github.com/golang/go/issues/18639
-      Transport: &http.Transport{
-         Proxy: http.ProxyFromEnvironment,
-         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
-      },
-   }
    var meter text.ProgressMeter
    meter.Set(len(media))
    for _, medium := range media {
@@ -98,7 +91,7 @@ func (s Stream) segment_template(
          return err
       }
       err := func() error {
-         resp, err := client.Do(req)
+         resp, err := http.DefaultClient.Do(req)
          if err != nil {
             return err
          }
