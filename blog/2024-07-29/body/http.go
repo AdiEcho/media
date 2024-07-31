@@ -10,6 +10,16 @@ func pointer[T any](value *T) *T {
    return new(T)
 }
 
+type response struct {
+   body *struct {
+      Slideshow struct {
+         Date string
+         Title string
+      }
+   }
+   raw []byte
+}
+
 func (r *response) New() error {
    resp, err := http.Get("http://httpbingo.org/json")
    if err != nil {
@@ -23,17 +33,7 @@ func (r *response) New() error {
    return nil
 }
 
-type response struct {
-   body *struct {
-      Slideshow struct {
-         Date string
-         Title string
-      }
-   }
-   raw []byte
-}
-
-func (r response) unmarshal() error {
+func (r *response) unmarshal() error {
    r.body = pointer(r.body)
    return json.Unmarshal(r.raw, r.body)
 }
