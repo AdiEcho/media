@@ -4,6 +4,7 @@ import (
    "encoding/json"
    "io"
    "net/http"
+   "time"
 )
 
 func pointer[T any](value *T) *T {
@@ -11,14 +12,17 @@ func pointer[T any](value *T) *T {
 }
 
 type response struct {
-   fly_request_id string
+   date *time.Time
    body *struct {
       Slideshow struct {
          Date string
          Title string
       }
    }
-   raw_body []byte
+   raw struct {
+      body []byte
+      date string
+   }
 }
 
 func (r *response) New() error {
@@ -27,15 +31,20 @@ func (r *response) New() error {
       return err
    }
    defer resp.Body.Close()
-   r.fly_request_id = resp.Header.Get("fly-request-id")
-   r.raw_body, err = io.ReadAll(resp.Body)
+   r.raw.date = resp.Header.Get("date")
+   r.raw.body, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
    return nil
 }
 
-func (r *response) unmarshal_body() error {
+func (r *response) unmarshal() error {
+   date, err := time.Parse(time.RFC1123, r.raw.date)
+   if err != nil {
+      return err
+   }
+   r.date = &date
    r.body = pointer(r.body)
-   return json.Unmarshal(r.raw_body, r.body)
+   return json.Unmarshal(r.raw.body, r.body)
 }

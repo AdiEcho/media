@@ -13,6 +13,49 @@ import (
    "time"
 )
 
+type DefaultToken struct {
+   x_wbd_session_state map[string]string
+   body *struct {
+      Data struct {
+         Attributes struct {
+            Token string
+         }
+      }
+   }
+   raw struct {
+      body []byte
+      x_wbd_session_state string
+   }
+}
+
+func (s session_state) Set(text string) error {
+   for text != "" {
+      var key string
+      key, text, _ = strings.Cut(text, ";")
+      key, value, _ := strings.Cut(key, ":")
+      s[key] = value
+   }
+   return nil
+}
+
+func (s session_state) String() string {
+   var (
+      b strings.Builder
+      sep bool
+   )
+   for key, value := range s {
+      if sep {
+         b.WriteByte(';')
+      } else {
+         sep = true
+      }
+      b.WriteString(key)
+      b.WriteByte(':')
+      b.WriteString(value)
+   }
+   return b.String()
+}
+
 func (d DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var p playback_request
@@ -133,20 +176,6 @@ func (d DefaultToken) decision() (*default_decision, error) {
    return decision, nil
 }
 
-type DefaultToken struct {
-   x_wbd_session_state string
-   body *struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-   raw_body []byte
-}
-
-//////////
-
 func (d *DefaultToken) New() error {
    req, err := http.NewRequest(
       "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
@@ -166,8 +195,14 @@ func (d *DefaultToken) New() error {
       resp.Write(&b)
       return errors.New(b.String())
    }
-   return json.NewDecoder(resp.Body).Decode(&d.body)
+   d.raw_body, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
 }
+
+//////////
 
 func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    address := func() string {
@@ -205,18 +240,19 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
       resp.Write(&b)
       return errors.New(b.String())
    }
-   session := make(session_state)
-   session.Set(resp.Header.Get("x-wbd-session-state"))
-   for key := range session {
-      switch key {
-      case "device", "token", "user":
-      default:
-         delete(session, key)
-      }
-   }
-   d.SessionState = session.String()
-   return json.NewDecoder(resp.Body).Decode(&d.body)
 }
+
+session := make(session_state)
+session.Set(resp.Header.Get("x-wbd-session-state"))
+for key := range session {
+   switch key {
+   case "device", "token", "user":
+   default:
+      delete(session, key)
+   }
+}
+d.SessionState = session.String()
+return json.NewDecoder(resp.Body).Decode(&d.body)
 
 func (d *DefaultToken) Unmarshal(text []byte) error {
    return json.Unmarshal(text, d)

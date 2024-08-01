@@ -2,8 +2,8 @@
 154.pages.dev/dash v1.24.5/go.mod h1:qqrvR016b89Rucd66scFaOZmlsSmuWV5RNRky+GNgl8=
 154.pages.dev/protobuf v1.2.0 h1:mA9M6BQ3kRQwy5hXq6vtKcvZWcvtBjGVLc7EIGvBkVc=
 154.pages.dev/protobuf v1.2.0/go.mod h1:kFM1NMn73gQZwDNqF24zulewOIORP/4Etn1L6qlTc3U=
-154.pages.dev/sofia v1.5.5 h1:4s9ML+KUqWCC26u0PMVMpb770SyX1xAo8JeZ+HNREeU=
-154.pages.dev/sofia v1.5.5/go.mod h1:42KjYiPl7Vy50qEETAFgjZrDdJyg1MpqiZh3JdxMEGY=
+154.pages.dev/sofia v1.5.6 h1:csTgao7jwWxgPTEySG5yGYTn6J1a72AWUXXSnsYVAAU=
+154.pages.dev/sofia v1.5.6/go.mod h1:42KjYiPl7Vy50qEETAFgjZrDdJyg1MpqiZh3JdxMEGY=
 154.pages.dev/text v1.2.9 h1:gfLYwdlFdjwn7st+01wAgTgAZLuLTv2nphz7v7GHurA=
 154.pages.dev/text v1.2.9/go.mod h1:UvyUI44OzPxT7aBKgFMCqA8simgm/OMEvNSn+UxbW8o=
 154.pages.dev/widevine v1.4.5 h1:6Q48ZGPDQ/6TKZp7HBVC3QPV+MPuuzA8qmYCBDItQ0I=

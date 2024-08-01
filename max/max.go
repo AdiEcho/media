@@ -249,32 +249,3 @@ type route_include struct {
    }
 }
 
-type session_state map[string]string
-
-func (s session_state) Set(text string) error {
-   for text != "" {
-      var key string
-      key, text, _ = strings.Cut(text, ";")
-      key, value, _ := strings.Cut(key, ":")
-      s[key] = value
-   }
-   return nil
-}
-
-func (s session_state) String() string {
-   var (
-      b strings.Builder
-      sep bool
-   )
-   for key, value := range s {
-      if sep {
-         b.WriteByte(';')
-      } else {
-         sep = true
-      }
-      b.WriteString(key)
-      b.WriteByte(':')
-      b.WriteString(value)
-   }
-   return b.String()
-}
