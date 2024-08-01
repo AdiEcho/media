@@ -7,22 +7,14 @@ import (
    "time"
 )
 
-func pointer[T any](value *T) *T {
-   return new(T)
-}
-
 type response struct {
-   date *time.Time
-   body *struct {
+   date value[time.Time]
+   body value[struct {
       Slideshow struct {
          Date string
          Title string
       }
-   }
-   raw struct {
-      body []byte
-      date string
-   }
+   }]
 }
 
 func (r *response) New() error {
@@ -31,8 +23,8 @@ func (r *response) New() error {
       return err
    }
    defer resp.Body.Close()
-   r.raw.date = resp.Header.Get("date")
-   r.raw.body, err = io.ReadAll(resp.Body)
+   r.date.raw = []byte(resp.Header.Get("date"))
+   r.body.raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -40,11 +32,20 @@ func (r *response) New() error {
 }
 
 func (r *response) unmarshal() error {
-   date, err := time.Parse(time.RFC1123, r.raw.date)
+   date, err := time.Parse(time.RFC1123, string(r.date.raw))
    if err != nil {
       return err
    }
-   r.date = &date
-   r.body = pointer(r.body)
-   return json.Unmarshal(r.raw.body, r.body)
+   r.date.value = &date
+   r.body.New()
+   return json.Unmarshal(r.body.raw, r.body.value)
+}
+
+type value[T any] struct {
+   value *T
+   raw []byte
+}
+
+func (v *value[T]) New() {
+   v.value = new(T)
 }
