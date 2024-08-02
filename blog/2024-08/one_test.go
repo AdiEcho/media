@@ -7,15 +7,6 @@ import (
    "time"
 )
 
-type value[T any] struct {
-   value *T
-   raw []byte
-}
-
-func (v *value[T]) New() {
-   v.value = new(T)
-}
-
 type response struct {
    date value[time.Time]
    body value[struct {
@@ -48,4 +39,13 @@ func (r *response) unmarshal() error {
    r.date.value = &date
    r.body.New()
    return json.Unmarshal(r.body.raw, r.body.value)
+}
+
+type value[T any] struct {
+   value *T
+   raw []byte
+}
+
+func (v *value[T]) New() {
+   v.value = new(T)
 }
