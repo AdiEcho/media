@@ -1,44 +1,51 @@
 package http
 
 import (
-   "fmt"
-   "os"
-   "testing"
+   "encoding/json"
+   "io"
+   "net/http"
+   "time"
 )
 
-func TestWrite(t *testing.T) {
-   var resp response
-   err := resp.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("date.txt", resp.date.raw, 0666)
-   os.WriteFile("body.txt", resp.body.raw, 0666)
-   err = resp.unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(resp.date.value)
-   fmt.Printf("%+v\n", resp.body.value)
+type one struct {
+   date value[time.Time]
+   body value[struct {
+      Slideshow struct {
+         Date string
+         Title string
+      }
+   }]
 }
 
-func TestRead(t *testing.T) {
-   var (
-      resp response
-      err error
-   )
-   resp.date.raw, err = os.ReadFile("date.txt")
+func (o *one) New() error {
+   resp, err := http.Get("http://httpbingo.org/json")
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   resp.body.raw, err = os.ReadFile("body.txt")
+   defer resp.Body.Close()
+   o.date.raw = []byte(resp.Header.Get("date"))
+   o.body.raw, err = io.ReadAll(resp.Body)
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   err = resp.unmarshal()
+   return nil
+}
+
+func (o *one) unmarshal() error {
+   date, err := time.Parse(time.RFC1123, string(o.date.raw))
    if err != nil {
-      t.Fatal(err)
+      return err
    }
-   fmt.Println(resp.date.value)
-   fmt.Printf("%+v\n", resp.body.value)
+   o.date.value = &date
+   o.body.New()
+   return json.Unmarshal(o.body.raw, o.body.value)
+}
+
+type value[T any] struct {
+   value *T
+   raw []byte
+}
+
+func (v *value[T]) New() {
+   v.value = new(T)
 }

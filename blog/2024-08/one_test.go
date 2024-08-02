@@ -1,51 +1,44 @@
 package http
 
 import (
-   "encoding/json"
-   "io"
-   "net/http"
-   "time"
+   "fmt"
+   "os"
+   "testing"
 )
 
-type response struct {
-   date value[time.Time]
-   body value[struct {
-      Slideshow struct {
-         Date string
-         Title string
-      }
-   }]
-}
-
-func (r *response) New() error {
-   resp, err := http.Get("http://httpbingo.org/json")
+func TestWrite(t *testing.T) {
+   var resp response
+   err := resp.New()
    if err != nil {
-      return err
+      t.Fatal(err)
    }
-   defer resp.Body.Close()
-   r.date.raw = []byte(resp.Header.Get("date"))
-   r.body.raw, err = io.ReadAll(resp.Body)
+   os.WriteFile("date.txt", resp.date.raw, 0666)
+   os.WriteFile("body.txt", resp.body.raw, 0666)
+   err = resp.unmarshal()
    if err != nil {
-      return err
+      t.Fatal(err)
    }
-   return nil
+   fmt.Println(resp.date.value)
+   fmt.Printf("%+v\n", resp.body.value)
 }
 
-func (r *response) unmarshal() error {
-   date, err := time.Parse(time.RFC1123, string(r.date.raw))
+func TestRead(t *testing.T) {
+   var (
+      resp response
+      err error
+   )
+   resp.date.raw, err = os.ReadFile("date.txt")
    if err != nil {
-      return err
+      t.Fatal(err)
    }
-   r.date.value = &date
-   r.body.New()
-   return json.Unmarshal(r.body.raw, r.body.value)
-}
-
-type value[T any] struct {
-   value *T
-   raw []byte
-}
-
-func (v *value[T]) New() {
-   v.value = new(T)
+   resp.body.raw, err = os.ReadFile("body.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = resp.unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(resp.date.value)
+   fmt.Printf("%+v\n", resp.body.value)
 }
