@@ -15,43 +15,6 @@ import (
    "strings"
 )
 
-func (s Stream) Create(ext string) (*os.File, error) {
-   name, err := text.Name(s.Name)
-   if err != nil {
-      return nil, err
-   }
-   return os.Create(text.Clean(name) + ext)
-}
-
-func (s *Stream) Download(rep dash.Representation) error {
-   if data, ok := rep.Widevine(); ok {
-      read := bytes.NewReader(data)
-      var pssh sofia.ProtectionSystemSpecificHeader
-      err := pssh.BoxHeader.Read(read)
-      if err != nil {
-         return err
-      }
-      err = pssh.Read(read)
-      if err != nil {
-         return err
-      }
-      s.pssh = pssh.Data
-   }
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Representation.Ext")
-   }
-   base, ok := rep.GetBaseUrl()
-   if !ok {
-      return errors.New("Representation.GetBaseUrl")
-   }
-   if rep.SegmentBase != nil {
-      return s.segment_base(ext, base, rep.SegmentBase)
-   }
-   initial, _ := rep.Initialization()
-   return s.segment_template(ext, initial, base, rep.Media())
-}
-
 func (s Stream) segment_template(
    ext, initial string, base *dash.BaseUrl, media []string,
 ) error {
@@ -355,4 +318,40 @@ func Dash(req *http.Request) ([]dash.Representation, error) {
       return nil, err
    }
    return dash.Unmarshal(data, resp.Request.URL)
+}
+func (s Stream) Create(ext string) (*os.File, error) {
+   name, err := text.Name(s.Name)
+   if err != nil {
+      return nil, err
+   }
+   return os.Create(text.Clean(name) + ext)
+}
+
+func (s *Stream) Download(rep dash.Representation) error {
+   if data, ok := rep.Widevine(); ok {
+      read := bytes.NewReader(data)
+      var pssh sofia.ProtectionSystemSpecificHeader
+      err := pssh.BoxHeader.Read(read)
+      if err != nil {
+         return err
+      }
+      err = pssh.Read(read)
+      if err != nil {
+         return err
+      }
+      s.pssh = pssh.Data
+   }
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
+   base, ok := rep.GetBaseUrl()
+   if !ok {
+      return errors.New("Representation.GetBaseUrl")
+   }
+   if rep.SegmentBase != nil {
+      return s.segment_base(ext, base, rep.SegmentBase)
+   }
+   initial, _ := rep.Initialization()
+   return s.segment_template(ext, initial, base, rep.Media())
 }
