@@ -7,7 +7,7 @@ import (
    "time"
 )
 
-type one struct {
+type response_one struct {
    date value[time.Time]
    body value[struct {
       Slideshow struct {
@@ -17,28 +17,28 @@ type one struct {
    }]
 }
 
-func (o *one) New() error {
+func (r *response_one) New() error {
    resp, err := http.Get("http://httpbingo.org/json")
    if err != nil {
       return err
    }
    defer resp.Body.Close()
-   o.date.raw = []byte(resp.Header.Get("date"))
-   o.body.raw, err = io.ReadAll(resp.Body)
+   r.date.raw = []byte(resp.Header.Get("date"))
+   r.body.raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
    return nil
 }
 
-func (o *one) unmarshal() error {
-   date, err := time.Parse(time.RFC1123, string(o.date.raw))
+func (r *response_one) unmarshal() error {
+   date, err := time.Parse(time.RFC1123, string(r.date.raw))
    if err != nil {
       return err
    }
-   o.date.value = &date
-   o.body.New()
-   return json.Unmarshal(o.body.raw, o.body.value)
+   r.date.value = &date
+   r.body.New()
+   return json.Unmarshal(r.body.raw, r.body.value)
 }
 
 type value[T any] struct {
