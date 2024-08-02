@@ -48,6 +48,9 @@ func (s Stream) segment_template(
    }
    var meter text.ProgressMeter
    meter.Set(len(media))
+   var transport text.Transport
+   transport.Set(false)
+   defer transport.Set(true)
    for _, medium := range media {
       req.URL, err = base.Url.Parse(medium)
       if err != nil {

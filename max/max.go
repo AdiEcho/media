@@ -248,4 +248,3 @@ type route_include struct {
       }
    }
 }
-

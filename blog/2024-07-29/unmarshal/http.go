@@ -7,13 +7,32 @@ import (
    "time"
 )
 
+type value[T any] struct {
+   value *T
+   raw []byte
+}
+
+func (v *value[T]) New() {
+   v.value = new(T)
+}
+
+type response struct {
+   date value[time.Time]
+   body value[struct {
+      Slideshow struct {
+         Date string
+         Title string
+      }
+   }]
+}
+
 func (r *response) New() error {
    resp, err := http.Get("http://httpbingo.org/json")
    if err != nil {
       return err
    }
    defer resp.Body.Close()
-   r.date.raw = resp.Header.Get("date")
+   r.date.raw = []byte(resp.Header.Get("date"))
    r.body.raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
@@ -21,32 +40,12 @@ func (r *response) New() error {
    return nil
 }
 
-func pointer[T any](value *T) *T {
-   return new(T)
-}
-
-type response struct {
-   date struct {
-      value *time.Time
-      raw string
-   }
-   body struct {
-      value *struct {
-         Slideshow struct {
-            Date string
-            Title string
-         }
-      }
-      raw []byte
-   }
-}
-
 func (r *response) unmarshal() error {
-   date, err := time.Parse(time.RFC1123, r.date.raw)
+   date, err := time.Parse(time.RFC1123, string(r.date.raw))
    if err != nil {
       return err
    }
    r.date.value = &date
-   r.body.value = pointer(r.body.value)
+   r.body.New()
    return json.Unmarshal(r.body.raw, r.body.value)
 }

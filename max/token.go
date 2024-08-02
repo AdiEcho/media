@@ -13,20 +13,16 @@ import (
    "time"
 )
 
-type DefaultToken struct {
-   x_wbd_session_state map[string]string
-   body *struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-   raw struct {
-      body []byte
-      x_wbd_session_state string
-   }
+type value[T any] struct {
+   value *T
+   raw []byte
 }
+
+func (v *value[T]) New() {
+   v.value = new(T)
+}
+
+type session_state map[string]string
 
 func (s session_state) Set(text string) error {
    for text != "" {
@@ -56,6 +52,17 @@ func (s session_state) String() string {
    return b.String()
 }
 
+type DefaultToken struct {
+   session_state value[session_state]
+   body value[struct {
+      Data struct {
+         Attributes struct {
+            Token string
+         }
+      }
+   }]
+}
+
 func (d DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var p playback_request
@@ -80,7 +87,7 @@ func (d DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
       return b.String()
    }()
    req.Header = http.Header{
-      "authorization": {"Bearer "+d.body.Data.Attributes.Token},
+      "authorization": {"Bearer "+d.body.value.Data.Attributes.Token},
       "content-type": {"application/json"},
       "x-wbd-session-state": {d.x_wbd_session_state},
    }
@@ -143,10 +150,6 @@ func (d DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
    return route, nil
 }
 
-func pointer[T any](value *T) *T {
-   return new(T)
-}
-
 func (d DefaultToken) decision() (*default_decision, error) {
    body, err := json.Marshal(map[string]string{
       "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
@@ -201,8 +204,6 @@ func (d *DefaultToken) New() error {
    }
    return nil
 }
-
-//////////
 
 func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    address := func() string {
