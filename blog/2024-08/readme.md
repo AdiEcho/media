@@ -1,6 +1,6 @@
 # encoding
 
 ~~~
-BenchmarkOne-12           228831   5144 ns/op   1112 B/op         28 allocs/op
-BenchmarkThree-12         198159   5603 ns/op   1282 B/op         23 allocs/op
+BenchmarkOne-12           228903   5030 ns/op   1112 B/op         28 allocs/op
+BenchmarkThree-12         197528   5273 ns/op   1185 B/op         22 allocs/op
 ~~~

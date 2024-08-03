@@ -35,7 +35,7 @@ func (r *response_three) New() error {
    return json.NewDecoder(resp.Body).Decode(&r.Body)
 }
 
-func (r response_three) marshal() ([]byte, error) {
+func (r *response_three) marshal() ([]byte, error) {
    return json.Marshal(r)
 }
 
