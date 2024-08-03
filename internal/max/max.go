@@ -74,6 +74,7 @@ func (f flags) authenticate() error {
    if err != nil {
       return err
    }
+   token.SessionState.Delete()
    text, err := token.Marshal()
    if err != nil {
       return err
