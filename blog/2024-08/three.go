@@ -6,21 +6,19 @@ import (
    "time"
 )
 
-func (r *response_three) unmarshal(text []byte) error {
-   return json.Unmarshal(text, r)
-}
-
-func (r response_three) marshal() ([]byte, error) {
-   return json.Marshal(r)
-}
-
 type response_three struct {
    Date time.Time
    Body struct {
       Slideshow struct {
-         Date string
-         Title string
-      }
+         Author string `json:"author"`
+         Date   string `json:"date"`
+         Slides []struct {
+            Title string   `json:"title"`
+            Type  string   `json:"type"`
+            Items []string `json:"items,omitempty"`
+         } `json:"slides"`
+         Title string `json:"title"`
+      } `json:"slideshow"`
    }
 }
 
@@ -35,4 +33,12 @@ func (r *response_three) New() error {
       return err
    }
    return json.NewDecoder(resp.Body).Decode(&r.Body)
+}
+
+func (r response_three) marshal() ([]byte, error) {
+   return json.Marshal(r)
+}
+
+func (r *response_three) unmarshal(text []byte) error {
+   return json.Unmarshal(text, r)
 }

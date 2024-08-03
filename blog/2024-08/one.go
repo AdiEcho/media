@@ -11,9 +11,15 @@ type response_one struct {
    date value[time.Time]
    body value[struct {
       Slideshow struct {
-         Date string
-         Title string
-      }
+         Author string `json:"author"`
+         Date   string `json:"date"`
+         Slides []struct {
+            Title string   `json:"title"`
+            Type  string   `json:"type"`
+            Items []string `json:"items,omitempty"`
+         } `json:"slides"`
+         Title string `json:"title"`
+      } `json:"slideshow"`
    }]
 }
 

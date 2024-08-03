@@ -1,8 +1,6 @@
 package http
 
-import (
-   "testing"
-)
+import "testing"
 
 func BenchmarkThree(b *testing.B) {
    var three response_three
@@ -21,4 +19,3 @@ func BenchmarkThree(b *testing.B) {
       }
    }
 }
-

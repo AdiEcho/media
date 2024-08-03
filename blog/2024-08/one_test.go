@@ -1,8 +1,6 @@
 package http
 
-import (
-   "testing"
-)
+import "testing"
 
 func BenchmarkOne(b *testing.B) {
    var one response_one
