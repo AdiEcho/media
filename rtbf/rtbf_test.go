@@ -1,13 +1,52 @@
 package rtbf
 
 import (
+   "154.pages.dev/text"
    "154.pages.dev/widevine"
    "encoding/base64"
    "fmt"
    "os"
    "testing"
+   "time"
 )
 
+func TestPage(t *testing.T) {
+   for _, medium := range media {
+      page, err := NewPage(medium.path)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", page)
+      name, err := text.Name(page)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
+}
+
+var media = []struct {
+   id     int64
+   key_id string
+   path   string
+   url    string
+}{
+   {
+      id:     3201987,
+      key_id: "o1C37Tt5SzmHMmEgQViUEA==",
+      path:   "/media/i-care-a-lot-i-care-a-lot-3201987",
+      url:    "auvio.rtbf.be/media/i-care-a-lot-i-care-a-lot-3201987",
+   },
+   {
+      path: "/media/grantchester-grantchester-s01-3194636",
+      url:  "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
+   },
+   {
+      path: "/emission/i-care-a-lot-27462",
+      url:  "auvio.rtbf.be/emission/i-care-a-lot-27462",
+   },
+}
 func TestWidevine(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -108,22 +147,4 @@ func TestEntitlement(t *testing.T) {
    }
    fmt.Printf("%+v\n", title)
    fmt.Println(title.Dash())
-}
-
-func TestAccountsLogin(t *testing.T) {
-   username := os.Getenv("rtbf_username")
-   if username == "" {
-      t.Fatal("Getenv")
-   }
-   password := os.Getenv("rtbf_password")
-   var login AccountLogin
-   err := login.New(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   text, err := login.Marshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("account.txt", text, 0666)
 }

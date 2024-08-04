@@ -10,6 +10,11 @@ import (
    "time"
 )
 
+const (
+   arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
+   home_market = "amer"
+)
+
 type AddressFlag struct {
    EditId  string
    VideoId string
@@ -52,35 +57,6 @@ func (a *AddressManifest) UnmarshalText(text []byte) error {
    a.Text = strings.Replace(string(text), "_fallback", "", 1)
    return nil
 }
-
-type DefaultRoutes struct {
-   Data struct {
-      Attributes struct {
-         Url AddressFlag
-      }
-   }
-   Included []route_include
-}
-
-type Playback struct {
-   Drm struct {
-      Schemes struct {
-         Widevine struct {
-            LicenseUrl string
-         }
-      }
-   }
-   Fallback struct {
-      Manifest struct {
-         Url AddressManifest
-      }
-   }
-}
-
-const (
-   arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
-   home_market = "amer"
-)
 
 type DefaultLogin struct {
    Credentials struct {
@@ -139,6 +115,15 @@ func (d DefaultRoutes) Show() string {
    return ""
 }
 
+type DefaultRoutes struct {
+   Data struct {
+      Attributes struct {
+         Url AddressFlag
+      }
+   }
+   Included []route_include
+}
+
 func (Playback) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -153,6 +138,21 @@ func (Playback) RequestHeader() (http.Header, error) {
 
 func (p Playback) RequestUrl() (string, bool) {
    return p.Drm.Schemes.Widevine.LicenseUrl, true
+}
+
+type Playback struct {
+   Drm struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string
+         }
+      }
+   }
+   Fallback struct {
+      Manifest struct {
+         Url AddressManifest
+      }
+   }
 }
 
 type PublicKey struct {

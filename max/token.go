@@ -14,6 +14,29 @@ import (
    "time"
 )
 
+func (d *DefaultToken) Unmarshal() error {
+   d.Session.Value = SessionState{}
+   d.Session.Value.Set(string(d.Session.Raw))
+   var data struct {
+      Data struct {
+         Attributes struct {
+            Token string
+         }
+      }
+   }
+   err := json.Unmarshal(d.Token.Raw, &data)
+   if err != nil {
+      return err
+   }
+   d.Token.Value = data.Data.Attributes.Token
+   return nil
+}
+
+type DefaultToken struct {
+   Session Value[SessionState]
+   Token Value[string]
+}
+
 func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    address := func() string {
       var b bytes.Buffer
@@ -230,34 +253,6 @@ func (s SessionState) String() string {
 
 type SessionState map[string]string
 
-type DefaultToken struct {
-   Session Value[SessionState]
-   Token Value[string]
-}
-
-type Value[T any] struct {
-   Value T
-   Raw []byte
-}
-
-func (d *DefaultToken) Unmarshal() error {
-   d.Session.Value = SessionState{}
-   d.Session.Value.Set(string(d.Session.Raw))
-   var data struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-   err := json.Unmarshal(d.Token.Raw, &data)
-   if err != nil {
-      return err
-   }
-   d.Token.Value = data.Data.Attributes.Token
-   return nil
-}
-
 func (s SessionState) Delete() {
    for key := range s {
       switch key {
@@ -266,4 +261,9 @@ func (s SessionState) Delete() {
          delete(s, key)
       }
    }
+}
+
+type Value[T any] struct {
+   Value T
+   Raw []byte
 }

@@ -6,8 +6,109 @@ import (
    "errors"
    "net/http"
    "net/url"
+   "strconv"
    "strings"
 )
+
+func (a AuvioPage) Episode() int {
+   return a.Content.Subtitle.Episode
+}
+
+func (a AuvioPage) Show() string {
+   if v := a.Content.Title; v.Season >= 1 {
+      return v.Title
+   }
+   return ""
+}
+
+func (a AuvioPage) Title() string {
+   if v := a.Content.Subtitle; v.Episode >= 1 {
+      return v.Subtitle
+   }
+   return a.Content.Title.Title
+}
+
+// its just not available from what I can tell
+func (AuvioPage) Year() int {
+   return 0
+}
+
+func (a AuvioPage) asset_id() string {
+   if v := a.Content.AssetId; v != "" {
+      return v
+   }
+   return a.Content.Media.AssetId
+}
+
+func NewPage(path string) (*AuvioPage, error) {
+   resp, err := http.Get("https://bff-service.rtbf.be/auvio/v1.23/pages" + path)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
+   }
+   var data struct {
+      Data AuvioPage
+   }
+   err = json.NewDecoder(resp.Body).Decode(&data)
+   if err != nil {
+      return nil, err
+   }
+   return &data.Data, nil
+}
+
+func (a AuvioPage) Season() int {
+   return a.Content.Title.Season
+}
+
+type AuvioPage struct {
+   Content struct {
+      AssetId  string
+      Media struct {
+         AssetId string
+      }
+      Subtitle Subtitle
+      Title    Title
+   }
+}
+
+type Subtitle struct {
+   Episode  int
+   Subtitle string
+}
+
+// json.data.content.subtitle = "06 - Les ombres de la guerre";
+// json.data.content.subtitle = "Avec Rosamund Pike";
+func (s *Subtitle) UnmarshalText(text []byte) error {
+   s.Subtitle = string(text)
+   if before, after, ok := strings.Cut(s.Subtitle, " - "); ok {
+      if episode, err := strconv.Atoi(before); err == nil {
+         s.Episode = episode
+         s.Subtitle = after
+      }
+   }
+   return nil
+}
+
+type Title struct {
+   Season int
+   Title  string
+}
+
+// json.data.content.title = "Grantchester S01";
+// json.data.content.title = "I care a lot";
+func (t *Title) UnmarshalText(text []byte) error {
+   t.Title = string(text)
+   if before, after, ok := strings.Cut(t.Title, " S"); ok {
+      if season, err := strconv.Atoi(after); err == nil {
+         t.Title = before
+         t.Season = season
+      }
+   }
+   return nil
+}
 
 func (e Entitlement) Dash() (string, bool) {
    for _, format := range e.Formats {
@@ -16,83 +117,6 @@ func (e Entitlement) Dash() (string, bool) {
       }
    }
    return "", false
-}
-
-// hard coded in JavaScript
-const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
-
-func (a AccountLogin) Token() (*WebToken, error) {
-   body := url.Values{
-      "APIKey": {api_key},
-      // from /accounts.login
-      "login_token": {a.SessionInfo.CookieValue},
-   }.Encode()
-   req, err := http.NewRequest(
-      "POST", "https://login.auvio.rtbf.be/accounts.getJWT",
-      strings.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("content-type", "application/x-www-form-urlencoded")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var web WebToken
-   err = json.NewDecoder(resp.Body).Decode(&web)
-   if err != nil {
-      return nil, err
-   }
-   if v := web.ErrorMessage; v != "" {
-      return nil, errors.New(v)
-   }
-   return &web, nil
-}
-
-func (a *AccountLogin) New(id, password string) error {
-   body := url.Values{
-      "APIKey":   {api_key},
-      "loginID":  {id},
-      "password": {password},
-   }.Encode()
-   req, err := http.NewRequest(
-      "POST", "https://login.auvio.rtbf.be/accounts.login",
-      strings.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   req.Header.Set("content-type", "application/x-www-form-urlencoded")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   err = json.NewDecoder(resp.Body).Decode(a)
-   if err != nil {
-      return err
-   }
-   if v := a.ErrorMessage; v != "" {
-      return errors.New(v)
-   }
-   return nil
-}
-
-type AccountLogin struct {
-   ErrorMessage string
-   SessionInfo  struct {
-      CookieValue string
-   }
-}
-
-func (a *AccountLogin) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, a)
-}
-
-func (a AccountLogin) Marshal() ([]byte, error) {
-   return json.Marshal(a)
 }
 
 type Entitlement struct {

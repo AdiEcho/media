@@ -4,12 +4,24 @@ import (
    "154.pages.dev/text"
    "154.pages.dev/widevine"
    "encoding/hex"
-   "encoding/json"
    "fmt"
    "os"
    "testing"
    "time"
 )
+
+func TestConfig(t *testing.T) {
+   var token DefaultToken
+   err := token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   decision, err := token.decision()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", decision)
+}
 
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -25,11 +37,18 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var token DefaultToken
-   text, err := os.ReadFile(home + "/max.txt")
+   token.Session.Raw, err = os.ReadFile("session.txt")
    if err != nil {
       t.Fatal(err)
    }
-   token.Unmarshal(text)
+   token.Token.Raw, err = os.ReadFile("token.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = token.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
    for _, test := range tests {
       var pssh widevine.Pssh
       pssh.KeyId, err = hex.DecodeString(test.key_id)
@@ -71,21 +90,6 @@ var tests = []struct {
       url:        "play.max.com/video/watch/d0938760-d3ca-4c59-aea2-74ecbed42d17/2e7d1db4-2fd7-47fb-a7c3-a65b7c2e5d6f",
       video_type: "EPISODE",
    },
-}
-
-func TestConfig(t *testing.T) {
-   var token DefaultToken
-   err := token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   decision, err := token.decision()
-   if err != nil {
-      t.Fatal(err)
-   }
-   enc := json.NewEncoder(os.Stdout)
-   enc.SetIndent("", " ")
-   enc.Encode(decision)
 }
 
 func TestRoutes(t *testing.T) {

@@ -22,13 +22,14 @@ func TestLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
+   err = token.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
    err = token.Login(key, login)
    if err != nil {
       t.Fatal(err)
    }
-   text, err := token.Marshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("token.txt", text, 0666)
+   os.WriteFile("session.txt", token.Session.Raw, 0666)
+   os.WriteFile("token.txt", token.Token.Raw, 0666)
 }
