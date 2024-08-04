@@ -57,7 +57,7 @@ func (a AuthToken) Video(slug string) (*EmbedItem, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   item := new(EmbedItem)
+   item := &EmbedItem{}
    err = json.NewDecoder(resp.Body).Decode(item)
    if err != nil {
       return nil, err

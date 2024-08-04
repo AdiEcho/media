@@ -12,7 +12,7 @@ import (
 func (f flags) download() error {
    var token *roku.AccountToken
    if f.token_read {
-      token = new(roku.AccountToken)
+      token = &roku.AccountToken{}
       var err error
       token.Data, err = os.ReadFile(f.home + "/roku.json")
       if err != nil {

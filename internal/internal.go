@@ -107,7 +107,7 @@ func (s Stream) segment_base(
    data, _ := segment.Initialization.Range.MarshalText()
    var req http.Request
    req.URL = base.Url
-   req.Header = make(http.Header)
+   req.Header = http.Header{}
    // need to use Set for lower case
    req.Header.Set("range", "bytes=" + string(data))
    resp, err := http.DefaultClient.Do(&req)

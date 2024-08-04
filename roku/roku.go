@@ -121,7 +121,7 @@ func (a AccountAuth) Playback(roku_id string) (*Playback, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   play := new(Playback)
+   play := &Playback{}
    err = json.NewDecoder(resp.Body).Decode(play)
    if err != nil {
       return nil, err

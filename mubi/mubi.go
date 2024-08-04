@@ -140,7 +140,7 @@ func (a Authenticate) RequestHeader() (http.Header, error) {
    if err != nil {
       return nil, err
    }
-   head := make(http.Header)
+   head := http.Header{}
    head.Set("dt-custom-data", base64.StdEncoding.EncodeToString(text))
    return head, nil
 }

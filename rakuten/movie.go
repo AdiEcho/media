@@ -66,7 +66,7 @@ func (a Address) Movie() (*GizmoMovie, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   movie := new(GizmoMovie)
+   movie := &GizmoMovie{}
    err = json.NewDecoder(resp.Body).Decode(movie)
    if err != nil {
       return nil, err

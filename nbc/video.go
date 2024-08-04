@@ -37,7 +37,7 @@ func Core() Video {
 }
 
 func (Video) RequestHeader() (http.Header, error) {
-   head := make(http.Header)
+   head := http.Header{}
    head.Set("content-type", "application/octet-stream")
    return head, nil
 }

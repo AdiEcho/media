@@ -14,44 +14,6 @@ import (
    "time"
 )
 
-func (s SessionState) String() string {
-   var (
-      b strings.Builder
-      sep bool
-   )
-   for key, value := range s {
-      if sep {
-         b.WriteByte(';')
-      } else {
-         sep = true
-      }
-      b.WriteString(key)
-      b.WriteByte(':')
-      b.WriteString(value)
-   }
-   return b.String()
-}
-
-func (s SessionState) Delete() {
-   for key := range s {
-      switch key {
-      case "device", "token", "user":
-      default:
-         delete(s, key)
-      }
-   }
-}
-
-func (s SessionState) Set(text string) error {
-   for text != "" {
-      var key string
-      key, text, _ = strings.Cut(text, ";")
-      key, value, _ := strings.Cut(key, ":")
-      s[key] = value
-   }
-   return nil
-}
-
 func (d *DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
    address := func() string {
       path, _ := flag.MarshalText()
@@ -85,7 +47,7 @@ func (d *DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   route := new(DefaultRoutes)
+   route := &DefaultRoutes{}
    err = json.NewDecoder(resp.Body).Decode(route)
    if err != nil {
       return nil, err
@@ -114,7 +76,7 @@ func (d *DefaultToken) decision() (*default_decision, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   decision := new(default_decision)
+   decision := &default_decision{}
    err = json.NewDecoder(resp.Body).Decode(decision)
    if err != nil {
       return nil, err
@@ -160,7 +122,7 @@ func (d *DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   play := new(Playback)
+   play := &Playback{}
    err = json.NewDecoder(resp.Body).Decode(play)
    if err != nil {
       return nil, err
@@ -191,6 +153,29 @@ func (d *DefaultToken) New() error {
    if err != nil {
       return err
    }
+   return nil
+}
+
+type DefaultToken struct {
+   SessionState Value[SessionState]
+   Token Value[string]
+}
+
+func (d *DefaultToken) Unmarshal() error {
+   d.SessionState.Value = SessionState{}
+   d.SessionState.Value.Set(string(d.SessionState.Raw))
+   var data struct {
+      Data struct {
+         Attributes struct {
+            Token string
+         }
+      }
+   }
+   err := json.Unmarshal(d.Token.Raw, &data)
+   if err != nil {
+      return err
+   }
+   d.Token.Value = data.Data.Attributes.Token
    return nil
 }
 
@@ -238,32 +223,47 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    return nil
 }
 
-type SessionState map[string]string
-
-type DefaultToken struct {
-   SessionState Value[SessionState]
-   Token Value[string]
+func (s SessionState) String() string {
+   var (
+      b strings.Builder
+      sep bool
+   )
+   for key, value := range s {
+      if sep {
+         b.WriteByte(';')
+      } else {
+         sep = true
+      }
+      b.WriteString(key)
+      b.WriteByte(':')
+      b.WriteString(value)
+   }
+   return b.String()
 }
+
+func (s SessionState) Delete() {
+   for key := range s {
+      switch key {
+      case "device", "token", "user":
+      default:
+         delete(s, key)
+      }
+   }
+}
+
+func (s SessionState) Set(text string) error {
+   for text != "" {
+      var key string
+      key, text, _ = strings.Cut(text, ";")
+      key, value, _ := strings.Cut(key, ":")
+      s[key] = value
+   }
+   return nil
+}
+
+type SessionState map[string]string
 
 type Value[T any] struct {
    Value T
    Raw []byte
-}
-
-func (d *DefaultToken) Unmarshal() error {
-   d.SessionState.Value = SessionState{}
-   d.SessionState.Value.Set(string(d.SessionState.Raw))
-   var data struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-   err := json.Unmarshal(d.Token.Raw, &data)
-   if err != nil {
-      return err
-   }
-   d.Token.Value = data.Data.Attributes.Token
-   return nil
 }

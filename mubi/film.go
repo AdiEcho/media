@@ -67,7 +67,7 @@ func (a Address) Film() (*FilmResponse, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   film := new(FilmResponse)
+   film := &FilmResponse{}
    err = json.NewDecoder(resp.Body).Decode(film)
    if err != nil {
       return nil, err

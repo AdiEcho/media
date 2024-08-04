@@ -27,7 +27,7 @@ func (a AuthLogin) Entitlement(movie *FullMovie) (*Entitlement, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   title := new(Entitlement)
+   title := &Entitlement{}
    err = json.NewDecoder(resp.Body).Decode(title)
    if err != nil {
       return nil, err
@@ -63,7 +63,7 @@ func (a AuthLogin) Playback(
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   play := new(Playback)
+   play := &Playback{}
    err = json.NewDecoder(resp.Body).Decode(play)
    if err != nil {
       return nil, err

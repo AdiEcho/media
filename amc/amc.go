@@ -137,7 +137,7 @@ func (Playback) WrapRequest(b []byte) ([]byte, error) {
 }
 
 func (p Playback) RequestHeader() (http.Header, error) {
-   head := make(http.Header)
+   head := http.Header{}
    head.Set("bcov-auth", p.header.Get("x-amcn-bc-jwt"))
    return head, nil
 }

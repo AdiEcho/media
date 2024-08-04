@@ -9,9 +9,9 @@ import (
 
 // github.com/mitmproxy/mitmproxy/blob/main/mitmproxy/contentviews/protobuf.py
 func (StreamInfo) RequestHeader() (http.Header, error) {
-   h := make(http.Header)
-   h.Set("content-type", "application/x-protobuf")
-   return h, nil
+   head := http.Header{}
+   head.Set("content-type", "application/x-protobuf")
+   return head, nil
 }
 
 func (StreamInfo) WrapRequest(b []byte) ([]byte, error) {

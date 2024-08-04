@@ -51,7 +51,7 @@ func TestLicense(t *testing.T) {
 
 func TestResolution(t *testing.T) {
    for _, test := range tests {
-      cms := new(Content)
+      cms := &Content{}
       err := cms.New(test.content_id)
       if err != nil {
          t.Fatal(err)

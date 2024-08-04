@@ -199,7 +199,7 @@ func (a AxisContent) Media() (*MediaContent, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   media := new(MediaContent)
+   media := &MediaContent{}
    err = json.NewDecoder(resp.Body).Decode(media)
    if err != nil {
       return nil, err

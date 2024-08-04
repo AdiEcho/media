@@ -7,6 +7,34 @@ import (
    "time"
 )
 
+func TestContent(t *testing.T) {
+   for _, test := range tests {
+      cms := &Content{}
+      err := cms.New(test.content_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(time.Second)
+      if cms.Episode() {
+         err := cms.New(cms.SeriesId)
+         if err != nil {
+            t.Fatal(err)
+         }
+         time.Sleep(time.Second)
+         var ok bool
+         cms, ok = cms.Get(test.content_id)
+         if !ok {
+            t.Fatal("get")
+         }
+      }
+      name, err := text.Name(Namer{cms})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+   }
+}
+
 var tests = map[string]struct {
    content_id int
    key_id     string
@@ -49,32 +77,4 @@ var tests = map[string]struct {
       content_id: 200042567,
       url:        "tubitv.com/tv-shows/200042567",
    },
-}
-
-func TestContent(t *testing.T) {
-   for _, test := range tests {
-      cms := new(Content)
-      err := cms.New(test.content_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      time.Sleep(time.Second)
-      if cms.Episode() {
-         err := cms.New(cms.SeriesId)
-         if err != nil {
-            t.Fatal(err)
-         }
-         time.Sleep(time.Second)
-         var ok bool
-         cms, ok = cms.Get(test.content_id)
-         if !ok {
-            t.Fatal("get")
-         }
-      }
-      name, err := text.Name(Namer{cms})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-   }
 }

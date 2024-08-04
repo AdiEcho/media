@@ -81,7 +81,7 @@ func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   play := new(Playlist)
+   play := &Playlist{}
    err = json.NewDecoder(resp.Body).Decode(play)
    if err != nil {
       return nil, err
@@ -110,7 +110,7 @@ func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   link := new(DeepLink)
+   link := &DeepLink{}
    err = json.NewDecoder(resp.Body).Decode(link)
    if err != nil {
       return nil, err

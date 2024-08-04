@@ -117,9 +117,9 @@ func (e Entitlement) RequestUrl() (string, bool) {
 }
 
 func (Entitlement) RequestHeader() (http.Header, error) {
-   h := make(http.Header)
-   h.Set("content-type", "application/x-protobuf")
-   return h, nil
+   head := http.Header{}
+   head.Set("content-type", "application/x-protobuf")
+   return head, nil
 }
 
 func (Entitlement) WrapRequest(b []byte) ([]byte, error) {
@@ -160,7 +160,7 @@ func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   title := new(Entitlement)
+   title := &Entitlement{}
    err = json.NewDecoder(resp.Body).Decode(title)
    if err != nil {
       return nil, err
@@ -202,7 +202,7 @@ func (w WebToken) Login() (*GigyaLogin, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   login := new(GigyaLogin)
+   login := &GigyaLogin{}
    err = json.NewDecoder(resp.Body).Decode(login)
    if err != nil {
       return nil, err

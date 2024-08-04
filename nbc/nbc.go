@@ -151,7 +151,7 @@ func (m Metadata) OnDemand() (*OnDemand, error) {
    if resp.StatusCode != http.StatusOK {
       return nil, errors.New(resp.Status)
    }
-   video := new(OnDemand)
+   video := &OnDemand{}
    err = json.NewDecoder(resp.Body).Decode(video)
    if err != nil {
       return nil, err

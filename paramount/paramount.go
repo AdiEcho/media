@@ -90,7 +90,7 @@ func (at AppToken) Session(content_id string) (*SessionToken, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   session := new(SessionToken)
+   session := &SessionToken{}
    err = json.NewDecoder(resp.Body).Decode(session)
    if err != nil {
       return nil, err

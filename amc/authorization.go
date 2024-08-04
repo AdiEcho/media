@@ -195,7 +195,7 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   content := new(ContentCompiler)
+   content := &ContentCompiler{}
    err = json.NewDecoder(resp.Body).Decode(content)
    if err != nil {
       return nil, err

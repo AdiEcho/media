@@ -51,7 +51,7 @@ func (f flags) name() string {
 }
 
 func (f flags) write_content() error {
-   content := new(tubi.Content)
+   content := &tubi.Content{}
    err := content.New(f.tubi)
    if err != nil {
       return err
