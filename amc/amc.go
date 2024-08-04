@@ -31,7 +31,7 @@ func (a *Address) Set(text string) error {
    return nil
 }
 
-func (a Address) String() string {
+func (a *Address) String() string {
    return a.Path
 }
 
