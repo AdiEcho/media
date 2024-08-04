@@ -14,11 +14,6 @@ import (
    "time"
 )
 
-type DefaultToken struct {
-   SessionState Value[SessionState]
-   Token Value[string]
-}
-
 func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    address := func() string {
       var b bytes.Buffer
@@ -59,7 +54,7 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    if err != nil {
       return err
    }
-   d.SessionState.Raw = []byte(resp.Header.Get("x-wbd-session-state"))
+   d.Session.Raw = []byte(resp.Header.Get("x-wbd-session-state"))
    return nil
 }
 
@@ -115,7 +110,7 @@ func (d *DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
    req.Header = http.Header{
       "authorization": {"Bearer " + d.Token.Value},
       "content-type": {"application/json"},
-      "x-wbd-session-state": {d.SessionState.Value.String()},
+      "x-wbd-session-state": {d.Session.Value.String()},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -156,7 +151,7 @@ func (d *DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
    }.Encode()
    req.Header = http.Header{
       "authorization": {"Bearer " + d.Token.Value},
-      "x-wbd-session-state": {d.SessionState.Value.String()},
+      "x-wbd-session-state": {d.Session.Value.String()},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -174,24 +169,6 @@ func (d *DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
       return nil, err
    }
    return route, nil
-}
-
-func (d *DefaultToken) Unmarshal() error {
-   d.SessionState.Value = SessionState{}
-   d.SessionState.Value.Set(string(d.SessionState.Raw))
-   var data struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-   err := json.Unmarshal(d.Token.Raw, &data)
-   if err != nil {
-      return err
-   }
-   d.Token.Value = data.Data.Attributes.Token
-   return nil
 }
 
 func (d *DefaultToken) decision() (*default_decision, error) {
@@ -223,18 +200,6 @@ func (d *DefaultToken) decision() (*default_decision, error) {
    return decision, nil
 }
 
-type SessionState map[string]string
-
-func (s SessionState) Delete() {
-   for key := range s {
-      switch key {
-      case "device", "token", "user":
-      default:
-         delete(s, key)
-      }
-   }
-}
-
 func (s SessionState) Set(text string) error {
    for text != "" {
       var key string
@@ -263,7 +228,42 @@ func (s SessionState) String() string {
    return b.String()
 }
 
+type SessionState map[string]string
+
+type DefaultToken struct {
+   Session Value[SessionState]
+   Token Value[string]
+}
+
 type Value[T any] struct {
    Value T
    Raw []byte
+}
+
+func (d *DefaultToken) Unmarshal() error {
+   d.Session.Value = SessionState{}
+   d.Session.Value.Set(string(d.Session.Raw))
+   var data struct {
+      Data struct {
+         Attributes struct {
+            Token string
+         }
+      }
+   }
+   err := json.Unmarshal(d.Token.Raw, &data)
+   if err != nil {
+      return err
+   }
+   d.Token.Value = data.Data.Attributes.Token
+   return nil
+}
+
+func (s SessionState) Delete() {
+   for key := range s {
+      switch key {
+      case "device", "token", "user":
+      default:
+         delete(s, key)
+      }
+   }
 }

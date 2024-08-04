@@ -9,6 +9,19 @@ import (
    "path/filepath"
 )
 
+func (f *flags) New() error {
+   var err error
+   f.home, err = os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   f.home = filepath.ToSlash(f.home)
+   f.s.ClientId = f.home + "/widevine/client_id.bin"
+   f.s.PrivateKey = f.home + "/widevine/private_key.pem"
+   f.home += "/max"
+   return nil
+}
+
 type flags struct {
    address max.AddressFlag
    email string
@@ -48,16 +61,4 @@ func main() {
    default:
       flag.Usage()
    }
-}
-
-func (f *flags) New() error {
-   var err error
-   f.home, err = os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   f.home = filepath.ToSlash(f.home)
-   f.s.ClientId = f.home + "/widevine/client_id.bin"
-   f.s.PrivateKey = f.home + "/widevine/private_key.pem"
-   return nil
 }

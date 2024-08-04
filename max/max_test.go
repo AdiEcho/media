@@ -11,29 +11,6 @@ import (
    "time"
 )
 
-func TestRoutes(t *testing.T) {
-   var token DefaultToken
-   err := token.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      var flag AddressFlag
-      flag.UnmarshalText([]byte(test.url))
-      routes, err := token.Routes(flag)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", routes)
-      name, err := text.Name(routes)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
-   }
-}
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -109,4 +86,27 @@ func TestConfig(t *testing.T) {
    enc := json.NewEncoder(os.Stdout)
    enc.SetIndent("", " ")
    enc.Encode(decision)
+}
+
+func TestRoutes(t *testing.T) {
+   var token DefaultToken
+   err := token.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      var flag AddressFlag
+      flag.UnmarshalText([]byte(test.url))
+      routes, err := token.Routes(flag)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", routes)
+      name, err := text.Name(routes)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
 }

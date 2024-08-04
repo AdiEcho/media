@@ -9,16 +9,51 @@ import (
    "sort"
 )
 
-func (f flags) download() error {
-   text, err := os.ReadFile(f.home + "/max.json")
+func (f *flags) authenticate() error {
+   var login max.DefaultLogin
+   login.Credentials.Username = f.email
+   login.Credentials.Password = f.password
+   var key max.PublicKey
+   err := key.New()
    if err != nil {
       return err
    }
    var token max.DefaultToken
-   err = token.Unmarshal(text)
+   err = token.New()
    if err != nil {
       return err
    }
+   err = token.Unmarshal()
+   if err != nil {
+      return err
+   }
+   err = token.Login(key, login)
+   if err != nil {
+      return err
+   }
+   os.Mkdir(f.home, 0666)
+   os.WriteFile(f.home + "/session.txt", token.Session.Raw, 0666)
+   return os.WriteFile(f.home + "/token.txt", token.Token.Raw, 0666)
+}
+
+func (f *flags) download() error {
+   var (
+      token max.DefaultToken
+      err error
+   )
+   token.Session.Raw, err = os.ReadFile(f.home + "/session.txt")
+   if err != nil {
+      return err
+   }
+   token.Token.Raw, err = os.ReadFile(f.home + "/token.txt")
+   if err != nil {
+      return err
+   }
+   err = token.Unmarshal()
+   if err != nil {
+      return err
+   }
+   token.Session.Value.Delete()
    play, err := token.Playback(f.address)
    if err != nil {
       return err
@@ -54,30 +89,4 @@ func (f flags) download() error {
       }
    }
    return nil
-}
-
-func (f flags) authenticate() error {
-   var login max.DefaultLogin
-   login.Credentials.Username = f.email
-   login.Credentials.Password = f.password
-   var key max.PublicKey
-   err := key.New()
-   if err != nil {
-      return err
-   }
-   var token max.DefaultToken
-   err = token.New()
-   if err != nil {
-      return err
-   }
-   err = token.Login(key, login)
-   if err != nil {
-      return err
-   }
-   token.SessionState.Delete()
-   text, err := token.Marshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/max.json", text, 0666)
 }
