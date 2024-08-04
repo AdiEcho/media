@@ -13,64 +13,36 @@ import (
    "time"
 )
 
-func (d *DefaultToken) Marshal() ([]byte, error) {
-   return json.Marshal(d)
+func (v *Value[T]) New() {
+   v.value = new(T)
 }
 
-type DefaultToken struct {
-   SessionState SessionState
-   Body struct {
+func (s SessionState) Set(text string) error {
+   for text != "" {
+      var key string
+      key, text, _ = strings.Cut(text, ";")
+      key, value, _ := strings.Cut(key, ":")
+      s[key] = value
+   }
+   return nil
+}
+
+func (d *DefaultToken) Unmarshal() error {
+   d.SessionState.value = make(SessionState)
+   d.SessionState.value.Set(string(d.SessionState.Raw))
+   var v struct {
       Data struct {
          Attributes struct {
             Token string
          }
       }
    }
-}
-
-func (d *DefaultToken) Unmarshal(text []byte) error {
-   return json.Unmarshal(text, d)
-}
-
-func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
-   address := func() string {
-      var b bytes.Buffer
-      b.WriteString("https://default.any-")
-      b.WriteString(home_market)
-      b.WriteString(".prd.api.discomax.com/login")
-      return b.String()
-   }()
-   body, err := json.Marshal(login)
+   err := json.Unmarshal(data, &v)
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("POST", address, bytes.NewReader(body))
-   if err != nil {
-      return err
-   }
-   req.Header.Set("authorization", "Bearer "+d.Body.Data.Attributes.Token)
-   req.Header.Set("content-type", "application/json")
-   req.Header.Set("x-disco-arkose-token", key.Token)
-   req.Header.Set("x-disco-client-id", func() string {
-      timestamp := time.Now().Unix()
-      hash := hmac.New(sha256.New, default_key.Key)
-      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
-      signature := hash.Sum(nil)
-      return fmt.Sprintf("%v:%v:%x", default_key.Id, timestamp, signature)
-   }())
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   d.SessionState = make(SessionState)
-   d.SessionState.Set(resp.Header.Get("x-wbd-session-state"))
-   return json.NewDecoder(resp.Body).Decode(&d.Body)
+   d.Token.value = v.Data.Attributes.Token
+   return nil
 }
 
 func (d *DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
@@ -97,9 +69,9 @@ func (d *DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
       return b.String()
    }()
    req.Header = http.Header{
-      "authorization": {"Bearer "+d.Body.Data.Attributes.Token},
+      "authorization": {"Bearer "+d.Token.value},
       "content-type": {"application/json"},
-      "x-wbd-session-state": {d.SessionState.String()},
+      "x-wbd-session-state": {d.SessionState.value.String()},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -139,8 +111,8 @@ func (d *DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
       "page[items.size]": {"1"},
    }.Encode()
    req.Header = http.Header{
-      "authorization": {"Bearer "+d.Body.Data.Attributes.Token},
-      "x-wbd-session-state": {d.SessionState.String()},
+      "authorization": {"Bearer "+d.Token.value},
+      "x-wbd-session-state": {d.SessionState.value.String()},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -174,7 +146,7 @@ func (d *DefaultToken) decision() (*default_decision, error) {
    if err != nil {
       return nil, err
    }
-   req.Header.Set("authorization", "Bearer "+d.Body.Data.Attributes.Token)
+   req.Header.Set("authorization", "Bearer "+d.Token.value)
    req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -187,38 +159,6 @@ func (d *DefaultToken) decision() (*default_decision, error) {
       return nil, err
    }
    return decision, nil
-}
-
-func (d *DefaultToken) New() error {
-   req, err := http.NewRequest(
-      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
-   )
-   if err != nil {
-      return err
-   }
-   // fuck you Max
-   req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   return json.NewDecoder(resp.Body).Decode(&d.Body)
-}
-
-func (s SessionState) Set(text string) error {
-   for text != "" {
-      var key string
-      key, text, _ = strings.Cut(text, ";")
-      key, value, _ := strings.Cut(key, ":")
-      s[key] = value
-   }
-   return nil
 }
 
 func (s SessionState) String() string {
@@ -250,3 +190,85 @@ func (s SessionState) Delete() {
 }
 
 type SessionState map[string]string
+
+func (d *DefaultToken) New() error {
+   req, err := http.NewRequest(
+      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
+   )
+   if err != nil {
+      return err
+   }
+   // fuck you Max
+   req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   d.Token.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+///
+
+func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
+   address := func() string {
+      var b bytes.Buffer
+      b.WriteString("https://default.any-")
+      b.WriteString(home_market)
+      b.WriteString(".prd.api.discomax.com/login")
+      return b.String()
+   }()
+   body, err := json.Marshal(login)
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest("POST", address, bytes.NewReader(body))
+   if err != nil {
+      return err
+   }
+   req.Header.Set("authorization", "Bearer "+d.Body.Data.Attributes.Token)
+   req.Header.Set("content-type", "application/json")
+   req.Header.Set("x-disco-arkose-token", key.Token)
+   req.Header.Set("x-disco-client-id", func() string {
+      timestamp := time.Now().Unix()
+      hash := hmac.New(sha256.New, default_key.Key)
+      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
+      signature := hash.Sum(nil)
+      return fmt.Sprintf("%v:%v:%x", default_key.Id, timestamp, signature)
+   }())
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   d.Token.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   d.SessionState.Raw = []byte(resp.Header.Get("x-wbd-session-state"))
+   return nil
+}
+
+type DefaultToken struct {
+   SessionState Value[SessionState]
+   Token Value[string]
+}
+
+type Value[T any] struct {
+   Raw []byte
+   value *T
+}
