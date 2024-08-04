@@ -11,83 +11,9 @@ import (
    "strings"
 )
 
-// type GigyaLogin struct {
-// type LoginToken struct {
-// type WebToken struct {
-
 // hard coded in JavaScript
 const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
 
-func (t *LoginToken) WebToken() (*WebToken, error) {
-   resp, err := http.PostForm(
-      "https://login.auvio.rtbf.be/accounts.getJWT", url.Values{
-         "APIKey": {api_key},
-         "login_token": {t.CookieValue},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var web WebToken
-   err = json.NewDecoder(resp.Body).Decode(&web)
-   if err != nil {
-      return nil, err
-   }
-   if v := web.ErrorMessage; v != "" {
-      return nil, errors.New(v)
-   }
-   return &web, nil
-}
-
-func (t *LoginToken) New(id, password string) error {
-   body := url.Values{
-      "APIKey":   {api_key},
-      "loginID":  {id},
-      "password": {password},
-   }.Encode()
-   req, err := http.NewRequest(
-      "POST", "https://login.auvio.rtbf.be/accounts.login",
-      strings.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   req.Header.Set("content-type", "application/x-www-form-urlencoded")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   t.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-type LoginToken struct {
-   CookieValue string
-   Raw []byte
-}
-
-func (t *LoginToken) Unmarshal() error {
-   var data struct {
-      ErrorMessage string
-      SessionInfo  struct {
-         CookieValue string
-      }
-   }
-   err := json.Unmarshal(t.Raw, &data)
-   if err != nil {
-      return err
-   }
-   if v := data.ErrorMessage; v != "" {
-      return errors.New(v)
-   }
-   t.CookieValue = data.SessionInfo.CookieValue
-   return nil
-}
 func (a *AuvioPage) Episode() int {
    return a.Content.Subtitle.Episode
 }
@@ -116,25 +42,6 @@ func (a *AuvioPage) asset_id() string {
       return v
    }
    return a.Content.Media.AssetId
-}
-
-func NewPage(path string) (*AuvioPage, error) {
-   resp, err := http.Get("https://bff-service.rtbf.be/auvio/v1.23/pages" + path)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return nil, errors.New(resp.Status)
-   }
-   var data struct {
-      Data AuvioPage
-   }
-   err = json.NewDecoder(resp.Body).Decode(&data)
-   if err != nil {
-      return nil, err
-   }
-   return &data.Data, nil
 }
 
 func (a *AuvioPage) Season() int {
@@ -205,19 +112,10 @@ func (Entitlement) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-type GigyaLogin struct {
-   SessionToken string
-}
-
 func (Entitlement) RequestHeader() (http.Header, error) {
    head := http.Header{}
    head.Set("content-type", "application/x-protobuf")
    return head, nil
-}
-
-type WebToken struct {
-   ErrorMessage string
-   IdToken      string `json:"id_token"`
 }
 
 func (e *Entitlement) Dash() (string, bool) {
@@ -241,7 +139,16 @@ func (e *Entitlement) RequestUrl() (string, bool) {
    return u.String(), true
 }
 
-func (g *GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
+type AuvioGigya struct {
+   SessionToken string
+}
+
+type AuvioToken struct {
+   ErrorMessage string
+   IdToken      string `json:"id_token"`
+}
+
+func (g *AuvioGigya) Entitlement(page *AuvioPage) (*Entitlement, error) {
    req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
    if err != nil {
       return nil, err
@@ -275,36 +182,117 @@ func (g *GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
    return title, nil
 }
 
-func (w *WebToken) Login() (*GigyaLogin, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Device struct {
-            DeviceId string `json:"deviceId"`
-            Type     string `json:"type"`
-         } `json:"device"`
-         Jwt string `json:"jwt"`
-      }
-      s.Device.Type = "WEB"
-      s.Jwt = w.IdToken
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://exposure.api.redbee.live", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/v2/customer/RTBF/businessunit/Auvio/auth/gigyaLogin"
-   req.Header.Set("content-type", "application/json")
-   resp, err := http.DefaultClient.Do(req)
+func NewPage(path string) (*AuvioPage, error) {
+   resp, err := http.Get("https://bff-service.rtbf.be/auvio/v1.23/pages" + path)
    if err != nil {
       return nil, err
    }
    defer resp.Body.Close()
-   login := &GigyaLogin{}
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
+   }
+   var data struct {
+      Data AuvioPage
+   }
+   err = json.NewDecoder(resp.Body).Decode(&data)
+   if err != nil {
+      return nil, err
+   }
+   return &data.Data, nil
+}
+
+func (t *AuvioLogin) New(id, password string) error {
+   resp, err := http.PostForm(
+      "https://login.auvio.rtbf.be/accounts.login", url.Values{
+         "APIKey":   {api_key},
+         "loginID":  {id},
+         "password": {password},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   t.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+type AuvioLogin struct {
+   CookieValue string
+   Raw []byte
+}
+
+func (t *AuvioLogin) Unmarshal() error {
+   var data struct {
+      ErrorMessage string
+      SessionInfo  struct {
+         CookieValue string
+      }
+   }
+   err := json.Unmarshal(t.Raw, &data)
+   if err != nil {
+      return err
+   }
+   if v := data.ErrorMessage; v != "" {
+      return errors.New(v)
+   }
+   t.CookieValue = data.SessionInfo.CookieValue
+   return nil
+}
+
+func (t *AuvioLogin) AuvioToken() (*AuvioToken, error) {
+   resp, err := http.PostForm(
+      "https://login.auvio.rtbf.be/accounts.getJWT", url.Values{
+         "APIKey": {api_key},
+         "login_token": {t.CookieValue},
+      },
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var web AuvioToken
+   err = json.NewDecoder(resp.Body).Decode(&web)
+   if err != nil {
+      return nil, err
+   }
+   if v := web.ErrorMessage; v != "" {
+      return nil, errors.New(v)
+   }
+   return &web, nil
+}
+
+func (w *AuvioToken) Login() (*AuvioGigya, error) {
+   var data struct {
+      Device struct {
+         DeviceId string `json:"deviceId"`
+         Type     string `json:"type"`
+      } `json:"device"`
+      Jwt string `json:"jwt"`
+   }
+   data.Device.Type = "WEB"
+   data.Jwt = w.IdToken
+   body, err := json.Marshal(data)
+   if err != nil {
+      return nil, err
+   }
+   address := func() string {
+      var b strings.Builder
+      b.WriteString("https://exposure.api.redbee.live")
+      b.WriteString("/v2/customer/RTBF/businessunit/Auvio/auth/gigyaLogin")
+      return b.String()
+   }
+   resp, err := http.Post(
+      address(), "application/json", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   login := &AuvioGigya{}
    err = json.NewDecoder(resp.Body).Decode(login)
    if err != nil {
       return nil, err
