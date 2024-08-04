@@ -14,74 +14,79 @@ import (
    "time"
 )
 
-func (d *DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
+type DefaultToken struct {
+   SessionState Value[SessionState]
+   Token Value[string]
+}
+
+func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    address := func() string {
-      path, _ := flag.MarshalText()
-      var b strings.Builder
+      var b bytes.Buffer
       b.WriteString("https://default.any-")
       b.WriteString(home_market)
-      b.WriteString(".prd.api.discomax.com/cms/routes")
-      b.Write(path)
+      b.WriteString(".prd.api.discomax.com/login")
       return b.String()
    }()
-   req, err := http.NewRequest("", address, nil)
+   body, err := json.Marshal(login)
    if err != nil {
-      return nil, err
+      return err
    }
-   req.URL.RawQuery = url.Values{
-      "include": {"default"},
-      // this is not required, but results in a smaller response
-      "page[items.size]": {"1"},
-   }.Encode()
-   req.Header = http.Header{
-      "authorization": {"Bearer " + d.Token.Value},
-      "x-wbd-session-state": {d.SessionState.Value.String()},
+   req, err := http.NewRequest("POST", address, bytes.NewReader(body))
+   if err != nil {
+      return err
    }
+   req.Header.Set("authorization", "Bearer " + d.Token.Value)
+   req.Header.Set("content-type", "application/json")
+   req.Header.Set("x-disco-arkose-token", key.Token)
+   req.Header.Set("x-disco-client-id", func() string {
+      timestamp := time.Now().Unix()
+      hash := hmac.New(sha256.New, default_key.Key)
+      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
+      signature := hash.Sum(nil)
+      return fmt.Sprintf("%v:%v:%x", default_key.Id, timestamp, signature)
+   }())
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return nil, err
+      return err
    }
    defer resp.Body.Close()
    if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
+      var b bytes.Buffer
       resp.Write(&b)
-      return nil, errors.New(b.String())
+      return errors.New(b.String())
    }
-   route := &DefaultRoutes{}
-   err = json.NewDecoder(resp.Body).Decode(route)
+   d.Token.Raw, err = io.ReadAll(resp.Body)
    if err != nil {
-      return nil, err
+      return err
    }
-   return route, nil
+   d.SessionState.Raw = []byte(resp.Header.Get("x-wbd-session-state"))
+   return nil
 }
 
-func (d *DefaultToken) decision() (*default_decision, error) {
-   body, err := json.Marshal(map[string]string{
-      "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
-   })
-   if err != nil {
-      return nil, err
-   }
+func (d *DefaultToken) New() error {
    req, err := http.NewRequest(
-      "POST", "https://default.any-any.prd.api.discomax.com",
-      bytes.NewReader(body),
+      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
    )
    if err != nil {
-      return nil, err
+      return err
    }
-   req.Header.Set("authorization", "Bearer " + d.Token.Value)
-   req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
+   // fuck you Max
+   req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return nil, err
+      return err
    }
    defer resp.Body.Close()
-   decision := &default_decision{}
-   err = json.NewDecoder(resp.Body).Decode(decision)
-   if err != nil {
-      return nil, err
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return errors.New(b.String())
    }
-   return decision, nil
+   d.Token.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
 }
 
 func (d *DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
@@ -130,35 +135,45 @@ func (d *DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
    return play, nil
 }
 
-func (d *DefaultToken) New() error {
-   req, err := http.NewRequest(
-      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
-   )
+func (d *DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
+   address := func() string {
+      path, _ := flag.MarshalText()
+      var b strings.Builder
+      b.WriteString("https://default.any-")
+      b.WriteString(home_market)
+      b.WriteString(".prd.api.discomax.com/cms/routes")
+      b.Write(path)
+      return b.String()
+   }()
+   req, err := http.NewRequest("", address, nil)
    if err != nil {
-      return err
+      return nil, err
    }
-   // fuck you Max
-   req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
+   req.URL.RawQuery = url.Values{
+      "include": {"default"},
+      // this is not required, but results in a smaller response
+      "page[items.size]": {"1"},
+   }.Encode()
+   req.Header = http.Header{
+      "authorization": {"Bearer " + d.Token.Value},
+      "x-wbd-session-state": {d.SessionState.Value.String()},
+   }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
    if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
+      var b strings.Builder
       resp.Write(&b)
-      return errors.New(b.String())
+      return nil, errors.New(b.String())
    }
-   d.Token.Raw, err = io.ReadAll(resp.Body)
+   route := &DefaultRoutes{}
+   err = json.NewDecoder(resp.Body).Decode(route)
    if err != nil {
-      return err
+      return nil, err
    }
-   return nil
-}
-
-type DefaultToken struct {
-   SessionState Value[SessionState]
-   Token Value[string]
+   return route, nil
 }
 
 func (d *DefaultToken) Unmarshal() error {
@@ -179,67 +194,36 @@ func (d *DefaultToken) Unmarshal() error {
    return nil
 }
 
-func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
-   address := func() string {
-      var b bytes.Buffer
-      b.WriteString("https://default.any-")
-      b.WriteString(home_market)
-      b.WriteString(".prd.api.discomax.com/login")
-      return b.String()
-   }()
-   body, err := json.Marshal(login)
+func (d *DefaultToken) decision() (*default_decision, error) {
+   body, err := json.Marshal(map[string]string{
+      "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
+   })
    if err != nil {
-      return err
+      return nil, err
    }
-   req, err := http.NewRequest("POST", address, bytes.NewReader(body))
+   req, err := http.NewRequest(
+      "POST", "https://default.any-any.prd.api.discomax.com",
+      bytes.NewReader(body),
+   )
    if err != nil {
-      return err
+      return nil, err
    }
    req.Header.Set("authorization", "Bearer " + d.Token.Value)
-   req.Header.Set("content-type", "application/json")
-   req.Header.Set("x-disco-arkose-token", key.Token)
-   req.Header.Set("x-disco-client-id", func() string {
-      timestamp := time.Now().Unix()
-      hash := hmac.New(sha256.New, default_key.Key)
-      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, body)
-      signature := hash.Sum(nil)
-      return fmt.Sprintf("%v:%v:%x", default_key.Id, timestamp, signature)
-   }())
+   req.URL.Path = "/labs/api/v1/sessions/feature-flags/decisions"
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   d.Token.Raw, err = io.ReadAll(resp.Body)
+   decision := &default_decision{}
+   err = json.NewDecoder(resp.Body).Decode(decision)
    if err != nil {
-      return err
+      return nil, err
    }
-   d.SessionState.Raw = []byte(resp.Header.Get("x-wbd-session-state"))
-   return nil
+   return decision, nil
 }
 
-func (s SessionState) String() string {
-   var (
-      b strings.Builder
-      sep bool
-   )
-   for key, value := range s {
-      if sep {
-         b.WriteByte(';')
-      } else {
-         sep = true
-      }
-      b.WriteString(key)
-      b.WriteByte(':')
-      b.WriteString(value)
-   }
-   return b.String()
-}
+type SessionState map[string]string
 
 func (s SessionState) Delete() {
    for key := range s {
@@ -261,7 +245,23 @@ func (s SessionState) Set(text string) error {
    return nil
 }
 
-type SessionState map[string]string
+func (s SessionState) String() string {
+   var (
+      b strings.Builder
+      sep bool
+   )
+   for key, value := range s {
+      if sep {
+         b.WriteByte(';')
+      } else {
+         sep = true
+      }
+      b.WriteString(key)
+      b.WriteByte(':')
+      b.WriteString(value)
+   }
+   return b.String()
+}
 
 type Value[T any] struct {
    Value T
