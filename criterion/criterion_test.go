@@ -35,7 +35,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   text, err := os.ReadFile("token.json")
+   text, err := os.ReadFile("token.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -64,7 +64,7 @@ func TestLicense(t *testing.T) {
 }
 
 func TestVideo(t *testing.T) {
-   data, err := os.ReadFile("token.json")
+   data, err := os.ReadFile("token.txt")
    if err != nil {
       t.Fatal(err)
    }

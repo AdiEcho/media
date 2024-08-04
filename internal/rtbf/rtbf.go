@@ -11,7 +11,7 @@ import (
 )
 
 func (f flags) download() error {
-   text, err := os.ReadFile(f.home + "/rtbf.json")
+   text, err := os.ReadFile(f.home + "/rtbf.txt")
    if err != nil {
       return err
    }
@@ -78,5 +78,5 @@ func (f flags) authenticate() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/rtbf.json", text, 0666)
+   return os.WriteFile(f.home + "/rtbf.txt", text, 0666)
 }

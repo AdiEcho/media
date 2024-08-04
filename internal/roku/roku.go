@@ -14,7 +14,7 @@ func (f flags) download() error {
    if f.token_read {
       token = &roku.AccountToken{}
       var err error
-      token.Data, err = os.ReadFile(f.home + "/roku.json")
+      token.Data, err = os.ReadFile(f.home + "/roku.txt")
       if err != nil {
          return err
       }
@@ -66,14 +66,14 @@ func (f flags) write_token() error {
    var err error
    // AccountAuth
    var auth roku.AccountAuth
-   auth.Data, err = os.ReadFile("auth.json")
+   auth.Data, err = os.ReadFile("auth.txt")
    if err != nil {
       return err
    }
    auth.Unmarshal()
    // AccountCode
    var code roku.AccountCode
-   code.Data, err = os.ReadFile("code.json")
+   code.Data, err = os.ReadFile("code.txt")
    if err != nil {
       return err
    }
@@ -83,7 +83,7 @@ func (f flags) write_token() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/roku.json", token.Data, 0666)
+   return os.WriteFile(f.home + "/roku.txt", token.Data, 0666)
 }
 
 func (f flags) write_code() error {
@@ -93,7 +93,7 @@ func (f flags) write_code() error {
    if err != nil {
       return err
    }
-   err = os.WriteFile("auth.json", auth.Data, 0666)
+   err = os.WriteFile("auth.txt", auth.Data, 0666)
    if err != nil {
       return err
    }
@@ -106,7 +106,7 @@ func (f flags) write_code() error {
    if err != nil {
       return err
    }
-   err = os.WriteFile("code.json", code.Data, 0666)
+   err = os.WriteFile("code.txt", code.Data, 0666)
    if err != nil {
       return err
    }

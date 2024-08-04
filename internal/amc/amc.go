@@ -22,11 +22,11 @@ func (f flags) login() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/amc.json", auth.Marshal(), 0666)
+   return os.WriteFile(f.home + "/amc.txt", auth.Marshal(), 0666)
 }
 
 func (f flags) download() error {
-   raw, err := os.ReadFile(f.home + "/amc.json")
+   raw, err := os.ReadFile(f.home + "/amc.txt")
    if err != nil {
       return err
    }
@@ -40,7 +40,7 @@ func (f flags) download() error {
       return err
    }
    raw = auth.Marshal()
-   os.WriteFile(f.home + "/amc.json", raw, 0666)
+   os.WriteFile(f.home + "/amc.txt", raw, 0666)
    err = auth.Unmarshal(raw)
    if err != nil {
       return err

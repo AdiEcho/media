@@ -15,7 +15,7 @@ func TestAsset(t *testing.T) {
    if !ok {
       t.Fatal(ArticleAsset{})
    }
-   raw, err := os.ReadFile("authenticate.json")
+   raw, err := os.ReadFile("authenticate.txt")
    if err != nil {
       t.Fatal(err)
    }

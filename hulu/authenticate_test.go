@@ -14,7 +14,7 @@ func TestDetails(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   raw, err := os.ReadFile(home + "/hulu.json")
+   raw, err := os.ReadFile(home + "/hulu.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -70,5 +70,5 @@ func TestAuthenticate(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("authenticate.json", auth.Marshal(), 0666)
+   os.WriteFile("authenticate.txt", auth.Marshal(), 0666)
 }

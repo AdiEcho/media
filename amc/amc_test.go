@@ -43,7 +43,7 @@ func TestLicense(t *testing.T) {
       }
       var module widevine.Cdm
       module.New(private_key, client_id, pssh.Encode())
-      raw, err := os.ReadFile(home + "/amc.json")
+      raw, err := os.ReadFile(home + "/amc.txt")
       if err != nil {
          t.Fatal(err)
       }

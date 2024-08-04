@@ -10,8 +10,46 @@ import (
    "sort"
 )
 
+func (f flags) do_write() error {
+   os.Mkdir(f.paramount, 0666)
+   var head paramount.Header
+   err := head.New(f.paramount)
+   if err != nil {
+      return err
+   }
+   text, err := head.JsonMarshal()
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(f.paramount + "/header.txt", text, 0666)
+   if err != nil {
+      return err
+   }
+   var app paramount.AppToken
+   if f.intl {
+      err = app.ComCbsCa()
+   } else {
+      err = app.ComCbsApp()
+   }
+   if err != nil {
+      return err
+   }
+   items, err := app.Items(f.paramount)
+   if err != nil {
+      return err
+   }
+   item, ok := items.Item()
+   if !ok {
+      return errors.New("VideoItems.Item")
+   }
+   text, err = item.JsonMarshal()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.paramount + "/item.txt", text, 0666)
+}
 func (f flags) do_read() error {
-   text, err := os.ReadFile(f.paramount + "/header.json")
+   text, err := os.ReadFile(f.paramount + "/header.txt")
    if err != nil {
       return err
    }
@@ -48,7 +86,7 @@ func (f flags) do_read() error {
             if err != nil {
                return err
             }
-            text, err := os.ReadFile(f.paramount + "/item.json")
+            text, err := os.ReadFile(f.paramount + "/item.txt")
             if err != nil {
                return err
             }
@@ -63,46 +101,4 @@ func (f flags) do_read() error {
       }
    }
    return nil
-}
-
-func (f flags) do_write() error {
-   err := os.MkdirAll(f.paramount, 0666)
-   if err != nil {
-      return err
-   }
-   var head paramount.Header
-   err = head.New(f.paramount)
-   if err != nil {
-      return err
-   }
-   text, err := head.JsonMarshal()
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(f.paramount + "/header.json", text, 0666)
-   if err != nil {
-      return err
-   }
-   var app paramount.AppToken
-   if f.intl {
-      err = app.ComCbsCa()
-   } else {
-      err = app.ComCbsApp()
-   }
-   if err != nil {
-      return err
-   }
-   items, err := app.Items(f.paramount)
-   if err != nil {
-      return err
-   }
-   item, ok := items.Item()
-   if !ok {
-      return errors.New("VideoItems.Item")
-   }
-   text, err = item.JsonMarshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.paramount + "/item.json", text, 0666)
 }

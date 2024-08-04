@@ -15,7 +15,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   text, err := os.ReadFile(f.base() + "/media.json")
+   text, err := os.ReadFile(f.base() + "/media.txt")
    if err != nil {
       return err
    }
@@ -73,7 +73,7 @@ func (f flags) get_manifest() error {
    if err != nil {
       return err
    }
-   err = os.WriteFile(f.base() + "/media.json", text, 0666)
+   err = os.WriteFile(f.base() + "/media.txt", text, 0666)
    if err != nil {
       return err
    }

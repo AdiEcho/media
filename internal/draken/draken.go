@@ -15,11 +15,11 @@ func (f flags) authenticate() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/draken.json", login.Marshal(), 0666)
+   return os.WriteFile(f.home + "/draken.txt", login.Marshal(), 0666)
 }
 
 func (f flags) download() error {
-   raw, err := os.ReadFile(f.home + "/draken.json")
+   raw, err := os.ReadFile(f.home + "/draken.txt")
    if err != nil {
       return err
    }

@@ -30,5 +30,5 @@ func TestLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("token.json", text, 0666)
+   os.WriteFile("token.txt", text, 0666)
 }

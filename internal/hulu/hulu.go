@@ -15,11 +15,11 @@ func (f flags) authenticate() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/hulu.json", auth.Marshal(), 0666)
+   return os.WriteFile(f.home + "/hulu.txt", auth.Marshal(), 0666)
 }
 
 func (f flags) download() error {
-   raw, err := os.ReadFile(f.home + "/hulu.json")
+   raw, err := os.ReadFile(f.home + "/hulu.txt")
    if err != nil {
       return err
    }

@@ -32,7 +32,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var auth Authenticate
-   auth.Data, err = os.ReadFile(home + "/hulu.json")
+   auth.Data, err = os.ReadFile(home + "/hulu.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -49,7 +49,7 @@ func TestAuthenticate(t *testing.T) {
       code LinkCode
       err error
    )
-   code.Data, err = os.ReadFile("code.json")
+   code.Data, err = os.ReadFile("code.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -58,7 +58,7 @@ func TestAuthenticate(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("authenticate.json", auth.Data, 0666)
+   os.WriteFile("authenticate.txt", auth.Data, 0666)
 }
 
 func TestCode(t *testing.T) {
@@ -67,10 +67,11 @@ func TestCode(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("code.json", code.Data, 0666)
+   os.WriteFile("code.txt", code.Data, 0666)
    code.Unmarshal()
    fmt.Println(code)
 }
+
 // mubi.com/films/325455/player
 // mubi.com/films/passages-2022
 const passages_2022 = 325455
@@ -80,7 +81,7 @@ func TestSecure(t *testing.T) {
       auth Authenticate
       err error
    )
-   auth.Data, err = os.ReadFile("authenticate.json")
+   auth.Data, err = os.ReadFile("authenticate.txt")
    if err != nil {
       t.Fatal(err)
    }

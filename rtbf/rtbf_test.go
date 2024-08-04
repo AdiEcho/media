@@ -32,7 +32,7 @@ func TestWidevine(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   text, err := os.ReadFile("account.json")
+   text, err := os.ReadFile("account.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -65,7 +65,7 @@ func TestWidevine(t *testing.T) {
 }
 
 func TestWebToken(t *testing.T) {
-   text, err := os.ReadFile("account.json")
+   text, err := os.ReadFile("account.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -81,7 +81,7 @@ func TestWebToken(t *testing.T) {
    fmt.Printf("%+v\n", token)
 }
 func TestEntitlement(t *testing.T) {
-   text, err := os.ReadFile("account.json")
+   text, err := os.ReadFile("account.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -125,5 +125,5 @@ func TestAccountsLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("account.json", text, 0666)
+   os.WriteFile("account.txt", text, 0666)
 }

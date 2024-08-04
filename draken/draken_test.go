@@ -24,7 +24,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   raw, err := os.ReadFile("login.json")
+   raw, err := os.ReadFile("login.txt")
    if err != nil {
       t.Fatal(err)
    }

@@ -24,11 +24,11 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   text, err := os.ReadFile(home + "/max.json")
+   var token DefaultToken
+   text, err := os.ReadFile(home + "/max.txt")
    if err != nil {
       t.Fatal(err)
    }
-   var token DefaultToken
    token.Unmarshal(text)
    for _, test := range tests {
       var pssh widevine.Pssh

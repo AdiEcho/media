@@ -34,7 +34,7 @@ func TestRefresh(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   raw, err := os.ReadFile(home + "/amc.json")
+   raw, err := os.ReadFile(home + "/amc.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -47,7 +47,7 @@ func TestRefresh(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile(home + "/amc.json", auth.Marshal(), 0666)
+   os.WriteFile(home + "/amc.txt", auth.Marshal(), 0666)
 }
 
 func TestContent(t *testing.T) {
@@ -55,7 +55,7 @@ func TestContent(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   raw, err := os.ReadFile(home + "/amc.json")
+   raw, err := os.ReadFile(home + "/amc.txt")
    if err != nil {
       t.Fatal(err)
    }
