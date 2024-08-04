@@ -4,28 +4,92 @@ import (
    "bytes"
    "encoding/json"
    "errors"
+   "io"
    "net/http"
    "net/url"
    "strconv"
    "strings"
 )
 
-func (a AuvioPage) Episode() int {
+// type GigyaLogin struct {
+// type LoginToken struct {
+// type WebToken struct {
+
+// hard coded in JavaScript
+const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
+
+func (t *LoginToken) WebToken() (*WebToken, error) {
+   resp, err := http.PostForm(
+      "https://login.auvio.rtbf.be/accounts.getJWT", url.Values{
+         "APIKey": {api_key},
+         "login_token": {t.CookieValue},
+      },
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var web WebToken
+   err = json.NewDecoder(resp.Body).Decode(&web)
+   if err != nil {
+      return nil, err
+   }
+   if v := web.ErrorMessage; v != "" {
+      return nil, errors.New(v)
+   }
+   return &web, nil
+}
+
+func (t *LoginToken) New(id, password string) error {
+   body := url.Values{
+      "APIKey":   {api_key},
+      "loginID":  {id},
+      "password": {password},
+   }.Encode()
+   req, err := http.NewRequest(
+      "POST", "https://login.auvio.rtbf.be/accounts.login",
+      strings.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   req.Header.Set("content-type", "application/x-www-form-urlencoded")
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   t.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+type LoginToken struct {
+   CookieValue string
+   Raw []byte
+}
+
+func (t *LoginToken) Unmarshal() error {
+   var data struct {
+      ErrorMessage string
+      SessionInfo  struct {
+         CookieValue string
+      }
+   }
+   err := json.Unmarshal(t.Raw, &data)
+   if err != nil {
+      return err
+   }
+   if v := data.ErrorMessage; v != "" {
+      return errors.New(v)
+   }
+   t.CookieValue = data.SessionInfo.CookieValue
+   return nil
+}
+func (a *AuvioPage) Episode() int {
    return a.Content.Subtitle.Episode
-}
-
-func (a AuvioPage) Show() string {
-   if v := a.Content.Title; v.Season >= 1 {
-      return v.Title
-   }
-   return ""
-}
-
-func (a AuvioPage) Title() string {
-   if v := a.Content.Subtitle; v.Episode >= 1 {
-      return v.Subtitle
-   }
-   return a.Content.Title.Title
 }
 
 // its just not available from what I can tell
@@ -33,7 +97,21 @@ func (AuvioPage) Year() int {
    return 0
 }
 
-func (a AuvioPage) asset_id() string {
+func (a *AuvioPage) Show() string {
+   if v := a.Content.Title; v.Season >= 1 {
+      return v.Title
+   }
+   return ""
+}
+
+func (a *AuvioPage) Title() string {
+   if v := a.Content.Subtitle; v.Episode >= 1 {
+      return v.Subtitle
+   }
+   return a.Content.Title.Title
+}
+
+func (a *AuvioPage) asset_id() string {
    if v := a.Content.AssetId; v != "" {
       return v
    }
@@ -59,7 +137,7 @@ func NewPage(path string) (*AuvioPage, error) {
    return &data.Data, nil
 }
 
-func (a AuvioPage) Season() int {
+func (a *AuvioPage) Season() int {
    return a.Content.Title.Season
 }
 
@@ -110,15 +188,6 @@ func (t *Title) UnmarshalText(text []byte) error {
    return nil
 }
 
-func (e Entitlement) Dash() (string, bool) {
-   for _, format := range e.Formats {
-      if format.Format == "DASH" {
-         return format.MediaLocator, true
-      }
-   }
-   return "", false
-}
-
 type Entitlement struct {
    AssetId   string
    PlayToken string
@@ -126,24 +195,6 @@ type Entitlement struct {
       Format       string
       MediaLocator string
    }
-}
-
-func (e Entitlement) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Host = "rbm-rtbf.live.ott.irdeto.com"
-   u.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
-   u.Scheme = "https"
-   u.RawQuery = url.Values{
-      "contentId":  {e.AssetId},
-      "ls_session": {e.PlayToken},
-   }.Encode()
-   return u.String(), true
-}
-
-func (Entitlement) RequestHeader() (http.Header, error) {
-   head := http.Header{}
-   head.Set("content-type", "application/x-protobuf")
-   return head, nil
 }
 
 func (Entitlement) WrapRequest(b []byte) ([]byte, error) {
@@ -158,7 +209,39 @@ type GigyaLogin struct {
    SessionToken string
 }
 
-func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
+func (Entitlement) RequestHeader() (http.Header, error) {
+   head := http.Header{}
+   head.Set("content-type", "application/x-protobuf")
+   return head, nil
+}
+
+type WebToken struct {
+   ErrorMessage string
+   IdToken      string `json:"id_token"`
+}
+
+func (e *Entitlement) Dash() (string, bool) {
+   for _, format := range e.Formats {
+      if format.Format == "DASH" {
+         return format.MediaLocator, true
+      }
+   }
+   return "", false
+}
+
+func (e *Entitlement) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Host = "rbm-rtbf.live.ott.irdeto.com"
+   u.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
+   u.Scheme = "https"
+   u.RawQuery = url.Values{
+      "contentId":  {e.AssetId},
+      "ls_session": {e.PlayToken},
+   }.Encode()
+   return u.String(), true
+}
+
+func (g *GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
    req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
    if err != nil {
       return nil, err
@@ -192,12 +275,7 @@ func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error) {
    return title, nil
 }
 
-type WebToken struct {
-   ErrorMessage string
-   IdToken      string `json:"id_token"`
-}
-
-func (w WebToken) Login() (*GigyaLogin, error) {
+func (w *WebToken) Login() (*GigyaLogin, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          Device struct {

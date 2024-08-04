@@ -11,11 +11,11 @@ import (
 )
 
 func (f flags) download() error {
+   var account rtbf.LoginToken
    text, err := os.ReadFile(f.home + "/rtbf.txt")
    if err != nil {
       return err
    }
-   var account rtbf.AccountLogin
    err = account.Unmarshal(text)
    if err != nil {
       return err
@@ -48,35 +48,28 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := internal.Dash(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
          f.s.Name = page
          f.s.Poster = title
-         return f.s.Download(medium)
+         return f.s.Download(rep)
       }
-   }
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
 }
 
 func (f flags) authenticate() error {
-   var login rtbf.AccountLogin
+   var login rtbf.LoginToken
    err := login.New(f.email, f.password)
    if err != nil {
       return err
    }
-   text, err := login.Marshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/rtbf.txt", text, 0666)
+   return os.WriteFile(f.home + "/rtbf.txt", login.Raw, 0666)
 }
