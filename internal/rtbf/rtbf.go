@@ -65,8 +65,8 @@ func (f flags) download() error {
    return nil
 }
 
-func (f flags) authenticate() error {
-   var login rtbf.LoginToken
+func (f *flags) authenticate() error {
+   var login rtbf.AuvioLogin
    err := login.New(f.email, f.password)
    if err != nil {
       return err
