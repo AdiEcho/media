@@ -37,14 +37,9 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   secure.Unmarshal()
-   for _, rep := range secure.V.TextTrackUrls {
-      switch f.representation {
-      case "":
-         fmt.Print(rep, "\n\n")
-      case rep.Id:
-         return f.timed_text(rep.Url)
-      }
+   err = secure.Unmarshal()
+   if err != nil {
+      return err
    }
    req, err := http.NewRequest("", secure.V.Url, nil)
    if err != nil {
@@ -54,10 +49,20 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   for _, rep := range reps {
+   for _, rep := range secure.V.TextTrackUrls {
       switch f.representation {
       case "":
          fmt.Print(rep, "\n\n")
+      case rep.Id:
+         return f.timed_text(rep.Url)
+      }
+   }
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         if _, ok := rep.Ext(); ok {
+            fmt.Print(rep, "\n\n")
+         }
       case rep.Id:
          film, err := f.address.Film()
          if err != nil {

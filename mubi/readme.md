@@ -1,19 +1,14 @@
 # Mubi
 
 1. mubi.com
-2. enable javascript
-3. email address
+2. email address
    - email.ml
-4. get started
-5. enter code
-6. mubi
-7. next
-8. cardholder name
-9. card number
-10. expiry date
-11. CVV
-12. zip code
-13. start free trial
+3. get started
+4. enter code
+5. mubi
+6. next
+7. paypal
+8. start free trial
 
 ## Android
 
