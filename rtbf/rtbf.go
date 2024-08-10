@@ -11,10 +11,6 @@ import (
    "strings"
 )
 
-type AuvioAuth struct {
-   SessionToken string
-}
-
 // its just not available from what I can tell
 func (Namer) Year() int {
    return 0
@@ -82,13 +78,19 @@ func (t *Title) UnmarshalText(text []byte) error {
    return nil
 }
 
+// hard coded in JavaScript
+const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
+
+///
+
+type AuvioAuth struct {
+   SessionToken string
+}
+
 type WebToken struct {
    ErrorMessage string
    IdToken      string `json:"id_token"`
 }
-
-// hard coded in JavaScript
-const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
 
 type AuvioLogin struct {
    CookieValue string
