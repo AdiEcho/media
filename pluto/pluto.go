@@ -8,6 +8,24 @@ import (
    "strings"
 )
 
+type Poster struct{}
+
+func (Poster) RequestUrl() (string, bool) {
+   return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
+}
+
+func (Poster) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (Poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
 func (e EpisodeClip) Dash() (*url.URL, bool) {
    for _, s := range e.Sources {
       if s.Type == "DASH" {
@@ -30,24 +48,6 @@ type Url struct {
 
 func (u *Url) UnmarshalText(text []byte) error {
    return u.Url.UnmarshalBinary(text)
-}
-
-type Poster struct{}
-
-func (Poster) RequestUrl() (string, bool) {
-   return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
-}
-
-func (Poster) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (Poster) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
 }
 
 func (v Video) Clip() (*EpisodeClip, error) {
