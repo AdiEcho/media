@@ -8,30 +8,16 @@ import (
    "os"
 )
 
-func (f flags) login() error {
-   var auth amc.Authorization
-   err := auth.Unauth()
-   if err != nil {
-      return err
-   }
-   err = auth.Unmarshal(auth.Marshal())
-   if err != nil {
-      return err
-   }
-   err = auth.Login(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/amc.txt", auth.Marshal(), 0666)
-}
-
 func (f flags) download() error {
-   raw, err := os.ReadFile(f.home + "/amc.txt")
+   var (
+      auth amc.Authorization
+      err error
+   )
+   auth.Raw, err = os.ReadFile(f.home + "/amc.txt")
    if err != nil {
       return err
    }
-   var auth amc.Authorization
-   err = auth.Unmarshal(raw)
+   err = auth.Unmarshal()
    if err != nil {
       return err
    }
@@ -39,8 +25,8 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   raw = auth.Marshal()
-   os.WriteFile(f.home + "/amc.txt", raw, 0666)
+   os.WriteFile(f.home + "/amc.txt", auth.Raw, 0666)
+   
    err = auth.Unmarshal(raw)
    if err != nil {
       return err
@@ -79,4 +65,21 @@ func (f flags) download() error {
       }
    }
    return nil
+}
+
+func (f *flags) login() error {
+   var auth amc.Authorization
+   err := auth.Unauth()
+   if err != nil {
+      return err
+   }
+   err = auth.Unmarshal()
+   if err != nil {
+      return err
+   }
+   err = auth.Login(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/amc.txt", auth.Raw, 0666)
 }

@@ -9,63 +9,7 @@ import (
    "strings"
 )
 
-func (a Authorization) Playback(nid string) (*Playback, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         AdTags struct {
-            Lat int `json:"lat"`
-            Mode string `json:"mode"`
-            Ppid int `json:"ppid"`
-            PlayerHeight int `json:"playerHeight"`
-            PlayerWidth int `json:"playerWidth"`
-            Url string `json:"url"`
-         } `json:"adtags"`
-      }
-      s.AdTags.Mode = "on-demand"
-      s.AdTags.Url = "-"
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://gw.cds.amcn.com", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/playback-id/api/v1/playback/" + nid
-   req.Header = http.Header{
-      "authorization": {"Bearer " + a.Data.AccessToken},
-      "content-type": {"application/json"},
-      "x-amcn-device-ad-id": {"-"},
-      "x-amcn-language": {"en"},
-      "x-amcn-network": {"amcplus"},
-      "x-amcn-platform": {"web"},
-      "x-amcn-service-id": {"amcplus"},
-      "x-amcn-tenant": {"amcn"},
-      "x-ccpa-do-not-sell": {"doNotPassData"},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var play Playback
-   play.header = resp.Header
-   err = json.NewDecoder(resp.Body).Decode(&play.body)
-   if err != nil {
-      return nil, err
-   }
-   return &play, nil
-}
-
-func (a Authorization) Content(path string) (*ContentCompiler, error) {
+func (a *Authorization) Content(path string) (*ContentCompiler, error) {
    req, err := http.NewRequest("", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return nil, err
@@ -73,7 +17,7 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
    // If you request once with headers, you can request again without any
    // headers for 10 minutes, but then headers are required again
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.Data.AccessToken},
+      "authorization": {"Bearer " + a.Body.AccessToken},
       "x-amcn-cache-hash": {cache_hash()},
       "x-amcn-network": {"amcplus"},
       "x-amcn-tenant": {"amcn"},
@@ -110,21 +54,6 @@ func (a Authorization) Content(path string) (*ContentCompiler, error) {
    return content, nil
 }
 
-func (a Authorization) Marshal() []byte {
-   return a.raw
-}
-
-type Authorization struct {
-   Data *struct {
-      AccessToken string `json:"access_token"`
-      RefreshToken string `json:"refresh_token"`
-   }
-   raw []byte
-}
-
-func (a *Authorization) Unmarshal(raw []byte) error {
-   return json.Unmarshal(raw, a)
-}
 func (a *Authorization) Login(email, password string) error {
    body, err := json.Marshal(map[string]string{
       "email": email,
@@ -141,7 +70,7 @@ func (a *Authorization) Login(email, password string) error {
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/login"
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.Data.AccessToken},
+      "authorization": {"Bearer " + a.Body.AccessToken},
       "content-type": {"application/json"},
       "x-amcn-device-ad-id": {"-"},
       "x-amcn-device-id": {"-"},
@@ -161,7 +90,7 @@ func (a *Authorization) Login(email, password string) error {
    if resp.StatusCode != http.StatusOK {
       return errors.New(resp.Status)
    }
-   a.raw, err = io.ReadAll(resp.Body)
+   a.Raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -189,7 +118,7 @@ func (a *Authorization) Unauth() error {
    if resp.StatusCode != http.StatusOK {
       return errors.New(resp.Status)
    }
-   a.raw, err = io.ReadAll(resp.Body)
+   a.Raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -202,7 +131,7 @@ func (a *Authorization) Refresh() error {
       return err
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
-   req.Header.Set("authorization", "Bearer " + a.Data.RefreshToken)
+   req.Header.Set("authorization", "Bearer " + a.Body.RefreshToken)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -211,9 +140,75 @@ func (a *Authorization) Refresh() error {
    if resp.StatusCode != http.StatusOK {
       return errors.New(resp.Status)
    }
-   a.raw, err = io.ReadAll(resp.Body)
+   a.Raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
    return nil
+}
+
+func (a *Authorization) Playback(nid string) (*Playback, error) {
+   var data struct {
+      AdTags struct {
+         Lat int `json:"lat"`
+         Mode string `json:"mode"`
+         Ppid int `json:"ppid"`
+         PlayerHeight int `json:"playerHeight"`
+         PlayerWidth int `json:"playerWidth"`
+         Url string `json:"url"`
+      } `json:"adtags"`
+   }
+   data.AdTags.Mode = "on-demand"
+   data.AdTags.Url = "-"
+   body, err := json.Marshal(data)
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://gw.cds.amcn.com", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/playback-id/api/v1/playback/" + nid
+   req.Header = http.Header{
+      "authorization": {"Bearer " + a.Body.AccessToken},
+      "content-type": {"application/json"},
+      "x-amcn-device-ad-id": {"-"},
+      "x-amcn-language": {"en"},
+      "x-amcn-network": {"amcplus"},
+      "x-amcn-platform": {"web"},
+      "x-amcn-service-id": {"amcplus"},
+      "x-amcn-tenant": {"amcn"},
+      "x-ccpa-do-not-sell": {"doNotPassData"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var play Playback
+   play.header = resp.Header
+   err = json.NewDecoder(resp.Body).Decode(&play.body)
+   if err != nil {
+      return nil, err
+   }
+   return &play, nil
+}
+
+type Authorization struct {
+   Body struct {
+      AccessToken string `json:"access_token"`
+      RefreshToken string `json:"refresh_token"`
+   }
+   Raw []byte
+}
+
+func (a *Authorization) Unmarshal() error {
+   return json.Unmarshal(a.Raw, &a.Body)
 }
