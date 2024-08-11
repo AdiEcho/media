@@ -11,40 +11,52 @@ import (
 )
 
 func (f flags) download() error {
-   var account rtbf.LoginToken
-   text, err := os.ReadFile(f.home + "/rtbf.txt")
+   var (
+      login rtbf.AuvioLogin
+      err error
+   )
+   login.Raw, err = os.ReadFile(f.home + "/rtbf.txt")
    if err != nil {
       return err
    }
-   err = account.Unmarshal(text)
+   err = login.Unmarshal()
    if err != nil {
       return err
    }
-   token, err := account.Token()
+   token, err := login.Token()
    if err != nil {
       return err
    }
-   gigya, err := token.Login()
+   auth, err := token.Auth()
    if err != nil {
       return err
    }
-   address, err := url.Parse(f.address)
+   address, err := func() (string, error) {
+      u, err := url.Parse(f.address)
+      if err != nil {
+         return "", err
+      }
+      return u.Path, nil
+   }()
    if err != nil {
       return err
    }
-   page, err := rtbf.NewPage(address.Path)
+   var page rtbf.AuvioPage
+   err = page.New(address)
    if err != nil {
       return err
    }
-   title, err := gigya.Entitlement(page)
+   title, err := auth.Entitlement(&page)
    if err != nil {
       return err
    }
-   locator, ok := title.Dash()
-   if !ok {
-      return errors.New("Entitlement.Dash")
-   }
-   req, err := http.NewRequest("", locator, nil)
+   address, err = func() (string, error) {
+      if v, ok := title.Dash(); ok {
+         return v, nil
+      }
+      return "", errors.New("Entitlement.Dash")
+   }()
+   req, err := http.NewRequest("", address, nil)
    if err != nil {
       return err
    }
@@ -57,7 +69,7 @@ func (f flags) download() error {
       case "":
          fmt.Print(rep, "\n\n")
       case rep.Id:
-         f.s.Name = page
+         f.s.Name = &rtbf.Namer{page}
          f.s.Poster = title
          return f.s.Download(rep)
       }

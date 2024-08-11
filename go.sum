@@ -6,8 +6,8 @@
 154.pages.dev/sofia v1.5.6/go.mod h1:42KjYiPl7Vy50qEETAFgjZrDdJyg1MpqiZh3JdxMEGY=
 154.pages.dev/text v1.2.9 h1:gfLYwdlFdjwn7st+01wAgTgAZLuLTv2nphz7v7GHurA=
 154.pages.dev/text v1.2.9/go.mod h1:UvyUI44OzPxT7aBKgFMCqA8simgm/OMEvNSn+UxbW8o=
-154.pages.dev/widevine v1.4.5 h1:6Q48ZGPDQ/6TKZp7HBVC3QPV+MPuuzA8qmYCBDItQ0I=
-154.pages.dev/widevine v1.4.5/go.mod h1:IlvrbKdyjV3+eECb3lxG//QONo2drjG2ThgCKfmWvt8=
+154.pages.dev/widevine v1.4.6 h1:B2KqysH69dWtvFAn59SZO84YyREVuNr7sLdp7gqnbvU=
+154.pages.dev/widevine v1.4.6/go.mod h1:IlvrbKdyjV3+eECb3lxG//QONo2drjG2ThgCKfmWvt8=
 github.com/chmike/cmac-go v1.1.0 h1:aF73ZAEx9N2WdQc93DOJ2fMsBDAGqUtuenjMJMb3kEI=
 github.com/chmike/cmac-go v1.1.0/go.mod h1:wcIN7NRqWSKGuORzd4dReBkoBDE9ZBqfyTVxyDxGeUw=
 google.golang.org/protobuf v1.34.2 h1:6xV6lTsCfpGD21XK49h7MhtcApnLqkfYgPcdHftf6hg=
