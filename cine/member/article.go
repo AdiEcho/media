@@ -71,9 +71,26 @@ func (OperationArticle) Show() string {
    return ""
 }
 
-func (o OperationArticle) Title() string {
-   return o.Data.Article.CanonicalTitle
+func (o *OperationArticle) Title() string {
+   return o.Body.Article.CanonicalTitle
 }
+
+type OperationArticle struct {
+   Body struct {
+      Article struct {
+         Assets         []*ArticleAsset
+         CanonicalTitle string `json:"canonical_title"`
+         Id             int
+         Metas          []struct {
+            Key   string
+            Value string
+         }
+      }
+   }
+   Raw []byte
+}
+
+///
 
 func (o OperationArticle) Film() (*ArticleAsset, bool) {
    for _, asset := range o.Data.Article.Assets {
@@ -95,24 +112,33 @@ func (o OperationArticle) Year() int {
    return 0
 }
 
+func (o *OperationArticle) Unmarshal(raw []byte) error {
+   err := json.Unmarshal(raw, o)
+   if err != nil {
+      return err
+   }
+   for _, asset := range o.Data.Article.Assets {
+      asset.article = o
+   }
+   return nil
+}
+
 func (a ArticleSlug) Article() (*OperationArticle, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Query     string `json:"query"`
-         Variables struct {
-            ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
-         } `json:"variables"`
-      }
-      s.Variables.ArticleUrlSlug = a
-      s.Query = query_article
-      return json.Marshal(s)
-   }()
+   var body struct {
+      Query     string `json:"query"`
+      Variables struct {
+         ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
+      } `json:"variables"`
+   }
+   body.Variables.ArticleUrlSlug = a
+   body.Query = query_article
+   raw, err := json.Marshal(body)
    if err != nil {
       return nil, err
    }
    resp, err := http.Post(
       "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(body),
+      "application/json", bytes.NewReader(raw),
    )
    if err != nil {
       return nil, err
@@ -124,34 +150,4 @@ func (a ArticleSlug) Article() (*OperationArticle, error) {
       return nil, err
    }
    return &article, nil
-}
-
-func (o OperationArticle) Marshal() []byte {
-   return o.raw
-}
-
-type OperationArticle struct {
-   Data *struct {
-      Article struct {
-         Assets         []*ArticleAsset
-         CanonicalTitle string `json:"canonical_title"`
-         Id             int
-         Metas          []struct {
-            Key   string
-            Value string
-         }
-      }
-   }
-   raw []byte
-}
-
-func (o *OperationArticle) Unmarshal(raw []byte) error {
-   err := json.Unmarshal(raw, o)
-   if err != nil {
-      return err
-   }
-   for _, asset := range o.Data.Article.Assets {
-      asset.article = o
-   }
-   return nil
 }

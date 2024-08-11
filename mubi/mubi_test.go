@@ -8,6 +8,19 @@ import (
    "testing"
 )
 
+var test = struct{
+   id int64
+   key_id string
+   url []string
+}{
+   id: 325455,
+   key_id: "CA215A25BB2D43F0BD095FC671C984EE",
+   url: []string{
+      "mubi.com/films/325455/player",
+      "mubi.com/films/passages-2022",
+   },
+}
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -22,7 +35,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var pssh widevine.Pssh
-   pssh.KeyId, err = hex.DecodeString(default_kid)
+   pssh.KeyId, err = hex.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -32,7 +45,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var auth Authenticate
-   auth.Data, err = os.ReadFile(home + "/hulu.txt")
+   auth.Data, err = os.ReadFile(home + "/authenticate.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -72,10 +85,6 @@ func TestCode(t *testing.T) {
    fmt.Println(code)
 }
 
-// mubi.com/films/325455/player
-// mubi.com/films/passages-2022
-const passages_2022 = 325455
-
 func TestSecure(t *testing.T) {
    var (
       auth Authenticate
@@ -86,13 +95,9 @@ func TestSecure(t *testing.T) {
       t.Fatal(err)
    }
    auth.Unmarshal()
-   secure, err := auth.Url(&FilmResponse{Id: passages_2022})
+   secure, err := auth.Url(&FilmResponse{Id: test.id})
    if err != nil {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", secure)
 }
-
-// mubi.com/films/325455/player
-// mubi.com/films/passages-2022
-const default_kid = "CA215A25BB2D43F0BD095FC671C984EE"

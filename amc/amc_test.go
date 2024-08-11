@@ -43,12 +43,12 @@ func TestLicense(t *testing.T) {
       }
       var module widevine.Cdm
       module.New(private_key, client_id, pssh.Encode())
-      raw, err := os.ReadFile(home + "/amc.txt")
+      var auth Authorization
+      auth.Raw, err = os.ReadFile("/authorization.txt")
       if err != nil {
          t.Fatal(err)
       }
-      var auth Authorization
-      auth.Unmarshal(raw)
+      auth.Unmarshal()
       var web Address
       web.Set(test.url)
       play, err := auth.Playback(web.Nid)

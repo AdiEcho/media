@@ -26,8 +26,7 @@ func (f flags) download() error {
       return err
    }
    os.WriteFile(f.home + "/amc.txt", auth.Raw, 0666)
-   
-   err = auth.Unmarshal(raw)
+   err = auth.Unmarshal()
    if err != nil {
       return err
    }

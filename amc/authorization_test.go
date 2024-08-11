@@ -8,59 +8,19 @@ import (
    "time"
 )
 
-func TestLogin(t *testing.T) {
-   username := os.Getenv("amc_username")
-   if username == "" {
-      t.Fatal("Getenv")
-   }
-   password := os.Getenv("amc_password")
-   var auth Authorization
-   err := auth.Unauth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = auth.Unmarshal(auth.Marshal())
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = auth.Login(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-}
-
-func TestRefresh(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   raw, err := os.ReadFile(home + "/amc.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var auth Authorization
-   err = auth.Unmarshal(raw)
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = auth.Refresh()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile(home + "/amc.txt", auth.Marshal(), 0666)
-}
-
 func TestContent(t *testing.T) {
-   home, err := os.UserHomeDir()
+   var (
+      auth Authorization
+      err error
+   )
+   auth.Raw, err = os.ReadFile("/authorization.txt")
    if err != nil {
       t.Fatal(err)
    }
-   raw, err := os.ReadFile(home + "/amc.txt")
+   err = auth.Unmarshal()
    if err != nil {
       t.Fatal(err)
    }
-   var auth Authorization
-   auth.Unmarshal(raw)
    for _, test := range tests {
       var web Address
       web.Set(test.url)
@@ -95,4 +55,43 @@ func TestPath(t *testing.T) {
       }
       fmt.Println(web)
    }
+}
+func TestLogin(t *testing.T) {
+   username := os.Getenv("amc_username")
+   if username == "" {
+      t.Fatal("Getenv")
+   }
+   password := os.Getenv("amc_password")
+   var auth Authorization
+   err := auth.Unauth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.Login(username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+}
+func TestRefresh(t *testing.T) {
+   var (
+      auth Authorization
+      err error
+   )
+   auth.Raw, err = os.ReadFile("/authorization.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.Refresh()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("/authorization.txt", auth.Raw, 0666)
 }
