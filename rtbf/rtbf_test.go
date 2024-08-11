@@ -10,7 +10,7 @@ import (
    "time"
 )
 
-func TestWebToken(t *testing.T) {
+func TestEntitlement(t *testing.T) {
    var (
       login AuvioLogin
       err error
@@ -27,38 +27,26 @@ func TestWebToken(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", token)
+   auth, err := token.Auth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, medium := range media {
+      var page AuvioPage
+      err := page.New(medium.path)
+      if err != nil {
+         t.Fatal(err)
+      }
+      title, err := auth.Entitlement(&page)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", title)
+      fmt.Println(title.Dash())
+      time.Sleep(time.Second)
+   }
 }
 
-func TestEntitlement(t *testing.T) {
-   text, err := os.ReadFile("account.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var account AccountLogin
-   err = account.Unmarshal(text)
-   if err != nil {
-      t.Fatal(err)
-   }
-   token, err := account.Token()
-   if err != nil {
-      t.Fatal(err)
-   }
-   gigya, err := token.Login()
-   if err != nil {
-      t.Fatal(err)
-   }
-   page, err := NewPage(media[0].path)
-   if err != nil {
-      t.Fatal(err)
-   }
-   title, err := gigya.Entitlement(page)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", title)
-   fmt.Println(title.Dash())
-}
 func TestPage(t *testing.T) {
    for _, medium := range media {
       var page AuvioPage
@@ -130,4 +118,23 @@ func TestWidevine(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
+}
+func TestWebToken(t *testing.T) {
+   var (
+      login AuvioLogin
+      err error
+   )
+   login.Raw, err = os.ReadFile("login.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = login.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   token, err := login.Token()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", token)
 }

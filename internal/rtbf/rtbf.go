@@ -56,6 +56,9 @@ func (f flags) download() error {
       }
       return "", errors.New("Entitlement.Dash")
    }()
+   if err != nil {
+      return err
+   }
    req, err := http.NewRequest("", address, nil)
    if err != nil {
       return err
