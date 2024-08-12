@@ -21,6 +21,43 @@ mutation($article_id: Int, $asset_id: Int) {
 }
 `
 
+func (o *OperationPlay) Dash() (string, bool) {
+   for _, title := range o.Entitlements {
+      if title.Protocol == "dash" {
+         return title.Manifest, true
+      }
+   }
+   return "", false
+}
+
+type OperationPlay struct {
+   Entitlements []struct {
+      Manifest string
+      Protocol string
+   }
+   Raw []byte `json:"-"`
+}
+
+func (o *OperationPlay) Unmarshal() error {
+   var body struct {
+      Data struct {
+         ArticleAssetPlay OperationPlay
+      }
+      Errors []struct {
+         Message string
+      }
+   }
+   err := json.Unmarshal(o.Raw, &body)
+   if err != nil {
+      return err
+   }
+   if v := body.Errors; len(v) >= 1 {
+      return errors.New(v[0].Message)
+   }
+   *o = body.Data.ArticleAssetPlay
+   return nil
+}
+
 // geo block, not x-forwarded-for
 func (o *OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
    var body struct {
@@ -59,41 +96,4 @@ func (o *OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
       return nil, err
    }
    return &play, nil
-}
-
-func (o *OperationPlay) Dash() (string, bool) {
-   for _, title := range o.Entitlements {
-      if title.Protocol == "dash" {
-         return title.Manifest, true
-      }
-   }
-   return "", false
-}
-
-type OperationPlay struct {
-   Entitlements []struct {
-      Manifest string
-      Protocol string
-   }
-   Raw []byte `json:"-"`
-}
-
-func (o *OperationPlay) Unmarshal() error {
-   var body struct {
-      Data struct {
-         ArticleAssetPlay OperationPlay
-      }
-      Errors []struct {
-         Message string
-      }
-   }
-   err := json.Unmarshal(o.Raw, &body)
-   if err != nil {
-      return err
-   }
-   if v := body.Errors; len(v) >= 1 {
-      return errors.New(v[0].Message)
-   }
-   *o = body.Data.ArticleAssetPlay
-   return nil
 }

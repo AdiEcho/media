@@ -9,7 +9,25 @@ import (
    "strings"
 )
 
-func (a AuthToken) Files(item *EmbedItem) (VideoFiles, error) {
+func (a *AuthToken) New(username, password string) error {
+   resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
+      "client_id":  {client_id},
+      "grant_type": {"password"},
+      "password":   {password},
+      "username":   {username},
+   })
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   a.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a *AuthToken) Files(item *EmbedItem) (VideoFiles, error) {
    req, err := http.NewRequest("", item.Links.Files.Href, nil)
    if err != nil {
       return nil, err
@@ -33,7 +51,7 @@ func (a AuthToken) Files(item *EmbedItem) (VideoFiles, error) {
    return files, nil
 }
 
-func (a AuthToken) Video(slug string) (*EmbedItem, error) {
+func (a *AuthToken) Video(slug string) (*EmbedItem, error) {
    req, err := http.NewRequest("", "https://api.vhx.com/videos", nil)
    if err != nil {
       return nil, err
@@ -65,33 +83,11 @@ func (a AuthToken) Video(slug string) (*EmbedItem, error) {
    return item, nil
 }
 
-func (a *AuthToken) New(username, password string) error {
-   resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
-      "client_id":  {client_id},
-      "grant_type": {"password"},
-      "password":   {password},
-      "username":   {username},
-   })
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   a.raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-func (a AuthToken) Marshal() []byte {
-   return a.raw
-}
-
 type AuthToken struct {
    AccessToken string `json:"access_token"`
-   raw []byte
+   Raw []byte `json:"-"`
 }
 
-func (a *AuthToken) Unmarshal(raw []byte) error {
-   return json.Unmarshal(raw, a)
+func (a *AuthToken) Unmarshal() error {
+   return json.Unmarshal(a.Raw, a)
 }

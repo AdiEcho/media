@@ -1,5 +1,7 @@
 # cinemember.nl
 
+## Proefperiode van 14 dagen (trial period of 14 days)
+
 1. cinemember.nl
 2. turn on VPN
 3. Start je proefperiode (start your trial)

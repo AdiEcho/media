@@ -10,19 +10,18 @@ import (
    "path"
 )
 
-func (f flags) write_play() error {
+func (f *flags) write_play() error {
    os.Mkdir(f.base(), 0666)
    // 1. write OperationArticle
    article, err := f.slug.Article()
    if err != nil {
       return err
    }
-   raw := article.Marshal()
-   err = os.WriteFile(f.base() + "/article.txt", raw, 0666)
+   err = os.WriteFile(f.base() + "/article.txt", article.Raw, 0666)
    if err != nil {
       return err
    }
-   err = article.Unmarshal(raw)
+   err = article.Unmarshal()
    if err != nil {
       return err
    }
@@ -31,12 +30,12 @@ func (f flags) write_play() error {
    if !ok {
       return member.ArticleAsset{}
    }
-   raw, err = os.ReadFile(f.home + "/cine-member.txt")
+   var user member.OperationUser
+   user.Raw, err = os.ReadFile(f.home + "/cine-member.txt")
    if err != nil {
       return err
    }
-   var user member.OperationUser
-   err = user.Unmarshal(raw)
+   err = user.Unmarshal()
    if err != nil {
       return err
    }
@@ -44,20 +43,28 @@ func (f flags) write_play() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.base() + "/play.txt", play.Marshal(), 0666)
+   return os.WriteFile(f.base() + "/play.txt", play.Raw, 0666)
 }
 
-func (f flags) base() string {
-   return path.Base(string(f.slug))
-}
-
-func (f flags) download() error {
-   raw, err := os.ReadFile(f.base() + "/play.txt")
+func (f *flags) write_user() error {
+   var user member.OperationUser
+   err := user.New(f.email, f.password)
    if err != nil {
       return err
    }
-   var play member.OperationPlay
-   err = play.Unmarshal(raw)
+   return os.WriteFile(f.home + "/cine-member.txt", user.Raw, 0666)
+}
+
+func (f *flags) download() error {
+   var (
+      play member.OperationPlay
+      err error
+   )
+   play.Raw, err = os.ReadFile(f.base() + "/play.txt")
+   if err != nil {
+      return err
+   }
+   err = play.Unmarshal()
    if err != nil {
       return err
    }
@@ -78,27 +85,22 @@ func (f flags) download() error {
       case "":
          fmt.Print(rep, "\n\n")
       case rep.Id:
-         raw, err = os.ReadFile(f.base() + "/article.txt")
-         if err != nil {
-            return err
-         }
          var article member.OperationArticle
-         err = article.Unmarshal(raw)
+         article.Raw, err = os.ReadFile(f.base() + "/article.txt")
          if err != nil {
             return err
          }
-         f.s.Name = article
+         err = article.Unmarshal()
+         if err != nil {
+            return err
+         }
+         f.s.Name = &article
          return f.s.Download(rep)
       }
    }
    return nil
 }
 
-func (f flags) write_user() error {
-   var user member.OperationUser
-   err := user.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/cine-member.txt", user.Marshal(), 0666)
+func (f *flags) base() string {
+   return path.Base(string(f.slug))
 }

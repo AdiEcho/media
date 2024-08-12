@@ -9,6 +9,32 @@ import (
    "strings"
 )
 
+func (o *OperationArticle) Unmarshal() error {
+   var body struct {
+      Data struct {
+         Article OperationArticle
+      }
+   }
+   err := json.Unmarshal(o.Raw, &body)
+   if err != nil {
+      return err
+   }
+   *o = body.Data.Article
+   for _, asset := range o.Assets {
+      asset.article = o
+   }
+   return nil
+}
+
+func (o *OperationArticle) Film() (*ArticleAsset, bool) {
+   for _, asset := range o.Assets {
+      if asset.LinkedType == "film" {
+         return asset, true
+      }
+   }
+   return nil, false
+}
+
 const query_article = `
 query($articleUrlSlug: String) {
    Article(full_url_slug: $articleUrlSlug) {
@@ -99,21 +125,6 @@ type OperationArticle struct {
    Raw []byte `json:"-"`
 }
 
-func (o *OperationArticle) Unmarshal() error {
-   var body struct {
-      Article OperationArticle
-   }
-   err := json.Unmarshal(o.Raw, &body)
-   if err != nil {
-      return err
-   }
-   *o = body.Article
-   for _, asset := range o.Assets {
-      asset.article = o
-   }
-   return nil
-}
-
 func (OperationArticle) Episode() int {
    return 0
 }
@@ -128,15 +139,6 @@ func (OperationArticle) Show() string {
 
 func (o *OperationArticle) Title() string {
    return o.CanonicalTitle
-}
-
-func (o *OperationArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range o.Assets {
-      if asset.LinkedType == "film" {
-         return asset, true
-      }
-   }
-   return nil, false
 }
 
 func (o *OperationArticle) Year() int {
