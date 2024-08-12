@@ -9,33 +9,6 @@ import (
    "strings"
 )
 
-func (ArticleAsset) Error() string {
-   return "ArticleAsset"
-}
-
-type ArticleSlug string
-
-// https://www.cinemember.nl/nl/films/american-hustle
-func (a *ArticleSlug) Set(s string) error {
-   s = strings.TrimPrefix(s, "https://")
-   s = strings.TrimPrefix(s, "www.")
-   s = strings.TrimPrefix(s, "cinemember.nl")
-   s = strings.TrimPrefix(s, "/nl")
-   s = strings.TrimPrefix(s, "/")
-   *a = ArticleSlug(s)
-   return nil
-}
-
-func (a ArticleSlug) String() string {
-   return string(a)
-}
-
-type ArticleAsset struct {
-   Id         int
-   LinkedType string `json:"linked_type"`
-   article    *OperationArticle
-}
-
 const query_article = `
 query($articleUrlSlug: String) {
    Article(full_url_slug: $articleUrlSlug) {
@@ -58,6 +31,88 @@ query($articleUrlSlug: String) {
    }
 }
 `
+
+func (ArticleAsset) Error() string {
+   return "ArticleAsset"
+}
+
+type ArticleAsset struct {
+   Id         int
+   LinkedType string `json:"linked_type"`
+   article    *OperationArticle
+}
+
+type ArticleSlug string
+
+func (a ArticleSlug) Article() (*OperationArticle, error) {
+   var body struct {
+      Query     string `json:"query"`
+      Variables struct {
+         ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
+      } `json:"variables"`
+   }
+   body.Variables.ArticleUrlSlug = a
+   body.Query = query_article
+   raw, err := json.Marshal(body)
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.Post(
+      "https://api.audienceplayer.com/graphql/2/user",
+      "application/json", bytes.NewReader(raw),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var article OperationArticle
+   article.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &article, nil
+}
+
+// https://www.cinemember.nl/nl/films/american-hustle
+func (a *ArticleSlug) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   s = strings.TrimPrefix(s, "cinemember.nl")
+   s = strings.TrimPrefix(s, "/nl")
+   s = strings.TrimPrefix(s, "/")
+   *a = ArticleSlug(s)
+   return nil
+}
+
+func (a ArticleSlug) String() string {
+   return string(a)
+}
+
+type OperationArticle struct {
+   Assets         []*ArticleAsset
+   CanonicalTitle string `json:"canonical_title"`
+   Id             int
+   Metas          []struct {
+      Key   string
+      Value string
+   }
+   Raw []byte `json:"-"`
+}
+
+func (o *OperationArticle) Unmarshal() error {
+   var body struct {
+      Article OperationArticle
+   }
+   err := json.Unmarshal(o.Raw, &body)
+   if err != nil {
+      return err
+   }
+   *o = body.Article
+   for _, asset := range o.Assets {
+      asset.article = o
+   }
+   return nil
+}
 
 func (OperationArticle) Episode() int {
    return 0
@@ -93,59 +148,4 @@ func (o *OperationArticle) Year() int {
       }
    }
    return 0
-}
-
-func (a ArticleSlug) Article() (*OperationArticle, error) {
-   var body struct {
-      Query     string `json:"query"`
-      Variables struct {
-         ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
-      } `json:"variables"`
-   }
-   body.Variables.ArticleUrlSlug = a
-   body.Query = query_article
-   raw, err := json.Marshal(body)
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(raw),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var article OperationArticle
-   article.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &article, nil
-}
-
-type OperationArticle struct {
-   Assets         []*ArticleAsset
-   CanonicalTitle string `json:"canonical_title"`
-   Id             int
-   Metas          []struct {
-      Key   string
-      Value string
-   }
-   Raw []byte `json:"-"`
-}
-
-func (o *OperationArticle) Unmarshal() error {
-   var body struct {
-      Article OperationArticle
-   }
-   err := json.Unmarshal(o.Raw, &body)
-   if err != nil {
-      return err
-   }
-   *o = body.Article
-   for _, asset := range o.Assets {
-      asset.article = o
-   }
-   return nil
 }
