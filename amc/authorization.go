@@ -9,32 +9,14 @@ import (
    "strings"
 )
 
-func (v *Value[Authorization]) Unauth() error {
-   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
-   if err != nil {
-      return err
-   }
-   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
-   req.Header = http.Header{
-      "x-amcn-device-id": {"-"},
-      "x-amcn-language": {"en"},
-      "x-amcn-network": {"amcplus"},
-      "x-amcn-platform": {"web"},
-      "x-amcn-tenant": {"amcn"},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return errors.New(resp.Status)
-   }
-   v.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
+type Value[T any] struct {
+   Value T
+   Raw []byte
+}
+
+type Authorization struct {
+   AccessToken string `json:"access_token"`
+   RefreshToken string `json:"refresh_token"`
 }
 
 func (v *Value[Authorization]) Refresh() error {
@@ -156,16 +138,6 @@ func (a *Authorization) Playback(nid string) (*Playback, error) {
    return &play, nil
 }
 
-type Value[T any] struct {
-   Value T
-   Raw []byte
-}
-
-type Authorization struct {
-   AccessToken string `json:"access_token"`
-   RefreshToken string `json:"refresh_token"`
-}
-
 func (v *Value[Authorization]) Unmarshal() error {
    var body struct {
       Data Authorization
@@ -175,5 +147,32 @@ func (v *Value[Authorization]) Unmarshal() error {
       return err
    }
    v.Value = body.Data
+   return nil
+}
+func (v *Value[Authorization]) Unauth() error {
+   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
+   if err != nil {
+      return err
+   }
+   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
+   req.Header = http.Header{
+      "x-amcn-device-id": {"-"},
+      "x-amcn-language": {"en"},
+      "x-amcn-network": {"amcplus"},
+      "x-amcn-platform": {"web"},
+      "x-amcn-tenant": {"amcn"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
+   }
+   v.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
    return nil
 }
