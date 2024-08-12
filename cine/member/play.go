@@ -7,28 +7,6 @@ import (
    "net/http"
 )
 
-const query_play = `
-mutation($article_id: Int, $asset_id: Int) {
-   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
-      entitlements {
-         ... on ArticleAssetPlayEntitlement {
-            manifest
-            protocol
-         }
-      }
-   }
-}
-`
-
-func (o *OperationPlay) Dash() (string, bool) {
-   for _, title := range o.Body.ArticleAssetPlay.Entitlements {
-      if title.Protocol == "dash" {
-         return title.Manifest, true
-      }
-   }
-   return "", false
-}
-
 // geo block, not x-forwarded-for
 func (o *OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
    var body struct {
@@ -40,7 +18,7 @@ func (o *OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
    }
    body.Query = query_play
    body.Variables.AssetId = asset.Id
-   body.Variables.ArticleId = asset.article.Body.Article.Id
+   body.Variables.ArticleId = asset.article.Id
    raw, err := json.Marshal(body)
    if err != nil {
       return nil, err
@@ -83,4 +61,25 @@ type OperationPlay struct {
 
 func (o *OperationPlay) Unmarshal() error {
    return json.Unmarshal(o.Raw, &o.Body)
+}
+const query_play = `
+mutation($article_id: Int, $asset_id: Int) {
+   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
+      entitlements {
+         ... on ArticleAssetPlayEntitlement {
+            manifest
+            protocol
+         }
+      }
+   }
+}
+`
+
+func (o *OperationPlay) Dash() (string, bool) {
+   for _, title := range o.Body.ArticleAssetPlay.Entitlements {
+      if title.Protocol == "dash" {
+         return title.Manifest, true
+      }
+   }
+   return "", false
 }

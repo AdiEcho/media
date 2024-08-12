@@ -72,11 +72,11 @@ func (OperationArticle) Show() string {
 }
 
 func (o *OperationArticle) Title() string {
-   return o.Body.Article.CanonicalTitle
+   return o.CanonicalTitle
 }
 
 func (o *OperationArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range o.Body.Article.Assets {
+   for _, asset := range o.Assets {
       if asset.LinkedType == "film" {
          return asset, true
       }
@@ -85,7 +85,7 @@ func (o *OperationArticle) Film() (*ArticleAsset, bool) {
 }
 
 func (o *OperationArticle) Year() int {
-   for _, meta := range o.Body.Article.Metas {
+   for _, meta := range o.Metas {
       if meta.Key == "year" {
          if v, err := strconv.Atoi(meta.Value); err == nil {
             return v
@@ -125,26 +125,26 @@ func (a ArticleSlug) Article() (*OperationArticle, error) {
 }
 
 type OperationArticle struct {
-   Body struct {
-      Article struct {
-         Assets         []*ArticleAsset
-         CanonicalTitle string `json:"canonical_title"`
-         Id             int
-         Metas          []struct {
-            Key   string
-            Value string
-         }
-      }
+   Assets         []*ArticleAsset
+   CanonicalTitle string `json:"canonical_title"`
+   Id             int
+   Metas          []struct {
+      Key   string
+      Value string
    }
-   Raw []byte
+   Raw []byte `json:"-"`
 }
 
 func (o *OperationArticle) Unmarshal() error {
-   err := json.Unmarshal(o.Raw, &o.Body)
+   var body struct {
+      Article OperationArticle
+   }
+   err := json.Unmarshal(o.Raw, &body)
    if err != nil {
       return err
    }
-   for _, asset := range o.Body.Article.Assets {
+   *o = body.Article
+   for _, asset := range o.Assets {
       asset.article = o
    }
    return nil
