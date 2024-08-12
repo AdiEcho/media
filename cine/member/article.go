@@ -75,25 +75,8 @@ func (o *OperationArticle) Title() string {
    return o.Body.Article.CanonicalTitle
 }
 
-type OperationArticle struct {
-   Body struct {
-      Article struct {
-         Assets         []*ArticleAsset
-         CanonicalTitle string `json:"canonical_title"`
-         Id             int
-         Metas          []struct {
-            Key   string
-            Value string
-         }
-      }
-   }
-   Raw []byte
-}
-
-///
-
-func (o OperationArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range o.Data.Article.Assets {
+func (o *OperationArticle) Film() (*ArticleAsset, bool) {
+   for _, asset := range o.Body.Article.Assets {
       if asset.LinkedType == "film" {
          return asset, true
       }
@@ -101,8 +84,8 @@ func (o OperationArticle) Film() (*ArticleAsset, bool) {
    return nil, false
 }
 
-func (o OperationArticle) Year() int {
-   for _, meta := range o.Data.Article.Metas {
+func (o *OperationArticle) Year() int {
+   for _, meta := range o.Body.Article.Metas {
       if meta.Key == "year" {
          if v, err := strconv.Atoi(meta.Value); err == nil {
             return v
@@ -110,17 +93,6 @@ func (o OperationArticle) Year() int {
       }
    }
    return 0
-}
-
-func (o *OperationArticle) Unmarshal(raw []byte) error {
-   err := json.Unmarshal(raw, o)
-   if err != nil {
-      return err
-   }
-   for _, asset := range o.Data.Article.Assets {
-      asset.article = o
-   }
-   return nil
 }
 
 func (a ArticleSlug) Article() (*OperationArticle, error) {
@@ -145,9 +117,35 @@ func (a ArticleSlug) Article() (*OperationArticle, error) {
    }
    defer resp.Body.Close()
    var article OperationArticle
-   article.raw, err = io.ReadAll(resp.Body)
+   article.Raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
    return &article, nil
+}
+
+type OperationArticle struct {
+   Body struct {
+      Article struct {
+         Assets         []*ArticleAsset
+         CanonicalTitle string `json:"canonical_title"`
+         Id             int
+         Metas          []struct {
+            Key   string
+            Value string
+         }
+      }
+   }
+   Raw []byte
+}
+
+func (o *OperationArticle) Unmarshal() error {
+   err := json.Unmarshal(o.Raw, &o.Body)
+   if err != nil {
+      return err
+   }
+   for _, asset := range o.Body.Article.Assets {
+      asset.article = o
+   }
+   return nil
 }

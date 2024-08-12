@@ -20,8 +20,8 @@ mutation($article_id: Int, $asset_id: Int) {
 }
 `
 
-func (o OperationPlay) Dash() (string, bool) {
-   for _, title := range o.Data.ArticleAssetPlay.Entitlements {
+func (o *OperationPlay) Dash() (string, bool) {
+   for _, title := range o.Body.ArticleAssetPlay.Entitlements {
       if title.Protocol == "dash" {
          return title.Manifest, true
       }
@@ -30,26 +30,24 @@ func (o OperationPlay) Dash() (string, bool) {
 }
 
 // geo block, not x-forwarded-for
-func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Query     string `json:"query"`
-         Variables struct {
-            ArticleId int `json:"article_id"`
-            AssetId   int `json:"asset_id"`
-         } `json:"variables"`
-      }
-      s.Query = query_play
-      s.Variables.AssetId = asset.Id
-      s.Variables.ArticleId = asset.article.Data.Article.Id
-      return json.Marshal(s)
-   }()
+func (o *OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
+   var body struct {
+      Query     string `json:"query"`
+      Variables struct {
+         ArticleId int `json:"article_id"`
+         AssetId   int `json:"asset_id"`
+      } `json:"variables"`
+   }
+   body.Query = query_play
+   body.Variables.AssetId = asset.Id
+   body.Variables.ArticleId = asset.article.Body.Article.Id
+   raw, err := json.Marshal(body)
    if err != nil {
       return nil, err
    }
    req, err := http.NewRequest(
       "POST", "https://api.audienceplayer.com/graphql/2/user",
-      bytes.NewReader(body),
+      bytes.NewReader(raw),
    )
    if err != nil {
       return nil, err
@@ -64,19 +62,15 @@ func (o OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
    }
    defer resp.Body.Close()
    var play OperationPlay
-   play.raw, err = io.ReadAll(resp.Body)
+   play.Raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
    return &play, nil
 }
 
-func (o OperationPlay) Marshal() []byte {
-   return o.raw
-}
-
 type OperationPlay struct {
-   Data *struct {
+   Body struct {
       ArticleAssetPlay struct {
          Entitlements []struct {
             Manifest string
@@ -84,9 +78,9 @@ type OperationPlay struct {
          }
       }
    }
-   raw []byte
+   Raw []byte
 }
 
-func (o *OperationPlay) Unmarshal(raw []byte) error {
-   return json.Unmarshal(raw, o)
+func (o *OperationPlay) Unmarshal() error {
+   return json.Unmarshal(o.Raw, &o.Body)
 }
