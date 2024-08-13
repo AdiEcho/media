@@ -9,7 +9,30 @@ import (
    "strings"
 )
 
-func (a AuthLogin) Entitlement(movie *FullMovie) (*Entitlement, error) {
+func (a *AuthLogin) New(identity, key string) error {
+   body, err := json.Marshal(map[string]string{
+      "accessKey": key,
+      "identity":  identity,
+   })
+   if err != nil {
+      return err
+   }
+   resp, err := http.Post(
+      "https://drakenfilm.se/api/auth/login", "application/json",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   a.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a *AuthLogin) Entitlement(movie *FullMovie) (*Entitlement, error) {
    req, err := http.NewRequest("POST", "https://client-api.magine.com", nil)
    if err != nil {
       return nil, err
@@ -35,7 +58,7 @@ func (a AuthLogin) Entitlement(movie *FullMovie) (*Entitlement, error) {
    return title, nil
 }
 
-func (a AuthLogin) Playback(
+func (a *AuthLogin) Playback(
    movie *FullMovie, title *Entitlement,
 ) (*Playback, error) {
    req, err := http.NewRequest("POST", "https://client-api.magine.com", nil)
@@ -71,38 +94,11 @@ func (a AuthLogin) Playback(
    return play, nil
 }
 
-func (a *AuthLogin) New(identity, key string) error {
-   body, err := json.Marshal(map[string]string{
-      "accessKey": key,
-      "identity":  identity,
-   })
-   if err != nil {
-      return err
-   }
-   resp, err := http.Post(
-      "https://drakenfilm.se/api/auth/login", "application/json",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   a.raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-func (a AuthLogin) Marshal() []byte {
-   return a.raw
-}
-
 type AuthLogin struct {
    Token string
-   raw []byte
+   Raw []byte `json:"-"`
 }
 
-func (a *AuthLogin) Unmarshal(raw []byte) error {
-   return json.Unmarshal(raw, a)
+func (a *AuthLogin) Unmarshal() error {
+   return json.Unmarshal(a.Raw, a)
 }

@@ -10,17 +10,17 @@ import (
    "sort"
 )
 
-func (f flags) download() error {
+func (f *flags) download() error {
    manifest, err := os.ReadFile(f.base() + "/manifest.txt")
    if err != nil {
       return err
    }
-   text, err := os.ReadFile(f.base() + "/media.txt")
+   var media ctv.MediaContent
+   media.Raw, err = os.ReadFile(f.base() + "/media.txt")
    if err != nil {
       return err
    }
-   var media ctv.MediaContent
-   err = media.Json(text)
+   err = media.Unmarshal()
    if err != nil {
       return err
    }
@@ -48,11 +48,7 @@ func (f flags) download() error {
    return nil
 }
 
-func (f flags) base() string {
-   return path.Base(string(f.path))
-}
-
-func (f flags) get_manifest() error {
+func (f *flags) get_manifest() error {
    resolve, err := f.path.Resolve()
    if err != nil {
       return err
@@ -65,15 +61,8 @@ func (f flags) get_manifest() error {
    if err != nil {
       return err
    }
-   err = os.MkdirAll(f.base(), 0666)
-   if err != nil {
-      return err
-   }
-   text, err := media.JsonMarshal()
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(f.base() + "/media.txt", text, 0666)
+   os.Mkdir(f.base(), 0666)
+   err = os.WriteFile(f.base() + "/media.txt", media.Raw, 0666)
    if err != nil {
       return err
    }
@@ -82,4 +71,8 @@ func (f flags) get_manifest() error {
       return err
    }
    return os.WriteFile(f.base() + "/manifest.txt", []byte(manifest), 0666)
+}
+
+func (f *flags) base() string {
+   return path.Base(string(f.path))
 }
