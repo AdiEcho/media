@@ -10,6 +10,40 @@ import (
    "strings"
 )
 
+type Authenticate struct {
+   UserToken string `json:"user_token"`
+   Raw []byte `json:"-"`
+}
+
+func (a *Authenticate) DeepLink(id *EntityId) (*DeepLink, error) {
+   req, err := http.NewRequest("", "https://discover.hulu.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/content/v5/deeplink/playback"
+   req.URL.RawQuery = url.Values{
+      "id": {id.s},
+      "namespace": {"entity"},
+   }.Encode()
+   req.Header.Set("authorization", "Bearer " + a.UserToken)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   link := &DeepLink{}
+   err = json.NewDecoder(resp.Body).Decode(link)
+   if err != nil {
+      return nil, err
+   }
+   return link, nil
+}
+
 func (a *Authenticate) Details(link *DeepLink) (*Details, error) {
    body, err := json.Marshal(map[string][]string{
       "eabs": {link.EabId},
@@ -67,14 +101,7 @@ func (a *Authenticate) New(email, password string) error {
    return nil
 }
 
-type Authenticate struct {
-   UserToken string `json:"user_token"`
-   Raw []byte `json:"-"`
-}
-
-///
-
-func (a Authenticate) Playlist(link *DeepLink) (*Playlist, error) {
+func (a *Authenticate) Playlist(link *DeepLink) (*Playlist, error) {
    var p playlist_request
    p.ContentEabId = link.EabId
    p.DeejayDeviceId = 166
@@ -121,7 +148,7 @@ func (a Authenticate) Playlist(link *DeepLink) (*Playlist, error) {
          Width: 9999,
       },
    }
-   body, err := json.MarshalIndent(p, "", " ")
+   body, err := json.Marshal(p)
    if err != nil {
       return nil, err
    }
@@ -132,7 +159,7 @@ func (a Authenticate) Playlist(link *DeepLink) (*Playlist, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.Data.UserToken},
+      "authorization": {"Bearer " + a.UserToken},
       "content-type": {"application/json"},
    }
    resp, err := http.DefaultClient.Do(req)
@@ -153,40 +180,14 @@ func (a Authenticate) Playlist(link *DeepLink) (*Playlist, error) {
    return play, nil
 }
 
-func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
-   req, err := http.NewRequest("", "https://discover.hulu.com", nil)
+func (a *Authenticate) Unmarshal() error {
+   var body struct {
+      Data Authenticate
+   }
+   err := json.Unmarshal(a.Raw, &body)
    if err != nil {
-      return nil, err
+      return err
    }
-   req.URL.Path = "/content/v5/deeplink/playback"
-   req.URL.RawQuery = url.Values{
-      "id": {id.s},
-      "namespace": {"entity"},
-   }.Encode()
-   req.Header.Set("authorization", "Bearer " + a.Data.UserToken)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   link := &DeepLink{}
-   err = json.NewDecoder(resp.Body).Decode(link)
-   if err != nil {
-      return nil, err
-   }
-   return link, nil
-}
-
-func (a *Authenticate) Unmarshal(raw []byte) error {
-   struct {
-      Data struct {
-         UserToken string `json:"user_token"`
-      }
-   }
-   return json.Unmarshal(raw, a)
+   *a = body.Data
+   return nil
 }
