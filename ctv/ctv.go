@@ -11,35 +11,6 @@ import (
    "time"
 )
 
-// wikipedia.org/wiki/Geo-blocking
-func (a AxisContent) Manifest(media *MediaContent) (string, error) {
-   address := func() string {
-      b := []byte("https://capi.9c9media.com/destinations/")
-      b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
-      b = append(b, "/platforms/desktop/playback/contents/"...)
-      b = strconv.AppendInt(b, a.AxisId, 10)
-      b = append(b, "/contentPackages/"...)
-      b = strconv.AppendInt(b, media.ContentPackages[0].Id, 10)
-      b = append(b, "/manifest.mpd?action=reference"...)
-      return string(b)
-   }()
-   resp, err := http.Get(address)
-   if err != nil {
-      return "", err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return "", errors.New(b.String())
-   }
-   text, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return "", err
-   }
-   return strings.Replace(string(text), "/best/", "/ultimate/", 1), nil
-}
-
 type Date struct {
    Time time.Time
 }
@@ -55,30 +26,6 @@ func (d *Date) UnmarshalText(text []byte) error {
       return err
    }
    return nil
-}
-
-type MediaContent struct {
-   BroadcastDate   Date
-   ContentPackages []struct {
-      Id int64
-   }
-   Episode int
-   Media   struct {
-      Name string
-      Type string
-   }
-   Name   string
-   Season struct {
-      Number int
-   }
-}
-
-func (m *MediaContent) Json(text []byte) error {
-   return json.Unmarshal(text, m)
-}
-
-func (m MediaContent) JsonMarshal() ([]byte, error) {
-   return json.MarshalIndent(m, "", " ")
 }
 
 type Namer struct {
@@ -185,7 +132,14 @@ query($id: ID!) {
 }
 `
 
-func (a AxisContent) Media() (*MediaContent, error) {
+type AxisContent struct {
+   AxisId                int64
+   AxisPlaybackLanguages []struct {
+      DestinationCode string
+   }
+}
+
+func (a *AxisContent) Media() (*MediaContent, error) {
    address := func() string {
       b := []byte("https://capi.9c9media.com/destinations/")
       b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
@@ -199,18 +153,60 @@ func (a AxisContent) Media() (*MediaContent, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   media := &MediaContent{}
-   err = json.NewDecoder(resp.Body).Decode(media)
+   var media MediaContent
+   media.Raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
-   return media, nil
+   return &media, nil
 }
 
-type AxisContent struct {
-   AxisId                int64
-   AxisPlaybackLanguages []struct {
-      DestinationCode string
+// wikipedia.org/wiki/Geo-blocking
+func (a *AxisContent) Manifest(media *MediaContent) (string, error) {
+   address := func() string {
+      b := []byte("https://capi.9c9media.com/destinations/")
+      b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
+      b = append(b, "/platforms/desktop/playback/contents/"...)
+      b = strconv.AppendInt(b, a.AxisId, 10)
+      b = append(b, "/contentPackages/"...)
+      b = strconv.AppendInt(b, media.ContentPackages[0].Id, 10)
+      b = append(b, "/manifest.mpd?action=reference"...)
+      return string(b)
+   }()
+   resp, err := http.Get(address)
+   if err != nil {
+      return "", err
    }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return "", errors.New(b.String())
+   }
+   text, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return "", err
+   }
+   return strings.Replace(string(text), "/best/", "/ultimate/", 1), nil
 }
 
+type MediaContent struct {
+   BroadcastDate   Date
+   ContentPackages []struct {
+      Id int64
+   }
+   Episode int
+   Media   struct {
+      Name string
+      Type string
+   }
+   Name   string
+   Season struct {
+      Number int
+   }
+   Raw []byte `json:"-"`
+}
+
+func (m *MediaContent) Unmarshal() error {
+   return json.Unmarshal(m.Raw, m)
+}

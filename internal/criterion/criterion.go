@@ -10,22 +10,16 @@ import (
    "path"
 )
 
-func (f flags) authenticate() error {
-   var token criterion.AuthToken
-   err := token.New(f.email, f.password)
+func (f *flags) download() error {
+   var (
+      token criterion.AuthToken
+      err error
+   )
+   token.Raw, err = os.ReadFile(f.home + "/criterion.txt")
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/criterion.txt", token.Marshal(), 0666)
-}
-
-func (f flags) download() error {
-   text, err := os.ReadFile(f.home + "/criterion.txt")
-   if err != nil {
-      return err
-   }
-   var token criterion.AuthToken
-   err = token.Unmarshal(text)
+   err = token.Unmarshal()
    if err != nil {
       return err
    }
@@ -60,4 +54,13 @@ func (f flags) download() error {
       }
    }
    return nil
+}
+
+func (f *flags) authenticate() error {
+   var token criterion.AuthToken
+   err := token.New(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/criterion.txt", token.Raw, 0666)
 }
