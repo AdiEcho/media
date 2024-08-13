@@ -36,19 +36,6 @@ func (a *AddressFlag) UnmarshalText(text []byte) error {
    return nil
 }
 
-func (a AddressFlag) MarshalText() ([]byte, error) {
-   var b bytes.Buffer
-   if a.VideoId != "" {
-      b.WriteString("/video/watch/")
-      b.WriteString(a.VideoId)
-   }
-   if a.EditId != "" {
-      b.WriteByte('/')
-      b.WriteString(a.EditId)
-   }
-   return b.Bytes(), nil
-}
-
 type AddressManifest struct {
    Text string
 }
@@ -65,65 +52,6 @@ type DefaultLogin struct {
    } `json:"credentials"`
 }
 
-func (d DefaultRoutes) video() (*route_include, bool) {
-   for _, include := range d.Included {
-      if include.Id == d.Data.Attributes.Url.VideoId {
-         return &include, true
-      }
-   }
-   return nil, false
-}
-
-func (d DefaultRoutes) Season() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.SeasonNumber
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Episode() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.EpisodeNumber
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Title() string {
-   if v, ok := d.video(); ok {
-      return v.Attributes.Name
-   }
-   return ""
-}
-
-func (d DefaultRoutes) Year() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.AirDate.Year()
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Show() string {
-   if v, ok := d.video(); ok {
-      if v.Attributes.SeasonNumber >= 1 {
-         for _, include := range d.Included {
-            if include.Id == v.Relationships.Show.Data.Id {
-               return include.Attributes.Name
-            }
-         }
-      }
-   }
-   return ""
-}
-
-type DefaultRoutes struct {
-   Data struct {
-      Attributes struct {
-         Url AddressFlag
-      }
-   }
-   Included []route_include
-}
-
 func (Playback) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -134,10 +62,6 @@ func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
 
 func (Playback) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
-}
-
-func (p Playback) RequestUrl() (string, bool) {
-   return p.Drm.Schemes.Widevine.LicenseUrl, true
 }
 
 type Playback struct {
@@ -159,18 +83,34 @@ type PublicKey struct {
    Token string
 }
 
-func (p *PublicKey) New() error {
-   resp, err := http.PostForm(
-      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/"+arkose_site_key,
-      url.Values{
-         "public_key": {arkose_site_key},
-      },
-   )
-   if err != nil {
-      return err
+type RouteInclude struct {
+   Attributes struct {
+      AirDate       time.Time
+      Name          string
+      EpisodeNumber int
+      SeasonNumber  int
    }
-   defer resp.Body.Close()
-   return json.NewDecoder(resp.Body).Decode(p)
+   Id            string
+   Relationships *struct {
+      Show *struct {
+         Data struct {
+            Id string
+         }
+      }
+   }
+}
+
+type DefaultRoutes struct {
+   Data struct {
+      Attributes struct {
+         Url AddressFlag
+      }
+   }
+   Included []RouteInclude
+}
+
+func (p *Playback) RequestUrl() (string, bool) {
+   return p.Drm.Schemes.Widevine.LicenseUrl, true
 }
 
 type default_decision struct {
@@ -232,19 +172,81 @@ type playback_request struct {
    UserPreferences   struct{} `json:"userPreferences"`   // required
 }
 
-type route_include struct {
-   Attributes struct {
-      AirDate       time.Time
-      Name          string
-      EpisodeNumber int
-      SeasonNumber  int
+///
+
+func (a AddressFlag) MarshalText() ([]byte, error) {
+   var b bytes.Buffer
+   if a.VideoId != "" {
+      b.WriteString("/video/watch/")
+      b.WriteString(a.VideoId)
    }
-   Id            string
-   Relationships *struct {
-      Show *struct {
-         Data struct {
-            Id string
+   if a.EditId != "" {
+      b.WriteByte('/')
+      b.WriteString(a.EditId)
+   }
+   return b.Bytes(), nil
+}
+
+func (d DefaultRoutes) video() (*RouteInclude, bool) {
+   for _, include := range d.Included {
+      if include.Id == d.Data.Attributes.Url.VideoId {
+         return &include, true
+      }
+   }
+   return nil, false
+}
+
+func (d DefaultRoutes) Season() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.SeasonNumber
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Episode() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.EpisodeNumber
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Title() string {
+   if v, ok := d.video(); ok {
+      return v.Attributes.Name
+   }
+   return ""
+}
+
+func (d DefaultRoutes) Year() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.AirDate.Year()
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Show() string {
+   if v, ok := d.video(); ok {
+      if v.Attributes.SeasonNumber >= 1 {
+         for _, include := range d.Included {
+            if include.Id == v.Relationships.Show.Data.Id {
+               return include.Attributes.Name
+            }
          }
       }
    }
+   return ""
+}
+
+func (p *PublicKey) New() error {
+   resp, err := http.PostForm(
+      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/"+arkose_site_key,
+      url.Values{
+         "public_key": {arkose_site_key},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   return json.NewDecoder(resp.Body).Decode(p)
 }
