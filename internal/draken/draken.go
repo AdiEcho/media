@@ -9,34 +9,29 @@ import (
    "path"
 )
 
-func (f flags) authenticate() error {
-   var login draken.AuthLogin
-   err := login.New(f.email, f.password)
+func (f *flags) download() error {
+   var (
+      login draken.AuthLogin
+      err error
+   )
+   login.Raw, err = os.ReadFile(f.home + "/draken.txt")
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/draken.txt", login.Marshal(), 0666)
-}
-
-func (f flags) download() error {
-   raw, err := os.ReadFile(f.home + "/draken.txt")
+   err = login.Unmarshal()
    if err != nil {
       return err
    }
-   var login draken.AuthLogin
-   err = login.Unmarshal(raw)
+   var movie draken.FullMovie
+   err = movie.New(path.Base(f.address))
    if err != nil {
       return err
    }
-   movie, err := draken.NewMovie(path.Base(f.address))
+   title, err := login.Entitlement(&movie)
    if err != nil {
       return err
    }
-   title, err := login.Entitlement(movie)
-   if err != nil {
-      return err
-   }
-   play, err := login.Playback(movie, title)
+   play, err := login.Playback(&movie, title)
    if err != nil {
       return err
    }
@@ -53,10 +48,19 @@ func (f flags) download() error {
       case "":
          fmt.Print(rep, "\n\n")
       case rep.Id:
-         f.s.Name = draken.Namer{movie}
-         f.s.Poster = draken.Poster{login, play}
+         f.s.Name = &draken.Namer{&movie}
+         f.s.Poster = &draken.Poster{&login, play}
          return f.s.Download(rep)
       }
    }
    return nil
+}
+
+func (f *flags) authenticate() error {
+   var login draken.AuthLogin
+   err := login.New(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/draken.txt", login.Raw, 0666)
 }

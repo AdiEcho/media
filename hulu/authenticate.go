@@ -10,9 +10,73 @@ import (
    "strings"
 )
 
-func (a Authenticate) Playlist(d *DeepLink) (*Playlist, error) {
+func (a *Authenticate) Details(link *DeepLink) (*Details, error) {
+   body, err := json.Marshal(map[string][]string{
+      "eabs": {link.EabId},
+   })
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://guide.hulu.com/guide/details", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("authorization", "Bearer " + a.UserToken)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
+   }
+   var data struct {
+      Items []Details
+   }
+   err = json.NewDecoder(resp.Body).Decode(&data)
+   if err != nil {
+      return nil, err
+   }
+   return &data.Items[0], nil
+}
+
+func (a *Authenticate) New(email, password string) error {
+   resp, err := http.PostForm(
+      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
+         "friendly_name": {"!"},
+         "password": {password},
+         "serial_number": {"!"},
+         "user_email": {email},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   a.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+type Authenticate struct {
+   UserToken string `json:"user_token"`
+   Raw []byte `json:"-"`
+}
+
+///
+
+func (a Authenticate) Playlist(link *DeepLink) (*Playlist, error) {
    var p playlist_request
-   p.ContentEabId = d.EabId
+   p.ContentEabId = link.EabId
    p.DeejayDeviceId = 166
    p.Unencrypted = true
    p.Playback.Audio.Codecs.SelectionMode = "ALL"
@@ -118,42 +182,11 @@ func (a Authenticate) DeepLink(id EntityId) (*DeepLink, error) {
    return link, nil
 }
 
-func (a *Authenticate) New(email, password string) error {
-   resp, err := http.PostForm(
-      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
-         "friendly_name": {"!"},
-         "password": {password},
-         "serial_number": {"!"},
-         "user_email": {email},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   a.raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-func (a Authenticate) Marshal() []byte {
-   return a.raw
-}
-
-type Authenticate struct {
-   Data *struct {
-      UserToken string `json:"user_token"`
-   }
-   raw []byte
-}
-
 func (a *Authenticate) Unmarshal(raw []byte) error {
+   struct {
+      Data struct {
+         UserToken string `json:"user_token"`
+      }
+   }
    return json.Unmarshal(raw, a)
 }
