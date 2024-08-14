@@ -1,11 +1,9 @@
 # Hulu
 
-## Sign up
-
 1. signup.hulu.com/plans
 2. select (hulu)
 3. email
-   - 2024-7-10@mailsac.com
+   - mailsac.com
 4. password
 5. name
 6. birthdate
