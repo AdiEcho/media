@@ -10,6 +10,25 @@ import (
    "strings"
 )
 
+var Base = []string{
+   // these return `403 OK` with compressed content
+   "http://siloh-fs.plutotv.net",
+   "http://siloh-ns1.plutotv.net",
+   "https://siloh-fs.plutotv.net",
+   "https://siloh-ns1.plutotv.net",
+   // returns `200 OK` with plain content
+   "http://silo-hybrik.pluto.tv.s3.amazonaws.com",
+}
+
+func (e *EpisodeClip) Dash() (*url.URL, bool) {
+   for _, s := range e.Sources {
+      if s.Type == "DASH" {
+         return &s.File.Url, true
+      }
+   }
+   return nil, false
+}
+
 // ex-machina-2015-1-1-ptv1
 // head-first-1998-1-2
 // king-of-queens
@@ -37,6 +56,18 @@ func (s *Slug) atoi() error {
    return nil
 }
 
+func (s *Slug) UnmarshalText(text []byte) error {
+   s.Slug = string(text)
+   return nil
+}
+
+type Season struct {
+   Episodes []*Video
+   parent   *Video
+}
+
+///
+
 func (a Address) Video(forward string) (*Video, error) {
    req, err := http.NewRequest("", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
@@ -58,14 +89,14 @@ func (a Address) Video(forward string) (*Video, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   var start struct {
+   var data struct {
       Vod []Video
    }
-   err = json.NewDecoder(resp.Body).Decode(&start)
+   err = json.NewDecoder(resp.Body).Decode(&data)
    if err != nil {
       return nil, err
    }
-   demand := start.Vod[0]
+   demand := data.Vod[0]
    if demand.Slug.Slug != a.series {
       if demand.Id != a.series {
          return nil, errors.New(demand.Slug.Slug)
@@ -73,17 +104,17 @@ func (a Address) Video(forward string) (*Video, error) {
    }
    for _, s := range demand.Seasons {
       s.parent = &demand
-      for _, e := range s.Episodes {
-         err := e.Slug.atoi()
+      for _, episode := range s.Episodes {
+         err := episode.Slug.atoi()
          if err != nil {
             return nil, err
          }
-         e.parent = s
-         if e.Episode == a.episode {
-            return e, nil
+         episode.parent = s
+         if episode.Episode == a.episode {
+            return episode, nil
          }
-         if e.Slug.Slug == a.episode {
-            return e, nil
+         if episode.Slug.Slug == a.episode {
+            return episode, nil
          }
       }
    }
@@ -92,16 +123,6 @@ func (a Address) Video(forward string) (*Video, error) {
       return nil, err
    }
    return &demand, nil
-}
-
-func (s *Slug) UnmarshalText(text []byte) error {
-   s.Slug = string(text)
-   return nil
-}
-
-type Season struct {
-   Episodes []*Video
-   parent   *Video
 }
 
 func (n Namer) Show() string {
@@ -130,6 +151,7 @@ func (n Namer) Title() string {
 func (n Namer) Year() int {
    return n.V.Slug.year
 }
+
 func (a Address) String() string {
    var b strings.Builder
    if a.series != "" {
@@ -211,15 +233,6 @@ func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (e EpisodeClip) Dash() (*url.URL, bool) {
-   for _, s := range e.Sources {
-      if s.Type == "DASH" {
-         return &s.File.Url, true
-      }
-   }
-   return nil, false
-}
-
 type EpisodeClip struct {
    Sources []struct {
       File Url
@@ -265,14 +278,4 @@ func (v Video) Clip() (*EpisodeClip, error) {
       return nil, err
    }
    return &clips[0], nil
-}
-
-var Base = []string{
-   // these return `403 OK` with compressed content
-   "http://siloh-fs.plutotv.net",
-   "http://siloh-ns1.plutotv.net",
-   "https://siloh-fs.plutotv.net",
-   "https://siloh-ns1.plutotv.net",
-   // returns `200 OK` with plain content
-   "http://silo-hybrik.pluto.tv.s3.amazonaws.com",
 }
