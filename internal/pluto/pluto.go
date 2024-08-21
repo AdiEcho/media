@@ -26,22 +26,19 @@ func (f flags) download() error {
       return err
    }
    req.URL.Path = file.Path
-   media, err := internal.Dash(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
          f.s.Name = pluto.Namer{video}
          f.s.Poster = pluto.Poster{}
-         return f.s.Download(medium)
+         return f.s.Download(rep)
       }
-   }
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
 }
