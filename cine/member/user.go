@@ -15,24 +15,29 @@ mutation($email: String, $password: String) {
 }
 `
 
+type OperationUser struct {
+   AccessToken string `json:"access_token"`
+   Raw []byte `json:"-"`
+}
+
 func (o *OperationUser) New(email, password string) error {
-   var body struct {
+   var value struct {
       Query     string `json:"query"`
       Variables struct {
          Email    string `json:"email"`
          Password string `json:"password"`
       } `json:"variables"`
    }
-   body.Query = query_user
-   body.Variables.Email = email
-   body.Variables.Password = password
-   raw, err := json.Marshal(body)
+   value.Query = query_user
+   value.Variables.Email = email
+   value.Variables.Password = password
+   data, err := json.Marshal(value)
    if err != nil {
       return err
    }
    resp, err := http.Post(
       "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(raw),
+      "application/json", bytes.NewReader(data),
    )
    if err != nil {
       return err
@@ -45,21 +50,16 @@ func (o *OperationUser) New(email, password string) error {
    return nil
 }
 
-type OperationUser struct {
-   AccessToken string `json:"access_token"`
-   Raw []byte `json:"-"`
-}
-
 func (o *OperationUser) Unmarshal() error {
-   var body struct {
+   var value struct {
       Data struct {
          UserAuthenticate OperationUser
       }
    }
-   err := json.Unmarshal(o.Raw, &body)
+   err := json.Unmarshal(o.Raw, &value)
    if err != nil {
       return err
    }
-   *o = body.Data.UserAuthenticate
+   *o = value.Data.UserAuthenticate
    return nil
 }

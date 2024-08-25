@@ -16,5 +16,5 @@ func TestAuthenticate(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("user.txt", user.raw, 0666)
+   os.WriteFile("user.txt", user.Raw, 0666)
 }

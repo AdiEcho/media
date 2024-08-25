@@ -9,8 +9,39 @@ import (
    "testing"
 )
 
-// criterionchannel.com/videos/my-dinner-with-andre
-const default_kid = "e4576465a745213f336c1ef1bf5d513e"
+func TestVideo(t *testing.T) {
+   var (
+      token AuthToken
+      err error
+   )
+   token.Raw, err = os.ReadFile("token.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   if err = token.Unmarshal(); err != nil {
+      t.Fatal(err)
+   }
+   item, err := token.Video(test.slug)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", item)
+   name, err := text.Name(item)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%q\n", name)
+}
+
+var test = struct{
+   key_id string
+   slug string
+   url string
+}{
+   key_id: "e4576465a745213f336c1ef1bf5d513e",
+   slug: "my-dinner-with-andre",
+   url: "criterionchannel.com/videos/my-dinner-with-andre",
+}
 
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -26,7 +57,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var pssh widevine.Pssh
-   pssh.KeyId, err = hex.DecodeString(default_kid)
+   pssh.KeyId, err = hex.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -35,16 +66,15 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   text, err := os.ReadFile("token.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
    var token AuthToken
-   err = token.Unmarshal(text)
+   token.Raw, err = os.ReadFile("token.txt")
    if err != nil {
       t.Fatal(err)
    }
-   item, err := token.Video(my_dinner)
+   if err = token.Unmarshal(); err != nil {
+      t.Fatal(err)
+   }
+   item, err := token.Video(test.slug)
    if err != nil {
       t.Fatal(err)
    }
@@ -62,28 +92,3 @@ func TestLicense(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
-
-func TestVideo(t *testing.T) {
-   data, err := os.ReadFile("token.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var token AuthToken
-   err = token.Unmarshal(data)
-   if err != nil {
-      t.Fatal(err)
-   }
-   item, err := token.Video(my_dinner)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", item)
-   name, err := text.Name(item)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%q\n", name)
-}
-
-// criterionchannel.com/videos/my-dinner-with-andre
-const my_dinner = "my-dinner-with-andre"

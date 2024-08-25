@@ -7,6 +7,60 @@ import (
    "strings"
 )
 
+func (f *FullMovie) New(custom_id string) error {
+   body, err := func() ([]byte, error) {
+      var s struct {
+         Query     string `json:"query"`
+         Variables struct {
+            CustomId string `json:"customId"`
+         } `json:"variables"`
+      }
+      s.Variables.CustomId = custom_id
+      s.Query = graphql_compact(get_custom_id)
+      return json.MarshalIndent(s, "", " ")
+   }()
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://client-api.magine.com/api/apiql/v2",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return err
+   }
+   magine_accesstoken.set(req.Header)
+   x_forwarded_for.set(req.Header)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   var data struct {
+      Data struct {
+         Viewer struct {
+            ViewableCustomId *FullMovie
+         }
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&data)
+   if err != nil {
+      return err
+   }
+   if v := data.Data.Viewer.ViewableCustomId; v != nil {
+      *f = *v
+      return nil
+   }
+   return FullMovie{}
+}
+
+func (n *Namer) Title() string {
+   return n.Movie.Title
+}
+
+func (n *Namer) Year() int {
+   return n.Movie.ProductionYear
+}
 type Namer struct {
    Movie *FullMovie
 }
@@ -128,59 +182,4 @@ func (p *Poster) RequestHeader() (http.Header, error) {
       head.Set(key, value)
    }
    return head, nil
-}
-
-func (f *FullMovie) New(custom_id string) error {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Query     string `json:"query"`
-         Variables struct {
-            CustomId string `json:"customId"`
-         } `json:"variables"`
-      }
-      s.Variables.CustomId = custom_id
-      s.Query = graphql_compact(get_custom_id)
-      return json.MarshalIndent(s, "", " ")
-   }()
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://client-api.magine.com/api/apiql/v2",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   magine_accesstoken.set(req.Header)
-   x_forwarded_for.set(req.Header)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   var data struct {
-      Data struct {
-         Viewer struct {
-            ViewableCustomId *FullMovie
-         }
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&data)
-   if err != nil {
-      return err
-   }
-   if v := data.Data.Viewer.ViewableCustomId; v != nil {
-      *f = *v
-      return nil
-   }
-   return FullMovie{}
-}
-
-func (n *Namer) Title() string {
-   return n.Movie.Title
-}
-
-func (n *Namer) Year() int {
-   return n.Movie.ProductionYear
 }

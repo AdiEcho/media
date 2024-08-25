@@ -15,13 +15,12 @@ func TestAsset(t *testing.T) {
    if !ok {
       t.Fatal(ArticleAsset{})
    }
-   raw, err := os.ReadFile("authenticate.txt")
+   var user OperationUser
+   user.Raw, err = os.ReadFile("authenticate.txt")
    if err != nil {
       t.Fatal(err)
    }
-   var user OperationUser
-   err = user.Unmarshal(raw)
-   if err != nil {
+   if err = user.Unmarshal(); err != nil {
       t.Fatal(err)
    }
    play, err := user.Play(asset)

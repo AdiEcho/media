@@ -6,10 +6,29 @@ import (
    "encoding/base64"
    "fmt"
    "os"
-   "path"
    "testing"
    "time"
 )
+
+var films = []struct {
+   content_id string
+   custom_id string
+   key_id     string
+   url        string
+}{
+   {
+      content_id: "ODE0OTQ1NWMtY2IzZC00YjE1LTg1YTgtYjk1ZTNkMTU3MGI1",
+      custom_id: "michael-clayton",
+      key_id:     "e5WypDjIM1+4W74cf6rHIw==",
+      url:        "drakenfilm.se/film/michael-clayton",
+   },
+   {
+      content_id: "MTcxMzkzNTctZWQwYi00YTE2LThiZTYtNjllNDE4YzRiYTQw",
+      custom_id:        "the-card-counter",
+      key_id:     "ToV4wH2nlVZE8QYLmLywDg==",
+      url:        "drakenfilm.se/film/the-card-counter",
+   },
+}
 
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -24,13 +43,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   raw, err := os.ReadFile("login.txt")
+   var login AuthLogin
+   login.Raw, err = os.ReadFile("login.txt")
    if err != nil {
       t.Fatal(err)
    }
-   var login AuthLogin
-   err = login.Unmarshal(raw)
-   if err != nil {
+   if err = login.Unmarshal(); err != nil {
       t.Fatal(err)
    }
    for _, film := range films {
@@ -48,7 +66,7 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      movie, err := NewMovie(path.Base(film.url))
+      movie, err := NewMovie(film.custom_id)
       if err != nil {
          t.Fatal(err)
       }
@@ -69,26 +87,9 @@ func TestLicense(t *testing.T) {
    }
 }
 
-var films = []struct {
-   content_id string
-   key_id     string
-   url        string
-}{
-   {
-      content_id: "ODE0OTQ1NWMtY2IzZC00YjE1LTg1YTgtYjk1ZTNkMTU3MGI1",
-      key_id:     "e5WypDjIM1+4W74cf6rHIw==",
-      url:        "drakenfilm.se/film/michael-clayton",
-   },
-   {
-      content_id: "MTcxMzkzNTctZWQwYi00YTE2LThiZTYtNjllNDE4YzRiYTQw",
-      key_id:     "ToV4wH2nlVZE8QYLmLywDg==",
-      url:        "drakenfilm.se/film/the-card-counter",
-   },
-}
-
 func TestMovie(t *testing.T) {
    for _, film := range films {
-      movie, err := NewMovie(path.Base(film.url))
+      movie, err := NewMovie(film.custom_id)
       if err != nil {
          t.Fatal(err)
       }
