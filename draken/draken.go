@@ -3,28 +3,27 @@ package draken
 import (
    "bytes"
    "encoding/json"
+   "errors"
    "net/http"
    "strings"
 )
 
 func (f *FullMovie) New(custom_id string) error {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         Query     string `json:"query"`
-         Variables struct {
-            CustomId string `json:"customId"`
-         } `json:"variables"`
-      }
-      s.Variables.CustomId = custom_id
-      s.Query = graphql_compact(get_custom_id)
-      return json.MarshalIndent(s, "", " ")
-   }()
+   var req_body struct {
+      Query     string `json:"query"`
+      Variables struct {
+         CustomId string `json:"customId"`
+      } `json:"variables"`
+   }
+   req_body.Variables.CustomId = custom_id
+   req_body.Query = graphql_compact(get_custom_id)
+   data, err := json.Marshal(req_body)
    if err != nil {
       return err
    }
    req, err := http.NewRequest(
       "POST", "https://client-api.magine.com/api/apiql/v2",
-      bytes.NewReader(body),
+      bytes.NewReader(data),
    )
    if err != nil {
       return err
@@ -36,22 +35,21 @@ func (f *FullMovie) New(custom_id string) error {
       return err
    }
    defer resp.Body.Close()
-   var data struct {
+   var resp_body struct {
       Data struct {
          Viewer struct {
             ViewableCustomId *FullMovie
          }
       }
    }
-   err = json.NewDecoder(resp.Body).Decode(&data)
-   if err != nil {
+   if err = json.NewDecoder(resp.Body).Decode(&resp_body); err != nil {
       return err
    }
-   if v := data.Data.Viewer.ViewableCustomId; v != nil {
-      *f = *v
+   if id := resp_body.Data.Viewer.ViewableCustomId; id != nil {
+      *f = *id
       return nil
    }
-   return FullMovie{}
+   return errors.New("ViewableCustomId")
 }
 
 func (n *Namer) Title() string {
@@ -61,6 +59,7 @@ func (n *Namer) Title() string {
 func (n *Namer) Year() int {
    return n.Movie.ProductionYear
 }
+
 type Namer struct {
    Movie *FullMovie
 }
@@ -75,10 +74,6 @@ func (Namer) Season() int {
 
 func (Namer) Show() string {
    return ""
-}
-
-func (FullMovie) Error() string {
-   return "FullMovie"
 }
 
 type FullMovie struct {

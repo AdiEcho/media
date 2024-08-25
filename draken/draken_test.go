@@ -10,24 +10,20 @@ import (
    "time"
 )
 
-var films = []struct {
-   content_id string
-   custom_id string
-   key_id     string
-   url        string
-}{
-   {
-      content_id: "ODE0OTQ1NWMtY2IzZC00YjE1LTg1YTgtYjk1ZTNkMTU3MGI1",
-      custom_id: "michael-clayton",
-      key_id:     "e5WypDjIM1+4W74cf6rHIw==",
-      url:        "drakenfilm.se/film/michael-clayton",
-   },
-   {
-      content_id: "MTcxMzkzNTctZWQwYi00YTE2LThiZTYtNjllNDE4YzRiYTQw",
-      custom_id:        "the-card-counter",
-      key_id:     "ToV4wH2nlVZE8QYLmLywDg==",
-      url:        "drakenfilm.se/film/the-card-counter",
-   },
+func TestMovie(t *testing.T) {
+   for _, film := range films {
+      var movie FullMovie
+      if err := movie.New(film.custom_id); err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", movie)
+      name, err := text.Name(&Namer{&movie})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(99 * time.Millisecond)
+   }
 }
 
 func TestLicense(t *testing.T) {
@@ -66,19 +62,20 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      movie, err := NewMovie(film.custom_id)
+      var movie FullMovie
+      err = movie.New(film.custom_id)
       if err != nil {
          t.Fatal(err)
       }
-      title, err := login.Entitlement(movie)
+      title, err := login.Entitlement(&movie)
       if err != nil {
          t.Fatal(err)
       }
-      play, err := login.Playback(movie, title)
+      play, err := login.Playback(&movie, title)
       if err != nil {
          t.Fatal(err)
       }
-      key, err := module.Key(Poster{login, play}, pssh.KeyId)
+      key, err := module.Key(&Poster{&login, play}, pssh.KeyId)
       if err != nil {
          t.Fatal(err)
       }
@@ -87,18 +84,22 @@ func TestLicense(t *testing.T) {
    }
 }
 
-func TestMovie(t *testing.T) {
-   for _, film := range films {
-      movie, err := NewMovie(film.custom_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", movie)
-      name, err := text.Name(Namer{movie})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(99 * time.Millisecond)
-   }
+var films = []struct {
+   content_id string
+   custom_id string
+   key_id     string
+   url        string
+}{
+   {
+      content_id: "ODE0OTQ1NWMtY2IzZC00YjE1LTg1YTgtYjk1ZTNkMTU3MGI1",
+      custom_id: "michael-clayton",
+      key_id:     "e5WypDjIM1+4W74cf6rHIw==",
+      url:        "drakenfilm.se/film/michael-clayton",
+   },
+   {
+      content_id: "MTcxMzkzNTctZWQwYi00YTE2LThiZTYtNjllNDE4YzRiYTQw",
+      custom_id:        "the-card-counter",
+      key_id:     "ToV4wH2nlVZE8QYLmLywDg==",
+      url:        "drakenfilm.se/film/the-card-counter",
+   },
 }

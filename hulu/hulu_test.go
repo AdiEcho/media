@@ -34,13 +34,12 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      raw, err := os.ReadFile("authenticate.txt")
+      var auth Authenticate
+      auth.Raw, err = os.ReadFile("authenticate.txt")
       if err != nil {
          t.Fatal(err)
       }
-      var auth Authenticate
-      err = auth.Unmarshal(raw)
-      if err != nil {
+      if err = auth.Unmarshal(); err != nil {
          t.Fatal(err)
       }
       base := path.Base(test.url)
