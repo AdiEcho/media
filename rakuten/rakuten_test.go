@@ -28,7 +28,7 @@ func (m movie_test) license() ([]byte, error) {
    }
    pssh.ContentId = []byte(m.content_id)
    var module widevine.Cdm
-   err = module.New(private_key, client_id, pssh.Encode())
+   err = module.New(private_key, client_id, pssh.Marshal())
    if err != nil {
       return nil, err
    }

@@ -244,7 +244,7 @@ func (s Stream) key() ([]byte, error) {
       return nil, err
    }
    if s.pssh == nil {
-      s.pssh = widevine.Pssh{KeyId: s.key_id}.Encode()
+      s.pssh = widevine.Pssh{KeyId: s.key_id}.Marshal()
    }
    var module widevine.Cdm
    err = module.New(private_key, client_id, s.pssh)

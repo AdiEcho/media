@@ -9,32 +9,6 @@ import (
    "strings"
 )
 
-func (o *OperationArticle) Unmarshal() error {
-   var body struct {
-      Data struct {
-         Article OperationArticle
-      }
-   }
-   err := json.Unmarshal(o.Raw, &body)
-   if err != nil {
-      return err
-   }
-   *o = body.Data.Article
-   for _, asset := range o.Assets {
-      asset.article = o
-   }
-   return nil
-}
-
-func (o *OperationArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range o.Assets {
-      if asset.LinkedType == "film" {
-         return asset, true
-      }
-   }
-   return nil, false
-}
-
 const query_article = `
 query($articleUrlSlug: String) {
    Article(full_url_slug: $articleUrlSlug) {
@@ -70,35 +44,6 @@ type ArticleAsset struct {
 
 type ArticleSlug string
 
-func (a ArticleSlug) Article() (*OperationArticle, error) {
-   var body struct {
-      Query     string `json:"query"`
-      Variables struct {
-         ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
-      } `json:"variables"`
-   }
-   body.Variables.ArticleUrlSlug = a
-   body.Query = query_article
-   raw, err := json.Marshal(body)
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(raw),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var article OperationArticle
-   article.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &article, nil
-}
-
 // https://www.cinemember.nl/nl/films/american-hustle
 func (a *ArticleSlug) Set(s string) error {
    s = strings.TrimPrefix(s, "https://")
@@ -114,17 +59,6 @@ func (a ArticleSlug) String() string {
    return string(a)
 }
 
-type OperationArticle struct {
-   Assets         []*ArticleAsset
-   CanonicalTitle string `json:"canonical_title"`
-   Id             int
-   Metas          []struct {
-      Key   string
-      Value string
-   }
-   Raw []byte `json:"-"`
-}
-
 func (OperationArticle) Episode() int {
    return 0
 }
@@ -137,8 +71,46 @@ func (OperationArticle) Show() string {
    return ""
 }
 
+func (a ArticleSlug) Article() (*OperationArticle, error) {
+   var value struct {
+      Query     string `json:"query"`
+      Variables struct {
+         ArticleUrlSlug ArticleSlug `json:"articleUrlSlug"`
+      } `json:"variables"`
+   }
+   value.Variables.ArticleUrlSlug = a
+   value.Query = query_article
+   data, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.Post(
+      "https://api.audienceplayer.com/graphql/2/user",
+      "application/json", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var article OperationArticle
+   article.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &article, nil
+}
+
 func (o *OperationArticle) Title() string {
    return o.CanonicalTitle
+}
+
+func (o *OperationArticle) Film() (*ArticleAsset, bool) {
+   for _, asset := range o.Assets {
+      if asset.LinkedType == "film" {
+         return asset, true
+      }
+   }
+   return nil, false
 }
 
 func (o *OperationArticle) Year() int {
@@ -150,4 +122,32 @@ func (o *OperationArticle) Year() int {
       }
    }
    return 0
+}
+
+type OperationArticle struct {
+   Assets         []*ArticleAsset
+   CanonicalTitle string `json:"canonical_title"`
+   Id             int
+   Metas          []struct {
+      Key   string
+      Value string
+   }
+   Raw []byte `json:"-"`
+}
+
+func (o *OperationArticle) Unmarshal() error {
+   var value struct {
+      Data struct {
+         Article OperationArticle
+      }
+   }
+   err := json.Unmarshal(o.Raw, &value)
+   if err != nil {
+      return err
+   }
+   *o = value.Data.Article
+   for _, asset := range o.Assets {
+      asset.article = o
+   }
+   return nil
 }

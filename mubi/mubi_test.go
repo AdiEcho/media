@@ -40,7 +40,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var module widevine.Cdm
-   err = module.New(private_key, client_id, pssh.Encode())
+   err = module.New(private_key, client_id, pssh.Marshal())
    if err != nil {
       t.Fatal(err)
    }

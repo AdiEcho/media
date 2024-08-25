@@ -42,7 +42,7 @@ func TestLicense(t *testing.T) {
          t.Fatal(err)
       }
       var module widevine.Cdm
-      module.New(private_key, client_id, pssh.Encode())
+      module.New(private_key, client_id, pssh.Marshal())
       var auth Authorization
       auth.Raw, err = os.ReadFile("/authorization.txt")
       if err != nil {

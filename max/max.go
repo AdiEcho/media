@@ -172,8 +172,6 @@ type playback_request struct {
    UserPreferences   struct{} `json:"userPreferences"`   // required
 }
 
-///
-
 func (a AddressFlag) MarshalText() ([]byte, error) {
    var b bytes.Buffer
    if a.VideoId != "" {
