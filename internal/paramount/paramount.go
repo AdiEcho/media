@@ -11,7 +11,7 @@ import (
 )
 
 func (f flags) do_write() error {
-   os.Mkdir(f.paramount, 0666)
+   os.Mkdir(f.paramount, os.ModePerm)
    var head paramount.Header
    err := head.New(f.paramount)
    if err != nil {
@@ -21,7 +21,7 @@ func (f flags) do_write() error {
    if err != nil {
       return err
    }
-   err = os.WriteFile(f.paramount + "/header.txt", text, 0666)
+   err = os.WriteFile(f.paramount + "/header.txt", text, os.ModePerm)
    if err != nil {
       return err
    }
@@ -46,8 +46,9 @@ func (f flags) do_write() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.paramount + "/item.txt", text, 0666)
+   return os.WriteFile(f.paramount + "/item.txt", text, os.ModePerm)
 }
+
 func (f flags) do_read() error {
    text, err := os.ReadFile(f.paramount + "/header.txt")
    if err != nil {

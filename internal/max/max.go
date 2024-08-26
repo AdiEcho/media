@@ -31,9 +31,9 @@ func (f *flags) authenticate() error {
    if err != nil {
       return err
    }
-   os.Mkdir(f.home, 0666)
-   os.WriteFile(f.home + "/session.txt", token.Session.Raw, 0666)
-   return os.WriteFile(f.home + "/token.txt", token.Token.Raw, 0666)
+   os.Mkdir(f.home, os.ModePerm)
+   os.WriteFile(f.home + "/session.txt", token.Session.Raw, os.ModePerm)
+   return os.WriteFile(f.home + "/token.txt", token.Token.Raw, os.ModePerm)
 }
 
 func (f *flags) download() error {

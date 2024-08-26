@@ -86,5 +86,5 @@ func (f *flags) authenticate() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/rtbf.txt", login.Raw, 0666)
+   return os.WriteFile(f.home + "/rtbf.txt", login.Raw, os.ModePerm)
 }

@@ -96,7 +96,7 @@ func (f flags) write_auth() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/mubi.txt", auth.Data, 0666)
+   return os.WriteFile(f.home + "/mubi.txt", auth.Data, os.ModePerm)
 }
 
 func (f flags) write_code() error {
@@ -105,7 +105,7 @@ func (f flags) write_code() error {
    if err != nil {
       return err
    }
-   os.WriteFile("code.txt", code.Data, 0666)
+   os.WriteFile("code.txt", code.Data, os.ModePerm)
    code.Unmarshal()
    fmt.Println(code)
    return nil
@@ -133,5 +133,5 @@ func (f flags) write_secure() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.address.String() + ".txt", secure.Data, 0666)
+   return os.WriteFile(f.address.String() + ".txt", secure.Data, os.ModePerm)
 }

@@ -16,5 +16,5 @@ func TestToken(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("token.txt", token.Raw, 0666)
+   os.WriteFile("token.txt", token.Raw, os.ModePerm)
 }

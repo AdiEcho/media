@@ -25,7 +25,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   os.WriteFile(f.home + "/amc.txt", auth.Raw, 0666)
+   os.WriteFile(f.home + "/amc.txt", auth.Raw, os.ModePerm)
    err = auth.Unmarshal()
    if err != nil {
       return err
@@ -80,5 +80,5 @@ func (f *flags) login() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/amc.txt", auth.Raw, 0666)
+   return os.WriteFile(f.home + "/amc.txt", auth.Raw, os.ModePerm)
 }

@@ -83,7 +83,7 @@ func (f flags) write_token() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/roku.txt", token.Data, 0666)
+   return os.WriteFile(f.home + "/roku.txt", token.Data, os.ModePerm)
 }
 
 func (f flags) write_code() error {
@@ -93,7 +93,7 @@ func (f flags) write_code() error {
    if err != nil {
       return err
    }
-   err = os.WriteFile("auth.txt", auth.Data, 0666)
+   err = os.WriteFile("auth.txt", auth.Data, os.ModePerm)
    if err != nil {
       return err
    }
@@ -106,7 +106,7 @@ func (f flags) write_code() error {
    if err != nil {
       return err
    }
-   err = os.WriteFile("code.txt", code.Data, 0666)
+   err = os.WriteFile("code.txt", code.Data, os.ModePerm)
    if err != nil {
       return err
    }

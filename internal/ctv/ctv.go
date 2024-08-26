@@ -61,8 +61,8 @@ func (f *flags) get_manifest() error {
    if err != nil {
       return err
    }
-   os.Mkdir(f.base(), 0666)
-   err = os.WriteFile(f.base() + "/media.txt", media.Raw, 0666)
+   os.Mkdir(f.base(), os.ModePerm)
+   err = os.WriteFile(f.base() + "/media.txt", media.Raw, os.ModePerm)
    if err != nil {
       return err
    }
@@ -70,7 +70,7 @@ func (f *flags) get_manifest() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.base() + "/manifest.txt", []byte(manifest), 0666)
+   return os.WriteFile(f.base() + "/manifest.txt", []byte(manifest), os.ModePerm)
 }
 
 func (f *flags) base() string {

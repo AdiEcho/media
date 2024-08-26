@@ -30,6 +30,6 @@ func TestLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("session.txt", token.Session.Raw, 0666)
-   os.WriteFile("token.txt", token.Token.Raw, 0666)
+   os.WriteFile("session.txt", token.Session.Raw, os.ModePerm)
+   os.WriteFile("token.txt", token.Token.Raw, os.ModePerm)
 }

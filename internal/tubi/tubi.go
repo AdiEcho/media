@@ -64,7 +64,7 @@ func (f flags) write_content() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.name(), text, 0666)
+   return os.WriteFile(f.name(), text, os.ModePerm)
 }
 
 func (f flags) name() string {

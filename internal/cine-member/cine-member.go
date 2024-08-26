@@ -11,13 +11,13 @@ import (
 )
 
 func (f *flags) write_play() error {
-   os.Mkdir(f.base(), 0666)
+   os.Mkdir(f.base(), os.ModePerm)
    // 1. write OperationArticle
    article, err := f.slug.Article()
    if err != nil {
       return err
    }
-   err = os.WriteFile(f.base() + "/article.txt", article.Raw, 0666)
+   err = os.WriteFile(f.base() + "/article.txt", article.Raw, os.ModePerm)
    if err != nil {
       return err
    }
@@ -43,7 +43,7 @@ func (f *flags) write_play() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.base() + "/play.txt", play.Raw, 0666)
+   return os.WriteFile(f.base() + "/play.txt", play.Raw, os.ModePerm)
 }
 
 func (f *flags) write_user() error {
@@ -52,7 +52,7 @@ func (f *flags) write_user() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/cine-member.txt", user.Raw, 0666)
+   return os.WriteFile(f.home + "/cine-member.txt", user.Raw, os.ModePerm)
 }
 
 func (f *flags) download() error {

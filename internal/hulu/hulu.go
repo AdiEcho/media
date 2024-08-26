@@ -65,5 +65,5 @@ func (f *flags) authenticate() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/hulu.txt", auth.Raw, 0666)
+   return os.WriteFile(f.home + "/hulu.txt", auth.Raw, os.ModePerm)
 }

@@ -36,7 +36,7 @@ func TestAuthenticate(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("authenticate.txt", auth.Raw, 0666)
+   os.WriteFile("authenticate.txt", auth.Raw, os.ModePerm)
 }
 
 func TestDetails(t *testing.T) {

@@ -76,6 +76,7 @@ func TestLogin(t *testing.T) {
       t.Fatal(err)
    }
 }
+
 func TestRefresh(t *testing.T) {
    var (
       auth Authorization
@@ -93,5 +94,5 @@ func TestRefresh(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("/authorization.txt", auth.Raw, 0666)
+   os.WriteFile("/authorization.txt", auth.Raw, os.ModePerm)
 }
