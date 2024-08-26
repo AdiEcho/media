@@ -16,7 +16,7 @@ func TestAccountsLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("login.txt", login.Raw, 0666)
+   os.WriteFile("login.txt", login.Raw, os.ModePerm)
 }
 
 var media = []struct {

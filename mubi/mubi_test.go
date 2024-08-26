@@ -71,7 +71,7 @@ func TestAuthenticate(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("authenticate.txt", auth.Data, 0666)
+   os.WriteFile("authenticate.txt", auth.Data, os.ModePerm)
 }
 
 func TestCode(t *testing.T) {
@@ -80,7 +80,7 @@ func TestCode(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("code.txt", code.Data, 0666)
+   os.WriteFile("code.txt", code.Data, os.ModePerm)
    code.Unmarshal()
    fmt.Println(code)
 }

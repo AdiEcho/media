@@ -56,14 +56,14 @@ func TestCode(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("auth.txt", auth.Data, 0666)
+   os.WriteFile("auth.txt", auth.Data, os.ModePerm)
    auth.Unmarshal()
    // AccountCode
    code, err := auth.Code()
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("code.txt", code.Data, 0666)
+   os.WriteFile("code.txt", code.Data, os.ModePerm)
    code.Unmarshal()
    fmt.Println(code)
 }
@@ -89,7 +89,7 @@ func TestTokenWrite(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("token.txt", token.Data, 0666)
+   os.WriteFile("token.txt", token.Data, os.ModePerm)
 }
 
 func TestTokenRead(t *testing.T) {
