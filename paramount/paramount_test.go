@@ -26,49 +26,6 @@ var tests = map[string]struct{
    },
 }
 
-func TestMpdFr(t *testing.T) {
-   var head Header
-   err := head.New(tests["fr"].content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", head)
-}
-
-func TestMpdUs(t *testing.T) {
-   var head Header
-   err := head.New(tests["us"].content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", head)
-}
-func TestItemUs(t *testing.T) {
-   var app AppToken
-   err := app.ComCbsApp()
-   if err != nil {
-      t.Fatal(err)
-   }
-   items, err := app.Items(tests["us"].content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", items)
-}
-
-func TestItemFr(t *testing.T) {
-   var app AppToken
-   err := app.ComCbsCa()
-   if err != nil {
-      t.Fatal(err)
-   }
-   items, err := app.Items(tests["fr"].content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", items)
-}
-
 func TestWidevine(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
