@@ -8,7 +8,7 @@ import (
 )
 
 // must use IP address for correct location
-func (h *Header) New(content_id string) error {
+func (s *Location) New(content_id string) error {
    req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {
       return err
@@ -29,28 +29,14 @@ func (h *Header) New(content_id string) error {
    }
    defer resp.Body.Close()
    if resp.StatusCode != http.StatusFound {
-      var s struct {
+      var v struct {
          Description string
       }
-      json.NewDecoder(resp.Body).Decode(&s)
-      return errors.New(s.Description)
+      json.NewDecoder(resp.Body).Decode(&v)
+      return errors.New(v.Description)
    }
-   h.Header = resp.Header
+   *s = Location(resp.Header.Get("location"))
    return nil
 }
 
-type Header struct {
-   Header http.Header
-}
-
-func (h Header) Location() string {
-   return h.Header.Get("location")
-}
-
-func (h Header) JsonMarshal() ([]byte, error) {
-   return json.MarshalIndent(h, "", " ")
-}
-
-func (h *Header) Json(text []byte) error {
-   return json.Unmarshal(text, h)
-}
+type Location string

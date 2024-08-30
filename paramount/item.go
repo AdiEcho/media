@@ -17,8 +17,26 @@ type VideoItem struct {
    MediaType string
 }
 
+func (v *VideoItem) Season() int {
+   return int(v.SeasonNum)
+}
+
+func (v *VideoItem) Episode() int {
+   return int(v.EpisodeNum)
+}
+
+func (v *VideoItem) Title() string {
+   return v.Label
+}
+
+func (v *VideoItem) Year() int {
+   return v.AirDateIso.Year()
+}
+
+///
+
 // must use app token and IP address for correct location
-func (at AppToken) Items(content_id string) (VideoItems, error) {
+func (at AppToken) Item(content_id string) (*VideoItem, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err
@@ -41,26 +59,22 @@ func (at AppToken) Items(content_id string) (VideoItems, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   var video struct {
+   var value struct {
       Error string
-      ItemList VideoItems
+      ItemList []VideoItem
    }
-   err = json.NewDecoder(resp.Body).Decode(&video)
+   err = json.NewDecoder(resp.Body).Decode(&value)
    if err != nil {
       return nil, err
    }
-   if video.Error != "" {
-      return nil, errors.New(video.Error)
+   if v := value.Error; v != "" {
+      return nil, errors.New(v)
    }
-   return video.ItemList, nil
+   return &value.ItemList[0], nil
 }
 
 func (v *VideoItem) Json(text []byte) error {
    return json.Unmarshal(text, v)
-}
-
-func (v VideoItem) JsonMarshal() ([]byte, error) {
-   return json.MarshalIndent(v, "", " ")
 }
 
 func (v VideoItems) Item() (*VideoItem, bool) {
@@ -68,22 +82,6 @@ func (v VideoItems) Item() (*VideoItem, bool) {
       return &v[0], true
    }
    return nil, false
-}
-
-func (v VideoItem) Season() int {
-   return int(v.SeasonNum)
-}
-
-func (v VideoItem) Episode() int {
-   return int(v.EpisodeNum)
-}
-
-func (v VideoItem) Title() string {
-   return v.Label
-}
-
-func (v VideoItem) Year() int {
-   return v.AirDateIso.Year()
 }
 
 func (v VideoItem) Show() string {
