@@ -35,6 +35,7 @@ func TestFilm(t *testing.T) {
       fmt.Println(web)
    }
 }
+
 var test = struct{
    id int64
    key_id string
@@ -82,49 +83,4 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-func TestAuthenticate(t *testing.T) {
-   var (
-      code LinkCode
-      err error
-   )
-   code.Data, err = os.ReadFile("code.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   code.Unmarshal()
-   auth, err := code.Authenticate()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("authenticate.txt", auth.Data, os.ModePerm)
-}
-
-func TestCode(t *testing.T) {
-   var code LinkCode
-   err := code.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("code.txt", code.Data, os.ModePerm)
-   code.Unmarshal()
-   fmt.Println(code)
-}
-
-func TestSecure(t *testing.T) {
-   var (
-      auth Authenticate
-      err error
-   )
-   auth.Data, err = os.ReadFile("authenticate.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth.Unmarshal()
-   secure, err := auth.Url(&FilmResponse{Id: test.id})
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", secure)
 }
