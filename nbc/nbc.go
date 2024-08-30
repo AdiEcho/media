@@ -14,37 +14,6 @@ import (
    "time"
 )
 
-func (v *Video) RequestUrl() (string, bool) {
-   now := time.Now().UnixMilli()
-   mac := hmac.New(sha256.New, []byte(v.DrmProxySecret))
-   fmt.Fprint(mac, now, "widevine")
-   b := []byte(v.DrmProxyUrl)
-   b = append(b, "/widevine"...)
-   b = append(b, "?device=web"...)
-   b = fmt.Append(b, "&time=", now)
-   b = fmt.Appendf(b, "&hash=%x", mac.Sum(nil))
-   return string(b), true
-}
-
-type Video struct {
-   DrmProxyUrl string
-   DrmProxySecret string
-}
-
-func (Video) RequestHeader() (http.Header, error) {
-   head := http.Header{}
-   head.Set("content-type", "application/octet-stream")
-   return head, nil
-}
-
-func (Video) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Video) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 const query = `
 query(
    $app: NBCUBrands!
@@ -99,16 +68,6 @@ type page_request struct {
       Type string `json:"type"` // can be empty
       UserId string `json:"userId"`
    } `json:"variables"`
-}
-
-func (v *Video) New() {
-   v.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
-   v.DrmProxyUrl = func() string {
-      var b strings.Builder
-      b.WriteString("https://drmproxy.digitalsvc.apps.nbcuni.com")
-      b.WriteString("/drm-proxy/license")
-      return b.String()
-   }()
 }
 
 type Metadata struct {
@@ -219,4 +178,47 @@ func (m *Metadata) New(guid int) error {
    }
    *m = value.Data.BonanzaPage.Metadata
    return nil
+}
+
+///
+
+type Video struct {
+   DrmProxyUrl string
+   DrmProxySecret string
+}
+
+func (v *Video) RequestUrl() (string, bool) {
+   now := time.Now().UnixMilli()
+   mac := hmac.New(sha256.New, []byte(v.DrmProxySecret))
+   fmt.Fprint(mac, now, "widevine")
+   b := []byte(v.DrmProxyUrl)
+   b = append(b, "/widevine"...)
+   b = append(b, "?device=web"...)
+   b = fmt.Append(b, "&time=", now)
+   b = fmt.Appendf(b, "&hash=%x", mac.Sum(nil))
+   return string(b), true
+}
+
+func (Video) RequestHeader() (http.Header, error) {
+   head := http.Header{}
+   head.Set("content-type", "application/octet-stream")
+   return head, nil
+}
+
+func (Video) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Video) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (v *Video) New() {
+   v.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
+   v.DrmProxyUrl = func() string {
+      var b strings.Builder
+      b.WriteString("https://drmproxy.digitalsvc.apps.nbcuni.com")
+      b.WriteString("/drm-proxy/license")
+      return b.String()
+   }()
 }
