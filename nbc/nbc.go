@@ -14,42 +14,27 @@ import (
    "time"
 )
 
-func (v Video) RequestUrl() (string, bool) {
-   t, h := func() (int64, []byte) {
-      h := hmac.New(sha256.New, []byte(v.DrmProxySecret))
-      t := time.Now().UnixMilli()
-      fmt.Fprint(h, t, "widevine")
-      return t, h.Sum(nil)
-   }()
+func (v *Video) RequestUrl() (string, bool) {
+   now := time.Now().UnixMilli()
+   mac := hmac.New(sha256.New, []byte(v.DrmProxySecret))
+   fmt.Fprint(mac, now, "widevine")
    b := []byte(v.DrmProxyUrl)
    b = append(b, "/widevine"...)
-   b = fmt.Append(b, "?time=", t)
-   b = fmt.Appendf(b, "&hash=%x", h)
-   b = append(b, "&device=web"...)
+   b = append(b, "?device=web"...)
+   b = fmt.Append(b, "&time=", now)
+   b = fmt.Appendf(b, "&hash=%x", mac.Sum(nil))
    return string(b), true
 }
 
-func Core() Video {
-   var v Video
-   v.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
-   v.DrmProxyUrl = func() string {
-      var b strings.Builder
-      b.WriteString("https://drmproxy.digitalsvc.apps.nbcuni.com")
-      b.WriteString("/drm-proxy/license")
-      return b.String()
-   }()
-   return v
+type Video struct {
+   DrmProxyUrl string
+   DrmProxySecret string
 }
 
 func (Video) RequestHeader() (http.Header, error) {
    head := http.Header{}
    head.Set("content-type", "application/octet-stream")
    return head, nil
-}
-
-type Video struct {
-   DrmProxyUrl string
-   DrmProxySecret string
 }
 
 func (Video) WrapRequest(b []byte) ([]byte, error) {
@@ -59,6 +44,99 @@ func (Video) WrapRequest(b []byte) ([]byte, error) {
 func (Video) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
+
+func (v *Video) Core() {
+   v.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
+   v.DrmProxyUrl = func() string {
+      var b strings.Builder
+      b.WriteString("https://drmproxy.digitalsvc.apps.nbcuni.com")
+      b.WriteString("/drm-proxy/license")
+      return b.String()
+   }()
+}
+
+type Metadata struct {
+   AirDate time.Time
+   EpisodeNumber int `json:",string"`
+   MovieShortTitle string
+   MpxAccountId int64 `json:",string"`
+   MpxGuid int64 `json:",string"`
+   ProgrammingType string
+   SeasonNumber int `json:",string"`
+   SecondaryTitle string
+   SeriesShortTitle string
+}
+
+const query = `
+query(
+   $app: NBCUBrands!
+   $name: String!
+   $oneApp: Boolean
+   $platform: SupportedPlatforms!
+   $type: EntityPageType!
+   $userId: String!
+) {
+   bonanzaPage(
+      app: $app
+      name: $name
+      oneApp: $oneApp
+      platform: $platform
+      type: $type
+      userId: $userId
+   ) {
+      metadata {
+         ... on VideoPageData {
+            airDate
+            episodeNumber
+            movieShortTitle
+            mpxAccountId
+            mpxGuid
+            programmingType
+            seasonNumber
+            secondaryTitle
+            seriesShortTitle
+         }
+      }
+   }
+}
+`
+
+// this is better than strings.Replace and strings.ReplaceAll
+func graphql_compact(s string) string {
+   field := strings.Fields(s)
+   return strings.Join(field, " ")
+}
+
+type OnDemand struct {
+   PlaybackUrl string
+}
+
+type page_request struct {
+   Query string `json:"query"`
+   Variables struct {
+      App string `json:"app"` // String cannot represent a non string value
+      Name string `json:"name"`
+      OneApp bool `json:"oneApp"`
+      Platform string `json:"platform"`
+      Type string `json:"type"` // can be empty
+      UserId string `json:"userId"`
+   } `json:"variables"`
+}
+
+///
+
+func (m Metadata) Show() string {
+   return m.SeriesShortTitle
+}
+
+func (m Metadata) Season() int {
+   return m.SeasonNumber
+}
+
+func (m Metadata) Episode() int {
+   return m.EpisodeNumber
+}
+
 func NewMetadata(guid int) (*Metadata, error) {
    body, err := func() ([]byte, error) {
       var p page_request
@@ -101,17 +179,6 @@ func NewMetadata(guid int) (*Metadata, error) {
    return &data.Data.BonanzaPage.Metadata, nil
 }
 
-func (m Metadata) Show() string {
-   return m.SeriesShortTitle
-}
-
-func (m Metadata) Season() int {
-   return m.SeasonNumber
-}
-
-func (m Metadata) Episode() int {
-   return m.EpisodeNumber
-}
 func (m Metadata) Title() string {
    if v := m.MovieShortTitle; v != "" {
       return v
@@ -119,61 +186,9 @@ func (m Metadata) Title() string {
    return m.SecondaryTitle
 }
 
-type Metadata struct {
-   AirDate time.Time
-   EpisodeNumber int `json:",string"`
-   MovieShortTitle string
-   MpxAccountId int64 `json:",string"`
-   MpxGuid int64 `json:",string"`
-   ProgrammingType string
-   SeasonNumber int `json:",string"`
-   SecondaryTitle string
-   SeriesShortTitle string
-}
-
 func (m Metadata) Year() int {
    return m.AirDate.Year()
 }
-
-// this is better than strings.Replace and strings.ReplaceAll
-func graphql_compact(s string) string {
-   f := strings.Fields(s)
-   return strings.Join(f, " ")
-}
-
-const query = `
-query(
-   $app: NBCUBrands!
-   $name: String!
-   $oneApp: Boolean
-   $platform: SupportedPlatforms!
-   $type: EntityPageType!
-   $userId: String!
-) {
-   bonanzaPage(
-      app: $app
-      name: $name
-      oneApp: $oneApp
-      platform: $platform
-      type: $type
-      userId: $userId
-   ) {
-      metadata {
-         ... on VideoPageData {
-            airDate
-            episodeNumber
-            movieShortTitle
-            mpxAccountId
-            mpxGuid
-            programmingType
-            seasonNumber
-            secondaryTitle
-            seriesShortTitle
-         }
-      }
-   }
-}
-`
 
 func (m Metadata) OnDemand() (*OnDemand, error) {
    req, err := http.NewRequest("", "https://lemonade.nbc.com", nil)
@@ -205,20 +220,4 @@ func (m Metadata) OnDemand() (*OnDemand, error) {
       return nil, err
    }
    return video, nil
-}
-
-type OnDemand struct {
-   PlaybackUrl string
-}
-
-type page_request struct {
-   Query string `json:"query"`
-   Variables struct {
-      App string `json:"app"` // String cannot represent a non string value
-      Name string `json:"name"`
-      OneApp bool `json:"oneApp"`
-      Platform string `json:"platform"`
-      Type string `json:"type"` // can be empty
-      UserId string `json:"userId"`
-   } `json:"variables"`
 }
