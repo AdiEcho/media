@@ -27,10 +27,6 @@ func (a *Address) Set(text string) error {
    return nil
 }
 
-func (a Address) String() string {
-   return a.s
-}
-
 func (Namer) Episode() int {
    return 0
 }
@@ -43,24 +39,9 @@ func (Namer) Show() string {
    return ""
 }
 
-func (n Namer) Title() string {
-   return n.F.Title
-}
-
-func (n Namer) Year() int {
-   return n.F.Year
-}
-
 type TextTrack struct {
    Id string
    Url string
-}
-
-func (t TextTrack) String() string {
-   var b strings.Builder
-   b.WriteString("id = ")
-   b.WriteString(t.Id)
-   return b.String()
 }
 
 type FilmResponse struct {
@@ -69,11 +50,27 @@ type FilmResponse struct {
    Year int
 }
 
-type Namer struct {
-   F *FilmResponse
+func (a *Address) String() string {
+   return a.s
 }
 
-func (a Address) Film() (*FilmResponse, error) {
+func (n *Namer) Title() string {
+   return n.Film.Title
+}
+
+func (n *Namer) Year() int {
+   return n.Film.Year
+}
+
+type Namer struct {
+   Film *FilmResponse
+}
+
+func (t *TextTrack) String() string {
+   return "id = " + t.Id
+}
+
+func (a *Address) Film() (*FilmResponse, error) {
    req, err := http.NewRequest("", "https://api.mubi.com/v3/films/" + a.s, nil)
    if err != nil {
       return nil, err

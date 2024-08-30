@@ -9,7 +9,7 @@ import (
    "strings"
 )
 
-func (a Authenticate) Url(film *FilmResponse) (*SecureUrl, error) {
+func (a *Authenticate) Url(film *FilmResponse) (*SecureUrl, error) {
    req, err := http.NewRequest("", "https://api.mubi.com", nil)
    if err != nil {
       return nil, err
@@ -21,7 +21,7 @@ func (a Authenticate) Url(film *FilmResponse) (*SecureUrl, error) {
       return string(b)
    }()
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.V.Token},
+      "authorization": {"Bearer " + a.Token},
       "client": {client},
       "client-country": {ClientCountry},
    }
@@ -35,21 +35,19 @@ func (a Authenticate) Url(film *FilmResponse) (*SecureUrl, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   data, err := io.ReadAll(resp.Body)
+   text, err := io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
-   return &SecureUrl{Data: data}, nil
+   return &SecureUrl{Raw: text}, nil
 }
 
 type SecureUrl struct {
-   Data []byte
-   V struct {
-      TextTrackUrls []TextTrack `json:"text_track_urls"`
-      Url string
-   }
+   TextTrackUrls []TextTrack `json:"text_track_urls"`
+   Url string
+   Raw []byte `json:"-"`
 }
 
 func (s *SecureUrl) Unmarshal() error {
-   return json.Unmarshal(s.Data, &s.V)
+   return json.Unmarshal(s.Raw, s)
 }

@@ -8,26 +8,6 @@ import (
    "os"
 )
 
-func (f flags) timed_text(url string) error {
-   resp, err := http.Get(url)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   film, err := f.address.Film()
-   if err != nil {
-      return err
-   }
-   f.s.Name = mubi.Namer{film}
-   file, err := f.s.Create(".vtt")
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   file.ReadFrom(resp.Body)
-   return nil
-}
-
 func (f flags) download() error {
    var (
       secure mubi.SecureUrl
@@ -134,4 +114,24 @@ func (f flags) write_secure() error {
       return err
    }
    return os.WriteFile(f.address.String() + ".txt", secure.Data, os.ModePerm)
+}
+
+func (f flags) timed_text(url string) error {
+   resp, err := http.Get(url)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   film, err := f.address.Film()
+   if err != nil {
+      return err
+   }
+   f.s.Name = &mubi.Namer{film}
+   file, err := f.s.Create(".vtt")
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   file.ReadFrom(resp.Body)
+   return nil
 }

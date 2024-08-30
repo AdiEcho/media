@@ -1,9 +1,11 @@
 package mubi
 
 import (
+   "bytes"
    "encoding/base64"
    "encoding/json"
    "errors"
+   "io"
    "net/http"
    "strconv"
    "strings"
@@ -29,17 +31,12 @@ func (Authenticate) UnwrapResponse(b []byte) ([]byte, error) {
    return data.License, nil
 }
 
-func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Data, &a.V)
-}
-
-func (a Authenticate) RequestHeader() (http.Header, error) {
-   value := map[string]any{
+func (a *Authenticate) RequestHeader() (http.Header, error) {
+   text, err := json.Marshal(map[string]any{
       "merchant": "mubi",
-      "sessionId": a.V.Token,
-      "userId": a.V.User.Id,
-   }
-   text, err := json.Marshal(value)
+      "sessionId": a.Token,
+      "userId": a.User.Id,
+   })
    if err != nil {
       return nil, err
    }
@@ -48,14 +45,37 @@ func (a Authenticate) RequestHeader() (http.Header, error) {
    return head, nil
 }
 
-type Authenticate struct {
-   Data []byte
-   V struct {
-      Token string
-      User struct {
-         Id int
-      }
+func (c *LinkCode) Authenticate() (*Authenticate, error) {
+   body, err := json.Marshal(map[string]string{"auth_token": c.AuthToken})
+   if err != nil {
+      return nil, err
    }
+   req, err := http.NewRequest(
+      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "client": {client},
+      "client-country": {ClientCountry},
+      "content-type": {"application/json"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   text, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &Authenticate{Raw: text}, nil
 }
 
 // Mubi do this sneaky thing. you cannot download a video unless you have told
@@ -63,7 +83,7 @@ type Authenticate struct {
 // `/v3/films/%v/viewing`, otherwise it wont let you get the MPD. if you have
 // already viewed the video on the website that counts, but if you only use the
 // tool it will error
-func (a Authenticate) Viewing(film *FilmResponse) error {
+func (a *Authenticate) Viewing(film *FilmResponse) error {
    req, err := http.NewRequest("POST", "https://api.mubi.com", nil)
    if err != nil {
       return err
@@ -75,7 +95,7 @@ func (a Authenticate) Viewing(film *FilmResponse) error {
       return string(b)
    }()
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.V.Token},
+      "authorization": {"Bearer " + a.Token},
       "client": {client},
       "client-country": {ClientCountry},
    }
@@ -92,3 +112,14 @@ func (a Authenticate) Viewing(film *FilmResponse) error {
    return nil
 }
 
+type Authenticate struct {
+   Token string
+   User struct {
+      Id int
+   }
+   Raw []byte `json:"-"`
+}
+
+func (a *Authenticate) Unmarshal() error {
+   return json.Unmarshal(a.Raw, a)
+}
