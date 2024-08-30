@@ -10,7 +10,7 @@ func TestAuthenticate(t *testing.T) {
       code LinkCode
       err error
    )
-   code.Data, err = os.ReadFile("code.txt")
+   code.Raw, err = os.ReadFile("code.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -19,5 +19,5 @@ func TestAuthenticate(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("authenticate.txt", auth.Data, os.ModePerm)
+   os.WriteFile("authenticate.txt", auth.Raw, os.ModePerm)
 }

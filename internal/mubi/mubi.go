@@ -13,7 +13,7 @@ func (f flags) download() error {
       secure mubi.SecureUrl
       err error
    )
-   secure.Data, err = os.ReadFile(f.address.String() + ".txt")
+   secure.Raw, err = os.ReadFile(f.address.String() + ".txt")
    if err != nil {
       return err
    }
@@ -21,7 +21,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", secure.V.Url, nil)
+   req, err := http.NewRequest("", secure.Url, nil)
    if err != nil {
       return err
    }
@@ -29,7 +29,7 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   for _, rep := range secure.V.TextTrackUrls {
+   for _, rep := range secure.TextTrackUrls {
       switch f.representation {
       case "":
          fmt.Print(rep, "\n\n")
@@ -48,14 +48,17 @@ func (f flags) download() error {
          if err != nil {
             return err
          }
-         f.s.Name = mubi.Namer{film}
+         f.s.Name = &mubi.Namer{film}
          var auth mubi.Authenticate
-         auth.Data, err = os.ReadFile(f.home + "/mubi.txt")
+         auth.Raw, err = os.ReadFile(f.home + "/mubi.txt")
          if err != nil {
             return err
          }
-         auth.Unmarshal()
-         f.s.Poster = auth
+         err = auth.Unmarshal()
+         if err != nil {
+            return err
+         }
+         f.s.Poster = &auth
          return f.s.Download(rep)
       }
    }
@@ -67,7 +70,7 @@ func (f flags) write_auth() error {
       code mubi.LinkCode
       err error
    )
-   code.Data, err = os.ReadFile("code.txt")
+   code.Raw, err = os.ReadFile("code.txt")
    if err != nil {
       return err
    }
@@ -76,7 +79,7 @@ func (f flags) write_auth() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/mubi.txt", auth.Data, os.ModePerm)
+   return os.WriteFile(f.home + "/mubi.txt", auth.Raw, os.ModePerm)
 }
 
 func (f flags) write_code() error {
@@ -85,7 +88,7 @@ func (f flags) write_code() error {
    if err != nil {
       return err
    }
-   os.WriteFile("code.txt", code.Data, os.ModePerm)
+   os.WriteFile("code.txt", code.Raw, os.ModePerm)
    code.Unmarshal()
    fmt.Println(code)
    return nil
@@ -96,7 +99,7 @@ func (f flags) write_secure() error {
       auth mubi.Authenticate
       err error
    )
-   auth.Data, err = os.ReadFile(f.home + "/mubi.txt")
+   auth.Raw, err = os.ReadFile(f.home + "/mubi.txt")
    if err != nil {
       return err
    }
@@ -113,7 +116,7 @@ func (f flags) write_secure() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.address.String() + ".txt", secure.Data, os.ModePerm)
+   return os.WriteFile(f.address.String() + ".txt", secure.Raw, os.ModePerm)
 }
 
 func (f flags) timed_text(url string) error {

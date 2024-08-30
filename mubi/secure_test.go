@@ -11,11 +11,14 @@ func TestSecure(t *testing.T) {
       auth Authenticate
       err error
    )
-   auth.Data, err = os.ReadFile("authenticate.txt")
+   auth.Raw, err = os.ReadFile("authenticate.txt")
    if err != nil {
       t.Fatal(err)
    }
-   auth.Unmarshal()
+   err = auth.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
    secure, err := auth.Url(&FilmResponse{Id: test.id})
    if err != nil {
       t.Fatal(err)
