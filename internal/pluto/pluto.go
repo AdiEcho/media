@@ -8,7 +8,7 @@ import (
    "net/http"
 )
 
-func (f flags) download() error {
+func (f *flags) download() error {
    video, err := f.address.Video(f.forward)
    if err != nil {
       return err

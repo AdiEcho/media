@@ -10,7 +10,7 @@ import (
    "os"
 )
 
-func (f flags) download() error {
+func (f *flags) download() error {
    var (
       login rtbf.AuvioLogin
       err error

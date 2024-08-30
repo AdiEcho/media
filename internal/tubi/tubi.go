@@ -8,7 +8,7 @@ import (
    "os"
 )
 
-func (f flags) download() error {
+func (f *flags) download() error {
    text, err := os.ReadFile(f.name())
    if err != nil {
       return err
@@ -43,7 +43,7 @@ func (f flags) download() error {
    return nil
 }
 
-func (f flags) write_content() error {
+func (f *flags) write_content() error {
    content := &tubi.Content{}
    err := content.New(f.tubi)
    if err != nil {
@@ -67,6 +67,6 @@ func (f flags) write_content() error {
    return os.WriteFile(f.name(), text, os.ModePerm)
 }
 
-func (f flags) name() string {
+func (f *flags) name() string {
    return fmt.Sprint(f.tubi) + ".txt"
 }

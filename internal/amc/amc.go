@@ -8,7 +8,7 @@ import (
    "os"
 )
 
-func (f flags) download() error {
+func (f *flags) download() error {
    var (
       auth amc.Authorization
       err error

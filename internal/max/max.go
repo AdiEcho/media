@@ -9,33 +9,6 @@ import (
    "sort"
 )
 
-func (f *flags) authenticate() error {
-   var login max.DefaultLogin
-   login.Credentials.Username = f.email
-   login.Credentials.Password = f.password
-   var key max.PublicKey
-   err := key.New()
-   if err != nil {
-      return err
-   }
-   var token max.DefaultToken
-   err = token.New()
-   if err != nil {
-      return err
-   }
-   err = token.Unmarshal()
-   if err != nil {
-      return err
-   }
-   err = token.Login(key, login)
-   if err != nil {
-      return err
-   }
-   os.Mkdir(f.home, os.ModePerm)
-   os.WriteFile(f.home + "/session.txt", token.Session.Raw, os.ModePerm)
-   return os.WriteFile(f.home + "/token.txt", token.Token.Raw, os.ModePerm)
-}
-
 func (f *flags) download() error {
    var (
       token max.DefaultToken
@@ -89,4 +62,31 @@ func (f *flags) download() error {
       }
    }
    return nil
+}
+
+func (f *flags) authenticate() error {
+   var login max.DefaultLogin
+   login.Credentials.Username = f.email
+   login.Credentials.Password = f.password
+   var key max.PublicKey
+   err := key.New()
+   if err != nil {
+      return err
+   }
+   var token max.DefaultToken
+   err = token.New()
+   if err != nil {
+      return err
+   }
+   err = token.Unmarshal()
+   if err != nil {
+      return err
+   }
+   err = token.Login(key, login)
+   if err != nil {
+      return err
+   }
+   os.Mkdir(f.home, os.ModePerm)
+   os.WriteFile(f.home + "/session.txt", token.Session.Raw, os.ModePerm)
+   return os.WriteFile(f.home + "/token.txt", token.Token.Raw, os.ModePerm)
 }

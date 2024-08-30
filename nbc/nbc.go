@@ -45,28 +45,6 @@ func (Video) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (v *Video) Core() {
-   v.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
-   v.DrmProxyUrl = func() string {
-      var b strings.Builder
-      b.WriteString("https://drmproxy.digitalsvc.apps.nbcuni.com")
-      b.WriteString("/drm-proxy/license")
-      return b.String()
-   }()
-}
-
-type Metadata struct {
-   AirDate time.Time
-   EpisodeNumber int `json:",string"`
-   MovieShortTitle string
-   MpxAccountId int64 `json:",string"`
-   MpxGuid int64 `json:",string"`
-   ProgrammingType string
-   SeasonNumber int `json:",string"`
-   SecondaryTitle string
-   SeriesShortTitle string
-}
-
 const query = `
 query(
    $app: NBCUBrands!
@@ -123,74 +101,52 @@ type page_request struct {
    } `json:"variables"`
 }
 
-///
+func (v *Video) New() {
+   v.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
+   v.DrmProxyUrl = func() string {
+      var b strings.Builder
+      b.WriteString("https://drmproxy.digitalsvc.apps.nbcuni.com")
+      b.WriteString("/drm-proxy/license")
+      return b.String()
+   }()
+}
 
-func (m Metadata) Show() string {
+type Metadata struct {
+   AirDate time.Time
+   EpisodeNumber int `json:",string"`
+   MovieShortTitle string
+   MpxAccountId int64 `json:",string"`
+   MpxGuid int64 `json:",string"`
+   ProgrammingType string
+   SeasonNumber int `json:",string"`
+   SecondaryTitle string
+   SeriesShortTitle string
+}
+
+func (m *Metadata) Show() string {
    return m.SeriesShortTitle
 }
 
-func (m Metadata) Season() int {
+func (m *Metadata) Season() int {
    return m.SeasonNumber
 }
 
-func (m Metadata) Episode() int {
+func (m *Metadata) Episode() int {
    return m.EpisodeNumber
 }
 
-func NewMetadata(guid int) (*Metadata, error) {
-   body, err := func() ([]byte, error) {
-      var p page_request
-      p.Variables.Name = strconv.Itoa(guid)
-      p.Query = graphql_compact(query)
-      p.Variables.App = "nbc"
-      p.Variables.OneApp = true
-      p.Variables.Platform = "android"
-      p.Variables.Type = "VIDEO"
-      return json.Marshal(p)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://friendship.nbc.co/v2/graphql", "application/json",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var data struct {
-      Data struct {
-         BonanzaPage struct {
-            Metadata Metadata
-         }
-      }
-      Errors []struct {
-         Message string
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&data)
-   if err != nil {
-      return nil, err
-   }
-   if len(data.Errors) >= 1 {
-      return nil, errors.New(data.Errors[0].Message)
-   }
-   return &data.Data.BonanzaPage.Metadata, nil
+func (m *Metadata) Year() int {
+   return m.AirDate.Year()
 }
 
-func (m Metadata) Title() string {
-   if v := m.MovieShortTitle; v != "" {
-      return v
+func (m *Metadata) Title() string {
+   if m.MovieShortTitle != "" {
+      return m.MovieShortTitle
    }
    return m.SecondaryTitle
 }
 
-func (m Metadata) Year() int {
-   return m.AirDate.Year()
-}
-
-func (m Metadata) OnDemand() (*OnDemand, error) {
+func (m *Metadata) OnDemand() (*OnDemand, error) {
    req, err := http.NewRequest("", "https://lemonade.nbc.com", nil)
    if err != nil {
       return nil, err
@@ -220,4 +176,47 @@ func (m Metadata) OnDemand() (*OnDemand, error) {
       return nil, err
    }
    return video, nil
+}
+
+func (m *Metadata) New(guid int) error {
+   data, err := func() ([]byte, error) {
+      var p page_request
+      p.Query = graphql_compact(query)
+      p.Variables.App = "nbc"
+      p.Variables.Name = strconv.Itoa(guid)
+      p.Variables.OneApp = true
+      p.Variables.Platform = "android"
+      p.Variables.Type = "VIDEO"
+      return json.Marshal(p)
+   }()
+   if err != nil {
+      return err
+   }
+   resp, err := http.Post(
+      "https://friendship.nbc.co/v2/graphql", "application/json",
+      bytes.NewReader(data),
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   var value struct {
+      Data struct {
+         BonanzaPage struct {
+            Metadata Metadata
+         }
+      }
+      Errors []struct {
+         Message string
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&value)
+   if err != nil {
+      return err
+   }
+   if v := value.Errors; len(v) >= 1 {
+      return errors.New(v[0].Message)
+   }
+   *m = value.Data.BonanzaPage.Metadata
+   return nil
 }

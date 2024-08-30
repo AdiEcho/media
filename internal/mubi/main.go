@@ -53,7 +53,7 @@ func main() {
          panic(err)
       }
    case f.code:
-      err := f.write_code()
+      err := write_code()
       if err != nil {
          panic(err)
       }

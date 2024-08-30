@@ -10,7 +10,7 @@ import (
    "sort"
 )
 
-func (f flags) do_write() error {
+func (f *flags) do_write() error {
    os.Mkdir(f.paramount, os.ModePerm)
    var head paramount.Header
    err := head.New(f.paramount)
@@ -49,7 +49,7 @@ func (f flags) do_write() error {
    return os.WriteFile(f.paramount + "/item.txt", text, os.ModePerm)
 }
 
-func (f flags) do_read() error {
+func (f *flags) do_read() error {
    text, err := os.ReadFile(f.paramount + "/header.txt")
    if err != nil {
       return err

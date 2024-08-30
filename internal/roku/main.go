@@ -47,7 +47,7 @@ func main() {
    text.Transport{}.Set(true)
    switch {
    case f.code_write:
-      err := f.write_code()
+      err := write_code()
       if err != nil {
          panic(err)
       }

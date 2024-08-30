@@ -7,7 +7,7 @@ import (
    "sort"
 )
 
-func (f flags) download() error {
+func (f *flags) download() error {
    fhd, err := f.address.Fhd().Info()
    if err != nil {
       return err

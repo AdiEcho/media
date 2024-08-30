@@ -8,7 +8,7 @@ import (
    "sort"
 )
 
-func (f flags) download() error {
+func (f *flags) download() error {
    var anon plex.Anonymous
    err := anon.New()
    if err != nil {

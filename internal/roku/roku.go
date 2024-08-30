@@ -9,7 +9,7 @@ import (
    "sort"
 )
 
-func (f flags) download() error {
+func (f *flags) download() error {
    var token *roku.AccountToken
    if f.token_read {
       token = &roku.AccountToken{}
@@ -62,7 +62,7 @@ func (f flags) download() error {
    return nil
 }
 
-func (f flags) write_token() error {
+func (f *flags) write_token() error {
    var err error
    // AccountAuth
    var auth roku.AccountAuth
@@ -86,7 +86,7 @@ func (f flags) write_token() error {
    return os.WriteFile(f.home + "/roku.txt", token.Data, os.ModePerm)
 }
 
-func (f flags) write_code() error {
+func write_code() error {
    // AccountAuth
    var auth roku.AccountAuth
    err := auth.New(nil)

@@ -7,8 +7,9 @@ import (
    "net/http"
 )
 
-func (f flags) download() error {
-   meta, err := nbc.NewMetadata(f.nbc)
+func (f *flags) download() error {
+   var meta nbc.Metadata
+   err := meta.New(f.nbc)
    if err != nil {
       return err
    }
@@ -20,23 +21,19 @@ func (f flags) download() error {
    if err != nil {
       return err
    }
-   media, err := internal.Dash(req)
+   reps, err := internal.Dash(req)
    if err != nil {
       return err
    }
-   for _, medium := range media {
-      if medium.Id == f.representation {
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
          f.s.Name = meta
          f.s.Poster = nbc.Core()
-         return f.s.Download(medium)
+         return f.s.Download(rep)
       }
-   }
-   // 2 MPD all
-   for i, medium := range media {
-      if i >= 1 {
-         fmt.Println()
-      }
-      fmt.Println(medium)
    }
    return nil
 }

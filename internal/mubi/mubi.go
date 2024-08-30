@@ -8,7 +8,7 @@ import (
    "os"
 )
 
-func (f flags) download() error {
+func (f *flags) download() error {
    var (
       secure mubi.SecureUrl
       err error
@@ -65,7 +65,7 @@ func (f flags) download() error {
    return nil
 }
 
-func (f flags) write_auth() error {
+func (f *flags) write_auth() error {
    var (
       code mubi.LinkCode
       err error
@@ -82,7 +82,7 @@ func (f flags) write_auth() error {
    return os.WriteFile(f.home + "/mubi.txt", auth.Raw, os.ModePerm)
 }
 
-func (f flags) write_code() error {
+func write_code() error {
    var code mubi.LinkCode
    err := code.New()
    if err != nil {
@@ -94,7 +94,7 @@ func (f flags) write_code() error {
    return nil
 }
 
-func (f flags) write_secure() error {
+func (f *flags) write_secure() error {
    var (
       auth mubi.Authenticate
       err error
@@ -119,7 +119,7 @@ func (f flags) write_secure() error {
    return os.WriteFile(f.address.String() + ".txt", secure.Raw, os.ModePerm)
 }
 
-func (f flags) timed_text(url string) error {
+func (f *flags) timed_text(url string) error {
    resp, err := http.Get(url)
    if err != nil {
       return err
