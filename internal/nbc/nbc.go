@@ -37,9 +37,9 @@ func (f *flags) download() error {
          }
       case rep.Id:
          f.s.Name = &meta
-         var video nbc.Video
-         video.New()
-         f.s.Poster = &video
+         var core nbc.CoreVideo
+         core.New()
+         f.s.Poster = &core
          return f.s.Download(rep)
       }
    }
