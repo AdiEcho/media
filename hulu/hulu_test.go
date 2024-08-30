@@ -43,7 +43,7 @@ func TestLicense(t *testing.T) {
          t.Fatal(err)
       }
       base := path.Base(test.url)
-      link, err := auth.DeepLink(EntityId{base})
+      link, err := auth.DeepLink(&EntityId{base})
       if err != nil {
          t.Fatal(err)
       }
