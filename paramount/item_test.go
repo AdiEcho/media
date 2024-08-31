@@ -11,11 +11,15 @@ func TestItemUs(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   items, err := app.Items(tests["us"].content_id)
+   item, err := app.Item(tests["us"].content_id)
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", items)
+   err = item.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", item)
 }
 
 func TestItemFr(t *testing.T) {
@@ -24,9 +28,13 @@ func TestItemFr(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   items, err := app.Items(tests["fr"].content_id)
+   item, err := app.Item(tests["fr"].content_id)
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", items)
+   err = item.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", item)
 }
