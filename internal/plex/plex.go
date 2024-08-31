@@ -3,6 +3,7 @@ package main
 import (
    "154.pages.dev/media/internal"
    "154.pages.dev/media/plex"
+   "errors"
    "fmt"
    "net/http"
    "sort"
@@ -14,7 +15,7 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   match, err := anon.Discover(f.address)
+   match, err := anon.Discover(f.url)
    if err != nil {
       return err
    }
@@ -24,7 +25,7 @@ func (f *flags) download() error {
    }
    part, ok := video.Dash(anon)
    if !ok {
-      return plex.MediaPart{}
+      return errors.New("OnDemand.Dash")
    }
    req, err := http.NewRequest("", part.Key, nil)
    if err != nil {
@@ -47,7 +48,7 @@ func (f *flags) download() error {
             fmt.Print(rep, "\n\n")
          }
       case rep.Id:
-         f.s.Name = plex.Namer{match}
+         f.s.Name = &plex.Namer{match}
          f.s.Poster = part
          return f.s.Download(rep)
       }

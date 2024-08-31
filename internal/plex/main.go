@@ -9,20 +9,27 @@ import (
    "path/filepath"
 )
 
+type flags struct {
+   forward string
+   representation string
+   s internal.Stream
+   url plex.Url
+}
+
 func main() {
    var f flags
    err := f.New()
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.address, "a", "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.StringVar(&f.forward, "z", "", internal.Forward.String())
+   flag.Var(&f.url, "a", "address")
    flag.Parse()
    text.Transport{}.Set(true)
-   if f.address.String() != "" {
+   if f.url.Path != "" {
       err := f.download()
       if err != nil {
          panic(err)
@@ -30,13 +37,6 @@ func main() {
    } else {
       flag.Usage()
    }
-}
-
-type flags struct {
-   address plex.Path
-   representation string
-   s internal.Stream
-   forward string
 }
 
 func (f *flags) New() error {
