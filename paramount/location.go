@@ -8,10 +8,10 @@ import (
 )
 
 // must use IP address for correct location
-func (s *Location) New(content_id string) error {
+func Location(content_id string) (string, error) {
    req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {
-      return err
+      return "", err
    }
    req.URL.Path = func() string {
       b := []byte("/s/")
@@ -25,7 +25,7 @@ func (s *Location) New(content_id string) error {
    req.URL.RawQuery = "formats=MPEG-DASH"
    resp, err := http.DefaultTransport.RoundTrip(req)
    if err != nil {
-      return err
+      return "", err
    }
    defer resp.Body.Close()
    if resp.StatusCode != http.StatusFound {
@@ -33,10 +33,7 @@ func (s *Location) New(content_id string) error {
          Description string
       }
       json.NewDecoder(resp.Body).Decode(&v)
-      return errors.New(v.Description)
+      return "", errors.New(v.Description)
    }
-   *s = Location(resp.Header.Get("location"))
-   return nil
+   return resp.Header.Get("location"), nil
 }
-
-type Location string

@@ -26,10 +26,6 @@ const (
    cms_account_id = "dJ5BDC"
 )
 
-type AppToken struct {
-   values url.Values
-}
-
 func (n Number) MarshalText() ([]byte, error) {
    return strconv.AppendInt(nil, int64(n), 10), nil
 }
@@ -84,10 +80,12 @@ func (s *SessionToken) RequestHeader() (http.Header, error) {
    return head, nil
 }
 
-///
+type AppToken struct {
+   Values url.Values
+}
 
 // must use app token and IP address for US
-func (at AppToken) Session(content_id string) (*SessionToken, error) {
+func (at *AppToken) Session(content_id string) (*SessionToken, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err
@@ -98,8 +96,8 @@ func (at AppToken) Session(content_id string) (*SessionToken, error) {
       b.WriteString("/anonymous-session-token.json")
       return b.String()
    }()
-   at.values.Set("contentId", content_id)
-   req.URL.RawQuery = at.values.Encode()
+   at.Values.Set("contentId", content_id)
+   req.URL.RawQuery = at.Values.Encode()
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -137,7 +135,7 @@ func (at *AppToken) New(app_secret string) error {
    dst = append(dst, 0, aes.BlockSize)
    dst = append(dst, iv[:]...)
    dst = append(dst, src...)
-   at.values = url.Values{
+   at.Values = url.Values{
       "at": {base64.StdEncoding.EncodeToString(dst)},
    }
    return nil

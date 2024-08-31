@@ -3,63 +3,18 @@ package main
 import (
    "154.pages.dev/media/internal"
    "154.pages.dev/media/paramount"
-   "errors"
    "fmt"
    "net/http"
    "os"
    "sort"
 )
 
-func (f *flags) do_write() error {
-   os.Mkdir(f.paramount, os.ModePerm)
-   var head paramount.Header
-   err := head.New(f.paramount)
-   if err != nil {
-      return err
-   }
-   text, err := head.JsonMarshal()
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(f.paramount + "/header.txt", text, os.ModePerm)
-   if err != nil {
-      return err
-   }
-   var app paramount.AppToken
-   if f.intl {
-      err = app.ComCbsCa()
-   } else {
-      err = app.ComCbsApp()
-   }
-   if err != nil {
-      return err
-   }
-   items, err := app.Items(f.paramount)
-   if err != nil {
-      return err
-   }
-   item, ok := items.Item()
-   if !ok {
-      return errors.New("VideoItems.Item")
-   }
-   text, err = item.JsonMarshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.paramount + "/item.txt", text, os.ModePerm)
-}
-
 func (f *flags) do_read() error {
-   text, err := os.ReadFile(f.paramount + "/header.txt")
+   location, err := os.ReadFile(f.paramount + "/location.txt")
    if err != nil {
       return err
    }
-   var head paramount.Header
-   err = head.Json(text)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest("", head.Location(), nil)
+   req, err := http.NewRequest("", string(location), nil)
    if err != nil {
       return err
    }
@@ -87,19 +42,47 @@ func (f *flags) do_read() error {
             if err != nil {
                return err
             }
-            text, err := os.ReadFile(f.paramount + "/item.txt")
-            if err != nil {
-               return err
-            }
             var item paramount.VideoItem
-            err = item.Json(text)
+            item.Raw, err = os.ReadFile(f.paramount + "/item.txt")
             if err != nil {
                return err
             }
-            f.s.Name = item
+            err = item.Unmarshal()
+            if err != nil {
+               return err
+            }
+            f.s.Name = &item
             return f.s.Download(rep)
          }
       }
    }
    return nil
+}
+
+func (f *flags) do_write() error {
+   os.Mkdir(f.paramount, os.ModePerm)
+   location, err := paramount.Location(f.paramount)
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(
+      f.paramount + "/location.txt", []byte(location), os.ModePerm,
+   )
+   if err != nil {
+      return err
+   }
+   var app paramount.AppToken
+   if f.intl {
+      err = app.ComCbsCa()
+   } else {
+      err = app.ComCbsApp()
+   }
+   if err != nil {
+      return err
+   }
+   item, err := app.Item(f.paramount)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.paramount + "/item.txt", item.Raw, os.ModePerm)
 }
