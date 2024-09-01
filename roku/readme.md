@@ -28,7 +28,8 @@
 23. state
 24. zip
 25. save
-26. start free trial
+26. see plans
+27. start free trial
 
 ## Android
 

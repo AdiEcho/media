@@ -6,6 +6,34 @@ import (
    "strings"
 )
 
+type OnDemand struct {
+   Media []struct {
+      Part []MediaPart
+      Protocol string
+   }
+}
+
+type MediaPart struct {
+   Key string
+   License string
+}
+
+func (MediaPart) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (MediaPart) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (m *MediaPart) RequestUrl() (string, bool) {
+   return m.License, true
+}
+
+func (MediaPart) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
 func (o *OnDemand) Dash(a Anonymous) (*MediaPart, bool) {
    for _, media := range o.Media {
       if media.Protocol == "dash" {
@@ -27,11 +55,6 @@ type DiscoverMatch struct {
    RatingKey string
    Title string
    Year int
-}
-
-type MediaPart struct {
-   Key string
-   License string
 }
 
 type Namer struct {
@@ -56,29 +79,6 @@ func (n *Namer) Title() string {
 
 func (n *Namer) Year() int {
    return n.Match.Year
-}
-
-func (MediaPart) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (MediaPart) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (m *MediaPart) RequestUrl() (string, bool) {
-   return m.License, true
-}
-
-func (MediaPart) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-type OnDemand struct {
-   Media []struct {
-      Part []MediaPart
-      Protocol string
-   }
 }
 
 func (u Url) String() string {
