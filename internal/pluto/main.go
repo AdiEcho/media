@@ -15,7 +15,8 @@ type flags struct {
    s internal.Stream
    representation string
    address pluto.Address
-   forward string
+   get_forward bool
+   set_forward string
 }
 
 func main() {
@@ -36,15 +37,19 @@ func main() {
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.StringVar(&f.forward, "z", "", internal.Forward.String())
+   flag.BoolVar(&f.get_forward, "g", false, "get forward")
+   flag.StringVar(&f.set_forward, "s", "", "set forward")
    flag.Parse()
    text.Transport{}.Set(true)
-   if f.address.String() != "" {
+   switch {
+   case f.get_forward:
+      get_forward()
+   case f.address.String() != "":
       err := f.download()
       if err != nil {
          panic(err)
       }
-   } else {
+   default:
       flag.Usage()
    }
 }

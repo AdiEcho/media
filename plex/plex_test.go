@@ -12,12 +12,12 @@ import (
 
 func TestVideo(t *testing.T) {
    var anon Anonymous
-   err = anon.New()
+   err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
    for _, test := range watch_tests {
-      match, err := anon.Match(Url{test.path})
+      match, err := anon.Match(Address{test.path})
       if err != nil {
          t.Fatal(err)
       }
@@ -25,16 +25,21 @@ func TestVideo(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%+v\n", video)
+      for _, media := range video.Media {
+         for _, part := range media.Part {
+            fmt.Println(part.Key)
+            fmt.Println(part.License)
+         }
+      }
       time.Sleep(time.Second)
    }
 }
 
 func TestUrl(t *testing.T) {
    for _, test := range url_tests {
-      var u Url
-      u.Set(test)
-      fmt.Println(u)
+      var web Address
+      web.Set(test)
+      fmt.Println(web)
    }
 }
 
@@ -62,14 +67,14 @@ var watch_tests = []struct{
    },
 }
 
-func TestDiscover(t *testing.T) {
+func TestMatch(t *testing.T) {
    var anon Anonymous
    err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
    for _, test := range watch_tests {
-      match, err := anon.Match(Url{test.path})
+      match, err := anon.Match(Address{test.path})
       if err != nil {
          t.Fatal(err)
       }
@@ -101,7 +106,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    for _, test := range watch_tests {
-      match, err := anon.Match(Url{test.path})
+      match, err := anon.Match(Address{test.path})
       if err != nil {
          t.Fatal(err)
       }
@@ -109,7 +114,7 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      part, ok := video.Dash(anon)
+      part, ok := video.Dash()
       if !ok {
          t.Fatal("Metadata.Dash")
       }

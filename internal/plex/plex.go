@@ -9,19 +9,13 @@ import (
    "sort"
 )
 
-func get_forward() {
-   for _, forward := range internal.Forward {
-      fmt.Println(forward.Country, forward.IP)
-   }
-}
-
 func (f *flags) download() error {
    var anon plex.Anonymous
    err := anon.New()
    if err != nil {
       return err
    }
-   match, err := anon.Discover(f.url)
+   match, err := anon.Match(f.address)
    if err != nil {
       return err
    }
@@ -29,11 +23,11 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   part, ok := video.Dash(anon)
+   part, ok := video.Dash()
    if !ok {
       return errors.New("OnDemand.Dash")
    }
-   req, err := http.NewRequest("", part.Key, nil)
+   req, err := http.NewRequest("", part.Key.Url.String(), nil)
    if err != nil {
       return err
    }
@@ -60,4 +54,10 @@ func (f *flags) download() error {
       }
    }
    return nil
+}
+
+func get_forward() {
+   for _, forward := range internal.Forward {
+      fmt.Println(forward.Country, forward.IP)
+   }
 }

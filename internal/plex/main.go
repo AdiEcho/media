@@ -12,9 +12,9 @@ import (
 type flags struct {
    representation string
    s internal.Stream
-   url plex.Url
    get_forward bool
    set_forward string
+   address plex.Address
 }
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.url, "a", "address")
+   flag.Var(&f.address, "a", "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
@@ -34,7 +34,7 @@ func main() {
    switch {
    case f.get_forward:
       get_forward()
-   case f.url.Path != "":
+   case f.address.Path != "":
       err := f.download()
       if err != nil {
          panic(err)
