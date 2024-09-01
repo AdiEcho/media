@@ -11,6 +11,16 @@ import (
    "time"
 )
 
+var video_tests = []struct{
+   id string
+   key_id string
+   url   string
+}{
+   {
+      url: "pluto.tv/on-demand/movies/bound-paramount-1-1"
+   },
+}
+
 func TestAddress(t *testing.T) {
    for _, test := range video_tests {
       var web Address
@@ -25,19 +35,17 @@ func TestClip(t *testing.T) {
       t.Fatal(err)
    }
    for _, test := range video_tests {
-      if test.clips != "" {
-         clip, err := Video{Id: test.clips}.Clip()
-         if err != nil {
-            t.Fatal(err)
-         }
-         manifest, ok := clip.Dash()
-         if !ok {
-            t.Fatal("EpisodeClip.Dash")
-         }
-         base_url.Path = manifest.Path
-         fmt.Println(base_url)
-         time.Sleep(time.Second)
+      clip, err := Video{Id: test.clips}.Clip()
+      if err != nil {
+         t.Fatal(err)
       }
+      manifest, ok := clip.Dash()
+      if !ok {
+         t.Fatal("EpisodeClip.Dash")
+      }
+      base_url.Path = manifest.Path
+      fmt.Println(base_url)
+      time.Sleep(time.Second)
    }
 }
 
@@ -72,19 +80,6 @@ func TestLicense(t *testing.T) {
       fmt.Printf("%x\n", key)
       time.Sleep(time.Second)
    }
-}
-
-var video_tests = []struct{
-   url   string
-   start string
-   clips string
-   key_id string
-}{
-   {
-      key_id: "0000000066a9a5964a9c3c4a83408e0f",
-      start: "6002532ace98800013ebd5fe",
-      url: "pluto.tv/us/on-demand/movies/6002532ace98800013ebd5fe",
-   },
 }
 
 func TestVideo(t *testing.T) {

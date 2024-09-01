@@ -5,23 +5,76 @@ import (
    "errors"
    "net/http"
    "net/url"
-   "slices"
-   "strconv"
    "strings"
 )
 
-type Namer struct {
-   Video *OnDemand
+func (a Address) Video(forward string) (*OnDemand, error) {
+   req, err := http.NewRequest("", "https://boot.pluto.tv/v4/start", nil)
+   if err != nil {
+      return nil, err
+   }
+   if forward != "" {
+      req.Header.Set("x-forwarded-for", forward)
+   }
+   req.URL.RawQuery = url.Values{
+      "appName":           {"web"},
+      "appVersion":        {"9"},
+      "clientID":          {"9"},
+      "clientModelNumber": {"9"},
+      "drmCapabilities":   {"widevine:L3"},
+      "seriesIDs":         {a.series},
+   }.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var data struct {
+      Vod []OnDemand
+   }
+   err = json.NewDecoder(resp.Body).Decode(&data)
+   if err != nil {
+      return nil, err
+   }
+   demand := data.Vod[0]
+   if demand.Slug.Slug != a.series {
+      if demand.Id != a.series {
+         return nil, errors.New(demand.Slug.Slug)
+      }
+   }
+   for _, s := range demand.Seasons {
+      s.show = &demand
+      for _, episode := range s.Episodes {
+         err := episode.Slug.atoi()
+         if err != nil {
+            return nil, err
+         }
+         episode.season = s
+         if episode.Episode == a.episode {
+            return episode, nil
+         }
+         if episode.Slug.Slug == a.episode {
+            return episode, nil
+         }
+      }
+   }
+   err = demand.Slug.atoi()
+   if err != nil {
+      return nil, err
+   }
+   return &demand, nil
 }
 
-var Base = []string{
-   // these return `403 OK` with compressed content
-   "http://siloh-fs.plutotv.net",
-   "http://siloh-ns1.plutotv.net",
-   "https://siloh-fs.plutotv.net",
-   "https://siloh-ns1.plutotv.net",
-   // returns `200 OK` with plain content
-   "http://silo-hybrik.pluto.tv.s3.amazonaws.com",
+var Base = []struct{
+   Scheme string
+   Host string
+   Status string
+}{
+   {"https", "siloh-fs.plutotv.net", "403 OK"},
+   {"https", "siloh-ns1.plutotv.net", "403 OK"},
+   {"http", "siloh-fs.plutotv.net", "403 OK"},
+   {"http", "siloh-ns1.plutotv.net", "403 OK"},
+   {"http", "silo-hybrik.pluto.tv.s3.amazonaws.com", "200 OK"},
 }
 
 type Poster struct{}
@@ -135,63 +188,6 @@ func (o OnDemand) Clip() (*EpisodeClip, error) {
    return &clips[0], nil
 }
 
-func (a Address) Video(forward string) (*OnDemand, error) {
-   req, err := http.NewRequest("", "https://boot.pluto.tv/v4/start", nil)
-   if err != nil {
-      return nil, err
-   }
-   if forward != "" {
-      req.Header.Set("x-forwarded-for", forward)
-   }
-   req.URL.RawQuery = url.Values{
-      "appName":           {"web"},
-      "appVersion":        {"9"},
-      "clientID":          {"9"},
-      "clientModelNumber": {"9"},
-      "drmCapabilities":   {"widevine:L3"},
-      "seriesIDs":         {a.series},
-   }.Encode()
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var data struct {
-      Vod []OnDemand
-   }
-   err = json.NewDecoder(resp.Body).Decode(&data)
-   if err != nil {
-      return nil, err
-   }
-   demand := data.Vod[0]
-   if demand.Slug.Slug != a.series {
-      if demand.Id != a.series {
-         return nil, errors.New(demand.Slug.Slug)
-      }
-   }
-   for _, s := range demand.Seasons {
-      s.show = &demand
-      for _, episode := range s.Episodes {
-         err := episode.Slug.atoi()
-         if err != nil {
-            return nil, err
-         }
-         episode.season = s
-         if episode.Episode == a.episode {
-            return episode, nil
-         }
-         if episode.Slug.Slug == a.episode {
-            return episode, nil
-         }
-      }
-   }
-   err = demand.Slug.atoi()
-   if err != nil {
-      return nil, err
-   }
-   return &demand, nil
-}
-
 type Url struct {
    Url *url.URL
 }
@@ -201,25 +197,34 @@ func (u *Url) UnmarshalText(text []byte) error {
    return u.Url.UnmarshalBinary(text)
 }
 
-func (s *Slug) UnmarshalText(text []byte) error {
-   s.Slug = string(text)
-   return nil
-}
-
-///
-
 type Season struct {
    Episodes []*OnDemand
    show   *OnDemand
 }
 
+type Namer struct {
+   Video *OnDemand
+}
+
 type OnDemand struct {
-   Name    string
-   Seasons []*Season
-   Slug    Slug
    Episode string `json:"_id"`
    Id      string
+   Name    string
+   Seasons []*Season
+   Slug    string
    season  *Season
+}
+
+func (Namer) Year() int {
+   return 0
+}
+
+func (Namer) Season() int {
+   return 0
+}
+
+func (Namer) Episode() int {
+   return 0
 }
 
 func (n Namer) Show() string {
@@ -229,53 +234,6 @@ func (n Namer) Show() string {
    return ""
 }
 
-func (n Namer) Season() int {
-   return n.Video.Slug.season
-}
-
-func (n Namer) Episode() int {
-   return n.Video.Slug.episode
-}
-
 func (n Namer) Title() string {
    return n.Video.Name
-}
-
-func (n Namer) Year() int {
-   return n.Video.Slug.year
-}
-
-type Slug struct {
-   Slug    string
-   episode int
-   season  int
-   year    int
-}
-
-// pluto.tv/on-demand/movies/bound-paramount-1-1
-// ex-machina-2015-1-1-ptv1
-// head-first-1998-1-2
-// king-of-queens
-// pilot-1998-1-1-ptv8
-func (s *Slug) atoi() error {
-   split := strings.Split(s.Slug, "-")
-   slices.Reverse(split)
-   if strings.HasPrefix(split[0], "ptv") {
-      split = split[1:]
-   }
-   var err error
-   s.episode, err = strconv.Atoi(split[0])
-   if err != nil {
-      return err
-   }
-   s.season, err = strconv.Atoi(split[1])
-   if err != nil {
-      return err
-   }
-   // some items just dont have a date:
-   // bound-paramount-1-1
-   // not just missing from the slug, missing EVERYWHERE, both on web and
-   // Android
-   s.year, _ = strconv.Atoi(split[2])
-   return nil
 }
