@@ -10,19 +10,76 @@ import (
    "time"
 )
 
-var tests = []struct{
+func TestVideo(t *testing.T) {
+   var anon Anonymous
+   err = anon.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range watch_tests {
+      match, err := anon.Match(Url{test.path})
+      if err != nil {
+         t.Fatal(err)
+      }
+      video, err := anon.Video(match, "")
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", video)
+      time.Sleep(time.Second)
+   }
+}
+
+func TestUrl(t *testing.T) {
+   for _, test := range url_tests {
+      var u Url
+      u.Set(test)
+      fmt.Println(u)
+   }
+}
+
+var url_tests = []string{
+   "/movie/the-hurt-locker",
+   "/watch/movie/the-hurt-locker",
+   "https://watch.plex.tv/watch/movie/the-hurt-locker",
+   "watch.plex.tv/watch/movie/the-hurt-locker",
+}
+
+var watch_tests = []struct{
    key_id string
    path string
    url string
 }{
    {
+      key_id: "4310a7c8094acab73fceab9d5494f36f",
       path: "/movie/cruel-intentions",
       url: "watch.plex.tv/movie/cruel-intentions",
    },
    {
+      key_id: "", // no DRM
       path: "/show/broadchurch/season/3/episode/5",
       url: "watch.plex.tv/show/broadchurch/season/3/episode/5",
    },
+}
+
+func TestDiscover(t *testing.T) {
+   var anon Anonymous
+   err := anon.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range watch_tests {
+      match, err := anon.Match(Url{test.path})
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := text.Name(&Namer{match})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(name)
+      time.Sleep(time.Second)
+   }
 }
 
 func TestLicense(t *testing.T) {
@@ -43,18 +100,8 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   for _, test := range tests {
-      var pssh widevine.Pssh
-      pssh.KeyId, err = hex.DecodeString(test.key_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      var module widevine.Cdm
-      err = module.New(private_key, client_id, pssh.Marshal())
-      if err != nil {
-         t.Fatal(err)
-      }
-      match, err := anon.Discover(Url{test.path})
+   for _, test := range watch_tests {
+      match, err := anon.Match(Url{test.path})
       if err != nil {
          t.Fatal(err)
       }
@@ -66,31 +113,24 @@ func TestLicense(t *testing.T) {
       if !ok {
          t.Fatal("Metadata.Dash")
       }
-      key, err := module.Key(part, pssh.KeyId)
-      if err != nil {
-         t.Fatal(err)
+      fmt.Printf("%+v\n", part)
+      if test.key_id != "" {
+         var pssh widevine.Pssh
+         pssh.KeyId, err = hex.DecodeString(test.key_id)
+         if err != nil {
+            t.Fatal(err)
+         }
+         var module widevine.Cdm
+         err = module.New(private_key, client_id, pssh.Marshal())
+         if err != nil {
+            t.Fatal(err)
+         }
+         key, err := module.Key(part, pssh.KeyId)
+         if err != nil {
+            t.Fatal(err)
+         }
+         fmt.Printf("%x\n", key)
       }
-      fmt.Printf("%x\n", key)
-      time.Sleep(time.Second)
-   }
-}
-
-func TestDiscover(t *testing.T) {
-   var anon Anonymous
-   err := anon.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      match, err := anon.Discover(Url{test.path})
-      if err != nil {
-         t.Fatal(err)
-      }
-      name, err := text.Name(&Namer{match})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(name)
       time.Sleep(time.Second)
    }
 }
