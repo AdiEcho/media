@@ -24,89 +24,22 @@ var Base = []string{
    "http://silo-hybrik.pluto.tv.s3.amazonaws.com",
 }
 
-func (e *EpisodeClip) Dash() (*url.URL, bool) {
-   for _, source := range e.Sources {
-      if source.Type == "DASH" {
-         return &source.File.Url, true
-      }
-   }
-   return nil, false
+type Poster struct{}
+
+func (Poster) RequestUrl() (string, bool) {
+   return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
 }
 
-func (n Namer) Season() int {
-   return n.Video.Slug.season
+func (Poster) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
 }
 
-func (n Namer) Episode() int {
-   return n.Video.Slug.episode
+func (Poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
 }
 
-func (n Namer) Title() string {
-   return n.Video.Name
-}
-
-func (n Namer) Year() int {
-   return n.Video.Slug.year
-}
-
-func (n Namer) Show() string {
-   if v := n.Video.parent; v != nil {
-      return v.parent.Name
-   }
-   return ""
-}
-
-///
-
-func (s *Slug) UnmarshalText(text []byte) error {
-   s.Slug = string(text)
-   return nil
-}
-
-// ex-machina-2015-1-1-ptv1
-// head-first-1998-1-2
-// king-of-queens
-// pilot-1998-1-1-ptv8
-func (s *Slug) atoi() error {
-   split := strings.Split(s.Slug, "-")
-   slices.Reverse(split)
-   if strings.HasPrefix(split[0], "ptv") {
-      split = split[1:]
-   }
-   var err error
-   s.episode, err = strconv.Atoi(split[0])
-   if err != nil {
-      return err
-   }
-   s.season, err = strconv.Atoi(split[1])
-   if err != nil {
-      return err
-   }
-   // some items just dont have a date:
-   // bound-paramount-1-1
-   // not just missing from the slug, missing EVERYWHERE, both on web and
-   // Android
-   s.year, _ = strconv.Atoi(split[2])
-   return nil
-}
-
-func (a Address) String() string {
-   var b strings.Builder
-   if a.series != "" {
-      b.WriteString("https://pluto.tv/on-demand/")
-      if a.episode != "" {
-         b.WriteString("series")
-      } else {
-         b.WriteString("movies")
-      }
-      b.WriteByte('/')
-      b.WriteString(a.series)
-   }
-   if a.episode != "" {
-      b.WriteString("/episode/")
-      b.WriteString(a.episode)
-   }
-   return b.String()
+func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
 }
 
 type Address struct {
@@ -114,11 +47,36 @@ type Address struct {
    episode string
 }
 
-type Slug struct {
-   episode int
-   season  int
-   Slug    string
-   year    int
+func (e *EpisodeClip) Dash() (*Url, bool) {
+   for _, source := range e.Sources {
+      if source.Type == "DASH" {
+         return &source.File, true
+      }
+   }
+   return nil, false
+}
+
+func (a *Address) String() string {
+   var b strings.Builder
+   if a.series != "" {
+      if a.episode != "" {
+         b.WriteString("series/")
+         b.WriteString(a.series)
+         b.WriteString("/episode/")
+         b.WriteString(a.episode)
+      } else {
+         b.WriteString("movies/")
+         b.WriteString(a.series)
+      }
+   }
+   return b.String()
+}
+
+type EpisodeClip struct {
+   Sources []struct {
+      File Url
+      Type string
+   }
 }
 
 func (a *Address) Set(text string) error {
@@ -143,47 +101,6 @@ func (a *Address) Set(text string) error {
          }
       }
    }
-}
-type Poster struct{}
-
-func (Poster) RequestUrl() (string, bool) {
-   return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
-}
-
-func (Poster) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (Poster) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-type EpisodeClip struct {
-   Sources []struct {
-      File Url
-      Type string
-   }
-}
-
-type Url struct {
-   Url url.URL
-}
-
-func (u *Url) UnmarshalText(text []byte) error {
-   return u.Url.UnmarshalBinary(text)
-}
-
-type OnDemand struct {
-   Name    string
-   Seasons []*Season
-   parent  *Season
-   Slug    Slug
-   Episode string `json:"_id"`
-   Id      string
 }
 
 func (o OnDemand) Clip() (*EpisodeClip, error) {
@@ -216,11 +133,6 @@ func (o OnDemand) Clip() (*EpisodeClip, error) {
       return nil, err
    }
    return &clips[0], nil
-}
-
-type Season struct {
-   Episodes []*OnDemand
-   parent   *OnDemand
 }
 
 func (a Address) Video(forward string) (*OnDemand, error) {
@@ -258,13 +170,13 @@ func (a Address) Video(forward string) (*OnDemand, error) {
       }
    }
    for _, s := range demand.Seasons {
-      s.parent = &demand
+      s.show = &demand
       for _, episode := range s.Episodes {
          err := episode.Slug.atoi()
          if err != nil {
             return nil, err
          }
-         episode.parent = s
+         episode.season = s
          if episode.Episode == a.episode {
             return episode, nil
          }
@@ -278,4 +190,92 @@ func (a Address) Video(forward string) (*OnDemand, error) {
       return nil, err
    }
    return &demand, nil
+}
+
+type Url struct {
+   Url *url.URL
+}
+
+func (u *Url) UnmarshalText(text []byte) error {
+   u.Url = &url.URL{}
+   return u.Url.UnmarshalBinary(text)
+}
+
+func (s *Slug) UnmarshalText(text []byte) error {
+   s.Slug = string(text)
+   return nil
+}
+
+///
+
+type Season struct {
+   Episodes []*OnDemand
+   show   *OnDemand
+}
+
+type OnDemand struct {
+   Name    string
+   Seasons []*Season
+   Slug    Slug
+   Episode string `json:"_id"`
+   Id      string
+   season  *Season
+}
+
+func (n Namer) Show() string {
+   if v := n.Video.season; v != nil {
+      return v.show.Name
+   }
+   return ""
+}
+
+func (n Namer) Season() int {
+   return n.Video.Slug.season
+}
+
+func (n Namer) Episode() int {
+   return n.Video.Slug.episode
+}
+
+func (n Namer) Title() string {
+   return n.Video.Name
+}
+
+func (n Namer) Year() int {
+   return n.Video.Slug.year
+}
+
+type Slug struct {
+   Slug    string
+   episode int
+   season  int
+   year    int
+}
+
+// pluto.tv/on-demand/movies/bound-paramount-1-1
+// ex-machina-2015-1-1-ptv1
+// head-first-1998-1-2
+// king-of-queens
+// pilot-1998-1-1-ptv8
+func (s *Slug) atoi() error {
+   split := strings.Split(s.Slug, "-")
+   slices.Reverse(split)
+   if strings.HasPrefix(split[0], "ptv") {
+      split = split[1:]
+   }
+   var err error
+   s.episode, err = strconv.Atoi(split[0])
+   if err != nil {
+      return err
+   }
+   s.season, err = strconv.Atoi(split[1])
+   if err != nil {
+      return err
+   }
+   // some items just dont have a date:
+   // bound-paramount-1-1
+   // not just missing from the slug, missing EVERYWHERE, both on web and
+   // Android
+   s.year, _ = strconv.Atoi(split[2])
+   return nil
 }
