@@ -10,10 +10,19 @@ import (
    "time"
 )
 
-var tests = map[string]Url{
-   "episode": {"/show/broadchurch/season/3/episode/5"},
-   // watch.plex.tv/movie/cruel-intentions
-   "movie": {"/movie/cruel-intentions"},
+var tests = []struct{
+   key_id string
+   path string
+   url string
+}{
+   {
+      path: "/show/broadchurch/season/3/episode/5",
+      url: "watch.plex.tv/show/broadchurch/season/3/episode/5",
+   },
+   {
+      path: "/movie/cruel-intentions",
+      url: "watch.plex.tv/movie/cruel-intentions",
+   }
 }
 
 func TestDiscover(t *testing.T) {
@@ -82,5 +91,3 @@ func TestLicense(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
-
-const default_kid = "eabdd790d9279b9699b32110eed9a154"

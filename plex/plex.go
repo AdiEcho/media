@@ -8,6 +8,67 @@ import (
    "strings"
 )
 
+type DiscoverMatch struct {
+   GrandparentTitle string
+   Index int
+   ParentIndex int
+   RatingKey string
+   Title string
+   Year int
+}
+
+type Namer struct {
+   Match *DiscoverMatch
+}
+
+func (n *Namer) Episode() int {
+   return n.Match.Index
+}
+
+func (n *Namer) Season() int {
+   return n.Match.ParentIndex
+}
+
+func (n *Namer) Show() string {
+   return n.Match.GrandparentTitle
+}
+
+func (n *Namer) Title() string {
+   return n.Match.Title
+}
+
+func (n *Namer) Year() int {
+   return n.Match.Year
+}
+
+type OnDemand struct {
+   Media []struct {
+      Part []MediaPart
+      Protocol string
+   }
+}
+
+type MediaPart struct {
+   Key string
+   License string
+}
+
+func (MediaPart) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (MediaPart) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (m *MediaPart) RequestUrl() (string, bool) {
+   return m.License, true
+}
+
+func (MediaPart) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
 type Anonymous struct {
    AuthToken string
 }
@@ -32,14 +93,24 @@ func (a *Anonymous) New() error {
    return json.NewDecoder(resp.Body).Decode(a)
 }
 
-func (a Anonymous) abs(path string, query url.Values) string {
-   query.Set("x-plex-token", a.AuthToken)
-   var u url.URL
-   u.Host = "vod.provider.plex.tv"
-   u.Path = path
-   u.RawQuery = query.Encode()
-   u.Scheme = "https"
-   return u.String()
+///
+
+// https://watch.plex.tv/movie/the-hurt-locker
+// https://watch.plex.tv/watch/movie/the-hurt-locker
+// watch.plex.tv/movie/the-hurt-locker
+func (u *Url) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "watch.plex.tv")
+   u.Path = strings.TrimPrefix(s, "/watch")
+   return nil
+}
+
+func (u Url) String() string {
+   return u.Path
+}
+
+type Url struct {
+   Path string
 }
 
 func (a Anonymous) Discover(u Url) (*DiscoverMatch, error) {
@@ -106,33 +177,6 @@ func (a Anonymous) Video(
    }
    return &value.MediaContainer.Metadata[0], nil
 }
-type OnDemand struct {
-   Media []struct {
-      Part []MediaPart
-      Protocol string
-   }
-}
-
-type MediaPart struct {
-   Key string
-   License string
-}
-
-func (MediaPart) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (MediaPart) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (m *MediaPart) RequestUrl() (string, bool) {
-   return m.License, true
-}
-
-func (MediaPart) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
 
 func (o *OnDemand) Dash(a Anonymous) (*MediaPart, bool) {
    for _, media := range o.Media {
@@ -148,53 +192,12 @@ func (o *OnDemand) Dash(a Anonymous) (*MediaPart, bool) {
    return nil, false
 }
 
-type DiscoverMatch struct {
-   GrandparentTitle string
-   Index int
-   ParentIndex int
-   RatingKey string
-   Title string
-   Year int
-}
-
-type Namer struct {
-   Match *DiscoverMatch
-}
-
-func (n *Namer) Episode() int {
-   return n.Match.Index
-}
-
-func (n *Namer) Season() int {
-   return n.Match.ParentIndex
-}
-
-func (n *Namer) Show() string {
-   return n.Match.GrandparentTitle
-}
-
-func (n *Namer) Title() string {
-   return n.Match.Title
-}
-
-func (n *Namer) Year() int {
-   return n.Match.Year
-}
-
-func (u Url) String() string {
-   return u.Path
-}
-
-// watch.plex.tv/movie/the-hurt-locker
-// https://watch.plex.tv/movie/the-hurt-locker
-// https://watch.plex.tv/watch/movie/the-hurt-locker
-func (u *Url) Set(s string) error {
-   s = strings.TrimPrefix(s, "https://")
-   s = strings.TrimPrefix(s, "watch.plex.tv")
-   u.Path = strings.TrimPrefix(s, "/watch")
-   return nil
-}
-
-type Url struct {
-   Path string
+func (a Anonymous) abs(path string, query url.Values) string {
+   query.Set("x-plex-token", a.AuthToken)
+   var u url.URL
+   u.Host = "vod.provider.plex.tv"
+   u.Path = path
+   u.RawQuery = query.Encode()
+   u.Scheme = "https"
+   return u.String()
 }
