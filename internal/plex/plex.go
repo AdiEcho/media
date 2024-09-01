@@ -9,6 +9,12 @@ import (
    "sort"
 )
 
+func get_forward() {
+   for _, forward := range internal.Forward {
+      fmt.Println(forward.Country, forward.IP)
+   }
+}
+
 func (f *flags) download() error {
    var anon plex.Anonymous
    err := anon.New()
@@ -19,7 +25,7 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   video, err := anon.Video(match, f.forward)
+   video, err := anon.Video(match, f.set_forward)
    if err != nil {
       return err
    }
@@ -31,8 +37,8 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   if f.forward != "" {
-      req.Header.Set("x-forwarded-for", f.forward)
+   if f.set_forward != "" {
+      req.Header.Set("x-forwarded-for", f.set_forward)
    }
    reps, err := internal.Dash(req)
    if err != nil {

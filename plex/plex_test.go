@@ -16,33 +16,13 @@ var tests = []struct{
    url string
 }{
    {
+      path: "/movie/cruel-intentions",
+      url: "watch.plex.tv/movie/cruel-intentions",
+   },
+   {
       path: "/show/broadchurch/season/3/episode/5",
       url: "watch.plex.tv/show/broadchurch/season/3/episode/5",
    },
-   {
-      path: "/movie/cruel-intentions",
-      url: "watch.plex.tv/movie/cruel-intentions",
-   }
-}
-
-func TestDiscover(t *testing.T) {
-   var anon Anonymous
-   err := anon.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      match, err := anon.Discover(test)
-      if err != nil {
-         t.Fatal(err)
-      }
-      name, err := text.Name(&Namer{match})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(name)
-      time.Sleep(time.Second)
-   }
 }
 
 func TestLicense(t *testing.T) {
@@ -58,36 +38,59 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var pssh widevine.Pssh
-   pssh.KeyId, err = hex.DecodeString(default_kid)
-   if err != nil {
-      t.Fatal(err)
-   }
-   var module widevine.Cdm
-   err = module.New(private_key, client_id, pssh.Marshal())
-   if err != nil {
-      t.Fatal(err)
-   }
    var anon Anonymous
    err = anon.New()
    if err != nil {
       t.Fatal(err)
    }
-   match, err := anon.Discover(tests["movie"])
+   for _, test := range tests {
+      var pssh widevine.Pssh
+      pssh.KeyId, err = hex.DecodeString(test.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var module widevine.Cdm
+      err = module.New(private_key, client_id, pssh.Marshal())
+      if err != nil {
+         t.Fatal(err)
+      }
+      match, err := anon.Discover(Url{test.path})
+      if err != nil {
+         t.Fatal(err)
+      }
+      video, err := anon.Video(match, "")
+      if err != nil {
+         t.Fatal(err)
+      }
+      part, ok := video.Dash(anon)
+      if !ok {
+         t.Fatal("Metadata.Dash")
+      }
+      key, err := module.Key(part, pssh.KeyId)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
+   }
+}
+
+func TestDiscover(t *testing.T) {
+   var anon Anonymous
+   err := anon.New()
    if err != nil {
       t.Fatal(err)
    }
-   video, err := anon.Video(match, "")
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      match, err := anon.Discover(Url{test.path})
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := text.Name(&Namer{match})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(name)
+      time.Sleep(time.Second)
    }
-   part, ok := video.Dash(anon)
-   if !ok {
-      t.Fatal("Metadata.Dash")
-   }
-   key, err := module.Key(part, pssh.KeyId)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
 }

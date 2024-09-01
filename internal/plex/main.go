@@ -10,10 +10,11 @@ import (
 )
 
 type flags struct {
-   forward string
    representation string
    s internal.Stream
    url plex.Url
+   get_forward bool
+   set_forward string
 }
 
 func main() {
@@ -22,19 +23,23 @@ func main() {
    if err != nil {
       panic(err)
    }
+   flag.Var(&f.url, "a", "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.StringVar(&f.forward, "z", "", internal.Forward.String())
-   flag.Var(&f.url, "a", "address")
+   flag.BoolVar(&f.get_forward, "g", false, "get forward")
+   flag.StringVar(&f.set_forward, "s", "", "set forward")
    flag.Parse()
    text.Transport{}.Set(true)
-   if f.url.Path != "" {
+   switch {
+   case f.get_forward:
+      get_forward()
+   case f.url.Path != "":
       err := f.download()
       if err != nil {
          panic(err)
       }
-   } else {
+   default:
       flag.Usage()
    }
 }
@@ -49,4 +54,3 @@ func (f *flags) New() error {
    f.s.PrivateKey = home + "/widevine/private_key.pem"
    return nil
 }
-
