@@ -1,7 +1,6 @@
 package plex
 
 import (
-   "154.pages.dev/text"
    "154.pages.dev/widevine"
    "encoding/hex"
    "fmt"
@@ -9,31 +8,6 @@ import (
    "testing"
    "time"
 )
-
-func TestVideo(t *testing.T) {
-   var anon Anonymous
-   err := anon.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range watch_tests {
-      match, err := anon.Match(Address{test.path})
-      if err != nil {
-         t.Fatal(err)
-      }
-      video, err := anon.Video(match, "")
-      if err != nil {
-         t.Fatal(err)
-      }
-      for _, media := range video.Media {
-         for _, part := range media.Part {
-            fmt.Println(part.Key)
-            fmt.Println(part.License)
-         }
-      }
-      time.Sleep(time.Second)
-   }
-}
 
 func TestUrl(t *testing.T) {
    for _, test := range url_tests {
@@ -50,43 +24,6 @@ var url_tests = []string{
    "watch.plex.tv/watch/movie/the-hurt-locker",
 }
 
-var watch_tests = []struct{
-   key_id string
-   path string
-   url string
-}{
-   {
-      key_id: "4310a7c8094acab73fceab9d5494f36f",
-      path: "/movie/cruel-intentions",
-      url: "watch.plex.tv/movie/cruel-intentions",
-   },
-   {
-      key_id: "", // no DRM
-      path: "/show/broadchurch/season/3/episode/5",
-      url: "watch.plex.tv/show/broadchurch/season/3/episode/5",
-   },
-}
-
-func TestMatch(t *testing.T) {
-   var anon Anonymous
-   err := anon.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range watch_tests {
-      match, err := anon.Match(Address{test.path})
-      if err != nil {
-         t.Fatal(err)
-      }
-      name, err := text.Name(&Namer{match})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(name)
-      time.Sleep(time.Second)
-   }
-}
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -100,17 +37,17 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var anon Anonymous
-   err = anon.New()
+   var user Anonymous
+   err = user.New()
    if err != nil {
       t.Fatal(err)
    }
    for _, test := range watch_tests {
-      match, err := anon.Match(Address{test.path})
+      match, err := user.Match(Address{test.path})
       if err != nil {
          t.Fatal(err)
       }
-      video, err := anon.Video(match, "")
+      video, err := user.Video(match, "")
       if err != nil {
          t.Fatal(err)
       }

@@ -10,16 +10,16 @@ import (
 )
 
 func (f *flags) download() error {
-   var anon plex.Anonymous
-   err := anon.New()
+   var user plex.Anonymous
+   err := user.New()
    if err != nil {
       return err
    }
-   match, err := anon.Match(f.address)
+   match, err := user.Match(f.address)
    if err != nil {
       return err
    }
-   video, err := anon.Video(match, f.set_forward)
+   video, err := user.Video(match, f.set_forward)
    if err != nil {
       return err
    }
