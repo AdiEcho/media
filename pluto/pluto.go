@@ -197,8 +197,8 @@ type OnDemand struct {
 
 ///
 
-func (o OnDemand) Clip() (*EpisodeClip, error) {
-   req, err := http.NewRequest("", "http://api.pluto.tv", nil)
+func (o *OnDemand) Clip() (*EpisodeClip, error) {
+   req, err := http.NewRequest("", "https://api.pluto.tv", nil)
    if err != nil {
       return nil, err
    }
