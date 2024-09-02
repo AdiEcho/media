@@ -3,6 +3,7 @@ package roku
 import (
    "encoding/json"
    "errors"
+   "io"
    "net/http"
    "net/url"
    "strings"
@@ -17,10 +18,6 @@ type HomeScreen struct {
       Title string
    }
    Title string
-}
-
-func (n Namer) Year() int {
-   return n.Home.ReleaseDate.Year()
 }
 
 func (h *HomeScreen) New(id string) error {
@@ -71,11 +68,8 @@ type Namer struct {
    Home HomeScreen
 }
 
-func (n Namer) Show() string {
-   if v := n.Home.Series; v != nil {
-      return v.Title
-   }
-   return ""
+func (n Namer) Year() int {
+   return n.Home.ReleaseDate.Year()
 }
 
 func (n Namer) Season() int {
@@ -90,22 +84,18 @@ func (n Namer) Title() string {
    return n.Home.Title
 }
 
-type Playback struct {
-   Drm struct {
-      Widevine struct {
-         LicenseServer string
-      }
+func (n Namer) Show() string {
+   if v := n.Home.Series; v != nil {
+      return v.Title
    }
-   Url string
+   return ""
 }
 
 func (Playback) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 
-func (p Playback) RequestUrl() (string, bool) {
-   return p.Drm.Widevine.LicenseServer, true
-}
+const user_agent = "trc-googletv; production; 0"
 
 func (Playback) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
@@ -115,20 +105,47 @@ func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-const user_agent = "trc-googletv; production; 0"
-
-func pointer[T any](value *T) *T {
-   return new(T)
+type Playback struct {
+   Drm struct {
+      Widevine struct {
+         LicenseServer string
+      }
+   }
+   Url string
 }
 
-type AccountToken struct {
-   Data []byte
-   V    *struct {
-      Token string
-   }
+func (p *Playback) RequestUrl() (string, bool) {
+   return p.Drm.Widevine.LicenseServer, true
 }
 
 func (a *AccountToken) Unmarshal() error {
-   a.V = pointer(a.V)
-   return json.Unmarshal(a.Data, a.V)
+   return json.Unmarshal(a.Raw, a)
+}
+
+type AccountToken struct {
+   Token string
+   Raw []byte `json:"-"`
+}
+
+func (a *AccountAuth) Token(code *AccountCode) (*AccountToken, error) {
+   req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/api/v1/account/activation/" + code.Code
+   req.Header = http.Header{
+      "user-agent":           {user_agent},
+      "x-roku-content-token": {a.AuthToken},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var token AccountToken
+   token.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &token, nil
 }
