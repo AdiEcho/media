@@ -8,135 +8,6 @@ import (
    "strings"
 )
 
-type Poster struct{}
-
-func (Poster) RequestUrl() (string, bool) {
-   return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
-}
-
-func (Poster) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (Poster) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-type Namer struct {
-   Video *OnDemand
-}
-
-func (Namer) Season() int {
-   return 0
-}
-
-func (Namer) Episode() int {
-   return 0
-}
-
-func (Namer) Year() int {
-   return 0
-}
-
-var Base = []struct{
-   Scheme string
-   Host string
-   Status string
-}{
-   {"https", "siloh-fs.plutotv.net", "403 OK"},
-   {"https", "siloh-ns1.plutotv.net", "403 OK"},
-   {"http", "siloh-fs.plutotv.net", "403 OK"},
-   {"http", "siloh-ns1.plutotv.net", "403 OK"},
-   {"http", "silo-hybrik.pluto.tv.s3.amazonaws.com", "200 OK"},
-}
-
-func (n Namer) Show() string {
-   if v := n.Video.season; v != nil {
-      return v.show.Name
-   }
-   return ""
-}
-
-func (n Namer) Title() string {
-   return n.Video.Slug
-}
-
-func (e *EpisodeClip) Dash() (*Url, bool) {
-   for _, source := range e.Sources {
-      if source.Type == "DASH" {
-         return &source.File, true
-      }
-   }
-   return nil, false
-}
-
-type EpisodeClip struct {
-   Sources []struct {
-      File Url
-      Type string
-   }
-}
-
-type Url struct {
-   Url *url.URL
-}
-
-func (u *Url) UnmarshalText(text []byte) error {
-   u.Url = &url.URL{}
-   return u.Url.UnmarshalBinary(text)
-}
-
-func (a Address) String() string {
-   var b strings.Builder
-   if a[0] != "" {
-      if a[1] != "" {
-         b.WriteString("series/")
-         b.WriteString(a[0])
-         b.WriteString("/episode/")
-         b.WriteString(a[1])
-      } else {
-         b.WriteString("movies/")
-         b.WriteString(a[0])
-      }
-   }
-   return b.String()
-}
-
-func (a Address) Set(text string) error {
-   for {
-      var (
-         key string
-         ok  bool
-      )
-      key, text, ok = strings.Cut(text, "/")
-      if !ok {
-         return nil
-      }
-      switch key {
-      case "movies":
-         a[0] = text
-      case "series":
-         a[0], text, ok = strings.Cut(text, "/")
-         if !ok {
-            return errors.New("episode")
-         }
-      case "episode":
-         a[1] = text
-      }
-   }
-}
-
-type Address [2]string
-
-type VideoSeason struct {
-   Episodes []*OnDemand
-   show   *OnDemand
-}
-
 func (a Address) Video(forward string) (*OnDemand, error) {
    req, err := http.NewRequest("", "https://boot.pluto.tv/v4/start", nil)
    if err != nil {
@@ -186,6 +57,105 @@ func (a Address) Video(forward string) (*OnDemand, error) {
    return &demand, nil
 }
 
+func (a Address) String() string {
+   var b strings.Builder
+   if a[0] != "" {
+      if a[1] != "" {
+         b.WriteString("series/")
+         b.WriteString(a[0])
+         b.WriteString("/episode/")
+         b.WriteString(a[1])
+      } else {
+         b.WriteString("movies/")
+         b.WriteString(a[0])
+      }
+   }
+   return b.String()
+}
+
+func (a Address) Set(text string) error {
+   for {
+      var (
+         key string
+         ok  bool
+      )
+      key, text, ok = strings.Cut(text, "/")
+      if !ok {
+         return nil
+      }
+      switch key {
+      case "movies":
+         a[0] = text
+      case "series":
+         a[0], text, ok = strings.Cut(text, "/")
+         if !ok {
+            return errors.New("episode")
+         }
+      case "episode":
+         a[1] = text
+      }
+   }
+}
+
+type Address [2]string
+
+func (e *EpisodeClip) Dash() (*Url, bool) {
+   for _, source := range e.Sources {
+      if source.Type == "DASH" {
+         return &source.File, true
+      }
+   }
+   return nil, false
+}
+
+type EpisodeClip struct {
+   Sources []struct {
+      File Url
+      Type string
+   }
+}
+
+var Bases = []FileBase{
+   {"https", "siloh-fs.plutotv.net", "403 OK"},
+   {"https", "siloh-ns1.plutotv.net", "403 OK"},
+   {"http", "siloh-fs.plutotv.net", "403 OK"},
+   {"http", "siloh-ns1.plutotv.net", "403 OK"},
+   {"http", "silo-hybrik.pluto.tv.s3.amazonaws.com", "200 OK"},
+}
+
+type FileBase struct {
+   Scheme string
+   Host string
+   Status string
+}
+
+type Namer struct {
+   Video *OnDemand
+}
+
+func (Namer) Season() int {
+   return 0
+}
+
+func (Namer) Episode() int {
+   return 0
+}
+
+func (Namer) Year() int {
+   return 0
+}
+
+func (n Namer) Show() string {
+   if v := n.Video.season; v != nil {
+      return v.show.Name
+   }
+   return ""
+}
+
+func (n Namer) Title() string {
+   return n.Video.Slug
+}
+
 type OnDemand struct {
    Episode string `json:"_id"`
    Id      string
@@ -195,9 +165,7 @@ type OnDemand struct {
    season  *VideoSeason
 }
 
-///
-
-func (o *OnDemand) Clip() (*EpisodeClip, error) {
+func (o OnDemand) Clip() (*EpisodeClip, error) {
    req, err := http.NewRequest("", "https://api.pluto.tv", nil)
    if err != nil {
       return nil, err
@@ -227,4 +195,36 @@ func (o *OnDemand) Clip() (*EpisodeClip, error) {
       return nil, err
    }
    return &clips[0], nil
+}
+
+type Poster struct{}
+
+func (Poster) RequestUrl() (string, bool) {
+   return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
+}
+
+func (Poster) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (Poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+type Url struct {
+   Url *url.URL
+}
+
+func (u *Url) UnmarshalText(text []byte) error {
+   u.Url = &url.URL{}
+   return u.Url.UnmarshalBinary(text)
+}
+
+type VideoSeason struct {
+   Episodes []*OnDemand
+   show   *OnDemand
 }

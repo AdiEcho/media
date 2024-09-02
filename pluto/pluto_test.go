@@ -5,11 +5,31 @@ import (
    "154.pages.dev/widevine"
    "encoding/hex"
    "fmt"
-   "net/url"
    "os"
+   "slices"
    "testing"
    "time"
 )
+
+func TestClip(t *testing.T) {
+   i := slices.IndexFunc(Bases, func(f FileBase) bool {
+      return f.Status == "200 OK"
+   })
+   for _, test := range video_tests {
+      clip, err := OnDemand{Id: test.id}.Clip()
+      if err != nil {
+         t.Fatal(err)
+      }
+      manifest, ok := clip.Dash()
+      if !ok {
+         t.Fatal("EpisodeClip.Dash")
+      }
+      manifest.Url.Scheme = Bases[i].Scheme
+      manifest.Url.Host = Bases[i].Host
+      fmt.Printf("%+v\n", manifest)
+      time.Sleep(time.Second)
+   }
+}
 
 // the slug is useful as it sometimes contains the year, but its not worth
 // parsing since its sometimes missing
@@ -33,26 +53,6 @@ var video_tests = []struct{
       key_id: "000000006358c035248b647dad3c09ad",
       url: "pluto.tv/on-demand/series/frasier-cbs-tv/season/1/episode/space-quest-1992-1-2",
    },
-}
-
-func TestClip(t *testing.T) {
-   base_url, err := url.Parse(Base[len(Base)-1])
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range video_tests {
-      clip, err := Video{Id: test.clips}.Clip()
-      if err != nil {
-         t.Fatal(err)
-      }
-      manifest, ok := clip.Dash()
-      if !ok {
-         t.Fatal("EpisodeClip.Dash")
-      }
-      base_url.Path = manifest.Path
-      fmt.Println(base_url)
-      time.Sleep(time.Second)
-   }
 }
 
 func TestAddress(t *testing.T) {
