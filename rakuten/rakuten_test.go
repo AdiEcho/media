@@ -8,6 +8,37 @@ import (
    "testing"
 )
 
+var tests = map[string]movie_test{
+   "fr": {
+      url: "rakuten.tv/fr/movies/challengers",
+   },
+   "se": {
+      url:        "rakuten.tv/se/movies/i-heart-huckabees",
+      content_id: "9a534a1f12d68e1a2359f38710fddb65-mc-0-147-0-0",
+      key_id:     "00000000000000000000000000000000",
+   },
+}
+
+func TestFr(t *testing.T) {
+   var web Address
+   web.Set(tests["fr"].url)
+   stream, err := web.Fhd().Info()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", stream)
+}
+
+func TestSe(t *testing.T) {
+   var web Address
+   web.Set(tests["se"].url)
+   stream, err := web.Fhd().Info()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", stream)
+}
+
 func (m movie_test) license() ([]byte, error) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -55,24 +86,4 @@ func TestLicenseFr(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-func TestFr(t *testing.T) {
-   var web Address
-   web.Set(tests["fr"].url)
-   stream, err := web.Fhd().Info()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", stream)
-}
-
-func TestSe(t *testing.T) {
-   var web Address
-   web.Set(tests["se"].url)
-   stream, err := web.Fhd().Info()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", stream)
 }

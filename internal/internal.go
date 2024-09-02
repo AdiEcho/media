@@ -15,6 +15,36 @@ import (
    "strings"
 )
 
+func (s Stream) key() ([]byte, error) {
+   if s.key_id == nil {
+      return nil, nil
+   }
+   private_key, err := os.ReadFile(s.PrivateKey)
+   if err != nil {
+      return nil, err
+   }
+   client_id, err := os.ReadFile(s.ClientId)
+   if err != nil {
+      return nil, err
+   }
+   if s.pssh == nil {
+      s.pssh = widevine.Pssh{KeyId: s.key_id}.Marshal()
+   }
+   var module widevine.Cdm
+   err = module.New(private_key, client_id, s.pssh)
+   if err != nil {
+      return nil, err
+   }
+   key, err := module.Key(s.Poster, s.key_id)
+   if err != nil {
+      return nil, err
+   }
+   slog.Info(
+      "CDM", "ID", hex.EncodeToString(s.key_id), "key", hex.EncodeToString(key),
+   )
+   return key, nil
+}
+
 func Dash(req *http.Request) ([]dash.Representation, error) {
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -271,36 +301,6 @@ func write_sidx(req *http.Request, index dash.Range) ([]sofia.Reference, error) 
       return nil, err
    }
    return file.SegmentIndex.Reference, nil
-}
-
-func (s Stream) key() ([]byte, error) {
-   if s.key_id == nil {
-      return nil, nil
-   }
-   private_key, err := os.ReadFile(s.PrivateKey)
-   if err != nil {
-      return nil, err
-   }
-   client_id, err := os.ReadFile(s.ClientId)
-   if err != nil {
-      return nil, err
-   }
-   if s.pssh == nil {
-      s.pssh = widevine.Pssh{KeyId: s.key_id}.Marshal()
-   }
-   var module widevine.Cdm
-   err = module.New(private_key, client_id, s.pssh)
-   if err != nil {
-      return nil, err
-   }
-   key, err := module.Key(s.Poster, s.key_id)
-   if err != nil {
-      return nil, err
-   }
-   slog.Info(
-      "CDM", "ID", hex.EncodeToString(s.key_id), "key", hex.EncodeToString(key),
-   )
-   return key, nil
 }
 
 // wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
