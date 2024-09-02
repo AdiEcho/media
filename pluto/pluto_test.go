@@ -1,20 +1,15 @@
 package pluto
 
 import (
-   "154.pages.dev/text"
    "154.pages.dev/widevine"
    "encoding/hex"
    "fmt"
    "os"
-   "slices"
    "testing"
    "time"
 )
 
 func TestClip(t *testing.T) {
-   i := slices.IndexFunc(Bases, func(f FileBase) bool {
-      return f.Status == "200 OK"
-   })
    for _, test := range video_tests {
       clip, err := OnDemand{Id: test.id}.Clip()
       if err != nil {
@@ -24,21 +19,10 @@ func TestClip(t *testing.T) {
       if !ok {
          t.Fatal("EpisodeClip.Dash")
       }
-      manifest.Url.Scheme = Bases[i].Scheme
-      manifest.Url.Host = Bases[i].Host
+      manifest.Url.Scheme = Bases[0].Scheme
+      manifest.Url.Host = Bases[0].Host
       fmt.Printf("%+v\n", manifest)
       time.Sleep(time.Second)
-   }
-}
-
-func TestAddress(t *testing.T) {
-   for _, test := range video_tests {
-      var web Address
-      err := web.Set(test.url)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(web)
    }
 }
 
@@ -64,24 +48,6 @@ var video_tests = []struct{
       key_id: "000000006358c035248b647dad3c09ad",
       url: "pluto.tv/on-demand/series/frasier-cbs-tv/season/1/episode/space-quest-1992-1-2",
    },
-}
-
-func TestVideo(t *testing.T) {
-   for _, test := range video_tests {
-      var web Address
-      web.Set(test.url)
-      video, err := web.Video("")
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", video)
-      name, err := text.Name(Namer{video})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
-   }
 }
 
 func TestLicense(t *testing.T) {
