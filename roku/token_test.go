@@ -6,23 +6,6 @@ import (
    "testing"
 )
 
-var tests = map[string]struct {
-   id string
-   key_id string
-   url string
-} {
-   "episode": {
-      id: "105c41ea75775968b670fbb26978ed76",
-      key_id: "bdfa4d6cdb39702e5b681f90617f9a7e",
-      url: "therokuchannel.roku.com/watch/105c41ea75775968b670fbb26978ed76",
-   },
-   "movie": {
-      id: "597a64a4a25c5bf6af4a8c7053049a6f",
-      key_id: "28339ad78f734520da24e6e0573d392e",
-      url: "therokuchannel.roku.com/watch/597a64a4a25c5bf6af4a8c7053049a6f",
-   },
-}
-
 func TestTokenWrite(t *testing.T) {
    var err error
    // AccountAuth

@@ -11,6 +11,40 @@ import (
    "strings"
 )
 
+func (c *LinkCode) Authenticate() (*Authenticate, error) {
+   body, err := json.Marshal(map[string]string{"auth_token": c.AuthToken})
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "client": {client},
+      "client-country": {ClientCountry},
+      "content-type": {"application/json"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var auth Authenticate
+   auth.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &auth, nil
+}
+
 func (Authenticate) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -43,39 +77,6 @@ func (a *Authenticate) RequestHeader() (http.Header, error) {
    head := http.Header{}
    head.Set("dt-custom-data", base64.StdEncoding.EncodeToString(text))
    return head, nil
-}
-
-func (c *LinkCode) Authenticate() (*Authenticate, error) {
-   body, err := json.Marshal(map[string]string{"auth_token": c.AuthToken})
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header = http.Header{
-      "client": {client},
-      "client-country": {ClientCountry},
-      "content-type": {"application/json"},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   text, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &Authenticate{Raw: text}, nil
 }
 
 // Mubi do this sneaky thing. you cannot download a video unless you have told

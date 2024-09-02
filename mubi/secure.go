@@ -35,11 +35,12 @@ func (a *Authenticate) Url(film *FilmResponse) (*SecureUrl, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   text, err := io.ReadAll(resp.Body)
+   var secure SecureUrl
+   secure.Raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
-   return &SecureUrl{Raw: text}, nil
+   return &secure, nil
 }
 
 type SecureUrl struct {
