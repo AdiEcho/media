@@ -6,7 +6,7 @@ import (
    "154.pages.dev/text"
    "154.pages.dev/widevine"
    "bytes"
-   "encoding/hex"
+   "encoding/base64"
    "errors"
    "io"
    "log/slog"
@@ -40,7 +40,9 @@ func (s Stream) key() ([]byte, error) {
       return nil, err
    }
    slog.Info(
-      "CDM", "ID", hex.EncodeToString(s.key_id), "key", hex.EncodeToString(key),
+      "CDM",
+      "PSSH", base64.StdEncoding.EncodeToString(s.pssh),
+      "key", base64.StdEncoding.EncodeToString(key),
    )
    return key, nil
 }

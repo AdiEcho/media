@@ -2,41 +2,29 @@ package rakuten
 
 import (
    "154.pages.dev/widevine"
-   "encoding/hex"
+   "encoding/base64"
    "fmt"
    "os"
    "testing"
 )
 
+type movie_test struct {
+   content_id string
+   key_id string
+   url        string
+}
+
 var tests = map[string]movie_test{
    "fr": {
-      url: "rakuten.tv/fr/movies/challengers",
+      content_id: "MGU1MTgwMDA2Y2Q1MDhlZWMwMGQ1MzVmZWM2YzQyMGQtbWMtMC0xNDEtMC0w",
+      key_id: "DlGAAGzVCO7ADVNf7GxCDQ==",
+      url: "rakuten.tv/fr/movies/infidele",
    },
    "se": {
-      url:        "rakuten.tv/se/movies/i-heart-huckabees",
-      content_id: "9a534a1f12d68e1a2359f38710fddb65-mc-0-147-0-0",
-      key_id:     "00000000000000000000000000000000",
+      content_id: "OWE1MzRhMWYxMmQ2OGUxYTIzNTlmMzg3MTBmZGRiNjUtbWMtMC0xNDctMC0w",
+      key_id: "mlNKHxLWjhojWfOHEP3bZQ==",
+      url: "rakuten.tv/se/movies/i-heart-huckabees",
    },
-}
-
-func TestFr(t *testing.T) {
-   var web Address
-   web.Set(tests["fr"].url)
-   stream, err := web.Fhd().Info()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", stream)
-}
-
-func TestSe(t *testing.T) {
-   var web Address
-   web.Set(tests["se"].url)
-   stream, err := web.Fhd().Info()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", stream)
 }
 
 func (m movie_test) license() ([]byte, error) {
@@ -53,11 +41,14 @@ func (m movie_test) license() ([]byte, error) {
       return nil, err
    }
    var pssh widevine.Pssh
-   pssh.KeyId, err = hex.DecodeString(m.key_id)
+   pssh.ContentId, err = base64.StdEncoding.DecodeString(m.content_id)
    if err != nil {
       return nil, err
    }
-   pssh.ContentId = []byte(m.content_id)
+   pssh.KeyId, err = base64.StdEncoding.DecodeString(m.key_id)
+   if err != nil {
+      return nil, err
+   }
    var module widevine.Cdm
    err = module.New(private_key, client_id, pssh.Marshal())
    if err != nil {
@@ -72,16 +63,36 @@ func (m movie_test) license() ([]byte, error) {
    return module.Key(info, pssh.KeyId)
 }
 
-func TestLicenseSe(t *testing.T) {
-   key, err := tests["se"].license()
+func TestFr(t *testing.T) {
+   var web Address
+   web.Set(tests["fr"].url)
+   stream, err := web.Fhd().Info()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", stream)
+}
+
+func TestLicenseFr(t *testing.T) {
+   key, err := tests["fr"].license()
    if err != nil {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
 }
 
-func TestLicenseFr(t *testing.T) {
-   key, err := tests["fr"].license()
+func TestSe(t *testing.T) {
+   var web Address
+   web.Set(tests["se"].url)
+   stream, err := web.Fhd().Info()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", stream)
+}
+
+func TestLicenseSe(t *testing.T) {
+   key, err := tests["se"].license()
    if err != nil {
       t.Fatal(err)
    }

@@ -7,12 +7,6 @@ import (
    "time"
 )
 
-type movie_test struct {
-   content_id string
-   key_id     string
-   url        string
-}
-
 func TestMovie(t *testing.T) {
    for _, test := range tests {
       var web Address
