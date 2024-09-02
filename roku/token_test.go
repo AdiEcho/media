@@ -7,17 +7,18 @@ import (
 )
 
 var tests = map[string]struct {
-   key string
+   id string
    key_id string
    url string
 } {
    "episode": {
-      key: "e258b67d75420066c8424bd142f84565",
+      id: "105c41ea75775968b670fbb26978ed76",
       key_id: "bdfa4d6cdb39702e5b681f90617f9a7e",
       url: "therokuchannel.roku.com/watch/105c41ea75775968b670fbb26978ed76",
    },
    "movie": {
-      key: "13d7c7cf295444944b627ef0ad2c1b3c",
+      id: "597a64a4a25c5bf6af4a8c7053049a6f",
+      key_id: "28339ad78f734520da24e6e0573d392e",
       url: "therokuchannel.roku.com/watch/597a64a4a25c5bf6af4a8c7053049a6f",
    },
 }
@@ -26,31 +27,37 @@ func TestTokenWrite(t *testing.T) {
    var err error
    // AccountAuth
    var auth AccountAuth
-   auth.Data, err = os.ReadFile("auth.txt")
+   auth.Raw, err = os.ReadFile("auth.txt")
    if err != nil {
       t.Fatal(err)
    }
-   auth.Unmarshal()
+   err = auth.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
    // AccountCode
    var code AccountCode
-   code.Data, err = os.ReadFile("code.txt")
+   code.Raw, err = os.ReadFile("code.txt")
    if err != nil {
       t.Fatal(err)
    }
-   code.Unmarshal()
+   err = code.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
    // AccountToken
-   token, err := auth.Token(code)
+   token, err := auth.Token(&code)
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("token.txt", token.Data, os.ModePerm)
+   os.WriteFile("token.txt", token.Raw, os.ModePerm)
 }
 
 func TestTokenRead(t *testing.T) {
    var err      error
    // AccountToken
    var token AccountToken
-   token.Data, err = os.ReadFile("token.txt")
+   token.Raw, err = os.ReadFile("token.txt")
    if err != nil {
       t.Fatal(err)
    }

@@ -6,7 +6,6 @@ import (
    "encoding/hex"
    "fmt"
    "os"
-   "path"
    "testing"
    "time"
 )
@@ -14,7 +13,7 @@ import (
 func TestContent(t *testing.T) {
    for _, test := range tests {
       var home HomeScreen
-      err := home.New(path.Base(test.url))
+      err := home.New(test.id)
       if err != nil {
          t.Fatal(err)
       }
@@ -26,6 +25,8 @@ func TestContent(t *testing.T) {
       time.Sleep(time.Second)
    }
 }
+
+///
 
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -52,8 +53,11 @@ func TestLicense(t *testing.T) {
          t.Fatal(err)
       }
       var auth AccountAuth
-      auth.New(nil)
-      play, err := auth.Playback(path.Base(test.url))
+      err = auth.New(nil)
+      if err != nil {
+         t.Fatal(err)
+      }
+      play, err := auth.Playback(test.id)
       if err != nil {
          t.Fatal(err)
       }

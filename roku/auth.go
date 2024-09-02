@@ -9,40 +9,7 @@ import (
    "strings"
 )
 
-type AccountAuth struct {
-   AuthToken string
-   Raw []byte `json:"-"`
-}
-
-// token can be nil
-func (a *AccountAuth) New(token *AccountToken) error {
-   req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
-   if err != nil {
-      return err
-   }
-   req.URL.Path = "/api/v1/account/token"
-   req.Header.Set("user-agent", user_agent)
-   if token != nil {
-      req.Header.Set("x-roku-content-token", token.V.Token)
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   a.Data, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-func (a *AccountAuth) Unmarshal() error {
-   a.v = pointer(a.v)
-   return json.Unmarshal(a.Data, a.v)
-}
-
-func (a AccountAuth) Playback(roku_id string) (*Playback, error) {
+func (a *AccountAuth) Playback(roku_id string) (*Playback, error) {
    body, err := json.Marshal(map[string]string{
       "mediaFormat": "DASH",
       "providerId":  "rokuavod",
@@ -61,7 +28,7 @@ func (a AccountAuth) Playback(roku_id string) (*Playback, error) {
    req.Header = http.Header{
       "content-type":         {"application/json"},
       "user-agent":           {user_agent},
-      "x-roku-content-token": {a.v.AuthToken},
+      "x-roku-content-token": {a.AuthToken},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -79,4 +46,36 @@ func (a AccountAuth) Playback(roku_id string) (*Playback, error) {
       return nil, err
    }
    return play, nil
+}
+
+// token can be nil
+func (a *AccountAuth) New(token *AccountToken) error {
+   req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
+   if err != nil {
+      return err
+   }
+   req.URL.Path = "/api/v1/account/token"
+   req.Header.Set("user-agent", user_agent)
+   if token != nil {
+      req.Header.Set("x-roku-content-token", token.Token)
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   a.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+type AccountAuth struct {
+   AuthToken string
+   Raw []byte `json:"-"`
+}
+
+func (a *AccountAuth) Unmarshal() error {
+   return json.Unmarshal(a.Raw, a)
 }

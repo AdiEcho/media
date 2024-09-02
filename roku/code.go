@@ -8,11 +8,6 @@ import (
    "strings"
 )
 
-type AccountCode struct {
-   Code string
-   Raw []byte `json:"-"`
-}
-
 func (a *AccountAuth) Code() (*AccountCode, error) {
    body, err := json.Marshal(map[string]string{
       "platform": "googletv",
@@ -43,6 +38,11 @@ func (a *AccountAuth) Code() (*AccountCode, error) {
       return nil, err
    }
    return &code, nil
+}
+
+type AccountCode struct {
+   Code string
+   Raw []byte `json:"-"`
 }
 
 func (a *AccountCode) String() string {

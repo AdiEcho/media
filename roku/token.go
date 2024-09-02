@@ -10,6 +10,40 @@ import (
    "time"
 )
 
+const user_agent = "trc-googletv; production; 0"
+
+func (a *AccountAuth) Token(code *AccountCode) (*AccountToken, error) {
+   req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/api/v1/account/activation/" + code.Code
+   req.Header = http.Header{
+      "user-agent":           {user_agent},
+      "x-roku-content-token": {a.AuthToken},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var token AccountToken
+   token.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &token, nil
+}
+
+func (a *AccountToken) Unmarshal() error {
+   return json.Unmarshal(a.Raw, a)
+}
+
+type AccountToken struct {
+   Token string
+   Raw []byte `json:"-"`
+}
+
 type HomeScreen struct {
    EpisodeNumber int `json:",string"`
    ReleaseDate time.Time // 2007-01-01T000000Z
@@ -95,8 +129,6 @@ func (Playback) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 
-const user_agent = "trc-googletv; production; 0"
-
 func (Playback) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -116,36 +148,4 @@ type Playback struct {
 
 func (p *Playback) RequestUrl() (string, bool) {
    return p.Drm.Widevine.LicenseServer, true
-}
-
-func (a *AccountToken) Unmarshal() error {
-   return json.Unmarshal(a.Raw, a)
-}
-
-type AccountToken struct {
-   Token string
-   Raw []byte `json:"-"`
-}
-
-func (a *AccountAuth) Token(code *AccountCode) (*AccountToken, error) {
-   req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/api/v1/account/activation/" + code.Code
-   req.Header = http.Header{
-      "user-agent":           {user_agent},
-      "x-roku-content-token": {a.AuthToken},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var token AccountToken
-   token.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &token, nil
 }
