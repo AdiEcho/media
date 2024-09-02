@@ -10,20 +10,20 @@ import (
 
 type movie_test struct {
    content_id string
-   key_id string
+   key_id     string
    url        string
 }
 
 var tests = map[string]movie_test{
    "fr": {
       content_id: "MGU1MTgwMDA2Y2Q1MDhlZWMwMGQ1MzVmZWM2YzQyMGQtbWMtMC0xNDEtMC0w",
-      key_id: "DlGAAGzVCO7ADVNf7GxCDQ==",
-      url: "rakuten.tv/fr/movies/infidele",
+      key_id:     "DlGAAGzVCO7ADVNf7GxCDQ==",
+      url:        "rakuten.tv/fr/movies/infidele",
    },
    "se": {
       content_id: "OWE1MzRhMWYxMmQ2OGUxYTIzNTlmMzg3MTBmZGRiNjUtbWMtMC0xNDctMC0w",
-      key_id: "mlNKHxLWjhojWfOHEP3bZQ==",
-      url: "rakuten.tv/se/movies/i-heart-huckabees",
+      key_id:     "mlNKHxLWjhojWfOHEP3bZQ==",
+      url:        "rakuten.tv/se/movies/i-heart-huckabees",
    },
 }
 
