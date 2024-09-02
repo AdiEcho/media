@@ -10,10 +10,6 @@ import (
    "strings"
 )
 
-type AuvioAuth struct {
-   SessionToken string
-}
-
 func (a *AuvioAuth) Entitlement(page *AuvioPage) (*Entitlement, error) {
    req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
    if err != nil {
@@ -48,13 +44,8 @@ func (a *AuvioAuth) Entitlement(page *AuvioPage) (*Entitlement, error) {
    return title, nil
 }
 
-type AuvioPage struct {
-   AssetId  string
-   Media struct {
-      AssetId string
-   }
-   Subtitle Subtitle
-   Title    Title
+type AuvioAuth struct {
+   SessionToken string
 }
 
 func (a *AuvioPage) New(path string) error {
@@ -66,16 +57,16 @@ func (a *AuvioPage) New(path string) error {
    if resp.StatusCode != http.StatusOK {
       return errors.New(resp.Status)
    }
-   var data struct {
+   var value struct {
       Data struct {
          Content AuvioPage
       }
    }
-   err = json.NewDecoder(resp.Body).Decode(&data)
+   err = json.NewDecoder(resp.Body).Decode(&value)
    if err != nil {
       return err
    }
-   *a = data.Data.Content
+   *a = value.Data.Content
    return nil
 }
 
@@ -84,6 +75,36 @@ func (a *AuvioPage) asset_id() string {
       return a.AssetId
    }
    return a.Media.AssetId
+}
+
+type AuvioPage struct {
+   AssetId  string
+   Media struct {
+      AssetId string
+   }
+   Subtitle Subtitle
+   Title    Title
+}
+
+func (e *Entitlement) Dash() (string, bool) {
+   for _, format := range e.Formats {
+      if format.Format == "DASH" {
+         return format.MediaLocator, true
+      }
+   }
+   return "", false
+}
+
+func (e *Entitlement) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Scheme = "https"
+   u.Host = "rbm-rtbf.live.ott.irdeto.com"
+   u.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
+   u.RawQuery = url.Values{
+      "contentId":  {e.AssetId},
+      "ls_session": {e.PlayToken},
+   }.Encode()
+   return u.String(), true
 }
 
 func (Entitlement) WrapRequest(b []byte) ([]byte, error) {
@@ -100,27 +121,6 @@ func (Entitlement) RequestHeader() (http.Header, error) {
    return head, nil
 }
 
-func (e *Entitlement) Dash() (string, bool) {
-   for _, format := range e.Formats {
-      if format.Format == "DASH" {
-         return format.MediaLocator, true
-      }
-   }
-   return "", false
-}
-
-func (e *Entitlement) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Host = "rbm-rtbf.live.ott.irdeto.com"
-   u.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
-   u.Scheme = "https"
-   u.RawQuery = url.Values{
-      "contentId":  {e.AssetId},
-      "ls_session": {e.PlayToken},
-   }.Encode()
-   return u.String(), true
-}
-
 type Entitlement struct {
    AssetId   string
    PlayToken string
@@ -133,6 +133,10 @@ type Entitlement struct {
 // its just not available from what I can tell
 func (Namer) Year() int {
    return 0
+}
+
+type Namer struct {
+   Page AuvioPage
 }
 
 func (n *Namer) Episode() int {
@@ -155,10 +159,6 @@ func (n *Namer) Title() string {
       return v.Subtitle
    }
    return n.Page.Title.Title
-}
-
-type Namer struct {
-   Page AuvioPage
 }
 
 type Subtitle struct {
@@ -203,16 +203,16 @@ type WebToken struct {
 }
 
 func (w *WebToken) Auth() (*AuvioAuth, error) {
-   var data struct {
+   var value struct {
       Device struct {
          DeviceId string `json:"deviceId"`
          Type     string `json:"type"`
       } `json:"device"`
       Jwt string `json:"jwt"`
    }
-   data.Device.Type = "WEB"
-   data.Jwt = w.IdToken
-   body, err := json.Marshal(data)
+   value.Device.Type = "WEB"
+   value.Jwt = w.IdToken
+   body, err := json.Marshal(value)
    if err != nil {
       return nil, err
    }

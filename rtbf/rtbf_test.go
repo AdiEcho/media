@@ -11,17 +11,10 @@ import (
 )
 
 var media = []struct{
-   id     int64
    key_id string
    path   string
    url    string
 }{
-   {
-      id:     3201987,
-      key_id: "o1C37Tt5SzmHMmEgQViUEA==",
-      path:   "/media/i-care-a-lot-i-care-a-lot-3201987",
-      url:    "auvio.rtbf.be/media/i-care-a-lot-i-care-a-lot-3201987",
-   },
    {
       path: "/media/grantchester-grantchester-s01-3194636",
       url:  "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
@@ -32,59 +25,6 @@ var media = []struct{
    },
 }
 
-func TestEntitlement(t *testing.T) {
-   var (
-      login AuvioLogin
-      err error
-   )
-   login.Raw, err = os.ReadFile("login.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = login.Unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   token, err := login.Token()
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth, err := token.Auth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, medium := range media {
-      var page AuvioPage
-      err := page.New(medium.path)
-      if err != nil {
-         t.Fatal(err)
-      }
-      title, err := auth.Entitlement(&page)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", title)
-      fmt.Println(title.Dash())
-      time.Sleep(time.Second)
-   }
-}
-
-func TestPage(t *testing.T) {
-   for _, medium := range media {
-      var page AuvioPage
-      err := page.New(medium.path)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", page)
-      name, err := text.Name(&Namer{page})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
-   }
-}
 func TestWidevine(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -141,6 +81,61 @@ func TestWidevine(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
+
+func TestEntitlement(t *testing.T) {
+   var (
+      login AuvioLogin
+      err error
+   )
+   login.Raw, err = os.ReadFile("login.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = login.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   token, err := login.Token()
+   if err != nil {
+      t.Fatal(err)
+   }
+   auth, err := token.Auth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, medium := range media {
+      var page AuvioPage
+      err := page.New(medium.path)
+      if err != nil {
+         t.Fatal(err)
+      }
+      title, err := auth.Entitlement(&page)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", title)
+      fmt.Println(title.Dash())
+      time.Sleep(time.Second)
+   }
+}
+
+func TestPage(t *testing.T) {
+   for _, medium := range media {
+      var page AuvioPage
+      err := page.New(medium.path)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", page)
+      name, err := text.Name(&Namer{page})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
+}
+
 func TestWebToken(t *testing.T) {
    var (
       login AuvioLogin

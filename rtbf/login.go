@@ -58,19 +58,19 @@ func (a *AuvioLogin) Token() (*WebToken, error) {
 }
 
 func (a *AuvioLogin) Unmarshal() error {
-   var data struct {
+   var value struct {
       ErrorMessage string
       SessionInfo  struct {
          CookieValue string
       }
    }
-   err := json.Unmarshal(a.Raw, &data)
+   err := json.Unmarshal(a.Raw, &value)
    if err != nil {
       return err
    }
-   if v := data.ErrorMessage; v != "" {
+   if v := value.ErrorMessage; v != "" {
       return errors.New(v)
    }
-   a.CookieValue = data.SessionInfo.CookieValue
+   a.CookieValue = value.SessionInfo.CookieValue
    return nil
 }
