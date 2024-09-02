@@ -8,12 +8,6 @@ import (
    "net/http"
 )
 
-func get_forward() {
-   for _, forward := range internal.Forward {
-      fmt.Println(forward.Country, forward.IP)
-   }
-}
-
 func (f *flags) download() error {
    video, err := f.address.Video(f.set_forward)
    if err != nil {
@@ -47,4 +41,10 @@ func (f *flags) download() error {
       }
    }
    return nil
+}
+
+func get_forward() {
+   for _, forward := range internal.Forward {
+      fmt.Println(forward.Country, forward.IP)
+   }
 }

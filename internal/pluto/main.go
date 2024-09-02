@@ -11,7 +11,6 @@ import (
 )
 
 type flags struct {
-   base string
    s internal.Stream
    representation string
    address pluto.Address
@@ -26,14 +25,6 @@ func main() {
       panic(err)
    }
    flag.Var(&f.address, "a", "address")
-   flag.StringVar(&f.base, "b", pluto.Base[0], func() string {
-      var b strings.Builder
-      for _, base := range pluto.Base[1:] {
-         b.WriteString(base)
-         b.WriteByte('\n')
-      }
-      return b.String()
-   }())
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
