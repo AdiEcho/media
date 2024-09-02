@@ -17,16 +17,17 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   file, ok := clip.Dash()
+   var (
+      req http.Request
+      ok bool
+   )
+   req.URL, ok = clip.Dash()
    if !ok {
       return errors.New("EpisodeClip.Dash")
    }
-   req, err := http.NewRequest("", f.base, nil)
-   if err != nil {
-      return err
-   }
-   req.URL.Path = file.Path
-   reps, err := internal.Dash(req)
+   req.URL.Scheme = pluto.Base[0].Scheme
+   req.URL.Host = pluto.Base[0].Host
+   reps, err := internal.Dash(&req)
    if err != nil {
       return err
    }

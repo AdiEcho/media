@@ -8,7 +8,23 @@ import (
    "strings"
 )
 
-var Bases = []FileBase{
+type EpisodeClip struct {
+   Sources []struct {
+      File Url
+      Type string
+   }
+}
+
+func (e *EpisodeClip) Dash() (*url.URL, bool) {
+   for _, source := range e.Sources {
+      if source.Type == "DASH" {
+         return source.File.Url, true
+      }
+   }
+   return nil, false
+}
+
+var Base = []FileBase{
    {"http", "silo-hybrik.pluto.tv.s3.amazonaws.com", "200 OK"},
    {"http", "siloh-fs.plutotv.net", "403 OK"},
    {"http", "siloh-ns1.plutotv.net", "403 OK"},
@@ -18,24 +34,8 @@ var Bases = []FileBase{
 
 type FileBase struct {
    Scheme string
-   Host string
+   Host   string
    Status string
-}
-
-func (e *EpisodeClip) Dash() (*Url, bool) {
-   for _, source := range e.Sources {
-      if source.Type == "DASH" {
-         return &source.File, true
-      }
-   }
-   return nil, false
-}
-
-type EpisodeClip struct {
-   Sources []struct {
-      File Url
-      Type string
-   }
 }
 
 type Namer struct {
@@ -135,5 +135,5 @@ func (u *Url) UnmarshalText(text []byte) error {
 
 type VideoSeason struct {
    Episodes []*OnDemand
-   show   *OnDemand
+   show     *OnDemand
 }

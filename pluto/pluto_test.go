@@ -19,8 +19,8 @@ func TestClip(t *testing.T) {
       if !ok {
          t.Fatal("EpisodeClip.Dash")
       }
-      manifest.Url.Scheme = Bases[0].Scheme
-      manifest.Url.Host = Bases[0].Host
+      manifest.Scheme = Base[0].Scheme
+      manifest.Host = Base[0].Host
       fmt.Printf("%+v\n", manifest)
       time.Sleep(time.Second)
    }
@@ -28,25 +28,25 @@ func TestClip(t *testing.T) {
 
 // the slug is useful as it sometimes contains the year, but its not worth
 // parsing since its sometimes missing
-var video_tests = []struct{
-   id string
+var video_tests = []struct {
+   id     string
    key_id string
-   url   string
+   url    string
 }{
    {
-      id: "5c4bb2b308d10f9a25bbc6af",
+      id:     "5c4bb2b308d10f9a25bbc6af",
       key_id: "0000000066bfe3cd26602c92dc082e3b",
-      url: "pluto.tv/on-demand/movies/bound-paramount-1-1",
+      url:    "pluto.tv/on-demand/movies/bound-paramount-1-1",
    },
    {
-      id: "66b3838317101c00130b411e",
+      id:     "66b3838317101c00130b411e",
       key_id: "0000000066b3c161c1cee84ffce71de3",
-      url: "pluto.tv/on-demand/movies/just-go-with-it-2011-1-1",
+      url:    "pluto.tv/on-demand/movies/just-go-with-it-2011-1-1",
    },
    {
-      id: "6356d14136d64a001450b121",
+      id:     "6356d14136d64a001450b121",
       key_id: "000000006358c035248b647dad3c09ad",
-      url: "pluto.tv/on-demand/series/frasier-cbs-tv/season/1/episode/space-quest-1992-1-2",
+      url:    "pluto.tv/on-demand/series/frasier-cbs-tv/season/1/episode/space-quest-1992-1-2",
    },
 }
 

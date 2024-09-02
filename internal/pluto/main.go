@@ -7,7 +7,6 @@ import (
    "flag"
    "os"
    "path/filepath"
-   "strings"
 )
 
 type flags struct {

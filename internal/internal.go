@@ -15,6 +15,60 @@ import (
    "strings"
 )
 
+func Dash(req *http.Request) ([]dash.Representation, error) {
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return dash.Unmarshal(data, resp.Request.URL)
+}
+
+func (s Stream) Create(ext string) (*os.File, error) {
+   name, err := text.Name(s.Name)
+   if err != nil {
+      return nil, err
+   }
+   return os.Create(text.Clean(name) + ext)
+}
+
+func (s *Stream) Download(rep dash.Representation) error {
+   if data, ok := rep.Widevine(); ok {
+      read := bytes.NewReader(data)
+      var pssh sofia.ProtectionSystemSpecificHeader
+      err := pssh.BoxHeader.Read(read)
+      if err != nil {
+         return err
+      }
+      err = pssh.Read(read)
+      if err != nil {
+         return err
+      }
+      s.pssh = pssh.Data
+   }
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
+   base, ok := rep.GetBaseUrl()
+   if !ok {
+      return errors.New("Representation.GetBaseUrl")
+   }
+   if rep.SegmentBase != nil {
+      return s.segment_base(ext, base, rep.SegmentBase)
+   }
+   initial, _ := rep.Initialization()
+   return s.segment_template(ext, initial, base, rep.Media())
+}
 type ForwardedFor struct {
    Country string
    IP string
@@ -289,60 +343,4 @@ func (s *Stream) init_protect(to io.Writer, from io.Reader) error {
       }
    }
    return file.Write(to)
-}
-
-func Dash(req *http.Request) ([]dash.Representation, error) {
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   switch resp.Status {
-   case "200 OK", "403 OK":
-   default:
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   data, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return dash.Unmarshal(data, resp.Request.URL)
-}
-func (s Stream) Create(ext string) (*os.File, error) {
-   name, err := text.Name(s.Name)
-   if err != nil {
-      return nil, err
-   }
-   return os.Create(text.Clean(name) + ext)
-}
-
-func (s *Stream) Download(rep dash.Representation) error {
-   if data, ok := rep.Widevine(); ok {
-      read := bytes.NewReader(data)
-      var pssh sofia.ProtectionSystemSpecificHeader
-      err := pssh.BoxHeader.Read(read)
-      if err != nil {
-         return err
-      }
-      err = pssh.Read(read)
-      if err != nil {
-         return err
-      }
-      s.pssh = pssh.Data
-   }
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Representation.Ext")
-   }
-   base, ok := rep.GetBaseUrl()
-   if !ok {
-      return errors.New("Representation.GetBaseUrl")
-   }
-   if rep.SegmentBase != nil {
-      return s.segment_base(ext, base, rep.SegmentBase)
-   }
-   initial, _ := rep.Initialization()
-   return s.segment_template(ext, initial, base, rep.Media())
 }
