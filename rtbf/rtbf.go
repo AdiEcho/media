@@ -4,11 +4,100 @@ import (
    "bytes"
    "encoding/json"
    "errors"
+   "io"
    "net/http"
    "net/url"
    "strconv"
    "strings"
 )
+
+// hard coded in JavaScript
+const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
+
+type AuvioLogin struct {
+   CookieValue string
+   Raw []byte
+}
+
+func (a *AuvioLogin) New(id, password string) error {
+   resp, err := http.PostForm(
+      "https://login.auvio.rtbf.be/accounts.login", url.Values{
+         "APIKey":   {api_key},
+         "loginID":  {id},
+         "password": {password},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   a.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a *AuvioLogin) Token() (*WebToken, error) {
+   resp, err := http.PostForm(
+      "https://login.auvio.rtbf.be/accounts.getJWT", url.Values{
+         "APIKey": {api_key},
+         "login_token": {a.CookieValue},
+      },
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var web WebToken
+   err = json.NewDecoder(resp.Body).Decode(&web)
+   if err != nil {
+      return nil, err
+   }
+   if v := web.ErrorMessage; v != "" {
+      return nil, errors.New(v)
+   }
+   return &web, nil
+}
+
+func (a *AuvioLogin) Unmarshal() error {
+   var value struct {
+      ErrorMessage string
+      SessionInfo  struct {
+         CookieValue string
+      }
+   }
+   err := json.Unmarshal(a.Raw, &value)
+   if err != nil {
+      return err
+   }
+   if v := value.ErrorMessage; v != "" {
+      return errors.New(v)
+   }
+   a.CookieValue = value.SessionInfo.CookieValue
+   return nil
+}
+func (a *AuvioPage) New(path string) error {
+   resp, err := http.Get("https://bff-service.rtbf.be/auvio/v1.23/pages" + path)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
+   }
+   var value struct {
+      Data struct {
+         Content AuvioPage
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&value)
+   if err != nil {
+      return err
+   }
+   *a = value.Data.Content
+   return nil
+}
 
 func (a *AuvioAuth) Entitlement(page *AuvioPage) (*Entitlement, error) {
    req, err := http.NewRequest("", "https://exposure.api.redbee.live", nil)
@@ -46,28 +135,6 @@ func (a *AuvioAuth) Entitlement(page *AuvioPage) (*Entitlement, error) {
 
 type AuvioAuth struct {
    SessionToken string
-}
-
-func (a *AuvioPage) New(path string) error {
-   resp, err := http.Get("https://bff-service.rtbf.be/auvio/v1.23/pages" + path)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return errors.New(resp.Status)
-   }
-   var value struct {
-      Data struct {
-         Content AuvioPage
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&value)
-   if err != nil {
-      return err
-   }
-   *a = value.Data.Content
-   return nil
 }
 
 func (a *AuvioPage) asset_id() string {
