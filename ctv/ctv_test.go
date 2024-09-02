@@ -10,37 +10,6 @@ import (
    "time"
 )
 
-func TestManifest(t *testing.T) {
-   for _, test_path := range test_paths {
-      resolve, err := Path(test_path).Resolve()
-      if err != nil {
-         t.Fatal(err)
-      }
-      time.Sleep(99 * time.Millisecond)
-      axis, err := resolve.Axis()
-      if err != nil {
-         t.Fatal(err)
-      }
-      time.Sleep(99 * time.Millisecond)
-      media, err := axis.Media()
-      if err != nil {
-         t.Fatal(err)
-      }
-      manifest, err := axis.Manifest(media)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(string(manifest))
-      time.Sleep(99 * time.Millisecond)
-   }
-}
-
-// ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
-const (
-   content_id = "ZmYtZDAxM2NhN2EtMjY0MjY1"
-   raw_key_id = "ywlXHuvLP3KHICZX9rn3pg=="
-)
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -74,6 +43,37 @@ func TestLicense(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
+
+func TestManifest(t *testing.T) {
+   for _, test_path := range test_paths {
+      resolve, err := Path(test_path).Resolve()
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(99 * time.Millisecond)
+      axis, err := resolve.Axis()
+      if err != nil {
+         t.Fatal(err)
+      }
+      time.Sleep(99 * time.Millisecond)
+      media, err := axis.Media()
+      if err != nil {
+         t.Fatal(err)
+      }
+      manifest, err := axis.Manifest(media)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(string(manifest))
+      time.Sleep(99 * time.Millisecond)
+   }
+}
+
+// ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
+const (
+   content_id = "ZmYtZDAxM2NhN2EtMjY0MjY1"
+   raw_key_id = "ywlXHuvLP3KHICZX9rn3pg=="
+)
 
 var test_paths = []string{
    // ctv.ca/shows/friends/the-one-with-the-chicken-pox-s2e23

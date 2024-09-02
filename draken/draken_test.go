@@ -10,22 +10,6 @@ import (
    "time"
 )
 
-func TestMovie(t *testing.T) {
-   for _, film := range films {
-      var movie FullMovie
-      if err := movie.New(film.custom_id); err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", movie)
-      name, err := text.Name(&Namer{&movie})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(99 * time.Millisecond)
-   }
-}
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -81,6 +65,22 @@ func TestLicense(t *testing.T) {
       }
       fmt.Printf("%x\n", key)
       time.Sleep(time.Second)
+   }
+}
+
+func TestMovie(t *testing.T) {
+   for _, film := range films {
+      var movie FullMovie
+      if err := movie.New(film.custom_id); err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", movie)
+      name, err := text.Name(&Namer{&movie})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(99 * time.Millisecond)
    }
 }
 
