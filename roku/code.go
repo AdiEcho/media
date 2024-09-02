@@ -42,7 +42,7 @@ func (a *AccountAuth) Code() (*AccountCode, error) {
 
 type AccountCode struct {
    Code string
-   Raw []byte `json:"-"`
+   Raw  []byte `json:"-"`
 }
 
 func (a *AccountCode) String() string {

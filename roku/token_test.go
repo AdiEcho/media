@@ -37,7 +37,7 @@ func TestTokenWrite(t *testing.T) {
 }
 
 func TestTokenRead(t *testing.T) {
-   var err      error
+   var err error
    // AccountToken
    var token AccountToken
    token.Raw, err = os.ReadFile("token.txt")

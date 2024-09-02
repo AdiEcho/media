@@ -73,7 +73,7 @@ func (a *AccountAuth) Playback(roku_id string) (*Playback, error) {
 
 type AccountAuth struct {
    AuthToken string
-   Raw []byte `json:"-"`
+   Raw       []byte `json:"-"`
 }
 
 func (a *AccountAuth) Unmarshal() error {

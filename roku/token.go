@@ -41,14 +41,14 @@ func (a *AccountToken) Unmarshal() error {
 
 type AccountToken struct {
    Token string
-   Raw []byte `json:"-"`
+   Raw   []byte `json:"-"`
 }
 
 type HomeScreen struct {
-   EpisodeNumber int `json:",string"`
-   ReleaseDate time.Time // 2007-01-01T000000Z
-   SeasonNumber int `json:",string"`
-   Series *struct {
+   EpisodeNumber int       `json:",string"`
+   ReleaseDate   time.Time // 2007-01-01T000000Z
+   SeasonNumber  int       `json:",string"`
+   Series        *struct {
       Title string
    }
    Title string
