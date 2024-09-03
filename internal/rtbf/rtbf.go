@@ -34,7 +34,11 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   title, err := auth.Entitlement(page)
+   asset_id, ok := page.GetAssetId()
+   if !ok {
+      return errors.New("AuvioPage.GetAssetId")
+   }
+   title, err := auth.Entitlement(asset_id)
    if err != nil {
       return err
    }

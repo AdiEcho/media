@@ -104,12 +104,12 @@ var tests = []struct{
    url    string
 }{
    {
-      path: "/media/grantchester-grantchester-s01-3194636",
-      url:  "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
-   },
-   {
       path: "/emission/i-care-a-lot-27462",
       url:  "auvio.rtbf.be/emission/i-care-a-lot-27462",
+   },
+   {
+      path: "/media/grantchester-grantchester-s01-3194636",
+      url:  "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
    },
 }
 
