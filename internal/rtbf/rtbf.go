@@ -6,7 +6,6 @@ import (
    "errors"
    "fmt"
    "net/http"
-   "net/url"
    "os"
 )
 
@@ -31,33 +30,17 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   address, err := func() (string, error) {
-      u, err := url.Parse(f.address)
-      if err != nil {
-         return "", err
-      }
-      return u.Path, nil
-   }()
+   page, err := f.address.Page()
    if err != nil {
       return err
    }
-   var page rtbf.AuvioPage
-   err = page.New(address)
+   title, err := auth.Entitlement(page)
    if err != nil {
       return err
    }
-   title, err := auth.Entitlement(&page)
-   if err != nil {
-      return err
-   }
-   address, err = func() (string, error) {
-      if v, ok := title.Dash(); ok {
-         return v, nil
-      }
-      return "", errors.New("Entitlement.Dash")
-   }()
-   if err != nil {
-      return err
+   address, ok := title.Dash()
+   if !ok {
+      return errors.New("Entitlement.Dash")
    }
    req, err := http.NewRequest("", address, nil)
    if err != nil {

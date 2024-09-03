@@ -11,6 +11,24 @@ import (
    "strings"
 )
 
+type Address struct {
+   Path string
+}
+
+func (a Address) String() string {
+   return a.Path
+}
+
+func (a *Address) Set(text string) error {
+   a.Path = strings.TrimPrefix(text, "https://")
+   a.Path = strings.TrimPrefix(a.Path, "auvio.rtbf.be")
+   return nil
+}
+
+type Namer struct {
+   Page *AuvioPage
+}
+
 // hard coded in JavaScript
 const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
 
@@ -75,27 +93,6 @@ func (a *AuvioLogin) Unmarshal() error {
       return errors.New(v)
    }
    a.CookieValue = value.SessionInfo.CookieValue
-   return nil
-}
-func (a *AuvioPage) New(path string) error {
-   resp, err := http.Get("https://bff-service.rtbf.be/auvio/v1.23/pages" + path)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return errors.New(resp.Status)
-   }
-   var value struct {
-      Data struct {
-         Content AuvioPage
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&value)
-   if err != nil {
-      return err
-   }
-   *a = value.Data.Content
    return nil
 }
 
@@ -202,26 +199,22 @@ func (Namer) Year() int {
    return 0
 }
 
-type Namer struct {
-   Page AuvioPage
-}
-
-func (n *Namer) Episode() int {
+func (n Namer) Episode() int {
    return n.Page.Subtitle.Episode
 }
 
-func (n *Namer) Season() int {
+func (n Namer) Season() int {
    return n.Page.Title.Season
 }
 
-func (n *Namer) Show() string {
+func (n Namer) Show() string {
    if v := n.Page.Title; v.Season >= 1 {
       return v.Title
    }
    return ""
 }
 
-func (n *Namer) Title() string {
+func (n Namer) Title() string {
    if v := n.Page.Subtitle; v.Episode >= 1 {
       return v.Subtitle
    }
@@ -283,14 +276,14 @@ func (w *WebToken) Auth() (*AuvioAuth, error) {
    if err != nil {
       return nil, err
    }
-   address := func() string {
+   web := func() string {
       var b strings.Builder
       b.WriteString("https://exposure.api.redbee.live")
       b.WriteString("/v2/customer/RTBF/businessunit/Auvio/auth/gigyaLogin")
       return b.String()
    }
    resp, err := http.Post(
-      address(), "application/json", bytes.NewReader(body),
+      web(), "application/json", bytes.NewReader(body),
    )
    if err != nil {
       return nil, err
@@ -302,4 +295,27 @@ func (w *WebToken) Auth() (*AuvioAuth, error) {
       return nil, err
    }
    return auth, nil
+}
+
+func (a Address) Page() (*AuvioPage, error) {
+   resp, err := http.Get(
+      "https://bff-service.rtbf.be/auvio/v1.23/pages" + a.Path,
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
+   }
+   var value struct {
+      Data struct {
+         Content AuvioPage
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&value)
+   if err != nil {
+      return nil, err
+   }
+   return &value.Data.Content, nil
 }

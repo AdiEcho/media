@@ -2,20 +2,12 @@ package main
 
 import (
    "154.pages.dev/media/internal"
+   "154.pages.dev/media/rtbf"
    "154.pages.dev/text"
    "flag"
    "os"
    "path/filepath"
 )
-
-type flags struct {
-   email string
-   s internal.Stream
-   home string
-   representation string
-   password string
-   address string
-}
 
 func (f *flags) New() error {
    var err error
@@ -29,6 +21,15 @@ func (f *flags) New() error {
    return nil
 }
 
+type flags struct {
+   email string
+   s internal.Stream
+   home string
+   representation string
+   password string
+   address rtbf.Address
+}
+
 func main() {
    var f flags
    err := f.New()
@@ -40,7 +41,7 @@ func main() {
    flag.StringVar(&f.password, "p", "", "password")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
-   flag.StringVar(&f.address, "a", "", "address")
+   flag.Var(&f.address, "a", "address")
    flag.Parse()
    text.Transport{}.Set(true)
    switch {
@@ -49,7 +50,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.address != "":
+   case f.address.Path != "":
       err := f.download()
       if err != nil {
          panic(err)

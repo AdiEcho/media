@@ -24,78 +24,6 @@ func TestAccountsLogin(t *testing.T) {
    os.WriteFile("login.txt", login.Raw, os.ModePerm)
 }
 
-var media = []struct{
-   key_id string
-   path   string
-   url    string
-}{
-   {
-      path: "/media/grantchester-grantchester-s01-3194636",
-      url:  "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
-   },
-   {
-      path: "/emission/i-care-a-lot-27462",
-      url:  "auvio.rtbf.be/emission/i-care-a-lot-27462",
-   },
-}
-
-func TestWidevine(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
-   if err != nil {
-      t.Fatal(err)
-   }
-   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
-   if err != nil {
-      t.Fatal(err)
-   }
-   medium := media[0]
-   var pssh widevine.Pssh
-   pssh.KeyId, err = base64.StdEncoding.DecodeString(medium.key_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   var module widevine.Cdm
-   err = module.New(private_key, client_id, pssh.Marshal())
-   if err != nil {
-      t.Fatal(err)
-   }
-   var login AuvioLogin
-   login.Raw, err = os.ReadFile("login.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = login.Unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   token, err := login.Token()
-   if err != nil {
-      t.Fatal(err)
-   }
-   auth, err := token.Auth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   var page AuvioPage
-   err = page.New(medium.path)
-   if err != nil {
-      t.Fatal(err)
-   }
-   title, err := auth.Entitlement(&page)
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := module.Key(title, pssh.KeyId)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
-}
-
 func TestEntitlement(t *testing.T) {
    var (
       login AuvioLogin
@@ -117,13 +45,12 @@ func TestEntitlement(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   for _, medium := range media {
-      var page AuvioPage
-      err := page.New(medium.path)
+   for _, test := range tests {
+      page, err := Address{test.path}.Page()
       if err != nil {
          t.Fatal(err)
       }
-      title, err := auth.Entitlement(&page)
+      title, err := auth.Entitlement(page)
       if err != nil {
          t.Fatal(err)
       }
@@ -134,9 +61,8 @@ func TestEntitlement(t *testing.T) {
 }
 
 func TestPage(t *testing.T) {
-   for _, medium := range media {
-      var page AuvioPage
-      err := page.New(medium.path)
+   for _, test := range tests {
+      page, err := Address{test.path}.Page()
       if err != nil {
          t.Fatal(err)
       }
@@ -168,4 +94,76 @@ func TestWebToken(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", token)
+}
+
+///
+
+var tests = []struct{
+   key_id string
+   path   string
+   url    string
+}{
+   {
+      path: "/media/grantchester-grantchester-s01-3194636",
+      url:  "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
+   },
+   {
+      path: "/emission/i-care-a-lot-27462",
+      url:  "auvio.rtbf.be/emission/i-care-a-lot-27462",
+   },
+}
+
+func TestWidevine(t *testing.T) {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
+   }
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   if err != nil {
+      t.Fatal(err)
+   }
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      var pssh widevine.Pssh
+      pssh.KeyId, err = base64.StdEncoding.DecodeString(test.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var module widevine.Cdm
+      err = module.New(private_key, client_id, pssh.Marshal())
+      if err != nil {
+         t.Fatal(err)
+      }
+      var login AuvioLogin
+      login.Raw, err = os.ReadFile(home + "/rtbf.txt")
+      if err != nil {
+         t.Fatal(err)
+      }
+      login.Unmarshal()
+      token, err := login.Token()
+      if err != nil {
+         t.Fatal(err)
+      }
+      auth, err := token.Auth()
+      if err != nil {
+         t.Fatal(err)
+      }
+      page, err := Address{test.path}.Page()
+      if err != nil {
+         t.Fatal(err)
+      }
+      title, err := auth.Entitlement(page)
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, err := module.Key(title, pssh.KeyId)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
+   }
 }
