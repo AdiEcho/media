@@ -27,8 +27,8 @@ type flags struct {
    home string
    representation string
    password string
-   slug member.ArticleSlug
    play bool
+   address member.Address
 }
 
 func main() {
@@ -37,7 +37,7 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.slug, "a", "address")
+   flag.Var(&f.address, "a", "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.email, "e", "", "email")
    flag.StringVar(&f.representation, "i", "", "representation")
@@ -57,7 +57,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.slug != "":
+   case f.address.Path != "":
       err := f.download()
       if err != nil {
          panic(err)

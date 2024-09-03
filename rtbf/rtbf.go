@@ -11,6 +11,12 @@ import (
    "strings"
 )
 
+func (a *Address) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   a.Path = strings.TrimPrefix(s, "auvio.rtbf.be")
+   return nil
+}
+
 func (a Address) Page() (*AuvioPage, error) {
    resp, err := http.Get(
       "https://bff-service.rtbf.be/auvio/v1.23/pages" + a.Path,
@@ -193,12 +199,6 @@ func (a Address) String() string {
    return a.Path
 }
 
-func (a *Address) Set(text string) error {
-   a.Path = strings.TrimPrefix(text, "https://")
-   a.Path = strings.TrimPrefix(a.Path, "auvio.rtbf.be")
-   return nil
-}
-
 type Namer struct {
    Page *AuvioPage
 }
@@ -322,4 +322,3 @@ func (a *AuvioAuth) Entitlement(asset_id string) (*Entitlement, error) {
    }
    return title, nil
 }
-

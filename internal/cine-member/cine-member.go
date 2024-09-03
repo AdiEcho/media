@@ -13,7 +13,7 @@ import (
 func (f *flags) write_play() error {
    os.Mkdir(f.base(), os.ModePerm)
    // 1. write OperationArticle
-   article, err := f.slug.Article()
+   article, err := f.address.Article()
    if err != nil {
       return err
    }
@@ -102,5 +102,5 @@ func (f *flags) download() error {
 }
 
 func (f *flags) base() string {
-   return path.Base(string(f.slug))
+   return path.Base(f.address.Path)
 }

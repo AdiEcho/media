@@ -50,7 +50,11 @@ func TestEntitlement(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      title, err := auth.Entitlement(page)
+      asset_id, ok := page.GetAssetId()
+      if !ok {
+         t.Fatal("AuvioPage.GetAssetId")
+      }
+      title, err := auth.Entitlement(asset_id)
       if err != nil {
          t.Fatal(err)
       }
@@ -96,18 +100,18 @@ func TestWebToken(t *testing.T) {
    fmt.Printf("%+v\n", token)
 }
 
-///
-
 var tests = []struct{
    key_id string
    path   string
    url    string
 }{
    {
-      path: "/emission/i-care-a-lot-27462",
-      url:  "auvio.rtbf.be/emission/i-care-a-lot-27462",
+      key_id: "v6f4GpHISrWZcd6esgIvRw==",
+      path: "/emission/la-proposition-27866",
+      url: "auvio.rtbf.be/emission/la-proposition-27866",
    },
    {
+      key_id: "10kWa4A9SOSzHFpq1n1zUQ==",
       path: "/media/grantchester-grantchester-s01-3194636",
       url:  "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
    },
@@ -126,6 +130,23 @@ func TestWidevine(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
+   var login AuvioLogin
+   login.Raw, err = os.ReadFile(home + "/rtbf.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = login.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   token, err := login.Token()
+   if err != nil {
+      t.Fatal(err)
+   }
+   auth, err := token.Auth()
+   if err != nil {
+      t.Fatal(err)
+   }
    for _, test := range tests {
       var pssh widevine.Pssh
       pssh.KeyId, err = base64.StdEncoding.DecodeString(test.key_id)
@@ -137,25 +158,15 @@ func TestWidevine(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      var login AuvioLogin
-      login.Raw, err = os.ReadFile(home + "/rtbf.txt")
-      if err != nil {
-         t.Fatal(err)
-      }
-      login.Unmarshal()
-      token, err := login.Token()
-      if err != nil {
-         t.Fatal(err)
-      }
-      auth, err := token.Auth()
-      if err != nil {
-         t.Fatal(err)
-      }
       page, err := Address{test.path}.Page()
       if err != nil {
          t.Fatal(err)
       }
-      title, err := auth.Entitlement(page)
+      asset_id, ok := page.GetAssetId()
+      if !ok {
+         t.Fatal("AuvioPage.GetAssetId")
+      }
+      title, err := auth.Entitlement(asset_id)
       if err != nil {
          t.Fatal(err)
       }
