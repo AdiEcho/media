@@ -140,15 +140,19 @@ type AxisContent struct {
 }
 
 func (a *AxisContent) Media() (*MediaContent, error) {
-   address := func() string {
-      b := []byte("https://capi.9c9media.com/destinations/")
+   req, err := http.NewRequest("", "https://capi.9c9media.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/destinations/")
       b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
       b = append(b, "/platforms/desktop/contents/"...)
       b = strconv.AppendInt(b, a.AxisId, 10)
-      b = append(b, "?$include=[ContentPackages,Media,Season]"...)
       return string(b)
    }()
-   resp, err := http.Get(address)
+   req.URL.RawQuery = "$include=[ContentPackages,Media,Season]"
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
@@ -159,35 +163,6 @@ func (a *AxisContent) Media() (*MediaContent, error) {
       return nil, err
    }
    return &media, nil
-}
-
-// wikipedia.org/wiki/Geo-blocking
-func (a *AxisContent) Manifest(media *MediaContent) (string, error) {
-   address := func() string {
-      b := []byte("https://capi.9c9media.com/destinations/")
-      b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
-      b = append(b, "/platforms/desktop/playback/contents/"...)
-      b = strconv.AppendInt(b, a.AxisId, 10)
-      b = append(b, "/contentPackages/"...)
-      b = strconv.AppendInt(b, media.ContentPackages[0].Id, 10)
-      b = append(b, "/manifest.mpd?action=reference"...)
-      return string(b)
-   }()
-   resp, err := http.Get(address)
-   if err != nil {
-      return "", err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return "", errors.New(b.String())
-   }
-   text, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return "", err
-   }
-   return strings.Replace(string(text), "/best/", "/ultimate/", 1), nil
 }
 
 type MediaContent struct {
@@ -209,4 +184,38 @@ type MediaContent struct {
 
 func (m *MediaContent) Unmarshal() error {
    return json.Unmarshal(m.Raw, m)
+}
+
+// wikipedia.org/wiki/Geo-blocking
+func (a *AxisContent) Manifest(media *MediaContent) (string, error) {
+   req, err := http.NewRequest("", "https://capi.9c9media.com", nil)
+   if err != nil {
+      panic(err)
+   }
+   req.URL.Path = func() string {
+      b := []byte("/destinations/")
+      b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
+      b = append(b, "/platforms/desktop/playback/contents/"...)
+      b = strconv.AppendInt(b, a.AxisId, 10)
+      b = append(b, "/contentPackages/"...)
+      b = strconv.AppendInt(b, media.ContentPackages[0].Id, 10)
+      b = append(b, "/manifest.mpd"...)
+      return string(b)
+   }()
+   req.URL.RawQuery = "action=reference"
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return "", err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return "", errors.New(b.String())
+   }
+   text, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return "", err
+   }
+   return strings.Replace(string(text), "/best/", "/ultimate/", 1), nil
 }

@@ -9,24 +9,6 @@ import (
    "strings"
 )
 
-type Path string
-
-func (p Path) String() string {
-   return string(p)
-}
-
-// https://www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-// www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-// ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-// /shows/friends/the-one-with-the-bullies-s2e21
-func (p *Path) Set(s string) error {
-   s = strings.TrimPrefix(s, "https://")
-   s = strings.TrimPrefix(s, "www.")
-   s = strings.TrimPrefix(s, "ctv.ca")
-   *p = Path(s)
-   return nil
-}
-
 // this is better than strings.Replace and strings.ReplaceAll
 func graphql_compact(s string) string {
    f := strings.Fields(s)
@@ -66,6 +48,26 @@ type ResolvePath struct {
    }
 }
 
+///
+
+type Path string
+
+func (p Path) String() string {
+   return string(p)
+}
+
+// https://www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
+// www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
+// ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
+// /shows/friends/the-one-with-the-bullies-s2e21
+func (p *Path) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   s = strings.TrimPrefix(s, "ctv.ca")
+   *p = Path(s)
+   return nil
+}
+
 func (p Path) Resolve() (*ResolvePath, error) {
    body, err := func() ([]byte, error) {
       var s struct {
@@ -101,7 +103,7 @@ func (p Path) Resolve() (*ResolvePath, error) {
    if err != nil {
       return nil, err
    }
-   var data struct {
+   var value struct {
       Data struct {
          ResolvedPath *struct {
             LastSegment struct {
@@ -110,11 +112,11 @@ func (p Path) Resolve() (*ResolvePath, error) {
          }
       }
    }
-   err = json.Unmarshal(body, &data)
+   err = json.Unmarshal(body, &value)
    if err != nil {
       return nil, err
    }
-   if v := data.Data.ResolvedPath; v != nil {
+   if v := value.Data.ResolvedPath; v != nil {
       return &v.LastSegment.Content, nil
    }
    return nil, errors.New(string(body))
