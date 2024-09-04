@@ -1,98 +1,14 @@
 package tubi
 
 import (
-   "bytes"
    "encoding/json"
    "errors"
    "io"
    "net/http"
    "net/url"
-   "slices"
    "strconv"
    "strings"
 )
-
-func (VideoResource) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (VideoResource) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (VideoResource) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-type VideoResource struct {
-   LicenseServer *struct {
-      Url string
-   } `json:"license_server"`
-   Manifest struct {
-      Url string
-   }
-   Resolution Resolution
-   Type       string
-}
-
-func (v VideoResource) RequestUrl() (string, bool) {
-   if v := v.LicenseServer; v != nil {
-      return v.Url, true
-   }
-   return "", false
-}
-
-func (c Content) Video() (*VideoResource, error) {
-   slices.SortFunc(c.VideoResources, func(a, b VideoResource) int {
-      return int(b.Resolution - a.Resolution)
-   })
-   return &c.VideoResources[0], nil
-}
-
-type Resolution int64
-
-func (r *Resolution) UnmarshalText(text []byte) error {
-   a := strings.TrimPrefix(string(text), "VIDEO_RESOLUTION_")
-   i, err := strconv.Atoi(strings.TrimSuffix(a, "P"))
-   if err != nil {
-      return err
-   }
-   *r = Resolution(i)
-   return nil
-}
-
-func (r Resolution) MarshalText() ([]byte, error) {
-   b := []byte("VIDEO_RESOLUTION_")
-   b = strconv.AppendInt(b, int64(r), 10)
-   return append(b, 'P'), nil
-}
-func (Content) Error() string {
-   return "Content"
-}
-
-func (c Content) Get(id int) (*Content, bool) {
-   if c.Id == id {
-      return &c, true
-   }
-   for _, child := range c.Children {
-      if v, ok := child.Get(id); ok {
-         return v, true
-      }
-   }
-   return nil, false
-}
-
-func (c Content) Marshal() ([]byte, error) {
-   var buf bytes.Buffer
-   enc := json.NewEncoder(&buf)
-   enc.SetEscapeHTML(false)
-   enc.SetIndent("", " ")
-   err := enc.Encode(c)
-   if err != nil {
-      return nil, err
-   }
-   return buf.Bytes(), nil
-}
 
 func (c *Content) New(id int) error {
    req, err := http.NewRequest("", "https://uapi.adrise.tv/cms/content", nil)
@@ -113,31 +29,23 @@ func (c *Content) New(id int) error {
       return err
    }
    defer resp.Body.Close()
-   text, err := io.ReadAll(resp.Body)
+   c.Raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
-   }
-   err = c.Unmarshal(text)
-   if err != nil {
-      return err
-   }
-   if len(c.VideoResources) == 0 {
-      return errors.New(string(text))
    }
    return nil
 }
 
-type Namer struct {
-   Content *Content
-}
-
-func (c *Content) Unmarshal(text []byte) error {
-   err := json.Unmarshal(text, c)
-   if err != nil {
-      return err
+func (c *Content) Get(id int) (*Content, bool) {
+   if c.Id == id {
+      return c, true
    }
-   c.set(nil)
-   return nil
+   for _, child := range c.Children {
+      if v, ok := child.Get(id); ok {
+         return v, true
+      }
+   }
+   return nil, false
 }
 
 type Content struct {
@@ -145,15 +53,12 @@ type Content struct {
    DetailedType   string `json:"detailed_type"`
    EpisodeNumber  int    `json:"episode_number,string"`
    Id             int    `json:",string"`
+   Raw            []byte `json:"-"`
    SeriesId       int    `json:"series_id,string"`
    Title          string
    VideoResources []VideoResource `json:"video_resources"`
    Year           int
    parent         *Content
-}
-
-func (c Content) Episode() bool {
-   return c.DetailedType == "episode"
 }
 
 func (c *Content) set(parent *Content) {
@@ -163,8 +68,46 @@ func (c *Content) set(parent *Content) {
    }
 }
 
+func (c *Content) Unmarshal(text []byte) error {
+   err := json.Unmarshal(text, c)
+   if err != nil {
+      return err
+   }
+   if len(c.VideoResources) == 0 {
+      return errors.New(string(text))
+   }
+   c.set(nil)
+   return nil
+}
+
+// Content.Unmarshal checks the length
+func (c *Content) Video() VideoResource {
+   a := c.VideoResources[0]
+   for _, b := range c.VideoResources {
+      if b.Resolution.Int64 > a.Resolution.Int64 {
+         a = b
+      }
+   }
+   return a
+}
+
+func (c *Content) Episode() bool {
+   return c.DetailedType == "episode"
+}
+
 func (n Namer) Episode() int {
    return n.Content.EpisodeNumber
+}
+
+type Namer struct {
+   Content *Content
+}
+
+func (n Namer) Show() string {
+   if v := n.Content.parent; v != nil {
+      return v.parent.Title
+   }
+   return ""
 }
 
 func (n Namer) Season() int {
@@ -174,11 +117,8 @@ func (n Namer) Season() int {
    return 0
 }
 
-func (n Namer) Show() string {
-   if v := n.Content.parent; v != nil {
-      return v.parent.Title
-   }
-   return ""
+func (n Namer) Year() int {
+   return n.Content.Year
 }
 
 // S01:E03 - Hell Hath No Fury
@@ -189,6 +129,54 @@ func (n Namer) Title() string {
    return n.Content.Title
 }
 
-func (n Namer) Year() int {
-   return n.Content.Year
+func (r Resolution) MarshalText() ([]byte, error) {
+   b := []byte("VIDEO_RESOLUTION_")
+   b = strconv.AppendInt(b, r.Int64, 10)
+   return append(b, 'P'), nil
+}
+
+type Resolution struct {
+   Int64 int64
+}
+
+func (r *Resolution) UnmarshalText(text []byte) error {
+   s := string(text)
+   s = strings.TrimPrefix(s, "VIDEO_RESOLUTION_")
+   s = strings.TrimSuffix(s, "P")
+   var err error
+   r.Int64, err = strconv.ParseInt(s, 10, 64)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+type VideoResource struct {
+   LicenseServer *struct {
+      Url string
+   } `json:"license_server"`
+   Manifest struct {
+      Url string
+   }
+   Resolution Resolution
+   Type       string
+}
+
+func (VideoResource) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (VideoResource) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (VideoResource) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (v *VideoResource) RequestUrl() (string, bool) {
+   if v.LicenseServer != nil {
+      return v.LicenseServer.Url, true
+   }
+   return "", false
 }

@@ -6,6 +6,7 @@ import (
    "fmt"
    "net/http"
    "os"
+   "slices"
 )
 
 func (f *flags) download() error {
@@ -18,9 +19,9 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   video, err := content.Video()
-   if err != nil {
-      return err
+   video, ok := content.Video()
+   if !ok {
+      return errors.New("Content.Video")
    }
    req, err := http.NewRequest("", video.Manifest.Url, nil)
    if err != nil {
