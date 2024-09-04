@@ -21,10 +21,10 @@ func (f *flags) New() error {
 }
 
 type flags struct {
-   path ctv.Path
    representation string
    s internal.Stream
    manifest bool
+   address ctv.Address
 }
 
 func main() {
@@ -33,7 +33,7 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.Var(&f.path, "a", "address")
+   flag.Var(&f.address, "a", "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.BoolVar(&f.manifest, "m", false, "manifest")
@@ -46,7 +46,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.path != "":
+   case f.address.Path != "":
       err := f.download()
       if err != nil {
          panic(err)

@@ -23,13 +23,13 @@ func (f *flags) New() error {
 }
 
 type flags struct {
-   address max.AddressFlag
    email string
    home string
    max_height int
    password string
    representation string
    s internal.Stream
+   address max.Address
 }
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.TextVar(&f.address, "a", f.address, "address")
+   flag.TextVar(&f.address, "a", &f.address, "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.email, "e", "", "email")
    flag.StringVar(&f.representation, "i", "", "representation")

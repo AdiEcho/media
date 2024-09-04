@@ -10,6 +10,29 @@ import (
    "time"
 )
 
+func TestMedia(t *testing.T) {
+   for _, test_path := range test_paths {
+      resolve, err := Address{test_path}.Resolve()
+      if err != nil {
+         t.Fatal(err)
+      }
+      axis, err := resolve.Axis()
+      if err != nil {
+         t.Fatal(err)
+      }
+      media, err := axis.Media()
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := text.Name(Namer{media})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
+}
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -43,19 +66,16 @@ func TestLicense(t *testing.T) {
    }
    fmt.Printf("%x\n", key)
 }
-
 func TestManifest(t *testing.T) {
    for _, test_path := range test_paths {
-      resolve, err := Path(test_path).Resolve()
+      resolve, err := Address{test_path}.Resolve()
       if err != nil {
          t.Fatal(err)
       }
-      time.Sleep(99 * time.Millisecond)
       axis, err := resolve.Axis()
       if err != nil {
          t.Fatal(err)
       }
-      time.Sleep(99 * time.Millisecond)
       media, err := axis.Media()
       if err != nil {
          t.Fatal(err)
@@ -65,7 +85,7 @@ func TestManifest(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Println(string(manifest))
-      time.Sleep(99 * time.Millisecond)
+      time.Sleep(time.Second)
    }
 }
 
@@ -82,29 +102,4 @@ var test_paths = []string{
    "/movies/the-girl-with-the-dragon-tattoo-2011",
    // ctv.ca/movies/baby-driver
    "/movies/baby-driver",
-}
-
-func TestMedia(t *testing.T) {
-   for _, test_path := range test_paths {
-      resolve, err := Path(test_path).Resolve()
-      if err != nil {
-         t.Fatal(err)
-      }
-      time.Sleep(99 * time.Millisecond)
-      axis, err := resolve.Axis()
-      if err != nil {
-         t.Fatal(err)
-      }
-      time.Sleep(99 * time.Millisecond)
-      media, err := axis.Media()
-      if err != nil {
-         t.Fatal(err)
-      }
-      name, err := text.Name(Namer{media})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(99 * time.Millisecond)
-   }
 }

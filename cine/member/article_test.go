@@ -7,7 +7,7 @@ import (
 )
 
 // cinemember.nl/films/american-hustle
-const american_hustle ArticleSlug = "films/american-hustle"
+var american_hustle = Address{"films/american-hustle"}
 
 func TestArticle(t *testing.T) {
    article, err := american_hustle.Article()

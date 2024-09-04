@@ -60,9 +60,9 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      var flag AddressFlag
-      flag.UnmarshalText([]byte(test.url))
-      play, err := token.Playback(flag)
+      var web Address
+      web.UnmarshalText([]byte(test.url))
+      play, err := token.Playback(web)
       if err != nil {
          t.Fatal(err)
       }
@@ -99,9 +99,9 @@ func TestRoutes(t *testing.T) {
       t.Fatal(err)
    }
    for _, test := range tests {
-      var flag AddressFlag
-      flag.UnmarshalText([]byte(test.url))
-      routes, err := token.Routes(flag)
+      var web Address
+      web.UnmarshalText([]byte(test.url))
+      routes, err := token.Routes(web)
       if err != nil {
          t.Fatal(err)
       }

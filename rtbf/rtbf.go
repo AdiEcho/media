@@ -88,6 +88,10 @@ type Entitlement struct {
    }
 }
 
+type Namer struct {
+   Page *AuvioPage
+}
+
 // its just not available from what I can tell
 func (Namer) Year() int {
    return 0
@@ -197,10 +201,6 @@ type Address struct {
 
 func (a Address) String() string {
    return a.Path
-}
-
-type Namer struct {
-   Page *AuvioPage
 }
 
 // hard coded in JavaScript

@@ -31,7 +31,7 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", play.Fallback.Manifest.Url.Text, nil)
+   req, err := http.NewRequest("", play.Fallback.Manifest.Url.Url, nil)
    if err != nil {
       return err
    }

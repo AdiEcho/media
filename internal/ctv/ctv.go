@@ -49,7 +49,7 @@ func (f *flags) download() error {
 }
 
 func (f *flags) get_manifest() error {
-   resolve, err := f.path.Resolve()
+   resolve, err := f.address.Resolve()
    if err != nil {
       return err
    }
@@ -74,5 +74,5 @@ func (f *flags) get_manifest() error {
 }
 
 func (f *flags) base() string {
-   return path.Base(string(f.path))
+   return path.Base(f.address.Path)
 }
