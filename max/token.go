@@ -37,22 +37,24 @@ type DefaultToken struct {
    Token Value[string]
 }
 
+///
+
 func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
-   address := func() string {
-      var b bytes.Buffer
-      b.WriteString("https://default.any-")
-      b.WriteString(home_market)
-      b.WriteString(".prd.api.discomax.com/login")
-      return b.String()
-   }()
    body, err := json.Marshal(login)
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("POST", address, bytes.NewReader(body))
+   req, err := http.NewRequest("POST", "/login", bytes.NewReader(body))
    if err != nil {
       return err
    }
+   req.URL.Host = func() string {
+      var b bytes.Buffer
+      b.WriteString("https://default.any-")
+      b.WriteString(home_market)
+      b.WriteString(".prd.api.discomax.com")
+      return b.String()
+   }()
    req.Header.Set("authorization", "Bearer " + d.Token.Value)
    req.Header.Set("content-type", "application/json")
    req.Header.Set("x-disco-arkose-token", key.Token)
@@ -107,11 +109,11 @@ func (d *DefaultToken) New() error {
    return nil
 }
 
-func (d *DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
+func (d *DefaultToken) Playback(web Address) (*Playback, error) {
    body, err := func() ([]byte, error) {
       var p playback_request
       p.ConsumptionType = "streaming"
-      p.EditId = flag.EditId
+      p.EditId = web.EditId
       return json.Marshal(p)
    }()
    if err != nil {
@@ -153,20 +155,24 @@ func (d *DefaultToken) Playback(flag AddressFlag) (*Playback, error) {
    return play, nil
 }
 
-func (d *DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
-   address := func() string {
-      path, _ := flag.MarshalText()
+func (d *DefaultToken) Routes(web Address) (*DefaultRoutes, error) {
+   var req http.Request
+   req.URL = &url.URL{}
+   req.URL.Scheme = "https"
+   req.URL.Host = func() string {
       var b strings.Builder
       b.WriteString("https://default.any-")
       b.WriteString(home_market)
-      b.WriteString(".prd.api.discomax.com/cms/routes")
-      b.Write(path)
+      b.WriteString(".prd.api.discomax.com")
       return b.String()
    }()
-   req, err := http.NewRequest("", address, nil)
-   if err != nil {
-      return nil, err
-   }
+   req.URL.Path = func() string {
+      text, _ := web.MarshalText()
+      var b strings.Builder
+      b.WriteString("/cms/routes")
+      b.Write(text)
+      return b.String()
+   }()
    req.URL.RawQuery = url.Values{
       "include": {"default"},
       // this is not required, but results in a smaller response
@@ -176,7 +182,7 @@ func (d *DefaultToken) Routes(flag AddressFlag) (*DefaultRoutes, error) {
       "authorization": {"Bearer " + d.Token.Value},
       "x-wbd-session-state": {d.Session.Value.String()},
    }
-   resp, err := http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(&req)
    if err != nil {
       return nil, err
    }

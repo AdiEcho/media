@@ -15,36 +15,6 @@ const (
    home_market = "amer"
 )
 
-type AddressFlag struct {
-   EditId  string
-   VideoId string
-}
-
-func (a *AddressFlag) UnmarshalText(text []byte) error {
-   s := string(text)
-   if !strings.Contains(s, "/video/watch/") {
-      return errors.New("/video/watch/ not found")
-   }
-   s = strings.TrimPrefix(s, "https://")
-   s = strings.TrimPrefix(s, "play.max.com")
-   s = strings.TrimPrefix(s, "/video/watch/")
-   var found bool
-   a.VideoId, a.EditId, found = strings.Cut(s, "/")
-   if !found {
-      return errors.New("/ not found")
-   }
-   return nil
-}
-
-type AddressManifest struct {
-   Text string
-}
-
-func (a *AddressManifest) UnmarshalText(text []byte) error {
-   a.Text = strings.Replace(string(text), "_fallback", "", 1)
-   return nil
-}
-
 type DefaultLogin struct {
    Credentials struct {
       Username string `json:"username"`
@@ -62,21 +32,6 @@ func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
 
 func (Playback) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
-}
-
-type Playback struct {
-   Drm struct {
-      Schemes struct {
-         Widevine struct {
-            LicenseUrl string
-         }
-      }
-   }
-   Fallback struct {
-      Manifest struct {
-         Url AddressManifest
-      }
-   }
 }
 
 type PublicKey struct {
@@ -98,15 +53,6 @@ type RouteInclude struct {
          }
       }
    }
-}
-
-type DefaultRoutes struct {
-   Data struct {
-      Attributes struct {
-         Url AddressFlag
-      }
-   }
-   Included []RouteInclude
 }
 
 func (p *Playback) RequestUrl() (string, bool) {
@@ -172,19 +118,6 @@ type playback_request struct {
    UserPreferences   struct{} `json:"userPreferences"`   // required
 }
 
-func (a AddressFlag) MarshalText() ([]byte, error) {
-   var b bytes.Buffer
-   if a.VideoId != "" {
-      b.WriteString("/video/watch/")
-      b.WriteString(a.VideoId)
-   }
-   if a.EditId != "" {
-      b.WriteByte('/')
-      b.WriteString(a.EditId)
-   }
-   return b.Bytes(), nil
-}
-
 func (d DefaultRoutes) video() (*RouteInclude, bool) {
    for _, include := range d.Included {
       if include.Id == d.Data.Attributes.Url.VideoId {
@@ -247,4 +180,71 @@ func (p *PublicKey) New() error {
    }
    defer resp.Body.Close()
    return json.NewDecoder(resp.Body).Decode(p)
+}
+
+type Playback struct {
+   Drm struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string
+         }
+      }
+   }
+   Fallback struct {
+      Manifest struct {
+         Url Manifest
+      }
+   }
+}
+
+type DefaultRoutes struct {
+   Data struct {
+      Attributes struct {
+         Url Address
+      }
+   }
+   Included []RouteInclude
+}
+
+func (m *Manifest) UnmarshalText(text []byte) error {
+   m.Url = strings.Replace(string(text), "_fallback", "", 1)
+   return nil
+}
+
+func (a *Address) MarshalText() ([]byte, error) {
+   var b bytes.Buffer
+   if a.VideoId != "" {
+      b.WriteString("/video/watch/")
+      b.WriteString(a.VideoId)
+   }
+   if a.EditId != "" {
+      b.WriteByte('/')
+      b.WriteString(a.EditId)
+   }
+   return b.Bytes(), nil
+}
+
+type Manifest struct {
+   Url string
+}
+
+type Address struct {
+   EditId  string
+   VideoId string
+}
+
+func (a *Address) UnmarshalText(text []byte) error {
+   s := string(text)
+   if !strings.Contains(s, "/video/watch/") {
+      return errors.New("/video/watch/ not found")
+   }
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "play.max.com")
+   s = strings.TrimPrefix(s, "/video/watch/")
+   var found bool
+   a.VideoId, a.EditId, found = strings.Cut(s, "/")
+   if !found {
+      return errors.New("/ not found")
+   }
+   return nil
 }

@@ -48,38 +48,34 @@ type ResolvePath struct {
    }
 }
 
-///
+type Address struct {
+   Path string
+}
 
-type Path string
-
-func (p Path) String() string {
-   return string(p)
+func (a Address) String() string {
+   return a.Path
 }
 
 // https://www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-// www.ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-// ctv.ca/shows/friends/the-one-with-the-bullies-s2e21
-// /shows/friends/the-one-with-the-bullies-s2e21
-func (p *Path) Set(s string) error {
+func (a *Address) Set(s string) error {
    s = strings.TrimPrefix(s, "https://")
    s = strings.TrimPrefix(s, "www.")
-   s = strings.TrimPrefix(s, "ctv.ca")
-   *p = Path(s)
+   a.Path = strings.TrimPrefix(s, "ctv.ca")
    return nil
 }
 
-func (p Path) Resolve() (*ResolvePath, error) {
+func (a Address) Resolve() (*ResolvePath, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          OperationName string `json:"operationName"`
          Query         string `json:"query"`
          Variables     struct {
-            Path Path `json:"path"`
+            Path string `json:"path"`
          } `json:"variables"`
       }
       s.OperationName = "resolvePath"
-      s.Variables.Path = p
       s.Query = graphql_compact(query_resolve)
+      s.Variables.Path = a.Path
       return json.Marshal(s)
    }()
    if err != nil {
