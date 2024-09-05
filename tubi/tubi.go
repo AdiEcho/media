@@ -10,7 +10,7 @@ import (
    "strings"
 )
 
-func (c *Content) New(id int) error {
+func (v *VideoContent) New(id int) error {
    req, err := http.NewRequest("", "https://uapi.adrise.tv/cms/content", nil)
    if err != nil {
       return err
@@ -29,27 +29,39 @@ func (c *Content) New(id int) error {
       return err
    }
    defer resp.Body.Close()
-   c.Raw, err = io.ReadAll(resp.Body)
+   v.Raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
    return nil
 }
 
-func (c *Content) Get(id int) (*Content, bool) {
-   if c.Id == id {
-      return c, true
+func (v *VideoContent) Unmarshal() error {
+   err := json.Unmarshal(v.Raw, v)
+   if err != nil {
+      return err
    }
-   for _, child := range c.Children {
-      if v, ok := child.Get(id); ok {
-         return v, true
+   if len(v.VideoResources) == 0 {
+      return errors.New(string(v.Raw))
+   }
+   v.set(nil)
+   return nil
+}
+
+func (v *VideoContent) Get(id int) (*VideoContent, bool) {
+   if v.Id == id {
+      return v, true
+   }
+   for _, child := range v.Children {
+      if content, ok := child.Get(id); ok {
+         return content, true
       }
    }
    return nil, false
 }
 
-type Content struct {
-   Children       []*Content
+type VideoContent struct {
+   Children       []*VideoContent
    DetailedType   string `json:"detailed_type"`
    EpisodeNumber  int    `json:"episode_number,string"`
    Id             int    `json:",string"`
@@ -58,32 +70,20 @@ type Content struct {
    Title          string
    VideoResources []VideoResource `json:"video_resources"`
    Year           int
-   parent         *Content
+   parent         *VideoContent
 }
 
-func (c *Content) set(parent *Content) {
-   c.parent = parent
-   for _, child := range c.Children {
-      child.set(c)
+func (v *VideoContent) set(parent *VideoContent) {
+   v.parent = parent
+   for _, child := range v.Children {
+      child.set(v)
    }
 }
 
-func (c *Content) Unmarshal(text []byte) error {
-   err := json.Unmarshal(text, c)
-   if err != nil {
-      return err
-   }
-   if len(c.VideoResources) == 0 {
-      return errors.New(string(text))
-   }
-   c.set(nil)
-   return nil
-}
-
-// Content.Unmarshal checks the length
-func (c *Content) Video() VideoResource {
-   a := c.VideoResources[0]
-   for _, b := range c.VideoResources {
+// VideoContent.Unmarshal checks the length
+func (v *VideoContent) Video() VideoResource {
+   a := v.VideoResources[0]
+   for _, b := range v.VideoResources {
       if b.Resolution.Int64 > a.Resolution.Int64 {
          a = b
       }
@@ -91,42 +91,8 @@ func (c *Content) Video() VideoResource {
    return a
 }
 
-func (c *Content) Episode() bool {
-   return c.DetailedType == "episode"
-}
-
-func (n Namer) Episode() int {
-   return n.Content.EpisodeNumber
-}
-
-type Namer struct {
-   Content *Content
-}
-
-func (n Namer) Show() string {
-   if v := n.Content.parent; v != nil {
-      return v.parent.Title
-   }
-   return ""
-}
-
-func (n Namer) Season() int {
-   if v := n.Content.parent; v != nil {
-      return v.Id
-   }
-   return 0
-}
-
-func (n Namer) Year() int {
-   return n.Content.Year
-}
-
-// S01:E03 - Hell Hath No Fury
-func (n Namer) Title() string {
-   if _, v, ok := strings.Cut(n.Content.Title, " - "); ok {
-      return v
-   }
-   return n.Content.Title
+func (v *VideoContent) Episode() bool {
+   return v.DetailedType == "episode"
 }
 
 func (r Resolution) MarshalText() ([]byte, error) {
@@ -174,9 +140,43 @@ func (VideoResource) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
+func (n Namer) Episode() int {
+   return n.Content.EpisodeNumber
+}
+
 func (v *VideoResource) RequestUrl() (string, bool) {
    if v.LicenseServer != nil {
       return v.LicenseServer.Url, true
    }
    return "", false
+}
+
+func (n Namer) Year() int {
+   return n.Content.Year
+}
+
+type Namer struct {
+   Content *VideoContent
+}
+
+func (n Namer) Season() int {
+   if n.Content.parent != nil {
+      return n.Content.parent.Id
+   }
+   return 0
+}
+
+func (n Namer) Show() string {
+   if v := n.Content.parent; v != nil {
+      return v.parent.Title
+   }
+   return ""
+}
+
+// S01:E03 - Hell Hath No Fury
+func (n Namer) Title() string {
+   if _, v, ok := strings.Cut(n.Content.Title, " - "); ok {
+      return v
+   }
+   return n.Content.Title
 }

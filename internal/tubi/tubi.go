@@ -3,25 +3,31 @@ package main
 import (
    "154.pages.dev/media/internal"
    "154.pages.dev/media/tubi"
+   "errors"
    "fmt"
    "net/http"
    "os"
 )
 
 func (f *flags) download() error {
-   text, err := os.ReadFile(f.name())
+   content := &tubi.VideoContent{}
+   var err error
+   content.Raw, err = os.ReadFile(f.name())
    if err != nil {
       return err
    }
-   var content tubi.Content
-   err = content.Unmarshal(text)
+   err = content.Unmarshal()
    if err != nil {
       return err
    }
-   video, ok := content.Video()
-   if !ok {
-      return errors.New("Content.Video")
+   if content.Episode() {
+      var ok bool
+      content, ok = content.Get(f.tubi)
+      if !ok {
+         return errors.New("VideoContent.Get")
+      }
    }
+   video := content.Video()
    req, err := http.NewRequest("", video.Manifest.Url, nil)
    if err != nil {
       return err
@@ -35,17 +41,25 @@ func (f *flags) download() error {
       case "":
          fmt.Print(rep, "\n\n")
       case rep.Id:
-         f.s.Name = tubi.Namer{&content}
-         f.s.Poster = video
+         f.s.Name = tubi.Namer{content}
+         f.s.Poster = &video
          return f.s.Download(rep)
       }
    }
    return nil
 }
 
+func (f *flags) name() string {
+   return fmt.Sprint(f.tubi) + ".txt"
+}
+
 func (f *flags) write_content() error {
-   content := &tubi.Content{}
+   content := &tubi.VideoContent{}
    err := content.New(f.tubi)
+   if err != nil {
+      return err
+   }
+   err = content.Unmarshal()
    if err != nil {
       return err
    }
@@ -54,19 +68,6 @@ func (f *flags) write_content() error {
       if err != nil {
          return err
       }
-      var ok bool
-      content, ok = content.Get(f.tubi)
-      if !ok {
-         return tubi.Content{}
-      }
    }
-   text, err := content.Marshal()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.name(), text, os.ModePerm)
-}
-
-func (f *flags) name() string {
-   return fmt.Sprint(f.tubi) + ".txt"
+   return os.WriteFile(f.name(), content.Raw, os.ModePerm)
 }

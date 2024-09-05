@@ -34,12 +34,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var cms Content
-   err = cms.New(test.content_id)
+   var content VideoContent
+   err = content.New(test.content_id)
    if err != nil {
       t.Fatal(err)
    }
-   video, err := cms.Video()
+   video, err := content.Video()
    if err != nil {
       t.Fatal(err)
    }
@@ -52,51 +52,52 @@ func TestLicense(t *testing.T) {
 
 func TestResolution(t *testing.T) {
    for _, test := range tests {
-      cms := &Content{}
-      err := cms.New(test.content_id)
+      content := &VideoContent{}
+      err := content.New(test.content_id)
       if err != nil {
          t.Fatal(err)
       }
       time.Sleep(time.Second)
-      if cms.Episode() {
-         err := cms.New(cms.SeriesId)
+      if content.Episode() {
+         err := content.New(content.SeriesId)
          if err != nil {
             t.Fatal(err)
          }
          time.Sleep(time.Second)
          var ok bool
-         cms, ok = cms.Get(test.content_id)
+         content, ok = content.Get(test.content_id)
          if !ok {
             t.Fatal("get")
          }
       }
       fmt.Println(test.url)
-      for _, r := range cms.VideoResources {
+      for _, r := range content.VideoResources {
          fmt.Println(r.Resolution, r.Type)
       }
    }
 }
+
 func TestContent(t *testing.T) {
    for _, test := range tests {
-      cms := &Content{}
-      err := cms.New(test.content_id)
+      content := &VideoContent{}
+      err := content.New(test.content_id)
       if err != nil {
          t.Fatal(err)
       }
       time.Sleep(time.Second)
-      if cms.Episode() {
-         err := cms.New(cms.SeriesId)
+      if content.Episode() {
+         err := content.New(content.SeriesId)
          if err != nil {
             t.Fatal(err)
          }
          time.Sleep(time.Second)
          var ok bool
-         cms, ok = cms.Get(test.content_id)
+         content, ok = content.Get(test.content_id)
          if !ok {
             t.Fatal("get")
          }
       }
-      name, err := text.Name(Namer{cms})
+      name, err := text.Name(Namer{content})
       if err != nil {
          t.Fatal(err)
       }
