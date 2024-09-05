@@ -42,7 +42,7 @@ func (f *flags) download() error {
          fmt.Print(rep, "\n\n")
       case rep.Id:
          f.s.Name = tubi.Namer{content}
-         f.s.Poster = &video
+         f.s.Poster = video
          return f.s.Download(rep)
       }
    }
