@@ -6,7 +6,6 @@ import (
    "fmt"
    "net/http"
    "os"
-   "slices"
 )
 
 func (f *flags) download() error {
