@@ -10,7 +10,6 @@ import (
 )
 
 func TestLicense(t *testing.T) {
-   test := tests["the-mask"]
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -23,26 +22,29 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var pssh widevine.Pssh
-   pssh.KeyId, err = hex.DecodeString(test.key_id)
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      var pssh widevine.Pssh
+      pssh.KeyId, err = hex.DecodeString(test.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var module widevine.Cdm
+      err = module.New(private_key, client_id, pssh.Marshal())
+      if err != nil {
+         t.Fatal(err)
+      }
+      var content VideoContent
+      err = content.New(test.content_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, err := module.Key(content.Video(), pssh.KeyId)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
    }
-   var module widevine.Cdm
-   err = module.New(private_key, client_id, pssh.Marshal())
-   if err != nil {
-      t.Fatal(err)
-   }
-   var content VideoContent
-   err = content.New(test.content_id)
-   if err != nil {
-      t.Fatal(err)
-   }
-   key, err := module.Key(content.Video(), pssh.KeyId)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
 }
 
 func TestResolution(t *testing.T) {

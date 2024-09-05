@@ -7,6 +7,21 @@ import (
    "time"
 )
 
+var tests = []struct{
+   content_id int
+   key_id     string
+   url        string
+}{
+   {
+      content_id: 590133,
+      url:        "tubitv.com/movies/590133",
+   },
+   {
+      content_id: 200042567,
+      url:        "tubitv.com/tv-shows/200042567",
+   },
+}
+
 func TestContent(t *testing.T) {
    for _, test := range tests {
       content := &VideoContent{}
@@ -33,48 +48,4 @@ func TestContent(t *testing.T) {
       }
       fmt.Printf("%q\n", name)
    }
-}
-
-var tests = map[string]struct {
-   content_id int
-   key_id     string
-   url        string
-}{
-   "the-mask": {
-      content_id: 589292,
-      key_id:     "943974887f2a4b87a3ded9e99f03c962",
-      url:        "tubitv.com/movies/589292",
-   },
-   "the-devil-s-advocate": {
-      content_id: 590133,
-      url:        "tubitv.com/movies/590133",
-   },
-   "training-day": {
-      content_id: 608618,
-      url:        "tubitv.com/movies/608618",
-   },
-   "heat": {
-      content_id: 611324,
-      url:        "tubitv.com/movies/611324",
-   },
-   "the-thing": {
-      content_id: 648069,
-      url:        "tubitv.com/movies/648069",
-   },
-   "get-out": {
-      content_id: 100009092,
-      url:        "tubitv.com/movies/100009092",
-   },
-   "lady-bird": {
-      content_id: 100012358,
-      url:        "tubitv.com/movies/100012358",
-   },
-   "the-batman": {
-      content_id: 100016185,
-      url:        "tubitv.com/movies/100016185",
-   },
-   "scandal": {
-      content_id: 200042567,
-      url:        "tubitv.com/tv-shows/200042567",
-   },
 }
