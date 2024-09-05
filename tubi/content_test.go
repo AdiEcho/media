@@ -13,13 +13,14 @@ var tests = []struct{
    url        string
 }{
    {
-      content_id: 590133,
       url:        "tubitv.com/movies/590133",
-      EhDyrIHqwYBFBZP77NyA2WfCSOPclZsG 
+      key_id: "8qyB6sGARQWT++zcgNlnwg==",
+      content_id: 590133,
    },
    {
-      content_id: 200042567,
       url:        "tubitv.com/tv-shows/200042567",
+      key_id: "Ndopo1ozQ8iSL75MAfbL6A==",
+      content_id: 200042567,
    },
 }
 
