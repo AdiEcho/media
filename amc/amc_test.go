@@ -12,6 +12,7 @@ import (
 )
 
 var size_tests = []any{
+   &struct{}{},
    Address{},
    Authorization{},
    ContentCompiler{},
