@@ -34,9 +34,9 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   source, ok := play.HttpsDash()
+   source, ok := play.Dash()
    if !ok {
-      return amc.DataSource{}
+      return play.DashError()
    }
    req, err := http.NewRequest("", source.Src, nil)
    if err != nil {
@@ -49,16 +49,18 @@ func (f *flags) download() error {
    for _, rep := range reps {
       switch f.representation {
       case "":
-         fmt.Print(rep, "\n\n")
+         if _, ok := rep.Ext(); ok {
+            fmt.Print(rep, "\n\n")
+         }
       case rep.Id:
          f.s.Poster = play
          content, err := auth.Content(f.address.Path)
          if err != nil {
             return err
          }
-         f.s.Name, err = content.Video()
-         if err != nil {
-            return err
+         f.s.Name, ok = content.Video()
+         if !ok {
+            return content.VideoError()
          }
          return f.s.Download(rep)
       }

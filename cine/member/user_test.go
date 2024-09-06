@@ -5,6 +5,17 @@ import (
    "testing"
 )
 
+var size_tests = []any{
+   &struct{}{},
+   Address{},
+}
+
+func TestSize(t *testing.T) {
+   for _, test := range size_tests {
+      fmt.Println(reflect.TypeOf(test).Size())
+   }
+}
+
 func TestAuthenticate(t *testing.T) {
    username := os.Getenv("cine_member_username")
    if username == "" {

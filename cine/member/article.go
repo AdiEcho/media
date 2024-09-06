@@ -32,10 +32,6 @@ query($articleUrlSlug: String) {
 }
 `
 
-func (ArticleAsset) Error() string {
-   return "ArticleAsset"
-}
-
 type ArticleAsset struct {
    Id         int
    LinkedType string `json:"linked_type"`
@@ -53,6 +49,8 @@ func (OperationArticle) Season() int {
 func (OperationArticle) Show() string {
    return ""
 }
+
+///
 
 func (o *OperationArticle) Title() string {
    return o.CanonicalTitle

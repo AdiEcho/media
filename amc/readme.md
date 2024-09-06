@@ -2,10 +2,10 @@
 
 1. amcplus.com/create
 2. email
-   - 2024-5-26@mailsac.com
+   - mailsac.com
 3. password
 4. create account
-5. monthly with ads
+5. monthly ad-free
 6. continue to payment
 7. name on card
 8. card number

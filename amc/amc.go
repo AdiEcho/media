@@ -12,6 +12,18 @@ func cache_hash() string {
    return base64.StdEncoding.EncodeToString([]byte("ff="))
 }
 
+func (a *Address) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   a.Path = strings.TrimPrefix(s, "amcplus.com")
+   var found bool
+   _, a.Nid, found = strings.Cut(a.Path, "--")
+   if !found {
+      return errors.New("--")
+   }
+   return nil
+}
+
 type Address struct {
    Nid string
    Path string
@@ -19,19 +31,6 @@ type Address struct {
 
 func (a *Address) String() string {
    return a.Path
-}
-
-func (a *Address) Set(text string) error {
-   var found bool
-   _, a.Path, found = strings.Cut(text, "amcplus.com")
-   if !found {
-      return errors.New("amcplus.com")
-   }
-   _, a.Nid, found = strings.Cut(a.Path, "--")
-   if !found {
-      return errors.New("--")
-   }
-   return nil
 }
 
 func (ContentCompiler) VideoError() error {

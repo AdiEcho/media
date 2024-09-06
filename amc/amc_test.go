@@ -25,9 +25,25 @@ func TestSize(t *testing.T) {
    }
 }
 
+var key_tests = []struct{
+   key_id string
+   url string
+}{
+   {
+      key_id: "+7nUc5piRu2GY3lAiA4MvQ==",
+      url: "amcplus.com/movies/nocebo--1061554",
+   },
+   {
+      key_id: "vHkdO0RPSsqD3iPzeupPeA==",
+      url: "amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152",
+   },
+}
+
 var path_tests = []string{
-   "http://amcplus.com/movies/nocebo--1061554",
+   "/movies/nocebo--1061554",
    "amcplus.com/movies/nocebo--1061554",
+   "https://www.amcplus.com/movies/nocebo--1061554",
+   "www.amcplus.com/movies/nocebo--1061554",
 }
 
 func TestPath(t *testing.T) {
@@ -39,19 +55,6 @@ func TestPath(t *testing.T) {
       }
       fmt.Println(web)
    }
-}
-
-var tests = []struct{
-   key_id string
-   url string
-}{
-   {
-      key_id: "Xn02m57KRCakPhWnbwndfg==",
-      url: "amcplus.com/shows/orphan-black/episodes/season-1-instinct--1011152",
-   },
-   {
-      url: "amcplus.com/movies/nocebo--1061554",
-   },
 }
 
 func TestLicense(t *testing.T) {
@@ -67,7 +70,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   for _, test := range tests {
+   for _, test := range key_tests {
       var pssh widevine.Pssh
       pssh.KeyId, err = base64.StdEncoding.DecodeString(test.key_id)
       if err != nil {
@@ -76,13 +79,19 @@ func TestLicense(t *testing.T) {
       var module widevine.Cdm
       module.New(private_key, client_id, pssh.Marshal())
       var auth Authorization
-      auth.Raw, err = os.ReadFile("/authorization.txt")
+      auth.Raw, err = os.ReadFile(home + "/amc.txt")
       if err != nil {
          t.Fatal(err)
       }
-      auth.Unmarshal()
+      err = auth.Unmarshal()
+      if err != nil {
+         t.Fatal(err)
+      }
       var web Address
-      web.Set(test.url)
+      err = web.Set(test.url)
+      if err != nil {
+         t.Fatal(err)
+      }
       play, err := auth.Playback(web.Nid)
       if err != nil {
          t.Fatal(err)
