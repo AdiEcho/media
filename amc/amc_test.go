@@ -30,9 +30,9 @@ func TestContent(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      video, err := content.Video()
-      if err != nil {
-         t.Fatal(err)
+      video, ok := content.Video()
+      if !ok {
+         t.Fatal(content.VideoError())
       }
       name, err := text.Name(video)
       if err != nil {
