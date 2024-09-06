@@ -287,6 +287,10 @@ type Authorization struct {
    Raw []byte `json:"-"`
 }
 
+func (ContentCompiler) VideoError() error {
+   return errors.New("ContentCompiler.Video")
+}
+
 ///
 
 func (a *Authorization) Content(path string) (*ContentCompiler, error) {
@@ -353,8 +357,3 @@ type ContentCompiler struct {
       }
    }
 }
-
-func (ContentCompiler) VideoError() error {
-   return errors.New("ContentCompiler.Video")
-}
-
