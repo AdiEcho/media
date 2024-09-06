@@ -6,9 +6,24 @@ import (
    "encoding/base64"
    "fmt"
    "os"
+   "reflect"
    "testing"
    "time"
 )
+
+var size_tests = []any{
+   Address{},
+   Authorization{},
+   ContentCompiler{},
+   CurrentVideo{},
+   Playback{},
+}
+
+func TestSize(t *testing.T) {
+   for _, test := range size_tests {
+      fmt.Println(reflect.TypeOf(test).Size())
+   }
+}
 
 func TestContent(t *testing.T) {
    var (
