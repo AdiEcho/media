@@ -103,6 +103,8 @@ func (a *Authenticate) New(email, password string) error {
    return nil
 }
 
+///
+
 func (a *Authenticate) Playlist(link *DeepLink) (*Playlist, error) {
    var p playlist_request
    p.ContentEabId = link.EabId

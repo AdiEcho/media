@@ -11,6 +11,161 @@ import (
    "time"
 )
 
+func (a Address) Resolve() (*ResolvePath, error) {
+   body, err := func() ([]byte, error) {
+      var s struct {
+         OperationName string `json:"operationName"`
+         Query         string `json:"query"`
+         Variables     struct {
+            Path string `json:"path"`
+         } `json:"variables"`
+      }
+      s.OperationName = "resolvePath"
+      s.Query = graphql_compact(query_resolve)
+      s.Variables.Path = a.Path
+      return json.Marshal(s)
+   }()
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://www.ctv.ca/space-graphql/apq/graphql",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   // you need this for the first request, then can omit
+   req.Header.Set("graphql-client-platform", "entpay_web")
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   body, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   var value struct {
+      Data struct {
+         ResolvedPath *struct {
+            LastSegment struct {
+               Content ResolvePath
+            }
+         }
+      }
+   }
+   err = json.Unmarshal(body, &value)
+   if err != nil {
+      return nil, err
+   }
+   if v := value.Data.ResolvedPath; v != nil {
+      return &v.LastSegment.Content, nil
+   }
+   return nil, errors.New(string(body))
+}
+
+func (d *Date) UnmarshalText(text []byte) error {
+   var err error
+   d.Time, err = time.Parse(time.DateOnly, string(text))
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+type Namer struct {
+   Media *MediaContent
+}
+
+func (d *Date) MarshalText() ([]byte, error) {
+   return d.Time.AppendFormat(nil, time.DateOnly), nil
+}
+
+func (n Namer) Episode() int {
+   return n.Media.Episode
+}
+
+func (n Namer) Season() int {
+   return n.Media.Season.Number
+}
+
+func (n Namer) Show() string {
+   if v := n.Media.Media; v.Type == "series" {
+      return v.Name
+   }
+   return ""
+}
+
+func (n Namer) Year() int {
+   return n.Media.BroadcastDate.Time.Year()
+}
+
+func (n Namer) Title() string {
+   if strings.HasSuffix(n.Media.Name, ")") {
+      return n.Media.Name[:len(n.Media.Name)-len(" (9999)")]
+   }
+   return n.Media.Name
+}
+
+func (Poster) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (Poster) RequestUrl() (string, bool) {
+   return "https://license.9c9media.ca/widevine", true
+}
+
+func (Poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (r *ResolvePath) Axis() (*AxisContent, error) {
+   body, err := func() ([]byte, error) {
+      var s struct {
+         OperationName string `json:"operationName"`
+         Query         string `json:"query"`
+         Variables     struct {
+            Id string `json:"id"`
+         } `json:"variables"`
+      }
+      s.OperationName = "axisContent"
+      s.Query = graphql_compact(query_axis)
+      s.Variables.Id = r.id()
+      return json.MarshalIndent(s, "", " ")
+   }()
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://www.ctv.ca/space-graphql/apq/graphql",
+      bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   // you need this for the first request, then can omit
+   req.Header.Set("graphql-client-platform", "entpay_web")
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var value struct {
+      Data struct {
+         AxisContent AxisContent
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&value)
+   if err != nil {
+      return nil, err
+   }
+   return &value.Data.AxisContent, nil
+}
 const query_axis = `
 query($id: ID!) {
    axisContent(id: $id) {
@@ -171,160 +326,4 @@ type Poster struct{}
 
 func (a *Address) String() string {
    return a.Path
-}
-
-func (a Address) Resolve() (*ResolvePath, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         OperationName string `json:"operationName"`
-         Query         string `json:"query"`
-         Variables     struct {
-            Path string `json:"path"`
-         } `json:"variables"`
-      }
-      s.OperationName = "resolvePath"
-      s.Query = graphql_compact(query_resolve)
-      s.Variables.Path = a.Path
-      return json.Marshal(s)
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://www.ctv.ca/space-graphql/apq/graphql",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   // you need this for the first request, then can omit
-   req.Header.Set("graphql-client-platform", "entpay_web")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   body, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   var value struct {
-      Data struct {
-         ResolvedPath *struct {
-            LastSegment struct {
-               Content ResolvePath
-            }
-         }
-      }
-   }
-   err = json.Unmarshal(body, &value)
-   if err != nil {
-      return nil, err
-   }
-   if v := value.Data.ResolvedPath; v != nil {
-      return &v.LastSegment.Content, nil
-   }
-   return nil, errors.New(string(body))
-}
-
-func (d *Date) UnmarshalText(text []byte) error {
-   var err error
-   d.Time, err = time.Parse(time.DateOnly, string(text))
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-type Namer struct {
-   Media *MediaContent
-}
-
-func (d *Date) MarshalText() ([]byte, error) {
-   return d.Time.AppendFormat(nil, time.DateOnly), nil
-}
-
-func (n Namer) Episode() int {
-   return n.Media.Episode
-}
-
-func (n Namer) Season() int {
-   return n.Media.Season.Number
-}
-
-func (n Namer) Show() string {
-   if v := n.Media.Media; v.Type == "series" {
-      return v.Name
-   }
-   return ""
-}
-
-func (n Namer) Year() int {
-   return n.Media.BroadcastDate.Time.Year()
-}
-
-func (n Namer) Title() string {
-   if strings.HasSuffix(n.Media.Name, ")") {
-      return n.Media.Name[:len(n.Media.Name)-len(" (9999)")]
-   }
-   return n.Media.Name
-}
-
-func (Poster) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (Poster) RequestUrl() (string, bool) {
-   return "https://license.9c9media.ca/widevine", true
-}
-
-func (Poster) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (r *ResolvePath) Axis() (*AxisContent, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         OperationName string `json:"operationName"`
-         Query         string `json:"query"`
-         Variables     struct {
-            Id string `json:"id"`
-         } `json:"variables"`
-      }
-      s.OperationName = "axisContent"
-      s.Query = graphql_compact(query_axis)
-      s.Variables.Id = r.id()
-      return json.MarshalIndent(s, "", " ")
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://www.ctv.ca/space-graphql/apq/graphql",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   // you need this for the first request, then can omit
-   req.Header.Set("graphql-client-platform", "entpay_web")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var value struct {
-      Data struct {
-         AxisContent AxisContent
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&value)
-   if err != nil {
-      return nil, err
-   }
-   return &value.Data.AxisContent, nil
 }
