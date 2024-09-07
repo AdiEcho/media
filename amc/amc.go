@@ -33,10 +33,6 @@ func (a *Address) String() string {
    return a.Path
 }
 
-func (ContentCompiler) VideoError() error {
-   return errors.New("ContentCompiler.Video")
-}
-
 type ContentCompiler struct {
    Children []struct {
       Properties struct {
@@ -97,23 +93,11 @@ type DataSource struct {
    Type string
 }
 
-func (Playback) DashError() error {
-   return errors.New("Playback.DashError")
-}
-
-func (Playback) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 func (p *Playback) RequestUrl() (string, bool) {
    if v, ok := p.Dash(); ok {
       return v.KeySystems.Widevine.LicenseUrl, true
    }
    return "", false
-}
-
-func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
 }
 
 func (p *Playback) RequestHeader() (http.Header, error) {
@@ -138,4 +122,20 @@ type Playback struct {
          Sources []DataSource
       }
    }
+}
+
+func (*ContentCompiler) VideoError() error {
+   return errors.New("ContentCompiler.Video")
+}
+
+func (*Playback) DashError() error {
+   return errors.New("Playback.DashError")
+}
+
+func (*Playback) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*Playback) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
 }

@@ -3,11 +3,25 @@ package member
 import (
    "bytes"
    "encoding/json"
+   "errors"
    "io"
    "net/http"
    "strconv"
    "strings"
 )
+
+func (*OperationArticle) FilmError() error {
+   return errors.New("OperationArticle.Film")
+}
+
+func (o *OperationArticle) Film() (*ArticleAsset, bool) {
+   for _, asset := range o.Assets {
+      if asset.LinkedType == "film" {
+         return asset, true
+      }
+   }
+   return nil, false
+}
 
 const query_article = `
 query($articleUrlSlug: String) {
@@ -55,60 +69,8 @@ type ArticleAsset struct {
    article    *OperationArticle
 }
 
-///
-
-func (OperationArticle) Episode() int {
-   return 0
-}
-
-func (OperationArticle) Season() int {
-   return 0
-}
-
-func (OperationArticle) Show() string {
-   return ""
-}
-
-func (a Address) Article() (*OperationArticle, error) {
-   var value struct {
-      Query     string `json:"query"`
-      Variables struct {
-         ArticleUrlSlug string `json:"articleUrlSlug"`
-      } `json:"variables"`
-   }
-   value.Variables.ArticleUrlSlug = a.Path
-   value.Query = query_article
-   data, err := json.Marshal(value)
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(data),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var article OperationArticle
-   article.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &article, nil
-}
-
 func (o *OperationArticle) Title() string {
    return o.CanonicalTitle
-}
-
-func (o *OperationArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range o.Assets {
-      if asset.LinkedType == "film" {
-         return asset, true
-      }
-   }
-   return nil, false
 }
 
 func (o *OperationArticle) Year() int {
@@ -148,4 +110,45 @@ func (o *OperationArticle) Unmarshal() error {
       asset.article = o
    }
    return nil
+}
+
+func (*OperationArticle) Episode() int {
+   return 0
+}
+
+func (*OperationArticle) Season() int {
+   return 0
+}
+
+func (*OperationArticle) Show() string {
+   return ""
+}
+
+func (a *Address) Article() (*OperationArticle, error) {
+   var value struct {
+      Query     string `json:"query"`
+      Variables struct {
+         ArticleUrlSlug string `json:"articleUrlSlug"`
+      } `json:"variables"`
+   }
+   value.Variables.ArticleUrlSlug = a.Path
+   value.Query = query_article
+   data, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.Post(
+      "https://api.audienceplayer.com/graphql/2/user",
+      "application/json", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var article OperationArticle
+   article.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &article, nil
 }

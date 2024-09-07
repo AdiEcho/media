@@ -13,7 +13,7 @@ func TestAsset(t *testing.T) {
    }
    asset, ok := article.Film()
    if !ok {
-      t.Fatal(ArticleAsset{})
+      t.Fatal(article.FilmError())
    }
    var user OperationUser
    user.Raw, err = os.ReadFile("authenticate.txt")

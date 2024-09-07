@@ -8,6 +8,19 @@ import (
    "net/http"
 )
 
+func (*OperationPlay) DashError() error {
+   return errors.New("OperationPlay.Dash")
+}
+
+func (o *OperationPlay) Dash() (string, bool) {
+   for _, title := range o.Entitlements {
+      if title.Protocol == "dash" {
+         return title.Manifest, true
+      }
+   }
+   return "", false
+}
+
 const query_play = `
 mutation($article_id: Int, $asset_id: Int) {
    ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
@@ -20,15 +33,6 @@ mutation($article_id: Int, $asset_id: Int) {
    }
 }
 `
-
-func (o *OperationPlay) Dash() (string, bool) {
-   for _, title := range o.Entitlements {
-      if title.Protocol == "dash" {
-         return title.Manifest, true
-      }
-   }
-   return "", false
-}
 
 type OperationPlay struct {
    Entitlements []struct {
