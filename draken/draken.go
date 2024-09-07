@@ -102,6 +102,7 @@ type AuthLogin struct {
 func (a *AuthLogin) Unmarshal() error {
    return json.Unmarshal(a.Raw, a)
 }
+
 func (f *FullMovie) New(custom_id string) error {
    var req_body struct {
       Query     string `json:"query"`
@@ -136,7 +137,8 @@ func (f *FullMovie) New(custom_id string) error {
          }
       }
    }
-   if err = json.NewDecoder(resp.Body).Decode(&resp_body); err != nil {
+   err = json.NewDecoder(resp.Body).Decode(&resp_body)
+   if err != nil {
       return err
    }
    if id := resp_body.Data.Viewer.ViewableCustomId; id != nil {
@@ -146,11 +148,11 @@ func (f *FullMovie) New(custom_id string) error {
    return errors.New("ViewableCustomId")
 }
 
-func (n *Namer) Title() string {
+func (n Namer) Title() string {
    return n.Movie.Title
 }
 
-func (n *Namer) Year() int {
+func (n Namer) Year() int {
    return n.Movie.ProductionYear
 }
 
@@ -242,18 +244,6 @@ type Playback struct {
    Playlist string
 }
 
-func (Poster) RequestUrl() (string, bool) {
-   return "https://client-api.magine.com/api/playback/v1/widevine/license", true
-}
-
-func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Poster) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 type Poster struct {
    Login *AuthLogin
    Play *Playback
@@ -271,4 +261,16 @@ func (p *Poster) RequestHeader() (http.Header, error) {
       head.Set(key, value)
    }
    return head, nil
+}
+
+func (*Poster) RequestUrl() (string, bool) {
+   return "https://client-api.magine.com/api/playback/v1/widevine/license", true
+}
+
+func (*Poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*Poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
 }
