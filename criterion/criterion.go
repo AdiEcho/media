@@ -9,6 +9,19 @@ import (
    "strings"
 )
 
+func (*VideoFiles) DashError() error {
+   return errors.New("VideoFiles.Dash")
+}
+
+func (v VideoFiles) Dash() (*VideoFile, bool) {
+   for _, file := range v {
+      if file.Method == "dash" {
+         return &file, true
+      }
+   }
+   return nil, false
+}
+
 func (a *AuthToken) New(username, password string) error {
    resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
       "client_id":  {client_id},
@@ -154,13 +167,4 @@ func (v *VideoFile) RequestUrl() (string, bool) {
    b := []byte("https://drm.vhx.com/v2/widevine?token=")
    b = append(b, v.DrmAuthorizationToken...)
    return string(b), true
-}
-
-func (v *VideoFiles) Dash() (*VideoFile, bool) {
-   for _, file := range v {
-      if file.Method == "dash" {
-         return &file, true
-      }
-   }
-   return nil, false
 }

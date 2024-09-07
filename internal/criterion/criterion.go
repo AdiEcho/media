@@ -3,7 +3,6 @@ package main
 import (
    "154.pages.dev/media/criterion"
    "154.pages.dev/media/internal"
-   "errors"
    "fmt"
    "net/http"
    "os"
@@ -33,7 +32,7 @@ func (f *flags) download() error {
    }
    file, ok := files.Dash()
    if !ok {
-      return errors.New("VideoFiles.Dash")
+      return files.DashError()
    }
    req, err := http.NewRequest("", file.Links.Source.Href, nil)
    if err != nil {
