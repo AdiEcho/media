@@ -173,7 +173,7 @@ func (a *Address) String() string {
    return a.Path
 }
 
-func (a *Address) Resolve() (*ResolvePath, error) {
+func (a Address) Resolve() (*ResolvePath, error) {
    body, err := func() ([]byte, error) {
       var s struct {
          OperationName string `json:"operationName"`

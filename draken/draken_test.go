@@ -10,6 +10,20 @@ import (
    "time"
 )
 
+func TestLogin(t *testing.T) {
+   username := os.Getenv("draken_username")
+   if username == "" {
+      t.Fatal("Getenv")
+   }
+   password := os.Getenv("draken_password")
+   var login AuthLogin
+   err := login.New(username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("login.txt", login.Raw, os.ModePerm)
+}
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
