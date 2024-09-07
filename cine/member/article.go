@@ -32,11 +32,30 @@ query($articleUrlSlug: String) {
 }
 `
 
+func (a *Address) Set(s string) error {
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "www.")
+   s = strings.TrimPrefix(s, "cinemember.nl")
+   s = strings.TrimPrefix(s, "/nl")
+   a.Path = strings.TrimPrefix(s, "/")
+   return nil
+}
+
+type Address struct {
+   Path string
+}
+
+func (a *Address) String() string {
+   return a.Path
+}
+
 type ArticleAsset struct {
    Id         int
    LinkedType string `json:"linked_type"`
    article    *OperationArticle
 }
+
+///
 
 func (OperationArticle) Episode() int {
    return 0
@@ -50,7 +69,34 @@ func (OperationArticle) Show() string {
    return ""
 }
 
-///
+func (a Address) Article() (*OperationArticle, error) {
+   var value struct {
+      Query     string `json:"query"`
+      Variables struct {
+         ArticleUrlSlug string `json:"articleUrlSlug"`
+      } `json:"variables"`
+   }
+   value.Variables.ArticleUrlSlug = a.Path
+   value.Query = query_article
+   data, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.Post(
+      "https://api.audienceplayer.com/graphql/2/user",
+      "application/json", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var article OperationArticle
+   article.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &article, nil
+}
 
 func (o *OperationArticle) Title() string {
    return o.CanonicalTitle
@@ -102,50 +148,4 @@ func (o *OperationArticle) Unmarshal() error {
       asset.article = o
    }
    return nil
-}
-
-func (a Address) String() string {
-   return a.Path
-}
-
-func (a *Address) Set(s string) error {
-   s = strings.TrimPrefix(s, "https://")
-   s = strings.TrimPrefix(s, "www.")
-   s = strings.TrimPrefix(s, "cinemember.nl")
-   s = strings.TrimPrefix(s, "/nl")
-   a.Path = strings.TrimPrefix(s, "/")
-   return nil
-}
-
-type Address struct {
-   Path string
-}
-
-func (a Address) Article() (*OperationArticle, error) {
-   var value struct {
-      Query     string `json:"query"`
-      Variables struct {
-         ArticleUrlSlug string `json:"articleUrlSlug"`
-      } `json:"variables"`
-   }
-   value.Variables.ArticleUrlSlug = a.Path
-   value.Query = query_article
-   data, err := json.Marshal(value)
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(data),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var article OperationArticle
-   article.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &article, nil
 }

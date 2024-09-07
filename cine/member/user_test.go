@@ -1,13 +1,19 @@
 package member
 
 import (
+   "fmt"
    "os"
+   "reflect"
    "testing"
 )
 
 var size_tests = []any{
    &struct{}{},
    Address{},
+   ArticleAsset{},
+   OperationArticle{},
+   OperationPlay{},
+   OperationUser{},
 }
 
 func TestSize(t *testing.T) {
