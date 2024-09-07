@@ -6,8 +6,41 @@ import (
    "encoding/hex"
    "fmt"
    "os"
+   "reflect"
    "testing"
 )
+
+func TestToken(t *testing.T) {
+   username := os.Getenv("criterion_username")
+   if username == "" {
+      t.Fatal("Getenv")
+   }
+   password := os.Getenv("criterion_password")
+   var token AuthToken
+   err := token.New(username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("token.txt", token.Raw, os.ModePerm)
+}
+
+func TestSize(t *testing.T) {
+   size := reflect.TypeOf(&struct{}{}).Size()
+   for _, test := range size_tests {
+      if reflect.TypeOf(test).Size() > size {
+         fmt.Printf("*%T\n", test)
+      } else {
+         fmt.Printf("%T\n", test)
+      }
+   }
+}
+
+var size_tests = []any{
+   AuthToken{},
+   EmbedItem{},
+   VideoFile{},
+   VideoFiles{},
+}
 
 func TestVideo(t *testing.T) {
    var (
