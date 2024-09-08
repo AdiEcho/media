@@ -9,74 +9,15 @@ import (
    "strings"
 )
 
-func (*VideoFiles) DashError() error {
-   return errors.New("VideoFiles.Dash")
-}
-
-func (v VideoFiles) Dash() (*VideoFile, bool) {
-   for _, file := range v {
-      if file.Method == "dash" {
-         return &file, true
-      }
-   }
-   return nil, false
-}
-
-func (a *AuthToken) New(username, password string) error {
-   resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
-      "client_id":  {client_id},
-      "grant_type": {"password"},
-      "password":   {password},
-      "username":   {username},
-   })
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   a.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-func (a *AuthToken) Files(item *EmbedItem) (VideoFiles, error) {
-   req, err := http.NewRequest("", item.Links.Files.Href, nil)
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("authorization", "Bearer "+a.AccessToken)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var files VideoFiles
-   err = json.NewDecoder(resp.Body).Decode(&files)
-   if err != nil {
-      return nil, err
-   }
-   return files, nil
-}
-
 func (a *AuthToken) Video(slug string) (*EmbedItem, error) {
-   req, err := http.NewRequest("", "https://api.vhx.com/videos", nil)
+   req, err := http.NewRequest("", "https://api.vhx.com", nil)
    if err != nil {
       return nil, err
    }
-   req.URL.Path = func() string {
-      var b strings.Builder
-      b.WriteByte('/')
-      b.WriteString(slug)
-      b.WriteString("?url=")
-      b.WriteString(slug)
-      return b.String()
-   }()
+   req.URL.Path = "/videos/" + slug
+   req.URL.RawQuery = url.Values{
+      "url": {slug},
+   }.Encode()
    req.Header.Set("authorization", "Bearer "+a.AccessToken)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
@@ -167,4 +108,58 @@ func (v *VideoFile) RequestUrl() (string, bool) {
    b := []byte("https://drm.vhx.com/v2/widevine?token=")
    b = append(b, v.DrmAuthorizationToken...)
    return string(b), true
+}
+func (*VideoFiles) DashError() error {
+   return errors.New("VideoFiles.Dash")
+}
+
+func (v VideoFiles) Dash() (*VideoFile, bool) {
+   for _, file := range v {
+      if file.Method == "dash" {
+         return &file, true
+      }
+   }
+   return nil, false
+}
+
+func (a *AuthToken) New(username, password string) error {
+   resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
+      "client_id":  {client_id},
+      "grant_type": {"password"},
+      "password":   {password},
+      "username":   {username},
+   })
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   a.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a *AuthToken) Files(item *EmbedItem) (VideoFiles, error) {
+   req, err := http.NewRequest("", item.Links.Files.Href, nil)
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("authorization", "Bearer "+a.AccessToken)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   var files VideoFiles
+   err = json.NewDecoder(resp.Body).Decode(&files)
+   if err != nil {
+      return nil, err
+   }
+   return files, nil
 }

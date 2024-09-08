@@ -3,7 +3,7 @@
 1. criterionchannel.com/checkout
 2. monthly
 3. email
-   - 2024-6-8@mailsac.com
+   - mailsac.com
 4. confirm email
 5. password
 6. name on card
