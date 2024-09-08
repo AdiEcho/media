@@ -10,6 +10,55 @@ import (
    "testing"
 )
 
+func TestVideo(t *testing.T) {
+   var (
+      token AuthToken
+      err error
+   )
+   token.Raw, err = os.ReadFile("token.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = token.Unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   item, err := token.Video(video_test.slug)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", item)
+   name, err := text.Name(item)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%q\n", name)
+}
+
+func TestToken(t *testing.T) {
+   username := os.Getenv("criterion_username")
+   if username == "" {
+      t.Fatal("Getenv")
+   }
+   password := os.Getenv("criterion_password")
+   var token AuthToken
+   err := token.New(username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("token.txt", token.Raw, os.ModePerm)
+}
+
+var video_test = struct{
+   key_id string
+   slug string
+   url string
+}{
+   key_id: "e4576465a745213f336c1ef1bf5d513e",
+   slug: "my-dinner-with-andre",
+   url: "criterionchannel.com/videos/my-dinner-with-andre",
+}
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -24,7 +73,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var pssh widevine.Pssh
-   pssh.KeyId, err = hex.DecodeString(test.key_id)
+   pssh.KeyId, err = hex.DecodeString(video_test.key_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -41,7 +90,7 @@ func TestLicense(t *testing.T) {
    if err = token.Unmarshal(); err != nil {
       t.Fatal(err)
    }
-   item, err := token.Video(test.slug)
+   item, err := token.Video(video_test.slug)
    if err != nil {
       t.Fatal(err)
    }
@@ -58,20 +107,6 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-func TestToken(t *testing.T) {
-   username := os.Getenv("criterion_username")
-   if username == "" {
-      t.Fatal("Getenv")
-   }
-   password := os.Getenv("criterion_password")
-   var token AuthToken
-   err := token.New(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("token.txt", token.Raw, os.ModePerm)
 }
 
 func TestSize(t *testing.T) {
@@ -92,36 +127,3 @@ var size_tests = []any{
    VideoFiles{},
 }
 
-func TestVideo(t *testing.T) {
-   var (
-      token AuthToken
-      err error
-   )
-   token.Raw, err = os.ReadFile("token.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   if err = token.Unmarshal(); err != nil {
-      t.Fatal(err)
-   }
-   item, err := token.Video(test.slug)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", item)
-   name, err := text.Name(item)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%q\n", name)
-}
-
-var test = struct{
-   key_id string
-   slug string
-   url string
-}{
-   key_id: "e4576465a745213f336c1ef1bf5d513e",
-   slug: "my-dinner-with-andre",
-   url: "criterionchannel.com/videos/my-dinner-with-andre",
-}
