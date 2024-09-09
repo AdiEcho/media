@@ -76,6 +76,49 @@ func (s Stream) segment_template(
    return nil
 }
 
+func write_segment(to io.Writer, from io.Reader, key []byte) error {
+   if key == nil {
+      _, err := io.Copy(to, from)
+      if err != nil {
+         return err
+      }
+      return nil
+   }
+   var file sofia.File
+   err := file.Read(from)
+   if err != nil {
+      return err
+   }
+   track := file.MovieFragment.TrackFragment
+   if encrypt := track.SampleEncryption; encrypt != nil {
+      for i, data := range file.MediaData.Data(track) {
+         err := encrypt.Samples[i].DecryptCenc(data, key)
+         if err != nil {
+            return err
+         }
+      }
+   }
+   return file.Write(to)
+}
+
+func Dash(req *http.Request) ([]dash.Representation, error) {
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return dash.Unmarshal(data, resp.Request.URL)
+}
+
 func (s *Stream) Download(rep dash.Representation) error {
    if data, ok := rep.Widevine(); ok {
       read := bytes.NewReader(data)
@@ -137,24 +180,6 @@ func (s Stream) key() ([]byte, error) {
    return key, nil
 }
 
-func Dash(req *http.Request) ([]dash.Representation, error) {
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   data, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return dash.Unmarshal(data, resp.Request.URL)
-}
-
 func (s Stream) Create(ext string) (*os.File, error) {
    name, err := text.Name(s.Name)
    if err != nil {
@@ -201,31 +226,6 @@ var Forward = []ForwardedFor{
 {"Taiwan", "120.96.0.0"},
 {"United Kingdom", "25.0.0.0"},
 {"Venezuela", "190.72.0.0"},
-}
-
-func write_segment(to io.Writer, from io.Reader, key []byte) error {
-   if key == nil {
-      _, err := io.Copy(to, from)
-      if err != nil {
-         return err
-      }
-      return nil
-   }
-   var file sofia.File
-   err := file.Read(from)
-   if err != nil {
-      return err
-   }
-   track := file.MovieFragment.TrackFragment
-   if encrypt := track.SampleEncryption; encrypt != nil {
-      for i, data := range file.MediaData.Data(track) {
-         err := encrypt.Samples[i].DecryptCenc(data, key)
-         if err != nil {
-            return err
-         }
-      }
-   }
-   return file.Write(to)
 }
 
 func (s Stream) segment_base(
