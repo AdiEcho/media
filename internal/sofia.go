@@ -2,7 +2,9 @@ package internal
 
 import (
    "154.pages.dev/dash"
-   "154.pages.dev/sofia"
+   "154.pages.dev/sofia/container"
+   "154.pages.dev/sofia/pssh"
+   "154.pages.dev/sofia/sidx"
    "bytes"
    "errors"
    "io"
@@ -17,15 +19,15 @@ func write_segment(to io.Writer, from io.Reader, key []byte) error {
       }
       return nil
    }
-   var file sofia.File
+   var file container.File
    err := file.Read(from)
    if err != nil {
       return err
    }
    track := file.MovieFragment.TrackFragment
    if encrypt := track.SampleEncryption; encrypt != nil {
-      for i, data := range file.MediaData.Data(track) {
-         err := encrypt.Samples[i].DecryptCenc(data, key)
+      for i, text := range file.MediaData.Data(track) {
+         err := encrypt.Sample[i].DecryptCenc(text, key)
          if err != nil {
             return err
          }
@@ -37,7 +39,7 @@ func write_segment(to io.Writer, from io.Reader, key []byte) error {
 func (s *Stream) Download(rep dash.Representation) error {
    if data, ok := rep.Widevine(); ok {
       read := bytes.NewReader(data)
-      var pssh sofia.ProtectionSystemSpecificHeader
+      var pssh pssh.Box
       err := pssh.BoxHeader.Read(read)
       if err != nil {
          return err
@@ -63,7 +65,7 @@ func (s *Stream) Download(rep dash.Representation) error {
    return s.segment_template(ext, initial, base, rep.Media())
 }
 
-func write_sidx(req *http.Request, index dash.Range) ([]sofia.Reference, error) {
+func write_sidx(req *http.Request, index dash.Range) ([]sidx.Reference, error) {
    data, _ := index.MarshalText()
    req.Header.Set("range", "bytes=" + string(data))
    resp, err := http.DefaultClient.Do(req)
@@ -71,7 +73,7 @@ func write_sidx(req *http.Request, index dash.Range) ([]sofia.Reference, error) 
       return nil, err
    }
    defer resp.Body.Close()
-   var file sofia.File
+   var file container.File
    err = file.Read(resp.Body)
    if err != nil {
       return nil, err
@@ -80,7 +82,7 @@ func write_sidx(req *http.Request, index dash.Range) ([]sofia.Reference, error) 
 }
 
 func (s *Stream) init_protect(to io.Writer, from io.Reader) error {
-   var file sofia.File
+   var file container.File
    err := file.Read(from)
    if err != nil {
       return err
