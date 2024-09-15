@@ -35,7 +35,15 @@ func (s Stream) segment_template(
       if resp.StatusCode != http.StatusOK {
          return errors.New(resp.Status)
       }
-      err = s.init_protect(file, resp.Body)
+      buf, err := io.ReadAll(resp.Body)
+      if err != nil {
+         return err
+      }
+      buf, err = s.init_protect(buf)
+      if err != nil {
+         return err
+      }
+      _, err = file.Write(buf)
       if err != nil {
          return err
       }
@@ -65,7 +73,19 @@ func (s Stream) segment_template(
             resp.Write(&b)
             return errors.New(b.String())
          }
-         return write_segment(file, meter.Reader(resp), key)
+         buf, err := io.ReadAll(meter.Reader(resp))
+         if err != nil {
+            return err
+         }
+         buf, err = write_segment(buf, key)
+         if err != nil {
+            return err
+         }
+         _, err = file.Write(buf)
+         if err != nil {
+            return err
+         }
+         return nil
       }()
       if err != nil {
          return err
@@ -85,11 +105,11 @@ func Dash(req *http.Request) ([]dash.Representation, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   data, err := io.ReadAll(resp.Body)
+   buf, err := io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
-   return dash.Unmarshal(data, resp.Request.URL)
+   return dash.Unmarshal(buf, resp.Request.URL)
 }
 
 func (s Stream) key() ([]byte, error) {
@@ -175,12 +195,17 @@ var Forward = []ForwardedFor{
 func (s Stream) segment_base(
    ext string, base *dash.BaseUrl, segment *dash.SegmentBase,
 ) error {
-   data, _ := segment.Initialization.Range.MarshalText()
+   file, err := s.Create(ext)
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   buf, _ := segment.Initialization.Range.MarshalText()
    var req http.Request
    req.URL = base.Url
    req.Header = http.Header{}
    // need to use Set for lower case
-   req.Header.Set("range", "bytes=" + string(data))
+   req.Header.Set("range", "bytes=" + string(buf))
    resp, err := http.DefaultClient.Do(&req)
    if err != nil {
       return err
@@ -189,12 +214,15 @@ func (s Stream) segment_base(
    if resp.StatusCode != http.StatusPartialContent {
       return errors.New(resp.Status)
    }
-   file, err := s.Create(ext)
+   buf, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
-   defer file.Close()
-   err = s.init_protect(file, resp.Body)
+   buf, err = s.init_protect(buf)
+   if err != nil {
+      return err
+   }
+   _, err = file.Write(buf)
    if err != nil {
       return err
    }
@@ -214,9 +242,9 @@ func (s Stream) segment_base(
    for _, reference := range references {
       segment.IndexRange.Start = segment.IndexRange.End + 1
       segment.IndexRange.End += uint64(reference.ReferencedSize())
-      data, _ := segment.IndexRange.MarshalText()
+      buf, _ := segment.IndexRange.MarshalText()
       err := func() error {
-         req.Header.Set("range", "bytes=" + string(data))
+         req.Header.Set("range", "bytes=" + string(buf))
          resp, err := http.DefaultClient.Do(&req)
          if err != nil {
             return err
@@ -225,7 +253,19 @@ func (s Stream) segment_base(
          if resp.StatusCode != http.StatusPartialContent {
             return errors.New(resp.Status)
          }
-         return write_segment(file, meter.Reader(resp), key)
+         buf, err := io.ReadAll(meter.Reader(resp))
+         if err != nil {
+            return err
+         }
+         buf, err = write_segment(buf, key)
+         if err != nil {
+            return err
+         }
+         _, err = file.Write(buf)
+         if err != nil {
+            return err
+         }
+         return nil
       }()
       if err != nil {
          return err
