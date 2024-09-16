@@ -9,18 +9,6 @@ import (
    "strings"
 )
 
-func (a *Authorization) Unmarshal() error {
-   var value struct {
-      Data Authorization
-   }
-   err := json.Unmarshal(a.Raw, &value)
-   if err != nil {
-      return err
-   }
-   *a = value.Data
-   return nil
-}
-
 func (a *Authorization) Login(email, password string) error {
    body, err := json.Marshal(map[string]string{
       "email": email,
@@ -64,13 +52,19 @@ func (a *Authorization) Login(email, password string) error {
    return nil
 }
 
-func (a *Authorization) Refresh() error {
+func (a *Authorization) Unauth() error {
    req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return err
    }
-   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
-   req.Header.Set("authorization", "Bearer " + a.RefreshToken)
+   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
+   req.Header = http.Header{
+      "x-amcn-device-id": {"-"},
+      "x-amcn-language": {"en"},
+      "x-amcn-network": {"amcplus"},
+      "x-amcn-platform": {"web"},
+      "x-amcn-tenant": {"amcn"},
+   }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -86,19 +80,25 @@ func (a *Authorization) Refresh() error {
    return nil
 }
 
-func (a *Authorization) Unauth() error {
+func (a *Authorization) Unmarshal() error {
+   var value struct {
+      Data Authorization
+   }
+   err := json.Unmarshal(a.Raw, &value)
+   if err != nil {
+      return err
+   }
+   *a = value.Data
+   return nil
+}
+
+func (a *Authorization) Refresh() error {
    req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
    if err != nil {
       return err
    }
-   req.URL.Path = "/auth-orchestration-id/api/v1/unauth"
-   req.Header = http.Header{
-      "x-amcn-device-id": {"-"},
-      "x-amcn-language": {"en"},
-      "x-amcn-network": {"amcplus"},
-      "x-amcn-platform": {"web"},
-      "x-amcn-tenant": {"amcn"},
-   }
+   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
+   req.Header.Set("authorization", "Bearer " + a.RefreshToken)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err

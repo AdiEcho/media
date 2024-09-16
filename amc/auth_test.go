@@ -27,6 +27,7 @@ func TestLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
+   os.WriteFile("amc.txt", auth.Raw, os.ModePerm)
 }
 
 func TestRefresh(t *testing.T) {
@@ -34,7 +35,7 @@ func TestRefresh(t *testing.T) {
       auth Authorization
       err error
    )
-   auth.Raw, err = os.ReadFile("authorization.txt")
+   auth.Raw, err = os.ReadFile("amc.txt")
    if err != nil {
       t.Fatal(err)
    }
@@ -46,16 +47,15 @@ func TestRefresh(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("authorization.txt", auth.Raw, os.ModePerm)
+   os.WriteFile("amc.txt", auth.Raw, os.ModePerm)
 }
 
 func TestContent(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   var auth Authorization
-   auth.Raw, err = os.ReadFile(home + "/amc.txt")
+   var (
+      auth Authorization
+      err error
+   )
+   auth.Raw, err = os.ReadFile("amc.txt")
    if err != nil {
       t.Fatal(err)
    }

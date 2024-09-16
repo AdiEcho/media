@@ -5,28 +5,59 @@ import (
    "encoding/base64"
    "fmt"
    "os"
-   "reflect"
    "testing"
    "time"
 )
 
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
+func TestLicense(t *testing.T) {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      t.Fatal(err)
    }
-}
-
-var size_tests = []any{
-   Address{},
-   Authorization{},
-   ContentCompiler{},
-   CurrentVideo{},
-   Playback{},
+   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
+   if err != nil {
+      t.Fatal(err)
+   }
+   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range key_tests {
+      var pssh widevine.Pssh
+      pssh.KeyId, err = base64.StdEncoding.DecodeString(test.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var module widevine.Cdm
+      err = module.New(private_key, client_id, pssh.Marshal())
+      if err != nil {
+         t.Fatal(err)
+      }
+      var auth Authorization
+      auth.Raw, err = os.ReadFile("amc.txt")
+      if err != nil {
+         t.Fatal(err)
+      }
+      err = auth.Unmarshal()
+      if err != nil {
+         t.Fatal(err)
+      }
+      var web Address
+      err = web.Set(test.url)
+      if err != nil {
+         t.Fatal(err)
+      }
+      play, err := auth.Playback(web.Nid)
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, err := module.Key(play, pssh.KeyId)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
+   }
 }
 
 var key_tests = []struct{
@@ -58,53 +89,5 @@ func TestPath(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Println(web)
-   }
-}
-
-func TestLicense(t *testing.T) {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      t.Fatal(err)
-   }
-   private_key, err := os.ReadFile(home + "/widevine/private_key.pem")
-   if err != nil {
-      t.Fatal(err)
-   }
-   client_id, err := os.ReadFile(home + "/widevine/client_id.bin")
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range key_tests {
-      var pssh widevine.Pssh
-      pssh.KeyId, err = base64.StdEncoding.DecodeString(test.key_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      var module widevine.Cdm
-      module.New(private_key, client_id, pssh.Marshal())
-      var auth Authorization
-      auth.Raw, err = os.ReadFile(home + "/amc.txt")
-      if err != nil {
-         t.Fatal(err)
-      }
-      err = auth.Unmarshal()
-      if err != nil {
-         t.Fatal(err)
-      }
-      var web Address
-      err = web.Set(test.url)
-      if err != nil {
-         t.Fatal(err)
-      }
-      play, err := auth.Playback(web.Nid)
-      if err != nil {
-         t.Fatal(err)
-      }
-      key, err := module.Key(play, pssh.KeyId)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%x\n", key)
-      time.Sleep(time.Second)
    }
 }

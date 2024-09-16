@@ -8,6 +8,15 @@ import (
    "time"
 )
 
+func (c *ContentCompiler) Video() (*CurrentVideo, bool) {
+   for _, child := range c.Children {
+      if child.Type == "video-player-ap" {
+         return &child.Properties.CurrentVideo, true
+      }
+   }
+   return nil, false
+}
+
 func cache_hash() string {
    return base64.StdEncoding.EncodeToString([]byte("ff="))
 }
@@ -40,15 +49,6 @@ type ContentCompiler struct {
       }
       Type string
    }
-}
-
-func (c *ContentCompiler) Video() (*CurrentVideo, bool) {
-   for _, child := range c.Children {
-      if child.Type == "video-player-ap" {
-         return &child.Properties.CurrentVideo, true
-      }
-   }
-   return nil, false
 }
 
 type CurrentVideo struct {
