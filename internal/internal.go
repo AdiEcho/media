@@ -94,24 +94,6 @@ func (s Stream) segment_template(
    return nil
 }
 
-func Dash(req *http.Request) ([]dash.Representation, error) {
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   buf, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return dash.Unmarshal(buf, resp.Request.URL)
-}
-
 func (s Stream) key() ([]byte, error) {
    if s.key_id == nil {
       return nil, nil
@@ -282,4 +264,22 @@ type Stream struct {
    Poster widevine.Poster
    pssh []byte
    key_id []byte
+}
+
+func Dash(req *http.Request) ([]dash.Representation, error) {
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   buf, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return dash.Unmarshal(buf, resp.Request.URL)
 }

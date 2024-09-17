@@ -10,6 +10,34 @@ import (
    "net/http"
 )
 
+func (s *Stream) Download(rep dash.Representation) error {
+   if buf, ok := rep.Widevine(); ok {
+      var box pssh.Box
+      n, err := box.BoxHeader.Decode(buf)
+      if err != nil {
+         return err
+      }
+      err = box.Read(buf[n:])
+      if err != nil {
+         return err
+      }
+      s.pssh = box.Data
+   }
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
+   base, ok := rep.GetBaseUrl()
+   if !ok {
+      return errors.New("Representation.GetBaseUrl")
+   }
+   if rep.SegmentBase != nil {
+      return s.segment_base(ext, base, rep.SegmentBase)
+   }
+   initial, _ := rep.Initialization()
+   return s.segment_template(ext, initial, base, rep.Media())
+}
+
 func write_segment(buf, key []byte) ([]byte, error) {
    if key == nil {
       return buf, nil
@@ -76,32 +104,4 @@ func write_sidx(req *http.Request, index dash.Range) ([]sidx.Reference, error) {
       return nil, err
    }
    return file.Sidx.Reference, nil
-}
-
-func (s *Stream) Download(rep dash.Representation) error {
-   if buf, ok := rep.Widevine(); ok {
-      var box pssh.Box
-      n, err := box.BoxHeader.Decode(buf)
-      if err != nil {
-         return err
-      }
-      err = box.Read(buf[n:])
-      if err != nil {
-         return err
-      }
-      s.pssh = box.Data
-   }
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Representation.Ext")
-   }
-   base, ok := rep.GetBaseUrl()
-   if !ok {
-      return errors.New("Representation.GetBaseUrl")
-   }
-   if rep.SegmentBase != nil {
-      return s.segment_base(ext, base, rep.SegmentBase)
-   }
-   initial, _ := rep.Initialization()
-   return s.segment_template(ext, initial, base, rep.Media())
 }
