@@ -1,8 +1,6 @@
 # criterion
 
-1. troubleshoot mode
-2. forget about this site
-3. criterionchannel.com/checkout
+1. criterionchannel.com/checkout
 2. monthly
 3. email
    - mailsac.com
@@ -10,18 +8,15 @@
 5. password
 6. name on card
 7. card number
-   - they check the card number, so must use new card
-   - $15
+   - CANNOT USE VCC
 8. expiration
 9. CVC
 10. zip
 11. start subscription
-12. The card has insufficient funds to complete the purchase
-13. VPN
-14. start subscription
-15. The credit card was declined
-16. no paypal
-17. filed ticket with privacy.com
+12. criterionchannel.com/settings/manage/billing
+13. manager subscription
+14. cancel subscription
+15. confirm cancellation
 
 ## android
 
