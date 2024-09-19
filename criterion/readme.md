@@ -21,6 +21,7 @@
 14. start subscription
 15. The credit card was declined
 16. no paypal
+17. filed ticket with privacy.com
 
 ## android
 
