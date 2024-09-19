@@ -1,6 +1,8 @@
 # criterion
 
-1. criterionchannel.com/checkout
+1. troubleshoot mode
+2. forget about this site
+3. criterionchannel.com/checkout
 2. monthly
 3. email
    - mailsac.com
@@ -9,10 +11,16 @@
 6. name on card
 7. card number
    - they check the card number, so must use new card
+   - $15
 8. expiration
 9. CVC
 10. zip
 11. start subscription
+12. The card has insufficient funds to complete the purchase
+13. VPN
+14. start subscription
+15. The credit card was declined
+16. no paypal
 
 ## android
 
