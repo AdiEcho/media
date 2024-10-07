@@ -10,6 +10,33 @@ import (
    "net/http"
 )
 
+func (s *Stream) init_protect(buf []byte) ([]byte, error) {
+   var file container.File
+   err := file.Read(buf)
+   if err != nil {
+      return nil, err
+   }
+   if moov, ok := file.GetMoov(); ok {
+      for _, value := range moov.Pssh {
+         if value.Widevine() {
+            s.pssh = value.Data
+         }
+         copy(value.BoxHeader.Type[:], "free") // Firefox
+      }
+      description := moov.Trak.Mdia.Minf.Stbl.Stsd
+      if sinf, ok := description.Sinf(); ok {
+         s.key_id = sinf.Schi.Tenc.DefaultKid[:]
+         // Firefox
+         copy(sinf.BoxHeader.Type[:], "free")
+         if sample, ok := description.SampleEntry(); ok {
+            // Firefox
+            copy(sample.BoxHeader.Type[:], sinf.Frma.DataFormat[:])
+         }
+      }
+   }
+   return file.Append(nil)
+}
+
 func (s *Stream) Download(rep dash.Representation) error {
    if buf, ok := rep.Widevine(); ok {
       var box pssh.Box
@@ -53,33 +80,6 @@ func write_segment(buf, key []byte) ([]byte, error) {
          err = senc.Sample[i].DecryptCenc(text, key)
          if err != nil {
             return nil, err
-         }
-      }
-   }
-   return file.Append(nil)
-}
-
-func (s *Stream) init_protect(buf []byte) ([]byte, error) {
-   var file container.File
-   err := file.Read(buf)
-   if err != nil {
-      return nil, err
-   }
-   if moov, ok := file.GetMoov(); ok {
-      for _, value := range moov.Pssh {
-         if value.Widevine() {
-            s.pssh = value.Data
-         }
-         copy(value.BoxHeader.Type[:], "free") // Firefox
-      }
-      description := moov.Trak.Mdia.Minf.Stbl.Stsd
-      if sinf, ok := description.Sinf(); ok {
-         s.key_id = sinf.Schi.Tenc.DefaultKid[:]
-         // Firefox
-         copy(sinf.BoxHeader.Type[:], "free")
-         if sample, ok := description.SampleEntry(); ok {
-            // Firefox
-            copy(sample.BoxHeader.Type[:], sinf.Frma.DataFormat[:])
          }
       }
    }
