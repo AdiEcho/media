@@ -40,9 +40,16 @@ then:
 
 ~~~
 8833fca4ae7b4e63bda181b8ae3c03e2
-8009e9df60a64f4b899cdd91bff83985
-007df557d2d3451dbdea88a9590d7323
+
 e4c39c957b8f469eaf7b27519f915ca8
+maxWidth="3840" maxHeight="2160"
+
+8009e9df60a64f4b899cdd91bff83985
+maxWidth="1920" maxHeight="1080"
+
+007df557d2d3451dbdea88a9590d7323
+maxWidth="960" maxHeight="540"
+contentType="audio"
 ~~~
 
 so we are requesting multiple key IDs? which one is the right one? this one:
@@ -132,3 +139,21 @@ then:
    },
 }
 ~~~
+
+result:
+
+~~~
+maxWidth="3840" maxHeight="2160"
+e4c39c957b8f469eaf7b27519f915ca8
+FAIL
+
+maxWidth="1920" maxHeight="1080"
+8009e9df60a64f4b899cdd91bff83985
+FAIL
+
+maxWidth="960" maxHeight="540"
+contentType="audio"
+007df557d2d3451dbdea88a9590d7323
+PASS
+~~~
+
