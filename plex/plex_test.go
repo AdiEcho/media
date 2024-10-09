@@ -1,7 +1,7 @@
 package plex
 
 import (
-   "154.pages.dev/widevine"
+   "41.neocities.org/widevine"
    "encoding/hex"
    "fmt"
    "os"

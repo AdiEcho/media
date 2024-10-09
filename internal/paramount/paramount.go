@@ -9,56 +9,6 @@ import (
    "sort"
 )
 
-func (f *flags) do_read() error {
-   location, err := os.ReadFile(f.paramount + "/location.txt")
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest("", string(location), nil)
-   if err != nil {
-      return err
-   }
-   reps, err := internal.Dash(req)
-   if err != nil {
-      return err
-   }
-   sort.Slice(reps, func(i, j int) bool {
-      return reps[i].Bandwidth < reps[j].Bandwidth
-   })
-   for _, rep := range reps {
-      if rep.GetAdaptationSet().GetPeriod().Id == "0" {
-         switch f.representation {
-         case "":
-            if _, ok := rep.Ext(); ok {
-               fmt.Print(rep, "\n\n")
-            }
-         case rep.Id:
-            var app paramount.AppToken
-            err := app.ComCbsApp()
-            if err != nil {
-               return err
-            }
-            f.s.Poster, err = app.Session(f.paramount)
-            if err != nil {
-               return err
-            }
-            var item paramount.VideoItem
-            item.Raw, err = os.ReadFile(f.paramount + "/item.txt")
-            if err != nil {
-               return err
-            }
-            err = item.Unmarshal()
-            if err != nil {
-               return err
-            }
-            f.s.Name = &item
-            return f.s.Download(rep)
-         }
-      }
-   }
-   return nil
-}
-
 func (f *flags) do_write() error {
    os.Mkdir(f.paramount, os.ModePerm)
    location, err := paramount.Location(f.paramount)
@@ -85,4 +35,54 @@ func (f *flags) do_write() error {
       return err
    }
    return os.WriteFile(f.paramount + "/item.txt", item.Raw, os.ModePerm)
+}
+
+func (f *flags) do_read() error {
+   location, err := os.ReadFile(f.paramount + "/location.txt")
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest("", string(location), nil)
+   if err != nil {
+      return err
+   }
+   reps, err := internal.Dash(req)
+   if err != nil {
+      return err
+   }
+   sort.Slice(reps, func(i, j int) bool {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
+   for _, rep := range reps {
+      if rep.GetAdaptationSet().GetPeriod().Id == "0" {
+         switch f.representation {
+         case "":
+            if _, ok := rep.Ext(); ok {
+               fmt.Print(&rep, "\n\n")
+            }
+         case rep.Id:
+            var app paramount.AppToken
+            err := app.ComCbsApp()
+            if err != nil {
+               return err
+            }
+            f.s.Poster, err = app.Session(f.paramount)
+            if err != nil {
+               return err
+            }
+            var item paramount.VideoItem
+            item.Raw, err = os.ReadFile(f.paramount + "/item.txt")
+            if err != nil {
+               return err
+            }
+            err = item.Unmarshal()
+            if err != nil {
+               return err
+            }
+            f.s.Name = &item
+            return f.s.Download(rep)
+         }
+      }
+   }
+   return nil
 }

@@ -1,9 +1,9 @@
 package internal
 
 import (
-   "154.pages.dev/dash"
    "154.pages.dev/text"
-   "154.pages.dev/widevine"
+   "41.neocities.org/dash"
+   "41.neocities.org/widevine"
    "encoding/base64"
    "errors"
    "io"

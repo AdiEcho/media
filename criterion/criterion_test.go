@@ -2,7 +2,7 @@ package criterion
 
 import (
    "154.pages.dev/text"
-   "154.pages.dev/widevine"
+   "41.neocities.org/widevine"
    "encoding/hex"
    "fmt"
    "os"

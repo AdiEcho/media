@@ -9,27 +9,23 @@ import (
    "time"
 )
 
-func (v *VideoItem) Season() int {
-   return int(v.SeasonNum)
-}
-
-func (v *VideoItem) Episode() int {
-   return int(v.EpisodeNum)
-}
-
-func (v *VideoItem) Title() string {
-   return v.Label
-}
-
-func (v *VideoItem) Year() int {
-   return v.AirDateIso.Year()
-}
-
-func (v *VideoItem) Show() string {
-   if v.MediaType == "Full Episode" {
-      return v.SeriesTitle
+func (v *VideoItem) Unmarshal() error {
+   var value struct {
+      Error string
+      ItemList []VideoItem
    }
-   return ""
+   err := json.Unmarshal(v.Raw, &value)
+   if err != nil {
+      return err
+   }
+   if value.Error != "" {
+      return errors.New(value.Error)
+   }
+   if len(value.ItemList) == 0 {
+      return errors.New(`"itemList":[]`)
+   }
+   *v = value.ItemList[0]
+   return nil
 }
 
 // must use app token and IP address for correct location
@@ -74,18 +70,25 @@ type VideoItem struct {
    Raw []byte `json:"-"`
 }
 
-func (v *VideoItem) Unmarshal() error {
-   var value struct {
-      Error string
-      ItemList []VideoItem
+func (v *VideoItem) Season() int {
+   return int(v.SeasonNum)
+}
+
+func (v *VideoItem) Episode() int {
+   return int(v.EpisodeNum)
+}
+
+func (v *VideoItem) Title() string {
+   return v.Label
+}
+
+func (v *VideoItem) Year() int {
+   return v.AirDateIso.Year()
+}
+
+func (v *VideoItem) Show() string {
+   if v.MediaType == "Full Episode" {
+      return v.SeriesTitle
    }
-   err := json.Unmarshal(v.Raw, &value)
-   if err != nil {
-      return err
-   }
-   if value.Error != "" {
-      return errors.New(value.Error)
-   }
-   *v = value.ItemList[0]
-   return nil
+   return ""
 }
