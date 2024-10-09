@@ -22,7 +22,10 @@ func Location(content_id string) (string, error) {
       b = append(b, content_id...)
       return string(b)
    }()
-   req.URL.RawQuery = "formats=MPEG-DASH"
+   req.URL.RawQuery = url.Values{
+      "assetTypes": {"DASH_CENC_HDR10|DASH_CENC_PRECON"},
+      "formats": {"MPEG-DASH"},
+   }.Encode()
    resp, err := http.DefaultTransport.RoundTrip(req)
    if err != nil {
       return "", err

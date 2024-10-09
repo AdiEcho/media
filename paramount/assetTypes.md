@@ -1,4 +1,4 @@
-# paramount
+# assetTypes
 
 this seems to work with everything:
 
