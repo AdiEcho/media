@@ -13,47 +13,59 @@
 </head>
   <body>
     <nav>
-        <a href="..">154.pages.dev/media</a>/rtbf<span class="navbar-right">
-          v1.9.6 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+        <a href="..">41.neocities.org/media</a>/rtbf<span class="navbar-right">
+          v1.9.7 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package rtbf</h2>
-<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/rtbf&#34;</span></pre>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;41.neocities.org/media/rtbf&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
   <li>
-      <a href="#AccountLogin">type AccountLogin</a>
+      <a href="#Address">type Address</a>
       <ul>
-          <li><a href="#AccountLogin.Marshal">func (a AccountLogin) Marshal() ([]byte, error)</a></li>
-          <li><a href="#AccountLogin.New">func (a *AccountLogin) New(id, password string) error</a></li>
-          <li><a href="#AccountLogin.Token">func (a AccountLogin) Token() (*WebToken, error)</a></li>
-          <li><a href="#AccountLogin.Unmarshal">func (a *AccountLogin) Unmarshal(text []byte) error</a></li>
+          <li><a href="#Address.Page">func (a Address) Page() (*AuvioPage, error)</a></li>
+          <li><a href="#Address.Set">func (a *Address) Set(s string) error</a></li>
+          <li><a href="#Address.String">func (a Address) String() string</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#AuvioAuth">type AuvioAuth</a>
+      <ul>
+          <li><a href="#AuvioAuth.Entitlement">func (a *AuvioAuth) Entitlement(asset_id string) (*Entitlement, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#AuvioLogin">type AuvioLogin</a>
+      <ul>
+          <li><a href="#AuvioLogin.New">func (a *AuvioLogin) New(id, password string) error</a></li>
+          <li><a href="#AuvioLogin.Token">func (a *AuvioLogin) Token() (*WebToken, error)</a></li>
+          <li><a href="#AuvioLogin.Unmarshal">func (a *AuvioLogin) Unmarshal() error</a></li>
           </ul>
       </li>
   <li>
       <a href="#AuvioPage">type AuvioPage</a>
       <ul>
-          <li><a href="#NewPage">func NewPage(path string) (*AuvioPage, error)</a></li>
-          <li><a href="#AuvioPage.Episode">func (a AuvioPage) Episode() int</a></li>
-          <li><a href="#AuvioPage.Season">func (a AuvioPage) Season() int</a></li>
-          <li><a href="#AuvioPage.Show">func (a AuvioPage) Show() string</a></li>
-          <li><a href="#AuvioPage.Title">func (a AuvioPage) Title() string</a></li>
-          <li><a href="#AuvioPage.Year">func (AuvioPage) Year() int</a></li>
+          <li><a href="#AuvioPage.GetAssetId">func (a *AuvioPage) GetAssetId() (string, bool)</a></li>
           </ul>
       </li>
   <li>
       <a href="#Entitlement">type Entitlement</a>
       <ul>
-          <li><a href="#Entitlement.DASH">func (e Entitlement) DASH() (string, bool)</a></li>
+          <li><a href="#Entitlement.Dash">func (e *Entitlement) Dash() (string, bool)</a></li>
           <li><a href="#Entitlement.RequestHeader">func (Entitlement) RequestHeader() (http.Header, error)</a></li>
-          <li><a href="#Entitlement.RequestUrl">func (e Entitlement) RequestUrl() (string, bool)</a></li>
+          <li><a href="#Entitlement.RequestUrl">func (e *Entitlement) RequestUrl() (string, bool)</a></li>
           <li><a href="#Entitlement.UnwrapResponse">func (Entitlement) UnwrapResponse(b []byte) ([]byte, error)</a></li>
           <li><a href="#Entitlement.WrapRequest">func (Entitlement) WrapRequest(b []byte) ([]byte, error)</a></li>
           </ul>
       </li>
   <li>
-      <a href="#GigyaLogin">type GigyaLogin</a>
+      <a href="#Namer">type Namer</a>
       <ul>
-          <li><a href="#GigyaLogin.Entitlement">func (g GigyaLogin) Entitlement(page *AuvioPage) (*Entitlement, error)</a></li>
+          <li><a href="#Namer.Episode">func (n Namer) Episode() int</a></li>
+          <li><a href="#Namer.Season">func (n Namer) Season() int</a></li>
+          <li><a href="#Namer.Show">func (n Namer) Show() string</a></li>
+          <li><a href="#Namer.Title">func (n Namer) Title() string</a></li>
+          <li><a href="#Namer.Year">func (Namer) Year() int</a></li>
           </ul>
       </li>
   <li>
@@ -71,50 +83,49 @@
   <li>
       <a href="#WebToken">type WebToken</a>
       <ul>
-          <li><a href="#WebToken.Login">func (w WebToken) Login() (*GigyaLogin, error)</a></li>
+          <li><a href="#WebToken.Auth">func (w *WebToken) Auth() (*AuvioAuth, error)</a></li>
           </ul>
       </li>
   </ul><h3 id="pkg-types">Types</h3>
-  <h3 id="AccountLogin">type AccountLogin</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">AccountLogin</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="AccountLogin.ErrorMessage"><span class="nx">ErrorMessage</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span id="AccountLogin.SessionInfo"><span class="nx">SessionInfo</span></span>  <span class="kd">struct</span> <span class="p">{</span>
-		<span id="AccountLogin.CookieValue"><span class="nx">CookieValue</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span class="p">}</span>
+  <h3 id="Address">type Address</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Address</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Address.Path"><span class="nx">Path</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 <span class="p">}</span></pre>
-    <h4 id="AccountLogin.Marshal">func (AccountLogin) Marshal</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AccountLogin"><span class="nx">AccountLogin</span></a><span class="p">)</span> <span class="nf">Marshal</span><span class="p">()</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="AccountLogin.New">func (*AccountLogin) New</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AccountLogin"><span class="nx">AccountLogin</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">password</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="AccountLogin.Token">func (AccountLogin) Token</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AccountLogin"><span class="nx">AccountLogin</span></a><span class="p">)</span> <span class="nf">Token</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#WebToken"><span class="nx">WebToken</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="AccountLogin.Unmarshal">func (*AccountLogin) Unmarshal</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AccountLogin"><span class="nx">AccountLogin</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+    <h4 id="Address.Page">func (Address) Page</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Page</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#AuvioPage"><span class="nx">AuvioPage</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Address.Set">func (*Address) Set</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Address.String">func (Address) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h3 id="AuvioAuth">type AuvioAuth</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">AuvioAuth</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="AuvioAuth.SessionToken"><span class="nx">SessionToken</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="AuvioAuth.Entitlement">func (*AuvioAuth) Entitlement</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AuvioAuth"><span class="nx">AuvioAuth</span></a><span class="p">)</span> <span class="nf">Entitlement</span><span class="p">(</span><span class="nx">asset_id</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Entitlement"><span class="nx">Entitlement</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h3 id="AuvioLogin">type AuvioLogin</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">AuvioLogin</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="AuvioLogin.CookieValue"><span class="nx">CookieValue</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="AuvioLogin.Raw"><span class="nx">Raw</span></span>         <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
+<span class="p">}</span></pre>
+    <h4 id="AuvioLogin.New">func (*AuvioLogin) New</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AuvioLogin"><span class="nx">AuvioLogin</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">password</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="AuvioLogin.Token">func (*AuvioLogin) Token</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AuvioLogin"><span class="nx">AuvioLogin</span></a><span class="p">)</span> <span class="nf">Token</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#WebToken"><span class="nx">WebToken</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="AuvioLogin.Unmarshal">func (*AuvioLogin) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AuvioLogin"><span class="nx">AuvioLogin</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h3 id="AuvioPage">type AuvioPage</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">AuvioPage</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="AuvioPage.Content"><span class="nx">Content</span></span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="AuvioPage.AssetId"><span class="nx">AssetId</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="AuvioPage.Media"><span class="nx">Media</span></span>   <span class="o">*</span><span class="kd">struct</span> <span class="p">{</span>
 		<span id="AuvioPage.AssetId"><span class="nx">AssetId</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-		<span id="AuvioPage.Media"><span class="nx">Media</span></span>   <span class="kd">struct</span> <span class="p">{</span>
-			<span id="AuvioPage.AssetId"><span class="nx">AssetId</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-		<span class="p">}</span>
-		<span id="AuvioPage.Subtitle"><span class="nx">Subtitle</span></span> <a href="#Subtitle"><span class="nx">Subtitle</span></a>
-		<span id="AuvioPage.Title"><span class="nx">Title</span></span>    <a href="#Title"><span class="nx">Title</span></a>
 	<span class="p">}</span>
+	<span id="AuvioPage.Subtitle"><span class="nx">Subtitle</span></span> <a href="#Subtitle"><span class="nx">Subtitle</span></a>
+	<span id="AuvioPage.Title"><span class="nx">Title</span></span>    <a href="#Title"><span class="nx">Title</span></a>
 <span class="p">}</span></pre>
-    <h4 id="NewPage">func NewPage</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="nf">NewPage</span><span class="p">(</span><span class="nx">path</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#AuvioPage"><span class="nx">AuvioPage</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="AuvioPage.Episode">func (AuvioPage) Episode</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AuvioPage"><span class="nx">AuvioPage</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h4 id="AuvioPage.Season">func (AuvioPage) Season</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AuvioPage"><span class="nx">AuvioPage</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h4 id="AuvioPage.Show">func (AuvioPage) Show</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AuvioPage"><span class="nx">AuvioPage</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="AuvioPage.Title">func (AuvioPage) Title</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AuvioPage"><span class="nx">AuvioPage</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="AuvioPage.Year">func (AuvioPage) Year</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#AuvioPage"><span class="nx">AuvioPage</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <p>its just not available from what I can tell
-<h3 id="Entitlement">type Entitlement</h3>
+    <h4 id="AuvioPage.GetAssetId">func (*AuvioPage) GetAssetId</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#AuvioPage"><span class="nx">AuvioPage</span></a><span class="p">)</span> <span class="nf">GetAssetId</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h3 id="Entitlement">type Entitlement</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Entitlement</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Entitlement.AssetId"><span class="nx">AssetId</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span id="Entitlement.PlayToken"><span class="nx">PlayToken</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
@@ -123,23 +134,32 @@
 		<span id="Entitlement.MediaLocator"><span class="nx">MediaLocator</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span class="p">}</span>
 <span class="p">}</span></pre>
-    <h4 id="Entitlement.DASH">func (Entitlement) DASH</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <a href="#Entitlement"><span class="nx">Entitlement</span></a><span class="p">)</span> <span class="nf">DASH</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+    <h4 id="Entitlement.Dash">func (*Entitlement) Dash</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><a href="#Entitlement"><span class="nx">Entitlement</span></a><span class="p">)</span> <span class="nf">Dash</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h4 id="Entitlement.RequestHeader">func (Entitlement) RequestHeader</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Entitlement"><span class="nx">Entitlement</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Entitlement.RequestUrl">func (Entitlement) RequestUrl</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <a href="#Entitlement"><span class="nx">Entitlement</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="Entitlement.RequestUrl">func (*Entitlement) RequestUrl</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><a href="#Entitlement"><span class="nx">Entitlement</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h4 id="Entitlement.UnwrapResponse">func (Entitlement) UnwrapResponse</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Entitlement"><span class="nx">Entitlement</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Entitlement.WrapRequest">func (Entitlement) WrapRequest</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Entitlement"><span class="nx">Entitlement</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h3 id="GigyaLogin">type GigyaLogin</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">GigyaLogin</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="GigyaLogin.SessionToken"><span class="nx">SessionToken</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+  <h3 id="Namer">type Namer</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Namer</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Namer.Page"><span class="nx">Page</span></span> <span class="o">*</span><a href="#AuvioPage"><span class="nx">AuvioPage</span></a>
 <span class="p">}</span></pre>
-    <h4 id="GigyaLogin.Entitlement">func (GigyaLogin) Entitlement</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">g</span> <a href="#GigyaLogin"><span class="nx">GigyaLogin</span></a><span class="p">)</span> <span class="nf">Entitlement</span><span class="p">(</span><span class="nx">page</span> <span class="o">*</span><a href="#AuvioPage"><span class="nx">AuvioPage</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Entitlement"><span class="nx">Entitlement</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h3 id="Subtitle">type Subtitle</h3>
+    <h4 id="Namer.Episode">func (Namer) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="Namer.Season">func (Namer) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="Namer.Show">func (Namer) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Namer.Title">func (Namer) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Namer.Year">func (Namer) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <p>its just not available from what I can tell
+<h3 id="Subtitle">type Subtitle</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Subtitle</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Subtitle.Episode"><span class="nx">Episode</span></span>  <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
 	<span id="Subtitle.Subtitle"><span class="nx">Subtitle</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
@@ -162,8 +182,8 @@ json.data.content.title = &quot;I care a lot&quot;;
 	<span id="WebToken.ErrorMessage"><span class="nx">ErrorMessage</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span id="WebToken.IdToken"><span class="nx">IdToken</span></span>      <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;id_token&#34;`</span>
 <span class="p">}</span></pre>
-    <h4 id="WebToken.Login">func (WebToken) Login</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <a href="#WebToken"><span class="nx">WebToken</span></a><span class="p">)</span> <span class="nf">Login</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#GigyaLogin"><span class="nx">GigyaLogin</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <h4 id="WebToken.Auth">func (*WebToken) Auth</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <span class="o">*</span><a href="#WebToken"><span class="nx">WebToken</span></a><span class="p">)</span> <span class="nf">Auth</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#AuvioAuth"><span class="nx">AuvioAuth</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   </main>
     <hr>
     <footer>

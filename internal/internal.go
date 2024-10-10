@@ -223,7 +223,7 @@ func (s Stream) segment_base(
    defer transport.Set(true)
    for _, reference := range references {
       segment.IndexRange.Start = segment.IndexRange.End + 1
-      segment.IndexRange.End += uint64(reference.ReferencedSize())
+      segment.IndexRange.End += uint64(reference.Size())
       buf, _ := segment.IndexRange.MarshalText()
       err := func() error {
          req.Header.Set("range", "bytes=" + string(buf))

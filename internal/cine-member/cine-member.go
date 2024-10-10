@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/media/cine/member"
-   "154.pages.dev/media/internal"
+   "41.neocities.org/media/cine/member"
+   "41.neocities.org/media/internal"
    "errors"
    "fmt"
    "net/http"

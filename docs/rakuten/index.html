@@ -13,21 +13,21 @@
 </head>
   <body>
     <nav>
-        <a href="..">154.pages.dev/media</a>/rakuten<span class="navbar-right">
-          v1.9.6 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+        <a href="..">41.neocities.org/media</a>/rakuten<span class="navbar-right">
+          v1.9.7 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package rakuten</h2>
-<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/rakuten&#34;</span></pre>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;41.neocities.org/media/rakuten&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
   <li>
       <a href="#Address">type Address</a>
       <ul>
-          <li><a href="#Address.FHD">func (a Address) FHD() OnDemand</a></li>
-          <li><a href="#Address.HD">func (a Address) HD() OnDemand</a></li>
-          <li><a href="#Address.Movie">func (a Address) Movie() (*GizmoMovie, error)</a></li>
+          <li><a href="#Address.Fhd">func (a *Address) Fhd() *OnDemand</a></li>
+          <li><a href="#Address.Hd">func (a *Address) Hd() *OnDemand</a></li>
+          <li><a href="#Address.Movie">func (a *Address) Movie() (*GizmoMovie, error)</a></li>
           <li><a href="#Address.Set">func (a *Address) Set(s string) error</a></li>
-          <li><a href="#Address.String">func (a Address) String() string</a></li>
+          <li><a href="#Address.String">func (a *Address) String() string</a></li>
           </ul>
       </li>
   <li>
@@ -36,23 +36,21 @@
           <li><a href="#GizmoMovie.Episode">func (GizmoMovie) Episode() int</a></li>
           <li><a href="#GizmoMovie.Season">func (GizmoMovie) Season() int</a></li>
           <li><a href="#GizmoMovie.Show">func (GizmoMovie) Show() string</a></li>
-          <li><a href="#GizmoMovie.Title">func (g GizmoMovie) Title() string</a></li>
-          <li><a href="#GizmoMovie.Year">func (g GizmoMovie) Year() int</a></li>
+          <li><a href="#GizmoMovie.Title">func (g *GizmoMovie) Title() string</a></li>
+          <li><a href="#GizmoMovie.Year">func (g *GizmoMovie) Year() int</a></li>
           </ul>
       </li>
   <li>
       <a href="#OnDemand">type OnDemand</a>
       <ul>
-          <li><a href="#OnDemand.Info">func (o OnDemand) Info() (*StreamInfo, error)</a></li>
+          <li><a href="#OnDemand.Info">func (o *OnDemand) Info() (*StreamInfo, error)</a></li>
           </ul>
       </li>
   <li>
       <a href="#StreamInfo">type StreamInfo</a>
       <ul>
-          <li><a href="#StreamInfo.Marshal">func (s StreamInfo) Marshal() ([]byte, error)</a></li>
           <li><a href="#StreamInfo.RequestHeader">func (StreamInfo) RequestHeader() (http.Header, error)</a></li>
-          <li><a href="#StreamInfo.RequestUrl">func (s StreamInfo) RequestUrl() (string, bool)</a></li>
-          <li><a href="#StreamInfo.Unmarshal">func (s *StreamInfo) Unmarshal(text []byte) error</a></li>
+          <li><a href="#StreamInfo.RequestUrl">func (s *StreamInfo) RequestUrl() (string, bool)</a></li>
           <li><a href="#StreamInfo.UnwrapResponse">func (StreamInfo) UnwrapResponse(b []byte) ([]byte, error)</a></li>
           <li><a href="#StreamInfo.WrapRequest">func (StreamInfo) WrapRequest(b []byte) ([]byte, error)</a></li>
           </ul>
@@ -60,18 +58,20 @@
   </ul><h3 id="pkg-types">Types</h3>
   <h3 id="Address">type Address</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Address</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="c1">// contains filtered or unexported fields
-</span><span class="c1"></span><span class="p">}</span></pre>
-    <h4 id="Address.FHD">func (Address) FHD</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">FHD</span><span class="p">()</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a></pre>
-  <h4 id="Address.HD">func (Address) HD</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">HD</span><span class="p">()</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a></pre>
-  <h4 id="Address.Movie">func (Address) Movie</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Movie</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+	<span id="Address.ClassificationId"><span class="nx">ClassificationId</span></span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span id="Address.ContentId"><span class="nx">ContentId</span></span>        <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="Address.MarketCode"><span class="nx">MarketCode</span></span>       <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Address.Fhd">func (*Address) Fhd</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Fhd</span><span class="p">()</span> <span class="o">*</span><a href="#OnDemand"><span class="nx">OnDemand</span></a></pre>
+  <h4 id="Address.Hd">func (*Address) Hd</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Hd</span><span class="p">()</span> <span class="o">*</span><a href="#OnDemand"><span class="nx">OnDemand</span></a></pre>
+  <h4 id="Address.Movie">func (*Address) Movie</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Movie</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Address.Set">func (*Address) Set</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="Address.String">func (Address) String</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Address.String">func (*Address) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h3 id="GizmoMovie">type GizmoMovie</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">GizmoMovie</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="GizmoMovie.Data"><span class="nx">Data</span></span> <span class="kd">struct</span> <span class="p">{</span>
@@ -85,10 +85,10 @@
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h4 id="GizmoMovie.Show">func (GizmoMovie) Show</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="GizmoMovie.Title">func (GizmoMovie) Title</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">g</span> <a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="GizmoMovie.Year">func (GizmoMovie) Year</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">g</span> <a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="GizmoMovie.Title">func (*GizmoMovie) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">g</span> <span class="o">*</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="GizmoMovie.Year">func (*GizmoMovie) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">g</span> <span class="o">*</span><a href="#GizmoMovie"><span class="nx">GizmoMovie</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
   <h3 id="OnDemand">type OnDemand</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">OnDemand</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="OnDemand.AudioLanguage"><span class="nx">AudioLanguage</span></span>            <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;audio_language&#34;`</span>
@@ -103,24 +103,20 @@
 	<span id="OnDemand.SubtitleLanguage"><span class="nx">SubtitleLanguage</span></span>         <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;subtitle_language&#34;`</span>
 	<span id="OnDemand.VideoType"><span class="nx">VideoType</span></span>                <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;video_type&#34;`</span>
 <span class="p">}</span></pre>
-    <h4 id="OnDemand.Info">func (OnDemand) Info</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">)</span> <span class="nf">Info</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <h4 id="OnDemand.Info">func (*OnDemand) Info</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <span class="o">*</span><a href="#OnDemand"><span class="nx">OnDemand</span></a><span class="p">)</span> <span class="nf">Info</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <p>geo block
 <h3 id="StreamInfo">type StreamInfo</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">StreamInfo</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="StreamInfo.LicenseUrl"><span class="nx">LicenseUrl</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;license_url&#34;`</span>
-	<span id="StreamInfo.URL"><span class="nx">URL</span></span>          <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span id="StreamInfo.Url"><span class="nx">Url</span></span>          <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span id="StreamInfo.VideoQuality"><span class="nx">VideoQuality</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;video_quality&#34;`</span>
 <span class="p">}</span></pre>
-    <h4 id="StreamInfo.Marshal">func (StreamInfo) Marshal</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">Marshal</span><span class="p">()</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="StreamInfo.RequestHeader">func (StreamInfo) RequestHeader</h4>
+    <h4 id="StreamInfo.RequestHeader">func (StreamInfo) RequestHeader</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <p>github.com/mitmproxy/mitmproxy/blob/main/mitmproxy/contentviews/protobuf.py
-<h4 id="StreamInfo.RequestUrl">func (StreamInfo) RequestUrl</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h4 id="StreamInfo.Unmarshal">func (*StreamInfo) Unmarshal</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+<h4 id="StreamInfo.RequestUrl">func (*StreamInfo) RequestUrl</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
   <h4 id="StreamInfo.UnwrapResponse">func (StreamInfo) UnwrapResponse</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#StreamInfo"><span class="nx">StreamInfo</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="StreamInfo.WrapRequest">func (StreamInfo) WrapRequest</h4>

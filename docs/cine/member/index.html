@@ -13,130 +13,123 @@
 </head>
   <body>
     <nav>
-        <a href="../..">154.pages.dev/media</a>/<a href="..">cine</a>/member<span class="navbar-right">
-          v1.9.6 | <a href="../..">Root</a> | <a href="#pkg-index">Index</a></span>
+        <a href="../..">41.neocities.org/media</a>/<a href="..">cine</a>/member<span class="navbar-right">
+          v1.9.7 | <a href="../..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package member</h2>
-<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;154.pages.dev/media/cine/member&#34;</span></pre>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;41.neocities.org/media/cine/member&#34;</span></pre>
 <h3 id="pkg-index">Index</h3>
 <ul>
+  <li>
+      <a href="#Address">type Address</a>
+      <ul>
+          <li><a href="#Address.Article">func (a *Address) Article() (*OperationArticle, error)</a></li>
+          <li><a href="#Address.Set">func (a *Address) Set(s string) error</a></li>
+          <li><a href="#Address.String">func (a *Address) String() string</a></li>
+          </ul>
+      </li>
   <li>
       <a href="#ArticleAsset">type ArticleAsset</a>
       </li>
   <li>
-      <a href="#ArticleSlug">type ArticleSlug</a>
+      <a href="#OperationArticle">type OperationArticle</a>
       <ul>
-          <li><a href="#ArticleSlug.Article">func (a ArticleSlug) Article() (*DataArticle, error)</a></li>
-          <li><a href="#ArticleSlug.Set">func (a *ArticleSlug) Set(s string) error</a></li>
-          <li><a href="#ArticleSlug.String">func (a ArticleSlug) String() string</a></li>
+          <li><a href="#OperationArticle.Episode">func (*OperationArticle) Episode() int</a></li>
+          <li><a href="#OperationArticle.Film">func (o *OperationArticle) Film() (*ArticleAsset, bool)</a></li>
+          <li><a href="#OperationArticle.FilmError">func (*OperationArticle) FilmError() error</a></li>
+          <li><a href="#OperationArticle.Season">func (*OperationArticle) Season() int</a></li>
+          <li><a href="#OperationArticle.Show">func (*OperationArticle) Show() string</a></li>
+          <li><a href="#OperationArticle.Title">func (o *OperationArticle) Title() string</a></li>
+          <li><a href="#OperationArticle.Unmarshal">func (o *OperationArticle) Unmarshal() error</a></li>
+          <li><a href="#OperationArticle.Year">func (o *OperationArticle) Year() int</a></li>
           </ul>
       </li>
   <li>
-      <a href="#AssetPlay">type AssetPlay</a>
+      <a href="#OperationPlay">type OperationPlay</a>
       <ul>
-          <li><a href="#AssetPlay.DASH">func (a AssetPlay) DASH() (string, bool)</a></li>
+          <li><a href="#OperationPlay.Dash">func (o *OperationPlay) Dash() (string, bool)</a></li>
+          <li><a href="#OperationPlay.DashError">func (*OperationPlay) DashError() error</a></li>
+          <li><a href="#OperationPlay.Unmarshal">func (o *OperationPlay) Unmarshal() error</a></li>
           </ul>
       </li>
   <li>
-      <a href="#Authenticate">type Authenticate</a>
+      <a href="#OperationUser">type OperationUser</a>
       <ul>
-          <li><a href="#Authenticate.New">func (a *Authenticate) New(email, password string) error</a></li>
-          <li><a href="#Authenticate.Play">func (a Authenticate) Play(asset *ArticleAsset) (*AssetPlay, error)</a></li>
-          <li><a href="#Authenticate.Unmarshal">func (a *Authenticate) Unmarshal() error</a></li>
-          </ul>
-      </li>
-  <li>
-      <a href="#DataArticle">type DataArticle</a>
-      <ul>
-          <li><a href="#DataArticle.Film">func (d DataArticle) Film() (*ArticleAsset, bool)</a></li>
-          </ul>
-      </li>
-  <li>
-      <a href="#Encoding">type Encoding</a>
-      <ul>
-          <li><a href="#Encoding.Episode">func (Encoding) Episode() int</a></li>
-          <li><a href="#Encoding.Marshal">func (e Encoding) Marshal() ([]byte, error)</a></li>
-          <li><a href="#Encoding.Season">func (Encoding) Season() int</a></li>
-          <li><a href="#Encoding.Show">func (Encoding) Show() string</a></li>
-          <li><a href="#Encoding.Title">func (e Encoding) Title() string</a></li>
-          <li><a href="#Encoding.Unmarshal">func (e *Encoding) Unmarshal(text []byte) error</a></li>
-          <li><a href="#Encoding.Year">func (e Encoding) Year() int</a></li>
+          <li><a href="#OperationUser.New">func (o *OperationUser) New(email, password string) error</a></li>
+          <li><a href="#OperationUser.Play">func (o *OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error)</a></li>
+          <li><a href="#OperationUser.Unmarshal">func (o *OperationUser) Unmarshal() error</a></li>
           </ul>
       </li>
   </ul><h3 id="pkg-types">Types</h3>
+  <h3 id="Address">type Address</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Address</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Address.Path"><span class="nx">Path</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Address.Article">func (*Address) Article</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Article</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#OperationArticle"><span class="nx">OperationArticle</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Address.Set">func (*Address) Set</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Address.String">func (*Address) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
   <h3 id="ArticleAsset">type ArticleAsset</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">ArticleAsset</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="ArticleAsset.ID"><span class="nx">ID</span></span>         <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span id="ArticleAsset.Id"><span class="nx">Id</span></span>         <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
 	<span id="ArticleAsset.LinkedType"><span class="nx">LinkedType</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;linked_type&#34;`</span>
 	<span class="c1">// contains filtered or unexported fields
 </span><span class="c1"></span><span class="p">}</span></pre>
-    <h3 id="ArticleSlug">type ArticleSlug</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">ArticleSlug</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-    <h4 id="ArticleSlug.Article">func (ArticleSlug) Article</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#ArticleSlug"><span class="nx">ArticleSlug</span></a><span class="p">)</span> <span class="nf">Article</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#DataArticle"><span class="nx">DataArticle</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="ArticleSlug.Set">func (*ArticleSlug) Set</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#ArticleSlug"><span class="nx">ArticleSlug</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">s</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <p><a href="https://www.cinemember.nl/nl/films/american-hustle">https://www.cinemember.nl/nl/films/american-hustle</a>
-<h4 id="ArticleSlug.String">func (ArticleSlug) String</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#ArticleSlug"><span class="nx">ArticleSlug</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h3 id="AssetPlay">type AssetPlay</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">AssetPlay</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="AssetPlay.Entitlements"><span class="nx">Entitlements</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
-		<span id="AssetPlay.Manifest"><span class="nx">Manifest</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-		<span id="AssetPlay.Protocol"><span class="nx">Protocol</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+    <h3 id="OperationArticle">type OperationArticle</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">OperationArticle</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="OperationArticle.Assets"><span class="nx">Assets</span></span>         <span class="p">[]</span><span class="o">*</span><a href="#ArticleAsset"><span class="nx">ArticleAsset</span></a>
+	<span id="OperationArticle.CanonicalTitle"><span class="nx">CanonicalTitle</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;canonical_title&#34;`</span>
+	<span id="OperationArticle.Id"><span class="nx">Id</span></span>             <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span id="OperationArticle.Metas"><span class="nx">Metas</span></span>          <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="OperationArticle.Key"><span class="nx">Key</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="OperationArticle.Value"><span class="nx">Value</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span class="p">}</span>
+	<span id="OperationArticle.Raw"><span class="nx">Raw</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a> <span class="s">`json:&#34;-&#34;`</span>
 <span class="p">}</span></pre>
-    <h4 id="AssetPlay.DASH">func (AssetPlay) DASH</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#AssetPlay"><span class="nx">AssetPlay</span></a><span class="p">)</span> <span class="nf">DASH</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h3 id="Authenticate">type Authenticate</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">Authenticate</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="Authenticate.Data"><span class="nx">Data</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
-	<span id="Authenticate.V"><span class="nx">V</span></span>    <span class="kd">struct</span> <span class="p">{</span>
-		<span id="Authenticate.Data"><span class="nx">Data</span></span> <span class="kd">struct</span> <span class="p">{</span>
-			<span id="Authenticate.UserAuthenticate"><span class="nx">UserAuthenticate</span></span> <span class="kd">struct</span> <span class="p">{</span>
-				<span id="Authenticate.AccessToken"><span class="nx">AccessToken</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;access_token&#34;`</span>
-			<span class="p">}</span>
-		<span class="p">}</span>
+    <h4 id="OperationArticle.Episode">func (*OperationArticle) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="o">*</span><a href="#OperationArticle"><span class="nx">OperationArticle</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="OperationArticle.Film">func (*OperationArticle) Film</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <span class="o">*</span><a href="#OperationArticle"><span class="nx">OperationArticle</span></a><span class="p">)</span> <span class="nf">Film</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#ArticleAsset"><span class="nx">ArticleAsset</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="OperationArticle.FilmError">func (*OperationArticle) FilmError</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="o">*</span><a href="#OperationArticle"><span class="nx">OperationArticle</span></a><span class="p">)</span> <span class="nf">FilmError</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="OperationArticle.Season">func (*OperationArticle) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="o">*</span><a href="#OperationArticle"><span class="nx">OperationArticle</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="OperationArticle.Show">func (*OperationArticle) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="o">*</span><a href="#OperationArticle"><span class="nx">OperationArticle</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="OperationArticle.Title">func (*OperationArticle) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <span class="o">*</span><a href="#OperationArticle"><span class="nx">OperationArticle</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="OperationArticle.Unmarshal">func (*OperationArticle) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <span class="o">*</span><a href="#OperationArticle"><span class="nx">OperationArticle</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="OperationArticle.Year">func (*OperationArticle) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <span class="o">*</span><a href="#OperationArticle"><span class="nx">OperationArticle</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h3 id="OperationPlay">type OperationPlay</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">OperationPlay</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="OperationPlay.Entitlements"><span class="nx">Entitlements</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="OperationPlay.Manifest"><span class="nx">Manifest</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span id="OperationPlay.Protocol"><span class="nx">Protocol</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 	<span class="p">}</span>
+	<span id="OperationPlay.Raw"><span class="nx">Raw</span></span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a> <span class="s">`json:&#34;-&#34;`</span>
 <span class="p">}</span></pre>
-    <h4 id="Authenticate.New">func (*Authenticate) New</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="Authenticate.Play">func (Authenticate) Play</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">Play</span><span class="p">(</span><span class="nx">asset</span> <span class="o">*</span><a href="#ArticleAsset"><span class="nx">ArticleAsset</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#AssetPlay"><span class="nx">AssetPlay</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <p>geo block - VPN not x-forwarded-for
-<h4 id="Authenticate.Unmarshal">func (*Authenticate) Unmarshal</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Authenticate"><span class="nx">Authenticate</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h3 id="DataArticle">type DataArticle</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">DataArticle</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="DataArticle.Assets"><span class="nx">Assets</span></span>         <span class="p">[]</span><span class="o">*</span><a href="#ArticleAsset"><span class="nx">ArticleAsset</span></a>
-	<span id="DataArticle.CanonicalTitle"><span class="nx">CanonicalTitle</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;canonical_title&#34;`</span>
-	<span id="DataArticle.ID"><span class="nx">ID</span></span>             <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
-	<span id="DataArticle.Metas"><span class="nx">Metas</span></span>          <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
-		<span id="DataArticle.Key"><span class="nx">Key</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-		<span id="DataArticle.Value"><span class="nx">Value</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-	<span class="p">}</span>
+    <h4 id="OperationPlay.Dash">func (*OperationPlay) Dash</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <span class="o">*</span><a href="#OperationPlay"><span class="nx">OperationPlay</span></a><span class="p">)</span> <span class="nf">Dash</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="OperationPlay.DashError">func (*OperationPlay) DashError</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="o">*</span><a href="#OperationPlay"><span class="nx">OperationPlay</span></a><span class="p">)</span> <span class="nf">DashError</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="OperationPlay.Unmarshal">func (*OperationPlay) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <span class="o">*</span><a href="#OperationPlay"><span class="nx">OperationPlay</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h3 id="OperationUser">type OperationUser</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">OperationUser</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="OperationUser.AccessToken"><span class="nx">AccessToken</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;access_token&#34;`</span>
+	<span id="OperationUser.Raw"><span class="nx">Raw</span></span>         <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a> <span class="s">`json:&#34;-&#34;`</span>
 <span class="p">}</span></pre>
-    <h4 id="DataArticle.Film">func (DataArticle) Film</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DataArticle"><span class="nx">DataArticle</span></a><span class="p">)</span> <span class="nf">Film</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#ArticleAsset"><span class="nx">ArticleAsset</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h3 id="Encoding">type Encoding</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">Encoding</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="Encoding.Article"><span class="nx">Article</span></span> <span class="o">*</span><a href="#DataArticle"><span class="nx">DataArticle</span></a>
-	<span id="Encoding.Play"><span class="nx">Play</span></span>    <span class="o">*</span><a href="#AssetPlay"><span class="nx">AssetPlay</span></a>
-<span class="p">}</span></pre>
-    <h4 id="Encoding.Episode">func (Encoding) Episode</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Encoding"><span class="nx">Encoding</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h4 id="Encoding.Marshal">func (Encoding) Marshal</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <a href="#Encoding"><span class="nx">Encoding</span></a><span class="p">)</span> <span class="nf">Marshal</span><span class="p">()</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Encoding.Season">func (Encoding) Season</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Encoding"><span class="nx">Encoding</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h4 id="Encoding.Show">func (Encoding) Show</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Encoding"><span class="nx">Encoding</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="Encoding.Title">func (Encoding) Title</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <a href="#Encoding"><span class="nx">Encoding</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="Encoding.Unmarshal">func (*Encoding) Unmarshal</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><a href="#Encoding"><span class="nx">Encoding</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="Encoding.Year">func (Encoding) Year</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <a href="#Encoding"><span class="nx">Encoding</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+    <h4 id="OperationUser.New">func (*OperationUser) New</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <span class="o">*</span><a href="#OperationUser"><span class="nx">OperationUser</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="OperationUser.Play">func (*OperationUser) Play</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <span class="o">*</span><a href="#OperationUser"><span class="nx">OperationUser</span></a><span class="p">)</span> <span class="nf">Play</span><span class="p">(</span><span class="nx">asset</span> <span class="o">*</span><a href="#ArticleAsset"><span class="nx">ArticleAsset</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#OperationPlay"><span class="nx">OperationPlay</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <p>geo block, not x-forwarded-for
+<h4 id="OperationUser.Unmarshal">func (*OperationUser) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">o</span> <span class="o">*</span><a href="#OperationUser"><span class="nx">OperationUser</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   </main>
     <hr>
     <footer>
