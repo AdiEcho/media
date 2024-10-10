@@ -1,8 +1,8 @@
 package internal
 
 import (
-   "154.pages.dev/text"
    "41.neocities.org/dash"
+   "41.neocities.org/text"
    "41.neocities.org/widevine"
    "encoding/base64"
    "errors"

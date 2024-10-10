@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/media/internal"
-   "154.pages.dev/media/roku"
+   "41.neocities.org/media/internal"
+   "41.neocities.org/media/roku"
    "fmt"
    "net/http"
    "os"

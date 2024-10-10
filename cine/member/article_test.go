@@ -1,7 +1,7 @@
 package member
 
 import (
-   "154.pages.dev/text"
+   "41.neocities.org/text"
    "fmt"
    "testing"
 )

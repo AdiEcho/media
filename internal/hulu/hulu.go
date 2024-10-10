@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/media/hulu"
-   "154.pages.dev/media/internal"
+   "41.neocities.org/media/hulu"
+   "41.neocities.org/media/internal"
    "fmt"
    "net/http"
    "os"

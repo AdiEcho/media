@@ -1,10 +1,10 @@
 package internal
 
 import (
-   "154.pages.dev/sofia/container"
-   "154.pages.dev/sofia/pssh"
-   "154.pages.dev/sofia/sidx"
    "41.neocities.org/dash"
+   "41.neocities.org/sofia/container"
+   "41.neocities.org/sofia/pssh"
+   "41.neocities.org/sofia/sidx"
    "errors"
    "io"
    "net/http"

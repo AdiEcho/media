@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/media/amc"
-   "154.pages.dev/media/internal"
+   "41.neocities.org/media/amc"
+   "41.neocities.org/media/internal"
    "fmt"
    "net/http"
    "os"

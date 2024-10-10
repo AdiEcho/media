@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/media/max"
-   "154.pages.dev/media/internal"
+   "41.neocities.org/media/max"
+   "41.neocities.org/media/internal"
    "fmt"
    "net/http"
    "os"

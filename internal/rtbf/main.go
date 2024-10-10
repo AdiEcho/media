@@ -1,9 +1,9 @@
 package main
 
 import (
-   "154.pages.dev/media/internal"
-   "154.pages.dev/media/rtbf"
-   "154.pages.dev/text"
+   "41.neocities.org/media/internal"
+   "41.neocities.org/media/rtbf"
+   "41.neocities.org/text"
    "flag"
    "os"
    "path/filepath"

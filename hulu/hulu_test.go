@@ -1,7 +1,7 @@
 package hulu
 
 import (
-   "154.pages.dev/text"
+   "41.neocities.org/text"
    "41.neocities.org/widevine"
    "encoding/hex"
    "fmt"

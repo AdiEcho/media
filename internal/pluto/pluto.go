@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/media/internal"
-   "154.pages.dev/media/pluto"
+   "41.neocities.org/media/internal"
+   "41.neocities.org/media/pluto"
    "errors"
    "fmt"
    "net/http"

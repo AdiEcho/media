@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/media/internal"
-   "154.pages.dev/media/mubi"
+   "41.neocities.org/media/internal"
+   "41.neocities.org/media/mubi"
    "fmt"
    "net/http"
    "os"

@@ -1,7 +1,7 @@
 package main
 
 import (
-   "154.pages.dev/media/internal"
+   "41.neocities.org/media/internal"
    "fmt"
    "net/http"
    "sort"

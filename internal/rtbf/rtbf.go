@@ -1,8 +1,8 @@
 package main
 
 import (
-   "154.pages.dev/media/rtbf"
-   "154.pages.dev/media/internal"
+   "41.neocities.org/media/rtbf"
+   "41.neocities.org/media/internal"
    "errors"
    "fmt"
    "net/http"
