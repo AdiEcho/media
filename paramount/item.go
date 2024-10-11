@@ -9,25 +9,6 @@ import (
    "time"
 )
 
-func (v *VideoItem) Unmarshal() error {
-   var value struct {
-      Error string
-      ItemList []VideoItem
-   }
-   err := json.Unmarshal(v.Raw, &value)
-   if err != nil {
-      return err
-   }
-   if value.Error != "" {
-      return errors.New(value.Error)
-   }
-   if len(value.ItemList) == 0 {
-      return errors.New(`"itemList":[]`)
-   }
-   *v = value.ItemList[0]
-   return nil
-}
-
 // must use app token and IP address for correct location
 func (at *AppToken) Item(content_id string) (*VideoItem, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
@@ -58,6 +39,25 @@ func (at *AppToken) Item(content_id string) (*VideoItem, error) {
       return nil, err
    }
    return &item, nil
+}
+
+func (v *VideoItem) Unmarshal() error {
+   var value struct {
+      Error string
+      ItemList []VideoItem
+   }
+   err := json.Unmarshal(v.Raw, &value)
+   if err != nil {
+      return err
+   }
+   if value.Error != "" {
+      return errors.New(value.Error)
+   }
+   if len(value.ItemList) == 0 {
+      return errors.New(`"itemList":[]`)
+   }
+   *v = value.ItemList[0]
+   return nil
 }
 
 type VideoItem struct {

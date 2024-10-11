@@ -11,7 +11,7 @@ import (
 
 func (f *flags) do_write() error {
    os.Mkdir(f.paramount, os.ModePerm)
-   location, err := paramount.Location(f.paramount)
+   location, err := paramount.Location(f.paramount, f.intl)
    if err != nil {
       return err
    }

@@ -16,7 +16,7 @@ import (
 // USA
 // formats=MPEG-DASH&assetTypes=DASH_CENC
 // passes response status, Period and ContentProtection tests
-func Location(content_id string) (string, error) {
+func Location(content_id string, intl bool) (string, error) {
    req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {
       return "", err
@@ -30,10 +30,12 @@ func Location(content_id string) (string, error) {
       b = append(b, content_id...)
       return string(b)
    }()
-   req.URL.RawQuery = url.Values{
-      "assetTypes": {"DASH_CENC_HDR10|DASH_CENC_PRECON"},
-      "formats": {"MPEG-DASH"},
-   }.Encode()
+   query := url.Values{}
+   query.Set("formats", "MPEG-DASH")
+   if !intl {
+      query.Set("assetTypes", "DASH_CENC")
+   }
+   req.URL.RawQuery = query.Encode()
    resp, err := http.DefaultTransport.RoundTrip(req)
    if err != nil {
       return "", err

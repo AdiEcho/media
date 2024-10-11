@@ -1,6 +1,7 @@
 package paramount
 
 import (
+   "41.neocities.org/text"
    "fmt"
    "testing"
    "time"
@@ -22,7 +23,11 @@ func TestItemUsa(t *testing.T) {
          if err != nil {
             t.Fatal(err)
          }
-         fmt.Printf("%+v\n", item)
+         name, err := text.Name(item)
+         if err != nil {
+            t.Fatal(err)
+         }
+         fmt.Printf("%q\n", name)
          time.Sleep(time.Second)
       }
    }
@@ -47,5 +52,3 @@ func TestItemIntl(t *testing.T) {
       time.Sleep(time.Second)
    }
 }
-
-

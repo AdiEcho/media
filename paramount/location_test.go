@@ -9,7 +9,7 @@ import (
 func TestMpdUsa(t *testing.T) {
    for _, test := range tests {
       if test.location == "" {
-         mpd, err := Location(test.content_id)
+         mpd, err := Location(test.content_id, false)
          if err != nil {
             t.Fatal(err)
          }
@@ -22,7 +22,7 @@ func TestMpdUsa(t *testing.T) {
 func TestMpdIntl(t *testing.T) {
    for _, test := range tests {
       if test.location != "" {
-         mpd, err := Location(test.content_id)
+         mpd, err := Location(test.content_id, true)
          if err != nil {
             t.Fatal(err)
          }

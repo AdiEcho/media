@@ -13,47 +13,12 @@ import (
    "strings"
 )
 
-func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
+const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
 
 const (
    aid = 2198311517
    cms_account_id = "dJ5BDC"
 )
-
-func (n Number) MarshalText() ([]byte, error) {
-   return strconv.AppendInt(nil, int64(n), 10), nil
-}
-
-func (n *Number) UnmarshalText(text []byte) error {
-   if len(text) >= 1 {
-      i, err := strconv.ParseInt(string(text), 10, 64)
-      if err != nil {
-         return err
-      }
-      *n = Number(i)
-   }
-   return nil
-}
-
-type Number int64
-
-// 15.0.28
-func (at *AppToken) ComCbsApp() error {
-   return at.New("a624d7b175f5626b")
-}
-
-// 15.0.28
-func (at *AppToken) ComCbsCa() error {
-   return at.New("c0b1d5d6ed27a3f6")
-}
-
-const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
 
 func pad(b []byte) []byte {
    length := aes.BlockSize - len(b) % aes.BlockSize
@@ -61,23 +26,6 @@ func pad(b []byte) []byte {
       b = append(b, high)
    }
    return b
-}
-
-func (s *SessionToken) RequestUrl() (string, bool) {
-   return s.Url, true
-}
-
-type SessionToken struct {
-   LsSession string `json:"ls_session"`
-   Url string
-}
-
-func (s *SessionToken) RequestHeader() (http.Header, error) {
-   head := http.Header{
-      "authorization": {"Bearer " + s.LsSession},
-      "content-type": {"application/x-protobuf"},
-   }
-   return head, nil
 }
 
 type AppToken struct {
@@ -139,4 +87,56 @@ func (at *AppToken) New(app_secret string) error {
       "at": {base64.StdEncoding.EncodeToString(dst)},
    }
    return nil
+}
+
+// 15.0.28
+func (at *AppToken) ComCbsApp() error {
+   return at.New("a624d7b175f5626b")
+}
+
+// 15.0.28
+func (at *AppToken) ComCbsCa() error {
+   return at.New("c0b1d5d6ed27a3f6")
+}
+
+func (n Number) MarshalText() ([]byte, error) {
+   return strconv.AppendInt(nil, int64(n), 10), nil
+}
+
+func (n *Number) UnmarshalText(text []byte) error {
+   if len(text) >= 1 {
+      i, err := strconv.ParseInt(string(text), 10, 64)
+      if err != nil {
+         return err
+      }
+      *n = Number(i)
+   }
+   return nil
+}
+
+type Number int64
+
+func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (s *SessionToken) RequestUrl() (string, bool) {
+   return s.Url, true
+}
+
+type SessionToken struct {
+   LsSession string `json:"ls_session"`
+   Url string
+}
+
+func (s *SessionToken) RequestHeader() (http.Header, error) {
+   head := http.Header{
+      "authorization": {"Bearer " + s.LsSession},
+      "content-type": {"application/x-protobuf"},
+   }
+   return head, nil
 }
