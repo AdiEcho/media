@@ -9,6 +9,13 @@ import (
 )
 
 // must use IP address for correct location
+// France
+// formats=MPEG-DASH
+// passes response status, Period and ContentProtection tests
+
+// USA
+// formats=MPEG-DASH&assetTypes=DASH_CENC
+// passes response status, Period and ContentProtection tests
 func Location(content_id string) (string, error) {
    req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {

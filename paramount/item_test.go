@@ -5,7 +5,7 @@ import (
    "testing"
 )
 
-func TestItemUs(t *testing.T) {
+func TestItemUsa(t *testing.T) {
    var app AppToken
    err := app.ComCbsApp()
    if err != nil {

@@ -9,20 +9,36 @@ import (
    "time"
 )
 
-var tests = map[string]struct{
+// need all of these for `assetTypes` test
+var tests = []struct{
    content_id string
-   key_id string
+   location string
    url string
+   pssh string
 }{
-   "fr": {
-      content_id: "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
-      key_id: "06c3b7eea1ce45779faee2abc8d01a55",
-      url: "paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
+   {
+      content_id: "Oo75PgAbcmt9xqqn1AMoBAfo190Cfhqi",
+      location: "USA",
+      pssh: "CAESEN0cslc7YUkjpJQF4kNr8kciIE9vNzVQZ0FiY210OXhxcW4xQU1vQkFmbzE5MENmaHFpOAE=",
+      url: "paramountplus.com/movies/video/Oo75PgAbcmt9xqqn1AMoBAfo190Cfhqi",
    },
-   "us": {
+   {
       content_id: "esJvFlqdrcS_kFHnpxSuYp449E7tTexD",
-      key_id: "1fde0154d72a4f45912b34f0ce0777eb",
+      location: "USA",
+      pssh: "CAESEB/eAVTXKk9FkSs08M4Hd+siIGVzSnZGbHFkcmNTX2tGSG5weFN1WXA0NDlFN3RUZXhEOAE=",
       url: "paramountplus.com/shows/video/esJvFlqdrcS_kFHnpxSuYp449E7tTexD",
+   },
+   {
+      content_id: "rZ59lcp4i2fU4dAaZJ_iEgKqVg_ogrIf",
+      location: "USA",
+      pssh: "CAESEEq8qIOB3k9gix8d/DX7SDAiIHJaNTlsY3A0aTJmVTRkQWFaSl9pRWdLcVZnX29ncklmOAE=",
+      url: "cbs.com/shows/video/rZ59lcp4i2fU4dAaZJ_iEgKqVg_ogrIf",
+   },
+   {
+      content_id: "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
+      location: "France",
+      pssh: "CAESEAbDt+6hzkV3n67iq8jQGlUiIFk4c0t2YjJiSW9lWDRYWmJzZmphZEY0R2hOUHdjalRROAE=",
+      url: "paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
    },
 }
 
