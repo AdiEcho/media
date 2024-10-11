@@ -10,37 +10,6 @@ import (
    "time"
 )
 
-type asset_type [2]string
-
-func (a asset_type) String() string {
-   var data []byte
-   if a[0] != "" {
-      data = append(data, a[0]...)
-   }
-   if a[1] != "" {
-      if a[1] != a[0] {
-         if data != nil {
-            data = append(data, '|')
-         }
-         data = append(data, a[1]...)
-      }
-   }
-   if data != nil {
-      data = append([]byte("&assetTypes="), data...)
-   }
-   return string(data)
-}
-
-const france = "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ"
-
-func TestSlyGuy(t *testing.T) {
-   for _, a := range sly_guy {
-      for _, b := range sly_guy {
-         fmt.Printf("%q\n", asset_type{a, b})
-      }
-   }
-}
-
 func get(id, asset string) error {
    req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {
@@ -67,7 +36,7 @@ func get(id, asset string) error {
 }
 
 // github.com/matthuisman/slyguy.addons/blob/master/slyguy.paramount.plus/resources/lib/api.py
-var sly_guy = []string{
+var asset_types = []string{
    "",
    "DASH_CENC",
    "DASH_CENC_HDR10",
@@ -77,65 +46,35 @@ var sly_guy = []string{
    "DASH_TA",
 }
 
-var asset_types = []struct{
-   france bool
-   value string
-}{
-   //{false, "&assetTypes=DASH_CENC_HDR10|DASH_CENC"},
-   //{false, "&assetTypes=DASH_CENC_HDR10|DASH_CENC_PS4"},
-   //{false, "&assetTypes=DASH_CENC_HDR10|DASH_LIVE"},
-   //{false, "&assetTypes=DASH_CENC_HDR10|DASH_TA"},
-   //{false, "&assetTypes=DASH_CENC_PS4|DASH_CENC"},
-   //{false, "&assetTypes=DASH_CENC_PS4|DASH_CENC_HDR10"},
-   //{false, "&assetTypes=DASH_CENC_PS4|DASH_LIVE"},
-   //{false, "&assetTypes=DASH_CENC_PS4|DASH_TA"},
-   //{false, "&assetTypes=DASH_CENC|DASH_CENC_HDR10"},
-   //{false, "&assetTypes=DASH_CENC|DASH_CENC_PS4"},
-   //{false, "&assetTypes=DASH_CENC|DASH_LIVE"},
-   //{false, "&assetTypes=DASH_CENC|DASH_TA"},
-   //{false, "&assetTypes=DASH_LIVE|DASH_CENC"},
-   //{false, "&assetTypes=DASH_LIVE|DASH_CENC_HDR10"},
-   //{false, "&assetTypes=DASH_LIVE|DASH_CENC_PS4"},
-   //{false, "&assetTypes=DASH_LIVE|DASH_TA"},
-   //{false, "&assetTypes=DASH_TA|DASH_CENC"},
-   //{false, "&assetTypes=DASH_TA|DASH_CENC_HDR10"},
-   //{false, "&assetTypes=DASH_TA|DASH_CENC_PS4"},
-   //{false, "&assetTypes=DASH_TA|DASH_LIVE"},
-   //{true, "&assetTypes=DASH_CENC_HDR10|DASH_CENC_PRECON"},
-   //{true, "&assetTypes=DASH_CENC_PRECON|DASH_CENC"},
-   //{true, "&assetTypes=DASH_CENC_PRECON|DASH_CENC_HDR10"},
-   //{true, "&assetTypes=DASH_CENC_PRECON|DASH_CENC_PS4"},
-   //{true, "&assetTypes=DASH_CENC_PRECON|DASH_LIVE"},
-   //{true, "&assetTypes=DASH_CENC_PRECON|DASH_TA"},
-   //{true, "&assetTypes=DASH_CENC_PS4|DASH_CENC_PRECON"},
-   //{true, "&assetTypes=DASH_CENC|DASH_CENC_PRECON"},
-   //{true, "&assetTypes=DASH_LIVE|DASH_CENC_PRECON"},
-   //{true, "&assetTypes=DASH_TA|DASH_CENC_PRECON"},
-   {false, ""},
-   {false, "&assetTypes=DASH_TA"},
-   {false, "&assetTypes=DASH_CENC"},
-   {false, "&assetTypes=DASH_LIVE"},
-   {false, "&assetTypes=DASH_CENC_PS4"},
-   {false, "&assetTypes=DASH_CENC_HDR10"},
-   {false, "&assetTypes=DASH_CENC_PRECON"},
+var united_states = []string{
+   "Oo75PgAbcmt9xqqn1AMoBAfo190Cfhqi",
+   "esJvFlqdrcS_kFHnpxSuYp449E7tTexD",
+   "rZ59lcp4i2fU4dAaZJ_iEgKqVg_ogrIf",
 }
 
-// ""
+const france = "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ"
+
+// formats=MPEG-DASH
+// passes response status, Period and ContentProtection tests
 func TestFrance(t *testing.T) {
    for _, asset := range asset_types {
-      err := get(france, asset.value)
-      fmt.Printf("%v %q\n", err, asset.value)
+      err := get(france, asset)
+      fmt.Printf("%v %q\n", err, asset)
+      if err == nil {
+         break
+      }
       time.Sleep(time.Second)
    }
 }
 
-// DASH_CENC
+// formats=MPEG-DASH&assetTypes=DASH_CENC
+// passes response status, Period and ContentProtection tests
 func TestUnitedStates(t *testing.T) {
    for _, asset := range asset_types {
       ok := func() bool {
          for _, id := range united_states {
-            err := get(id, asset.value)
-            fmt.Printf("%v %v %q\n", err, id, asset.value)
+            err := get(id, asset)
+            fmt.Printf("%v %v %q\n", err, id, asset)
             if err != nil {
                return false
             }
@@ -148,10 +87,4 @@ func TestUnitedStates(t *testing.T) {
       }
       fmt.Println()
    }
-}
-
-var united_states = []string{
-   "Oo75PgAbcmt9xqqn1AMoBAfo190Cfhqi",
-   "esJvFlqdrcS_kFHnpxSuYp449E7tTexD",
-   "rZ59lcp4i2fU4dAaZJ_iEgKqVg_ogrIf",
 }
