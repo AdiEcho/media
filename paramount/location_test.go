@@ -3,20 +3,31 @@ package paramount
 import (
    "fmt"
    "testing"
+   "time"
 )
 
-func TestMpdFr(t *testing.T) {
-   mpd, err := Location(tests["fr"].content_id)
-   if err != nil {
-      t.Fatal(err)
+func TestMpdUsa(t *testing.T) {
+   for _, test := range tests {
+      if test.location == "" {
+         mpd, err := Location(test.content_id)
+         if err != nil {
+            t.Fatal(err)
+         }
+         fmt.Printf("%q\n", mpd)
+         time.Sleep(time.Second)
+      }
    }
-   fmt.Printf("%q\n", mpd)
 }
 
-func TestMpdUs(t *testing.T) {
-   mpd, err := Location(tests["us"].content_id)
-   if err != nil {
-      t.Fatal(err)
+func TestMpdIntl(t *testing.T) {
+   for _, test := range tests {
+      if test.location != "" {
+         mpd, err := Location(test.content_id)
+         if err != nil {
+            t.Fatal(err)
+         }
+         fmt.Printf("%q\n", mpd)
+         time.Sleep(time.Second)
+      }
    }
-   fmt.Printf("%q\n", mpd)
 }

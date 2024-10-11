@@ -9,6 +9,34 @@ import (
    "sort"
 )
 
+func (f *flags) do_write() error {
+   os.Mkdir(f.paramount, os.ModePerm)
+   location, err := paramount.Location(f.paramount)
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(
+      f.paramount + "/location.txt", []byte(location), os.ModePerm,
+   )
+   if err != nil {
+      return err
+   }
+   var app paramount.AppToken
+   if f.intl {
+      err = app.ComCbsCa()
+   } else {
+      err = app.ComCbsApp()
+   }
+   if err != nil {
+      return err
+   }
+   item, err := app.Item(f.paramount)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.paramount + "/item.txt", item.Raw, os.ModePerm)
+}
+
 func (f *flags) do_read() error {
    location, err := os.ReadFile(f.paramount + "/location.txt")
    if err != nil {
@@ -55,32 +83,4 @@ func (f *flags) do_read() error {
       }
    }
    return nil
-}
-
-func (f *flags) do_write() error {
-   os.Mkdir(f.paramount, os.ModePerm)
-   location, err := paramount.Location(f.paramount)
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(
-      f.paramount + "/location.txt", []byte(location), os.ModePerm,
-   )
-   if err != nil {
-      return err
-   }
-   var app paramount.AppToken
-   if f.intl {
-      err = app.ComCbsCa()
-   } else {
-      err = app.ComCbsApp()
-   }
-   if err != nil {
-      return err
-   }
-   item, err := app.Item(f.paramount)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.paramount + "/item.txt", item.Raw, os.ModePerm)
 }

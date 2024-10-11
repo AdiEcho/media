@@ -3,6 +3,7 @@ package paramount
 import (
    "fmt"
    "testing"
+   "time"
 )
 
 func TestItemUsa(t *testing.T) {
@@ -11,30 +12,40 @@ func TestItemUsa(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   item, err := app.Item(tests["us"].content_id)
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      if test.location == "" {
+         item, err := app.Item(test.content_id)
+         if err != nil {
+            t.Fatal(err)
+         }
+         err = item.Unmarshal()
+         if err != nil {
+            t.Fatal(err)
+         }
+         fmt.Printf("%+v\n", item)
+         time.Sleep(time.Second)
+      }
    }
-   err = item.Unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", item)
 }
 
-func TestItemFr(t *testing.T) {
+func TestItemIntl(t *testing.T) {
    var app AppToken
    err := app.ComCbsCa()
    if err != nil {
       t.Fatal(err)
    }
-   item, err := app.Item(tests["fr"].content_id)
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      item, err := app.Item(test.content_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      err = item.Unmarshal()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", item)
+      time.Sleep(time.Second)
    }
-   err = item.Unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", item)
 }
+
+
