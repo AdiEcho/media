@@ -32,7 +32,7 @@ func (f *flags) download() error {
    for _, rep := range secure.TextTrackUrls {
       switch f.representation {
       case "":
-         fmt.Print(rep, "\n\n")
+         fmt.Print(&rep, "\n\n")
       case rep.Id:
          return f.timed_text(rep.Url)
       }
@@ -41,7 +41,7 @@ func (f *flags) download() error {
       switch f.representation {
       case "":
          if _, ok := rep.Ext(); ok {
-            fmt.Print(rep, "\n\n")
+            fmt.Print(&rep, "\n\n")
          }
       case rep.Id:
          film, err := f.address.Film()
