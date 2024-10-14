@@ -7,20 +7,20 @@ import (
    "time"
 )
 
-var tests = []struct{
+var tests = []struct {
    content_id int
    key_id     string
    url        string
 }{
    {
-      url:        "tubitv.com/movies/590133",
-      key_id: "8qyB6sGARQWT++zcgNlnwg==",
-      content_id: 590133,
+      content_id: 100002888,
+      key_id:     "/czNsQXzQQKDN2Bl6kEmDQ==",
+      url:        "tubitv.com/movies/100002888",
    },
    {
-      url:        "tubitv.com/tv-shows/200042567",
-      key_id: "Ndopo1ozQ8iSL75MAfbL6A==",
       content_id: 200042567,
+      key_id:     "Ndopo1ozQ8iSL75MAfbL6A==",
+      url:        "tubitv.com/tv-shows/200042567",
    },
 }
 

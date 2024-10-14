@@ -4,6 +4,7 @@ import (
    "41.neocities.org/dash"
    "41.neocities.org/text"
    "41.neocities.org/widevine"
+   "crypto/tls"
    "encoding/base64"
    "errors"
    "io"
@@ -12,24 +13,6 @@ import (
    "os"
    "strings"
 )
-
-func Dash(req *http.Request) ([]dash.Representation, error) {
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   buf, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return dash.Unmarshal(buf, resp.Request.URL)
-}
 
 func (s Stream) segment_template(
    ext, initial string, base *dash.BaseUrl, media []string,
@@ -75,13 +58,19 @@ func (s Stream) segment_template(
    var transport text.Transport
    transport.Set(false)
    defer transport.Set(true)
+   client := http.Client{ // github.com/golang/go/issues/18639
+      Transport: &http.Transport{
+         Proxy: http.ProxyFromEnvironment,
+         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
+      },
+   }
    for _, medium := range media {
       req.URL, err = base.Url.Parse(medium)
       if err != nil {
          return err
       }
       err := func() error {
-         resp, err := http.DefaultClient.Do(req)
+         resp, err := client.Do(req)
          if err != nil {
             return err
          }
@@ -282,4 +271,22 @@ type Stream struct {
    Poster widevine.Poster
    pssh []byte
    key_id []byte
+}
+
+func Dash(req *http.Request) ([]dash.Representation, error) {
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   buf, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return dash.Unmarshal(buf, resp.Request.URL)
 }
