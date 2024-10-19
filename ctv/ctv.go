@@ -6,42 +6,33 @@ import (
    "errors"
    "io"
    "net/http"
-   "net/url"
    "strconv"
    "strings"
    "time"
 )
 
-// server requires GET instead of POST, and
-// `extensions.persistedQuery` instead of `query`
 func (r *ResolvePath) Axis() (*AxisContent, error) {
+   var body struct {
+      Query         string `json:"query"`
+      Variables     struct {
+         Id string `json:"id"`
+      } `json:"variables"`
+   }
+   body.Query = graphql_compact(query_axis)
+   body.Variables.Id = r.id()
+   data, err := json.Marshal(body)
+   if err != nil {
+      return nil, err
+   }
    req, err := http.NewRequest(
-      "", "https://www.ctv.ca/space-graphql/apq/graphql", nil,
+      "POST", "https://www.ctv.ca/space-graphql/apq/graphql",
+      bytes.NewReader(data),
    )
    if err != nil {
       return nil, err
    }
-   req.URL.RawQuery = url.Values{
-      "extensions": {`{"persistedQuery":{"version":1,"sha256Hash":"d6e75de9b5836cd6305c98c8d2411e336f59eb12f095a61f71d454f3fae2ecda"}}`},
-      "operationName": {"axisContent"},
-      // fmt.Sprintf(`{"id": %q}`, r.id()),
-      "variables": {`{"id":"contentid/axis-content-2968346","subscriptions":["CTV","CTV_DRAMA","CTV_COMEDY","CTV_LIFE","CTV_SCIFI","CTV_THROWBACK","CTV_MOVIES","CTV_MTV","CTV_MUCH","DISCOVERY","DISCOVERY_SCIENCE","DISCOVERY_VELOCITY","INVESTIGATION_DISCOVERY","ANIMAL_PLANET","E_NOW"],"maturity":"ADULT","language":"ENGLISH","authenticationState":"UNAUTH","playbackLanguage":"ENGLISH"}`},
-   }.Encode()
    // you need this for the first request, then can omit
-   req.Header["Graphql-Client-Platform"] = []string{"entpay_web"}
-   //req.Header["Accept"] = []string{"*/*"}
-   //req.Header["Accept-Language"] = []string{"en-US,en;q=0.5"}
-   //req.Header["Content-Length"] = []string{"0"}
-   //req.Header["Content-Type"] = []string{"application/json"}
-   //req.Header["Newrelic"] = []string{"eyJ2IjpbMCwxXSwiZCI6eyJ0eSI6IkJyb3dzZXIiLCJhYyI6IjI2MTQzMjciLCJhcCI6IjE4MzUwMDQwMjEiLCJpZCI6ImM1ZWViZTk5ODhjNDEwMWYiLCJ0ciI6ImMwOWQwZDk2ZGQ5ZjI2NzM2NjE4OTJmNTE0NzNmMDAwIiwidGkiOjE3MjkzMTkyOTY4NTIsInRrIjoiMjM3ODU3NSJ9fQ=="}
-   //req.Header["Referer"] = []string{"https://www.ctv.ca/movies/ingrid-goes-west/ingrid-goes-west"}
-   //req.Header["Sec-Fetch-Dest"] = []string{"empty"}
-   //req.Header["Sec-Fetch-Mode"] = []string{"cors"}
-   //req.Header["Sec-Fetch-Site"] = []string{"same-origin"}
-   //req.Header["Te"] = []string{"trailers"}
-   //req.Header["Traceparent"] = []string{"00-c09d0d96dd9f2673661892f51473f000-c5eebe9988c4101f-01"}
-   //req.Header["Tracestate"] = []string{"2378575@nr=0-1-2614327-1835004021-c5eebe9988c4101f----1729319296852"}
-   //req.Header["User-Agent"] = []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"}
+   req.Header.Set("graphql-client-platform", "entpay_web")
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -270,25 +261,6 @@ func graphql_compact(s string) string {
    return strings.Join(field, " ")
 }
 
-const query_resolve = `
-query resolvePath($path: String!) {
-   resolvedPath(path: $path) {
-      lastSegment {
-         content {
-            ... on AxisObject {
-               id
-               ... on AxisMedia {
-                  firstPlayableContent {
-                     id
-                  }
-               }
-            }
-         }
-      }
-   }
-}
-`
-
 func (r *ResolvePath) id() string {
    if r.FirstPlayableContent != nil {
       return r.FirstPlayableContent.Id
@@ -324,3 +296,36 @@ type Poster struct{}
 func (a *Address) String() string {
    return a.Path
 }
+
+// YOU CANNOT USE ANONYMOUS QUERY!
+const query_axis = `
+query axisContent($id: ID!) {
+   axisContent(id: $id) {
+      axisId
+      axisPlaybackLanguages {
+         ... on AxisPlayback {
+            destinationCode
+         }
+      }
+   }
+}
+`
+
+const query_resolve = `
+query resolvePath($path: String!) {
+   resolvedPath(path: $path) {
+      lastSegment {
+         content {
+            ... on AxisObject {
+               id
+               ... on AxisMedia {
+                  firstPlayableContent {
+                     id
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+`
