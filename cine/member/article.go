@@ -10,21 +10,9 @@ import (
    "strings"
 )
 
-func (*OperationArticle) FilmError() error {
-   return errors.New("OperationArticle.Film")
-}
-
-func (o *OperationArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range o.Assets {
-      if asset.LinkedType == "film" {
-         return asset, true
-      }
-   }
-   return nil, false
-}
-
+// NO ANONYMOUS QUERY
 const query_article = `
-query($articleUrlSlug: String) {
+query Article($articleUrlSlug: String) {
    Article(full_url_slug: $articleUrlSlug) {
       ... on Article {
          assets {
@@ -45,6 +33,19 @@ query($articleUrlSlug: String) {
    }
 }
 `
+
+func (*OperationArticle) FilmError() error {
+   return errors.New("OperationArticle.Film")
+}
+
+func (o *OperationArticle) Film() (*ArticleAsset, bool) {
+   for _, asset := range o.Assets {
+      if asset.LinkedType == "film" {
+         return asset, true
+      }
+   }
+   return nil, false
+}
 
 func (a *Address) Set(s string) error {
    s = strings.TrimPrefix(s, "https://")

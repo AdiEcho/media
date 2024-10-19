@@ -9,6 +9,23 @@ import (
    "strings"
 )
 
+// NO ANONYMOUS QUERY
+const get_custom_id = `
+query GetCustomIdFullMovie($customId: ID!) {
+   viewer {
+      viewableCustomId(customId: $customId) {
+         ... on Movie {
+            defaultPlayable {
+               id
+            }
+            productionYear
+            title
+         }
+      }
+   }
+}
+`
+
 func (a *AuthLogin) New(identity, key string) error {
    body, err := json.Marshal(map[string]string{
       "accessKey": key,
@@ -179,22 +196,6 @@ type FullMovie struct {
    ProductionYear int `json:",string"`
    Title          string
 }
-
-const get_custom_id = `
-query($customId: ID!) {
-   viewer {
-      viewableCustomId(customId: $customId) {
-         ... on Movie {
-            defaultPlayable {
-               id
-            }
-            productionYear
-            title
-         }
-      }
-   }
-}
-`
 
 func graphql_compact(s string) string {
    field := strings.Fields(s)

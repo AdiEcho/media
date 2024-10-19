@@ -9,6 +9,41 @@ import (
    "time"
 )
 
+// NO ANONYMOUS QUERY
+const bonanza_page = `
+query bonanzaPage(
+   $app: NBCUBrands!
+   $name: String!
+   $oneApp: Boolean
+   $platform: SupportedPlatforms!
+   $type: EntityPageType!
+   $userId: String!
+) {
+   bonanzaPage(
+      app: $app
+      name: $name
+      oneApp: $oneApp
+      platform: $platform
+      type: $type
+      userId: $userId
+   ) {
+      metadata {
+         ... on VideoPageData {
+            airDate
+            episodeNumber
+            movieShortTitle
+            mpxAccountId
+            mpxGuid
+            programmingType
+            seasonNumber
+            secondaryTitle
+            seriesShortTitle
+         }
+      }
+   }
+}
+`
+
 // this is better than strings.Replace and strings.ReplaceAll
 func graphql_compact(s string) string {
    field := strings.Fields(s)
@@ -55,40 +90,6 @@ func (c *CoreVideo) New() {
       return b.String()
    }()
 }
-
-const bonanza_page = `
-query(
-   $app: NBCUBrands!
-   $name: String!
-   $oneApp: Boolean
-   $platform: SupportedPlatforms!
-   $type: EntityPageType!
-   $userId: String!
-) {
-   bonanzaPage(
-      app: $app
-      name: $name
-      oneApp: $oneApp
-      platform: $platform
-      type: $type
-      userId: $userId
-   ) {
-      metadata {
-         ... on VideoPageData {
-            airDate
-            episodeNumber
-            movieShortTitle
-            mpxAccountId
-            mpxGuid
-            programmingType
-            seasonNumber
-            secondaryTitle
-            seriesShortTitle
-         }
-      }
-   }
-}
-`
 
 type OnDemand struct {
    PlaybackUrl string

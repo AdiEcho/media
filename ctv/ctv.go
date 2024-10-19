@@ -11,6 +11,39 @@ import (
    "time"
 )
 
+// YOU CANNOT USE ANONYMOUS QUERY!
+const query_axis = `
+query axisContent($id: ID!) {
+   axisContent(id: $id) {
+      axisId
+      axisPlaybackLanguages {
+         ... on AxisPlayback {
+            destinationCode
+         }
+      }
+   }
+}
+`
+
+const query_resolve = `
+query resolvePath($path: String!) {
+   resolvedPath(path: $path) {
+      lastSegment {
+         content {
+            ... on AxisObject {
+               id
+               ... on AxisMedia {
+                  firstPlayableContent {
+                     id
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+`
+
 func (r *ResolvePath) Axis() (*AxisContent, error) {
    var body struct {
       Query         string `json:"query"`
@@ -91,13 +124,11 @@ type AxisContent struct {
 
 func (a Address) Resolve() (*ResolvePath, error) {
    var body struct {
-      OperationName string `json:"operationName"`
       Query         string `json:"query"`
       Variables     struct {
          Path string `json:"path"`
       } `json:"variables"`
    }
-   body.OperationName = "resolvePath"
    body.Query = graphql_compact(query_resolve)
    body.Variables.Path = a.Path
    data, err := json.MarshalIndent(body, "", " ")
@@ -296,36 +327,3 @@ type Poster struct{}
 func (a *Address) String() string {
    return a.Path
 }
-
-// YOU CANNOT USE ANONYMOUS QUERY!
-const query_axis = `
-query axisContent($id: ID!) {
-   axisContent(id: $id) {
-      axisId
-      axisPlaybackLanguages {
-         ... on AxisPlayback {
-            destinationCode
-         }
-      }
-   }
-}
-`
-
-const query_resolve = `
-query resolvePath($path: String!) {
-   resolvedPath(path: $path) {
-      lastSegment {
-         content {
-            ... on AxisObject {
-               id
-               ... on AxisMedia {
-                  firstPlayableContent {
-                     id
-                  }
-               }
-            }
-         }
-      }
-   }
-}
-`
