@@ -9,29 +9,6 @@ import (
    "os"
 )
 
-func (f *flags) name() string {
-   return fmt.Sprint(f.tubi) + ".txt"
-}
-
-func (f *flags) write_content() error {
-   content := &tubi.VideoContent{}
-   err := content.New(f.tubi)
-   if err != nil {
-      return err
-   }
-   err = content.Unmarshal()
-   if err != nil {
-      return err
-   }
-   if content.Episode() {
-      err := content.New(content.SeriesId)
-      if err != nil {
-         return err
-      }
-   }
-   return os.WriteFile(f.name(), content.Raw, os.ModePerm)
-}
-
 func (f *flags) download() error {
    content := &tubi.VideoContent{}
    var err error
@@ -73,4 +50,27 @@ func (f *flags) download() error {
       }
    }
    return nil
+}
+
+func (f *flags) name() string {
+   return fmt.Sprint(f.tubi) + ".txt"
+}
+
+func (f *flags) write_content() error {
+   content := &tubi.VideoContent{}
+   err := content.New(f.tubi)
+   if err != nil {
+      return err
+   }
+   err = content.Unmarshal()
+   if err != nil {
+      return err
+   }
+   if content.Episode() {
+      err := content.New(content.SeriesId)
+      if err != nil {
+         return err
+      }
+   }
+   return os.WriteFile(f.name(), content.Raw, os.ModePerm)
 }
