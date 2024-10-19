@@ -29,39 +29,73 @@ func (r *ResolvePath) Axis() (*AxisContent, error) {
    }.Encode()
    // you need this for the first request, then can omit
    req.Header["Graphql-Client-Platform"] = []string{"entpay_web"}
-   
-   req.Header["Accept"] = []string{"*/*"}
-   req.Header["Accept-Language"] = []string{"en-US,en;q=0.5"}
-   req.Header["Content-Length"] = []string{"0"}
-   req.Header["Content-Type"] = []string{"application/json"}
-   req.Header["Newrelic"] = []string{"eyJ2IjpbMCwxXSwiZCI6eyJ0eSI6IkJyb3dzZXIiLCJhYyI6IjI2MTQzMjciLCJhcCI6IjE4MzUwMDQwMjEiLCJpZCI6ImM1ZWViZTk5ODhjNDEwMWYiLCJ0ciI6ImMwOWQwZDk2ZGQ5ZjI2NzM2NjE4OTJmNTE0NzNmMDAwIiwidGkiOjE3MjkzMTkyOTY4NTIsInRrIjoiMjM3ODU3NSJ9fQ=="}
-   req.Header["Referer"] = []string{"https://www.ctv.ca/movies/ingrid-goes-west/ingrid-goes-west"}
-   req.Header["Sec-Fetch-Dest"] = []string{"empty"}
-   req.Header["Sec-Fetch-Mode"] = []string{"cors"}
-   req.Header["Sec-Fetch-Site"] = []string{"same-origin"}
-   req.Header["Te"] = []string{"trailers"}
-   req.Header["Traceparent"] = []string{"00-c09d0d96dd9f2673661892f51473f000-c5eebe9988c4101f-01"}
-   req.Header["Tracestate"] = []string{"2378575@nr=0-1-2614327-1835004021-c5eebe9988c4101f----1729319296852"}
-   req.Header["User-Agent"] = []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"}
-   
+   //req.Header["Accept"] = []string{"*/*"}
+   //req.Header["Accept-Language"] = []string{"en-US,en;q=0.5"}
+   //req.Header["Content-Length"] = []string{"0"}
+   //req.Header["Content-Type"] = []string{"application/json"}
+   //req.Header["Newrelic"] = []string{"eyJ2IjpbMCwxXSwiZCI6eyJ0eSI6IkJyb3dzZXIiLCJhYyI6IjI2MTQzMjciLCJhcCI6IjE4MzUwMDQwMjEiLCJpZCI6ImM1ZWViZTk5ODhjNDEwMWYiLCJ0ciI6ImMwOWQwZDk2ZGQ5ZjI2NzM2NjE4OTJmNTE0NzNmMDAwIiwidGkiOjE3MjkzMTkyOTY4NTIsInRrIjoiMjM3ODU3NSJ9fQ=="}
+   //req.Header["Referer"] = []string{"https://www.ctv.ca/movies/ingrid-goes-west/ingrid-goes-west"}
+   //req.Header["Sec-Fetch-Dest"] = []string{"empty"}
+   //req.Header["Sec-Fetch-Mode"] = []string{"cors"}
+   //req.Header["Sec-Fetch-Site"] = []string{"same-origin"}
+   //req.Header["Te"] = []string{"trailers"}
+   //req.Header["Traceparent"] = []string{"00-c09d0d96dd9f2673661892f51473f000-c5eebe9988c4101f-01"}
+   //req.Header["Tracestate"] = []string{"2378575@nr=0-1-2614327-1835004021-c5eebe9988c4101f----1729319296852"}
+   //req.Header["User-Agent"] = []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"}
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return nil, errors.New(resp.Status)
-   }
    var resp_body struct {
       Data struct {
          AxisContent AxisContent
+      }
+      Errors []struct {
+         Message string
       }
    }
    err = json.NewDecoder(resp.Body).Decode(&resp_body)
    if err != nil {
       return nil, err
    }
+   if v := resp_body.Errors; len(v) >= 1 {
+      return nil, errors.New(v[0].Message)
+   }
    return &resp_body.Data.AxisContent, nil
+}
+
+func (a *AxisContent) Media() (*MediaContent, error) {
+   req, err := http.NewRequest("", "https://capi.9c9media.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/destinations/")
+      b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
+      b = append(b, "/platforms/desktop/contents/"...)
+      b = strconv.AppendInt(b, a.AxisId, 10)
+      return string(b)
+   }()
+   req.URL.RawQuery = "$include=[ContentPackages,Media,Season]"
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var media MediaContent
+   media.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &media, nil
+}
+
+type AxisContent struct {
+   AxisId                int64
+   AxisPlaybackLanguages []struct {
+      DestinationCode string
+   }
 }
 
 func (a Address) Resolve() (*ResolvePath, error) {
@@ -173,39 +207,6 @@ func (Poster) WrapRequest(b []byte) ([]byte, error) {
 
 func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
-}
-
-type AxisContent struct {
-   AxisId                int64
-   AxisPlaybackLanguages []struct {
-      DestinationCode string
-   }
-}
-
-func (a *AxisContent) Media() (*MediaContent, error) {
-   req, err := http.NewRequest("", "https://capi.9c9media.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      b := []byte("/destinations/")
-      b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
-      b = append(b, "/platforms/desktop/contents/"...)
-      b = strconv.AppendInt(b, a.AxisId, 10)
-      return string(b)
-   }()
-   req.URL.RawQuery = "$include=[ContentPackages,Media,Season]"
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var media MediaContent
-   media.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &media, nil
 }
 
 type MediaContent struct {
