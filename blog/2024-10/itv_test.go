@@ -1,13 +1,15 @@
-package criterion
+package itv
 
 import (
-   "41.neocities.org/text"
    "41.neocities.org/widevine"
-   "encoding/hex"
    "fmt"
    "os"
-   "reflect"
    "testing"
+)
+
+const (
+   content_id = "10-3918-0001-001_34"
+   key_id = "\xcex\xf3*\x03\x9aD\x1a\x890\x10Ɖ@\xcd\xf2"
 )
 
 func TestLicense(t *testing.T) {
@@ -24,36 +26,14 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    var pssh widevine.Pssh
-   pssh.KeyId, err = hex.DecodeString(video_test.key_id)
-   if err != nil {
-      t.Fatal(err)
-   }
+   pssh.ContentId = []byte(content_id)
+   pssh.KeyId = []byte(key_id)
    var module widevine.Cdm
    err = module.New(private_key, client_id, pssh.Marshal())
    if err != nil {
       t.Fatal(err)
    }
-   var token AuthToken
-   token.Raw, err = os.ReadFile("token.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   if err = token.Unmarshal(); err != nil {
-      t.Fatal(err)
-   }
-   item, err := token.Video(video_test.slug)
-   if err != nil {
-      t.Fatal(err)
-   }
-   files, err := token.Files(item)
-   if err != nil {
-      t.Fatal(err)
-   }
-   file, ok := files.Dash()
-   if !ok {
-      t.Fatal(files.DashError())
-   }
-   key, err := module.Key(file, pssh.KeyId)
+   key, err := module.Key(poster{}, []byte(key_id))
    if err != nil {
       t.Fatal(err)
    }
