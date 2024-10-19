@@ -6,31 +6,82 @@ import (
    "errors"
    "io"
    "net/http"
+   "net/url"
    "strconv"
    "strings"
    "time"
 )
 
-func (a Address) Resolve() (*ResolvePath, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         OperationName string `json:"operationName"`
-         Query         string `json:"query"`
-         Variables     struct {
-            Path string `json:"path"`
-         } `json:"variables"`
+// server requires GET instead of POST, and
+// `extensions.persistedQuery` instead of `query`
+func (r *ResolvePath) Axis() (*AxisContent, error) {
+   req, err := http.NewRequest(
+      "", "https://www.ctv.ca/space-graphql/apq/graphql", nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.URL.RawQuery = url.Values{
+      "extensions": {`{"persistedQuery":{"version":1,"sha256Hash":"d6e75de9b5836cd6305c98c8d2411e336f59eb12f095a61f71d454f3fae2ecda"}}`},
+      "operationName": {"axisContent"},
+      // fmt.Sprintf(`{"id": %q}`, r.id()),
+      "variables": {`{"id":"contentid/axis-content-2968346","subscriptions":["CTV","CTV_DRAMA","CTV_COMEDY","CTV_LIFE","CTV_SCIFI","CTV_THROWBACK","CTV_MOVIES","CTV_MTV","CTV_MUCH","DISCOVERY","DISCOVERY_SCIENCE","DISCOVERY_VELOCITY","INVESTIGATION_DISCOVERY","ANIMAL_PLANET","E_NOW"],"maturity":"ADULT","language":"ENGLISH","authenticationState":"UNAUTH","playbackLanguage":"ENGLISH"}`},
+   }.Encode()
+   // you need this for the first request, then can omit
+   req.Header["Graphql-Client-Platform"] = []string{"entpay_web"}
+   
+   req.Header["Accept"] = []string{"*/*"}
+   req.Header["Accept-Language"] = []string{"en-US,en;q=0.5"}
+   req.Header["Content-Length"] = []string{"0"}
+   req.Header["Content-Type"] = []string{"application/json"}
+   req.Header["Newrelic"] = []string{"eyJ2IjpbMCwxXSwiZCI6eyJ0eSI6IkJyb3dzZXIiLCJhYyI6IjI2MTQzMjciLCJhcCI6IjE4MzUwMDQwMjEiLCJpZCI6ImM1ZWViZTk5ODhjNDEwMWYiLCJ0ciI6ImMwOWQwZDk2ZGQ5ZjI2NzM2NjE4OTJmNTE0NzNmMDAwIiwidGkiOjE3MjkzMTkyOTY4NTIsInRrIjoiMjM3ODU3NSJ9fQ=="}
+   req.Header["Referer"] = []string{"https://www.ctv.ca/movies/ingrid-goes-west/ingrid-goes-west"}
+   req.Header["Sec-Fetch-Dest"] = []string{"empty"}
+   req.Header["Sec-Fetch-Mode"] = []string{"cors"}
+   req.Header["Sec-Fetch-Site"] = []string{"same-origin"}
+   req.Header["Te"] = []string{"trailers"}
+   req.Header["Traceparent"] = []string{"00-c09d0d96dd9f2673661892f51473f000-c5eebe9988c4101f-01"}
+   req.Header["Tracestate"] = []string{"2378575@nr=0-1-2614327-1835004021-c5eebe9988c4101f----1729319296852"}
+   req.Header["User-Agent"] = []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"}
+   
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
+   }
+   var resp_body struct {
+      Data struct {
+         AxisContent AxisContent
       }
-      s.OperationName = "resolvePath"
-      s.Query = graphql_compact(query_resolve)
-      s.Variables.Path = a.Path
-      return json.Marshal(s)
-   }()
+   }
+   err = json.NewDecoder(resp.Body).Decode(&resp_body)
+   if err != nil {
+      return nil, err
+   }
+   return &resp_body.Data.AxisContent, nil
+}
+
+func (a Address) Resolve() (*ResolvePath, error) {
+   var body struct {
+      OperationName string `json:"operationName"`
+      Query         string `json:"query"`
+      Variables     struct {
+         Path string `json:"path"`
+      } `json:"variables"`
+   }
+   body.OperationName = "resolvePath"
+   body.Query = graphql_compact(query_resolve)
+   body.Variables.Path = a.Path
+   data, err := json.MarshalIndent(body, "", " ")
    if err != nil {
       return nil, err
    }
    req, err := http.NewRequest(
       "POST", "https://www.ctv.ca/space-graphql/apq/graphql",
-      bytes.NewReader(body),
+      bytes.NewReader(data),
    )
    if err != nil {
       return nil, err
@@ -42,11 +93,11 @@ func (a Address) Resolve() (*ResolvePath, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   body, err = io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }
-   var value struct {
+   var resp_body struct {
       Data struct {
          ResolvedPath *struct {
             LastSegment struct {
@@ -55,14 +106,14 @@ func (a Address) Resolve() (*ResolvePath, error) {
          }
       }
    }
-   err = json.Unmarshal(body, &value)
+   err = json.Unmarshal(data, &resp_body)
    if err != nil {
       return nil, err
    }
-   if v := value.Data.ResolvedPath; v != nil {
+   if v := resp_body.Data.ResolvedPath; v != nil {
       return &v.LastSegment.Content, nil
    }
-   return nil, errors.New(string(body))
+   return nil, errors.New(string(data))
 }
 
 func (d *Date) UnmarshalText(text []byte) error {
@@ -123,61 +174,6 @@ func (Poster) WrapRequest(b []byte) ([]byte, error) {
 func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
-
-func (r *ResolvePath) Axis() (*AxisContent, error) {
-   body, err := func() ([]byte, error) {
-      var s struct {
-         OperationName string `json:"operationName"`
-         Query         string `json:"query"`
-         Variables     struct {
-            Id string `json:"id"`
-         } `json:"variables"`
-      }
-      s.OperationName = "axisContent"
-      s.Query = graphql_compact(query_axis)
-      s.Variables.Id = r.id()
-      return json.MarshalIndent(s, "", " ")
-   }()
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://www.ctv.ca/space-graphql/apq/graphql",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   // you need this for the first request, then can omit
-   req.Header.Set("graphql-client-platform", "entpay_web")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var value struct {
-      Data struct {
-         AxisContent AxisContent
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&value)
-   if err != nil {
-      return nil, err
-   }
-   return &value.Data.AxisContent, nil
-}
-const query_axis = `
-query($id: ID!) {
-   axisContent(id: $id) {
-      axisId
-      axisPlaybackLanguages {
-         ... on AxisPlayback {
-            destinationCode
-         }
-      }
-   }
-}
-`
 
 type AxisContent struct {
    AxisId                int64

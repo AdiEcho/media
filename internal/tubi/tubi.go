@@ -7,6 +7,7 @@ import (
    "fmt"
    "net/http"
    "os"
+   "sort"
 )
 
 func (f *flags) download() error {
@@ -39,10 +40,13 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
+   sort.Slice(reps, func(i, j int) bool {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
    for _, rep := range reps {
       switch f.representation {
       case "":
-         fmt.Print(rep, "\n\n")
+         fmt.Print(&rep, "\n\n")
       case rep.Id:
          f.s.Name = tubi.Namer{content}
          f.s.Poster = video
