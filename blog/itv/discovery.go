@@ -6,6 +6,7 @@ import (
    "os"
 )
 
+// POST request not allowed
 func main() {
    var req http.Request
    req.Header = http.Header{}
@@ -24,8 +25,7 @@ func main() {
    resp.Write(os.Stdout)
 }
 
-const query = `
-query {
+const query = `query {
   brands(
     filter: {
       legacyId: "10/4008"
@@ -317,5 +317,4 @@ query {
       legacyId
     }
   }
-}
-`
+}`
