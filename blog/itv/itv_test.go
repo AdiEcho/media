@@ -7,6 +7,15 @@ import (
    "testing"
 )
 
+func TestPlaylist(t *testing.T) {
+   var play playlist
+   err := play.New()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(play.resolution_720())
+}
+
 const (
    content_id = "10-3918-0001-001_34"
    key_id = "\xcex\xf3*\x03\x9aD\x1a\x890\x10Ɖ@\xcd\xf2"

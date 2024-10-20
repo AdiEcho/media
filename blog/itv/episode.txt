@@ -1,0 +1,9 @@
+GET https://content-inventory.prd.oasvc.itv.com/discovery?query=%7B%20versions(%20filter:%20%7B%20legacyId:%20%222_5460_0001.001%22%20tiers:%20%5B%22FREE%22%20%22PAID%22%5D%20features:%20%5BOUTBAND_WEBVTT%20MPEG_DASH%20WIDEVINE%5D%20broadcaster:%20UNKNOWN%20platform:%20CTV%20%7D%20)%20%7B%20legacyId%20tier%20linearContent%20broadcastDateTime%20compliance%20%7B%20displayableGuidance%20%7D%20duration%20playlistUrl%20visuallySigned%20bsl%20%7B%20playlistUrl%20%7D%20variants%20%7B%20features%20%7D%20availability%20%7B%20start%20end%20%7D%20title%20%7B%20ccid%20titleType%20title%20legacyId%20imageUrl(imageType:%20ITVX)%20synopses%20%7B%20ninety%20epg%20%7D%20series%20%7B%20fullSeries%20longRunning%20numberOfAvailableEpisodes%20%7D%20...%20on%20Episode%20%7B%20brandLegacyId%20episodeNumber%20seriesNumber%20channel%20%7B%20name%20%7D%20brand%20%7B%20categories%20genres%20%7B%20id%20name%20%7D%20title%20%7D%20nextAvailableTitle%20%7B%20latestAvailableVersion%20%7B%20legacyId%20%7D%20%7D%20%7D%20...%20on%20Film%20%7B%20brandLegacyId%20title%20categories%20genres%20%7B%20id%20name%20%7D%20channel%20%7B%20name%20%7D%20%7D%20...%20on%20Special%20%7B%20brandLegacyId%20title%20categories%20genres%20%7B%20id%20name%20%7D%20channel%20%7B%20name%20%7D%20%7D%20%7D%20%7D%20%7D HTTP/2.0
+accept: application/json
+origin: https://app.10ft.itv.com
+user-agent: Mozilla/5.0 (Linux; Android 9; sdk_google_atv_x86 Build/PSR1.180720.121; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.158 Mobile Safari/537.36
+referer: https://app.10ft.itv.com/3.416.0/androidtv/vod?productionId=2_5460_0001.001
+accept-language: en-US
+x-requested-with: air.ITVMobilePlayer
+content-length: 0
+
