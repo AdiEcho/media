@@ -1,81 +1,81 @@
 {
-  "data": {
-    "versions": [
-      {
-        "legacyId": "2/5460/0001#001",
-        "tier": [
-          "FREE"
-        ],
-        "linearContent": false,
-        "broadcastDateTime": "2018-01-03T02:05:00Z",
-        "compliance": {
-          "displayableGuidance": "Contains some adult humour."
-        },
-        "duration": "PT30M",
-        "playlistUrl": "https://magni.itv.com/playlist/itvonline/ITV/2_5460_0001.001",
-        "visuallySigned": false,
-        "bsl": null,
-        "variants": [
-          {
-            "features": [
-              "OUTBAND_WEBVTT",
-              "MPEG_DASH",
-              "WIDEVINE"
-            ]
-          },
-          {
-            "features": [
-              "MPEG_DASH",
-              "WIDEVINE"
-            ]
-          }
-        ],
-        "availability": [
-          {
-            "start": "2023-02-16T07:00:00Z",
-            "end": "2025-01-31T23:59:00Z"
-          }
-        ],
-        "title": {
-          "ccid": "6kgk9j7",
-          "titleType": "EPISODE",
-          "title": "Pilot",
-          "legacyId": "2/5460/0001",
-          "imageUrl": "https://ovp.itv.com/images/episode/6kgk9j7/itv_hub/{class}/{aspect_ratio}?distributionPartner={distributionPartner}&fallback={fallback}&treatment={treatment}&w={width}&h={height}&q={quality}&blur={blur}&bg={bg}",
-          "synopses": {
-            "ninety": "New Cloud 9 superstore employee Jonah makes a terrible impression.",
-            "epg": "New Cloud 9 superstore employee Jonah makes a terrible impression to floor supervisor Amy on his first day working there."
-          },
-          "series": {
-            "fullSeries": true,
-            "longRunning": false,
-            "numberOfAvailableEpisodes": 11
-          },
-          "brandLegacyId": "2/5460",
-          "episodeNumber": 1,
-          "seriesNumber": 1,
-          "channel": {
-            "name": "ITV2"
-          },
-          "brand": {
-            "categories": [
-              "COMEDY"
-            ],
-            "genres": [
-              {
-                "id": "COMEDY",
-                "name": "Comedy"
-              }
-            ],
-            "title": "Superstore"
-          },
-          "nextAvailableTitle": {
-            "latestAvailableVersion": {
-              "legacyId": "2/5460/0002#001"
-            }
-          }
-        }
+ "data": {
+  "versions": [
+   {
+    "legacyId": "2/5460/0001#001",
+    "tier": [
+     "FREE"
+    ],
+    "linearContent": false,
+    "broadcastDateTime": "2018-01-03T02:05:00Z",
+    "compliance": {
+     "displayableGuidance": "Contains some adult humour."
+    },
+    "duration": "PT30M",
+    "playlistUrl": "https://magni.itv.com/playlist/itvonline/ITV/2_5460_0001.001",
+    "visuallySigned": false,
+    "bsl": null,
+    "variants": [
+     {
+      "features": [
+       "OUTBAND_WEBVTT",
+       "MPEG_DASH",
+       "WIDEVINE"
+      ]
+     },
+     {
+      "features": [
+       "MPEG_DASH",
+       "WIDEVINE"
+      ]
+     }
+    ],
+    "availability": [
+     {
+      "start": "2023-02-16T07:00:00Z",
+      "end": "2025-01-31T23:59:00Z"
+     }
+    ],
+    "title": {
+     "ccid": "6kgk9j7",
+     "titleType": "EPISODE",
+     "title": "Pilot",
+     "legacyId": "2/5460/0001",
+     "imageUrl": "https://ovp.itv.com/images/episode/6kgk9j7/itv_hub/{class}/{aspect_ratio}?distributionPartner={distributionPartner}&fallback={fallback}&treatment={treatment}&w={width}&h={height}&q={quality}&blur={blur}&bg={bg}",
+     "synopses": {
+      "ninety": "New Cloud 9 superstore employee Jonah makes a terrible impression.",
+      "epg": "New Cloud 9 superstore employee Jonah makes a terrible impression to floor supervisor Amy on his first day working there."
+     },
+     "series": {
+      "fullSeries": true,
+      "longRunning": false,
+      "numberOfAvailableEpisodes": 11
+     },
+     "brandLegacyId": "2/5460",
+     "episodeNumber": 1,
+     "seriesNumber": 1,
+     "channel": {
+      "name": "ITV2"
+     },
+     "brand": {
+      "categories": [
+       "COMEDY"
+      ],
+      "genres": [
+       {
+        "id": "COMEDY",
+        "name": "Comedy"
+       }
+      ],
+      "title": "Superstore"
+     },
+     "nextAvailableTitle": {
+      "latestAvailableVersion": {
+       "legacyId": "2/5460/0002#001"
       }
-    ]
-  }
+     }
+    }
+   }
+  ]
+ }
 }

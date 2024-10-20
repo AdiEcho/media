@@ -1,6 +1,9 @@
 package main
 
 import (
+   "bytes"
+   "encoding/json"
+   "io"
    "net/http"
    "net/url"
    "os"
@@ -21,7 +24,13 @@ func main() {
       panic(err)
    }
    defer resp.Body.Close()
-   resp.Write(os.Stdout)
+   src, err := io.ReadAll(resp.Body)
+   if err != nil {
+      panic(err)
+   }
+   var dst bytes.Buffer
+   json.Indent(&dst, src, "", " ")
+   os.WriteFile("episode.json", dst.Bytes(), os.ModePerm)
 }
 
 const query = `
