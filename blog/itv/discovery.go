@@ -6,6 +6,28 @@ import (
    "os"
 )
 
+type discovery struct{}
+
+func (discovery) Show() string {
+   return ""
+}
+
+func (discovery) Season() int {
+   return 0
+}
+
+func (discovery) Episode() int {
+   return 0
+}
+
+func (discovery) Title() string {
+   return ""
+}
+
+func (discovery) Year() int {
+   return 0
+}
+
 // POST request not allowed
 func main() {
    var req http.Request
