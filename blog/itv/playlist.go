@@ -3,8 +3,19 @@ package itv
 import (
    "bytes"
    "encoding/json"
+   "errors"
    "net/http"
 )
+
+//type playlist struct {
+//   Playlist struct {
+//      Video struct {
+//         MediaFiles []struct {
+//            Href string
+//         }
+//      }
+//   }
+//}
 
 // hard geo block
 func playlist() (*http.Response, error) {
@@ -25,8 +36,11 @@ func playlist() (*http.Response, error) {
    value.VariantAvailability.PlatformTag = "dotcom"
    value.VariantAvailability.Drm.MaxSupported = "L3"
    value.VariantAvailability.Drm.System = "widevine"
+   // need all these to get 720:
    value.VariantAvailability.FeatureSet = []string{
+      "hd",
       "mpeg-dash",
+      "single-track",
       "widevine",
    }
    data, err := json.Marshal(value)
@@ -41,5 +55,12 @@ func playlist() (*http.Response, error) {
       return nil, err
    }
    req.Header["Accept"] = []string{"application/vnd.itv.vod.playlist.v4+json"}
-   return http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
+   }
+   return resp, nil
 }
