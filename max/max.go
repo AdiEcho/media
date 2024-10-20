@@ -4,6 +4,7 @@ import (
    "bytes"
    "crypto/hmac"
    "crypto/sha256"
+   "encoding/base64"
    "encoding/json"
    "errors"
    "fmt"
@@ -13,6 +14,40 @@ import (
    "strings"
    "time"
 )
+
+func (p *PublicKey) New() error {
+   bda, err := get_bda()
+   if err != nil {
+      return err
+   }
+   resp, err := http.PostForm(
+      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/"+arkose_site_key,
+      url.Values{
+         "bda": {bda},
+         "public_key": {arkose_site_key},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   return json.NewDecoder(resp.Body).Decode(p)
+}
+
+func get_bda() (string, error) {
+   data, err := json.Marshal(map[string][]byte{
+      "ct": make([]byte, 3504),
+   })
+   if err != nil {
+      return "", err
+   }
+   return base64.StdEncoding.EncodeToString(data), nil
+}
 
 const (
    arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
@@ -61,25 +96,6 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    }
    d.Session.Raw = []byte(resp.Header.Get("x-wbd-session-state"))
    return nil
-}
-
-func (p *PublicKey) New() error {
-   resp, err := http.PostForm(
-      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/"+arkose_site_key,
-      url.Values{
-         "public_key": {arkose_site_key},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   return json.NewDecoder(resp.Body).Decode(p)
 }
 
 func (d *DefaultToken) New() error {
