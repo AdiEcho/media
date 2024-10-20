@@ -7,18 +7,8 @@ import (
    "net/http"
 )
 
-//type playlist struct {
-//   Playlist struct {
-//      Video struct {
-//         MediaFiles []struct {
-//            Href string
-//         }
-//      }
-//   }
-//}
-
 // hard geo block
-func playlist() (*http.Response, error) {
+func (p *playlist) New() error {
    var value struct {
       Client struct {
          Id string `json:"id"`
@@ -33,7 +23,6 @@ func playlist() (*http.Response, error) {
       } `json:"variantAvailability"`
    }
    value.Client.Id = "browser"
-   value.VariantAvailability.PlatformTag = "dotcom"
    value.VariantAvailability.Drm.MaxSupported = "L3"
    value.VariantAvailability.Drm.System = "widevine"
    // need all these to get 720:
@@ -43,24 +32,45 @@ func playlist() (*http.Response, error) {
       "single-track",
       "widevine",
    }
-   data, err := json.Marshal(value)
+   value.VariantAvailability.PlatformTag = "dotcom"
+   data, err := json.MarshalIndent(value, "", " ")
    if err != nil {
-      return nil, err
+      return err
    }
    req, err := http.NewRequest(
-      "POST", "http://magni.itv.com/playlist/itvonline/ITV/10_3918_0001.001",
+      "POST", "https://magni.itv.com/playlist/itvonline/ITV/10_3918_0001.001",
       bytes.NewReader(data),
    )
    if err != nil {
-      return nil, err
+      return err
    }
-   req.Header["Accept"] = []string{"application/vnd.itv.vod.playlist.v4+json"}
+   req.Header.Set("accept", "application/vnd.itv.vod.playlist.v4+json")
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return nil, err
+      return err
    }
    if resp.StatusCode != http.StatusOK {
-      return nil, errors.New(resp.Status)
+      return errors.New(resp.Status)
    }
-   return resp, nil
+   return json.NewDecoder(resp.Body).Decode(p)
+}
+
+func (p *playlist) resolution_720() (string, bool) {
+   for _, file := range p.Playlist.Video.MediaFiles {
+      if file.Resolution == "720" {
+         return file.Href, true
+      }
+   }
+   return "", false
+}
+
+type playlist struct {
+   Playlist struct {
+      Video struct {
+         MediaFiles []struct {
+            Href string
+            Resolution string
+         }
+      }
+   }
 }

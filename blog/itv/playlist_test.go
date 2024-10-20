@@ -1,15 +1,15 @@
 package itv
 
 import (
-   "os"
+   "fmt"
    "testing"
 )
 
 func TestPlaylist(t *testing.T) {
-   resp, err := playlist()
+   var play playlist
+   err := play.New()
    if err != nil {
       t.Fatal(err)
    }
-   defer resp.Body.Close()
-   resp.Write(os.Stdout)
+   fmt.Println(play.resolution_720())
 }
