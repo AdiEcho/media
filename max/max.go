@@ -14,26 +14,29 @@ import (
    "time"
 )
 
+const (
+   arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
+   home_market = "https://default.any-amer.prd.api.discomax.com"
+)
+
 func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    data, err := json.Marshal(login)
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("POST", "/login", bytes.NewReader(data))
+   req, err := http.NewRequest(
+      "POST", home_market + "/login", bytes.NewReader(data),
+   )
    if err != nil {
       return err
    }
-   req.URL.Scheme = "https"
-   req.URL.Host = func() string {
-      var b strings.Builder
-      b.WriteString("default.any-")
-      b.WriteString(home_market)
-      b.WriteString(".prd.api.discomax.com")
-      return b.String()
-   }()
    req.Header.Set("authorization", "Bearer " + d.Token.Value)
    req.Header.Set("content-type", "application/json")
+   req.Header.Set("user-agent", "BEAM-Android/4.12.0 (Google/Android SDK built for x86)")
+   req.Header.Set("x-device-info", "BEAM-Android/4.12.0 (Google/Android SDK built for x86; ANDROID/7.0; ab3d8214d8d3f368/b6746ddc-7bc7-471f-a16c-f6aaf0c34d26)")
+   req.Header.Set("x-disco-arkose-sitekey", "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F")
    req.Header.Set("x-disco-arkose-token", key.Token)
+   req.Header.Set("x-disco-client", "ANDROID:7.0:beam:4.12.0")
    req.Header.Set("x-disco-client-id", func() string {
       timestamp := time.Now().Unix()
       hash := hmac.New(sha256.New, default_key.Key)
@@ -41,6 +44,7 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
       signature := hash.Sum(nil)
       return fmt.Sprintf("%v:%v:%x", default_key.Id, timestamp, signature)
    }())
+   req.Header.Set("x-disco-params", "realm=bolt,bid=beam,features=ar,rr")
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -59,6 +63,25 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    return nil
 }
 
+func (p *PublicKey) New() error {
+   resp, err := http.PostForm(
+      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/"+arkose_site_key,
+      url.Values{
+         "public_key": {arkose_site_key},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   return json.NewDecoder(resp.Body).Decode(p)
+}
+
 func (d *DefaultToken) New() error {
    req, err := http.NewRequest(
       "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
@@ -67,7 +90,8 @@ func (d *DefaultToken) New() error {
       return err
    }
    // fuck you Max
-   req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
+   //req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
+   req.Header.Set("x-device-info", "BEAM-Android/4.12.0 (Google/Android SDK built for x86; ANDROID/7.0; ab3d8214d8d3f368/b6746ddc-7bc7-471f-a16c-f6aaf0c34d26)")
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
@@ -132,16 +156,10 @@ func (d *DefaultToken) Playback(web Address) (*Playback, error) {
 }
 
 func (d *DefaultToken) Routes(web Address) (*DefaultRoutes, error) {
-   var req http.Request
-   req.URL = &url.URL{}
-   req.URL.Scheme = "https"
-   req.URL.Host = func() string {
-      var b strings.Builder
-      b.WriteString("https://default.any-")
-      b.WriteString(home_market)
-      b.WriteString(".prd.api.discomax.com")
-      return b.String()
-   }()
+   req, err := http.NewRequest("", home_market, nil)
+   if err != nil {
+      return nil, err
+   }
    req.URL.Path = func() string {
       text, _ := web.MarshalText()
       var b strings.Builder
@@ -158,7 +176,7 @@ func (d *DefaultToken) Routes(web Address) (*DefaultRoutes, error) {
       "authorization": {"Bearer " + d.Token.Value},
       "x-wbd-session-state": {d.Session.Value.String()},
    }
-   resp, err := http.DefaultClient.Do(&req)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
@@ -271,10 +289,6 @@ type DefaultToken struct {
    Session Value[SessionState]
    Token Value[string]
 }
-const (
-   arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
-   home_market = "amer"
-)
 
 type DefaultLogin struct {
    Credentials struct {
@@ -427,20 +441,6 @@ func (d DefaultRoutes) Show() string {
       }
    }
    return ""
-}
-
-func (p *PublicKey) New() error {
-   resp, err := http.PostForm(
-      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/"+arkose_site_key,
-      url.Values{
-         "public_key": {arkose_site_key},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   return json.NewDecoder(resp.Body).Decode(p)
 }
 
 type Playback struct {

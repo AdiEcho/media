@@ -26,7 +26,7 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   token.Session.Value.Delete()
+   // token.Session.Value.Delete()
    play, err := token.Playback(f.address)
    if err != nil {
       return err

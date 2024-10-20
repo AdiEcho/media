@@ -24,20 +24,20 @@
 https://play.google.com/store/apps/details?id=com.wbd.stream
 
 ~~~
-> play -i com.wbd.stream -s
-details[6] = WarnerMedia Global Digital Services, LLC
+> play -i com.wbd.stream
 details[8] = 0 USD
-details[13][1][4] = 4.1.1.2
-details[13][1][16] = Jun 5, 2024
-details[13][1][17] = APK
+details[13][1][4] = 4.12.0.64
+details[13][1][16] = Oct 11, 2024
+details[13][1][17] = APK APK APK APK
 details[13][1][82][1][1] = 5.0 and up
-downloads = 53.47 million
+details[15][18] = https://www.max.com/privacy
+downloads = 80.50 million
 name = Max: Stream HBO, TV, & Movies
-size = 37.77 megabyte
-version code = 35342589
+size = 112.78 megabyte
+version code = 35352971
 ~~~
 
-Create Android 6 device. Install user certificate
+above is wrong, needs to be at least Android 7. install system certificate
 
 ## how to get arkose site key?
 
