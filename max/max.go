@@ -2,18 +2,93 @@ package max
 
 import (
    "bytes"
-   "crypto/hmac"
-   "crypto/sha256"
-   "encoding/base64"
    "encoding/json"
    "errors"
-   "fmt"
-   "io"
    "net/http"
    "net/url"
    "strings"
    "time"
 )
+
+func (v *link_login) Routes(web Address) (*DefaultRoutes, error) {
+   req, err := http.NewRequest("", prd_api, nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      text, _ := web.MarshalText()
+      var b strings.Builder
+      b.WriteString("/cms/routes")
+      b.Write(text)
+      return b.String()
+   }()
+   req.URL.RawQuery = url.Values{
+      "include": {"default"},
+      // this is not required, but results in a smaller response
+      "page[items.size]": {"1"},
+   }.Encode()
+   req.Header = http.Header{
+      "authorization": {"Bearer " + v.token},
+      "x-wbd-session-state": {v.state},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   route := &DefaultRoutes{}
+   err = json.NewDecoder(resp.Body).Decode(route)
+   if err != nil {
+      return nil, err
+   }
+   return route, nil
+}
+
+func (v *link_login) Playback(web Address) (*Playback, error) {
+   var body playback_request
+   body.ConsumptionType = "streaming"
+   body.EditId = web.EditId
+   data, err := json.Marshal(body)
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest("POST", prd_api, bytes.NewReader(data))
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b bytes.Buffer
+      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
+      b.WriteString("/playbackInfo")
+      return b.String()
+   }()
+   req.Header = http.Header{
+      "authorization": {"Bearer " + v.token},
+      "content-type": {"application/json"},
+      "x-wbd-session-state": {v.state},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   resp_body := &Playback{}
+   err = json.NewDecoder(resp.Body).Decode(resp_body)
+   if err != nil {
+      return nil, err
+   }
+   return resp_body, nil
+}
 
 type Playback struct {
    Drm struct {
@@ -163,88 +238,6 @@ type RouteInclude struct {
          }
       }
    }
-}
-
-///
-
-func (v *link_login) Playback(web Address) (*Playback, error) {
-   var play playback_request
-   play.ConsumptionType = "streaming"
-   play.EditId = web.EditId
-   data, err := json.Marshal(play)
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest("POST", prd_api, bytes.NewReader(data))
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      var b bytes.Buffer
-      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
-      b.WriteString("/playbackInfo")
-      return b.String()
-   }()
-   req.Header = http.Header{
-      "content-type": {"application/json"},
-      "authorization": {"Bearer " + v.Token.Value},
-      "x-wbd-session-state": {v.Session.Value.String()},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   play := &Playback{}
-   err = json.NewDecoder(resp.Body).Decode(play)
-   if err != nil {
-      return nil, err
-   }
-   return play, nil
-}
-
-func (v *link_login) Routes(web Address) (*DefaultRoutes, error) {
-   req, err := http.NewRequest("", home_market, nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      text, _ := web.MarshalText()
-      var b strings.Builder
-      b.WriteString("/cms/routes")
-      b.Write(text)
-      return b.String()
-   }()
-   req.URL.RawQuery = url.Values{
-      "include": {"default"},
-      // this is not required, but results in a smaller response
-      "page[items.size]": {"1"},
-   }.Encode()
-   req.Header = http.Header{
-      "authorization": {"Bearer " + v.Token.Value},
-      "x-wbd-session-state": {v.Session.Value.String()},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   route := &DefaultRoutes{}
-   err = json.NewDecoder(resp.Body).Decode(route)
-   if err != nil {
-      return nil, err
-   }
-   return route, nil
 }
 
 func (a *Address) MarshalText() ([]byte, error) {
