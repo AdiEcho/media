@@ -1,15 +1,15 @@
 package max
 
 import (
-   "os"
+   "fmt"
    "testing"
 )
 
 func TestOne(t *testing.T) {
-   resp, err := get_one()
+   var token bolt_token
+   err := token.New()
    if err != nil {
       t.Fatal(err)
    }
-   defer resp.Body.Close()
-   resp.Write(os.Stdout)
+   fmt.Println(token.st)
 }
