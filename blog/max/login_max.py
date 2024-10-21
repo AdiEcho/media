@@ -16,15 +16,6 @@ def get_device_code(init_access_token, wbd_session_state=None):
         logger.error("Coudlnt retrieve code")
         sys.exit(1)
 
-def get_wbd_session_state( access_token):
-    token_response = session.post(**client_config.get_wbd_session_state_info(access_token))
-    if not token_response:
-        logger.error('error getting payload entitlemnt')
-        logger.error(token_response.text)
-        sys.exit(1)
-    get_wbd_session_state_info = token_response.headers['x-wbd-session-state']
-    return get_wbd_session_state_info
-
 def get_init_access_token():
     token_response = session.get(**client_config.get_init_token_data())
     if not token_response:
@@ -65,32 +56,49 @@ def max_login():
     save_token(json_response, access_token, expiry)
     return access_token, expiry
 
+def get_wbd_session_state( access_token):
+    token_response = session.post(**client_config.get_wbd_session_state_info(access_token))
+    if not token_response:
+        logger.error('error getting payload entitlemnt')
+        logger.error(token_response.text)
+        sys.exit(1)
+    get_wbd_session_state_info = token_response.headers['x-wbd-session-state']
+    return get_wbd_session_state_info
+
 def code_pair_login_method_LG():
    # First Init Access Token From Device
    init_access_token = get_init_access_token()
    # Get get_wbd_session_state values client Config
-   x_wbd_session_state = get_wbd_session_state(init_access_token)
+   
+   #x_wbd_session_state = get_wbd_session_state(init_access_token)
+   x_wbd_session_state = ''
+   
    # Getting Code
    code = get_device_code(init_access_token, x_wbd_session_state)
    # Following the flow and doing one more request
-   session.post(**client_config.get_tokens_using_code(init_access_token, x_wbd_session_state))
+   
+   return session.post(
+      **client_config.get_tokens_using_code(init_access_token, x_wbd_session_state)
+   )
+   
    logger.info(f"Go to www.max.com/signin and input the {code}")
    data = ''
    print('Checking link ', end='')
    while data == '':
-        for index, char in enumerate("." * 5):
-            sys.stdout.write(char)
-            sys.stdout.flush()
-            # exchange access code for oauth token
-            time.sleep(0.2)
-        token_response = session.post(
-            **client_config.get_tokens_using_code(init_access_token, x_wbd_session_state))
-        logger.info(token_response.text)
-        data = token_response.text
-        index += 1  # lists are zero indexed, we need to increase by one for the accurate count
-        # backtrack the written characters, overwrite them with space, backtrack again:
-        sys.stdout.write("\b" * index + " " * index + "\b" * index)
-        sys.stdout.flush()
+      for index, char in enumerate("." * 5):
+         sys.stdout.write(char)
+         sys.stdout.flush()
+         # exchange access code for oauth token
+         time.sleep(0.2)
+      token_response = session.post(
+         **client_config.get_tokens_using_code(init_access_token, x_wbd_session_state)
+      )
+      logger.info(token_response.text)
+      data = token_response.text
+      index += 1  # lists are zero indexed, we need to increase by one for the accurate count
+      # backtrack the written characters, overwrite them with space, backtrack again:
+      sys.stdout.write("\b" * index + " " * index + "\b" * index)
+      sys.stdout.flush()
    if json.loads(data)['data']['type'] == "token":
      print('\nSuccessfully linked!')
    return token_response

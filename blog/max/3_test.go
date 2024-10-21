@@ -3,6 +3,7 @@ package max
 import (
    "os"
    "testing"
+   "time"
 )
 
 func TestThree(t *testing.T) {
@@ -11,10 +12,20 @@ func TestThree(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   resp, err := token.login()
+   time.Sleep(time.Second)
+   resp, err := token.initiate()
    if err != nil {
       t.Fatal(err)
    }
    defer resp.Body.Close()
    resp.Write(os.Stdout)
+   time.Sleep(time.Second)
+   func() {
+      resp, err := token.login()
+      if err != nil {
+         t.Fatal(err)
+      }
+      defer resp.Body.Close()
+      resp.Write(os.Stdout)
+   }()
 }
