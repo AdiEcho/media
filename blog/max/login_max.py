@@ -7,7 +7,6 @@ import pathlib
 import login_config as client_config
 session = requests.Session()
 
-
 def get_device_code(init_access_token, wbd_session_state=None):
     code_pair_request = session.post(**client_config.get_code_pair(init_access_token, wbd_session_state))
     if code_pair_request:

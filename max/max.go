@@ -15,45 +15,6 @@ import (
    "time"
 )
 
-func (p *PublicKey) New() error {
-   bda, err := get_bda()
-   if err != nil {
-      return err
-   }
-   resp, err := http.PostForm(
-      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/"+arkose_site_key,
-      url.Values{
-         "bda": {bda},
-         "public_key": {arkose_site_key},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   return json.NewDecoder(resp.Body).Decode(p)
-}
-
-func get_bda() (string, error) {
-   data, err := json.Marshal(map[string][]byte{
-      "ct": make([]byte, 3504),
-   })
-   if err != nil {
-      return "", err
-   }
-   return base64.StdEncoding.EncodeToString(data), nil
-}
-
-const (
-   arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
-   home_market = "https://default.any-amer.prd.api.discomax.com"
-)
-
 func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    data, err := json.Marshal(login)
    if err != nil {
@@ -98,6 +59,29 @@ func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
    return nil
 }
 
+func (d *DefaultToken) Unmarshal() error {
+   d.Session.Value = SessionState{}
+   d.Session.Value.Set(string(d.Session.Raw))
+   var data struct {
+      Data struct {
+         Attributes struct {
+            Token string
+         }
+      }
+   }
+   err := json.Unmarshal(d.Token.Raw, &data)
+   if err != nil {
+      return err
+   }
+   d.Token.Value = data.Data.Attributes.Token
+   return nil
+}
+
+type DefaultToken struct {
+   Session Value[SessionState]
+   Token Value[string]
+}
+
 func (d *DefaultToken) New() error {
    req, err := http.NewRequest(
       "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
@@ -124,6 +108,45 @@ func (d *DefaultToken) New() error {
    }
    return nil
 }
+
+func (p *PublicKey) New() error {
+   bda, err := get_bda()
+   if err != nil {
+      return err
+   }
+   resp, err := http.PostForm(
+      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/"+arkose_site_key,
+      url.Values{
+         "bda": {bda},
+         "public_key": {arkose_site_key},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   return json.NewDecoder(resp.Body).Decode(p)
+}
+
+func get_bda() (string, error) {
+   data, err := json.Marshal(map[string][]byte{
+      "ct": make([]byte, 3504),
+   })
+   if err != nil {
+      return "", err
+   }
+   return base64.StdEncoding.EncodeToString(data), nil
+}
+
+const (
+   arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
+   home_market = "https://default.any-amer.prd.api.discomax.com"
+)
 
 func (d *DefaultToken) Playback(web Address) (*Playback, error) {
    body, err := func() ([]byte, error) {
@@ -282,28 +305,6 @@ func (s SessionState) Delete() {
 type Value[T any] struct {
    Value T
    Raw []byte
-}
-func (d *DefaultToken) Unmarshal() error {
-   d.Session.Value = SessionState{}
-   d.Session.Value.Set(string(d.Session.Raw))
-   var data struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-   err := json.Unmarshal(d.Token.Raw, &data)
-   if err != nil {
-      return err
-   }
-   d.Token.Value = data.Data.Attributes.Token
-   return nil
-}
-
-type DefaultToken struct {
-   Session Value[SessionState]
-   Token Value[string]
 }
 
 type DefaultLogin struct {
