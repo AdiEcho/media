@@ -5,13 +5,14 @@ import (
    "testing"
 )
 
-func TestTwo(t *testing.T) {
-   var token bolt_token
-   err := token.New()
+func TestLogin(t *testing.T) {
+   data, err := os.ReadFile("token.txt")
    if err != nil {
       t.Fatal(err)
    }
-   resp, err := token.initiate()
+   var token bolt_token
+   token.st = string(data)
+   resp, err := token.login()
    if err != nil {
       t.Fatal(err)
    }
