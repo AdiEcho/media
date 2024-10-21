@@ -9,7 +9,7 @@ func (b bolt_token) initiate() (*http.Response, error) {
    if err != nil {
       return nil, err
    }
-   req.AddCookie(b.st)
    req.Header.Set("x-device-info", device_info)
+   req.AddCookie(b.st)
    return http.DefaultClient.Do(req)
 }

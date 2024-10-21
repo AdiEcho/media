@@ -8,6 +8,7 @@ const (
 )
 
 type bolt_token struct {
+   session_state string
    st *http.Cookie
 }
 
@@ -22,6 +23,7 @@ func (b *bolt_token) New() error {
       return err
    }
    defer resp.Body.Close()
+   b.session_state = resp.Header.Get("x-wbd-session-state")
    for _, cookie := range resp.Cookies() {
       if cookie.Name == "st" {
          b.st = cookie
