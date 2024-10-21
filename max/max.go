@@ -15,86 +15,17 @@ import (
    "time"
 )
 
-func (d *DefaultToken) New() error {
-   req, err := http.NewRequest(
-      "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
-   )
-   if err != nil {
-      return err
-   }
-   // fuck you Max
-   //req.Header.Set("x-device-info", "!/!(!/!;!/!;!)")
-   req.Header.Set("x-device-info", "BEAM-Android/4.12.0 (Google/Android SDK built for x86; ANDROID/7.0; ab3d8214d8d3f368/b6746ddc-7bc7-471f-a16c-f6aaf0c34d26)")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   d.Token.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
+///
 
-func (p *PublicKey) New() error {
-   bda, err := get_bda()
-   if err != nil {
-      return err
-   }
-   resp, err := http.PostForm(
-      "https://wbd-api.arkoselabs.com/fc/gt2/public_key/"+arkose_site_key,
-      url.Values{
-         "bda": {bda},
-         "public_key": {arkose_site_key},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   return json.NewDecoder(resp.Body).Decode(p)
-}
-
-func get_bda() (string, error) {
-   data, err := json.Marshal(map[string][]byte{
-      "ct": make([]byte, 3504),
-   })
-   if err != nil {
-      return "", err
-   }
-   return base64.StdEncoding.EncodeToString(data), nil
-}
-
-const (
-   arkose_site_key = "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F"
-   home_market = "https://default.any-amer.prd.api.discomax.com"
-)
-
-func (d *DefaultToken) Playback(web Address) (*Playback, error) {
-   body, err := func() ([]byte, error) {
-      var p playback_request
-      p.ConsumptionType = "streaming"
-      p.EditId = web.EditId
-      return json.Marshal(p)
-   }()
+func (d *link_login) Playback(web Address) (*Playback, error) {
+   var play playback_request
+   play.ConsumptionType = "streaming"
+   play.EditId = web.EditId
+   data, err := json.Marshal(play)
    if err != nil {
       return nil, err
    }
-   req, err := http.NewRequest(
-      "POST", "https://default.any-any.prd.api.discomax.com",
-      bytes.NewReader(body),
-   )
+   req, err := http.NewRequest("POST", prd_api, bytes.NewReader(data))
    if err != nil {
       return nil, err
    }
@@ -127,7 +58,7 @@ func (d *DefaultToken) Playback(web Address) (*Playback, error) {
    return play, nil
 }
 
-func (d *DefaultToken) Routes(web Address) (*DefaultRoutes, error) {
+func (d *link_login) Routes(web Address) (*DefaultRoutes, error) {
    req, err := http.NewRequest("", home_market, nil)
    if err != nil {
       return nil, err
@@ -166,7 +97,7 @@ func (d *DefaultToken) Routes(web Address) (*DefaultRoutes, error) {
    return route, nil
 }
 
-func (d *DefaultToken) decision() (*default_decision, error) {
+func (d *link_login) decision() (*default_decision, error) {
    body, err := json.Marshal(map[string]string{
       "projectId": "d8665e86-8706-415d-8d84-d55ceddccfb5",
    })
@@ -195,53 +126,6 @@ func (d *DefaultToken) decision() (*default_decision, error) {
    return decision, nil
 }
 
-func (s SessionState) Set(text string) error {
-   for text != "" {
-      var key string
-      key, text, _ = strings.Cut(text, ";")
-      key, value, _ := strings.Cut(key, ":")
-      s[key] = value
-   }
-   return nil
-}
-
-func (s SessionState) String() string {
-   var (
-      b strings.Builder
-      sep bool
-   )
-   for key, value := range s {
-      if sep {
-         b.WriteByte(';')
-      } else {
-         sep = true
-      }
-      b.WriteString(key)
-      b.WriteByte(':')
-      b.WriteString(value)
-   }
-   return b.String()
-}
-
-type SessionState map[string]string
-
-func (s SessionState) Delete() {
-   for key := range s {
-      switch key {
-      case "device", "token", "user":
-      default:
-         delete(s, key)
-      }
-   }
-}
-
-type DefaultLogin struct {
-   Credentials struct {
-      Username string `json:"username"`
-      Password string `json:"password"`
-   } `json:"credentials"`
-}
-
 func (Playback) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -252,10 +136,6 @@ func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
 
 func (Playback) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
-}
-
-type PublicKey struct {
-   Token string
 }
 
 type RouteInclude struct {

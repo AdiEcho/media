@@ -6,6 +6,12 @@ import (
    "net/http"
 )
 
+type link_login struct {
+   raw []byte
+   state string
+   token string
+}
+
 // you must
 // /authentication/linkDevice/initiate
 // first or this will always fail
@@ -29,12 +35,6 @@ func (b bolt_token) login() (*link_login, error) {
    }
    link.state = resp.Header.Get("x-wbd-session-state")
    return &link, nil
-}
-
-type link_login struct {
-   raw []byte
-   state string
-   token string
 }
 
 func (v *link_login) unmarshal() error {
