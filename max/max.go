@@ -30,6 +30,15 @@ type Playback struct {
    }
 }
 
+func (m *Manifest) UnmarshalText(text []byte) error {
+   m.Url = strings.Replace(string(text), "_fallback", "", 1)
+   return nil
+}
+
+type Manifest struct {
+   Url string
+}
+
 type playback_request struct {
    AppBundle            string `json:"appBundle"`            // required
    ApplicationSessionId string `json:"applicationSessionId"` // required
@@ -62,6 +71,98 @@ type playback_request struct {
    Gdpr              bool     `json:"gdpr"`              // required
    PlaybackSessionId string   `json:"playbackSessionId"` // required
    UserPreferences   struct{} `json:"userPreferences"`   // required
+}
+
+func (Playback) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Playback) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (p *Playback) RequestUrl() (string, bool) {
+   return p.Drm.Schemes.Widevine.LicenseUrl, true
+}
+
+func (d DefaultRoutes) video() (*RouteInclude, bool) {
+   for _, include := range d.Included {
+      if include.Id == d.Data.Attributes.Url.VideoId {
+         return &include, true
+      }
+   }
+   return nil, false
+}
+
+func (d DefaultRoutes) Season() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.SeasonNumber
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Episode() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.EpisodeNumber
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Title() string {
+   if v, ok := d.video(); ok {
+      return v.Attributes.Name
+   }
+   return ""
+}
+
+func (d DefaultRoutes) Year() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.AirDate.Year()
+   }
+   return 0
+}
+
+func (d DefaultRoutes) Show() string {
+   if v, ok := d.video(); ok {
+      if v.Attributes.SeasonNumber >= 1 {
+         for _, include := range d.Included {
+            if include.Id == v.Relationships.Show.Data.Id {
+               return include.Attributes.Name
+            }
+         }
+      }
+   }
+   return ""
+}
+
+type DefaultRoutes struct {
+   Data struct {
+      Attributes struct {
+         Url Address
+      }
+   }
+   Included []RouteInclude
+}
+
+type RouteInclude struct {
+   Attributes struct {
+      AirDate       time.Time
+      Name          string
+      EpisodeNumber int
+      SeasonNumber  int
+   }
+   Id            string
+   Relationships *struct {
+      Show *struct {
+         Data struct {
+            Id string
+         }
+      }
+   }
 }
 
 ///
@@ -146,108 +247,6 @@ func (v *link_login) Routes(web Address) (*DefaultRoutes, error) {
    return route, nil
 }
 
-func (Playback) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Playback) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-type RouteInclude struct {
-   Attributes struct {
-      AirDate       time.Time
-      Name          string
-      EpisodeNumber int
-      SeasonNumber  int
-   }
-   Id            string
-   Relationships *struct {
-      Show *struct {
-         Data struct {
-            Id string
-         }
-      }
-   }
-}
-
-func (p *Playback) RequestUrl() (string, bool) {
-   return p.Drm.Schemes.Widevine.LicenseUrl, true
-}
-
-type hmac_key struct {
-   Id  string
-   Key []byte
-}
-
-func (d DefaultRoutes) video() (*RouteInclude, bool) {
-   for _, include := range d.Included {
-      if include.Id == d.Data.Attributes.Url.VideoId {
-         return &include, true
-      }
-   }
-   return nil, false
-}
-
-func (d DefaultRoutes) Season() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.SeasonNumber
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Episode() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.EpisodeNumber
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Title() string {
-   if v, ok := d.video(); ok {
-      return v.Attributes.Name
-   }
-   return ""
-}
-
-func (d DefaultRoutes) Year() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.AirDate.Year()
-   }
-   return 0
-}
-
-func (d DefaultRoutes) Show() string {
-   if v, ok := d.video(); ok {
-      if v.Attributes.SeasonNumber >= 1 {
-         for _, include := range d.Included {
-            if include.Id == v.Relationships.Show.Data.Id {
-               return include.Attributes.Name
-            }
-         }
-      }
-   }
-   return ""
-}
-
-type DefaultRoutes struct {
-   Data struct {
-      Attributes struct {
-         Url Address
-      }
-   }
-   Included []RouteInclude
-}
-
-func (m *Manifest) UnmarshalText(text []byte) error {
-   m.Url = strings.Replace(string(text), "_fallback", "", 1)
-   return nil
-}
-
 func (a *Address) MarshalText() ([]byte, error) {
    var b bytes.Buffer
    if a.VideoId != "" {
@@ -259,10 +258,6 @@ func (a *Address) MarshalText() ([]byte, error) {
       b.WriteString(a.EditId)
    }
    return b.Bytes(), nil
-}
-
-type Manifest struct {
-   Url string
 }
 
 type Address struct {
