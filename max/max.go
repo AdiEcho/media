@@ -15,73 +15,6 @@ import (
    "time"
 )
 
-func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error {
-   data, err := json.Marshal(login)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest(
-      "POST", home_market + "/login", bytes.NewReader(data),
-   )
-   if err != nil {
-      return err
-   }
-   req.Header.Set("authorization", "Bearer " + d.Token.Value)
-   req.Header.Set("content-type", "application/json")
-   req.Header.Set("user-agent", "BEAM-Android/4.12.0 (Google/Android SDK built for x86)")
-   req.Header.Set("x-device-info", "BEAM-Android/4.12.0 (Google/Android SDK built for x86; ANDROID/7.0; ab3d8214d8d3f368/b6746ddc-7bc7-471f-a16c-f6aaf0c34d26)")
-   req.Header.Set("x-disco-arkose-sitekey", "B0217B00-2CA4-41CC-925D-1EEB57BFFC2F")
-   req.Header.Set("x-disco-arkose-token", key.Token)
-   req.Header.Set("x-disco-client", "ANDROID:7.0:beam:4.12.0")
-   req.Header.Set("x-disco-client-id", func() string {
-      timestamp := time.Now().Unix()
-      hash := hmac.New(sha256.New, default_key.Key)
-      fmt.Fprintf(hash, "%v:POST:/login:%s", timestamp, data)
-      signature := hash.Sum(nil)
-      return fmt.Sprintf("%v:%v:%x", default_key.Id, timestamp, signature)
-   }())
-   req.Header.Set("x-disco-params", "realm=bolt,bid=beam,features=ar,rr")
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   d.Token.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   d.Session.Raw = []byte(resp.Header.Get("x-wbd-session-state"))
-   return nil
-}
-
-func (d *DefaultToken) Unmarshal() error {
-   d.Session.Value = SessionState{}
-   d.Session.Value.Set(string(d.Session.Raw))
-   var data struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-   err := json.Unmarshal(d.Token.Raw, &data)
-   if err != nil {
-      return err
-   }
-   d.Token.Value = data.Data.Attributes.Token
-   return nil
-}
-
-type DefaultToken struct {
-   Session Value[SessionState]
-   Token Value[string]
-}
-
 func (d *DefaultToken) New() error {
    req, err := http.NewRequest(
       "", "https://default.any-any.prd.api.discomax.com/token?realm=bolt", nil,
@@ -300,11 +233,6 @@ func (s SessionState) Delete() {
          delete(s, key)
       }
    }
-}
-
-type Value[T any] struct {
-   Value T
-   Raw []byte
 }
 
 type DefaultLogin struct {

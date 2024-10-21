@@ -1,6 +1,7 @@
 package max
 
 import (
+   "fmt"
    "os"
    "testing"
 )
@@ -12,10 +13,13 @@ func TestLogin(t *testing.T) {
    }
    var token bolt_token
    token.st = string(data)
-   resp, err := token.login()
+   login, err := token.login()
    if err != nil {
       t.Fatal(err)
    }
-   defer resp.Body.Close()
-   resp.Write(os.Stdout)
+   err = login.unmarshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Printf("%+v\n", login.Data)
 }
