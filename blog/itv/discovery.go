@@ -10,6 +10,12 @@ import (
    "os"
 )
 
+//Show() string
+//Season() int
+//Episode() int
+//Title() string
+//Year() int
+
 func main() {
    var req http.Request
    req.Header = http.Header{}
