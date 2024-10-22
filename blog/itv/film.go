@@ -143,22 +143,5 @@ query {
       }
     }
   }
-  titlesToRedirect: titles(
-    filter: {
-      legacyId: "10/4008"
-      titleTypes: [SPECIAL, FILM]
-      available: "NOW"
-      tiers: ["PAID", "FREE"]
-    }
-  ) {
-    legacyId
-    brandLegacyId
-    title
-    titleType
-    brand {
-      title
-      legacyId
-    }
-  }
 }
 `
