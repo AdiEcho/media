@@ -18,9 +18,10 @@ func main() {
    req.URL.Path = "/discovery"
    req.URL.Scheme = "https"
    value := url.Values{}
-   //pass
-   //value["query"] = []string{fmt.Sprintf(format, "2/5460/0023")}
-   value["query"] = []string{fmt.Sprintf(format, "10/4008/0001")}
+   // episode
+   value["query"] = []string{fmt.Sprintf(format, "2/5460/0023")}
+   // film
+   //value["query"] = []string{fmt.Sprintf(format, "10/4008/0001")}
    req.URL.RawQuery = value.Encode()
    resp, err := http.DefaultClient.Do(&req)
    if err != nil {
@@ -34,7 +35,6 @@ func main() {
    var dst bytes.Buffer
    json.Indent(&dst, src, "", " ")
    os.WriteFile("discovery.json", dst.Bytes(), os.ModePerm)
-   fmt.Println(&dst)
 }
 
 const format = `

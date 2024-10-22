@@ -1,0 +1,81 @@
+{
+ "data": {
+  "titles": [
+   {
+    "episodeNumber": 12,
+    "series": {
+     "fullSeries": true,
+     "tier": [
+      "FREE"
+     ],
+     "seriesNumber": 2,
+     "longRunning": false
+    },
+    "contentOwner": null,
+    "partnership": null,
+    "versions": [
+     {
+      "scheduleEvent": {
+       "originalBroadcastDateTime": "2018-02-02T01:15:00Z"
+      }
+     }
+    ],
+    "ccid": "sdg7k3p",
+    "titleType": "EPISODE",
+    "legacyId": "2/5460/0023",
+    "brandLegacyId": "2/5460",
+    "title": "Rebranding",
+    "channel": {
+     "name": "ITV2"
+    },
+    "regionalisation": false,
+    "broadcastDateTime": "2018-02-02T01:15:00Z",
+    "imageUrl": "https://ovp.itv.com/images/episode/sdg7k3p/itv_hub/{class}/{aspect_ratio}?distributionPartner={distributionPartner}&fallback={fallback}&treatment={treatment}&w={width}&h={height}&q={quality}&blur={blur}&bg={bg}",
+    "tier": [
+     "FREE"
+    ],
+    "visuallySigned": false,
+    "nextAvailableTitle": {
+     "legacyId": "2/5460/0024"
+    },
+    "brand": {
+     "numberOfAvailableSeries": 6
+    },
+    "synopses": {
+     "ninety": "A new corporate vice-president shakes things up at the store.",
+     "epg": "A new corporate vice-president shakes things up at the store. Mateo gets involved in relationship rumours and Dina gets revenge against a snitch."
+    },
+    "latestAvailableVersion": {
+     "legacyId": "2/5460/0023#001",
+     "duration": "PT30M",
+     "linearContent": false,
+     "playlistUrl": "https://magni.itv.com/playlist/itvonline/ITV/2_5460_0023.001",
+     "visuallySigned": false,
+     "tier": [
+      "FREE"
+     ],
+     "availability": [
+      {
+       "start": "2023-02-16T07:00:00Z",
+       "end": "2025-01-31T23:59:00Z"
+      },
+      {
+       "start": "2023-02-16T07:00:00Z",
+       "end": "2025-01-31T23:59:00Z"
+      },
+      {
+       "start": "2023-02-16T07:00:00Z",
+       "end": "2025-01-31T23:59:00Z"
+      }
+     ],
+     "subtitled": true,
+     "audioDescribed": true,
+     "compliance": {
+      "displayableGuidance": "Contains some adult humour."
+     },
+     "bsl": null
+    }
+   }
+  ]
+ }
+}
