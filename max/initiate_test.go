@@ -14,7 +14,6 @@ func TestInitiate(t *testing.T) {
       t.Fatal(err)
    }
    os.WriteFile("token.txt", []byte(token.st), os.ModePerm)
-   ///////////////////////
    time.Sleep(time.Second)
    initiate, err := token.initiate()
    if err != nil {

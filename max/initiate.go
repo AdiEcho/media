@@ -5,16 +5,7 @@ import (
    "net/http"
 )
 
-type link_initiate struct {
-   Data struct {
-      Attributes struct {
-         LinkingCode string
-         TargetUrl string
-      }
-   }
-}
-
-func (b *bolt_token) initiate() (*link_initiate, error) {
+func (b *BoltToken) Initiate() (*LinkInitiate, error) {
    req, err := http.NewRequest(
       "POST", prd_api + "/authentication/linkDevice/initiate", nil,
    )
@@ -30,10 +21,19 @@ func (b *bolt_token) initiate() (*link_initiate, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   link := &link_initiate{}
+   link := &LinkInitiate{}
    err = json.NewDecoder(resp.Body).Decode(link)
    if err != nil {
       return nil, err
    }
    return link, nil
+}
+
+type LinkInitiate struct {
+   Data struct {
+      Attributes struct {
+         LinkingCode string
+         TargetUrl string
+      }
+   }
 }

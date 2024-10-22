@@ -6,16 +6,16 @@ import (
    "net/http"
 )
 
-type link_login struct {
-   raw []byte
-   state string
+type LinkLogin struct {
+   State string
+   Raw []byte
    token string
 }
 
 // you must
 // /authentication/linkDevice/initiate
 // first or this will always fail
-func (b bolt_token) login() (*link_login, error) {
+func (b BoltToken) Login() (*LinkLogin, error) {
    req, err := http.NewRequest(
       "POST", prd_api + "/authentication/linkDevice/login", nil,
    )
@@ -28,7 +28,7 @@ func (b bolt_token) login() (*link_login, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   var link link_login
+   var link LinkLogin
    link.raw, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
@@ -37,7 +37,7 @@ func (b bolt_token) login() (*link_login, error) {
    return &link, nil
 }
 
-func (v *link_login) unmarshal() error {
+func (v *LinkLogin) Unmarshal() error {
    var value struct {
       Data struct {
          Attributes struct {

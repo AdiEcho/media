@@ -23,13 +23,12 @@ func (f *flags) New() error {
 }
 
 type flags struct {
-   email string
    home string
-   max_height int
-   password string
    representation string
    s internal.Stream
    address max.Address
+   initiate bool
+   login bool
 }
 
 func main() {
@@ -40,16 +39,24 @@ func main() {
    }
    flag.TextVar(&f.address, "a", &f.address, "address")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
-   flag.StringVar(&f.email, "e", "", "email")
    flag.StringVar(&f.representation, "i", "", "representation")
+   flag.BoolVar(
+      &f.initiate, "initiate", "", "/authentication/linkDevice/initiate",
+   )
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
-   flag.IntVar(&f.max_height, "m", 1079, "max height")
-   flag.StringVar(&f.password, "p", "", "password")
+   flag.BoolVar(
+      &f.login, "login", "", "/authentication/linkDevice/login",
+   )
    flag.Parse()
    text.Transport{}.Set(true)
    switch {
-   case f.password != "":
-      err := f.authenticate()
+   case f.initiate:
+      err := f.do_initiate()
+      if err != nil {
+         panic(err)
+      }
+   case f.login:
+      err := f.do_login()
       if err != nil {
          panic(err)
       }
