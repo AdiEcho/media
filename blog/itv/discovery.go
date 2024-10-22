@@ -3,6 +3,7 @@ package main
 import (
    "bytes"
    "encoding/json"
+   "fmt"
    "io"
    "net/http"
    "net/url"
@@ -15,10 +16,12 @@ func main() {
    req.URL = &url.URL{}
    req.URL.Host = "content-inventory.prd.oasvc.itv.com"
    req.URL.Path = "/discovery"
-   value := url.Values{}
-   value["query"] = []string{query}
-   req.URL.RawQuery = value.Encode()
    req.URL.Scheme = "https"
+   value := url.Values{}
+   //pass
+   //value["query"] = []string{fmt.Sprintf(format, "2/5460/0023")}
+   value["query"] = []string{fmt.Sprintf(format, "10/4008/0001")}
+   req.URL.RawQuery = value.Encode()
    resp, err := http.DefaultClient.Do(&req)
    if err != nil {
       panic(err)
@@ -30,20 +33,14 @@ func main() {
    }
    var dst bytes.Buffer
    json.Indent(&dst, src, "", " ")
-   os.WriteFile("film.json", dst.Bytes(), os.ModePerm)
+   os.WriteFile("discovery.json", dst.Bytes(), os.ModePerm)
+   fmt.Println(&dst)
 }
 
-const query = `
+const format = `
 query {
   titles(
-    filter: {
-      titleTypes: [SPECIAL, FILM]
-      brandLegacyId: "10/4008"
-      available: "NOW"
-      broadcaster: ITV
-      platform: DOTCOM
-      tiers: ["FREE", "PAID"]
-    }
+    filter: { legacyId: %q }
   ) {
     ... on Episode {
       episodeNumber
@@ -133,10 +130,6 @@ query {
       audioDescribed
       compliance {
         displayableGuidance
-      }
-      variants {
-        features
-        protection
       }
       bsl {
         playlistUrl
