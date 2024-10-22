@@ -13,7 +13,7 @@ func (b *BoltToken) Initiate() (*LinkInitiate, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "cookie": {"st=" + b.st},
+      "cookie": {"st=" + b.St},
       "x-device-info": {device_info},
    }
    resp, err := http.DefaultClient.Do(req)

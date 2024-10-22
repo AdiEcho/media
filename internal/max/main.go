@@ -1,8 +1,8 @@
 package main
 
 import (
-   "41.neocities.org/media/max"
    "41.neocities.org/media/internal"
+   "41.neocities.org/media/max"
    "41.neocities.org/text"
    "flag"
    "os"
@@ -23,12 +23,13 @@ func (f *flags) New() error {
 }
 
 type flags struct {
-   home string
+   address        max.Address
+   home           string
+   initiate       bool
+   login          bool
    representation string
-   s internal.Stream
-   address max.Address
-   initiate bool
-   login bool
+   s              internal.Stream
+   max_width uint64
 }
 
 func main() {
@@ -41,12 +42,13 @@ func main() {
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.BoolVar(
-      &f.initiate, "initiate", "", "/authentication/linkDevice/initiate",
+      &f.initiate, "initiate", false, "/authentication/linkDevice/initiate",
    )
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
    flag.BoolVar(
-      &f.login, "login", "", "/authentication/linkDevice/login",
+      &f.login, "login", false, "/authentication/linkDevice/login",
    )
+   flag.Uint64Var(&f.max_width, "m", 1280, "max width")
    flag.Parse()
    text.Transport{}.Set(true)
    switch {
