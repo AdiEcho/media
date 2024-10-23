@@ -28,6 +28,10 @@ func main() {
    value["query"] = []string{fmt.Sprintf(format, "2/5460/0023")}
    // film
    //value["query"] = []string{fmt.Sprintf(format, "10/4008/0001")}
+   
+   // itv.com/watch/joan/10a3918/10a3918a0001
+   value["query"] = []string{fmt.Sprintf(format, "10/3918/0001")}
+   
    req.URL.RawQuery = value.Encode()
    resp, err := http.DefaultClient.Do(&req)
    if err != nil {
