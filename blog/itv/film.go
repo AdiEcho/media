@@ -54,78 +54,16 @@ query {
    titles(filter: {
       legacyId: "10/3915/0002"
    }) {
-      ... on Episode {
-         episodeNumber
-         series {
-            longRunning
-            seriesNumber
-            seriesType
-         }
-         contentOwner
-         partnership
-         versions {
-            scheduleEvent {
-               originalBroadcastDateTime
-            }
-         }
-      }
-      ... on Special {
-         categories
-         contentOwner
-         episodeNumber
-         partnership
-         productionYear
-         genres {
-            id
-            name
-         }
-      }
-      ... on Film {
-         categories
-         contentOwner
-         partnership
-         productionYear
-         genres {
-            id
-            name
-            hubCategory
-         }
-      }
-      ccid
-      titleType
-      legacyId
-      brandLegacyId
-      title
-      channel {
-         name
-      }
-      contentOwner
-      partnership
-      regionalisation
-      broadcastDateTime
-      tier
-      visuallySigned
-      nextAvailableTitle {
-         legacyId
-      }
-      series {
-         fullSeries
-         tier
-         seriesNumber
-         longRunning
-      }
       brand {
-         numberOfAvailableSeries
          title
       }
-      latestAvailableVersion {
-         legacyId
-         duration
-         linearContent
-         visuallySigned
-         tier
-         subtitled
-         audioDescribed
+      ... on Episode {
+         seriesNumber
+         episodeNumber
+      }
+      title
+      ... on Film {
+         productionYear
       }
    }
 }
