@@ -9,6 +9,22 @@ import (
    "time"
 )
 
+var tests = []struct{
+   content_id string
+   key_id string
+   legacy_id string
+   url string
+}{
+   {
+      legacy_id: "10/3463/0001",
+      url: "itv.com/watch/pulp-fiction/10a3463",
+   },
+   {
+      legacy_id: "10/3915/0002",
+      url: "itv.com/watch/community/10a3915/10a3915a0002",
+   },
+}
+
 func TestDiscovery(t *testing.T) {
    for _, test := range tests {
       var title discovery_title
@@ -25,32 +41,21 @@ func TestDiscovery(t *testing.T) {
    }
 }
 
-var tests = []struct{
-   legacy_id string
-   url string
-}{
-   {
-      legacy_id: "10/3463/0001",
-      url: "itv.com/watch/pulp-fiction/10a3463",
-   },
-   {
-      legacy_id: "10/3915/0002",
-      url: "itv.com/watch/community/10a3915/10a3915a0002",
-   },
-}
 func TestPlaylist(t *testing.T) {
-   var play playlist
-   err := play.New()
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      var title discovery_title
+      err := title.New(test.legacy_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      play, err := title.playlist()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(play.resolution_720())
+      time.Sleep(time.Second)
    }
-   fmt.Println(play.resolution_720())
 }
-
-const (
-   content_id = "10-3918-0001-001_34"
-   key_id = "\xcex\xf3*\x03\x9aD\x1a\x890\x10Ɖ@\xcd\xf2"
-)
 
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -65,17 +70,20 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var pssh widevine.Pssh
-   pssh.ContentId = []byte(content_id)
-   pssh.KeyId = []byte(key_id)
-   var module widevine.Cdm
-   err = module.New(private_key, client_id, pssh.Marshal())
-   if err != nil {
-      t.Fatal(err)
+   for _, test := range tests {
+      var pssh widevine.Pssh
+      pssh.ContentId = []byte(test.content_id)
+      pssh.KeyId = []byte(test.key_id)
+      var module widevine.Cdm
+      err = module.New(private_key, client_id, pssh.Marshal())
+      if err != nil {
+         t.Fatal(err)
+      }
+      key, err := module.Key(poster{}, pssh.KeyId)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
    }
-   key, err := module.Key(poster{}, []byte(key_id))
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%x\n", key)
 }

@@ -14,17 +14,20 @@ const query_discovery = `
    titles(filter: {
       legacyId: %q
    }) {
-      brand {
-         title
-      }
       ... on Episode {
          seriesNumber
          episodeNumber
       }
-      title
       ... on Film {
          productionYear
       }
+      brand {
+         title
+      }
+      latestAvailableVersion {
+         playlistUrl
+      }
+      title
    }
 }
 `
@@ -48,10 +51,16 @@ func (d *discovery_title) New(legacy_id string) error {
       Data struct {
          Titles []discovery_title
       }
+      Errors []struct {
+         Message string
+      }
    }
    err = json.NewDecoder(resp.Body).Decode(&value)
    if err != nil {
       return err
+   }
+   if v := value.Errors; len(v) >= 1 {
+      return errors.New(v[0].Message)
    }
    *d = value.Data.Titles[0]
    return nil
@@ -80,21 +89,44 @@ type namer struct {
    title discovery_title
 }
 
-type discovery_title struct {
-   Brand *struct {
-      Title string
-   }
-   SeriesNumber int
-   EpisodeNumber int
-   Title string
-   ProductionYear int
-}
-
 func (n namer) Year() int {
    return n.title.ProductionYear
 }
+
+func (p *playlist) resolution_720() (string, bool) {
+   for _, file := range p.Playlist.Video.MediaFiles {
+      if file.Resolution == "720" {
+         return file.Href, true
+      }
+   }
+   return "", false
+}
+
+func (poster) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Host = "itvpnp.live.ott.irdeto.com"
+   u.Path = "/Widevine/getlicense"
+   u.RawQuery = "AccountId=itvpnp"
+   u.Scheme = "https"
+   return u.String(), true
+}
+
+type poster struct{}
+
+func (poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (poster) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
 // hard geo block
-func (p *playlist) New() error {
+func (d discovery_title) playlist() (*playlist, error) {
    var value struct {
       Client struct {
          Id string `json:"id"`
@@ -121,33 +153,41 @@ func (p *playlist) New() error {
    value.VariantAvailability.PlatformTag = "dotcom"
    data, err := json.MarshalIndent(value, "", " ")
    if err != nil {
-      return err
+      return nil, err
    }
    req, err := http.NewRequest(
-      "POST", "https://magni.itv.com/playlist/itvonline/ITV/10_3918_0001.001",
-      bytes.NewReader(data),
+      "POST", d.LatestAvailableVersion.PlaylistUrl, bytes.NewReader(data),
    )
    if err != nil {
-      return err
+      return nil, err
    }
    req.Header.Set("accept", "application/vnd.itv.vod.playlist.v4+json")
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    if resp.StatusCode != http.StatusOK {
-      return errors.New(resp.Status)
+      return nil, errors.New(resp.Status)
    }
-   return json.NewDecoder(resp.Body).Decode(p)
+   play := &playlist{}
+   err = json.NewDecoder(resp.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
 }
 
-func (p *playlist) resolution_720() (string, bool) {
-   for _, file := range p.Playlist.Video.MediaFiles {
-      if file.Resolution == "720" {
-         return file.Href, true
-      }
+type discovery_title struct {
+   LatestAvailableVersion struct {
+      PlaylistUrl string
    }
-   return "", false
+   Brand *struct {
+      Title string
+   }
+   EpisodeNumber int
+   ProductionYear int
+   SeriesNumber int
+   Title string
 }
 
 type playlist struct {
@@ -159,26 +199,4 @@ type playlist struct {
          }
       }
    }
-}
-func (poster) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Host = "itvpnp.live.ott.irdeto.com"
-   u.Path = "/Widevine/getlicense"
-   u.RawQuery = "AccountId=itvpnp"
-   u.Scheme = "https"
-   return u.String(), true
-}
-
-type poster struct{}
-
-func (poster) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (poster) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (poster) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
 }
