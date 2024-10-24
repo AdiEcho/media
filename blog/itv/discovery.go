@@ -55,6 +55,26 @@ func (d *discovery_title) New(legacy_id string) error {
    return nil
 }
 
+func (discovery_title) Show() string {
+   return ""
+}
+
+func (discovery_title) Season() int {
+   return 0
+}
+
+func (discovery_title) Episode() int {
+   return 0
+}
+
+func (discovery_title) Title() string {
+   return ""
+}
+
+func (discovery_title) Year() int {
+   return 0
+}
+
 type discovery_title struct {
    Brand *struct {
       Title string
