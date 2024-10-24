@@ -37,89 +37,85 @@ func main() {
 // missing year
 const query = `
 {
-  versions(
-    filter: {
-      legacyId: "10/3915/0002#001"
-    }
-  ) {
-    legacyId
-    tier
-    linearContent
-    broadcastDateTime
-    compliance {
-      displayableGuidance
-    }
-    duration
-    playlistUrl
-    visuallySigned
-    bsl {
-      playlistUrl
-    }
-    availability {
-      start
-      end
-    }
-    title {
-      ccid
-      titleType
-      title
+   versions(filter: { legacyId: "10/3915/0002#001" }) {
       legacyId
-      imageUrl(imageType: ITVX)
-      synopses {
-        ninety
-        epg
+      tier
+      linearContent
+      broadcastDateTime
+      compliance {
+         displayableGuidance
       }
-      series {
-        fullSeries
-        longRunning
-        numberOfAvailableEpisodes
+      duration
+      playlistUrl
+      visuallySigned
+      bsl {
+         playlistUrl
       }
-      ... on Episode {
-        brandLegacyId
-        episodeNumber
-        seriesNumber
-        channel {
-          name
-        }
-        brand {
-          categories
-          genres {
-            id
-            name
-          }
-          title
-        }
-        nextAvailableTitle {
-          latestAvailableVersion {
-            legacyId
-          }
-        }
+      availability {
+         start
+         end
       }
-      ... on Film {
-        brandLegacyId
-        title
-        categories
-        genres {
-          id
-          name
-        }
-        channel {
-          name
-        }
+      title {
+         ccid
+         titleType
+         title
+         legacyId
+         imageUrl(imageType: ITVX)
+         synopses {
+            ninety
+            epg
+         }
+         series {
+            fullSeries
+            longRunning
+            numberOfAvailableEpisodes
+         }
+         ... on Episode {
+            brandLegacyId
+            episodeNumber
+            seriesNumber
+            channel {
+               name
+            }
+            brand {
+               categories
+               genres {
+                  id
+                  name
+               }
+               title
+            }
+            nextAvailableTitle {
+               latestAvailableVersion {
+                  legacyId
+               }
+            }
+         }
+         ... on Film {
+            brandLegacyId
+            title
+            categories
+            genres {
+               id
+               name
+            }
+            channel {
+               name
+            }
+         }
+         ... on Special {
+            brandLegacyId
+            title
+            categories
+            genres {
+               id
+               name
+            }
+            channel {
+               name
+            }
+         }
       }
-      ... on Special {
-        brandLegacyId
-        title
-        categories
-        genres {
-          id
-          name
-        }
-        channel {
-          name
-        }
-      }
-    }
-  }
+   }
 }
 `
