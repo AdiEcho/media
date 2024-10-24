@@ -1,9 +1,12 @@
 package main
 
 import (
+   "bytes"
+   "encoding/json"
+   "fmt"
+   "io"
    "net/http"
    "net/url"
-   "os"
 )
 
 func main() {
@@ -30,19 +33,26 @@ func main() {
       panic(err)
    }
    defer resp.Body.Close()
-   resp.Write(os.Stdout)
+   src, err := io.ReadAll(resp.Body)
+   if err != nil {
+      panic(err)
+   }
+   dst := &bytes.Buffer{}
+   json.Indent(dst, src, "", " ")
+   fmt.Println(dst)
 }
 
-// itv.com/watch/community/10a3915/10a3915a0002
-//legacyId: "10/3915/0002"
+/*
+itv.com/watch/community/10a3915/10a3915a0002
+legacyId: "10/3915/0002"
 
-// itv.com/watch/pulp-fiction/10a3463
-//legacyId: "10/3463/0001"
-
+itv.com/watch/pulp-fiction/10a3463
+legacyId: "10/3463/0001"
+*/
 const query = `
 query {
    titles(filter: {
-      legacyId: "10/3463/0001"
+      legacyId: "10/3915/0002"
    }) {
       ... on Episode {
          episodeNumber
@@ -69,11 +79,6 @@ query {
             id
             name
          }
-         versions {
-            scheduleEvent {
-               originalBroadcastDateTime
-            }
-         }
       }
       ... on Film {
          categories
@@ -98,7 +103,6 @@ query {
       partnership
       regionalisation
       broadcastDateTime
-      imageUrl(imageType: ITVX)
       tier
       visuallySigned
       nextAvailableTitle {
@@ -114,29 +118,14 @@ query {
          numberOfAvailableSeries
          title
       }
-      synopses {
-         ninety
-         epg
-      }
       latestAvailableVersion {
          legacyId
          duration
          linearContent
-         playlistUrl
          visuallySigned
          tier
-         availability {
-            start
-            end
-         }
          subtitled
          audioDescribed
-         compliance {
-            displayableGuidance
-         }
-         bsl {
-            playlistUrl
-         }
       }
    }
 }
