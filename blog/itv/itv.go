@@ -4,10 +4,95 @@ import (
    "bytes"
    "encoding/json"
    "errors"
+   "fmt"
    "net/http"
    "net/url"
 )
 
+const query_discovery = `
+{
+   titles(filter: {
+      legacyId: %q
+   }) {
+      brand {
+         title
+      }
+      ... on Episode {
+         seriesNumber
+         episodeNumber
+      }
+      title
+      ... on Film {
+         productionYear
+      }
+   }
+}
+`
+
+func (d *discovery_title) New(legacy_id string) error {
+   req, err := http.NewRequest(
+      "", "https://content-inventory.prd.oasvc.itv.com/discovery", nil,
+   )
+   if err != nil {
+      return err
+   }
+   req.URL.RawQuery = url.Values{
+      "query": {fmt.Sprintf(query_discovery, legacy_id)},
+   }.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   var value struct {
+      Data struct {
+         Titles []discovery_title
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&value)
+   if err != nil {
+      return err
+   }
+   *d = value.Data.Titles[0]
+   return nil
+}
+
+func (n namer) Show() string {
+   if n.title.Brand != nil {
+      return n.title.Brand.Title
+   }
+   return ""
+}
+
+func (n namer) Season() int {
+   return n.title.SeriesNumber
+}
+
+func (n namer) Episode() int {
+   return n.title.EpisodeNumber
+}
+
+func (n namer) Title() string {
+   return n.title.Title
+}
+
+type namer struct {
+   title discovery_title
+}
+
+type discovery_title struct {
+   Brand *struct {
+      Title string
+   }
+   SeriesNumber int
+   EpisodeNumber int
+   Title string
+   ProductionYear int
+}
+
+func (n namer) Year() int {
+   return n.title.ProductionYear
+}
 // hard geo block
 func (p *playlist) New() error {
    var value struct {
