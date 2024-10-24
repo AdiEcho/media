@@ -34,10 +34,16 @@ func main() {
 }
 
 // itv.com/watch/community/10a3915/10a3915a0002
-// missing year
+//legacyId: "10/3915/0002#001"
+
+// itv.com/watch/pulp-fiction/10a3463
+//legacyId: "10/3463/0001#001"
+
 const query = `
 {
-   versions(filter: { legacyId: "10/3915/0002#001" }) {
+   versions(filter: {
+      legacyId: "10/3915/0002#001"
+   }) {
       legacyId
       tier
       linearContent
@@ -78,12 +84,12 @@ const query = `
                name
             }
             brand {
+               title
                categories
                genres {
                   id
                   name
                }
-               title
             }
             nextAvailableTitle {
                latestAvailableVersion {
@@ -92,6 +98,7 @@ const query = `
             }
          }
          ... on Film {
+            productionYear
             brandLegacyId
             title
             categories

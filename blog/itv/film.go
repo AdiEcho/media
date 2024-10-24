@@ -33,109 +33,111 @@ func main() {
    resp.Write(os.Stdout)
 }
 
-// missing show
-// missing year
+// itv.com/watch/community/10a3915/10a3915a0002
+//legacyId: "10/3915/0002"
+
+// itv.com/watch/pulp-fiction/10a3463
+//legacyId: "10/3463/0001"
 
 const query = `
 query {
-  titles(
-    filter: {
-      legacyId: "10/3915/0002"
-    }
-  ) {
-    ... on Episode {
-      episodeNumber
-      series {
-        longRunning
-        seriesNumber
-        seriesType
+   titles(filter: {
+      legacyId: "10/3463/0001"
+   }) {
+      ... on Episode {
+         episodeNumber
+         series {
+            longRunning
+            seriesNumber
+            seriesType
+         }
+         contentOwner
+         partnership
+         versions {
+            scheduleEvent {
+               originalBroadcastDateTime
+            }
+         }
       }
-      contentOwner
-      partnership
-      versions {
-        scheduleEvent {
-          originalBroadcastDateTime
-        }
+      ... on Special {
+         categories
+         contentOwner
+         episodeNumber
+         partnership
+         productionYear
+         genres {
+            id
+            name
+         }
+         versions {
+            scheduleEvent {
+               originalBroadcastDateTime
+            }
+         }
       }
-    }
-    ... on Special {
-      categories
-      contentOwner
-      episodeNumber
-      partnership
-      productionYear
-      genres {
-        id
-        name
+      ... on Film {
+         categories
+         contentOwner
+         partnership
+         productionYear
+         genres {
+            id
+            name
+            hubCategory
+         }
       }
-      versions {
-        scheduleEvent {
-          originalBroadcastDateTime
-        }
-      }
-    }
-    ... on Film {
-      categories
-      contentOwner
-      partnership
-      productionYear
-      genres {
-        id
-        name
-        hubCategory
-      }
-    }
-    ccid
-    titleType
-    legacyId
-    brandLegacyId
-    title
-    channel {
-      name
-    }
-    contentOwner
-    partnership
-    regionalisation
-    broadcastDateTime
-    imageUrl(imageType: ITVX)
-    tier
-    visuallySigned
-    nextAvailableTitle {
+      ccid
+      titleType
       legacyId
-    }
-    series {
-      fullSeries
+      brandLegacyId
+      title
+      channel {
+         name
+      }
+      contentOwner
+      partnership
+      regionalisation
+      broadcastDateTime
+      imageUrl(imageType: ITVX)
       tier
-      seriesNumber
-      longRunning
-    }
-    brand {
-      numberOfAvailableSeries
-    }
-    synopses {
-      ninety
-      epg
-    }
-    latestAvailableVersion {
-      legacyId
-      duration
-      linearContent
-      playlistUrl
       visuallySigned
-      tier
-      availability {
-        start
-        end
+      nextAvailableTitle {
+         legacyId
       }
-      subtitled
-      audioDescribed
-      compliance {
-        displayableGuidance
+      series {
+         fullSeries
+         tier
+         seriesNumber
+         longRunning
       }
-      bsl {
-        playlistUrl
+      brand {
+         numberOfAvailableSeries
+         title
       }
-    }
-  }
+      synopses {
+         ninety
+         epg
+      }
+      latestAvailableVersion {
+         legacyId
+         duration
+         linearContent
+         playlistUrl
+         visuallySigned
+         tier
+         availability {
+            start
+            end
+         }
+         subtitled
+         audioDescribed
+         compliance {
+            displayableGuidance
+         }
+         bsl {
+            playlistUrl
+         }
+      }
+   }
 }
 `
