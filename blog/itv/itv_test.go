@@ -3,27 +3,12 @@ package itv
 import (
    "41.neocities.org/text"
    "41.neocities.org/widevine"
+   "encoding/base64"
    "fmt"
    "os"
    "testing"
    "time"
 )
-
-var tests = []struct{
-   content_id string
-   key_id string
-   legacy_id string
-   url string
-}{
-   {
-      legacy_id: "10/3463/0001",
-      url: "itv.com/watch/pulp-fiction/10a3463",
-   },
-   {
-      legacy_id: "10/3915/0002",
-      url: "itv.com/watch/community/10a3915/10a3915a0002",
-   },
-}
 
 func TestDiscovery(t *testing.T) {
    for _, test := range tests {
@@ -57,6 +42,26 @@ func TestPlaylist(t *testing.T) {
    }
 }
 
+var tests = []struct{
+   content_id string
+   key_id string
+   legacy_id string
+   url string
+}{
+   {
+      content_id: "MTAtMzQ2My0wMDAxLTAwMV8zNA==",
+      key_id: "6eD/jRQxQeW1Lvl/lCPIfA==",
+      legacy_id: "10/3463/0001",
+      url: "itv.com/watch/pulp-fiction/10a3463",
+   },
+   {
+      content_id: "MTAtMzkxNS0wMDAyLTAwMV8zNA==",
+      key_id: "zCXIAYrkT9+eG6gbjNG1Qw==",
+      legacy_id: "10/3915/0002",
+      url: "itv.com/watch/community/10a3915/10a3915a0002",
+   },
+}
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -72,8 +77,14 @@ func TestLicense(t *testing.T) {
    }
    for _, test := range tests {
       var pssh widevine.Pssh
-      pssh.ContentId = []byte(test.content_id)
-      pssh.KeyId = []byte(test.key_id)
+      pssh.ContentId, err = base64.StdEncoding.DecodeString(test.content_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      pssh.KeyId, err = base64.StdEncoding.DecodeString(test.key_id)
+      if err != nil {
+         t.Fatal(err)
+      }
       var module widevine.Cdm
       err = module.New(private_key, client_id, pssh.Marshal())
       if err != nil {
