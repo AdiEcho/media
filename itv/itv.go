@@ -10,6 +10,15 @@ import (
    "strings"
 )
 
+func (p *Playlist) Resolution720() (string, bool) {
+   for _, file := range p.Playlist.Video.MediaFiles {
+      if file.Resolution == "720" {
+         return file.Href, true
+      }
+   }
+   return "", false
+}
+
 func (i LegacyId) String() string {
    var b strings.Builder
    for index, value := range i {
@@ -38,64 +47,8 @@ func (i *LegacyId) Set(text string) error {
 
 type LegacyId [3]string
 
-func (i LegacyId) discovery() (*discovery_title, error) {
-   req, err := http.NewRequest(
-      "", "https://content-inventory.prd.oasvc.itv.com/discovery", nil,
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.URL.RawQuery = url.Values{
-      "query": {fmt.Sprintf(query_discovery, i)},
-   }.Encode()
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var value struct {
-      Data struct {
-         Titles []discovery_title
-      }
-      Errors []struct {
-         Message string
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&value)
-   if err != nil {
-      return nil, err
-   }
-   if v := value.Errors; len(v) >= 1 {
-      return nil, errors.New(v[0].Message)
-   }
-   return &value.Data.Titles[0], nil
-}
-
-const query_discovery = `
-{
-   titles(filter: {
-      legacyId: %q
-   }) {
-      ... on Episode {
-         seriesNumber
-         episodeNumber
-      }
-      ... on Film {
-         productionYear
-      }
-      brand {
-         title
-      }
-      latestAvailableVersion {
-         playlistUrl
-      }
-      title
-   }
-}
-`
-
 // hard geo block
-func (d *discovery_title) playlist() (*playlist, error) {
+func (d *DiscoveryTitle) Playlist() (*Playlist, error) {
    var value struct {
       Client struct {
          Id string `json:"id"`
@@ -138,7 +91,7 @@ func (d *discovery_title) playlist() (*playlist, error) {
    if resp.StatusCode != http.StatusOK {
       return nil, errors.New(resp.Status)
    }
-   play := &playlist{}
+   play := &Playlist{}
    err = json.NewDecoder(resp.Body).Decode(play)
    if err != nil {
       return nil, err
@@ -146,7 +99,7 @@ func (d *discovery_title) playlist() (*playlist, error) {
    return play, nil
 }
 
-type discovery_title struct {
+type DiscoveryTitle struct {
    LatestAvailableVersion struct {
       PlaylistUrl string
    }
@@ -159,34 +112,34 @@ type discovery_title struct {
    Title string
 }
 
-type namer struct {
-   title *discovery_title
+type Namer struct {
+   Discovery *DiscoveryTitle
 }
 
-func (n namer) Show() string {
-   if n.title.Brand != nil {
-      return n.title.Brand.Title
+func (n Namer) Show() string {
+   if n.Discovery.Brand != nil {
+      return n.Discovery.Brand.Title
    }
    return ""
 }
 
-func (n namer) Season() int {
-   return n.title.SeriesNumber
+func (n Namer) Season() int {
+   return n.Discovery.SeriesNumber
 }
 
-func (n namer) Episode() int {
-   return n.title.EpisodeNumber
+func (n Namer) Episode() int {
+   return n.Discovery.EpisodeNumber
 }
 
-func (n namer) Title() string {
-   return n.title.Title
+func (n Namer) Title() string {
+   return n.Discovery.Title
 }
 
-func (n namer) Year() int {
-   return n.title.ProductionYear
+func (n Namer) Year() int {
+   return n.Discovery.ProductionYear
 }
 
-type playlist struct {
+type Playlist struct {
    Playlist struct {
       Video struct {
          MediaFiles []struct {
@@ -197,16 +150,7 @@ type playlist struct {
    }
 }
 
-func (p *playlist) resolution_720() (string, bool) {
-   for _, file := range p.Playlist.Video.MediaFiles {
-      if file.Resolution == "720" {
-         return file.Href, true
-      }
-   }
-   return "", false
-}
-
-func (poster) RequestUrl() (string, bool) {
+func (Poster) RequestUrl() (string, bool) {
    var u url.URL
    u.Host = "itvpnp.live.ott.irdeto.com"
    u.Path = "/Widevine/getlicense"
@@ -215,16 +159,72 @@ func (poster) RequestUrl() (string, bool) {
    return u.String(), true
 }
 
-type poster struct{}
+type Poster struct{}
 
-func (poster) WrapRequest(b []byte) ([]byte, error) {
+func (Poster) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (poster) UnwrapResponse(b []byte) ([]byte, error) {
+func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (poster) RequestHeader() (http.Header, error) {
+func (Poster) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
+}
+
+const query_discovery = `
+{
+   titles(filter: {
+      legacyId: %q
+   }) {
+      ... on Episode {
+         seriesNumber
+         episodeNumber
+      }
+      ... on Film {
+         productionYear
+      }
+      brand {
+         title
+      }
+      latestAvailableVersion {
+         playlistUrl
+      }
+      title
+   }
+}
+`
+
+func (i LegacyId) Discovery() (*DiscoveryTitle, error) {
+   req, err := http.NewRequest(
+      "", "https://content-inventory.prd.oasvc.itv.com/discovery", nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.URL.RawQuery = url.Values{
+      "query": {fmt.Sprintf(query_discovery, i)},
+   }.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var value struct {
+      Data struct {
+         Titles []DiscoveryTitle
+      }
+      Errors []struct {
+         Message string
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&value)
+   if err != nil {
+      return nil, err
+   }
+   if v := value.Errors; len(v) >= 1 {
+      return nil, errors.New(v[0].Message)
+   }
+   return &value.Data.Titles[0], nil
 }

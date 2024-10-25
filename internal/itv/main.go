@@ -5,11 +5,8 @@ import (
    "41.neocities.org/media/itv"
    "41.neocities.org/text"
    "flag"
-   "fmt"
-   "net/http"
    "os"
    "path/filepath"
-   "sort"
 )
 
 func (f *flags) New() error {
