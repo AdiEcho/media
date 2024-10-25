@@ -7,10 +7,24 @@ import (
    "fmt"
    "os"
    "path"
-   "reflect"
    "testing"
    "time"
 )
+
+func TestPlaylist(t *testing.T) {
+   for _, test := range tests {
+      discovery, err := test.legacy_id.discovery()
+      if err != nil {
+         t.Fatal(err)
+      }
+      play, err := discovery.playlist()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(play.resolution_720())
+      time.Sleep(time.Second)
+   }
+}
 
 var tests = []struct{
    content_id string
@@ -30,23 +44,6 @@ var tests = []struct{
       legacy_id: legacy_id{"10", "3915", "0002"},
       url: "itv.com/watch/community/10a3915/10a3915a0002",
    },
-}
-
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
-   }
-}
-
-var size_tests = []any{
-   discovery_title{},
-   legacy_id{},
-   namer{},
 }
 
 func TestLegacyId(t *testing.T) {
@@ -71,21 +68,6 @@ func TestDiscovery(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
-   }
-}
-
-func TestPlaylist(t *testing.T) {
-   for _, test := range tests {
-      discovery, err := test.legacy_id.discovery()
-      if err != nil {
-         t.Fatal(err)
-      }
-      play, err := discovery.playlist()
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(play.resolution_720())
       time.Sleep(time.Second)
    }
 }
