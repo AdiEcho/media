@@ -7,20 +7,10 @@ import (
    "fmt"
    "os"
    "path"
+   "reflect"
    "testing"
    "time"
 )
-
-func TestLegacyId(t *testing.T) {
-   for _, test := range tests {
-      var id legacy_id
-      err := id.Set(path.Base(test.url))
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(id)
-   }
-}
 
 var tests = []struct{
    content_id string
@@ -40,6 +30,34 @@ var tests = []struct{
       legacy_id: legacy_id{"10", "3915", "0002"},
       url: "itv.com/watch/community/10a3915/10a3915a0002",
    },
+}
+
+func TestSize(t *testing.T) {
+   size := reflect.TypeOf(&struct{}{}).Size()
+   for _, test := range size_tests {
+      if reflect.TypeOf(test).Size() > size {
+         fmt.Printf("*%T\n", test)
+      } else {
+         fmt.Printf("%T\n", test)
+      }
+   }
+}
+
+var size_tests = []any{
+   discovery_title{},
+   legacy_id{},
+   namer{},
+}
+
+func TestLegacyId(t *testing.T) {
+   for _, test := range tests {
+      var id legacy_id
+      err := id.Set(path.Base(test.url))
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(id)
+   }
 }
 
 func TestDiscovery(t *testing.T) {

@@ -33,85 +33,8 @@ const query_discovery = `
 }
 `
 
-type discovery_title struct {
-   LatestAvailableVersion struct {
-      PlaylistUrl string
-   }
-   Brand *struct {
-      Title string
-   }
-   EpisodeNumber int
-   ProductionYear int
-   SeriesNumber int
-   Title string
-}
-
-func (i *legacy_id) Set(text string) error {
-   var found bool
-   (*i)[0], text, found = strings.Cut(text, "a")
-   if !found {
-      return errors.New(`"a" not found`)
-   }
-   (*i)[1], (*i)[2], found = strings.Cut(text, "a")
-   if !found {
-      (*i)[2] = "0001"
-   }
-   return nil
-}
-
-type legacy_id [3]string
-
-type namer struct {
-   title *discovery_title
-}
-
-type playlist struct {
-   Playlist struct {
-      Video struct {
-         MediaFiles []struct {
-            Href string
-            Resolution string
-         }
-      }
-   }
-}
-
-func (p *playlist) resolution_720() (string, bool) {
-   for _, file := range p.Playlist.Video.MediaFiles {
-      if file.Resolution == "720" {
-         return file.Href, true
-      }
-   }
-   return "", false
-}
-
-func (poster) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Host = "itvpnp.live.ott.irdeto.com"
-   u.Path = "/Widevine/getlicense"
-   u.RawQuery = "AccountId=itvpnp"
-   u.Scheme = "https"
-   return u.String(), true
-}
-
-type poster struct{}
-
-func (poster) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (poster) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (poster) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-///
-
 // hard geo block
-func (d discovery_title) playlist() (*playlist, error) {
+func (d *discovery_title) playlist() (*playlist, error) {
    var value struct {
       Client struct {
          Id string `json:"id"`
@@ -162,6 +85,19 @@ func (d discovery_title) playlist() (*playlist, error) {
    return play, nil
 }
 
+type discovery_title struct {
+   LatestAvailableVersion struct {
+      PlaylistUrl string
+   }
+   Brand *struct {
+      Title string
+   }
+   EpisodeNumber int
+   ProductionYear int
+   SeriesNumber int
+   Title string
+}
+
 func (i legacy_id) String() string {
    return strings.Join(i[:], "/")
 }
@@ -199,6 +135,25 @@ func (i legacy_id) discovery() (*discovery_title, error) {
    return &value.Data.Titles[0], nil
 }
 
+func (i *legacy_id) Set(text string) error {
+   var found bool
+   (*i)[0], text, found = strings.Cut(text, "a")
+   if !found {
+      return errors.New(`"a" not found`)
+   }
+   (*i)[1], (*i)[2], found = strings.Cut(text, "a")
+   if !found {
+      (*i)[2] = "0001"
+   }
+   return nil
+}
+
+type legacy_id [3]string
+
+type namer struct {
+   title *discovery_title
+}
+
 func (n namer) Show() string {
    if n.title.Brand != nil {
       return n.title.Brand.Title
@@ -220,4 +175,47 @@ func (n namer) Title() string {
 
 func (n namer) Year() int {
    return n.title.ProductionYear
+}
+
+type playlist struct {
+   Playlist struct {
+      Video struct {
+         MediaFiles []struct {
+            Href string
+            Resolution string
+         }
+      }
+   }
+}
+
+func (p *playlist) resolution_720() (string, bool) {
+   for _, file := range p.Playlist.Video.MediaFiles {
+      if file.Resolution == "720" {
+         return file.Href, true
+      }
+   }
+   return "", false
+}
+
+func (poster) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Host = "itvpnp.live.ott.irdeto.com"
+   u.Path = "/Widevine/getlicense"
+   u.RawQuery = "AccountId=itvpnp"
+   u.Scheme = "https"
+   return u.String(), true
+}
+
+type poster struct{}
+
+func (poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (poster) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
 }
