@@ -196,6 +196,12 @@ const query_discovery = `
 }
 `
 
+// this is better than strings.Replace and strings.ReplaceAll
+func graphql_compact(s string) string {
+   field := strings.Fields(s)
+   return strings.Join(field, " ")
+}
+
 func (i LegacyId) Discovery() (*DiscoveryTitle, error) {
    req, err := http.NewRequest(
       "", "https://content-inventory.prd.oasvc.itv.com/discovery", nil,
@@ -204,7 +210,7 @@ func (i LegacyId) Discovery() (*DiscoveryTitle, error) {
       return nil, err
    }
    req.URL.RawQuery = url.Values{
-      "query": {fmt.Sprintf(query_discovery, i)},
+      "query": {fmt.Sprintf(graphql_compact(query_discovery), i)},
    }.Encode()
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
