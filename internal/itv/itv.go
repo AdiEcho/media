@@ -12,44 +12,6 @@ import (
    "sort"
 )
 
-type flags struct {
-   itv int
-   representation string
-   s internal.Stream
-}
-
-func (f *flags) New() error {
-   home, err := os.UserHomeDir()
-   if err != nil {
-      return err
-   }
-   home = filepath.ToSlash(home)
-   f.s.ClientId = home + "/widevine/client_id.bin"
-   f.s.PrivateKey = home + "/widevine/private_key.pem"
-   return nil
-}
-
-func main() {
-   var f flags
-   err := f.New()
-   if err != nil {
-      panic(err)
-   }
-   flag.IntVar(&f.itv, "b", 0, "itv ID")
-   flag.StringVar(&f.representation, "i", "", "representation")
-   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
-   flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.Parse()
-   text.Transport{}.Set(true)
-   if f.itv >= 1 {
-      err := f.download()
-      if err != nil {
-         panic(err)
-      }
-   } else {
-      flag.Usage()
-   }
-}
 func (f *flags) download() error {
    var meta itv.Metadata
    err := meta.New(f.itv)

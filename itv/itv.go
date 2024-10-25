@@ -10,6 +10,67 @@ import (
    "strings"
 )
 
+func (i LegacyId) String() string {
+   var b strings.Builder
+   for index, value := range i {
+      if value != "" {
+         if index >= 1 {
+            b.WriteByte('/')
+         }
+         b.WriteString(value)
+      }
+   }
+   return b.String()
+}
+
+func (i *LegacyId) Set(text string) error {
+   var found bool
+   (*i)[0], text, found = strings.Cut(text, "a")
+   if !found {
+      return errors.New(`"a" not found`)
+   }
+   (*i)[1], (*i)[2], found = strings.Cut(text, "a")
+   if !found {
+      (*i)[2] = "0001"
+   }
+   return nil
+}
+
+type LegacyId [3]string
+
+func (i LegacyId) discovery() (*discovery_title, error) {
+   req, err := http.NewRequest(
+      "", "https://content-inventory.prd.oasvc.itv.com/discovery", nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.URL.RawQuery = url.Values{
+      "query": {fmt.Sprintf(query_discovery, i)},
+   }.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var value struct {
+      Data struct {
+         Titles []discovery_title
+      }
+      Errors []struct {
+         Message string
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&value)
+   if err != nil {
+      return nil, err
+   }
+   if v := value.Errors; len(v) >= 1 {
+      return nil, errors.New(v[0].Message)
+   }
+   return &value.Data.Titles[0], nil
+}
+
 const query_discovery = `
 {
    titles(filter: {
@@ -97,58 +158,6 @@ type discovery_title struct {
    SeriesNumber int
    Title string
 }
-
-func (i legacy_id) String() string {
-   return strings.Join(i[:], "/")
-}
-
-func (i legacy_id) discovery() (*discovery_title, error) {
-   req, err := http.NewRequest(
-      "", "https://content-inventory.prd.oasvc.itv.com/discovery", nil,
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.URL.RawQuery = url.Values{
-      "query": {fmt.Sprintf(query_discovery, i)},
-   }.Encode()
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var value struct {
-      Data struct {
-         Titles []discovery_title
-      }
-      Errors []struct {
-         Message string
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&value)
-   if err != nil {
-      return nil, err
-   }
-   if v := value.Errors; len(v) >= 1 {
-      return nil, errors.New(v[0].Message)
-   }
-   return &value.Data.Titles[0], nil
-}
-
-func (i *legacy_id) Set(text string) error {
-   var found bool
-   (*i)[0], text, found = strings.Cut(text, "a")
-   if !found {
-      return errors.New(`"a" not found`)
-   }
-   (*i)[1], (*i)[2], found = strings.Cut(text, "a")
-   if !found {
-      (*i)[2] = "0001"
-   }
-   return nil
-}
-
-type legacy_id [3]string
 
 type namer struct {
    title *discovery_title

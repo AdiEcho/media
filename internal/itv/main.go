@@ -1,0 +1,52 @@
+package main
+
+import (
+   "41.neocities.org/media/internal"
+   "41.neocities.org/media/itv"
+   "41.neocities.org/text"
+   "flag"
+   "fmt"
+   "net/http"
+   "os"
+   "path/filepath"
+   "sort"
+)
+
+func (f *flags) New() error {
+   home, err := os.UserHomeDir()
+   if err != nil {
+      return err
+   }
+   home = filepath.ToSlash(home)
+   f.s.ClientId = home + "/widevine/client_id.bin"
+   f.s.PrivateKey = home + "/widevine/private_key.pem"
+   return nil
+}
+
+type flags struct {
+   legacy_id itv.LegacyId
+   representation string
+   s internal.Stream
+}
+
+func main() {
+   var f flags
+   err := f.New()
+   if err != nil {
+      panic(err)
+   }
+   flag.StringVar(&f.representation, "i", "", "representation")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
+   flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
+   flag.Var(&f.legacy_id, "b", "legacy ID")
+   flag.Parse()
+   text.Transport{}.Set(true)
+   if f.legacy_id.String() != "" {
+      err := f.download()
+      if err != nil {
+         panic(err)
+      }
+   } else {
+      flag.Usage()
+   }
+}
