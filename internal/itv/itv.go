@@ -27,7 +27,6 @@ func (f *flags) download() error {
    if !ok {
       return errors.New("resolution 720")
    }
-   //////////////////////////////////////////////////////////////////////////////
    req, err := http.NewRequest("", address, nil)
    if err != nil {
       return err
