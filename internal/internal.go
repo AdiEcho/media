@@ -18,13 +18,49 @@ import (
    "strings"
 )
 
-type Dasher interface {
-   Request() (*http.Request, error)
+type ForwardedFor struct {
+   Country string
+   IP string
 }
 
-func (s *Stream) init_protect(buf []byte) ([]byte, error) {
+var Forward = []ForwardedFor{
+{"Argentina", "186.128.0.0"},
+{"Australia", "1.128.0.0"},
+{"Bolivia", "179.58.0.0"},
+{"Brazil", "179.192.0.0"},
+{"Canada", "99.224.0.0"},
+{"Chile", "191.112.0.0"},
+{"Colombia", "181.128.0.0"},
+{"Costa Rica", "201.192.0.0"},
+{"Denmark", "2.104.0.0"},
+{"Ecuador", "186.68.0.0"},
+{"Egypt", "197.32.0.0"},
+{"Germany", "53.0.0.0"},
+{"Guatemala", "190.56.0.0"},
+{"India", "106.192.0.0"},
+{"Indonesia", "39.192.0.0"},
+{"Ireland", "87.32.0.0"},
+{"Italy", "79.0.0.0"},
+{"Latvia", "78.84.0.0"},
+{"Malaysia", "175.136.0.0"},
+{"Mexico", "189.128.0.0"},
+{"Netherlands", "145.160.0.0"},
+{"New Zealand", "49.224.0.0"},
+{"Norway", "88.88.0.0"},
+{"Peru", "190.232.0.0"},
+{"Russia", "95.24.0.0"},
+{"South Africa", "105.0.0.0"},
+{"South Korea", "175.192.0.0"},
+{"Spain", "88.0.0.0"},
+{"Sweden", "78.64.0.0"},
+{"Taiwan", "120.96.0.0"},
+{"United Kingdom", "25.0.0.0"},
+{"Venezuela", "190.72.0.0"},
+}
+
+func (s *Stream) init_protect(data []byte) ([]byte, error) {
    var file container.File
-   err := file.Read(buf)
+   err := file.Read(data)
    if err != nil {
       return nil, err
    }
@@ -49,14 +85,103 @@ func (s *Stream) init_protect(buf []byte) ([]byte, error) {
    return file.Append(nil)
 }
 
+func write_segment(data, key []byte) ([]byte, error) {
+   if key == nil {
+      return data, nil
+   }
+   var file container.File
+   err := file.Read(data)
+   if err != nil {
+      return nil, err
+   }
+   track := file.Moof.Traf
+   if senc := track.Senc; senc != nil {
+      for i, text := range file.Mdat.Data(&track) {
+         err = senc.Sample[i].DecryptCenc(text, key)
+         if err != nil {
+            return nil, err
+         }
+      }
+   }
+   return file.Append(nil)
+}
+
+func write_sidx(req *http.Request, index dash.Range) ([]sidx.Reference, error) {
+   data, _ := index.MarshalText()
+   req.Header.Set("range", "bytes=" + string(data))
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   var file container.File
+   err = file.Read(data)
+   if err != nil {
+      return nil, err
+   }
+   return file.Sidx.Reference, nil
+}
+
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type Stream struct {
+   ClientId string
+   PrivateKey string
+   Name text.Namer
+   Poster widevine.Poster
+   pssh []byte
+   key_id []byte
+}
+
+func (s Stream) key() ([]byte, error) {
+   if s.key_id == nil {
+      return nil, nil
+   }
+   private_key, err := os.ReadFile(s.PrivateKey)
+   if err != nil {
+      return nil, err
+   }
+   client_id, err := os.ReadFile(s.ClientId)
+   if err != nil {
+      return nil, err
+   }
+   if s.pssh == nil {
+      s.pssh = widevine.Pssh{KeyId: s.key_id}.Marshal()
+   }
+   var module widevine.Cdm
+   err = module.New(private_key, client_id, s.pssh)
+   if err != nil {
+      return nil, err
+   }
+   key, err := module.Key(s.Poster, s.key_id)
+   if err != nil {
+      return nil, err
+   }
+   slog.Info(
+      "CDM",
+      "PSSH", base64.StdEncoding.EncodeToString(s.pssh),
+      "key", base64.StdEncoding.EncodeToString(key),
+   )
+   return key, nil
+}
+
+type Dasher interface {
+   Mpd() (*http.Request, error)
+}
+
+///
+
 func (s *Stream) Download(rep dash.Representation) error {
-   if buf, ok := rep.Widevine(); ok {
+   if data, ok := rep.Widevine(); ok {
       var box pssh.Box
-      n, err := box.BoxHeader.Decode(buf)
+      n, err := box.BoxHeader.Decode(data)
       if err != nil {
          return err
       }
-      err = box.Read(buf[n:])
+      err = box.Read(data[n:])
       if err != nil {
          return err
       }
@@ -75,57 +200,6 @@ func (s *Stream) Download(rep dash.Representation) error {
    }
    initial, _ := rep.Initialization()
    return s.segment_template(ext, initial, base, rep.Media())
-}
-
-func write_segment(buf, key []byte) ([]byte, error) {
-   if key == nil {
-      return buf, nil
-   }
-   var file container.File
-   err := file.Read(buf)
-   if err != nil {
-      return nil, err
-   }
-   track := file.Moof.Traf
-   if senc := track.Senc; senc != nil {
-      for i, text := range file.Mdat.Data(&track) {
-         err = senc.Sample[i].DecryptCenc(text, key)
-         if err != nil {
-            return nil, err
-         }
-      }
-   }
-   return file.Append(nil)
-}
-
-func write_sidx(req *http.Request, index dash.Range) ([]sidx.Reference, error) {
-   buf, _ := index.MarshalText()
-   req.Header.Set("range", "bytes=" + string(buf))
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   buf, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   var file container.File
-   err = file.Read(buf)
-   if err != nil {
-      return nil, err
-   }
-   return file.Sidx.Reference, nil
-}
-
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type Stream struct {
-   ClientId string
-   PrivateKey string
-   Name text.Namer
-   Poster widevine.Poster
-   pssh []byte
-   key_id []byte
 }
 
 func Dash(req *http.Request) ([]dash.Representation, error) {
@@ -238,84 +312,12 @@ func (s Stream) segment_template(
    return nil
 }
 
-func (s Stream) key() ([]byte, error) {
-   if s.key_id == nil {
-      return nil, nil
-   }
-   private_key, err := os.ReadFile(s.PrivateKey)
-   if err != nil {
-      return nil, err
-   }
-   client_id, err := os.ReadFile(s.ClientId)
-   if err != nil {
-      return nil, err
-   }
-   if s.pssh == nil {
-      s.pssh = widevine.Pssh{KeyId: s.key_id}.Marshal()
-   }
-   var module widevine.Cdm
-   err = module.New(private_key, client_id, s.pssh)
-   if err != nil {
-      return nil, err
-   }
-   key, err := module.Key(s.Poster, s.key_id)
-   if err != nil {
-      return nil, err
-   }
-   slog.Info(
-      "CDM",
-      "PSSH", base64.StdEncoding.EncodeToString(s.pssh),
-      "key", base64.StdEncoding.EncodeToString(key),
-   )
-   return key, nil
-}
-
 func (s Stream) Create(ext string) (*os.File, error) {
    name, err := text.Name(s.Name)
    if err != nil {
       return nil, err
    }
    return os.Create(text.Clean(name) + ext)
-}
-
-type ForwardedFor struct {
-   Country string
-   IP string
-}
-
-var Forward = []ForwardedFor{
-{"Argentina", "186.128.0.0"},
-{"Australia", "1.128.0.0"},
-{"Bolivia", "179.58.0.0"},
-{"Brazil", "179.192.0.0"},
-{"Canada", "99.224.0.0"},
-{"Chile", "191.112.0.0"},
-{"Colombia", "181.128.0.0"},
-{"Costa Rica", "201.192.0.0"},
-{"Denmark", "2.104.0.0"},
-{"Ecuador", "186.68.0.0"},
-{"Egypt", "197.32.0.0"},
-{"Germany", "53.0.0.0"},
-{"Guatemala", "190.56.0.0"},
-{"India", "106.192.0.0"},
-{"Indonesia", "39.192.0.0"},
-{"Ireland", "87.32.0.0"},
-{"Italy", "79.0.0.0"},
-{"Latvia", "78.84.0.0"},
-{"Malaysia", "175.136.0.0"},
-{"Mexico", "189.128.0.0"},
-{"Netherlands", "145.160.0.0"},
-{"New Zealand", "49.224.0.0"},
-{"Norway", "88.88.0.0"},
-{"Peru", "190.232.0.0"},
-{"Russia", "95.24.0.0"},
-{"South Africa", "105.0.0.0"},
-{"South Korea", "175.192.0.0"},
-{"Spain", "88.0.0.0"},
-{"Sweden", "78.64.0.0"},
-{"Taiwan", "120.96.0.0"},
-{"United Kingdom", "25.0.0.0"},
-{"Venezuela", "190.72.0.0"},
 }
 
 func (s Stream) segment_base(
