@@ -7,13 +7,11 @@ import (
    "41.neocities.org/sofia/sidx"
    "41.neocities.org/text"
    "41.neocities.org/widevine"
-   "crypto/tls"
    "encoding/base64"
    "errors"
    "io"
    "log/slog"
    "net/http"
-   "net/http/cookiejar"
    "os"
    "strings"
 )
@@ -106,9 +104,7 @@ var Forward = []ForwardedFor{
 {"Venezuela", "190.72.0.0"},
 }
 
-///
-
-func (s Stream) segment_base(
+func (s *Stream) segment_base(
    ext string, base *dash.BaseUrl, segment *dash.SegmentBase,
 ) error {
    file, err := s.Create(ext)
@@ -159,30 +155,26 @@ func (s Stream) segment_base(
       segment.IndexRange.Start = segment.IndexRange.End + 1
       segment.IndexRange.End += uint64(reference.Size())
       data, _ := segment.IndexRange.MarshalText()
-      err := func() error {
+      data, err = func() ([]byte, error) {
          req.Header.Set("range", "bytes=" + string(data))
          resp, err := http.DefaultClient.Do(&req)
          if err != nil {
-            return err
+            return nil, err
          }
          defer resp.Body.Close()
          if resp.StatusCode != http.StatusPartialContent {
-            return errors.New(resp.Status)
+            return nil, errors.New(resp.Status)
          }
-         data, err := io.ReadAll(meter.Reader(resp))
-         if err != nil {
-            return err
-         }
-         data, err = write_segment(data, key)
-         if err != nil {
-            return err
-         }
-         _, err = file.Write(data)
-         if err != nil {
-            return err
-         }
-         return nil
+         return io.ReadAll(meter.Reader(resp))
       }()
+      if err != nil {
+         return err
+      }
+      data, err = write_segment(data, key)
+      if err != nil {
+         return err
+      }
+      _, err = file.Write(data)
       if err != nil {
          return err
       }
@@ -210,17 +202,7 @@ func write_sidx(req *http.Request, index dash.Range) ([]sidx.Reference, error) {
    return file.Sidx.Reference, nil
 }
 
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type Stream struct {
-   ClientId string
-   PrivateKey string
-   Name text.Namer
-   Poster widevine.Poster
-   pssh []byte
-   key_id []byte
-}
-
-func (s Stream) key() ([]byte, error) {
+func (s *Stream) key() ([]byte, error) {
    if s.key_id == nil {
       return nil, nil
    }
@@ -280,7 +262,7 @@ func (s *Stream) Download(rep dash.Representation) error {
    return s.segment_template(ext, initial, base, rep.Media())
 }
 
-func (s Stream) Create(ext string) (*os.File, error) {
+func (s *Stream) Create(ext string) (*os.File, error) {
    name, err := text.Name(s.Name)
    if err != nil {
       return nil, err
@@ -288,96 +270,22 @@ func (s Stream) Create(ext string) (*os.File, error) {
    return os.Create(text.Clean(name) + ext)
 }
 
-func (s Stream) segment_template(
-   ext, initial string, base *dash.BaseUrl, media []string,
-) error {
-   file, err := s.Create(ext)
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   req, err := http.NewRequest("", initial, nil)
-   if err != nil {
-      return err
-   }
-   if initial != "" {
-      req.URL = base.Url.ResolveReference(req.URL)
-      resp, err := http.DefaultClient.Do(req)
-      if err != nil {
-         return err
-      }
-      defer resp.Body.Close()
-      if resp.StatusCode != http.StatusOK {
-         return errors.New(resp.Status)
-      }
-      data, err := io.ReadAll(resp.Body)
-      if err != nil {
-         return err
-      }
-      data, err = s.init_protect(data)
-      if err != nil {
-         return err
-      }
-      _, err = file.Write(data)
-      if err != nil {
-         return err
-      }
-   }
-   key, err := s.key()
-   if err != nil {
-      return err
-   }
-   var meter text.ProgressMeter
-   meter.Set(len(media))
-   var transport text.Transport
-   transport.Set(false)
-   defer transport.Set(true)
-   client := http.Client{ // github.com/golang/go/issues/18639
-      Transport: &http.Transport{
-         Proxy: http.ProxyFromEnvironment,
-         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
-      },
-   }
-   for _, medium := range media {
-      req.URL, err = base.Url.Parse(medium)
-      if err != nil {
-         return err
-      }
-      data, err := func() ([]byte, error) {
-         resp, err := client.Do(req)
-         if err != nil {
-            return nil, err
-         }
-         defer resp.Body.Close()
-         if resp.StatusCode != http.StatusOK {
-            var b strings.Builder
-            resp.Write(&b)
-            return nil, errors.New(b.String())
-         }
-         return io.ReadAll(meter.Reader(resp))
-      }()
-      if err != nil {
-         return err
-      }
-      data, err = write_segment(data, key)
-      if err != nil {
-         return err
-      }
-      _, err = file.Write(data)
-      if err != nil {
-         return err
-      }
-   }
-   return nil
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type Stream struct {
+   ClientId string
+   PrivateKey string
+   Name text.Namer
+   Poster widevine.Poster
+   pssh []byte
+   key_id []byte
 }
 
-func Dash(req *http.Request) ([]dash.Representation, error) {
-   var err error
-   http.DefaultClient.Jar, err = cookiejar.New(nil)
+func Dash(client ClientRequest) ([]dash.Representation, error) {
+   req, err := client.DashRequest()
    if err != nil {
       return nil, err
    }
-   resp, err := http.DefaultClient.Do(req)
+   resp, err := client.DashClient().Do(req)
    if err != nil {
       return nil, err
    }
@@ -392,4 +300,9 @@ func Dash(req *http.Request) ([]dash.Representation, error) {
       return nil, err
    }
    return dash.Unmarshal(data, resp.Request.URL)
+}
+
+type ClientRequest interface {
+   DashClient() *http.Client
+   DashRequest() (*http.Request, error)
 }

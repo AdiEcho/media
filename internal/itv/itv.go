@@ -27,6 +27,11 @@ func (f *flags) download() error {
    if !ok {
       return errors.New("resolution 720")
    }
+   var err error
+   http.DefaultClient.Jar, err = cookiejar.New(nil)
+   if err != nil {
+      return nil, err
+   }
    req, err := http.NewRequest("", address, nil)
    if err != nil {
       return err
