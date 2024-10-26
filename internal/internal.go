@@ -10,9 +10,33 @@ import (
    "io"
    "log/slog"
    "net/http"
+   "net/http/cookiejar"
    "os"
    "strings"
 )
+
+func Dash(req *http.Request) ([]dash.Representation, error) {
+   var err error
+   http.DefaultClient.Jar, err = cookiejar.New(nil)
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return dash.Unmarshal(data, resp.Request.URL)
+}
 
 func (s Stream) segment_template(
    ext, initial string, base *dash.BaseUrl, media []string,
@@ -36,15 +60,15 @@ func (s Stream) segment_template(
       if resp.StatusCode != http.StatusOK {
          return errors.New(resp.Status)
       }
-      buf, err := io.ReadAll(resp.Body)
+      data, err := io.ReadAll(resp.Body)
       if err != nil {
          return err
       }
-      buf, err = s.init_protect(buf)
+      data, err = s.init_protect(data)
       if err != nil {
          return err
       }
-      _, err = file.Write(buf)
+      _, err = file.Write(data)
       if err != nil {
          return err
       }
@@ -80,15 +104,15 @@ func (s Stream) segment_template(
             resp.Write(&b)
             return errors.New(b.String())
          }
-         buf, err := io.ReadAll(meter.Reader(resp))
+         data, err := io.ReadAll(meter.Reader(resp))
          if err != nil {
             return err
          }
-         buf, err = write_segment(buf, key)
+         data, err = write_segment(data, key)
          if err != nil {
             return err
          }
-         _, err = file.Write(buf)
+         _, err = file.Write(data)
          if err != nil {
             return err
          }
@@ -189,12 +213,12 @@ func (s Stream) segment_base(
       return err
    }
    defer file.Close()
-   buf, _ := segment.Initialization.Range.MarshalText()
+   data, _ := segment.Initialization.Range.MarshalText()
    var req http.Request
    req.URL = base.Url
    req.Header = http.Header{}
    // need to use Set for lower case
-   req.Header.Set("range", "bytes=" + string(buf))
+   req.Header.Set("range", "bytes=" + string(data))
    resp, err := http.DefaultClient.Do(&req)
    if err != nil {
       return err
@@ -203,15 +227,15 @@ func (s Stream) segment_base(
    if resp.StatusCode != http.StatusPartialContent {
       return errors.New(resp.Status)
    }
-   buf, err = io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
-   buf, err = s.init_protect(buf)
+   data, err = s.init_protect(data)
    if err != nil {
       return err
    }
-   _, err = file.Write(buf)
+   _, err = file.Write(data)
    if err != nil {
       return err
    }
@@ -231,9 +255,9 @@ func (s Stream) segment_base(
    for _, reference := range references {
       segment.IndexRange.Start = segment.IndexRange.End + 1
       segment.IndexRange.End += uint64(reference.Size())
-      buf, _ := segment.IndexRange.MarshalText()
+      data, _ := segment.IndexRange.MarshalText()
       err := func() error {
-         req.Header.Set("range", "bytes=" + string(buf))
+         req.Header.Set("range", "bytes=" + string(data))
          resp, err := http.DefaultClient.Do(&req)
          if err != nil {
             return err
@@ -242,15 +266,15 @@ func (s Stream) segment_base(
          if resp.StatusCode != http.StatusPartialContent {
             return errors.New(resp.Status)
          }
-         buf, err := io.ReadAll(meter.Reader(resp))
+         data, err := io.ReadAll(meter.Reader(resp))
          if err != nil {
             return err
          }
-         buf, err = write_segment(buf, key)
+         data, err = write_segment(data, key)
          if err != nil {
             return err
          }
-         _, err = file.Write(buf)
+         _, err = file.Write(data)
          if err != nil {
             return err
          }
@@ -271,22 +295,4 @@ type Stream struct {
    Poster widevine.Poster
    pssh []byte
    key_id []byte
-}
-
-func Dash(req *http.Request) ([]dash.Representation, error) {
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   buf, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return dash.Unmarshal(buf, resp.Request.URL)
 }
