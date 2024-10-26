@@ -28,7 +28,7 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   reps, err := internal.Dash(req)
+   reps, err := internal.Mpd(req)
    if err != nil {
       return err
    }

@@ -3,6 +3,7 @@ package main
 import (
    "41.neocities.org/media/internal"
    "41.neocities.org/media/mubi"
+   "crypto/tls"
    "fmt"
    "net/http"
    "os"
@@ -25,15 +26,14 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   
-   client := http.Client{ // github.com/golang/go/issues/18639
+   // github.com/golang/go/issues/18639
+   http.DefaultClient = &http.Client{
       Transport: &http.Transport{
          Proxy: http.ProxyFromEnvironment,
          TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
       },
    }
-   
-   reps, err := internal.Dash(req)
+   reps, err := internal.Mpd(req)
    if err != nil {
       return err
    }

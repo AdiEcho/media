@@ -18,7 +18,7 @@ func (f *flags) do_read() error {
    if err != nil {
       return err
    }
-   reps, err := internal.Dash(req)
+   reps, err := internal.Mpd(req)
    if err != nil {
       return err
    }

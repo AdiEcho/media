@@ -28,7 +28,7 @@ func (f *flags) download() error {
    }
    req.URL.Scheme = pluto.Base[0].Scheme
    req.URL.Host = pluto.Base[0].Host
-   reps, err := internal.Dash(&req)
+   reps, err := internal.Mpd(&req)
    if err != nil {
       return err
    }

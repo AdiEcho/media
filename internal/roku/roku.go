@@ -9,6 +9,59 @@ import (
    "sort"
 )
 
+func (f *flags) download() error {
+   var token *roku.AccountToken
+   if f.token_read {
+      token = &roku.AccountToken{}
+      var err error
+      token.Raw, err = os.ReadFile(f.home + "/roku.txt")
+      if err != nil {
+         return err
+      }
+      token.Unmarshal()
+   }
+   var auth roku.AccountAuth
+   err := auth.New(token)
+   if err != nil {
+      return err
+   }
+   err = auth.Unmarshal()
+   if err != nil {
+      return err
+   }
+   play, err := auth.Playback(f.roku)
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest("", play.Url, nil)
+   if err != nil {
+      return err
+   }
+   reps, err := internal.Mpd(req)
+   if err != nil {
+      return err
+   }
+   sort.Slice(reps, func(i, j int) bool {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(rep, "\n\n")
+      case rep.Id:
+         var home roku.HomeScreen
+         err := home.New(f.roku)
+         if err != nil {
+            return err
+         }
+         f.s.Name = roku.Namer{home}
+         f.s.Poster = play
+         return f.s.Download(rep)
+      }
+   }
+   return nil
+}
+
 func (f *flags) write_token() error {
    var err error
    // AccountAuth
@@ -62,57 +115,5 @@ func write_code() error {
       return err
    }
    fmt.Println(code)
-   return nil
-}
-func (f *flags) download() error {
-   var token *roku.AccountToken
-   if f.token_read {
-      token = &roku.AccountToken{}
-      var err error
-      token.Raw, err = os.ReadFile(f.home + "/roku.txt")
-      if err != nil {
-         return err
-      }
-      token.Unmarshal()
-   }
-   var auth roku.AccountAuth
-   err := auth.New(token)
-   if err != nil {
-      return err
-   }
-   err = auth.Unmarshal()
-   if err != nil {
-      return err
-   }
-   play, err := auth.Playback(f.roku)
-   if err != nil {
-      return err
-   }
-   req, err := http.NewRequest("", play.Url, nil)
-   if err != nil {
-      return err
-   }
-   reps, err := internal.Dash(req)
-   if err != nil {
-      return err
-   }
-   sort.Slice(reps, func(i, j int) bool {
-      return reps[i].Bandwidth < reps[j].Bandwidth
-   })
-   for _, rep := range reps {
-      switch f.representation {
-      case "":
-         fmt.Print(rep, "\n\n")
-      case rep.Id:
-         var home roku.HomeScreen
-         err := home.New(f.roku)
-         if err != nil {
-            return err
-         }
-         f.s.Name = roku.Namer{home}
-         f.s.Poster = play
-         return f.s.Download(rep)
-      }
-   }
    return nil
 }

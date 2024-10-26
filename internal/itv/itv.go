@@ -6,6 +6,7 @@ import (
    "errors"
    "fmt"
    "net/http"
+   "net/http/cookiejar"
    "path"
 )
 
@@ -27,16 +28,15 @@ func (f *flags) download() error {
    if !ok {
       return errors.New("resolution 720")
    }
-   var err error
-   http.DefaultClient.Jar, err = cookiejar.New(nil)
-   if err != nil {
-      return nil, err
-   }
    req, err := http.NewRequest("", address, nil)
    if err != nil {
       return err
    }
-   reps, err := internal.Dash(req)
+   http.DefaultClient.Jar, err = cookiejar.New(nil)
+   if err != nil {
+      return err
+   }
+   reps, err := internal.Mpd(req)
    if err != nil {
       return err
    }

@@ -34,7 +34,7 @@ func (f *flags) download() error {
    if f.set_forward != "" {
       req.Header.Set("x-forwarded-for", f.set_forward)
    }
-   reps, err := internal.Dash(req)
+   reps, err := internal.Mpd(req)
    if err != nil {
       return err
    }

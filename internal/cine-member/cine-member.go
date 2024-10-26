@@ -31,7 +31,7 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   reps, err := internal.Dash(req)
+   reps, err := internal.Mpd(req)
    if err != nil {
       return err
    }
@@ -59,6 +59,7 @@ func (f *flags) download() error {
 func (f *flags) base() string {
    return path.Base(f.address.Path)
 }
+
 func (f *flags) write_play() error {
    os.Mkdir(f.base(), os.ModePerm)
    // 1. write OperationArticle
