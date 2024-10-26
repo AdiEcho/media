@@ -11,6 +11,185 @@ import (
    "time"
 )
 
+func (a *Address) MarshalText() ([]byte, error) {
+   var b bytes.Buffer
+   if a.VideoId != "" {
+      b.WriteString("/video/watch/")
+      b.WriteString(a.VideoId)
+   }
+   if a.EditId != "" {
+      b.WriteByte('/')
+      b.WriteString(a.EditId)
+   }
+   return b.Bytes(), nil
+}
+
+type Address struct {
+   EditId  string
+   VideoId string
+}
+
+func (a *Address) UnmarshalText(text []byte) error {
+   s := string(text)
+   if !strings.Contains(s, "/video/watch/") {
+      return errors.New("/video/watch/ not found")
+   }
+   s = strings.TrimPrefix(s, "https://")
+   s = strings.TrimPrefix(s, "play.max.com")
+   s = strings.TrimPrefix(s, "/video/watch/")
+   var found bool
+   a.VideoId, a.EditId, found = strings.Cut(s, "/")
+   if !found {
+      return errors.New("/ not found")
+   }
+   return nil
+}
+
+// you must
+// /authentication/linkDevice/initiate
+// first or this will always fail
+func (b *BoltToken) Login() (*LinkLogin, error) {
+   req, err := http.NewRequest(
+      "POST", prd_api + "/authentication/linkDevice/login", nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("cookie", "st=" + b.St)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var link LinkLogin
+   link.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   link.State = resp.Header.Get("x-wbd-session-state")
+   return &link, nil
+}
+
+func (d *DefaultRoutes) video() (*RouteInclude, bool) {
+   for _, include := range d.Included {
+      if include.Id == d.Data.Attributes.Url.VideoId {
+         return &include, true
+      }
+   }
+   return nil, false
+}
+
+func (d *DefaultRoutes) Season() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.SeasonNumber
+   }
+   return 0
+}
+
+func (d *DefaultRoutes) Episode() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.EpisodeNumber
+   }
+   return 0
+}
+
+func (d *DefaultRoutes) Title() string {
+   if v, ok := d.video(); ok {
+      return v.Attributes.Name
+   }
+   return ""
+}
+
+func (d *DefaultRoutes) Year() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.AirDate.Year()
+   }
+   return 0
+}
+
+func (d *DefaultRoutes) Show() string {
+   if v, ok := d.video(); ok {
+      if v.Attributes.SeasonNumber >= 1 {
+         for _, include := range d.Included {
+            if include.Id == v.Relationships.Show.Data.Id {
+               return include.Attributes.Name
+            }
+         }
+      }
+   }
+   return ""
+}
+
+type DefaultRoutes struct {
+   Data struct {
+      Attributes struct {
+         Url Address
+      }
+   }
+   Included []RouteInclude
+}
+
+func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
+   req, err := http.NewRequest("", prd_api, nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      text, _ := web.MarshalText()
+      var b strings.Builder
+      b.WriteString("/cms/routes")
+      b.Write(text)
+      return b.String()
+   }()
+   req.URL.RawQuery = url.Values{
+      "include": {"default"},
+      // this is not required, but results in a smaller response
+      "page[items.size]": {"1"},
+   }.Encode()
+   req.Header = http.Header{
+      "authorization": {"Bearer " + v.token},
+      "x-wbd-session-state": {v.State},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   route := &DefaultRoutes{}
+   err = json.NewDecoder(resp.Body).Decode(route)
+   if err != nil {
+      return nil, err
+   }
+   return route, nil
+}
+
+func (v *LinkLogin) Unmarshal() error {
+   var value struct {
+      Data struct {
+         Attributes struct {
+            Token string
+         }
+      }
+   }
+   err := json.Unmarshal(v.Raw, &value)
+   if err != nil {
+      return err
+   }
+   v.token = value.Data.Attributes.Token
+   return nil
+}
+
+type LinkLogin struct {
+   Raw []byte
+   State string
+   token string
+}
+
 func (v *LinkLogin) Playback(web Address) (*Playback, error) {
    var body playback_request
    body.ConsumptionType = "streaming"
@@ -92,6 +271,23 @@ func (p *Playback) RequestUrl() (string, bool) {
    return p.Drm.Schemes.Widevine.LicenseUrl, true
 }
 
+type RouteInclude struct {
+   Attributes struct {
+      AirDate       time.Time
+      Name          string
+      EpisodeNumber int
+      SeasonNumber  int
+   }
+   Id            string
+   Relationships *struct {
+      Show *struct {
+         Data struct {
+            Id string
+         }
+      }
+   }
+}
+
 type playback_request struct {
    AppBundle            string `json:"appBundle"`            // required
    ApplicationSessionId string `json:"applicationSessionId"` // required
@@ -124,200 +320,4 @@ type playback_request struct {
    Gdpr              bool     `json:"gdpr"`              // required
    PlaybackSessionId string   `json:"playbackSessionId"` // required
    UserPreferences   struct{} `json:"userPreferences"`   // required
-}
-
-type DefaultRoutes struct {
-   Data struct {
-      Attributes struct {
-         Url Address
-      }
-   }
-   Included []RouteInclude
-}
-
-type RouteInclude struct {
-   Attributes struct {
-      AirDate       time.Time
-      Name          string
-      EpisodeNumber int
-      SeasonNumber  int
-   }
-   Id            string
-   Relationships *struct {
-      Show *struct {
-         Data struct {
-            Id string
-         }
-      }
-   }
-}
-
-func (a *Address) MarshalText() ([]byte, error) {
-   var b bytes.Buffer
-   if a.VideoId != "" {
-      b.WriteString("/video/watch/")
-      b.WriteString(a.VideoId)
-   }
-   if a.EditId != "" {
-      b.WriteByte('/')
-      b.WriteString(a.EditId)
-   }
-   return b.Bytes(), nil
-}
-
-type Address struct {
-   EditId  string
-   VideoId string
-}
-
-func (a *Address) UnmarshalText(text []byte) error {
-   s := string(text)
-   if !strings.Contains(s, "/video/watch/") {
-      return errors.New("/video/watch/ not found")
-   }
-   s = strings.TrimPrefix(s, "https://")
-   s = strings.TrimPrefix(s, "play.max.com")
-   s = strings.TrimPrefix(s, "/video/watch/")
-   var found bool
-   a.VideoId, a.EditId, found = strings.Cut(s, "/")
-   if !found {
-      return errors.New("/ not found")
-   }
-   return nil
-}
-
-func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
-   req, err := http.NewRequest("", prd_api, nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      text, _ := web.MarshalText()
-      var b strings.Builder
-      b.WriteString("/cms/routes")
-      b.Write(text)
-      return b.String()
-   }()
-   req.URL.RawQuery = url.Values{
-      "include": {"default"},
-      // this is not required, but results in a smaller response
-      "page[items.size]": {"1"},
-   }.Encode()
-   req.Header = http.Header{
-      "authorization": {"Bearer " + v.token},
-      "x-wbd-session-state": {v.State},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   route := &DefaultRoutes{}
-   err = json.NewDecoder(resp.Body).Decode(route)
-   if err != nil {
-      return nil, err
-   }
-   return route, nil
-}
-
-func (v *LinkLogin) Unmarshal() error {
-   var value struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-   err := json.Unmarshal(v.Raw, &value)
-   if err != nil {
-      return err
-   }
-   v.token = value.Data.Attributes.Token
-   return nil
-}
-
-type LinkLogin struct {
-   Raw []byte
-   State string
-   token string
-}
-
-func (d *DefaultRoutes) video() (*RouteInclude, bool) {
-   for _, include := range d.Included {
-      if include.Id == d.Data.Attributes.Url.VideoId {
-         return &include, true
-      }
-   }
-   return nil, false
-}
-
-func (d *DefaultRoutes) Season() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.SeasonNumber
-   }
-   return 0
-}
-
-func (d *DefaultRoutes) Episode() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.EpisodeNumber
-   }
-   return 0
-}
-
-func (d *DefaultRoutes) Title() string {
-   if v, ok := d.video(); ok {
-      return v.Attributes.Name
-   }
-   return ""
-}
-
-func (d *DefaultRoutes) Year() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.AirDate.Year()
-   }
-   return 0
-}
-
-func (d *DefaultRoutes) Show() string {
-   if v, ok := d.video(); ok {
-      if v.Attributes.SeasonNumber >= 1 {
-         for _, include := range d.Included {
-            if include.Id == v.Relationships.Show.Data.Id {
-               return include.Attributes.Name
-            }
-         }
-      }
-   }
-   return ""
-}
-
-// you must
-// /authentication/linkDevice/initiate
-// first or this will always fail
-func (b *BoltToken) Login() (*LinkLogin, error) {
-   req, err := http.NewRequest(
-      "POST", prd_api + "/authentication/linkDevice/login", nil,
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("cookie", "st=" + b.St)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var link LinkLogin
-   link.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   link.State = resp.Header.Get("x-wbd-session-state")
-   return &link, nil
 }
