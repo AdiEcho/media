@@ -27,16 +27,37 @@ var tests = []struct {
    },
 }
 
+func TestLogin(t *testing.T) {
+   data, err := os.ReadFile("token.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var token BoltToken
+   token.St = string(data)
+   login, err := token.Login()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("login.txt", login.Raw, os.ModePerm)
+}
+
 func TestRoutes(t *testing.T) {
-   var token DefaultToken
-   err := token.New()
+   var (
+      login LinkLogin
+      err error
+   )
+   login.Raw, err = os.ReadFile("login.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = login.Unmarshal()
    if err != nil {
       t.Fatal(err)
    }
    for _, test := range tests {
       var web Address
       web.UnmarshalText([]byte(test.url))
-      routes, err := token.Routes(web)
+      routes, err := login.Routes(web)
       if err != nil {
          t.Fatal(err)
       }
@@ -63,16 +84,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var token DefaultToken
-   token.Session.Raw, err = os.ReadFile("session.txt")
+   var login LinkLogin
+   login.Raw, err = os.ReadFile("login.txt")
    if err != nil {
       t.Fatal(err)
    }
-   token.Token.Raw, err = os.ReadFile("token.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = token.Unmarshal()
+   err = login.Unmarshal()
    if err != nil {
       t.Fatal(err)
    }
@@ -89,7 +106,7 @@ func TestLicense(t *testing.T) {
       }
       var web Address
       web.UnmarshalText([]byte(test.url))
-      play, err := token.Playback(web)
+      play, err := login.Playback(web)
       if err != nil {
          t.Fatal(err)
       }
@@ -100,37 +117,4 @@ func TestLicense(t *testing.T) {
       fmt.Printf("%x\n", key)
       time.Sleep(time.Second)
    }
-}
-
-func TestLogin(t *testing.T) {
-   data, err := os.ReadFile("token.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var token bolt_token
-   token.st = string(data)
-   login, err := token.login()
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = login.unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%+v\n", login.Data)
-}
-
-func (f *flags) do_initiate() error {
-   var token max.BoltToken
-   err := token.New()
-   if err != nil {
-      return err
-   }
-   os.WriteFile("token.txt", []byte(token.St), os.ModePerm)
-   initiate, err := token.Initiate()
-   if err != nil {
-      return err
-   }
-   fmt.Printf("%+v\n", initiate)
-   return nil
 }

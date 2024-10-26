@@ -8,14 +8,14 @@ import (
 )
 
 func TestInitiate(t *testing.T) {
-   var token bolt_token
+   var token BoltToken
    err := token.New()
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("token.txt", []byte(token.st), os.ModePerm)
+   os.WriteFile("token.txt", []byte(token.St), os.ModePerm)
    time.Sleep(time.Second)
-   initiate, err := token.initiate()
+   initiate, err := token.Initiate()
    if err != nil {
       t.Fatal(err)
    }
