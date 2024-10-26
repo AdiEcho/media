@@ -18,6 +18,96 @@ import (
    "strings"
 )
 
+func write_segment(data, key []byte) ([]byte, error) {
+   if key == nil {
+      return data, nil
+   }
+   var file container.File
+   err := file.Read(data)
+   if err != nil {
+      return nil, err
+   }
+   track := file.Moof.Traf
+   if senc := track.Senc; senc != nil {
+      for i, text := range file.Mdat.Data(&track) {
+         err = senc.Sample[i].DecryptCenc(text, key)
+         if err != nil {
+            return nil, err
+         }
+      }
+   }
+   return file.Append(nil)
+}
+
+func (s *Stream) init_protect(data []byte) ([]byte, error) {
+   var file container.File
+   err := file.Read(data)
+   if err != nil {
+      return nil, err
+   }
+   if moov, ok := file.GetMoov(); ok {
+      for _, value := range moov.Pssh {
+         if value.Widevine() {
+            s.pssh = value.Data
+         }
+         copy(value.BoxHeader.Type[:], "free") // Firefox
+      }
+      description := moov.Trak.Mdia.Minf.Stbl.Stsd
+      if sinf, ok := description.Sinf(); ok {
+         s.key_id = sinf.Schi.Tenc.DefaultKid[:]
+         // Firefox
+         copy(sinf.BoxHeader.Type[:], "free")
+         if sample, ok := description.SampleEntry(); ok {
+            // Firefox
+            copy(sample.BoxHeader.Type[:], sinf.Frma.DataFormat[:])
+         }
+      }
+   }
+   return file.Append(nil)
+}
+
+type ForwardedFor struct {
+   Country string
+   IP string
+}
+
+var Forward = []ForwardedFor{
+{"Argentina", "186.128.0.0"},
+{"Australia", "1.128.0.0"},
+{"Bolivia", "179.58.0.0"},
+{"Brazil", "179.192.0.0"},
+{"Canada", "99.224.0.0"},
+{"Chile", "191.112.0.0"},
+{"Colombia", "181.128.0.0"},
+{"Costa Rica", "201.192.0.0"},
+{"Denmark", "2.104.0.0"},
+{"Ecuador", "186.68.0.0"},
+{"Egypt", "197.32.0.0"},
+{"Germany", "53.0.0.0"},
+{"Guatemala", "190.56.0.0"},
+{"India", "106.192.0.0"},
+{"Indonesia", "39.192.0.0"},
+{"Ireland", "87.32.0.0"},
+{"Italy", "79.0.0.0"},
+{"Latvia", "78.84.0.0"},
+{"Malaysia", "175.136.0.0"},
+{"Mexico", "189.128.0.0"},
+{"Netherlands", "145.160.0.0"},
+{"New Zealand", "49.224.0.0"},
+{"Norway", "88.88.0.0"},
+{"Peru", "190.232.0.0"},
+{"Russia", "95.24.0.0"},
+{"South Africa", "105.0.0.0"},
+{"South Korea", "175.192.0.0"},
+{"Spain", "88.0.0.0"},
+{"Sweden", "78.64.0.0"},
+{"Taiwan", "120.96.0.0"},
+{"United Kingdom", "25.0.0.0"},
+{"Venezuela", "190.72.0.0"},
+}
+
+///
+
 func (s Stream) segment_base(
    ext string, base *dash.BaseUrl, segment *dash.SegmentBase,
 ) error {
@@ -98,94 +188,6 @@ func (s Stream) segment_base(
       }
    }
    return nil
-}
-
-type ForwardedFor struct {
-   Country string
-   IP string
-}
-
-var Forward = []ForwardedFor{
-{"Argentina", "186.128.0.0"},
-{"Australia", "1.128.0.0"},
-{"Bolivia", "179.58.0.0"},
-{"Brazil", "179.192.0.0"},
-{"Canada", "99.224.0.0"},
-{"Chile", "191.112.0.0"},
-{"Colombia", "181.128.0.0"},
-{"Costa Rica", "201.192.0.0"},
-{"Denmark", "2.104.0.0"},
-{"Ecuador", "186.68.0.0"},
-{"Egypt", "197.32.0.0"},
-{"Germany", "53.0.0.0"},
-{"Guatemala", "190.56.0.0"},
-{"India", "106.192.0.0"},
-{"Indonesia", "39.192.0.0"},
-{"Ireland", "87.32.0.0"},
-{"Italy", "79.0.0.0"},
-{"Latvia", "78.84.0.0"},
-{"Malaysia", "175.136.0.0"},
-{"Mexico", "189.128.0.0"},
-{"Netherlands", "145.160.0.0"},
-{"New Zealand", "49.224.0.0"},
-{"Norway", "88.88.0.0"},
-{"Peru", "190.232.0.0"},
-{"Russia", "95.24.0.0"},
-{"South Africa", "105.0.0.0"},
-{"South Korea", "175.192.0.0"},
-{"Spain", "88.0.0.0"},
-{"Sweden", "78.64.0.0"},
-{"Taiwan", "120.96.0.0"},
-{"United Kingdom", "25.0.0.0"},
-{"Venezuela", "190.72.0.0"},
-}
-
-func (s *Stream) init_protect(data []byte) ([]byte, error) {
-   var file container.File
-   err := file.Read(data)
-   if err != nil {
-      return nil, err
-   }
-   if moov, ok := file.GetMoov(); ok {
-      for _, value := range moov.Pssh {
-         if value.Widevine() {
-            s.pssh = value.Data
-         }
-         copy(value.BoxHeader.Type[:], "free") // Firefox
-      }
-      description := moov.Trak.Mdia.Minf.Stbl.Stsd
-      if sinf, ok := description.Sinf(); ok {
-         s.key_id = sinf.Schi.Tenc.DefaultKid[:]
-         // Firefox
-         copy(sinf.BoxHeader.Type[:], "free")
-         if sample, ok := description.SampleEntry(); ok {
-            // Firefox
-            copy(sample.BoxHeader.Type[:], sinf.Frma.DataFormat[:])
-         }
-      }
-   }
-   return file.Append(nil)
-}
-
-func write_segment(data, key []byte) ([]byte, error) {
-   if key == nil {
-      return data, nil
-   }
-   var file container.File
-   err := file.Read(data)
-   if err != nil {
-      return nil, err
-   }
-   track := file.Moof.Traf
-   if senc := track.Senc; senc != nil {
-      for i, text := range file.Mdat.Data(&track) {
-         err = senc.Sample[i].DecryptCenc(text, key)
-         if err != nil {
-            return nil, err
-         }
-      }
-   }
-   return file.Append(nil)
 }
 
 func write_sidx(req *http.Request, index dash.Range) ([]sidx.Reference, error) {
@@ -286,12 +288,6 @@ func (s Stream) Create(ext string) (*os.File, error) {
    return os.Create(text.Clean(name) + ext)
 }
 
-type Dasher interface {
-   Mpd() (*http.Request, error)
-}
-
-///
-
 func (s Stream) segment_template(
    ext, initial string, base *dash.BaseUrl, media []string,
 ) error {
@@ -347,31 +343,27 @@ func (s Stream) segment_template(
       if err != nil {
          return err
       }
-      err := func() error {
+      data, err := func() ([]byte, error) {
          resp, err := client.Do(req)
          if err != nil {
-            return err
+            return nil, err
          }
          defer resp.Body.Close()
          if resp.StatusCode != http.StatusOK {
             var b strings.Builder
             resp.Write(&b)
-            return errors.New(b.String())
+            return nil, errors.New(b.String())
          }
-         data, err := io.ReadAll(meter.Reader(resp))
-         if err != nil {
-            return err
-         }
-         data, err = write_segment(data, key)
-         if err != nil {
-            return err
-         }
-         _, err = file.Write(data)
-         if err != nil {
-            return err
-         }
-         return nil
+         return io.ReadAll(meter.Reader(resp))
       }()
+      if err != nil {
+         return err
+      }
+      data, err = write_segment(data, key)
+      if err != nil {
+         return err
+      }
+      _, err = file.Write(data)
       if err != nil {
          return err
       }
