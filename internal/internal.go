@@ -18,6 +18,88 @@ import (
    "strings"
 )
 
+func (s Stream) segment_base(
+   ext string, base *dash.BaseUrl, segment *dash.SegmentBase,
+) error {
+   file, err := s.Create(ext)
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   data, _ := segment.Initialization.Range.MarshalText()
+   var req http.Request
+   req.URL = base.Url
+   req.Header = http.Header{}
+   // need to use Set for lower case
+   req.Header.Set("range", "bytes=" + string(data))
+   resp, err := http.DefaultClient.Do(&req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusPartialContent {
+      return errors.New(resp.Status)
+   }
+   data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   data, err = s.init_protect(data)
+   if err != nil {
+      return err
+   }
+   _, err = file.Write(data)
+   if err != nil {
+      return err
+   }
+   key, err := s.key()
+   if err != nil {
+      return err
+   }
+   references, err := write_sidx(&req, segment.IndexRange)
+   if err != nil {
+      return err
+   }
+   var meter text.ProgressMeter
+   meter.Set(len(references))
+   var transport text.Transport
+   transport.Set(false)
+   defer transport.Set(true)
+   for _, reference := range references {
+      segment.IndexRange.Start = segment.IndexRange.End + 1
+      segment.IndexRange.End += uint64(reference.Size())
+      data, _ := segment.IndexRange.MarshalText()
+      err := func() error {
+         req.Header.Set("range", "bytes=" + string(data))
+         resp, err := http.DefaultClient.Do(&req)
+         if err != nil {
+            return err
+         }
+         defer resp.Body.Close()
+         if resp.StatusCode != http.StatusPartialContent {
+            return errors.New(resp.Status)
+         }
+         data, err := io.ReadAll(meter.Reader(resp))
+         if err != nil {
+            return err
+         }
+         data, err = write_segment(data, key)
+         if err != nil {
+            return err
+         }
+         _, err = file.Write(data)
+         if err != nil {
+            return err
+         }
+         return nil
+      }()
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
+
 type ForwardedFor struct {
    Country string
    IP string
@@ -168,12 +250,6 @@ func (s Stream) key() ([]byte, error) {
    return key, nil
 }
 
-type Dasher interface {
-   Mpd() (*http.Request, error)
-}
-
-///
-
 func (s *Stream) Download(rep dash.Representation) error {
    if data, ok := rep.Widevine(); ok {
       var box pssh.Box
@@ -202,28 +278,19 @@ func (s *Stream) Download(rep dash.Representation) error {
    return s.segment_template(ext, initial, base, rep.Media())
 }
 
-func Dash(req *http.Request) ([]dash.Representation, error) {
-   var err error
-   http.DefaultClient.Jar, err = cookiejar.New(nil)
+func (s Stream) Create(ext string) (*os.File, error) {
+   name, err := text.Name(s.Name)
    if err != nil {
       return nil, err
    }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   data, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return dash.Unmarshal(data, resp.Request.URL)
+   return os.Create(text.Clean(name) + ext)
 }
+
+type Dasher interface {
+   Mpd() (*http.Request, error)
+}
+
+///
 
 func (s Stream) segment_template(
    ext, initial string, base *dash.BaseUrl, media []string,
@@ -312,92 +379,25 @@ func (s Stream) segment_template(
    return nil
 }
 
-func (s Stream) Create(ext string) (*os.File, error) {
-   name, err := text.Name(s.Name)
+func Dash(req *http.Request) ([]dash.Representation, error) {
+   var err error
+   http.DefaultClient.Jar, err = cookiejar.New(nil)
    if err != nil {
       return nil, err
    }
-   return os.Create(text.Clean(name) + ext)
-}
-
-func (s Stream) segment_base(
-   ext string, base *dash.BaseUrl, segment *dash.SegmentBase,
-) error {
-   file, err := s.Create(ext)
+   resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
-   }
-   defer file.Close()
-   data, _ := segment.Initialization.Range.MarshalText()
-   var req http.Request
-   req.URL = base.Url
-   req.Header = http.Header{}
-   // need to use Set for lower case
-   req.Header.Set("range", "bytes=" + string(data))
-   resp, err := http.DefaultClient.Do(&req)
-   if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
-   if resp.StatusCode != http.StatusPartialContent {
-      return errors.New(resp.Status)
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
    }
-   data, err = io.ReadAll(resp.Body)
+   data, err := io.ReadAll(resp.Body)
    if err != nil {
-      return err
+      return nil, err
    }
-   data, err = s.init_protect(data)
-   if err != nil {
-      return err
-   }
-   _, err = file.Write(data)
-   if err != nil {
-      return err
-   }
-   key, err := s.key()
-   if err != nil {
-      return err
-   }
-   references, err := write_sidx(&req, segment.IndexRange)
-   if err != nil {
-      return err
-   }
-   var meter text.ProgressMeter
-   meter.Set(len(references))
-   var transport text.Transport
-   transport.Set(false)
-   defer transport.Set(true)
-   for _, reference := range references {
-      segment.IndexRange.Start = segment.IndexRange.End + 1
-      segment.IndexRange.End += uint64(reference.Size())
-      data, _ := segment.IndexRange.MarshalText()
-      err := func() error {
-         req.Header.Set("range", "bytes=" + string(data))
-         resp, err := http.DefaultClient.Do(&req)
-         if err != nil {
-            return err
-         }
-         defer resp.Body.Close()
-         if resp.StatusCode != http.StatusPartialContent {
-            return errors.New(resp.Status)
-         }
-         data, err := io.ReadAll(meter.Reader(resp))
-         if err != nil {
-            return err
-         }
-         data, err = write_segment(data, key)
-         if err != nil {
-            return err
-         }
-         _, err = file.Write(data)
-         if err != nil {
-            return err
-         }
-         return nil
-      }()
-      if err != nil {
-         return err
-      }
-   }
-   return nil
+   return dash.Unmarshal(data, resp.Request.URL)
 }
