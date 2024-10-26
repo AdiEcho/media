@@ -11,6 +11,21 @@ import (
    "time"
 )
 
+func TestDiscovery(t *testing.T) {
+   for _, test := range tests {
+      discovery, err := test.legacy_id.Discovery()
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := text.Name(Namer{discovery})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
+}
+
 var tests = []struct{
    content_id string
    key_id string
@@ -29,19 +44,23 @@ var tests = []struct{
       legacy_id: LegacyId{"10", "3915", "0002"},
       url: "itv.com/watch/community/10a3915/10a3915a0002",
    },
+   {
+      legacy_id: LegacyId{"10", "3918", "0001"},
+      url: "itv.com/watch/joan/10a3918/10a3918a0001",
+   },
 }
 
 func TestPlaylist(t *testing.T) {
    for _, test := range tests {
-      discovery, err := test.legacy_id.discovery()
+      discovery, err := test.legacy_id.Discovery()
       if err != nil {
          t.Fatal(err)
       }
-      play, err := discovery.playlist()
+      play, err := discovery.Playlist()
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Println(play.resolution_720())
+      fmt.Println(play.Resolution720())
       time.Sleep(time.Second)
    }
 }
@@ -54,21 +73,6 @@ func TestLegacyId(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Println(id)
-   }
-}
-
-func TestDiscovery(t *testing.T) {
-   for _, test := range tests {
-      discovery, err := test.legacy_id.discovery()
-      if err != nil {
-         t.Fatal(err)
-      }
-      name, err := text.Name(namer{discovery})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
    }
 }
 
@@ -100,7 +104,7 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      key, err := module.Key(poster{}, pssh.KeyId)
+      key, err := module.Key(Poster{}, pssh.KeyId)
       if err != nil {
          t.Fatal(err)
       }

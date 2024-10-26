@@ -6,10 +6,16 @@ import (
    "errors"
    "fmt"
    "net/http"
+   "path"
 )
 
 func (f *flags) download() error {
-   discovery, err := f.legacy_id.Discovery()
+   var id itv.LegacyId
+   err := id.Set(path.Base(f.address))
+   if err != nil {
+      return err
+   }
+   discovery, err := id.Discovery()
    if err != nil {
       return err
    }
@@ -21,6 +27,7 @@ func (f *flags) download() error {
    if !ok {
       return errors.New("resolution 720")
    }
+   //////////////////////////////////////////////////////////////////////////////
    req, err := http.NewRequest("", address, nil)
    if err != nil {
       return err

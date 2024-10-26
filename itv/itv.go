@@ -10,6 +10,29 @@ import (
    "strings"
 )
 
+const query_discovery = `
+{
+   titles(filter: {
+      legacyId: %q
+   }) {
+      ... on Episode {
+         seriesNumber
+         episodeNumber
+      }
+      ... on Film {
+         productionYear
+      }
+      brand {
+         title
+      }
+      latestAvailableVersion {
+         playlistUrl
+      }
+      title
+   }
+}
+`
+
 func (p *Playlist) Resolution720() (string, bool) {
    for _, file := range p.Playlist.Video.MediaFiles {
       if file.Resolution == "720" {
@@ -172,29 +195,6 @@ func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
 func (Poster) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
-
-const query_discovery = `
-{
-   titles(filter: {
-      legacyId: %q
-   }) {
-      ... on Episode {
-         seriesNumber
-         episodeNumber
-      }
-      ... on Film {
-         productionYear
-      }
-      brand {
-         title
-      }
-      latestAvailableVersion {
-         playlistUrl
-      }
-      title
-   }
-}
-`
 
 // this is better than strings.Replace and strings.ReplaceAll
 func graphql_compact(s string) string {

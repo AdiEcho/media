@@ -15,6 +15,16 @@ import (
    "strings"
 )
 
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type Stream struct {
+   ClientId string
+   PrivateKey string
+   Name text.Namer
+   Poster widevine.Poster
+   pssh []byte
+   key_id []byte
+}
+
 func Dash(req *http.Request) ([]dash.Representation, error) {
    var err error
    http.DefaultClient.Jar, err = cookiejar.New(nil)
@@ -285,14 +295,4 @@ func (s Stream) segment_base(
       }
    }
    return nil
-}
-
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type Stream struct {
-   ClientId string
-   PrivateKey string
-   Name text.Namer
-   Poster widevine.Poster
-   pssh []byte
-   key_id []byte
 }

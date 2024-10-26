@@ -2,7 +2,6 @@ package main
 
 import (
    "41.neocities.org/media/internal"
-   "41.neocities.org/media/itv"
    "41.neocities.org/text"
    "flag"
    "os"
@@ -21,9 +20,9 @@ func (f *flags) New() error {
 }
 
 type flags struct {
-   legacy_id itv.LegacyId
    representation string
    s internal.Stream
+   address string
 }
 
 func main() {
@@ -35,10 +34,10 @@ func main() {
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.Var(&f.legacy_id, "b", "legacy ID")
+   flag.StringVar(&f.address, "a", "", "address")
    flag.Parse()
    text.Transport{}.Set(true)
-   if f.legacy_id.String() != "" {
+   if f.address != "" {
       err := f.download()
       if err != nil {
          panic(err)
