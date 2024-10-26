@@ -25,6 +25,14 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
+   
+   client := http.Client{ // github.com/golang/go/issues/18639
+      Transport: &http.Transport{
+         Proxy: http.ProxyFromEnvironment,
+         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
+      },
+   }
+   
    reps, err := internal.Dash(req)
    if err != nil {
       return err
