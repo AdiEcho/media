@@ -11,6 +11,137 @@ import (
    "time"
 )
 
+func (v *LinkLogin) Playback(web Address) (*Playback, error) {
+   var body playback_request
+   body.ConsumptionType = "streaming"
+   body.EditId = web.EditId
+   data, err := json.MarshalIndent(body, "", " ")
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest("POST", prd_api, bytes.NewReader(data))
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b bytes.Buffer
+      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
+      b.WriteString("/playbackInfo")
+      return b.String()
+   }()
+   req.Header = http.Header{
+      "authorization": {"Bearer " + v.token},
+      "content-type": {"application/json"},
+      "x-wbd-session-state": {v.State},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   resp_body := &Playback{}
+   err = json.NewDecoder(resp.Body).Decode(resp_body)
+   if err != nil {
+      return nil, err
+   }
+   return resp_body, nil
+}
+
+func (m *Manifest) UnmarshalText(text []byte) error {
+   m.Url = strings.Replace(string(text), "_fallback", "", 1)
+   return nil
+}
+
+type Manifest struct {
+   Url string
+}
+
+type Playback struct {
+   Drm struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string
+         }
+      }
+   }
+   Fallback struct {
+      Manifest struct {
+         Url Manifest
+      }
+   }
+}
+
+func (*Playback) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*Playback) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*Playback) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (p *Playback) RequestUrl() (string, bool) {
+   return p.Drm.Schemes.Widevine.LicenseUrl, true
+}
+
+type RouteInclude struct {
+   Attributes struct {
+      AirDate       time.Time
+      Name          string
+      EpisodeNumber int
+      SeasonNumber  int
+   }
+   Id            string
+   Relationships *struct {
+      Show *struct {
+         Data struct {
+            Id string
+         }
+      }
+   }
+}
+
+type playback_request struct {
+   AppBundle            string `json:"appBundle"`            // required
+   ApplicationSessionId string `json:"applicationSessionId"` // required
+   Capabilities         struct {
+      Manifests struct {
+         Formats struct {
+            Dash struct{} `json:"dash"` // required
+         } `json:"formats"` // required
+      } `json:"manifests"` // required
+   } `json:"capabilities"` // required
+   ConsumptionType string `json:"consumptionType"`
+   DeviceInfo      struct {
+      Player struct {
+         MediaEngine struct {
+            Name    string `json:"name"`    // required
+            Version string `json:"version"` // required
+         } `json:"mediaEngine"` // required
+         PlayerView struct {
+            Height int `json:"height"` // required
+            Width  int `json:"width"`  // required
+         } `json:"playerView"` // required
+         Sdk struct {
+            Name    string `json:"name"`    // required
+            Version string `json:"version"` // required
+         } `json:"sdk"` // required
+      } `json:"player"` // required
+   } `json:"deviceInfo"` // required
+   EditId            string   `json:"editId"`
+   FirstPlay         bool     `json:"firstPlay"`         // required
+   Gdpr              bool     `json:"gdpr"`              // required
+   PlaybackSessionId string   `json:"playbackSessionId"` // required
+   UserPreferences   struct{} `json:"userPreferences"`   // required
+}
 func (a *Address) MarshalText() ([]byte, error) {
    var b bytes.Buffer
    if a.VideoId != "" {
@@ -188,136 +319,4 @@ type LinkLogin struct {
    Raw []byte
    State string
    token string
-}
-
-func (v *LinkLogin) Playback(web Address) (*Playback, error) {
-   var body playback_request
-   body.ConsumptionType = "streaming"
-   body.EditId = web.EditId
-   data, err := json.Marshal(body)
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest("POST", prd_api, bytes.NewReader(data))
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      var b bytes.Buffer
-      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
-      b.WriteString("/playbackInfo")
-      return b.String()
-   }()
-   req.Header = http.Header{
-      "authorization": {"Bearer " + v.token},
-      "content-type": {"application/json"},
-      "x-wbd-session-state": {v.State},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   resp_body := &Playback{}
-   err = json.NewDecoder(resp.Body).Decode(resp_body)
-   if err != nil {
-      return nil, err
-   }
-   return resp_body, nil
-}
-
-func (m *Manifest) UnmarshalText(text []byte) error {
-   m.Url = strings.Replace(string(text), "_fallback", "", 1)
-   return nil
-}
-
-type Manifest struct {
-   Url string
-}
-
-type Playback struct {
-   Drm struct {
-      Schemes struct {
-         Widevine struct {
-            LicenseUrl string
-         }
-      }
-   }
-   Fallback struct {
-      Manifest struct {
-         Url Manifest
-      }
-   }
-}
-
-func (*Playback) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Playback) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Playback) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (p *Playback) RequestUrl() (string, bool) {
-   return p.Drm.Schemes.Widevine.LicenseUrl, true
-}
-
-type RouteInclude struct {
-   Attributes struct {
-      AirDate       time.Time
-      Name          string
-      EpisodeNumber int
-      SeasonNumber  int
-   }
-   Id            string
-   Relationships *struct {
-      Show *struct {
-         Data struct {
-            Id string
-         }
-      }
-   }
-}
-
-type playback_request struct {
-   AppBundle            string `json:"appBundle"`            // required
-   ApplicationSessionId string `json:"applicationSessionId"` // required
-   Capabilities         struct {
-      Manifests struct {
-         Formats struct {
-            Dash struct{} `json:"dash"` // required
-         } `json:"formats"` // required
-      } `json:"manifests"` // required
-   } `json:"capabilities"` // required
-   ConsumptionType string `json:"consumptionType"`
-   DeviceInfo      struct {
-      Player struct {
-         MediaEngine struct {
-            Name    string `json:"name"`    // required
-            Version string `json:"version"` // required
-         } `json:"mediaEngine"` // required
-         PlayerView struct {
-            Height int `json:"height"` // required
-            Width  int `json:"width"`  // required
-         } `json:"playerView"` // required
-         Sdk struct {
-            Name    string `json:"name"`    // required
-            Version string `json:"version"` // required
-         } `json:"sdk"` // required
-      } `json:"player"` // required
-   } `json:"deviceInfo"` // required
-   EditId            string   `json:"editId"`
-   FirstPlay         bool     `json:"firstPlay"`         // required
-   Gdpr              bool     `json:"gdpr"`              // required
-   PlaybackSessionId string   `json:"playbackSessionId"` // required
-   UserPreferences   struct{} `json:"userPreferences"`   // required
 }
