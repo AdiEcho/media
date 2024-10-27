@@ -10,7 +10,7 @@ import (
 )
 
 func (f *flags) do_read() error {
-   location, err := os.ReadFile(f.paramount + "/location.txt")
+   location, err := os.ReadFile(f.content_id + "/location.txt")
    if err != nil {
       return err
    }
@@ -39,12 +39,12 @@ func (f *flags) do_read() error {
          if err != nil {
             return err
          }
-         f.s.Poster, err = app.Session(f.paramount)
+         f.s.Poster, err = app.Session(f.content_id)
          if err != nil {
             return err
          }
          var item paramount.VideoItem
-         item.Raw, err = os.ReadFile(f.paramount + "/item.txt")
+         item.Raw, err = os.ReadFile(f.content_id + "/item.txt")
          if err != nil {
             return err
          }
@@ -60,13 +60,13 @@ func (f *flags) do_read() error {
 }
 
 func (f *flags) do_write() error {
-   os.Mkdir(f.paramount, os.ModePerm)
-   location, err := paramount.Location(f.paramount, f.intl)
+   os.Mkdir(f.content_id, os.ModePerm)
+   location, err := paramount.Location(f.content_id, f.intl)
    if err != nil {
       return err
    }
    err = os.WriteFile(
-      f.paramount + "/location.txt", []byte(location), os.ModePerm,
+      f.content_id + "/location.txt", []byte(location), os.ModePerm,
    )
    if err != nil {
       return err
@@ -80,9 +80,9 @@ func (f *flags) do_write() error {
    if err != nil {
       return err
    }
-   item, err := app.Item(f.paramount)
+   item, err := app.Item(f.content_id)
    if err != nil {
       return err
    }
-   return os.WriteFile(f.paramount + "/item.txt", item.Raw, os.ModePerm)
+   return os.WriteFile(f.content_id + "/item.txt", item.Raw, os.ModePerm)
 }

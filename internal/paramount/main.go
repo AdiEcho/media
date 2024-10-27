@@ -4,6 +4,7 @@ import (
    "41.neocities.org/media/internal"
    "41.neocities.org/text"
    "flag"
+   "fmt"
    "os"
    "path/filepath"
 )
@@ -22,9 +23,18 @@ func (f *flags) New() error {
 type flags struct {
    representation string
    s internal.Stream
-   paramount string
+   content_id string
    write bool
-   intl bool
+   location int
+}
+
+var location = map[int]struct{
+   asset_type string
+   host string
+}{
+   0: {"DASH_CENC", "www.paramountplus.com"},
+   1: {"DASH_CENC", "www.intl.paramountplus.com"},
+   2: {"DASH_CENC_PRECON", "www.intl.paramountplus.com"},
 }
 
 func main() {
@@ -33,12 +43,14 @@ func main() {
    if err != nil {
       panic(err)
    }
-   flag.StringVar(&f.paramount, "b", "", "Paramount ID")
+   flag.StringVar(&f.content_id, "b", "", "content ID")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
-   flag.BoolVar(&f.intl, "n", false, "intl")
    flag.BoolVar(&f.write, "w", false, "write")
+   
+   flag.IntVar(&f.location, "location", 0, fmt.Sprint(location))
+   
    flag.Parse()
    text.Transport{}.Set(true)
    switch {
@@ -47,7 +59,7 @@ func main() {
       if err != nil {
          panic(err)
       }
-   case f.paramount != "":
+   case f.content_id != "":
       err := f.do_read()
       if err != nil {
          panic(err)

@@ -8,8 +8,15 @@ import (
    "strconv"
 )
 
-// must use IP address for correct location
-func Location(content_id string, intl bool) (string, error) {
+// hard geo block
+// 
+// AU:
+// formats=MPEG-DASH&assetTypes=DASH_CENC
+// FR:
+// formats=MPEG-DASH&assetTypes=DASH_CENC_PRECON
+// US:
+// formats=MPEG-DASH&assetTypes=DASH_CENC
+func Location(content_id, asset_type string) (string, error) {
    req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {
       return "", err
@@ -23,12 +30,10 @@ func Location(content_id string, intl bool) (string, error) {
       b = append(b, content_id...)
       return string(b)
    }()
-   query := url.Values{}
-   query.Set("formats", "MPEG-DASH")
-   if !intl {
-      query.Set("assetTypes", "DASH_CENC")
-   }
-   req.URL.RawQuery = query.Encode()
+   req.URL.RawQuery = url.Values{
+      "assetTypes": {asset_type},
+      "formats": {"MPEG-DASH"},
+   }.Encode()
    resp, err := http.DefaultTransport.RoundTrip(req)
    if err != nil {
       return "", err
