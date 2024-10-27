@@ -306,11 +306,11 @@ func (s *Stream) segment_template(
       return err
    }
    defer file.Close()
-   req, err := http.NewRequest("", initial, nil)
-   if err != nil {
-      return err
-   }
    if initial != "" {
+      req, err := http.NewRequest("", initial, nil)
+      if err != nil {
+         return err
+      }
       req.URL = base.Url.ResolveReference(req.URL)
       resp, err := http.DefaultClient.Do(req)
       if err != nil {
@@ -343,10 +343,11 @@ func (s *Stream) segment_template(
    transport.Set(false)
    defer transport.Set(true)
    for _, medium := range media {
-      req.URL, err = base.Url.Parse(medium)
+      req, err := http.NewRequest("", medium, nil)
       if err != nil {
          return err
       }
+      req.URL = base.Url.ResolveReference(req.URL)
       data, err := func() ([]byte, error) {
          resp, err := http.DefaultClient.Do(req)
          if err != nil {
