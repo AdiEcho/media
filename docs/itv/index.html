@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="doc2go">
+    <link href="../_/css/main.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../_/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../_/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../_/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="../_/icons/favicon.ico">
+    <title>itv</title>
+</head>
+  <body>
+    <nav>
+        <a href="..">41.neocities.org/media</a>/itv<span class="navbar-right">
+          v1.9.8 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+      </nav>
+    <main><h2 id="pkg-overview">package itv</h2>
+<pre class="chroma"><span class="kn">import</span> <span class="s">&#34;41.neocities.org/media/itv&#34;</span></pre>
+<h3 id="pkg-index">Index</h3>
+<ul>
+  <li>
+      <a href="#DiscoveryTitle">type DiscoveryTitle</a>
+      <ul>
+          <li><a href="#DiscoveryTitle.Playlist">func (d *DiscoveryTitle) Playlist() (*Playlist, error)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#LegacyId">type LegacyId</a>
+      <ul>
+          <li><a href="#LegacyId.Discovery">func (i LegacyId) Discovery() (*DiscoveryTitle, error)</a></li>
+          <li><a href="#LegacyId.Set">func (i *LegacyId) Set(text string) error</a></li>
+          <li><a href="#LegacyId.String">func (i LegacyId) String() string</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Namer">type Namer</a>
+      <ul>
+          <li><a href="#Namer.Episode">func (n Namer) Episode() int</a></li>
+          <li><a href="#Namer.Season">func (n Namer) Season() int</a></li>
+          <li><a href="#Namer.Show">func (n Namer) Show() string</a></li>
+          <li><a href="#Namer.Title">func (n Namer) Title() string</a></li>
+          <li><a href="#Namer.Year">func (n Namer) Year() int</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Playlist">type Playlist</a>
+      <ul>
+          <li><a href="#Playlist.Resolution720">func (p *Playlist) Resolution720() (string, bool)</a></li>
+          </ul>
+      </li>
+  <li>
+      <a href="#Poster">type Poster</a>
+      <ul>
+          <li><a href="#Poster.RequestHeader">func (Poster) RequestHeader() (http.Header, error)</a></li>
+          <li><a href="#Poster.RequestUrl">func (Poster) RequestUrl() (string, bool)</a></li>
+          <li><a href="#Poster.UnwrapResponse">func (Poster) UnwrapResponse(b []byte) ([]byte, error)</a></li>
+          <li><a href="#Poster.WrapRequest">func (Poster) WrapRequest(b []byte) ([]byte, error)</a></li>
+          </ul>
+      </li>
+  </ul><h3 id="pkg-types">Types</h3>
+  <h3 id="DiscoveryTitle">type DiscoveryTitle</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">DiscoveryTitle</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="DiscoveryTitle.LatestAvailableVersion"><span class="nx">LatestAvailableVersion</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="DiscoveryTitle.PlaylistUrl"><span class="nx">PlaylistUrl</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
+	<span id="DiscoveryTitle.Brand"><span class="nx">Brand</span></span> <span class="o">*</span><span class="kd">struct</span> <span class="p">{</span>
+		<span id="DiscoveryTitle.Title"><span class="nx">Title</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="p">}</span>
+	<span id="DiscoveryTitle.EpisodeNumber"><span class="nx">EpisodeNumber</span></span>  <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span id="DiscoveryTitle.ProductionYear"><span class="nx">ProductionYear</span></span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span id="DiscoveryTitle.SeriesNumber"><span class="nx">SeriesNumber</span></span>   <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a>
+	<span id="DiscoveryTitle.Title"><span class="nx">Title</span></span>          <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+<span class="p">}</span></pre>
+    <h4 id="DiscoveryTitle.Playlist">func (*DiscoveryTitle) Playlist</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DiscoveryTitle"><span class="nx">DiscoveryTitle</span></a><span class="p">)</span> <span class="nf">Playlist</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#Playlist"><span class="nx">Playlist</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <p>hard geo block
+<h3 id="LegacyId">type LegacyId</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">LegacyId</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+    <h4 id="LegacyId.Discovery">func (LegacyId) Discovery</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <a href="#LegacyId"><span class="nx">LegacyId</span></a><span class="p">)</span> <span class="nf">Discovery</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#DiscoveryTitle"><span class="nx">DiscoveryTitle</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="LegacyId.Set">func (*LegacyId) Set</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <span class="o">*</span><a href="#LegacyId"><span class="nx">LegacyId</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">text</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="LegacyId.String">func (LegacyId) String</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <a href="#LegacyId"><span class="nx">LegacyId</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h3 id="Namer">type Namer</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Namer</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Namer.Discovery"><span class="nx">Discovery</span></span> <span class="o">*</span><a href="#DiscoveryTitle"><span class="nx">DiscoveryTitle</span></a>
+<span class="p">}</span></pre>
+    <h4 id="Namer.Episode">func (Namer) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="Namer.Season">func (Namer) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="Namer.Show">func (Namer) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Namer.Title">func (Namer) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="Namer.Year">func (Namer) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">n</span> <a href="#Namer"><span class="nx">Namer</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h3 id="Playlist">type Playlist</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Playlist</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="Playlist.Playlist"><span class="nx">Playlist</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="Playlist.Video"><span class="nx">Video</span></span> <span class="kd">struct</span> <span class="p">{</span>
+			<span id="Playlist.MediaFiles"><span class="nx">MediaFiles</span></span> <span class="p">[]</span><span class="kd">struct</span> <span class="p">{</span>
+				<span id="Playlist.Href"><span class="nx">Href</span></span>       <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+				<span id="Playlist.Resolution"><span class="nx">Resolution</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span></pre>
+    <h4 id="Playlist.Resolution720">func (*Playlist) Resolution720</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><a href="#Playlist"><span class="nx">Playlist</span></a><span class="p">)</span> <span class="nf">Resolution720</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h3 id="Poster">type Poster</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">Poster</span> <span class="kd">struct</span><span class="p">{}</span></pre>
+    <h4 id="Poster.RequestHeader">func (Poster) RequestHeader</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Poster.RequestUrl">func (Poster) RequestUrl</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
+  <h4 id="Poster.UnwrapResponse">func (Poster) UnwrapResponse</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Poster.WrapRequest">func (Poster) WrapRequest</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Poster"><span class="nx">Poster</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  </main>
+    <hr>
+    <footer>
+      <small id="generated-by-footer">
+        Generated with <a href="https://abhinav.github.io/doc2go/">doc2go</a>
+      </small>
+    </footer>
+    <script src="../_/js/permalink.js"></script>
+  </body>
+</html>

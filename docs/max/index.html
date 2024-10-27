@@ -14,7 +14,7 @@
   <body>
     <nav>
         <a href="..">41.neocities.org/media</a>/max<span class="navbar-right">
-          v1.9.7 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
+          v1.9.8 | <a href="..">Root</a> | <a href="#pkg-index">Index</a></span>
       </nav>
     <main><h2 id="pkg-overview">package max</h2>
 <pre class="chroma"><span class="kn">import</span> <span class="s">&#34;41.neocities.org/media/max&#34;</span></pre>
@@ -28,26 +28,32 @@
           </ul>
       </li>
   <li>
-      <a href="#DefaultLogin">type DefaultLogin</a>
+      <a href="#BoltToken">type BoltToken</a>
+      <ul>
+          <li><a href="#BoltToken.Initiate">func (b *BoltToken) Initiate() (*LinkInitiate, error)</a></li>
+          <li><a href="#BoltToken.Login">func (b *BoltToken) Login() (*LinkLogin, error)</a></li>
+          <li><a href="#BoltToken.New">func (b *BoltToken) New() error</a></li>
+          </ul>
       </li>
   <li>
       <a href="#DefaultRoutes">type DefaultRoutes</a>
       <ul>
-          <li><a href="#DefaultRoutes.Episode">func (d DefaultRoutes) Episode() int</a></li>
-          <li><a href="#DefaultRoutes.Season">func (d DefaultRoutes) Season() int</a></li>
-          <li><a href="#DefaultRoutes.Show">func (d DefaultRoutes) Show() string</a></li>
-          <li><a href="#DefaultRoutes.Title">func (d DefaultRoutes) Title() string</a></li>
-          <li><a href="#DefaultRoutes.Year">func (d DefaultRoutes) Year() int</a></li>
+          <li><a href="#DefaultRoutes.Episode">func (d *DefaultRoutes) Episode() int</a></li>
+          <li><a href="#DefaultRoutes.Season">func (d *DefaultRoutes) Season() int</a></li>
+          <li><a href="#DefaultRoutes.Show">func (d *DefaultRoutes) Show() string</a></li>
+          <li><a href="#DefaultRoutes.Title">func (d *DefaultRoutes) Title() string</a></li>
+          <li><a href="#DefaultRoutes.Year">func (d *DefaultRoutes) Year() int</a></li>
           </ul>
       </li>
   <li>
-      <a href="#DefaultToken">type DefaultToken</a>
+      <a href="#LinkInitiate">type LinkInitiate</a>
+      </li>
+  <li>
+      <a href="#LinkLogin">type LinkLogin</a>
       <ul>
-          <li><a href="#DefaultToken.Login">func (d *DefaultToken) Login(key PublicKey, login DefaultLogin) error</a></li>
-          <li><a href="#DefaultToken.New">func (d *DefaultToken) New() error</a></li>
-          <li><a href="#DefaultToken.Playback">func (d *DefaultToken) Playback(web Address) (*Playback, error)</a></li>
-          <li><a href="#DefaultToken.Routes">func (d *DefaultToken) Routes(web Address) (*DefaultRoutes, error)</a></li>
-          <li><a href="#DefaultToken.Unmarshal">func (d *DefaultToken) Unmarshal() error</a></li>
+          <li><a href="#LinkLogin.Playback">func (v *LinkLogin) Playback(web Address) (*Playback, error)</a></li>
+          <li><a href="#LinkLogin.Routes">func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error)</a></li>
+          <li><a href="#LinkLogin.Unmarshal">func (v *LinkLogin) Unmarshal() error</a></li>
           </ul>
       </li>
   <li>
@@ -59,31 +65,14 @@
   <li>
       <a href="#Playback">type Playback</a>
       <ul>
-          <li><a href="#Playback.RequestHeader">func (Playback) RequestHeader() (http.Header, error)</a></li>
+          <li><a href="#Playback.RequestHeader">func (*Playback) RequestHeader() (http.Header, error)</a></li>
           <li><a href="#Playback.RequestUrl">func (p *Playback) RequestUrl() (string, bool)</a></li>
-          <li><a href="#Playback.UnwrapResponse">func (Playback) UnwrapResponse(b []byte) ([]byte, error)</a></li>
-          <li><a href="#Playback.WrapRequest">func (Playback) WrapRequest(b []byte) ([]byte, error)</a></li>
-          </ul>
-      </li>
-  <li>
-      <a href="#PublicKey">type PublicKey</a>
-      <ul>
-          <li><a href="#PublicKey.New">func (p *PublicKey) New() error</a></li>
+          <li><a href="#Playback.UnwrapResponse">func (*Playback) UnwrapResponse(b []byte) ([]byte, error)</a></li>
+          <li><a href="#Playback.WrapRequest">func (*Playback) WrapRequest(b []byte) ([]byte, error)</a></li>
           </ul>
       </li>
   <li>
       <a href="#RouteInclude">type RouteInclude</a>
-      </li>
-  <li>
-      <a href="#SessionState">type SessionState</a>
-      <ul>
-          <li><a href="#SessionState.Delete">func (s SessionState) Delete()</a></li>
-          <li><a href="#SessionState.Set">func (s SessionState) Set(text string) error</a></li>
-          <li><a href="#SessionState.String">func (s SessionState) String() string</a></li>
-          </ul>
-      </li>
-  <li>
-      <a href="#Value">type Value</a>
       </li>
   </ul><h3 id="pkg-types">Types</h3>
   <h3 id="Address">type Address</h3>
@@ -95,14 +84,20 @@
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">MarshalText</span><span class="p">()</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Address.UnmarshalText">func (*Address) UnmarshalText</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="nf">UnmarshalText</span><span class="p">(</span><span class="nx">text</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h3 id="DefaultLogin">type DefaultLogin</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">DefaultLogin</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="DefaultLogin.Credentials"><span class="nx">Credentials</span></span> <span class="kd">struct</span> <span class="p">{</span>
-		<span id="DefaultLogin.Username"><span class="nx">Username</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;username&#34;`</span>
-		<span id="DefaultLogin.Password"><span class="nx">Password</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a> <span class="s">`json:&#34;password&#34;`</span>
-	<span class="p">}</span> <span class="s">`json:&#34;credentials&#34;`</span>
+  <h3 id="BoltToken">type BoltToken</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">BoltToken</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="BoltToken.St"><span class="nx">St</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
 <span class="p">}</span></pre>
-    <h3 id="DefaultRoutes">type DefaultRoutes</h3>
+    <h4 id="BoltToken.Initiate">func (*BoltToken) Initiate</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><a href="#BoltToken"><span class="nx">BoltToken</span></a><span class="p">)</span> <span class="nf">Initiate</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#LinkInitiate"><span class="nx">LinkInitiate</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="BoltToken.Login">func (*BoltToken) Login</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><a href="#BoltToken"><span class="nx">BoltToken</span></a><span class="p">)</span> <span class="nf">Login</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><a href="#LinkLogin"><span class="nx">LinkLogin</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <p>you must
+/authentication/linkDevice/initiate
+first or this will always fail
+<h4 id="BoltToken.New">func (*BoltToken) New</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><a href="#BoltToken"><span class="nx">BoltToken</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h3 id="DefaultRoutes">type DefaultRoutes</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">DefaultRoutes</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="DefaultRoutes.Data"><span class="nx">Data</span></span> <span class="kd">struct</span> <span class="p">{</span>
 		<span id="DefaultRoutes.Attributes"><span class="nx">Attributes</span></span> <span class="kd">struct</span> <span class="p">{</span>
@@ -111,31 +106,37 @@
 	<span class="p">}</span>
 	<span id="DefaultRoutes.Included"><span class="nx">Included</span></span> <span class="p">[]</span><a href="#RouteInclude"><span class="nx">RouteInclude</span></a>
 <span class="p">}</span></pre>
-    <h4 id="DefaultRoutes.Episode">func (DefaultRoutes) Episode</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h4 id="DefaultRoutes.Season">func (DefaultRoutes) Season</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h4 id="DefaultRoutes.Show">func (DefaultRoutes) Show</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="DefaultRoutes.Title">func (DefaultRoutes) Title</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h4 id="DefaultRoutes.Year">func (DefaultRoutes) Year</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
-  <h3 id="DefaultToken">type DefaultToken</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">DefaultToken</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="DefaultToken.Session"><span class="nx">Session</span></span> <a href="#Value"><span class="nx">Value</span></a><span class="p">[</span><a href="#SessionState"><span class="nx">SessionState</span></a><span class="p">]</span>
-	<span id="DefaultToken.Token"><span class="nx">Token</span></span>   <a href="#Value"><span class="nx">Value</span></a><span class="p">[</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">]</span>
+    <h4 id="DefaultRoutes.Episode">func (*DefaultRoutes) Episode</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">)</span> <span class="nf">Episode</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="DefaultRoutes.Season">func (*DefaultRoutes) Season</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">)</span> <span class="nf">Season</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h4 id="DefaultRoutes.Show">func (*DefaultRoutes) Show</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">)</span> <span class="nf">Show</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="DefaultRoutes.Title">func (*DefaultRoutes) Title</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">)</span> <span class="nf">Title</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
+  <h4 id="DefaultRoutes.Year">func (*DefaultRoutes) Year</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">)</span> <span class="nf">Year</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#int"><span class="kt">int</span></a></pre>
+  <h3 id="LinkInitiate">type LinkInitiate</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">LinkInitiate</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="LinkInitiate.Data"><span class="nx">Data</span></span> <span class="kd">struct</span> <span class="p">{</span>
+		<span id="LinkInitiate.Attributes"><span class="nx">Attributes</span></span> <span class="kd">struct</span> <span class="p">{</span>
+			<span id="LinkInitiate.LinkingCode"><span class="nx">LinkingCode</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+			<span id="LinkInitiate.TargetUrl"><span class="nx">TargetUrl</span></span>   <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+		<span class="p">}</span>
+	<span class="p">}</span>
 <span class="p">}</span></pre>
-    <h4 id="DefaultToken.Login">func (*DefaultToken) Login</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DefaultToken"><span class="nx">DefaultToken</span></a><span class="p">)</span> <span class="nf">Login</span><span class="p">(</span><span class="nx">key</span> <a href="#PublicKey"><span class="nx">PublicKey</span></a><span class="p">,</span> <span class="nx">login</span> <a href="#DefaultLogin"><span class="nx">DefaultLogin</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="DefaultToken.New">func (*DefaultToken) New</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DefaultToken"><span class="nx">DefaultToken</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="DefaultToken.Playback">func (*DefaultToken) Playback</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DefaultToken"><span class="nx">DefaultToken</span></a><span class="p">)</span> <span class="nf">Playback</span><span class="p">(</span><span class="nx">web</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="DefaultToken.Routes">func (*DefaultToken) Routes</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DefaultToken"><span class="nx">DefaultToken</span></a><span class="p">)</span> <span class="nf">Routes</span><span class="p">(</span><span class="nx">web</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="DefaultToken.Unmarshal">func (*DefaultToken) Unmarshal</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><a href="#DefaultToken"><span class="nx">DefaultToken</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+    <h3 id="LinkLogin">type LinkLogin</h3>
+    <pre class="chroma"><span class="kd">type</span> <span class="nx">LinkLogin</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span id="LinkLogin.Raw"><span class="nx">Raw</span></span>   <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
+	<span id="LinkLogin.State"><span class="nx">State</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
+	<span class="c1">// contains filtered or unexported fields
+</span><span class="c1"></span><span class="p">}</span></pre>
+    <h4 id="LinkLogin.Playback">func (*LinkLogin) Playback</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <span class="o">*</span><a href="#LinkLogin"><span class="nx">LinkLogin</span></a><span class="p">)</span> <span class="nf">Playback</span><span class="p">(</span><span class="nx">web</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="LinkLogin.Routes">func (*LinkLogin) Routes</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <span class="o">*</span><a href="#LinkLogin"><span class="nx">LinkLogin</span></a><span class="p">)</span> <span class="nf">Routes</span><span class="p">(</span><span class="nx">web</span> <a href="#Address"><span class="nx">Address</span></a><span class="p">)</span> <span class="p">(</span><span class="o">*</span><a href="#DefaultRoutes"><span class="nx">DefaultRoutes</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="LinkLogin.Unmarshal">func (*LinkLogin) Unmarshal</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <span class="o">*</span><a href="#LinkLogin"><span class="nx">LinkLogin</span></a><span class="p">)</span> <span class="nf">Unmarshal</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
   <h3 id="Manifest">type Manifest</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">Manifest</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="Manifest.Url"><span class="nx">Url</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
@@ -157,20 +158,14 @@
 		<span class="p">}</span>
 	<span class="p">}</span>
 <span class="p">}</span></pre>
-    <h4 id="Playback.RequestHeader">func (Playback) RequestHeader</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+    <h4 id="Playback.RequestHeader">func (*Playback) RequestHeader</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="o">*</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">)</span> <span class="nf">RequestHeader</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/net/http"><span class="nx">http</span></a><span class="p">.</span><a href="https://pkg.go.dev/net/http#Header"><span class="nx">Header</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h4 id="Playback.RequestUrl">func (*Playback) RequestUrl</h4>
   <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">)</span> <span class="nf">RequestUrl</span><span class="p">()</span> <span class="p">(</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#bool"><span class="kt">bool</span></a><span class="p">)</span></pre>
-  <h4 id="Playback.UnwrapResponse">func (Playback) UnwrapResponse</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h4 id="Playback.WrapRequest">func (Playback) WrapRequest</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
-  <h3 id="PublicKey">type PublicKey</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">PublicKey</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="PublicKey.Token"><span class="nx">Token</span></span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a>
-<span class="p">}</span></pre>
-    <h4 id="PublicKey.New">func (*PublicKey) New</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><a href="#PublicKey"><span class="nx">PublicKey</span></a><span class="p">)</span> <span class="nf">New</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
+  <h4 id="Playback.UnwrapResponse">func (*Playback) UnwrapResponse</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="o">*</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">)</span> <span class="nf">UnwrapResponse</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
+  <h4 id="Playback.WrapRequest">func (*Playback) WrapRequest</h4>
+  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="o">*</span><a href="#Playback"><span class="nx">Playback</span></a><span class="p">)</span> <span class="nf">WrapRequest</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">)</span> <span class="p">([]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a><span class="p">,</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a><span class="p">)</span></pre>
   <h3 id="RouteInclude">type RouteInclude</h3>
     <pre class="chroma"><span class="kd">type</span> <span class="nx">RouteInclude</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span id="RouteInclude.Attributes"><span class="nx">Attributes</span></span> <span class="kd">struct</span> <span class="p">{</span>
@@ -187,19 +182,6 @@
 			<span class="p">}</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
-<span class="p">}</span></pre>
-    <h3 id="SessionState">type SessionState</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">SessionState</span> <span class="kd">map</span><span class="p">[</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">]</span><a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-    <h4 id="SessionState.Delete">func (SessionState) Delete</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#SessionState"><span class="nx">SessionState</span></a><span class="p">)</span> <span class="nf">Delete</span><span class="p">()</span></pre>
-  <h4 id="SessionState.Set">func (SessionState) Set</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#SessionState"><span class="nx">SessionState</span></a><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">text</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a><span class="p">)</span> <a href="https://pkg.go.dev/builtin#error"><span class="kt">error</span></a></pre>
-  <h4 id="SessionState.String">func (SessionState) String</h4>
-  <pre class="chroma"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <a href="#SessionState"><span class="nx">SessionState</span></a><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <a href="https://pkg.go.dev/builtin#string"><span class="kt">string</span></a></pre>
-  <h3 id="Value">type Value</h3>
-    <pre class="chroma"><span class="kd">type</span> <span class="nx">Value</span><span class="p">[</span><span class="nx">T</span> <a href="https://pkg.go.dev/builtin#any"><span class="nx">any</span></a><span class="p">]</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span id="Value.Value"><span class="nx">Value</span></span> <span class="nx">T</span>
-	<span id="Value.Raw"><span class="nx">Raw</span></span>   <span class="p">[]</span><a href="https://pkg.go.dev/builtin#byte"><span class="kt">byte</span></a>
 <span class="p">}</span></pre>
     </main>
     <hr>
