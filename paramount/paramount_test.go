@@ -32,6 +32,12 @@ var tests = []struct{
       url: "cbs.com/shows/video/rZ59lcp4i2fU4dAaZJ_iEgKqVg_ogrIf",
    },
    {
+      content_id: "WNujiS5PHkY5wN9doNY6MSo_7G8uBUcX",
+      key_id: "bsT01+Q1Ta+39TayayKhBg==",
+      location: "Australia",
+      url: "paramountplus.com/shows/video/WNujiS5PHkY5wN9doNY6MSo_7G8uBUcX",
+   },
+   {
       content_id: "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
       key_id: "BsO37qHORXefruKryNAaVQ==",
       location: "France",

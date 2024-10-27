@@ -10,6 +10,15 @@ import (
    "strings"
 )
 
+func (Poster) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Host = "itvpnp.live.ott.irdeto.com"
+   u.Path = "/Widevine/getlicense"
+   u.RawQuery = "AccountId=itvpnp"
+   u.Scheme = "https"
+   return u.String(), true
+}
+
 const query_discovery = `
 {
    titles(filter: {
@@ -171,15 +180,6 @@ type Playlist struct {
          }
       }
    }
-}
-
-func (Poster) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Host = "itvpnp.live.ott.irdeto.com"
-   u.Path = "/Widevine/getlicense"
-   u.RawQuery = "AccountId=itvpnp"
-   u.Scheme = "https"
-   return u.String(), true
 }
 
 type Poster struct{}

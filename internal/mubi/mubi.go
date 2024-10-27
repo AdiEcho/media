@@ -3,7 +3,6 @@ package main
 import (
    "41.neocities.org/media/internal"
    "41.neocities.org/media/mubi"
-   "crypto/tls"
    "fmt"
    "net/http"
    "os"
@@ -25,13 +24,6 @@ func (f *flags) download() error {
    req, err := http.NewRequest("", secure.Url, nil)
    if err != nil {
       return err
-   }
-   // github.com/golang/go/issues/18639
-   http.DefaultClient = &http.Client{
-      Transport: &http.Transport{
-         Proxy: http.ProxyFromEnvironment,
-         TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
-      },
    }
    reps, err := internal.Mpd(req)
    if err != nil {
@@ -67,6 +59,8 @@ func (f *flags) download() error {
             return err
          }
          f.s.Poster = &auth
+         // github.com/golang/go/issues/18639
+         os.Setenv("GODEBUG", "http2client=0")
          return f.s.Download(rep)
       }
    }
