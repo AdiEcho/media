@@ -1,11 +1,15 @@
 # paramount
 
-France reports `DASH_CENC_PRECON`:
+~~~
+url: "paramountplus.com/movies/video/Oo75PgAbcmt9xqqn1AMoBAfo190Cfhqi",
 
-http://paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ
+url: "paramountplus.com/shows/video/esJvFlqdrcS_kFHnpxSuYp449E7tTexD",
 
-same with United States:
+url: "cbs.com/shows/video/rZ59lcp4i2fU4dAaZJ_iEgKqVg_ogrIf",
 
-<http://cbs.com/shows/video/rZ59lcp4i2fU4dAaZJ_iEgKqVg_ogrIf>
+location: "France",
+url: "paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
 
-but United States should be `DASH_CENC`. lets compare the JSON.
+location: "Australia",
+url: "paramountplus.com/shows/video/WNujiS5PHkY5wN9doNY6MSo_7G8uBUcX",
+~~~
