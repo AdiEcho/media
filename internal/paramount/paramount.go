@@ -9,12 +9,41 @@ import (
    "sort"
 )
 
-func (f *flags) do_read() error {
-   location, err := os.ReadFile(f.content_id + "/location.txt")
+func (f *flags) do_write() error {
+   os.Mkdir(f.content_id, os.ModePerm)
+   location := locations[f.location]
+   mpd, err := paramount.Mpd(f.content_id, location.asset_type)
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", string(location), nil)
+   err = os.WriteFile(
+      f.content_id + "/mpd.txt", []byte(mpd), os.ModePerm,
+   )
+   if err != nil {
+      return err
+   }
+   var app paramount.AppToken
+   if location.host == "www.paramountplus.com" {
+      err = app.ComCbsApp()
+   } else {
+      err = app.ComCbsCa()
+   }
+   if err != nil {
+      return err
+   }
+   item, err := app.Item(f.content_id)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.content_id + "/item.txt", item.Raw, os.ModePerm)
+}
+
+func (f *flags) do_read() error {
+   mpd, err := os.ReadFile(f.content_id + "/mpd.txt")
+   if err != nil {
+      return err
+   }
+   req, err := http.NewRequest("", string(mpd), nil)
    if err != nil {
       return err
    }
@@ -57,32 +86,4 @@ func (f *flags) do_read() error {
       }
    }
    return nil
-}
-
-func (f *flags) do_write() error {
-   os.Mkdir(f.content_id, os.ModePerm)
-   location, err := paramount.Location(f.content_id, f.intl)
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(
-      f.content_id + "/location.txt", []byte(location), os.ModePerm,
-   )
-   if err != nil {
-      return err
-   }
-   var app paramount.AppToken
-   if f.intl {
-      err = app.ComCbsCa()
-   } else {
-      err = app.ComCbsApp()
-   }
-   if err != nil {
-      return err
-   }
-   item, err := app.Item(f.content_id)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.content_id + "/item.txt", item.Raw, os.ModePerm)
 }

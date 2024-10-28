@@ -28,13 +28,24 @@ type flags struct {
    location int
 }
 
-var location = map[int]struct{
-   asset_type string
+var locations = []struct{
    host string
+   asset_type string
 }{
-   0: {"DASH_CENC", "www.paramountplus.com"},
-   1: {"DASH_CENC", "www.intl.paramountplus.com"},
-   2: {"DASH_CENC_PRECON", "www.intl.paramountplus.com"},
+   {"www.paramountplus.com", "DASH_CENC"},
+   {"www.intl.paramountplus.com", "DASH_CENC"},
+   {"www.intl.paramountplus.com", "DASH_CENC_PRECON"},
+}
+
+func get_location() string {
+   var b []byte
+   for k, v := range locations {
+      if k >= 1 {
+         b = append(b, '\n')
+      }
+      b = fmt.Append(b, k, v)
+   }
+   return string(b)
 }
 
 func main() {
@@ -46,11 +57,9 @@ func main() {
    flag.StringVar(&f.content_id, "b", "", "content ID")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
+   flag.IntVar(&f.location, "n", 0, get_location())
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.BoolVar(&f.write, "w", false, "write")
-   
-   flag.IntVar(&f.location, "location", 0, fmt.Sprint(location))
-   
    flag.Parse()
    text.Transport{}.Set(true)
    switch {

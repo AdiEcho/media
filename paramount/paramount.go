@@ -116,11 +116,11 @@ func (n *Number) UnmarshalText(text []byte) error {
 
 type Number int64
 
-func (SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
+func (*SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (SessionToken) WrapRequest(b []byte) ([]byte, error) {
+func (*SessionToken) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 

@@ -16,7 +16,7 @@ import (
 // formats=MPEG-DASH&assetTypes=DASH_CENC_PRECON
 // US:
 // formats=MPEG-DASH&assetTypes=DASH_CENC
-func Location(content_id, asset_type string) (string, error) {
+func Mpd(content_id, asset_type string) (string, error) {
    req, err := http.NewRequest("", "https://link.theplatform.com", nil)
    if err != nil {
       return "", err
