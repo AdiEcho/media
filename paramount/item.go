@@ -9,6 +9,18 @@ import (
    "time"
 )
 
+type VideoItem struct {
+   // "Full Episode"
+   // "Movie"
+   MediaType string
+   AirDateIso time.Time `json:"_airDateISO"`
+   EpisodeNum Number
+   Label string
+   SeasonNum Number
+   SeriesTitle string
+   Raw []byte `json:"-"`
+}
+
 // must use app token and IP address for correct location
 func (at *AppToken) Item(content_id string) (*VideoItem, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
@@ -58,16 +70,6 @@ func (v *VideoItem) Unmarshal() error {
    }
    *v = value.ItemList[0]
    return nil
-}
-
-type VideoItem struct {
-   AirDateIso time.Time `json:"_airDateISO"`
-   EpisodeNum Number
-   Label string
-   MediaType string
-   SeasonNum Number
-   SeriesTitle string
-   Raw []byte `json:"-"`
 }
 
 func (v *VideoItem) Season() int {
