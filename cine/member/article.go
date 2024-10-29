@@ -3,7 +3,6 @@ package member
 import (
    "bytes"
    "encoding/json"
-   "errors"
    "io"
    "net/http"
    "strconv"

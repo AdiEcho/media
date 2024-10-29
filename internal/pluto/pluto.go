@@ -1,10 +1,12 @@
 package main
 
 import (
+   "41.neocities.org/dash"
    "41.neocities.org/media/internal"
    "41.neocities.org/media/pluto"
    "errors"
    "fmt"
+   "io"
    "net/http"
    "sort"
 )
@@ -28,7 +30,16 @@ func (f *flags) download() error {
    }
    req.URL.Scheme = pluto.Base[0].Scheme
    req.URL.Host = pluto.Base[0].Host
-   reps, err := internal.Mpd(&req)
+   resp, err := http.DefaultClient.Do(&req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }

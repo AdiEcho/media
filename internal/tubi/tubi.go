@@ -32,11 +32,16 @@ func (f *flags) download() error {
    if !ok {
       return errors.New("VideoContent.Video")
    }
-   req, err := http.NewRequest("", video.Manifest.Url, nil)
+   resp, err := http.Get(video.Manifest.Url)
    if err != nil {
       return err
    }
-   reps, err := internal.Mpd(req)
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }

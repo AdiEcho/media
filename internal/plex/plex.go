@@ -1,10 +1,12 @@
 package main
 
 import (
+   "41.neocities.org/dash"
    "41.neocities.org/media/internal"
    "41.neocities.org/media/plex"
    "errors"
    "fmt"
+   "io"
    "net/http"
    "sort"
 )
@@ -27,14 +29,23 @@ func (f *flags) download() error {
    if !ok {
       return errors.New("OnDemand.Dash")
    }
-   req, err := http.NewRequest("", part.Key.Url.String(), nil)
+   var req http.Request
+   req.URL = part.Key.Url
+   if f.set_forward != "" {
+      req.Header = http.Header{
+         "x-forwarded-for": {f.set_forward},
+      }
+   }
+   resp, err := http.DefaultClient.Do(&req)
    if err != nil {
       return err
    }
-   if f.set_forward != "" {
-      req.Header.Set("x-forwarded-for", f.set_forward)
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
    }
-   reps, err := internal.Mpd(req)
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }

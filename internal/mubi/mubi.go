@@ -21,11 +21,16 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", secure.Url, nil)
+   resp, err := http.Get(secure.Url)
    if err != nil {
       return err
    }
-   reps, err := internal.Mpd(req)
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }

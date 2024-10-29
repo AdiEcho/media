@@ -1,10 +1,11 @@
 package main
 
 import (
+   "41.neocities.org/dash"
    "41.neocities.org/media/rtbf"
-   "41.neocities.org/media/internal"
    "errors"
    "fmt"
+   "io"
    "net/http"
    "os"
 )
@@ -46,11 +47,16 @@ func (f *flags) download() error {
    if !ok {
       return errors.New("Entitlement.Dash")
    }
-   req, err := http.NewRequest("", address, nil)
+   resp, err := http.Get(address)
    if err != nil {
       return err
    }
-   reps, err := internal.Mpd(req)
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }

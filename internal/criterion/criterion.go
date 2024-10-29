@@ -33,13 +33,18 @@ func (f *flags) download() error {
    }
    file, ok := files.Dash()
    if !ok {
-      return files.DashError()
+      return errors.New("VideoFiles.Dash")
    }
-   req, err := http.NewRequest("", file.Links.Source.Href, nil)
+   resp, err := http.Get(file.Links.Source.Href)
    if err != nil {
       return err
    }
-   reps, err := internal.Mpd(req)
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }

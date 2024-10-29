@@ -9,6 +9,15 @@ import (
    "strings"
 )
 
+func (v VideoFiles) Dash() (*VideoFile, bool) {
+   for _, file := range v {
+      if file.Method == "dash" {
+         return &file, true
+      }
+   }
+   return nil, false
+}
+
 func (a *AuthToken) Video(slug string) (*EmbedItem, error) {
    req, err := http.NewRequest("", "https://api.vhx.com", nil)
    if err != nil {
@@ -108,15 +117,6 @@ func (v *VideoFile) RequestUrl() (string, bool) {
    b := []byte("https://drm.vhx.com/v2/widevine?token=")
    b = append(b, v.DrmAuthorizationToken...)
    return string(b), true
-}
-
-func (v VideoFiles) Dash() (*VideoFile, bool) {
-   for _, file := range v {
-      if file.Method == "dash" {
-         return &file, true
-      }
-   }
-   return nil, false
 }
 
 func (a *AuthToken) New(username, password string) error {

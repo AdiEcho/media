@@ -28,15 +28,20 @@ func (f *flags) download() error {
    if !ok {
       return errors.New("resolution 720")
    }
-   req, err := http.NewRequest("", address, nil)
-   if err != nil {
-      return err
-   }
    http.DefaultClient.Jar, err = cookiejar.New(nil)
    if err != nil {
       return err
    }
-   reps, err := internal.Mpd(req)
+   resp, err := http.Get(address)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }

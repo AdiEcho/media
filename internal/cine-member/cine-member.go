@@ -23,15 +23,20 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   dash, ok := play.Dash()
+   address, ok := play.Dash()
    if !ok {
       return errors.New("OperationPlay.Dash")
    }
-   req, err := http.NewRequest("", dash, nil)
+   resp, err := http.Get(address)
    if err != nil {
       return err
    }
-   reps, err := internal.Mpd(req)
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }
