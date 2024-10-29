@@ -15,11 +15,6 @@ import (
 
 const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
 
-const (
-   aid = 2198311517
-   cms_account_id = "dJ5BDC"
-)
-
 func pad(b []byte) []byte {
    length := aes.BlockSize - len(b) % aes.BlockSize
    for high := byte(length); length >= 1; length-- {

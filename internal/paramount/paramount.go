@@ -11,22 +11,15 @@ import (
 
 func (f *flags) do_write() error {
    os.Mkdir(f.content_id, os.ModePerm)
-   location := locations[f.location]
-   mpd, err := paramount.Mpd(f.content_id, location.asset_type)
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(
-      f.content_id + "/mpd.txt", []byte(mpd), os.ModePerm,
+   // item
+   var (
+      app paramount.AppToken
+      err error
    )
-   if err != nil {
-      return err
-   }
-   var app paramount.AppToken
-   if location.host == "www.paramountplus.com" {
-      err = app.ComCbsApp()
-   } else {
+   if f.intl {
       err = app.ComCbsCa()
+   } else {
+      err = app.ComCbsApp()
    }
    if err != nil {
       return err
@@ -35,7 +28,25 @@ func (f *flags) do_write() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.content_id + "/item.txt", item.Raw, os.ModePerm)
+   err = os.WriteFile(f.content_id + "/item.txt", item.Raw, os.ModePerm)
+   if err != nil {
+      return err
+   }
+   // mpd
+   err = item.Unmarshal()
+   if err != nil {
+      return err
+   }
+   resp, err := http.Get(item.Mpd())
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.content_id + "/mpd.txt", data, os.ModePerm)
 }
 
 func (f *flags) do_read() error {

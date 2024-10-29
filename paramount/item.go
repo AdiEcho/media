@@ -9,16 +9,23 @@ import (
    "time"
 )
 
+func (v *VideoItem) asset_type() string {
+   if v.MediaType == "Movie" {
+      return "DASH_CENC_PRECON"
+   }
+   return "DASH_CENC"
+}
+
 type VideoItem struct {
-   // "Full Episode"
-   // "Movie"
-   MediaType string
    AirDateIso time.Time `json:"_airDateISO"`
+   CmsAccountId string
+   ContentId string
    EpisodeNum Number
    Label string
+   MediaType string
+   Raw []byte `json:"-"`
    SeasonNum Number
    SeriesTitle string
-   Raw []byte `json:"-"`
 }
 
 // must use app token and IP address for correct location

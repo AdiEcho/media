@@ -25,27 +25,7 @@ type flags struct {
    s internal.Stream
    content_id string
    write bool
-   location int
-}
-
-var locations = []struct{
-   host string
-   asset_type string
-}{
-   {"www.paramountplus.com", "DASH_CENC"},
-   {"www.intl.paramountplus.com", "DASH_CENC"},
-   {"www.intl.paramountplus.com", "DASH_CENC_PRECON"},
-}
-
-func get_location() string {
-   var b []byte
-   for k, v := range locations {
-      if k >= 1 {
-         b = append(b, '\n')
-      }
-      b = fmt.Append(b, k, v)
-   }
-   return string(b)
+   intl bool
 }
 
 func main() {
@@ -57,9 +37,9 @@ func main() {
    flag.StringVar(&f.content_id, "b", "", "content ID")
    flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.representation, "i", "", "representation")
-   flag.IntVar(&f.location, "n", 0, get_location())
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.BoolVar(&f.write, "w", false, "write")
+   flag.IntVar(&f.intl, "n", false, "intl")
    flag.Parse()
    text.Transport{}.Set(true)
    switch {
