@@ -1,9 +1,11 @@
 package main
 
 import (
+   "41.neocities.org/dash"
    "41.neocities.org/media/amc"
-   "41.neocities.org/media/internal"
+   "errors"
    "fmt"
+   "io"
    "net/http"
    "os"
    "sort"
@@ -37,13 +39,18 @@ func (f *flags) download() error {
    }
    source, ok := play.Dash()
    if !ok {
-      return play.DashError()
+      return errors.New("Playback.Dash")
    }
-   req, err := http.NewRequest("", source.Src, nil)
+   resp, err := http.Get(source.Src)
    if err != nil {
       return err
    }
-   reps, err := internal.Mpd(req)
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }
@@ -64,7 +71,7 @@ func (f *flags) download() error {
          }
          f.s.Name, ok = content.Video()
          if !ok {
-            return content.VideoError()
+            return errors.New("ContentCompiler.Video")
          }
          return f.s.Download(rep)
       }

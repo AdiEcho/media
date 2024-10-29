@@ -9,6 +9,15 @@ import (
    "strings"
 )
 
+func (o *OperationArticle) Film() (*ArticleAsset, bool) {
+   for _, asset := range o.Assets {
+      if asset.LinkedType == "film" {
+         return asset, true
+      }
+   }
+   return nil, false
+}
+
 // NO ANONYMOUS QUERY
 const query_article = `
 query Article($articleUrlSlug: String) {
@@ -32,15 +41,6 @@ query Article($articleUrlSlug: String) {
    }
 }
 `
-
-func (o *OperationArticle) Film() (*ArticleAsset, bool) {
-   for _, asset := range o.Assets {
-      if asset.LinkedType == "film" {
-         return asset, true
-      }
-   }
-   return nil, false
-}
 
 func (a *Address) Set(s string) error {
    s = strings.TrimPrefix(s, "https://")

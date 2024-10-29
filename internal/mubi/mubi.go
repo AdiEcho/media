@@ -1,9 +1,10 @@
 package main
 
 import (
-   "41.neocities.org/media/internal"
+   "41.neocities.org/dash"
    "41.neocities.org/media/mubi"
    "fmt"
+   "io"
    "net/http"
    "os"
 )

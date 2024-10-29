@@ -1,10 +1,11 @@
 package main
 
 import (
+   "41.neocities.org/dash"
    "41.neocities.org/media/cine/member"
-   "41.neocities.org/media/internal"
    "errors"
    "fmt"
+   "io"
    "net/http"
    "os"
    "path"
@@ -83,7 +84,7 @@ func (f *flags) write_play() error {
    // 2. write OperationPlay
    asset, ok := article.Film()
    if !ok {
-      return article.FilmError()
+      return errors.New("OperationArticle.Film")
    }
    var user member.OperationUser
    user.Raw, err = os.ReadFile(f.home + "/cine-member.txt")

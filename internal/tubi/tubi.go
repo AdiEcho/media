@@ -1,10 +1,11 @@
 package main
 
 import (
-   "41.neocities.org/media/internal"
+   "41.neocities.org/dash"
    "41.neocities.org/media/tubi"
    "errors"
    "fmt"
+   "io"
    "net/http"
    "os"
    "sort"

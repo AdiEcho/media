@@ -1,9 +1,10 @@
 package main
 
 import (
+   "41.neocities.org/dash"
    "41.neocities.org/media/ctv"
-   "41.neocities.org/media/internal"
    "fmt"
+   "io"
    "net/http"
    "os"
    "path"

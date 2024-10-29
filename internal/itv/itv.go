@@ -1,10 +1,11 @@
 package main
 
 import (
-   "41.neocities.org/media/internal"
+   "41.neocities.org/dash"
    "41.neocities.org/media/itv"
    "errors"
    "fmt"
+   "io"
    "net/http"
    "net/http/cookiejar"
    "path"

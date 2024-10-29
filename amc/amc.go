@@ -17,6 +17,15 @@ func (c *ContentCompiler) Video() (*CurrentVideo, bool) {
    return nil, false
 }
 
+func (p *Playback) Dash() (*DataSource, bool) {
+   for _, source := range p.Data.PlaybackJsonData.Sources {
+      if source.Type == "application/dash+xml" {
+         return &source, true
+      }
+   }
+   return nil, false
+}
+
 func cache_hash() string {
    return base64.StdEncoding.EncodeToString([]byte("ff="))
 }
@@ -104,15 +113,6 @@ func (p *Playback) RequestHeader() (http.Header, error) {
    head := http.Header{}
    head.Set("bcov-auth", p.AmcnBcJwt)
    return head, nil
-}
-
-func (p *Playback) Dash() (*DataSource, bool) {
-   for _, source := range p.Data.PlaybackJsonData.Sources {
-      if source.Type == "application/dash+xml" {
-         return &source, true
-      }
-   }
-   return nil, false
 }
 
 type Playback struct {

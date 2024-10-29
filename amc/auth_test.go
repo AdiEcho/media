@@ -9,11 +9,10 @@ import (
 )
 
 func TestLogin(t *testing.T) {
-   username := os.Getenv("amc_username")
-   if username == "" {
+   username, password, ok := strings.Cut(os.Getenv("amc"), ":")
+   if !ok {
       t.Fatal("Getenv")
    }
-   password := os.Getenv("amc_password")
    var auth Authorization
    err := auth.Unauth()
    if err != nil {
@@ -75,7 +74,7 @@ func TestContent(t *testing.T) {
       }
       video, ok := content.Video()
       if !ok {
-         t.Fatal(content.VideoError())
+         t.Fatal("ContentCompiler.Video")
       }
       name, err := text.Name(video)
       if err != nil {

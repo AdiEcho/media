@@ -1,8 +1,9 @@
 package main
 
 import (
-   "41.neocities.org/media/internal"
+   "41.neocities.org/dash"
    "fmt"
+   "io"
    "net/http"
    "sort"
 )
@@ -12,11 +13,16 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", fhd.Url, nil)
+   resp, err := http.Get(fhd.Url)
    if err != nil {
       return err
    }
-   reps, err := internal.Mpd(req)
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }
