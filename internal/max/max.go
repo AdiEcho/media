@@ -12,11 +12,6 @@ import (
 
 func (f *flags) download() error {
    var login max.LinkLogin
-   state, err := os.ReadFile(f.home + "/state.txt")
-   if err != nil {
-      return err
-   }
-   login.State = string(state)
    login.RawToken, err = os.ReadFile(f.home + "/login.txt")
    if err != nil {
       return err
@@ -25,6 +20,11 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
+   data, err := os.ReadFile(f.home + "/state.txt")
+   if err != nil {
+      return err
+   }
+   login.State = string(data)
    play, err := login.Playback(f.address)
    if err != nil {
       return err

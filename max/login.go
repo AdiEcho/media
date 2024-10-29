@@ -33,86 +33,6 @@ func (v *LinkLogin) Unmarshal() error {
    return nil
 }
 
-func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
-   req, err := http.NewRequest("", prd_api, nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      text, _ := web.MarshalText()
-      var b strings.Builder
-      b.WriteString("/cms/routes")
-      b.Write(text)
-      return b.String()
-   }()
-   req.URL.RawQuery = url.Values{
-      "include": {"default"},
-      // this is not required, but results in a smaller response
-      "page[items.size]": {"1"},
-   }.Encode()
-   req.Header = http.Header{
-      "authorization": {"Bearer " + v.token},
-      "x-wbd-session-state": {v.State},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   route := &DefaultRoutes{}
-   err = json.NewDecoder(resp.Body).Decode(route)
-   if err != nil {
-      return nil, err
-   }
-   return route, nil
-}
-
-func (v *LinkLogin) Playback(web Address) (*Playback, error) {
-   var body playback_request
-   body.ConsumptionType = "streaming"
-   body.EditId = web.EditId
-   data, err := json.MarshalIndent(body, "", " ")
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest("POST", prd_api, bytes.NewReader(data))
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      var b bytes.Buffer
-      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
-      b.WriteString("/playbackInfo")
-      return b.String()
-   }()
-   req.Header = http.Header{
-      "authorization": {"Bearer " + v.token},
-      "content-type": {"application/json"},
-      "x-wbd-session-state": {v.State},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   resp_body := &Playback{}
-   err = json.NewDecoder(resp.Body).Decode(resp_body)
-   if err != nil {
-      return nil, err
-   }
-   return resp_body, nil
-}
-
 func (m *Manifest) UnmarshalText(text []byte) error {
    m.Url = strings.Replace(string(text), "_fallback", "", 1)
    return nil
@@ -203,6 +123,66 @@ type playback_request struct {
    PlaybackSessionId string   `json:"playbackSessionId"` // required
    UserPreferences   struct{} `json:"userPreferences"`   // required
 }
+
+func (d *DefaultRoutes) video() (*RouteInclude, bool) {
+   for _, include := range d.Included {
+      if include.Id == d.Data.Attributes.Url.VideoId {
+         return &include, true
+      }
+   }
+   return nil, false
+}
+
+func (d *DefaultRoutes) Season() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.SeasonNumber
+   }
+   return 0
+}
+
+func (d *DefaultRoutes) Episode() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.EpisodeNumber
+   }
+   return 0
+}
+
+func (d *DefaultRoutes) Title() string {
+   if v, ok := d.video(); ok {
+      return v.Attributes.Name
+   }
+   return ""
+}
+
+func (d *DefaultRoutes) Year() int {
+   if v, ok := d.video(); ok {
+      return v.Attributes.AirDate.Year()
+   }
+   return 0
+}
+
+func (d *DefaultRoutes) Show() string {
+   if v, ok := d.video(); ok {
+      if v.Attributes.SeasonNumber >= 1 {
+         for _, include := range d.Included {
+            if include.Id == v.Relationships.Show.Data.Id {
+               return include.Attributes.Name
+            }
+         }
+      }
+   }
+   return ""
+}
+
+type DefaultRoutes struct {
+   Data struct {
+      Attributes struct {
+         Url Address
+      }
+   }
+   Included []RouteInclude
+}
+
 func (a *Address) MarshalText() ([]byte, error) {
    var b bytes.Buffer
    if a.VideoId != "" {
@@ -262,61 +242,82 @@ func (b *BoltToken) Login() (*LinkLogin, error) {
    return &link, nil
 }
 
-func (d *DefaultRoutes) video() (*RouteInclude, bool) {
-   for _, include := range d.Included {
-      if include.Id == d.Data.Attributes.Url.VideoId {
-         return &include, true
-      }
+func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
+   req, err := http.NewRequest("", prd_api, nil)
+   if err != nil {
+      return nil, err
    }
-   return nil, false
+   req.URL.Path = func() string {
+      text, _ := web.MarshalText()
+      var b strings.Builder
+      b.WriteString("/cms/routes")
+      b.Write(text)
+      return b.String()
+   }()
+   req.URL.RawQuery = url.Values{
+      "include": {"default"},
+      // this is not required, but results in a smaller response
+      "page[items.size]": {"1"},
+   }.Encode()
+   req.Header = http.Header{
+      "authorization": {"Bearer " + v.token},
+      "x-wbd-session-state": {v.State},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   route := &DefaultRoutes{}
+   err = json.NewDecoder(resp.Body).Decode(route)
+   if err != nil {
+      return nil, err
+   }
+   return route, nil
 }
 
-func (d *DefaultRoutes) Season() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.SeasonNumber
+func (v *LinkLogin) Playback(web Address) (*Playback, error) {
+   var body playback_request
+   body.ConsumptionType = "streaming"
+   body.EditId = web.EditId
+   data, err := json.MarshalIndent(body, "", " ")
+   if err != nil {
+      return nil, err
    }
-   return 0
-}
-
-func (d *DefaultRoutes) Episode() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.EpisodeNumber
+   req, err := http.NewRequest("POST", prd_api, bytes.NewReader(data))
+   if err != nil {
+      return nil, err
    }
-   return 0
-}
-
-func (d *DefaultRoutes) Title() string {
-   if v, ok := d.video(); ok {
-      return v.Attributes.Name
+   req.URL.Path = func() string {
+      var b bytes.Buffer
+      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
+      b.WriteString("/playbackInfo")
+      return b.String()
+   }()
+   req.Header = http.Header{
+      "authorization": {"Bearer " + v.token},
+      "content-type": {"application/json"},
+      "x-wbd-session-state": {v.State},
    }
-   return ""
-}
-
-func (d *DefaultRoutes) Year() int {
-   if v, ok := d.video(); ok {
-      return v.Attributes.AirDate.Year()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
    }
-   return 0
-}
-
-func (d *DefaultRoutes) Show() string {
-   if v, ok := d.video(); ok {
-      if v.Attributes.SeasonNumber >= 1 {
-         for _, include := range d.Included {
-            if include.Id == v.Relationships.Show.Data.Id {
-               return include.Attributes.Name
-            }
-         }
-      }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
    }
-   return ""
-}
-
-type DefaultRoutes struct {
-   Data struct {
-      Attributes struct {
-         Url Address
-      }
+   resp_body := &Playback{}
+   err = json.NewDecoder(resp.Body).Decode(resp_body)
+   if err != nil {
+      return nil, err
    }
-   Included []RouteInclude
+   return resp_body, nil
 }
