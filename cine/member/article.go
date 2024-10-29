@@ -34,10 +34,6 @@ query Article($articleUrlSlug: String) {
 }
 `
 
-func (*OperationArticle) FilmError() error {
-   return errors.New("OperationArticle.Film")
-}
-
 func (o *OperationArticle) Film() (*ArticleAsset, bool) {
    for _, asset := range o.Assets {
       if asset.LinkedType == "film" {

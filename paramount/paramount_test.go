@@ -17,18 +17,6 @@ var tests = []struct{
    key_id string
 }{
    {
-      content_id: "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
-      key_id: "BsO37qHORXefruKryNAaVQ==",
-      location: "France",
-      url: "paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
-   },
-   {
-      content_id: "WNujiS5PHkY5wN9doNY6MSo_7G8uBUcX",
-      key_id: "bsT01+Q1Ta+39TayayKhBg==",
-      location: "Australia",
-      url: "paramountplus.com/shows/video/WNujiS5PHkY5wN9doNY6MSo_7G8uBUcX",
-   },
-   {
       content_id: "Oo75PgAbcmt9xqqn1AMoBAfo190Cfhqi",
       key_id: "3RyyVzthSSOklAXiQ2vyRw==",
       url: "paramountplus.com/movies/video/Oo75PgAbcmt9xqqn1AMoBAfo190Cfhqi",
@@ -42,6 +30,18 @@ var tests = []struct{
       content_id: "rZ59lcp4i2fU4dAaZJ_iEgKqVg_ogrIf",
       key_id: "Sryog4HeT2CLHx38NftIMA==",
       url: "cbs.com/shows/video/rZ59lcp4i2fU4dAaZJ_iEgKqVg_ogrIf",
+   },
+   {
+      content_id: "Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
+      key_id: "BsO37qHORXefruKryNAaVQ==",
+      location: "France",
+      url: "paramountplus.com/movies/video/Y8sKvb2bIoeX4XZbsfjadF4GhNPwcjTQ",
+   },
+   {
+      content_id: "WNujiS5PHkY5wN9doNY6MSo_7G8uBUcX",
+      key_id: "bsT01+Q1Ta+39TayayKhBg==",
+      location: "Australia",
+      url: "paramountplus.com/shows/video/WNujiS5PHkY5wN9doNY6MSo_7G8uBUcX",
    },
 }
 

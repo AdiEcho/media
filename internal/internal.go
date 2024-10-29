@@ -16,24 +16,6 @@ import (
    "strings"
 )
 
-func Mpd(req *http.Request) ([]dash.Representation, error) {
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   data, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return dash.Unmarshal(data, resp.Request.URL)
-}
-
 func write_segment(data, key []byte) ([]byte, error) {
    if key == nil {
       return data, nil

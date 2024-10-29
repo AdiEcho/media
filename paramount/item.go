@@ -9,25 +9,6 @@ import (
    "time"
 )
 
-func (v *VideoItem) asset_type() string {
-   if v.MediaType == "Movie" {
-      return "DASH_CENC_PRECON"
-   }
-   return "DASH_CENC"
-}
-
-type VideoItem struct {
-   AirDateIso time.Time `json:"_airDateISO"`
-   CmsAccountId string
-   ContentId string
-   EpisodeNum Number
-   Label string
-   MediaType string
-   Raw []byte `json:"-"`
-   SeasonNum Number
-   SeriesTitle string
-}
-
 // must use app token and IP address for correct location
 func (at *AppToken) Item(content_id string) (*VideoItem, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
@@ -58,6 +39,25 @@ func (at *AppToken) Item(content_id string) (*VideoItem, error) {
       return nil, err
    }
    return &item, nil
+}
+
+func (v *VideoItem) asset_type() string {
+   if v.MediaType == "Movie" {
+      return "DASH_CENC_PRECON"
+   }
+   return "DASH_CENC"
+}
+
+type VideoItem struct {
+   AirDateIso time.Time `json:"_airDateISO"`
+   CmsAccountId string
+   ContentId string
+   EpisodeNum Number
+   Label string
+   MediaType string
+   Raw []byte `json:"-"`
+   SeasonNum Number
+   SeriesTitle string
 }
 
 func (v *VideoItem) Unmarshal() error {

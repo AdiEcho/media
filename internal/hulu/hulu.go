@@ -1,9 +1,10 @@
 package main
 
 import (
+   "41.neocities.org/dash"
    "41.neocities.org/media/hulu"
-   "41.neocities.org/media/internal"
    "fmt"
+   "io"
    "net/http"
    "os"
    "sort"
@@ -30,11 +31,16 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", play.StreamUrl, nil)
+   resp, err := http.Get(play.StreamUrl)
    if err != nil {
       return err
    }
-   reps, err := internal.Mpd(req)
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
    if err != nil {
       return err
    }

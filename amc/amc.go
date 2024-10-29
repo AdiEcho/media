@@ -124,14 +124,6 @@ type Playback struct {
    }
 }
 
-func (*ContentCompiler) VideoError() error {
-   return errors.New("ContentCompiler.Video")
-}
-
-func (*Playback) DashError() error {
-   return errors.New("Playback.DashError")
-}
-
 func (*Playback) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }

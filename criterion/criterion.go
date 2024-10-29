@@ -109,9 +109,6 @@ func (v *VideoFile) RequestUrl() (string, bool) {
    b = append(b, v.DrmAuthorizationToken...)
    return string(b), true
 }
-func (*VideoFiles) DashError() error {
-   return errors.New("VideoFiles.Dash")
-}
 
 func (v VideoFiles) Dash() (*VideoFile, bool) {
    for _, file := range v {

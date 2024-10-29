@@ -1,9 +1,10 @@
 package main
 
 import (
-   "41.neocities.org/media/internal"
+   "41.neocities.org/dash"
    "41.neocities.org/media/paramount"
    "fmt"
+   "io"
    "net/http"
    "os"
    "sort"
@@ -42,6 +43,7 @@ func (f *flags) do_write() error {
       return err
    }
    defer resp.Body.Close()
+   f.url = resp.Request.URL
    data, err := io.ReadAll(resp.Body)
    if err != nil {
       return err
@@ -50,15 +52,11 @@ func (f *flags) do_write() error {
 }
 
 func (f *flags) do_read() error {
-   mpd, err := os.ReadFile(f.content_id + "/mpd.txt")
+   data, err := os.ReadFile(f.content_id + "/mpd.txt")
    if err != nil {
       return err
    }
-   req, err := http.NewRequest("", string(mpd), nil)
-   if err != nil {
-      return err
-   }
-   reps, err := internal.Mpd(req)
+   reps, err := dash.Unmarshal(data, f.url)
    if err != nil {
       return err
    }

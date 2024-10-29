@@ -4,7 +4,7 @@ import (
    "41.neocities.org/media/internal"
    "41.neocities.org/text"
    "flag"
-   "fmt"
+   "net/url"
    "os"
    "path/filepath"
 )
@@ -26,6 +26,7 @@ type flags struct {
    content_id string
    write bool
    intl bool
+   url *url.URL
 }
 
 func main() {
@@ -39,7 +40,7 @@ func main() {
    flag.StringVar(&f.representation, "i", "", "representation")
    flag.StringVar(&f.s.PrivateKey, "p", f.s.PrivateKey, "private key")
    flag.BoolVar(&f.write, "w", false, "write")
-   flag.IntVar(&f.intl, "n", false, "intl")
+   flag.BoolVar(&f.intl, "n", false, "intl")
    flag.Parse()
    text.Transport{}.Set(true)
    switch {

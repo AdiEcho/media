@@ -8,10 +8,6 @@ import (
    "net/http"
 )
 
-func (*OperationPlay) DashError() error {
-   return errors.New("OperationPlay.Dash")
-}
-
 func (o *OperationPlay) Dash() (string, bool) {
    for _, title := range o.Entitlements {
       if title.Protocol == "dash" {
