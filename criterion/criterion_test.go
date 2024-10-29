@@ -6,6 +6,7 @@ import (
    "encoding/hex"
    "fmt"
    "os"
+   "strings"
    "testing"
 )
 
@@ -98,7 +99,7 @@ func TestLicense(t *testing.T) {
    }
    file, ok := files.Dash()
    if !ok {
-      t.Fatal(files.DashError())
+      t.Fatal("VideoFiles.Dash")
    }
    key, err := module.Key(file, pssh.KeyId)
    if err != nil {

@@ -6,17 +6,16 @@ import (
    "encoding/base64"
    "fmt"
    "os"
-   "reflect"
+   "strings"
    "testing"
    "time"
 )
 
 func TestLogin(t *testing.T) {
-   username := os.Getenv("draken_username")
-   if username == "" {
+   username, password, ok := strings.Cut(os.Getenv("draken"), ":")
+   if !ok {
       t.Fatal("Getenv")
    }
-   password := os.Getenv("draken_password")
    var login AuthLogin
    err := login.New(username, password)
    if err != nil {

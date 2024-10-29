@@ -6,6 +6,7 @@ import (
    "fmt"
    "io"
    "net/http"
+   "net/url"
    "os"
    "sort"
 )
@@ -43,20 +44,38 @@ func (f *flags) do_write() error {
       return err
    }
    defer resp.Body.Close()
-   f.url = resp.Request.URL
+   // Body
    data, err := io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
-   return os.WriteFile(f.content_id + "/mpd.txt", data, os.ModePerm)
-}
-
-func (f *flags) do_read() error {
-   data, err := os.ReadFile(f.content_id + "/mpd.txt")
+   err = os.WriteFile(f.content_id + "/body.txt", data, os.ModePerm)
    if err != nil {
       return err
    }
-   reps, err := dash.Unmarshal(data, f.url)
+   // Request
+   data, err = resp.Request.URL.MarshalBinary()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.content_id + "/request.txt", data, os.ModePerm)
+}
+
+func (f *flags) do_read() error {
+   data, err := os.ReadFile(f.content_id + "/request.txt")
+   if err != nil {
+      return err
+   }
+   var address url.URL
+   err = address.UnmarshalBinary(data)
+   if err != nil {
+      return err
+   }
+   data, err = os.ReadFile(f.content_id + "/body.txt")
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, &address)
    if err != nil {
       return err
    }

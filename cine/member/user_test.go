@@ -1,9 +1,8 @@
 package member
 
 import (
-   "fmt"
    "os"
-   "reflect"
+   "strings"
    "testing"
 )
 

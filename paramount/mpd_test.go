@@ -7,26 +7,44 @@ import (
 )
 
 func TestMpdUs(t *testing.T) {
+   var app AppToken
+   err := app.ComCbsApp()
+   if err != nil {
+      t.Fatal(err)
+   }
    for _, test := range tests {
       if test.location == "" {
-         address, err := Mpd(test.content_id, "DASH_CENC")
+         item, err := app.Item(test.content_id)
          if err != nil {
             t.Fatal(err)
          }
-         fmt.Printf("%q\n", address)
+         err = item.Unmarshal()
+         if err != nil {
+            t.Fatal(err)
+         }
+         fmt.Printf("%q\n", item.Mpd())
          time.Sleep(time.Second)
       }
    }
 }
 
 func TestMpdFr(t *testing.T) {
+   var app AppToken
+   err := app.ComCbsCa()
+   if err != nil {
+      t.Fatal(err)
+   }
    for _, test := range tests {
       if test.location == "France" {
-         address, err := Mpd(test.content_id, "DASH_CENC_PRECON")
+         item, err := app.Item(test.content_id)
          if err != nil {
             t.Fatal(err)
          }
-         fmt.Printf("%q\n", address)
+         err = item.Unmarshal()
+         if err != nil {
+            t.Fatal(err)
+         }
+         fmt.Printf("%q\n", item.Mpd())
          time.Sleep(time.Second)
       }
    }

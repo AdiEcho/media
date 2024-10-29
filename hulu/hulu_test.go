@@ -7,32 +7,22 @@ import (
    "fmt"
    "os"
    "path"
-   "reflect"
+   "strings"
    "testing"
    "time"
 )
 
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
+func TestAuthenticate(t *testing.T) {
+   username, password, ok := strings.Cut(os.Getenv("hulu"), ":")
+   if !ok {
+      t.Fatal("Getenv")
    }
-}
-
-var size_tests = []any{
-   Authenticate{},
-   DeepLink{},
-   Details{},
-   EntityId{},
-   Playlist{},
-   codec_value{},
-   drm_value{},
-   playlist_request{},
-   segment_value{},
+   var auth Authenticate
+   err := auth.New(username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("authenticate.txt", auth.Raw, os.ModePerm)
 }
 
 var tests = []struct{
@@ -49,20 +39,6 @@ var tests = []struct{
       content: "film",
       url: "hulu.com/watch/f70dfd4d-dbfb-46b8-abb3-136c841bba11",
    },
-}
-
-func TestAuthenticate(t *testing.T) {
-   username := os.Getenv("hulu_username")
-   if username == "" {
-      t.Fatal("Getenv")
-   }
-   password := os.Getenv("hulu_password")
-   var auth Authenticate
-   err := auth.New(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("authenticate.txt", auth.Raw, os.ModePerm)
 }
 
 func TestDetails(t *testing.T) {

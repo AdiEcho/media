@@ -4,7 +4,6 @@ import (
    "41.neocities.org/media/internal"
    "41.neocities.org/text"
    "flag"
-   "net/url"
    "os"
    "path/filepath"
 )
@@ -26,7 +25,6 @@ type flags struct {
    content_id string
    write bool
    intl bool
-   url *url.URL
 }
 
 func main() {
