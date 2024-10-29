@@ -11,6 +11,28 @@ import (
    "time"
 )
 
+type LinkLogin struct {
+   RawToken []byte
+   State string
+   token string
+}
+
+func (v *LinkLogin) Unmarshal() error {
+   var value struct {
+      Data struct {
+         Attributes struct {
+            Token string
+         }
+      }
+   }
+   err := json.Unmarshal(v.RawToken, &value)
+   if err != nil {
+      return err
+   }
+   v.token = value.Data.Attributes.Token
+   return nil
+}
+
 func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
    req, err := http.NewRequest("", prd_api, nil)
    if err != nil {
@@ -50,27 +72,6 @@ func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
    return route, nil
 }
 
-func (v *LinkLogin) Unmarshal() error {
-   var value struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-   err := json.Unmarshal(v.Raw, &value)
-   if err != nil {
-      return err
-   }
-   v.token = value.Data.Attributes.Token
-   return nil
-}
-
-type LinkLogin struct {
-   Raw []byte
-   State string
-   token string
-}
 func (v *LinkLogin) Playback(web Address) (*Playback, error) {
    var body playback_request
    body.ConsumptionType = "streaming"
@@ -253,7 +254,7 @@ func (b *BoltToken) Login() (*LinkLogin, error) {
    }
    defer resp.Body.Close()
    var link LinkLogin
-   link.Raw, err = io.ReadAll(resp.Body)
+   link.RawToken, err = io.ReadAll(resp.Body)
    if err != nil {
       return nil, err
    }

@@ -17,7 +17,7 @@ func (f *flags) download() error {
       return err
    }
    login.State = string(state)
-   login.Raw, err = os.ReadFile(f.home + "/login.txt")
+   login.RawToken, err = os.ReadFile(f.home + "/login.txt")
    if err != nil {
       return err
    }
@@ -83,7 +83,7 @@ func (f *flags) do_login() error {
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home+"/login.txt", login.Raw, os.ModePerm)
+   return os.WriteFile(f.home+"/login.txt", login.RawToken, os.ModePerm)
 }
 
 func (f *flags) do_initiate() error {
