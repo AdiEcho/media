@@ -29,6 +29,40 @@ func (v *VideoContent) Video() (*VideoResource, bool) {
    return &a, true
 }
 
+func (v *VideoContent) Get(id int) (*VideoContent, bool) {
+   if v.Id == id {
+      return v, true
+   }
+   for _, child := range v.Children {
+      if content, ok := child.Get(id); ok {
+         return content, true
+      }
+   }
+   return nil, false
+}
+
+func (v *VideoContent) set(parent *VideoContent) {
+   v.parent = parent
+   for _, child := range v.Children {
+      child.set(v)
+   }
+}
+
+///
+
+type VideoContent struct {
+   Children       []*VideoContent
+   DetailedType   string `json:"detailed_type"`
+   EpisodeNumber  int    `json:"episode_number,string"`
+   Id             int    `json:",string"`
+   Raw            []byte `json:"-"`
+   SeriesId       int    `json:"series_id,string"`
+   Title          string
+   VideoResources []VideoResource `json:"video_resources"`
+   Year           int
+   parent         *VideoContent
+}
+
 func (v *VideoContent) Unmarshal() error {
    err := json.Unmarshal(v.Raw, v)
    if err != nil {
@@ -62,36 +96,4 @@ func (v *VideoContent) New(id int) error {
       return err
    }
    return nil
-}
-
-func (v *VideoContent) Get(id int) (*VideoContent, bool) {
-   if v.Id == id {
-      return v, true
-   }
-   for _, child := range v.Children {
-      if content, ok := child.Get(id); ok {
-         return content, true
-      }
-   }
-   return nil, false
-}
-
-type VideoContent struct {
-   Children       []*VideoContent
-   DetailedType   string `json:"detailed_type"`
-   EpisodeNumber  int    `json:"episode_number,string"`
-   Id             int    `json:",string"`
-   Raw            []byte `json:"-"`
-   SeriesId       int    `json:"series_id,string"`
-   Title          string
-   VideoResources []VideoResource `json:"video_resources"`
-   Year           int
-   parent         *VideoContent
-}
-
-func (v *VideoContent) set(parent *VideoContent) {
-   v.parent = parent
-   for _, child := range v.Children {
-      child.set(v)
-   }
 }
