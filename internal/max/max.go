@@ -11,7 +11,10 @@ import (
 )
 
 func (f *flags) download() error {
-   var login max.LinkLogin
+   var (
+      login max.LinkLogin
+      err error
+   )
    login.RawToken, err = os.ReadFile(f.home + "/login.txt")
    if err != nil {
       return err
@@ -34,7 +37,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }

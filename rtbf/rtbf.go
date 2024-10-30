@@ -206,30 +206,6 @@ func (a Address) String() string {
 // hard coded in JavaScript
 const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
 
-type AuvioLogin struct {
-   CookieValue string
-   Raw []byte
-}
-
-func (a *AuvioLogin) New(id, password string) error {
-   resp, err := http.PostForm(
-      "https://login.auvio.rtbf.be/accounts.login", url.Values{
-         "APIKey":   {api_key},
-         "loginID":  {id},
-         "password": {password},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   a.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
 func (a *AuvioLogin) Token() (*WebToken, error) {
    resp, err := http.PostForm(
       "https://login.auvio.rtbf.be/accounts.getJWT", url.Values{
@@ -250,24 +226,6 @@ func (a *AuvioLogin) Token() (*WebToken, error) {
       return nil, errors.New(v)
    }
    return &web, nil
-}
-
-func (a *AuvioLogin) Unmarshal() error {
-   var value struct {
-      ErrorMessage string
-      SessionInfo  struct {
-         CookieValue string
-      }
-   }
-   err := json.Unmarshal(a.Raw, &value)
-   if err != nil {
-      return err
-   }
-   if v := value.ErrorMessage; v != "" {
-      return errors.New(v)
-   }
-   a.CookieValue = value.SessionInfo.CookieValue
-   return nil
 }
 
 type AuvioPage struct {
@@ -321,4 +279,48 @@ func (a *AuvioAuth) Entitlement(asset_id string) (*Entitlement, error) {
       return nil, err
    }
    return title, nil
+}
+
+///
+
+type AuvioLogin struct {
+   CookieValue string
+   Raw []byte
+}
+
+func (a *AuvioLogin) New(id, password string) error {
+   resp, err := http.PostForm(
+      "https://login.auvio.rtbf.be/accounts.login", url.Values{
+         "APIKey":   {api_key},
+         "loginID":  {id},
+         "password": {password},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   a.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a *AuvioLogin) Unmarshal() error {
+   var value struct {
+      ErrorMessage string
+      SessionInfo  struct {
+         CookieValue string
+      }
+   }
+   err := json.Unmarshal(a.Raw, &value)
+   if err != nil {
+      return err
+   }
+   if v := value.ErrorMessage; v != "" {
+      return errors.New(v)
+   }
+   a.CookieValue = value.SessionInfo.CookieValue
+   return nil
 }

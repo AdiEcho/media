@@ -8,6 +8,41 @@ import (
    "strconv"
 )
 
+func Video(id int, data *[]byte) (*VideoContent, error) {
+   req, err := http.NewRequest("", "https://uapi.adrise.tv/cms/content", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.RawQuery = url.Values{
+      "content_id": {strconv.Itoa(id)},
+      "deviceId":   {"!"},
+      "platform":   {"android"},
+      "video_resources[]": {
+         "dash",
+         "dash_widevine",
+      },
+   }.Encode()
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   body, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   if data != nil {
+      *data = body
+      return nil, nil
+   }
+   var content VideoContent
+   err = content.Unmarshal(body)
+   if err != nil {
+      return nil, err
+   }
+   return &content, nil
+}
+
 func (v *VideoContent) Series() bool {
    return v.DetailedType == "series"
 }
@@ -48,14 +83,11 @@ func (v *VideoContent) set(parent *VideoContent) {
    }
 }
 
-///
-
 type VideoContent struct {
    Children       []*VideoContent
    DetailedType   string `json:"detailed_type"`
    EpisodeNumber  int    `json:"episode_number,string"`
    Id             int    `json:",string"`
-   Raw            []byte `json:"-"`
    SeriesId       int    `json:"series_id,string"`
    Title          string
    VideoResources []VideoResource `json:"video_resources"`
@@ -63,37 +95,11 @@ type VideoContent struct {
    parent         *VideoContent
 }
 
-func (v *VideoContent) Unmarshal() error {
-   err := json.Unmarshal(v.Raw, v)
+func (v *VideoContent) Unmarshal(data []byte) error {
+   err := json.Unmarshal(data, v)
    if err != nil {
       return err
    }
    v.set(nil)
-   return nil
-}
-
-func (v *VideoContent) New(id int) error {
-   req, err := http.NewRequest("", "https://uapi.adrise.tv/cms/content", nil)
-   if err != nil {
-      return err
-   }
-   req.URL.RawQuery = url.Values{
-      "content_id": {strconv.Itoa(id)},
-      "deviceId":   {"!"},
-      "platform":   {"android"},
-      "video_resources[]": {
-         "dash",
-         "dash_widevine",
-      },
-   }.Encode()
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   v.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
    return nil
 }

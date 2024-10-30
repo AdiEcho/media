@@ -11,14 +11,33 @@ import (
    "sort"
 )
 
-func (f *flags) download() error {
-   content := &tubi.VideoContent{}
-   var err error
-   content.Raw, err = os.ReadFile(f.name())
+func (f *flags) write_content() error {
+   var data []byte
+   _, err := tubi.Video(f.tubi, &data)
    if err != nil {
       return err
    }
-   err = content.Unmarshal()
+   var content tubi.VideoContent
+   err = content.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   if content.Episode() {
+      _, err = tubi.Video(content.SeriesId, &data)
+      if err != nil {
+         return err
+      }
+   }
+   return os.WriteFile(f.name(), data, os.ModePerm)
+}
+
+func (f *flags) download() error {
+   data, err := os.ReadFile(f.name())
+   if err != nil {
+      return err
+   }
+   content := &tubi.VideoContent{}
+   err = content.Unmarshal(data)
    if err != nil {
       return err
    }
@@ -38,7 +57,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -64,23 +83,4 @@ func (f *flags) download() error {
 
 func (f *flags) name() string {
    return fmt.Sprint(f.tubi) + ".txt"
-}
-
-func (f *flags) write_content() error {
-   content := &tubi.VideoContent{}
-   err := content.New(f.tubi)
-   if err != nil {
-      return err
-   }
-   err = content.Unmarshal()
-   if err != nil {
-      return err
-   }
-   if content.Episode() {
-      err := content.New(content.SeriesId)
-      if err != nil {
-         return err
-      }
-   }
-   return os.WriteFile(f.name(), content.Raw, os.ModePerm)
 }
