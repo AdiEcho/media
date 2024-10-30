@@ -38,7 +38,3 @@ version code = 35352971
 ~~~
 
 above is wrong, needs to be at least Android 7. install system certificate
-
-## how to get arkose site key?
-
-https://wbd-api.arkoselabs.com/v2/B0217B00-2CA4-41CC-925D-1EEB57BFFC2F/settings

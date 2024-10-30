@@ -15,7 +15,7 @@ func (f *flags) download() error {
       login max.LinkLogin
       err error
    )
-   login.RawToken, err = os.ReadFile(f.home + "/login.txt")
+   login.RawToken, err = os.ReadFile(f.home + "/max.txt")
    if err != nil {
       return err
    }
@@ -23,11 +23,6 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   data, err := os.ReadFile(f.home + "/state.txt")
-   if err != nil {
-      return err
-   }
-   login.State = string(data)
    play, err := login.Playback(f.address)
    if err != nil {
       return err
@@ -37,7 +32,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err = io.ReadAll(resp.Body)
+   data, err := io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -81,12 +76,7 @@ func (f *flags) do_login() error {
    if err != nil {
       return err
    }
-   os.Mkdir(f.home, os.ModePerm)
-   err = os.WriteFile(f.home+"/state.txt", []byte(login.State), os.ModePerm)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home+"/login.txt", login.RawToken, os.ModePerm)
+   return os.WriteFile(f.home+"/max.txt", login.RawToken, os.ModePerm)
 }
 
 func (f *flags) do_initiate() error {

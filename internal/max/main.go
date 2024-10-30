@@ -18,7 +18,6 @@ func (f *flags) New() error {
    f.home = filepath.ToSlash(f.home)
    f.s.ClientId = f.home + "/widevine/client_id.bin"
    f.s.PrivateKey = f.home + "/widevine/private_key.pem"
-   f.home += "/max"
    return nil
 }
 

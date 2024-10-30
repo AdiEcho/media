@@ -11,9 +11,72 @@ import (
    "time"
 )
 
+// you must
+// /authentication/linkDevice/initiate
+// first or this will always fail
+func (b *BoltToken) Login() (*LinkLogin, error) {
+   req, err := http.NewRequest(
+      "POST", prd_api + "/authentication/linkDevice/login", nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("cookie", "st=" + b.St)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var link LinkLogin
+   link.RawToken, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &link, nil
+}
+
+func (v *LinkLogin) Playback(web Address) (*Playback, error) {
+   var body playback_request
+   body.ConsumptionType = "streaming"
+   body.EditId = web.EditId
+   data, err := json.MarshalIndent(body, "", " ")
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest("POST", prd_api, bytes.NewReader(data))
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      var b bytes.Buffer
+      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
+      b.WriteString("/playbackInfo")
+      return b.String()
+   }()
+   req.Header = http.Header{
+      "authorization": {"Bearer " + v.token},
+      "content-type": {"application/json"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   resp_body := &Playback{}
+   err = json.NewDecoder(resp.Body).Decode(resp_body)
+   if err != nil {
+      return nil, err
+   }
+   return resp_body, nil
+}
+
 type LinkLogin struct {
    RawToken []byte
-   State string
    token string
 }
 
@@ -217,31 +280,6 @@ func (a *Address) UnmarshalText(text []byte) error {
    return nil
 }
 
-// you must
-// /authentication/linkDevice/initiate
-// first or this will always fail
-func (b *BoltToken) Login() (*LinkLogin, error) {
-   req, err := http.NewRequest(
-      "POST", prd_api + "/authentication/linkDevice/login", nil,
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("cookie", "st=" + b.St)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var link LinkLogin
-   link.RawToken, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   link.State = resp.Header.Get("x-wbd-session-state")
-   return &link, nil
-}
-
 func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
    req, err := http.NewRequest("", prd_api, nil)
    if err != nil {
@@ -259,10 +297,7 @@ func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
       // this is not required, but results in a smaller response
       "page[items.size]": {"1"},
    }.Encode()
-   req.Header = http.Header{
-      "authorization": {"Bearer " + v.token},
-      "x-wbd-session-state": {v.State},
-   }
+   req.Header.Set("authorization", "Bearer " + v.token)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -279,45 +314,4 @@ func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
       return nil, err
    }
    return route, nil
-}
-
-func (v *LinkLogin) Playback(web Address) (*Playback, error) {
-   var body playback_request
-   body.ConsumptionType = "streaming"
-   body.EditId = web.EditId
-   data, err := json.MarshalIndent(body, "", " ")
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest("POST", prd_api, bytes.NewReader(data))
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      var b bytes.Buffer
-      b.WriteString("/playback-orchestrator/any/playback-orchestrator/v1")
-      b.WriteString("/playbackInfo")
-      return b.String()
-   }()
-   req.Header = http.Header{
-      "authorization": {"Bearer " + v.token},
-      "content-type": {"application/json"},
-      "x-wbd-session-state": {v.State},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   resp_body := &Playback{}
-   err = json.NewDecoder(resp.Body).Decode(resp_body)
-   if err != nil {
-      return nil, err
-   }
-   return resp_body, nil
 }

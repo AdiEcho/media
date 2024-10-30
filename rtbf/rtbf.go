@@ -206,28 +206,6 @@ func (a Address) String() string {
 // hard coded in JavaScript
 const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
 
-func (a *AuvioLogin) Token() (*WebToken, error) {
-   resp, err := http.PostForm(
-      "https://login.auvio.rtbf.be/accounts.getJWT", url.Values{
-         "APIKey": {api_key},
-         "login_token": {a.CookieValue},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var web WebToken
-   err = json.NewDecoder(resp.Body).Decode(&web)
-   if err != nil {
-      return nil, err
-   }
-   if v := web.ErrorMessage; v != "" {
-      return nil, errors.New(v)
-   }
-   return &web, nil
-}
-
 type AuvioPage struct {
    AssetId  string
    Media *struct {
@@ -281,14 +259,18 @@ func (a *AuvioAuth) Entitlement(asset_id string) (*Entitlement, error) {
    return title, nil
 }
 
-///
-
-type AuvioLogin struct {
-   CookieValue string
-   Raw []byte
+func (a *AuvioLogin) Unmarshal(data []byte) error {
+   err := json.Unmarshal(data, a)
+   if err != nil {
+      return err
+   }
+   if v := a.ErrorMessage; v != "" {
+      return errors.New(v)
+   }
+   return nil
 }
 
-func (a *AuvioLogin) New(id, password string) error {
+func Login(id, password string, data *[]byte) (*AuvioLogin, error) {
    resp, err := http.PostForm(
       "https://login.auvio.rtbf.be/accounts.login", url.Values{
          "APIKey":   {api_key},
@@ -297,30 +279,50 @@ func (a *AuvioLogin) New(id, password string) error {
       },
    )
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
-   a.Raw, err = io.ReadAll(resp.Body)
+   body, err := io.ReadAll(resp.Body)
    if err != nil {
-      return err
+      return nil, err
    }
-   return nil
+   if data != nil {
+      *data = body
+      return nil, nil
+   }
+   var auvio AuvioLogin
+   err = auvio.Unmarshal(body)
+   if err != nil {
+      return nil, err
+   }
+   return &auvio, nil
 }
 
-func (a *AuvioLogin) Unmarshal() error {
-   var value struct {
-      ErrorMessage string
-      SessionInfo  struct {
-         CookieValue string
-      }
+type AuvioLogin struct {
+   ErrorMessage string
+   SessionInfo  struct {
+      CookieValue string
    }
-   err := json.Unmarshal(a.Raw, &value)
+}
+
+func (a *AuvioLogin) Token() (*WebToken, error) {
+   resp, err := http.PostForm(
+      "https://login.auvio.rtbf.be/accounts.getJWT", url.Values{
+         "APIKey": {api_key},
+         "login_token": {a.SessionInfo.CookieValue},
+      },
+   )
    if err != nil {
-      return err
+      return nil, err
    }
-   if v := value.ErrorMessage; v != "" {
-      return errors.New(v)
+   defer resp.Body.Close()
+   var web WebToken
+   err = json.NewDecoder(resp.Body).Decode(&web)
+   if err != nil {
+      return nil, err
    }
-   a.CookieValue = value.SessionInfo.CookieValue
-   return nil
+   if v := web.ErrorMessage; v != "" {
+      return nil, errors.New(v)
+   }
+   return &web, nil
 }
