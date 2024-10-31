@@ -11,6 +11,23 @@ import (
    "sort"
 )
 
+func (f *flags) login() error {
+   var auth amc.Authorization
+   err := auth.Unauth()
+   if err != nil {
+      return err
+   }
+   err = auth.Unmarshal()
+   if err != nil {
+      return err
+   }
+   err = auth.Login(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/amc.txt", auth.Raw, os.ModePerm)
+}
+
 func (f *flags) download() error {
    var (
       auth amc.Authorization
@@ -77,21 +94,4 @@ func (f *flags) download() error {
       }
    }
    return nil
-}
-
-func (f *flags) login() error {
-   var auth amc.Authorization
-   err := auth.Unauth()
-   if err != nil {
-      return err
-   }
-   err = auth.Unmarshal()
-   if err != nil {
-      return err
-   }
-   err = auth.Login(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/amc.txt", auth.Raw, os.ModePerm)
 }

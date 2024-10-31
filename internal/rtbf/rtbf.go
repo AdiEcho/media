@@ -10,16 +10,21 @@ import (
    "os"
 )
 
-func (f *flags) download() error {
-   var (
-      login rtbf.AuvioLogin
-      err error
-   )
-   login.Raw, err = os.ReadFile(f.home + "/rtbf.txt")
+func (f *flags) authenticate() error {
+   data, err := (*rtbf.AuvioLogin).New(nil, f.email, f.password)
    if err != nil {
       return err
    }
-   err = login.Unmarshal()
+   return os.WriteFile(f.home + "/rtbf.txt", data, os.ModePerm)
+}
+
+func (f *flags) download() error {
+   data, err := os.ReadFile(f.home + "/rtbf.txt")
+   if err != nil {
+      return err
+   }
+   var login rtbf.AuvioLogin
+   err = login.Unmarshal(data)
    if err != nil {
       return err
    }
@@ -52,7 +57,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -71,13 +76,4 @@ func (f *flags) download() error {
       }
    }
    return nil
-}
-
-func (f *flags) authenticate() error {
-   var login rtbf.AuvioLogin
-   err := login.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/rtbf.txt", login.Raw, os.ModePerm)
 }

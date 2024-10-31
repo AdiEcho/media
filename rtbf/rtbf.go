@@ -11,6 +11,31 @@ import (
    "strings"
 )
 
+func (a *AuvioLogin) New(id, password string) ([]byte, error) {
+   resp, err := http.PostForm(
+      "https://login.auvio.rtbf.be/accounts.login", url.Values{
+         "APIKey":   {api_key},
+         "loginID":  {id},
+         "password": {password},
+      },
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   data, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   if a != nil {
+      err = a.Unmarshal(data)
+      if err != nil {
+         return nil, err
+      }
+   }
+   return data, nil
+}
+
 func (a *Address) Set(s string) error {
    s = strings.TrimPrefix(s, "https://")
    a.Path = strings.TrimPrefix(s, "auvio.rtbf.be")
@@ -268,34 +293,6 @@ func (a *AuvioLogin) Unmarshal(data []byte) error {
       return errors.New(v)
    }
    return nil
-}
-
-func Login(id, password string, data *[]byte) (*AuvioLogin, error) {
-   resp, err := http.PostForm(
-      "https://login.auvio.rtbf.be/accounts.login", url.Values{
-         "APIKey":   {api_key},
-         "loginID":  {id},
-         "password": {password},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if data != nil {
-      *data = body
-      return nil, nil
-   }
-   var auvio AuvioLogin
-   err = auvio.Unmarshal(body)
-   if err != nil {
-      return nil, err
-   }
-   return &auvio, nil
 }
 
 type AuvioLogin struct {
