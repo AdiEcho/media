@@ -46,35 +46,6 @@ type Address struct {
    Path string
 }
 
-func (a *Address) Article() (*OperationArticle, error) {
-   var value struct {
-      Query     string `json:"query"`
-      Variables struct {
-         ArticleUrlSlug string `json:"articleUrlSlug"`
-      } `json:"variables"`
-   }
-   value.Variables.ArticleUrlSlug = a.Path
-   value.Query = query_article
-   data, err := json.Marshal(value)
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(data),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var article OperationArticle
-   article.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &article, nil
-}
-
 func (a *Address) String() string {
    return a.Path
 }
@@ -109,6 +80,18 @@ func (o *OperationArticle) Year() int {
    return 0
 }
 
+func (*OperationArticle) Episode() int {
+   return 0
+}
+
+func (*OperationArticle) Season() int {
+   return 0
+}
+
+func (*OperationArticle) Show() string {
+   return ""
+}
+
 type OperationArticle struct {
    Assets         []*ArticleAsset
    CanonicalTitle string `json:"canonical_title"`
@@ -117,8 +100,9 @@ type OperationArticle struct {
       Key   string
       Value string
    }
-   Raw []byte `json:"-"`
 }
+
+///
 
 func (o *OperationArticle) Unmarshal() error {
    var value struct {
@@ -137,14 +121,31 @@ func (o *OperationArticle) Unmarshal() error {
    return nil
 }
 
-func (*OperationArticle) Episode() int {
-   return 0
-}
-
-func (*OperationArticle) Season() int {
-   return 0
-}
-
-func (*OperationArticle) Show() string {
-   return ""
+func (a *Address) Article() (*OperationArticle, error) {
+   var value struct {
+      Query     string `json:"query"`
+      Variables struct {
+         ArticleUrlSlug string `json:"articleUrlSlug"`
+      } `json:"variables"`
+   }
+   value.Variables.ArticleUrlSlug = a.Path
+   value.Query = query_article
+   data, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.Post(
+      "https://api.audienceplayer.com/graphql/2/user",
+      "application/json", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var article OperationArticle
+   article.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   return &article, nil
 }

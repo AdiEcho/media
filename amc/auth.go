@@ -9,23 +9,49 @@ import (
    "strings"
 )
 
-func (a *Authorization) Login(email, password string) ([]byte, error) {
+func (a *Authorization) Refresh(data *[]byte) error {
+   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
+   if err != nil {
+      return err
+   }
+   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
+   req.Header.Set("authorization", "Bearer " + a.Data.RefreshToken)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
+   }
+   body, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   if data != nil {
+      *data = body
+      return nil
+   }
+   return a.Unmarshal(body)
+}
+
+func (a *Authorization) Login(email, password string, data *[]byte) error {
    body, err := json.Marshal(map[string]string{
       "email": email,
       "password": password,
    })
    if err != nil {
-      return nil, err
+      return err
    }
    req, err := http.NewRequest(
       "POST", "https://gw.cds.amcn.com", bytes.NewReader(body),
    )
    if err != nil {
-      return nil, err
+      return err
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/login"
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.AccessToken},
+      "authorization": {"Bearer " + a.Data.AccessToken},
       "content-type": {"application/json"},
       "x-amcn-device-ad-id": {"-"},
       "x-amcn-device-id": {"-"},
@@ -39,23 +65,21 @@ func (a *Authorization) Login(email, password string) ([]byte, error) {
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return nil, err
+      return err
    }
    defer resp.Body.Close()
    if resp.StatusCode != http.StatusOK {
-      return nil, errors.New(resp.Status)
+      return errors.New(resp.Status)
    }
-   data, err := io.ReadAll(resp.Body)
+   body, err = io.ReadAll(resp.Body)
    if err != nil {
-      return nil, err
+      return err
    }
-   if a != nil {
-      err = a.Unmarshal(data)
-      if err != nil {
-         return nil, err
-      }
+   if data != nil {
+      *data = body
+      return nil
    }
-   return data, nil
+   return a.Unmarshal(body)
 }
 
 func (a *Authorization) Unauth() error {
@@ -80,34 +104,6 @@ func (a *Authorization) Unauth() error {
       return errors.New(resp.Status)
    }
    return json.NewDecoder(resp.Body).Decode(a)
-}
-
-func (a *Authorization) Refresh() ([]byte, error) {
-   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
-   req.Header.Set("authorization", "Bearer " + a.RefreshToken)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return nil, errors.New(resp.Status)
-   }
-   data, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if a != nil {
-      err = a.Unmarshal(data)
-      if err != nil {
-         return nil, err
-      }
-   }
-   return data, nil
 }
 
 func (a *Authorization) Content(path string) (*ContentCompiler, error) {
@@ -157,10 +153,6 @@ func (a *Authorization) Content(path string) (*ContentCompiler, error) {
    return &value.Data, nil
 }
 
-func (a *Authorization) Unmarshal(data []byte) error {
-   return json.Unmarshal(data, a)
-}
-
 type Authorization struct {
    Data struct {
       AccessToken string `json:"access_token"`
@@ -168,7 +160,9 @@ type Authorization struct {
    }
 }
 
-///
+func (a *Authorization) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, a)
+}
 
 func (a *Authorization) Playback(nid string) (*Playback, error) {
    var value struct {
@@ -195,7 +189,7 @@ func (a *Authorization) Playback(nid string) (*Playback, error) {
    }
    req.URL.Path = "/playback-id/api/v1/playback/" + nid
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.AccessToken},
+      "authorization": {"Bearer " + a.Data.AccessToken},
       "content-type": {"application/json"},
       "x-amcn-device-ad-id": {"-"},
       "x-amcn-language": {"en"},

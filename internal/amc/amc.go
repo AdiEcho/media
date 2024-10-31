@@ -17,36 +17,30 @@ func (f *flags) login() error {
    if err != nil {
       return err
    }
-   err = auth.Unmarshal()
+   var data []byte
+   err = auth.Login(f.email, f.password, &data)
    if err != nil {
       return err
    }
-   err = auth.Login(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/amc.txt", auth.Raw, os.ModePerm)
+   return os.WriteFile(f.home + "/amc.txt", data, os.ModePerm)
 }
 
 func (f *flags) download() error {
-   var (
-      auth amc.Authorization
-      err error
-   )
-   auth.Raw, err = os.ReadFile(f.home + "/amc.txt")
+   data, err := os.ReadFile(f.home + "/amc.txt")
    if err != nil {
       return err
    }
-   err = auth.Unmarshal()
+   var auth amc.Authorization
+   err = auth.Unmarshal(data)
    if err != nil {
       return err
    }
-   err = auth.Refresh()
+   err = auth.Refresh(&data)
    if err != nil {
       return err
    }
-   os.WriteFile(f.home + "/amc.txt", auth.Raw, os.ModePerm)
-   err = auth.Unmarshal()
+   os.WriteFile(f.home + "/amc.txt", data, os.ModePerm)
+   err = auth.Unmarshal(data)
    if err != nil {
       return err
    }
@@ -63,7 +57,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
