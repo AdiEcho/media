@@ -10,16 +10,22 @@ import (
    "sort"
 )
 
-func (f *flags) download() error {
-   var (
-      auth hulu.Authenticate
-      err error
-   )
-   auth.Raw, err = os.ReadFile(f.home + "/hulu.txt")
+func (f *flags) authenticate() error {
+   var data []byte
+   err := (*hulu.Authenticate).New(nil, f.email, f.password, &data)
    if err != nil {
       return err
    }
-   err = auth.Unmarshal()
+   return os.WriteFile(f.home + "/hulu.txt", data, os.ModePerm)
+}
+
+func (f *flags) download() error {
+   data, err := os.ReadFile(f.home + "/hulu.txt")
+   if err != nil {
+      return err
+   }
+   var auth hulu.Authenticate
+   err = auth.Unmarshal(data)
    if err != nil {
       return err
    }
@@ -36,7 +42,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -63,13 +69,4 @@ func (f *flags) download() error {
       }
    }
    return nil
-}
-
-func (f *flags) authenticate() error {
-   var auth hulu.Authenticate
-   err := auth.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/hulu.txt", auth.Raw, os.ModePerm)
 }

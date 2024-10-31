@@ -22,7 +22,7 @@ func (a *Authenticate) DeepLink(id *EntityId) (*DeepLink, error) {
       "id": {id.s},
       "namespace": {"entity"},
    }.Encode()
-   req.Header.Set("authorization", "Bearer " + a.UserToken)
+   req.Header.Set("authorization", "Bearer " + a.Data.UserToken)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -54,7 +54,7 @@ func (a *Authenticate) Details(link *DeepLink) (*Details, error) {
    if err != nil {
       return nil, err
    }
-   req.Header.Set("authorization", "Bearer " + a.UserToken)
+   req.Header.Set("authorization", "Bearer " + a.Data.UserToken)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -131,7 +131,7 @@ func (a *Authenticate) Playlist(link *DeepLink) (*Playlist, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.UserToken},
+      "authorization": {"Bearer " + a.Data.UserToken},
       "content-type": {"application/json"},
    }
    resp, err := http.DefaultClient.Do(req)
@@ -279,14 +279,17 @@ type segment_value struct {
    Type string `json:"type"`
 }
 
-///
-
 type Authenticate struct {
-   UserToken string `json:"user_token"`
-   Raw []byte `json:"-"`
+   Data struct {
+      UserToken string `json:"user_token"`
+   }
 }
 
-func (a *Authenticate) New(email, password string) error {
+func (a *Authenticate) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, a)
+}
+
+func (a *Authenticate) New(email, password string, data *[]byte) error {
    resp, err := http.PostForm(
       "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
          "friendly_name": {"!"},
@@ -304,21 +307,13 @@ func (a *Authenticate) New(email, password string) error {
       resp.Write(&b)
       return errors.New(b.String())
    }
-   a.Raw, err = io.ReadAll(resp.Body)
+   body, err := io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
-   return nil
-}
-
-func (a *Authenticate) Unmarshal() error {
-   var body struct {
-      Data Authenticate
+   if data != nil {
+      *data = body
+      return nil
    }
-   err := json.Unmarshal(a.Raw, &body)
-   if err != nil {
-      return err
-   }
-   *a = body.Data
-   return nil
+   return a.Unmarshal(body)
 }

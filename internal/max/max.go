@@ -10,16 +10,27 @@ import (
    "sort"
 )
 
-func (f *flags) download() error {
-   var (
-      login max.LinkLogin
-      err error
-   )
-   login.RawToken, err = os.ReadFile(f.home + "/max.txt")
+func (f *flags) do_login() error {
+   data, err := os.ReadFile("token.txt")
    if err != nil {
       return err
    }
-   err = login.Unmarshal()
+   var token max.BoltToken
+   token.St = string(data)
+   login, err := token.Login()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home+"/max.txt", login.RawToken, os.ModePerm)
+}
+
+func (f *flags) download() error {
+   data, err := os.ReadFile(f.home + "/max.txt")
+   if err != nil {
+      return err
+   }
+   var login max.LinkLogin
+   err = login.Unmarshal(data)
    if err != nil {
       return err
    }
@@ -32,7 +43,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -63,20 +74,6 @@ func (f *flags) download() error {
       }
    }
    return nil
-}
-
-func (f *flags) do_login() error {
-   data, err := os.ReadFile("token.txt")
-   if err != nil {
-      return err
-   }
-   var token max.BoltToken
-   token.St = string(data)
-   login, err := token.Login()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home+"/max.txt", login.RawToken, os.ModePerm)
 }
 
 func (f *flags) do_initiate() error {

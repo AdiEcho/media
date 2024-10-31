@@ -11,30 +11,6 @@ import (
    "time"
 )
 
-// you must
-// /authentication/linkDevice/initiate
-// first or this will always fail
-func (b *BoltToken) Login() (*LinkLogin, error) {
-   req, err := http.NewRequest(
-      "POST", prd_api + "/authentication/linkDevice/login", nil,
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("cookie", "st=" + b.St)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var link LinkLogin
-   link.RawToken, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &link, nil
-}
-
 func (v *LinkLogin) Playback(web Address) (*Playback, error) {
    var body playback_request
    body.ConsumptionType = "streaming"
@@ -54,7 +30,7 @@ func (v *LinkLogin) Playback(web Address) (*Playback, error) {
       return b.String()
    }()
    req.Header = http.Header{
-      "authorization": {"Bearer " + v.token},
+      "authorization": {"Bearer " + v.Data.Attributes.Token},
       "content-type": {"application/json"},
    }
    resp, err := http.DefaultClient.Do(req)
@@ -73,27 +49,6 @@ func (v *LinkLogin) Playback(web Address) (*Playback, error) {
       return nil, err
    }
    return resp_body, nil
-}
-
-type LinkLogin struct {
-   RawToken []byte
-   token string
-}
-
-func (v *LinkLogin) Unmarshal() error {
-   var value struct {
-      Data struct {
-         Attributes struct {
-            Token string
-         }
-      }
-   }
-   err := json.Unmarshal(v.RawToken, &value)
-   if err != nil {
-      return err
-   }
-   v.token = value.Data.Attributes.Token
-   return nil
 }
 
 func (m *Manifest) UnmarshalText(text []byte) error {
@@ -297,7 +252,7 @@ func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
       // this is not required, but results in a smaller response
       "page[items.size]": {"1"},
    }.Encode()
-   req.Header.Set("authorization", "Bearer " + v.token)
+   req.Header.Set("authorization", "Bearer " + v.Data.Attributes.Token)
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -314,4 +269,48 @@ func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
       return nil, err
    }
    return route, nil
+}
+
+type LinkLogin struct {
+   Data struct {
+      Attributes struct {
+         Token string
+      }
+   }
+}
+
+func (v *LinkLogin) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, v)
+}
+
+// you must
+// /authentication/linkDevice/initiate
+// first or this will always fail
+func (b *BoltToken) Login(data *[]byte) (*LinkLogin, error) {
+   req, err := http.NewRequest(
+      "POST", prd_api + "/authentication/linkDevice/login", nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("cookie", "st=" + b.St)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   body, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   if data != nil {
+      *data = body
+      return nil, nil
+   }
+   var link LinkLogin
+   err = link.Unmarshal(body)
+   if err != nil {
+      return nil, err
+   }
+   return &link, nil
 }
