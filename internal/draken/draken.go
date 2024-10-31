@@ -11,16 +11,22 @@ import (
    "sort"
 )
 
-func (f *flags) download() error {
-   var (
-      login draken.AuthLogin
-      err error
-   )
-   login.Raw, err = os.ReadFile(f.home + "/draken.txt")
+func (f *flags) authenticate() error {
+   var data []byte
+   err := (*draken.AuthLogin).New(nil, f.email, f.password, &data)
    if err != nil {
       return err
    }
-   err = login.Unmarshal()
+   return os.WriteFile(f.home + "/draken.txt", data, os.ModePerm)
+}
+
+func (f *flags) download() error {
+   data, err := os.ReadFile(f.home + "/draken.txt")
+   if err != nil {
+      return err
+   }
+   var login draken.AuthLogin
+   err = login.Unmarshal(data)
    if err != nil {
       return err
    }
@@ -42,7 +48,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -66,13 +72,4 @@ func (f *flags) download() error {
       }
    }
    return nil
-}
-
-func (f *flags) authenticate() error {
-   var login draken.AuthLogin
-   err := login.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/draken.txt", login.Raw, os.ModePerm)
 }

@@ -12,11 +12,6 @@ import (
    "time"
 )
 
-type Authenticate struct {
-   UserToken string `json:"user_token"`
-   Raw []byte `json:"-"`
-}
-
 func (a *Authenticate) DeepLink(id *EntityId) (*DeepLink, error) {
    req, err := http.NewRequest("", "https://discover.hulu.com", nil)
    if err != nil {
@@ -77,33 +72,6 @@ func (a *Authenticate) Details(link *DeepLink) (*Details, error) {
    }
    return &data.Items[0], nil
 }
-
-func (a *Authenticate) New(email, password string) error {
-   resp, err := http.PostForm(
-      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
-         "friendly_name": {"!"},
-         "password": {password},
-         "serial_number": {"!"},
-         "user_email": {email},
-      },
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return errors.New(b.String())
-   }
-   a.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
-///
 
 func (a *Authenticate) Playlist(link *DeepLink) (*Playlist, error) {
    var p playlist_request
@@ -184,17 +152,6 @@ func (a *Authenticate) Playlist(link *DeepLink) (*Playlist, error) {
    return play, nil
 }
 
-func (a *Authenticate) Unmarshal() error {
-   var body struct {
-      Data Authenticate
-   }
-   err := json.Unmarshal(a.Raw, &body)
-   if err != nil {
-      return err
-   }
-   *a = body.Data
-   return nil
-}
 type DeepLink struct {
    EabId string `json:"eab_id"`
 }
@@ -320,4 +277,48 @@ type segment_value struct {
       Type string `json:"type"`
    } `json:"encryption"`
    Type string `json:"type"`
+}
+
+///
+
+type Authenticate struct {
+   UserToken string `json:"user_token"`
+   Raw []byte `json:"-"`
+}
+
+func (a *Authenticate) New(email, password string) error {
+   resp, err := http.PostForm(
+      "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
+         "friendly_name": {"!"},
+         "password": {password},
+         "serial_number": {"!"},
+         "user_email": {email},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return errors.New(b.String())
+   }
+   a.Raw, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
+func (a *Authenticate) Unmarshal() error {
+   var body struct {
+      Data Authenticate
+   }
+   err := json.Unmarshal(a.Raw, &body)
+   if err != nil {
+      return err
+   }
+   *a = body.Data
+   return nil
 }

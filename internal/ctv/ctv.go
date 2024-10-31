@@ -22,20 +22,22 @@ func (f *flags) get_manifest() error {
    }
    os.Mkdir(f.base(), os.ModePerm)
    // media
-   media, err := axis.Media()
+   var data []byte
+   _, err = axis.Media(&data)
    if err != nil {
       return err
    }
-   err = os.WriteFile(f.base() + "/media.txt", media.Raw, os.ModePerm)
+   err = os.WriteFile(f.base() + "/media.txt", data, os.ModePerm)
    if err != nil {
       return err
    }
    // manifest
-   err = media.Unmarshal()
+   var media ctv.MediaContent
+   err = media.Unmarshal(data)
    if err != nil {
       return err
    }
-   manifest, err := axis.Manifest(media)
+   manifest, err := axis.Manifest(&media)
    if err != nil {
       return err
    }
