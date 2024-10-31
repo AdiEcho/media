@@ -9,6 +9,33 @@ import (
    "strings"
 )
 
+type OperationArticle struct {
+   Assets         []*ArticleAsset
+   CanonicalTitle string `json:"canonical_title"`
+   Id             int
+   Metas          []struct {
+      Key   string
+      Value string
+   }
+}
+
+func (o *OperationArticle) Unmarshal(data []byte) error {
+   var value struct {
+      Data struct {
+         Article OperationArticle
+      }
+   }
+   err := json.Unmarshal(data, &value)
+   if err != nil {
+      return err
+   }
+   *o = value.Data.Article
+   for _, asset := range o.Assets {
+      asset.article = o
+   }
+   return nil
+}
+
 // NO ANONYMOUS QUERY
 const query_article = `
 query Article($articleUrlSlug: String) {
@@ -92,36 +119,7 @@ func (*OperationArticle) Show() string {
    return ""
 }
 
-type OperationArticle struct {
-   Assets         []*ArticleAsset
-   CanonicalTitle string `json:"canonical_title"`
-   Id             int
-   Metas          []struct {
-      Key   string
-      Value string
-   }
-}
-
-///
-
-func (o *OperationArticle) Unmarshal() error {
-   var value struct {
-      Data struct {
-         Article OperationArticle
-      }
-   }
-   err := json.Unmarshal(o.Raw, &value)
-   if err != nil {
-      return err
-   }
-   *o = value.Data.Article
-   for _, asset := range o.Assets {
-      asset.article = o
-   }
-   return nil
-}
-
-func (a *Address) Article() (*OperationArticle, error) {
+func (a *Address) Article(data *[]byte) (*OperationArticle, error) {
    var value struct {
       Query     string `json:"query"`
       Variables struct {
@@ -130,20 +128,28 @@ func (a *Address) Article() (*OperationArticle, error) {
    }
    value.Variables.ArticleUrlSlug = a.Path
    value.Query = query_article
-   data, err := json.Marshal(value)
+   body, err := json.Marshal(value)
    if err != nil {
       return nil, err
    }
    resp, err := http.Post(
       "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(data),
+      "application/json", bytes.NewReader(body),
    )
    if err != nil {
       return nil, err
    }
    defer resp.Body.Close()
+   body, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   if data != nil {
+      *data = body
+      return nil, nil
+   }
    var article OperationArticle
-   article.Raw, err = io.ReadAll(resp.Body)
+   err = article.Unmarshal(body)
    if err != nil {
       return nil, err
    }

@@ -9,7 +9,7 @@ import (
 )
 
 func (o *OperationPlay) Dash() (string, bool) {
-   for _, title := range o.Entitlements {
+   for _, title := range o.Data.ArticleAssetPlay.Entitlements {
       if title.Protocol == "dash" {
          return title.Manifest, true
       }
@@ -31,35 +31,23 @@ mutation($article_id: Int, $asset_id: Int) {
 `
 
 type OperationPlay struct {
-   Entitlements []struct {
-      Manifest string
-      Protocol string
-   }
-   Raw []byte `json:"-"`
-}
-
-func (o *OperationPlay) Unmarshal() error {
-   var value struct {
-      Data struct {
-         ArticleAssetPlay OperationPlay
-      }
-      Errors []struct {
-         Message string
+   Data struct {
+      ArticleAssetPlay struct {
+         Entitlements []struct {
+            Manifest string
+            Protocol string
+         }
       }
    }
-   err := json.Unmarshal(o.Raw, &value)
-   if err != nil {
-      return err
+   Errors []struct {
+      Message string
    }
-   if v := value.Errors; len(v) >= 1 {
-      return errors.New(v[0].Message)
-   }
-   *o = value.Data.ArticleAssetPlay
-   return nil
 }
 
-// geo block, not x-forwarded-for
-func (o *OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
+// hard geo block
+func (o *OperationUser) Play(
+   asset *ArticleAsset, data *[]byte,
+) (*OperationPlay, error) {
    var value struct {
       Query     string `json:"query"`
       Variables struct {
@@ -70,19 +58,19 @@ func (o *OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
    value.Query = query_play
    value.Variables.AssetId = asset.Id
    value.Variables.ArticleId = asset.article.Id
-   data, err := json.Marshal(value)
+   body, err := json.Marshal(value)
    if err != nil {
       return nil, err
    }
    req, err := http.NewRequest(
       "POST", "https://api.audienceplayer.com/graphql/2/user",
-      bytes.NewReader(data),
+      bytes.NewReader(body),
    )
    if err != nil {
       return nil, err
    }
    req.Header = http.Header{
-      "authorization": {"Bearer " + o.AccessToken},
+      "authorization": {"Bearer " + o.Data.UserAuthenticate.AccessToken},
       "content-type":  {"application/json"},
    }
    resp, err := http.DefaultClient.Do(req)
@@ -90,10 +78,29 @@ func (o *OperationUser) Play(asset *ArticleAsset) (*OperationPlay, error) {
       return nil, err
    }
    defer resp.Body.Close()
+   body, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   if data != nil {
+      *data = body
+      return nil, nil
+   }
    var play OperationPlay
-   play.Raw, err = io.ReadAll(resp.Body)
+   err = play.Unmarshal(body)
    if err != nil {
       return nil, err
    }
    return &play, nil
+}
+
+func (o *OperationPlay) Unmarshal(data []byte) error {
+   err := json.Unmarshal(data, o)
+   if err != nil {
+      return err
+   }
+   if v := o.Errors; len(v) >= 1 {
+      return errors.New(v[0].Message)
+   }
+   return nil
 }
