@@ -89,32 +89,6 @@ query resolvePath($path: String!) {
 }
 `
 
-func (a *AxisContent) Media() (*MediaContent, error) {
-   req, err := http.NewRequest("", "https://capi.9c9media.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = func() string {
-      b := []byte("/destinations/")
-      b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
-      b = append(b, "/platforms/desktop/contents/"...)
-      b = strconv.AppendInt(b, a.AxisId, 10)
-      return string(b)
-   }()
-   req.URL.RawQuery = "$include=[ContentPackages,Media,Season]"
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var media MediaContent
-   media.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &media, nil
-}
-
 type AxisContent struct {
    AxisId                int64
    AxisPlaybackLanguages []struct {
@@ -231,28 +205,7 @@ func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-type MediaContent struct {
-   BroadcastDate   Date
-   ContentPackages []struct {
-      Id int64
-   }
-   Episode int
-   Media   struct {
-      Name string
-      Type string
-   }
-   Name   string
-   Season struct {
-      Number int
-   }
-   Raw []byte `json:"-"`
-}
-
-func (m *MediaContent) Unmarshal() error {
-   return json.Unmarshal(m.Raw, m)
-}
-
-// wikipedia.org/wiki/Geo-blocking
+// hard geo block
 func (a *AxisContent) Manifest(media *MediaContent) (string, error) {
    req, err := http.NewRequest("", "https://capi.9c9media.com", nil)
    if err != nil {
@@ -326,4 +279,58 @@ type Poster struct{}
 
 func (a *Address) String() string {
    return a.Path
+}
+
+type MediaContent struct {
+   BroadcastDate   Date
+   ContentPackages []struct {
+      Id int64
+   }
+   Episode int
+   Media   struct {
+      Name string
+      Type string
+   }
+   Name   string
+   Season struct {
+      Number int
+   }
+}
+
+func (m *MediaContent) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, m)
+}
+
+func (a *AxisContent) Media(data *[]byte) (*MediaContent, error) {
+   req, err := http.NewRequest("", "https://capi.9c9media.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/destinations/")
+      b = append(b, a.AxisPlaybackLanguages[0].DestinationCode...)
+      b = append(b, "/platforms/desktop/contents/"...)
+      b = strconv.AppendInt(b, a.AxisId, 10)
+      return string(b)
+   }()
+   req.URL.RawQuery = "$include=[ContentPackages,Media,Season]"
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   body, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   if data != nil {
+      *data = body
+      return nil, nil
+   }
+   var media MediaContent
+   err = media.Unmarshal(body)
+   if err != nil {
+      return nil, err
+   }
+   return &media, nil
 }

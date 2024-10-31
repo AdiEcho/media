@@ -46,15 +46,6 @@ func (a *AuthToken) Video(slug string) (*EmbedItem, error) {
    return item, nil
 }
 
-type AuthToken struct {
-   AccessToken string `json:"access_token"`
-   Raw []byte `json:"-"`
-}
-
-func (a *AuthToken) Unmarshal() error {
-   return json.Unmarshal(a.Raw, a)
-}
-
 type VideoFile struct {
    DrmAuthorizationToken string `json:"drm_authorization_token"`
    Links                 struct {
@@ -119,24 +110,6 @@ func (v *VideoFile) RequestUrl() (string, bool) {
    return string(b), true
 }
 
-func (a *AuthToken) New(username, password string) error {
-   resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
-      "client_id":  {client_id},
-      "grant_type": {"password"},
-      "password":   {password},
-      "username":   {username},
-   })
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   a.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   return nil
-}
-
 func (a *AuthToken) Files(item *EmbedItem) (VideoFiles, error) {
    req, err := http.NewRequest("", item.Links.Files.Href, nil)
    if err != nil {
@@ -159,4 +132,34 @@ func (a *AuthToken) Files(item *EmbedItem) (VideoFiles, error) {
       return nil, err
    }
    return files, nil
+}
+
+type AuthToken struct {
+   AccessToken string `json:"access_token"`
+}
+
+func (a *AuthToken) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, a)
+}
+
+func (a *AuthToken) New(username, password string, data *[]byte) error {
+   resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
+      "client_id":  {client_id},
+      "grant_type": {"password"},
+      "password":   {password},
+      "username":   {username},
+   })
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   body, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   if data != nil {
+      *data = body
+      return nil
+   }
+   return a.Unmarshal(body)
 }

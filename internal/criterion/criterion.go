@@ -12,16 +12,22 @@ import (
    "sort"
 )
 
-func (f *flags) download() error {
-   var (
-      token criterion.AuthToken
-      err error
-   )
-   token.Raw, err = os.ReadFile(f.home + "/criterion.txt")
+func (f *flags) authenticate() error {
+   var data []byte
+   err := (*criterion.AuthToken).New(nil, f.email, f.password, &data)
    if err != nil {
       return err
    }
-   err = token.Unmarshal()
+   return os.WriteFile(f.home + "/criterion.txt", data, os.ModePerm)
+}
+
+func (f *flags) download() error {
+   data, err := os.ReadFile(f.home + "/criterion.txt")
+   if err != nil {
+      return err
+   }
+   var token criterion.AuthToken
+   err = token.Unmarshal(data)
    if err != nil {
       return err
    }
@@ -42,7 +48,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -66,13 +72,4 @@ func (f *flags) download() error {
       }
    }
    return nil
-}
-
-func (f *flags) authenticate() error {
-   var token criterion.AuthToken
-   err := token.New(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/criterion.txt", token.Raw, os.ModePerm)
 }
