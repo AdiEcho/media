@@ -68,7 +68,7 @@ func (f *flags) download() error {
    for _, rep := range reps {
       switch f.representation {
       case "":
-         fmt.Print(rep, "\n\n")
+         fmt.Print(&rep, "\n\n")
       case rep.Id:
          f.s.Name = &rtbf.Namer{page}
          f.s.Poster = title

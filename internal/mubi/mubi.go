@@ -9,6 +9,31 @@ import (
    "os"
 )
 
+func (f *flags) write_secure() error {
+   data, err := os.ReadFile(f.home + "/mubi.txt")
+   if err != nil {
+      return err
+   }
+   var auth mubi.Authenticate
+   err = auth.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   film, err := f.address.Film()
+   if err != nil {
+      return err
+   }
+   err = auth.Viewing(film)
+   if err != nil {
+      return err
+   }
+   _, err = auth.Secure(film, &data)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.address.String() + ".txt", data, os.ModePerm)
+}
+
 func write_code() error {
    var data []byte
    err := (*mubi.LinkCode).New(nil, &data)
@@ -104,31 +129,6 @@ func (f *flags) download() error {
       }
    }
    return nil
-}
-
-func (f *flags) write_secure() error {
-   var (
-      auth mubi.Authenticate
-      err error
-   )
-   auth.Raw, err = os.ReadFile(f.home + "/mubi.txt")
-   if err != nil {
-      return err
-   }
-   auth.Unmarshal()
-   film, err := f.address.Film()
-   if err != nil {
-      return err
-   }
-   err = auth.Viewing(film)
-   if err != nil {
-      return err
-   }
-   secure, err := auth.Url(film)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.address.String() + ".txt", secure.Raw, os.ModePerm)
 }
 
 func (f *flags) timed_text(url string) error {

@@ -67,20 +67,6 @@ func (c *CoreVideo) RequestUrl() (string, bool) {
    return string(b), true
 }
 
-func (CoreVideo) RequestHeader() (http.Header, error) {
-   head := http.Header{}
-   head.Set("content-type", "application/octet-stream")
-   return head, nil
-}
-
-func (CoreVideo) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (CoreVideo) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 func (c *CoreVideo) New() {
    c.DrmProxySecret = "Whn8QFuLFM7Heiz6fYCYga7cYPM8ARe6"
    c.DrmProxyUrl = func() string {
@@ -105,4 +91,18 @@ type page_request struct {
       Type string `json:"type"` // can be empty
       UserId string `json:"userId"`
    } `json:"variables"`
+}
+
+func (*CoreVideo) RequestHeader() (http.Header, error) {
+   head := http.Header{}
+   head.Set("content-type", "application/octet-stream")
+   return head, nil
+}
+
+func (*CoreVideo) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*CoreVideo) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
 }

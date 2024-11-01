@@ -11,6 +11,23 @@ import (
    "time"
 )
 
+var tests = []struct{
+   key_id string
+   path   string
+   url    string
+}{
+   {
+      key_id: "v6f4GpHISrWZcd6esgIvRw==",
+      path: "/emission/la-proposition-27866",
+      url: "auvio.rtbf.be/emission/la-proposition-27866",
+   },
+   {
+      key_id: "10kWa4A9SOSzHFpq1n1zUQ==",
+      path: "/media/grantchester-grantchester-s01-3194636",
+      url:  "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
+   },
+}
+
 func TestAccountsLogin(t *testing.T) {
    username, password, ok := strings.Cut(os.Getenv("rtbf"), ":")
    if !ok {
@@ -98,23 +115,6 @@ func TestWebToken(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", token)
-}
-
-var tests = []struct{
-   key_id string
-   path   string
-   url    string
-}{
-   {
-      key_id: "v6f4GpHISrWZcd6esgIvRw==",
-      path: "/emission/la-proposition-27866",
-      url: "auvio.rtbf.be/emission/la-proposition-27866",
-   },
-   {
-      key_id: "10kWa4A9SOSzHFpq1n1zUQ==",
-      path: "/media/grantchester-grantchester-s01-3194636",
-      url:  "auvio.rtbf.be/media/grantchester-grantchester-s01-3194636",
-   },
 }
 
 func TestWidevine(t *testing.T) {

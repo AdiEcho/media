@@ -28,7 +28,7 @@ type AppToken struct {
 }
 
 // must use app token and IP address for US
-func (at *AppToken) Session(content_id string) (*SessionToken, error) {
+func (a *AppToken) Session(content_id string) (*SessionToken, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err
@@ -39,8 +39,8 @@ func (at *AppToken) Session(content_id string) (*SessionToken, error) {
       b.WriteString("/anonymous-session-token.json")
       return b.String()
    }()
-   at.Values.Set("contentId", content_id)
-   req.URL.RawQuery = at.Values.Encode()
+   a.Values.Set("contentId", content_id)
+   req.URL.RawQuery = a.Values.Encode()
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -59,7 +59,7 @@ func (at *AppToken) Session(content_id string) (*SessionToken, error) {
    return session, nil
 }
 
-func (at *AppToken) New(app_secret string) error {
+func (a *AppToken) New(app_secret string) error {
    key, err := hex.DecodeString(secret_key)
    if err != nil {
       return err
@@ -78,20 +78,20 @@ func (at *AppToken) New(app_secret string) error {
    dst = append(dst, 0, aes.BlockSize)
    dst = append(dst, iv[:]...)
    dst = append(dst, src...)
-   at.Values = url.Values{
+   a.Values = url.Values{
       "at": {base64.StdEncoding.EncodeToString(dst)},
    }
    return nil
 }
 
 // 15.0.28
-func (at *AppToken) ComCbsApp() error {
-   return at.New("a624d7b175f5626b")
+func (a *AppToken) ComCbsApp() error {
+   return a.New("a624d7b175f5626b")
 }
 
 // 15.0.28
-func (at *AppToken) ComCbsCa() error {
-   return at.New("c0b1d5d6ed27a3f6")
+func (a *AppToken) ComCbsCa() error {
+   return a.New("c0b1d5d6ed27a3f6")
 }
 
 func (n Number) MarshalText() ([]byte, error) {
