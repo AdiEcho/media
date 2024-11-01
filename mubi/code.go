@@ -82,7 +82,38 @@ func (a *Address) Film() (*FilmResponse, error) {
    return film, nil
 }
 
-func (c *LinkCode) New() error {
+func (c *LinkCode) String() string {
+   var b strings.Builder
+   b.WriteString("TO LOG IN AND START WATCHING\n")
+   b.WriteString("Go to\n")
+   b.WriteString("mubi.com/android\n")
+   b.WriteString("and enter the code below\n")
+   b.WriteString(c.LinkCode)
+   return b.String()
+}
+
+func (Namer) Episode() int {
+   return 0
+}
+
+func (Namer) Season() int {
+   return 0
+}
+
+func (Namer) Show() string {
+   return ""
+}
+
+type LinkCode struct {
+   AuthToken string `json:"auth_token"`
+   LinkCode string `json:"link_code"`
+}
+
+func (c *LinkCode) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, c)
+}
+
+func (c *LinkCode) New(data *[]byte) error {
    req, err := http.NewRequest("", "https://api.mubi.com/v3/link_code", nil)
    if err != nil {
       return err
@@ -101,41 +132,13 @@ func (c *LinkCode) New() error {
       resp.Write(&b)
       return errors.New(b.String())
    }
-   c.Raw, err = io.ReadAll(resp.Body)
+   body, err := io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
-   return nil
-}
-
-func (c *LinkCode) String() string {
-   var b strings.Builder
-   b.WriteString("TO LOG IN AND START WATCHING\n")
-   b.WriteString("Go to\n")
-   b.WriteString("mubi.com/android\n")
-   b.WriteString("and enter the code below\n")
-   b.WriteString(c.LinkCode)
-   return b.String()
-}
-
-type LinkCode struct {
-   AuthToken string `json:"auth_token"`
-   LinkCode string `json:"link_code"`
-   Raw []byte `json:"-"`
-}
-
-func (c *LinkCode) Unmarshal() error {
-   return json.Unmarshal(c.Raw, c)
-}
-
-func (Namer) Episode() int {
-   return 0
-}
-
-func (Namer) Season() int {
-   return 0
-}
-
-func (Namer) Show() string {
-   return ""
+   if data != nil {
+      *data = body
+      return nil
+   }
+   return c.Unmarshal(body)
 }

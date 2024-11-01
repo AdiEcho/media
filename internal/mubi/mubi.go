@@ -9,16 +9,49 @@ import (
    "os"
 )
 
-func (f *flags) download() error {
-   var (
-      secure mubi.SecureUrl
-      err error
-   )
-   secure.Raw, err = os.ReadFile(f.address.String() + ".txt")
+func write_code() error {
+   var data []byte
+   err := (*mubi.LinkCode).New(nil, &data)
    if err != nil {
       return err
    }
-   err = secure.Unmarshal()
+   err = os.WriteFile("code.txt", data, os.ModePerm)
+   if err != nil {
+      return err
+   }
+   var code mubi.LinkCode
+   err = code.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   fmt.Println(code)
+   return nil
+}
+
+func (f *flags) write_auth() error {
+   data, err := os.ReadFile("code.txt")
+   if err != nil {
+      return err
+   }
+   var code mubi.LinkCode
+   err = code.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   _, err = code.Authenticate(&data)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/mubi.txt", data, os.ModePerm)
+}
+
+func (f *flags) download() error {
+   data, err := os.ReadFile(f.address.String() + ".txt")
+   if err != nil {
+      return err
+   }
+   var secure mubi.SecureUrl
+   err = secure.Unmarshal(data)
    if err != nil {
       return err
    }
@@ -27,7 +60,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -55,12 +88,12 @@ func (f *flags) download() error {
             return err
          }
          f.s.Name = &mubi.Namer{film}
-         var auth mubi.Authenticate
-         auth.Raw, err = os.ReadFile(f.home + "/mubi.txt")
+         data, err = os.ReadFile(f.home + "/mubi.txt")
          if err != nil {
             return err
          }
-         err = auth.Unmarshal()
+         var auth mubi.Authenticate
+         err = auth.Unmarshal(data)
          if err != nil {
             return err
          }
@@ -70,35 +103,6 @@ func (f *flags) download() error {
          return f.s.Download(rep)
       }
    }
-   return nil
-}
-
-func (f *flags) write_auth() error {
-   var (
-      code mubi.LinkCode
-      err error
-   )
-   code.Raw, err = os.ReadFile("code.txt")
-   if err != nil {
-      return err
-   }
-   code.Unmarshal()
-   auth, err := code.Authenticate()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/mubi.txt", auth.Raw, os.ModePerm)
-}
-
-func write_code() error {
-   var code mubi.LinkCode
-   err := code.New()
-   if err != nil {
-      return err
-   }
-   os.WriteFile("code.txt", code.Raw, os.ModePerm)
-   code.Unmarshal()
-   fmt.Println(code)
    return nil
 }
 
