@@ -10,15 +10,6 @@ import (
    "strings"
 )
 
-func (Poster) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Host = "itvpnp.live.ott.irdeto.com"
-   u.Path = "/Widevine/getlicense"
-   u.RawQuery = "AccountId=itvpnp"
-   u.Scheme = "https"
-   return u.String(), true
-}
-
 const query_discovery = `
 {
    titles(filter: {
@@ -41,6 +32,15 @@ const query_discovery = `
    }
 }
 `
+
+func (Poster) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Host = "itvpnp.live.ott.irdeto.com"
+   u.Path = "/Widevine/getlicense"
+   u.RawQuery = "AccountId=itvpnp"
+   u.Scheme = "https"
+   return u.String(), true
+}
 
 func (p *Playlist) Resolution720() (string, bool) {
    for _, file := range p.Playlist.Video.MediaFiles {

@@ -11,8 +11,7 @@ import (
 )
 
 func (f *flags) authenticate() error {
-   var data []byte
-   err := (*hulu.Authenticate).New(nil, f.email, f.password, &data)
+   data, err := (*hulu.Authenticate).Marshal(nil, f.email, f.password)
    if err != nil {
       return err
    }

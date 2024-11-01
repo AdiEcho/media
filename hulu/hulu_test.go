@@ -7,6 +7,7 @@ import (
    "fmt"
    "os"
    "path"
+   "reflect"
    "strings"
    "testing"
    "time"
@@ -17,12 +18,11 @@ func TestAuthenticate(t *testing.T) {
    if !ok {
       t.Fatal("Getenv")
    }
-   var auth Authenticate
-   err := auth.New(username, password)
+   data, err := (*Authenticate).Marshal(nil, username, password)
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("authenticate.txt", auth.Raw, os.ModePerm)
+   os.WriteFile("authenticate.txt", data, os.ModePerm)
 }
 
 var tests = []struct{
@@ -41,37 +41,29 @@ var tests = []struct{
    },
 }
 
-func TestDetails(t *testing.T) {
-   var (
-      auth Authenticate
-      err error
-   )
-   auth.Raw, err = os.ReadFile("authenticate.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   if err = auth.Unmarshal(); err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      base := path.Base(test.url)
-      link, err := auth.DeepLink(&EntityId{base})
-      if err != nil {
-         t.Fatal(err)
+func TestSize(t *testing.T) {
+   size := reflect.TypeOf(&struct{}{}).Size()
+   for _, test := range size_tests {
+      if reflect.TypeOf(test).Size() > size {
+         fmt.Printf("*%T\n", test)
+      } else {
+         fmt.Printf("%T\n", test)
       }
-      details, err := auth.Details(link)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", details)
-      name, err := text.Name(details)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
    }
 }
+
+var size_tests = []any{
+   Authenticate{},
+   DeepLink{},
+   Details{},
+   EntityId{},
+   Playlist{},
+   codec_value{},
+   drm_value{},
+   playlist_request{},
+   segment_value{},
+}
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -96,12 +88,13 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      var auth Authenticate
-      auth.Raw, err = os.ReadFile("authenticate.txt")
+      data, err := os.ReadFile("authenticate.txt")
       if err != nil {
          t.Fatal(err)
       }
-      if err = auth.Unmarshal(); err != nil {
+      var auth Authenticate
+      err = auth.Unmarshal(data)
+      if err != nil {
          t.Fatal(err)
       }
       base := path.Base(test.url)
@@ -118,6 +111,36 @@ func TestLicense(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
+   }
+}
+
+func TestDetails(t *testing.T) {
+   data, err := os.ReadFile("authenticate.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var auth Authenticate
+   err = auth.Unmarshal(data)
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      base := path.Base(test.url)
+      link, err := auth.DeepLink(&EntityId{base})
+      if err != nil {
+         t.Fatal(err)
+      }
+      details, err := auth.Details(link)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", details)
+      name, err := text.Name(details)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
 }

@@ -211,18 +211,6 @@ func (p *Playlist) RequestUrl() (string, bool) {
    return p.WvServer, true
 }
 
-func (Playlist) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Playlist) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (Playlist) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 type codec_value struct {
    Height int `json:"height,omitempty"`
    Level   string `json:"level,omitempty"`
@@ -289,7 +277,19 @@ func (a *Authenticate) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
 }
 
-func (Authenticate) Marshal(email, password string) ([]byte, error) {
+func (*Playlist) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*Playlist) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (*Playlist) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*Authenticate) Marshal(email, password string) ([]byte, error) {
    resp, err := http.PostForm(
       "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
          "friendly_name": {"!"},
