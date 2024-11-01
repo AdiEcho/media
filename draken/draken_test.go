@@ -6,26 +6,21 @@ import (
    "encoding/base64"
    "fmt"
    "os"
-   "reflect"
    "strings"
    "testing"
    "time"
 )
 
-func TestMovie(t *testing.T) {
-   for _, film := range films {
-      var movie FullMovie
-      if err := movie.New(film.custom_id); err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", movie)
-      name, err := text.Name(&Namer{movie})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(99 * time.Millisecond)
+func TestLogin(t *testing.T) {
+   username, password, ok := strings.Cut(os.Getenv("draken"), ":")
+   if !ok {
+      t.Fatal("Getenv")
    }
+   data, err := (*AuthLogin).Marshal(nil, username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("login.txt", data, os.ModePerm)
 }
 
 func TestLicense(t *testing.T) {
@@ -87,6 +82,22 @@ func TestLicense(t *testing.T) {
    }
 }
 
+func TestMovie(t *testing.T) {
+   for _, film := range films {
+      var movie FullMovie
+      if err := movie.New(film.custom_id); err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", movie)
+      name, err := text.Name(&Namer{movie})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(99 * time.Millisecond)
+   }
+}
+
 var films = []struct {
    content_id string
    custom_id string
@@ -105,36 +116,4 @@ var films = []struct {
       key_id:     "ToV4wH2nlVZE8QYLmLywDg==",
       url:        "drakenfilm.se/film/the-card-counter",
    },
-}
-func TestLogin(t *testing.T) {
-   username, password, ok := strings.Cut(os.Getenv("draken"), ":")
-   if !ok {
-      t.Fatal("Getenv")
-   }
-   data, err := AuthLogin{}.Marshal(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("login.txt", data, os.ModePerm)
-}
-
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
-   }
-}
-
-var size_tests = []any{
-   AuthLogin{},
-   Entitlement{},
-   FullMovie{},
-   Namer{},
-   Playback{},
-   Poster{},
-   header{},
 }

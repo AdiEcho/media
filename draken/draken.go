@@ -9,6 +9,25 @@ import (
    "strings"
 )
 
+func (*AuthLogin) Marshal(identity, key string) ([]byte, error) {
+   data, err := json.Marshal(map[string]string{
+      "accessKey": key,
+      "identity":  identity,
+   })
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.Post(
+      "https://drakenfilm.se/api/auth/login", "application/json",
+      bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
 // NO ANONYMOUS QUERY
 const get_custom_id = `
 query GetCustomIdFullMovie($customId: ID!) {
@@ -223,34 +242,6 @@ func (a *AuthLogin) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
 }
 
-func (AuthLogin) Marshal(identity, key string) ([]byte, error) {
-   data, err := json.Marshal(map[string]string{
-      "accessKey": key,
-      "identity":  identity,
-   })
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://drakenfilm.se/api/auth/login", "application/json",
-      bytes.NewReader(data),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   return io.ReadAll(resp.Body)
-}
-
-type Namer struct {
-   Movie FullMovie
-}
-
-type Poster struct {
-   Login AuthLogin
-   Play *Playback
-}
-
 func (n *Namer) Title() string {
    return n.Movie.Title
 }
@@ -269,4 +260,13 @@ func (*Namer) Season() int {
 
 func (*Namer) Show() string {
    return ""
+}
+
+type Namer struct {
+   Movie FullMovie
+}
+
+type Poster struct {
+   Login AuthLogin
+   Play *Playback
 }

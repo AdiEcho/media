@@ -19,7 +19,7 @@ func (a *Authenticate) DeepLink(id *EntityId) (*DeepLink, error) {
    }
    req.URL.Path = "/content/v5/deeplink/playback"
    req.URL.RawQuery = url.Values{
-      "id": {id.s},
+      "id": {id.Text},
       "namespace": {"entity"},
    }.Encode()
    req.Header.Set("authorization", "Bearer " + a.Data.UserToken)
@@ -189,16 +189,16 @@ func (d *Details) Title() string {
 }
 
 type EntityId struct {
-   s string
+   Text string
 }
 
 func (e *EntityId) String() string {
-   return e.s
+   return e.Text
 }
 
 // hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
 func (e *EntityId) Set(s string) error {
-   e.s = path.Base(s)
+   e.Text = path.Base(s)
    return nil
 }
 
@@ -289,7 +289,7 @@ func (a *Authenticate) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
 }
 
-func (a *Authenticate) New(email, password string, data *[]byte) error {
+func (Authenticate) Marshal(email, password string) ([]byte, error) {
    resp, err := http.PostForm(
       "https://auth.hulu.com/v2/livingroom/password/authenticate", url.Values{
          "friendly_name": {"!"},
@@ -299,21 +299,13 @@ func (a *Authenticate) New(email, password string, data *[]byte) error {
       },
    )
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
    if resp.StatusCode != http.StatusOK {
       var b strings.Builder
       resp.Write(&b)
-      return errors.New(b.String())
+      return nil, errors.New(b.String())
    }
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   if data != nil {
-      *data = body
-      return nil
-   }
-   return a.Unmarshal(body)
+   return io.ReadAll(resp.Body)
 }

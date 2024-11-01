@@ -11,15 +11,6 @@ import (
    "sort"
 )
 
-func (f *flags) authenticate() error {
-   var data []byte
-   err := (*draken.AuthLogin).New(nil, f.email, f.password, &data)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/draken.txt", data, os.ModePerm)
-}
-
 func (f *flags) download() error {
    data, err := os.ReadFile(f.home + "/draken.txt")
    if err != nil {
@@ -66,10 +57,18 @@ func (f *flags) download() error {
             fmt.Print(&rep, "\n\n")
          }
       case rep.Id:
-         f.s.Name = &draken.Namer{&movie}
-         f.s.Poster = &draken.Poster{&login, play}
+         f.s.Name = &draken.Namer{movie}
+         f.s.Poster = &draken.Poster{login, play}
          return f.s.Download(rep)
       }
    }
    return nil
+}
+
+func (f *flags) authenticate() error {
+   data, err := (*draken.AuthLogin).Marshal(nil, f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/draken.txt", data, os.ModePerm)
 }
