@@ -7,7 +7,12 @@ import (
 )
 
 func TestAsset(t *testing.T) {
-   article, err := american_hustle.Article()
+   var article OperationArticle
+   data, err := article.Marshal(&american_hustle)
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = article.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
@@ -15,15 +20,21 @@ func TestAsset(t *testing.T) {
    if !ok {
       t.Fatal("OperationArticle.Film")
    }
-   var user OperationUser
-   user.Raw, err = os.ReadFile("authenticate.txt")
+   data, err = os.ReadFile("authenticate.txt")
    if err != nil {
       t.Fatal(err)
    }
-   if err = user.Unmarshal(); err != nil {
+   var user OperationUser
+   err = user.Unmarshal(data)
+   if err != nil {
       t.Fatal(err)
    }
-   play, err := user.Play(asset)
+   var play OperationPlay
+   data, err = play.Marshal(user, asset)
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = play.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }

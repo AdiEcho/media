@@ -9,6 +9,36 @@ import (
    "strings"
 )
 
+func (*OperationArticle) Marshal(web *Address) ([]byte, error) {
+   var value struct {
+      Query     string `json:"query"`
+      Variables struct {
+         ArticleUrlSlug string `json:"articleUrlSlug"`
+      } `json:"variables"`
+   }
+   value.Variables.ArticleUrlSlug = web.Path
+   value.Query = query_article
+   body, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.Post(
+      "https://api.audienceplayer.com/graphql/2/user",
+      "application/json", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
+type ArticleAsset struct {
+   Id         int
+   LinkedType string `json:"linked_type"`
+   article    *OperationArticle
+}
+
 // NO ANONYMOUS QUERY
 const query_article = `
 query Article($articleUrlSlug: String) {
@@ -48,12 +78,6 @@ type Address struct {
 
 func (a *Address) String() string {
    return a.Path
-}
-
-type ArticleAsset struct {
-   Id         int
-   LinkedType string `json:"linked_type"`
-   article    *OperationArticle
 }
 
 func (o *OperationArticle) Film() (*ArticleAsset, bool) {
@@ -117,28 +141,4 @@ func (o *OperationArticle) Unmarshal(data []byte) error {
       asset.article = o
    }
    return nil
-}
-
-func (*OperationArticle) Marshal(web Address) ([]byte, error) {
-   var value struct {
-      Query     string `json:"query"`
-      Variables struct {
-         ArticleUrlSlug string `json:"articleUrlSlug"`
-      } `json:"variables"`
-   }
-   value.Variables.ArticleUrlSlug = web.Path
-   value.Query = query_article
-   body, err := json.Marshal(value)
-   if err != nil {
-      return nil, err
-   }
-   resp, err := http.Post(
-      "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   return io.ReadAll(resp.Body)
 }

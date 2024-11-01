@@ -10,12 +10,17 @@ import (
 var american_hustle = Address{"films/american-hustle"}
 
 func TestArticle(t *testing.T) {
-   article, err := american_hustle.Article()
+   var article OperationArticle
+   data, err := article.Marshal(&american_hustle)
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = article.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", article)
-   name, err := text.Name(article)
+   name, err := text.Name(&article)
    if err != nil {
       t.Fatal(err)
    }

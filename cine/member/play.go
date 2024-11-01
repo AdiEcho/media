@@ -8,6 +8,43 @@ import (
    "net/http"
 )
 
+// hard geo block
+func (*OperationPlay) Marshal(
+   user OperationUser, asset ArticleAsset,
+) ([]byte, error) {
+   var value struct {
+      Query     string `json:"query"`
+      Variables struct {
+         ArticleId int `json:"article_id"`
+         AssetId   int `json:"asset_id"`
+      } `json:"variables"`
+   }
+   value.Query = query_play
+   value.Variables.AssetId = asset.Id
+   value.Variables.ArticleId = asset.article.Id
+   data, err := json.Marshal(value)
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://api.audienceplayer.com/graphql/2/user",
+      bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "authorization": {"Bearer " + user.Data.UserAuthenticate.AccessToken},
+      "content-type":  {"application/json"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
 func (o *OperationPlay) Dash() (string, bool) {
    for _, title := range o.Data.ArticleAssetPlay.Entitlements {
       if title.Protocol == "dash" {
@@ -42,56 +79,6 @@ type OperationPlay struct {
    Errors []struct {
       Message string
    }
-}
-
-// hard geo block
-func (o *OperationUser) Play(
-   asset *ArticleAsset, data *[]byte,
-) (*OperationPlay, error) {
-   var value struct {
-      Query     string `json:"query"`
-      Variables struct {
-         ArticleId int `json:"article_id"`
-         AssetId   int `json:"asset_id"`
-      } `json:"variables"`
-   }
-   value.Query = query_play
-   value.Variables.AssetId = asset.Id
-   value.Variables.ArticleId = asset.article.Id
-   body, err := json.Marshal(value)
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://api.audienceplayer.com/graphql/2/user",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header = http.Header{
-      "authorization": {"Bearer " + o.Data.UserAuthenticate.AccessToken},
-      "content-type":  {"application/json"},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   body, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if data != nil {
-      *data = body
-      return nil, nil
-   }
-   var play OperationPlay
-   err = play.Unmarshal(body)
-   if err != nil {
-      return nil, err
-   }
-   return &play, nil
 }
 
 func (o *OperationPlay) Unmarshal(data []byte) error {

@@ -27,7 +27,7 @@ func (o *OperationUser) Unmarshal(data []byte) error {
    return json.Unmarshal(data, o)
 }
 
-func (o *OperationUser) New(email, password string, data *[]byte) error {
+func (OperationUser) Marshal(email, password string) ([]byte, error) {
    var value struct {
       Query     string `json:"query"`
       Variables struct {
@@ -38,25 +38,17 @@ func (o *OperationUser) New(email, password string, data *[]byte) error {
    value.Query = query_user
    value.Variables.Email = email
    value.Variables.Password = password
-   body, err := json.Marshal(value)
+   data, err := json.Marshal(value)
    if err != nil {
-      return err
+      return nil, err
    }
    resp, err := http.Post(
       "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(body),
+      "application/json", bytes.NewReader(data),
    )
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
-   body, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   if data != nil {
-      *data = body
-      return nil
-   }
-   return o.Unmarshal(body)
+   return io.ReadAll(resp.Body)
 }
