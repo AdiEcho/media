@@ -8,10 +8,27 @@ import (
    "strings"
 )
 
-func (a *AccountAuth) Code() (*AccountCode, error) {
-   body, err := json.Marshal(map[string]string{
-      "platform": "googletv",
-   })
+func (a *AccountCode) String() string {
+   var b strings.Builder
+   b.WriteString("1 Visit the URL\n")
+   b.WriteString("  therokuchannel.com/link\n")
+   b.WriteString("\n")
+   b.WriteString("2 Enter the activation code\n")
+   b.WriteString("  ")
+   b.WriteString(a.Code)
+   return b.String()
+}
+
+type AccountCode struct {
+   Code string
+}
+
+func (a *AccountCode) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, a)
+}
+
+func (a *AccountAuth) Code(data *[]byte) (*AccountCode, error) {
+   body, err := json.Marshal(map[string]string{"platform": "googletv"})
    if err != nil {
       return nil, err
    }
@@ -32,30 +49,18 @@ func (a *AccountAuth) Code() (*AccountCode, error) {
       return nil, err
    }
    defer resp.Body.Close()
+   body, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   if data != nil {
+      *data = body
+      return nil, nil
+   }
    var code AccountCode
-   code.Raw, err = io.ReadAll(resp.Body)
+   err = code.Unmarshal(body)
    if err != nil {
       return nil, err
    }
    return &code, nil
-}
-
-type AccountCode struct {
-   Code string
-   Raw  []byte `json:"-"`
-}
-
-func (a *AccountCode) String() string {
-   var b strings.Builder
-   b.WriteString("1 Visit the URL\n")
-   b.WriteString("  therokuchannel.com/link\n")
-   b.WriteString("\n")
-   b.WriteString("2 Enter the activation code\n")
-   b.WriteString("  ")
-   b.WriteString(a.Code)
-   return b.String()
-}
-
-func (a *AccountCode) Unmarshal() error {
-   return json.Unmarshal(a.Raw, a)
 }
