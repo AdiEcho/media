@@ -6,10 +6,34 @@ import (
    "encoding/base64"
    "fmt"
    "os"
+   "reflect"
    "strings"
    "testing"
    "time"
 )
+
+func TestSize(t *testing.T) {
+   size := reflect.TypeOf(&struct{}{}).Size()
+   for _, test := range size_tests {
+      if reflect.TypeOf(test).Size() > size {
+         fmt.Printf("*%T\n", test)
+      } else {
+         fmt.Printf("%T\n", test)
+      }
+   }
+}
+
+var size_tests = []any{
+   Address{},
+   AuvioAuth{},
+   AuvioLogin{},
+   AuvioPage{},
+   Entitlement{},
+   Namer{},
+   Subtitle{},
+   Title{},
+   WebToken{},
+}
 
 var tests = []struct{
    key_id string

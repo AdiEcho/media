@@ -10,23 +10,84 @@ import (
    "sort"
 )
 
-func (f *flags) download() error {
-   var token *roku.AccountToken
-   if f.token_read {
-      token = &roku.AccountToken{}
-      var err error
-      token.Raw, err = os.ReadFile(f.home + "/roku.txt")
-      if err != nil {
-         return err
-      }
-      token.Unmarshal()
-   }
-   var auth roku.AccountAuth
-   err := auth.New(token)
+func write_code() error {
+   // AccountAuth
+   var data []byte
+   err := (*roku.AccountAuth).New(nil, nil, &data)
    if err != nil {
       return err
    }
-   err = auth.Unmarshal()
+   err = os.WriteFile("auth.txt", data, os.ModePerm)
+   if err != nil {
+      return err
+   }
+   // AccountCode
+   var auth roku.AccountAuth
+   err = auth.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   _, err = auth.Code(&data)
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile("code.txt", data, os.ModePerm)
+   if err != nil {
+      return err
+   }
+   var code roku.AccountCode
+   err = code.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   fmt.Println(code)
+   return nil
+}
+
+func (f *flags) write_token() error {
+   // AccountAuth
+   data, err := os.ReadFile("auth.txt")
+   if err != nil {
+      return err
+   }
+   var auth roku.AccountAuth
+   err = auth.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   // AccountCode
+   data, err = os.ReadFile("code.txt")
+   if err != nil {
+      return err
+   }
+   var code roku.AccountCode
+   err = code.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   // AccountToken
+   _, err = auth.Token(&code, &data)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/roku.txt", data, os.ModePerm)
+}
+
+func (f *flags) download() error {
+   var token *roku.AccountToken
+   if f.token_read {
+      data, err := os.ReadFile(f.home + "/roku.txt")
+      if err != nil {
+         return err
+      }
+      token = &roku.AccountToken{}
+      err = token.Unmarshal(data)
+      if err != nil {
+         return err
+      }
+   }
+   var auth roku.AccountAuth
+   err := auth.New(token, nil)
    if err != nil {
       return err
    }
@@ -65,61 +126,5 @@ func (f *flags) download() error {
          return f.s.Download(rep)
       }
    }
-   return nil
-}
-
-func (f *flags) write_token() error {
-   var err error
-   // AccountAuth
-   var auth roku.AccountAuth
-   auth.Raw, err = os.ReadFile("auth.txt")
-   if err != nil {
-      return err
-   }
-   auth.Unmarshal()
-   // AccountCode
-   var code roku.AccountCode
-   code.Raw, err = os.ReadFile("code.txt")
-   if err != nil {
-      return err
-   }
-   code.Unmarshal()
-   // AccountToken
-   token, err := auth.Token(&code)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/roku.txt", token.Raw, os.ModePerm)
-}
-
-func write_code() error {
-   // AccountAuth
-   var auth roku.AccountAuth
-   err := auth.New(nil)
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile("auth.txt", auth.Raw, os.ModePerm)
-   if err != nil {
-      return err
-   }
-   err = auth.Unmarshal()
-   if err != nil {
-      return err
-   }
-   // AccountCode
-   code, err := auth.Code()
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile("code.txt", code.Raw, os.ModePerm)
-   if err != nil {
-      return err
-   }
-   err = code.Unmarshal()
-   if err != nil {
-      return err
-   }
-   fmt.Println(code)
    return nil
 }
