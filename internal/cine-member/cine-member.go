@@ -11,6 +11,51 @@ import (
    "path"
 )
 
+func (f *flags) write_play() error {
+   os.Mkdir(f.base(), os.ModePerm)
+   // 1. write OperationArticle
+   var article member.OperationArticle
+   data, err := article.Marshal(&f.address)
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(f.base() + "/article.txt", data, os.ModePerm)
+   if err != nil {
+      return err
+   }
+   err = article.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   // 2. write OperationPlay
+   data, err = os.ReadFile(f.home + "/cine-member.txt")
+   if err != nil {
+      return err
+   }
+   var user member.OperationUser
+   err = user.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   asset, ok := article.Film()
+   if !ok {
+      return errors.New("OperationArticle.Film")
+   }
+   data, err = (*member.OperationPlay).Marshal(nil, &user, asset)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.base() + "/play.txt", data, os.ModePerm)
+}
+
+func (f *flags) write_user() error {
+   data, err := (*member.OperationUser).Marshal(nil, f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/cine-member.txt", data, os.ModePerm)
+}
+
 func (f *flags) download() error {
    data, err := os.ReadFile(f.base() + "/play.txt")
    if err != nil {
@@ -61,51 +106,4 @@ func (f *flags) download() error {
 
 func (f *flags) base() string {
    return path.Base(f.address.Path)
-}
-
-func (f *flags) write_user() error {
-   var data []byte
-   err := (*member.OperationUser).New(nil, f.email, f.password, &data)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/cine-member.txt", data, os.ModePerm)
-}
-
-func (f *flags) write_play() error {
-   os.Mkdir(f.base(), os.ModePerm)
-   // 1. write OperationArticle
-   var data []byte
-   _, err := f.address.Article(&data)
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(f.base() + "/article.txt", data, os.ModePerm)
-   if err != nil {
-      return err
-   }
-   var article member.OperationArticle
-   err = article.Unmarshal(data)
-   if err != nil {
-      return err
-   }
-   // 2. write OperationPlay
-   data, err = os.ReadFile(f.home + "/cine-member.txt")
-   if err != nil {
-      return err
-   }
-   var user member.OperationUser
-   err = user.Unmarshal(data)
-   if err != nil {
-      return err
-   }
-   asset, ok := article.Film()
-   if !ok {
-      return errors.New("OperationArticle.Film")
-   }
-   _, err = user.Play(asset, &data)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.base() + "/play.txt", data, os.ModePerm)
 }

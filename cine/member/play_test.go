@@ -30,7 +30,7 @@ func TestAsset(t *testing.T) {
       t.Fatal(err)
    }
    var play OperationPlay
-   data, err = play.Marshal(user, asset)
+   data, err = play.Marshal(&user, asset)
    if err != nil {
       t.Fatal(err)
    }

@@ -8,6 +8,24 @@ import (
    "time"
 )
 
+func TestSize(t *testing.T) {
+   size := reflect.TypeOf(&struct{}{}).Size()
+   for _, test := range size_tests {
+      if reflect.TypeOf(test).Size() > size {
+         fmt.Printf("*%T\n", test)
+      } else {
+         fmt.Printf("%T\n", test)
+      }
+   }
+}
+
+var size_tests = []any{
+   Namer{},
+   Resolution{},
+   VideoContent{},
+   VideoResource{},
+}
+
 func TestContent(t *testing.T) {
    for _, test := range tests {
       content := &VideoContent{}
@@ -33,24 +51,6 @@ func TestContent(t *testing.T) {
       fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
-}
-
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
-   }
-}
-
-var size_tests = []any{
-   Namer{},
-   Resolution{},
-   VideoContent{},
-   VideoResource{},
 }
 
 var tests = []struct {
