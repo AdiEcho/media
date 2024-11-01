@@ -11,6 +11,27 @@ import (
    "time"
 )
 
+func (*MediaContent) Marshal(axis *AxisContent) ([]byte, error) {
+   req, err := http.NewRequest("", "https://capi.9c9media.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = func() string {
+      b := []byte("/destinations/")
+      b = append(b, axis.AxisPlaybackLanguages[0].DestinationCode...)
+      b = append(b, "/platforms/desktop/contents/"...)
+      b = strconv.AppendInt(b, axis.AxisId, 10)
+      return string(b)
+   }()
+   req.URL.RawQuery = "$include=[ContentPackages,Media,Season]"
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
 func (r *ResolvePath) Axis() (*AxisContent, error) {
    var body struct {
       Query         string `json:"query"`
@@ -155,38 +176,12 @@ func (d *Date) UnmarshalText(text []byte) error {
    return nil
 }
 
-type Namer struct {
-   Media *MediaContent
-}
-
 func (d *Date) MarshalText() ([]byte, error) {
    return d.Time.AppendFormat(nil, time.DateOnly), nil
 }
 
-func (n Namer) Episode() int {
+func (n *Namer) Episode() int {
    return n.Media.Episode
-}
-
-func (n Namer) Season() int {
-   return n.Media.Season.Number
-}
-
-func (n Namer) Show() string {
-   if v := n.Media.Media; v.Type == "series" {
-      return v.Name
-   }
-   return ""
-}
-
-func (n Namer) Year() int {
-   return n.Media.BroadcastDate.Time.Year()
-}
-
-func (n Namer) Title() string {
-   if strings.HasSuffix(n.Media.Name, ")") {
-      return n.Media.Name[:len(n.Media.Name)-len(" (9999)")]
-   }
-   return n.Media.Name
 }
 
 func (Poster) RequestHeader() (http.Header, error) {
@@ -235,10 +230,6 @@ func (a *Address) Set(s string) error {
    s = strings.TrimPrefix(s, "www.")
    a.Path = strings.TrimPrefix(s, "ctv.ca")
    return nil
-}
-
-type Date struct {
-   Time time.Time
 }
 
 type Poster struct{}
@@ -301,23 +292,32 @@ func (m *MediaContent) Unmarshal(data []byte) error {
    return json.Unmarshal(data, m)
 }
 
-func (MediaContent) Marshal(axis AxisContent) ([]byte, error) {
-   req, err := http.NewRequest("", "https://capi.9c9media.com", nil)
-   if err != nil {
-      return nil, err
+type Date struct {
+   Time time.Time
+}
+
+type Namer struct {
+   Media MediaContent
+}
+
+func (n *Namer) Season() int {
+   return n.Media.Season.Number
+}
+
+func (n *Namer) Show() string {
+   if v := n.Media.Media; v.Type == "series" {
+      return v.Name
    }
-   req.URL.Path = func() string {
-      b := []byte("/destinations/")
-      b = append(b, axis.AxisPlaybackLanguages[0].DestinationCode...)
-      b = append(b, "/platforms/desktop/contents/"...)
-      b = strconv.AppendInt(b, axis.AxisId, 10)
-      return string(b)
-   }()
-   req.URL.RawQuery = "$include=[ContentPackages,Media,Season]"
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
+   return ""
+}
+
+func (n *Namer) Year() int {
+   return n.Media.BroadcastDate.Time.Year()
+}
+
+func (n *Namer) Title() string {
+   if strings.HasSuffix(n.Media.Name, ")") {
+      return n.Media.Name[:len(n.Media.Name)-len(" (9999)")]
    }
-   defer resp.Body.Close()
-   return io.ReadAll(resp.Body)
+   return n.Media.Name
 }

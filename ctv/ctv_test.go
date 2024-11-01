@@ -11,6 +11,62 @@ import (
    "time"
 )
 
+func TestMedia(t *testing.T) {
+   for _, test_path := range test_paths {
+      resolve, err := Address{test_path}.Resolve()
+      if err != nil {
+         t.Fatal(err)
+      }
+      axis, err := resolve.Axis()
+      if err != nil {
+         t.Fatal(err)
+      }
+      var media MediaContent
+      data, err := media.Marshal(axis)
+      if err != nil {
+         t.Fatal(err)
+      }
+      err = media.Unmarshal(data)
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := text.Name(&Namer{media})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
+}
+
+func TestManifest(t *testing.T) {
+   for _, test_path := range test_paths {
+      resolve, err := Address{test_path}.Resolve()
+      if err != nil {
+         t.Fatal(err)
+      }
+      axis, err := resolve.Axis()
+      if err != nil {
+         t.Fatal(err)
+      }
+      var media MediaContent
+      data, err := media.Marshal(axis)
+      if err != nil {
+         t.Fatal(err)
+      }
+      err = media.Unmarshal(data)
+      if err != nil {
+         t.Fatal(err)
+      }
+      manifest, err := axis.Manifest(&media)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(string(manifest))
+      time.Sleep(time.Second)
+   }
+}
+
 func TestSize(t *testing.T) {
    size := reflect.TypeOf(&struct{}{}).Size()
    for _, test := range size_tests {
@@ -30,29 +86,6 @@ var size_tests = []any{
    Namer{},
    Poster{},
    ResolvePath{},
-}
-
-func TestMedia(t *testing.T) {
-   for _, test_path := range test_paths {
-      resolve, err := Address{test_path}.Resolve()
-      if err != nil {
-         t.Fatal(err)
-      }
-      axis, err := resolve.Axis()
-      if err != nil {
-         t.Fatal(err)
-      }
-      media, err := axis.Media()
-      if err != nil {
-         t.Fatal(err)
-      }
-      name, err := text.Name(Namer{media})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
-   }
 }
 
 func TestLicense(t *testing.T) {
@@ -87,28 +120,6 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-func TestManifest(t *testing.T) {
-   for _, test_path := range test_paths {
-      resolve, err := Address{test_path}.Resolve()
-      if err != nil {
-         t.Fatal(err)
-      }
-      axis, err := resolve.Axis()
-      if err != nil {
-         t.Fatal(err)
-      }
-      media, err := axis.Media()
-      if err != nil {
-         t.Fatal(err)
-      }
-      manifest, err := axis.Manifest(media)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(string(manifest))
-      time.Sleep(time.Second)
-   }
 }
 
 // ctv.ca/movies/the-girl-with-the-dragon-tattoo-2011
