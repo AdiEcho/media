@@ -90,13 +90,13 @@ func (a *Authenticate) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
 }
 
-func (c *LinkCode) Authenticate(data *[]byte) (*Authenticate, error) {
-   body, err := json.Marshal(map[string]string{"auth_token": c.AuthToken})
+func (*Authenticate) Marshal(code *LinkCode) ([]byte, error) {
+   data, err := json.Marshal(map[string]string{"auth_token": code.AuthToken})
    if err != nil {
       return nil, err
    }
    req, err := http.NewRequest(
-      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(body),
+      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(data),
    )
    if err != nil {
       return nil, err
@@ -116,18 +116,5 @@ func (c *LinkCode) Authenticate(data *[]byte) (*Authenticate, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   body, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if data != nil {
-      *data = body
-      return nil, nil
-   }
-   var auth Authenticate
-   err = auth.Unmarshal(body)
-   if err != nil {
-      return nil, err
-   }
-   return &auth, nil
+   return io.ReadAll(resp.Body)
 }

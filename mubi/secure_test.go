@@ -7,19 +7,21 @@ import (
 )
 
 func TestSecure(t *testing.T) {
-   var (
-      auth Authenticate
-      err error
-   )
-   auth.Raw, err = os.ReadFile("authenticate.txt")
+   data, err := os.ReadFile("authenticate.txt")
    if err != nil {
       t.Fatal(err)
    }
-   err = auth.Unmarshal()
+   var auth Authenticate
+   err = auth.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
-   secure, err := auth.Url(&FilmResponse{Id: test.id})
+   var secure SecureUrl
+   data, err = secure.Marshal(&auth, &FilmResponse{Id: test.id})
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = secure.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }

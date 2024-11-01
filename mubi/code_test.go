@@ -9,6 +9,20 @@ import (
    "testing"
 )
 
+func TestCode(t *testing.T) {
+   var code LinkCode
+   data, err := code.Marshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("code.txt", data, os.ModePerm)
+   err = code.Unmarshal(data)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(code)
+}
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -32,12 +46,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var auth Authenticate
-   auth.Raw, err = os.ReadFile(home + "/authenticate.txt")
+   data, err := os.ReadFile(home + "/authenticate.txt")
    if err != nil {
       t.Fatal(err)
    }
-   err = auth.Unmarshal()
+   var auth Authenticate
+   err = auth.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
@@ -86,17 +100,4 @@ var test = struct{
       "mubi.com/films/325455/player",
       "mubi.com/films/passages-2022",
    },
-}
-func TestCode(t *testing.T) {
-   var code LinkCode
-   err := code.New()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("code.txt", code.Raw, os.ModePerm)
-   err = code.Unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(code)
 }

@@ -43,16 +43,16 @@ func (a *Address) String() string {
    return a.Text
 }
 
-func (n *Namer) Title() string {
+type Namer struct {
+   Film *FilmResponse
+}
+
+func (n Namer) Title() string {
    return n.Film.Title
 }
 
-func (n *Namer) Year() int {
+func (n Namer) Year() int {
    return n.Film.Year
-}
-
-type Namer struct {
-   Film *FilmResponse
 }
 
 func (t *TextTrack) String() string {
@@ -113,10 +113,10 @@ func (c *LinkCode) Unmarshal(data []byte) error {
    return json.Unmarshal(data, c)
 }
 
-func (c *LinkCode) New(data *[]byte) error {
+func (*LinkCode) Marshal() ([]byte, error) {
    req, err := http.NewRequest("", "https://api.mubi.com/v3/link_code", nil)
    if err != nil {
-      return err
+      return nil, err
    }
    req.Header = http.Header{
       "client": {client},
@@ -124,21 +124,13 @@ func (c *LinkCode) New(data *[]byte) error {
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
    if resp.StatusCode != http.StatusOK {
       var b strings.Builder
       resp.Write(&b)
-      return errors.New(b.String())
+      return nil, errors.New(b.String())
    }
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   if data != nil {
-      *data = body
-      return nil
-   }
-   return c.Unmarshal(body)
+   return io.ReadAll(resp.Body)
 }

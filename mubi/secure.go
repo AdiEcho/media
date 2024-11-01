@@ -18,9 +18,9 @@ func (s *SecureUrl) Unmarshal(data []byte) error {
    return json.Unmarshal(data, s)
 }
 
-func (a *Authenticate) Secure(
-   film *FilmResponse, data *[]byte,
-) (*SecureUrl, error) {
+func (*SecureUrl) Marshal(
+   auth *Authenticate, film *FilmResponse,
+) ([]byte, error) {
    req, err := http.NewRequest("", "https://api.mubi.com", nil)
    if err != nil {
       return nil, err
@@ -32,7 +32,7 @@ func (a *Authenticate) Secure(
       return string(b)
    }()
    req.Header = http.Header{
-      "authorization": {"Bearer " + a.Token},
+      "authorization": {"Bearer " + auth.Token},
       "client": {client},
       "client-country": {ClientCountry},
    }
@@ -46,18 +46,5 @@ func (a *Authenticate) Secure(
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if data != nil {
-      *data = body
-      return nil, nil
-   }
-   var secure SecureUrl
-   err = secure.Unmarshal(body)
-   if err != nil {
-      return nil, err
-   }
-   return &secure, nil
+   return io.ReadAll(resp.Body)
 }

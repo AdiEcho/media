@@ -9,6 +9,25 @@ import (
    "os"
 )
 
+func write_code() error {
+   var data []byte
+   err := (*mubi.LinkCode).New(nil, &data)
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile("code.txt", data, os.ModePerm)
+   if err != nil {
+      return err
+   }
+   var code mubi.LinkCode
+   err = code.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   fmt.Println(code)
+   return nil
+}
+
 func (f *flags) write_secure() error {
    data, err := os.ReadFile(f.home + "/mubi.txt")
    if err != nil {
@@ -27,30 +46,11 @@ func (f *flags) write_secure() error {
    if err != nil {
       return err
    }
-   _, err = auth.Secure(film, &data)
+   data, err = (*mubi.SecureUrl).Marshal(nil, &auth, film)
    if err != nil {
       return err
    }
    return os.WriteFile(f.address.String() + ".txt", data, os.ModePerm)
-}
-
-func write_code() error {
-   var data []byte
-   err := (*mubi.LinkCode).New(nil, &data)
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile("code.txt", data, os.ModePerm)
-   if err != nil {
-      return err
-   }
-   var code mubi.LinkCode
-   err = code.Unmarshal(data)
-   if err != nil {
-      return err
-   }
-   fmt.Println(code)
-   return nil
 }
 
 func (f *flags) write_auth() error {

@@ -7,6 +7,23 @@ import (
    "testing"
 )
 
+func TestAuthenticate(t *testing.T) {
+   data, err := os.ReadFile("code.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var code LinkCode
+   err = code.Unmarshal(data)
+   if err != nil {
+      t.Fatal(err)
+   }
+   data, err = (*Authenticate).Marshal(nil, &code)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("authenticate.txt", data, os.ModePerm)
+}
+
 func TestSize(t *testing.T) {
    size := reflect.TypeOf(&struct{}{}).Size()
    for _, test := range size_tests {
@@ -26,21 +43,4 @@ var size_tests = []any{
    Namer{},
    SecureUrl{},
    TextTrack{},
-}
-
-func TestAuthenticate(t *testing.T) {
-   var (
-      code LinkCode
-      err error
-   )
-   code.Raw, err = os.ReadFile("code.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   code.Unmarshal()
-   auth, err := code.Authenticate()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("authenticate.txt", auth.Raw, os.ModePerm)
 }
