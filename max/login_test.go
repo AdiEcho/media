@@ -10,23 +10,6 @@ import (
    "time"
 )
 
-var tests = []struct {
-   key_id string
-   url        string
-   video_type string
-}{
-   {
-      key_id: "0102f83e95fac43cf1662dd8e5b08d90",
-      url: "play.max.com/video/watch/c9e9bde1-1463-4c92-a25a-21451f3c5894/f1d899ac-1780-494a-a20d-caee55c9e262",
-      video_type: "MOVIE",
-   },
-   {
-      key_id: "0102d949c44f81b28fdb98d535c8bade",
-      url:        "play.max.com/video/watch/d0938760-d3ca-4c59-aea2-74ecbed42d17/2e7d1db4-2fd7-47fb-a7c3-a65b7c2e5d6f",
-      video_type: "EPISODE",
-   },
-}
-
 func TestLogin(t *testing.T) {
    data, err := os.ReadFile("token.txt")
    if err != nil {
@@ -34,41 +17,11 @@ func TestLogin(t *testing.T) {
    }
    var token BoltToken
    token.St = string(data)
-   login, err := token.Login()
+   data, err = (*LinkLogin).Marshal(nil, &token)
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("login.txt", login.Raw, os.ModePerm)
-}
-
-func TestRoutes(t *testing.T) {
-   var (
-      login LinkLogin
-      err error
-   )
-   login.Raw, err = os.ReadFile("login.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = login.Unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      var web Address
-      web.UnmarshalText([]byte(test.url))
-      routes, err := login.Routes(web)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", routes)
-      name, err := text.Name(routes)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
-   }
+   os.WriteFile("login.txt", data, os.ModePerm)
 }
 
 func TestLicense(t *testing.T) {
@@ -84,12 +37,12 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var login LinkLogin
-   login.Raw, err = os.ReadFile("login.txt")
+   data, err := os.ReadFile("login.txt")
    if err != nil {
       t.Fatal(err)
    }
-   err = login.Unmarshal()
+   var login LinkLogin
+   err = login.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
@@ -106,7 +59,7 @@ func TestLicense(t *testing.T) {
       }
       var web Address
       web.UnmarshalText([]byte(test.url))
-      play, err := login.Playback(web)
+      play, err := login.Playback(&web)
       if err != nil {
          t.Fatal(err)
       }
@@ -117,4 +70,48 @@ func TestLicense(t *testing.T) {
       fmt.Printf("%x\n", key)
       time.Sleep(time.Second)
    }
+}
+
+func TestRoutes(t *testing.T) {
+   data, err := os.ReadFile("login.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var login LinkLogin
+   err = login.Unmarshal(data)
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      var web Address
+      web.UnmarshalText([]byte(test.url))
+      routes, err := login.Routes(&web)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", routes)
+      name, err := text.Name(routes)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
+}
+
+var tests = []struct {
+   key_id string
+   url        string
+   video_type string
+}{
+   {
+      key_id: "0102f83e95fac43cf1662dd8e5b08d90",
+      url: "play.max.com/video/watch/c9e9bde1-1463-4c92-a25a-21451f3c5894/f1d899ac-1780-494a-a20d-caee55c9e262",
+      video_type: "MOVIE",
+   },
+   {
+      key_id: "0102d949c44f81b28fdb98d535c8bade",
+      url:        "play.max.com/video/watch/d0938760-d3ca-4c59-aea2-74ecbed42d17/2e7d1db4-2fd7-47fb-a7c3-a65b7c2e5d6f",
+      video_type: "EPISODE",
+   },
 }

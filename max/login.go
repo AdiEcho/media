@@ -11,7 +11,26 @@ import (
    "time"
 )
 
-func (v *LinkLogin) Playback(web Address) (*Playback, error) {
+// you must
+// /authentication/linkDevice/initiate
+// first or this will always fail
+func (*LinkLogin) Marshal(token *BoltToken) ([]byte, error) {
+   req, err := http.NewRequest(
+      "POST", prd_api + "/authentication/linkDevice/login", nil,
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header.Set("cookie", "st=" + token.St)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
+func (v *LinkLogin) Playback(web *Address) (*Playback, error) {
    var body playback_request
    body.ConsumptionType = "streaming"
    body.EditId = web.EditId
@@ -235,7 +254,7 @@ func (a *Address) UnmarshalText(text []byte) error {
    return nil
 }
 
-func (v *LinkLogin) Routes(web Address) (*DefaultRoutes, error) {
+func (v *LinkLogin) Routes(web *Address) (*DefaultRoutes, error) {
    req, err := http.NewRequest("", prd_api, nil)
    if err != nil {
       return nil, err
@@ -281,36 +300,4 @@ type LinkLogin struct {
 
 func (v *LinkLogin) Unmarshal(data []byte) error {
    return json.Unmarshal(data, v)
-}
-
-// you must
-// /authentication/linkDevice/initiate
-// first or this will always fail
-func (b *BoltToken) Login(data *[]byte) (*LinkLogin, error) {
-   req, err := http.NewRequest(
-      "POST", prd_api + "/authentication/linkDevice/login", nil,
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header.Set("cookie", "st=" + b.St)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if data != nil {
-      *data = body
-      return nil, nil
-   }
-   var link LinkLogin
-   err = link.Unmarshal(body)
-   if err != nil {
-      return nil, err
-   }
-   return &link, nil
 }
