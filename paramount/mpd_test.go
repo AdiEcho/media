@@ -7,18 +7,19 @@ import (
 )
 
 func TestMpdUs(t *testing.T) {
-   var app AppToken
-   err := app.ComCbsApp()
+   var token AppToken
+   err := token.ComCbsApp()
    if err != nil {
       t.Fatal(err)
    }
    for _, test := range tests {
       if test.location == "" {
-         item, err := app.Item(test.content_id)
+         var item VideoItem
+         data, err := item.Marshal(token, test.content_id)
          if err != nil {
             t.Fatal(err)
          }
-         err = item.Unmarshal()
+         err = item.Unmarshal(data)
          if err != nil {
             t.Fatal(err)
          }
@@ -29,18 +30,19 @@ func TestMpdUs(t *testing.T) {
 }
 
 func TestMpdFr(t *testing.T) {
-   var app AppToken
-   err := app.ComCbsCa()
+   var token AppToken
+   err := token.ComCbsCa()
    if err != nil {
       t.Fatal(err)
    }
    for _, test := range tests {
       if test.location == "France" {
-         item, err := app.Item(test.content_id)
+         var item VideoItem
+         data, err := item.Marshal(token, test.content_id)
          if err != nil {
             t.Fatal(err)
          }
-         err = item.Unmarshal()
+         err = item.Unmarshal(data)
          if err != nil {
             t.Fatal(err)
          }

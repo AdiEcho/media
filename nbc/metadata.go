@@ -78,16 +78,14 @@ func (m *Metadata) OnDemand() (*OnDemand, error) {
 }
 
 func (m *Metadata) New(guid int) error {
-   data, err := func() ([]byte, error) {
-      var p page_request
-      p.Query = graphql_compact(bonanza_page)
-      p.Variables.App = "nbc"
-      p.Variables.Name = strconv.Itoa(guid)
-      p.Variables.OneApp = true
-      p.Variables.Platform = "android"
-      p.Variables.Type = "VIDEO"
-      return json.Marshal(p)
-   }()
+   var page page_request
+   page.Query = graphql_compact(bonanza_page)
+   page.Variables.App = "nbc"
+   page.Variables.Name = strconv.Itoa(guid)
+   page.Variables.OneApp = true
+   page.Variables.Platform = "android"
+   page.Variables.Type = "VIDEO"
+   data, err := json.Marshal(page)
    if err != nil {
       return err
    }

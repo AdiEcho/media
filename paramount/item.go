@@ -70,7 +70,7 @@ func (v *VideoItem) Unmarshal(data []byte) error {
 }
 
 // must use app token and IP address for correct location
-func (a *AppToken) Item(cid string, data *[]byte) (*VideoItem, error) {
+func (VideoItem) Marshal(token AppToken, cid string) ([]byte, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err
@@ -82,7 +82,7 @@ func (a *AppToken) Item(cid string, data *[]byte) (*VideoItem, error) {
       b.WriteString(".json")
       return b.String()
    }()
-   req.URL.RawQuery = a.Values.Encode()
+   req.URL.RawQuery = token.Values.Encode()
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
@@ -93,18 +93,5 @@ func (a *AppToken) Item(cid string, data *[]byte) (*VideoItem, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if data != nil {
-      *data = body
-      return nil, nil
-   }
-   var item VideoItem
-   err = item.Unmarshal(body)
-   if err != nil {
-      return nil, err
-   }
-   return &item, nil
+   return io.ReadAll(resp.Body)
 }

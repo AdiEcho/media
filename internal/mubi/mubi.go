@@ -9,9 +9,26 @@ import (
    "os"
 )
 
+func (f *flags) write_auth() error {
+   data, err := os.ReadFile("code.txt")
+   if err != nil {
+      return err
+   }
+   var code mubi.LinkCode
+   err = code.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   data, err = (*mubi.Authenticate).Marshal(nil, &code)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/mubi.txt", data, os.ModePerm)
+}
+
 func write_code() error {
-   var data []byte
-   err := (*mubi.LinkCode).New(nil, &data)
+   var code mubi.LinkCode
+   data, err := code.Marshal()
    if err != nil {
       return err
    }
@@ -19,7 +36,6 @@ func write_code() error {
    if err != nil {
       return err
    }
-   var code mubi.LinkCode
    err = code.Unmarshal(data)
    if err != nil {
       return err
@@ -51,23 +67,6 @@ func (f *flags) write_secure() error {
       return err
    }
    return os.WriteFile(f.address.String() + ".txt", data, os.ModePerm)
-}
-
-func (f *flags) write_auth() error {
-   data, err := os.ReadFile("code.txt")
-   if err != nil {
-      return err
-   }
-   var code mubi.LinkCode
-   err = code.Unmarshal(data)
-   if err != nil {
-      return err
-   }
-   _, err = code.Authenticate(&data)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/mubi.txt", data, os.ModePerm)
 }
 
 func (f *flags) download() error {

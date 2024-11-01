@@ -8,6 +8,28 @@ import (
    "strings"
 )
 
+func (*LinkCode) Marshal() ([]byte, error) {
+   req, err := http.NewRequest("", "https://api.mubi.com/v3/link_code", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "client": {client},
+      "client-country": {ClientCountry},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   return io.ReadAll(resp.Body)
+}
+
 var ClientCountry = "US"
 
 // "android" requires headers:
@@ -111,26 +133,4 @@ type LinkCode struct {
 
 func (c *LinkCode) Unmarshal(data []byte) error {
    return json.Unmarshal(data, c)
-}
-
-func (*LinkCode) Marshal() ([]byte, error) {
-   req, err := http.NewRequest("", "https://api.mubi.com/v3/link_code", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.Header = http.Header{
-      "client": {client},
-      "client-country": {ClientCountry},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   return io.ReadAll(resp.Body)
 }
