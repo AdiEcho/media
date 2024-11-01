@@ -9,15 +9,6 @@ import (
    "strings"
 )
 
-func (v VideoFiles) Dash() (*VideoFile, bool) {
-   for _, file := range v {
-      if file.Method == "dash" {
-         return &file, true
-      }
-   }
-   return nil, false
-}
-
 func (a *AuthToken) Video(slug string) (*EmbedItem, error) {
    req, err := http.NewRequest("", "https://api.vhx.com", nil)
    if err != nil {
@@ -142,7 +133,7 @@ func (a *AuthToken) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
 }
 
-func (a *AuthToken) New(username, password string, data *[]byte) error {
+func (*AuthToken) Marshal(username, password string) ([]byte, error) {
    resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
       "client_id":  {client_id},
       "grant_type": {"password"},
@@ -150,16 +141,17 @@ func (a *AuthToken) New(username, password string, data *[]byte) error {
       "username":   {username},
    })
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return err
+   return io.ReadAll(resp.Body)
+}
+
+func (v *VideoFiles) Dash() (*VideoFile, bool) {
+   for _, file := range *v {
+      if file.Method == "dash" {
+         return &file, true
+      }
    }
-   if data != nil {
-      *data = body
-      return nil
-   }
-   return a.Unmarshal(body)
+   return nil, false
 }
