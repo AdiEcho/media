@@ -16,12 +16,12 @@ var ClientCountry = "US"
 const client = "web"
 
 type Address struct {
-   s string
+   Text string
 }
 
 func (a *Address) Set(text string) error {
    var ok bool
-   _, a.s, ok = strings.Cut(text, "/films/")
+   _, a.Text, ok = strings.Cut(text, "/films/")
    if !ok {
       return errors.New("/films/")
    }
@@ -40,7 +40,7 @@ type FilmResponse struct {
 }
 
 func (a *Address) String() string {
-   return a.s
+   return a.Text
 }
 
 func (n *Namer) Title() string {
@@ -60,10 +60,11 @@ func (t *TextTrack) String() string {
 }
 
 func (a *Address) Film() (*FilmResponse, error) {
-   req, err := http.NewRequest("", "https://api.mubi.com/v3/films/" + a.s, nil)
+   req, err := http.NewRequest("", "https://api.mubi.com", nil)
    if err != nil {
       return nil, err
    }
+   req.URL.Path = "/v3/films/" + a.Text
    req.Header = http.Header{
       "client": {client},
       "client-country": {ClientCountry},
