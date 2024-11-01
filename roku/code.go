@@ -8,25 +8,6 @@ import (
    "strings"
 )
 
-func (a *AccountCode) String() string {
-   var b strings.Builder
-   b.WriteString("1 Visit the URL\n")
-   b.WriteString("  therokuchannel.com/link\n")
-   b.WriteString("\n")
-   b.WriteString("2 Enter the activation code\n")
-   b.WriteString("  ")
-   b.WriteString(a.Code)
-   return b.String()
-}
-
-type AccountCode struct {
-   Code string
-}
-
-func (a *AccountCode) Unmarshal(data []byte) error {
-   return json.Unmarshal(data, a)
-}
-
 func (AccountCode) Marshal(auth AccountAuth) ([]byte, error) {
    data, err := json.Marshal(map[string]string{"platform": "googletv"})
    if err != nil {
@@ -50,4 +31,23 @@ func (AccountCode) Marshal(auth AccountAuth) ([]byte, error) {
    }
    defer resp.Body.Close()
    return io.ReadAll(resp.Body)
+}
+
+func (a *AccountCode) String() string {
+   var b strings.Builder
+   b.WriteString("1 Visit the URL\n")
+   b.WriteString("  therokuchannel.com/link\n")
+   b.WriteString("\n")
+   b.WriteString("2 Enter the activation code\n")
+   b.WriteString("  ")
+   b.WriteString(a.Code)
+   return b.String()
+}
+
+type AccountCode struct {
+   Code string
+}
+
+func (a *AccountCode) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, a)
 }

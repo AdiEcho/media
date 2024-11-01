@@ -126,9 +126,7 @@ func (a *AccountToken) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
 }
 
-func (a *AccountAuth) Token(
-   code *AccountCode, data *[]byte,
-) (*AccountToken, error) {
+func (AccountToken) Marshal(auth AccountAuth, code AccountCode) ([]byte, error) {
    req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
    if err != nil {
       return nil, err
@@ -136,25 +134,12 @@ func (a *AccountAuth) Token(
    req.URL.Path = "/api/v1/account/activation/" + code.Code
    req.Header = http.Header{
       "user-agent":           {user_agent},
-      "x-roku-content-token": {a.AuthToken},
+      "x-roku-content-token": {auth.AuthToken},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer resp.Body.Close()
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if data != nil {
-      *data = body
-      return nil, nil
-   }
-   var token AccountToken
-   err = token.Unmarshal(body)
-   if err != nil {
-      return nil, err
-   }
-   return &token, nil
+   return io.ReadAll(resp.Body)
 }

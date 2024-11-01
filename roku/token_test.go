@@ -7,24 +7,23 @@ import (
 )
 
 func TestTokenWrite(t *testing.T) {
-   var err error
    // AccountAuth
-   var auth AccountAuth
-   auth.Raw, err = os.ReadFile("auth.txt")
+   data, err := os.ReadFile("auth.txt")
    if err != nil {
       t.Fatal(err)
    }
-   err = auth.Unmarshal()
+   var auth AccountAuth
+   err = auth.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
    // AccountCode
-   var code AccountCode
-   code.Raw, err = os.ReadFile("code.txt")
+   data, err = os.ReadFile("code.txt")
    if err != nil {
       t.Fatal(err)
    }
-   err = code.Unmarshal()
+   var code AccountCode
+   err = code.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
