@@ -3,9 +3,28 @@ package paramount
 import (
    "41.neocities.org/text"
    "fmt"
+   "reflect"
    "testing"
    "time"
 )
+
+func TestSize(t *testing.T) {
+   size := reflect.TypeOf(&struct{}{}).Size()
+   for _, test := range size_tests {
+      if reflect.TypeOf(test).Size() > size {
+         fmt.Printf("*%T\n", test)
+      } else {
+         fmt.Printf("%T\n", test)
+      }
+   }
+}
+
+var size_tests = []any{
+   AppToken{},
+   Number(0),
+   SessionToken{},
+   VideoItem{},
+}
 
 func TestItemUsa(t *testing.T) {
    var token AppToken

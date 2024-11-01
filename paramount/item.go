@@ -70,7 +70,7 @@ func (v *VideoItem) Unmarshal(data []byte) error {
 }
 
 // must use app token and IP address for correct location
-func (VideoItem) Marshal(token AppToken, cid string) ([]byte, error) {
+func (*VideoItem) Marshal(token AppToken, cid string) ([]byte, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err

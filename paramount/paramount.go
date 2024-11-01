@@ -28,7 +28,7 @@ type AppToken struct {
 }
 
 // must use app token and IP address for US
-func (a *AppToken) Session(content_id string) (*SessionToken, error) {
+func (a AppToken) Session(content_id string) (*SessionToken, error) {
    req, err := http.NewRequest("", "https://www.paramountplus.com", nil)
    if err != nil {
       return nil, err

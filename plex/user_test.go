@@ -3,9 +3,31 @@ package plex
 import (
    "41.neocities.org/text"
    "fmt"
+   "reflect"
    "testing"
    "time"
 )
+
+func TestSize(t *testing.T) {
+   size := reflect.TypeOf(&struct{}{}).Size()
+   for _, test := range size_tests {
+      if reflect.TypeOf(test).Size() > size {
+         fmt.Printf("*%T\n", test)
+      } else {
+         fmt.Printf("%T\n", test)
+      }
+   }
+}
+
+var size_tests = []any{
+   Address{},
+   Anonymous{},
+   DiscoverMatch{},
+   MediaPart{},
+   Namer{},
+   OnDemand{},
+   Url{},
+}
 
 var watch_tests = []struct{
    key_id string

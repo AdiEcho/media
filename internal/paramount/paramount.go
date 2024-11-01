@@ -11,6 +11,57 @@ import (
    "sort"
 )
 
+func (f *flags) do_write() error {
+   os.Mkdir(f.content_id, os.ModePerm)
+   // item
+   var (
+      token paramount.AppToken
+      err error
+   )
+   if f.intl {
+      err = token.ComCbsCa()
+   } else {
+      err = token.ComCbsApp()
+   }
+   if err != nil {
+      return err
+   }
+   var item paramount.VideoItem
+   data, err := item.Marshal(token, f.content_id)
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(f.content_id + "/item.txt", data, os.ModePerm)
+   if err != nil {
+      return err
+   }
+   // mpd
+   err = item.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   resp, err := http.Get(item.Mpd())
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   // Body
+   data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(f.content_id + "/body.txt", data, os.ModePerm)
+   if err != nil {
+      return err
+   }
+   // Request
+   data, err = resp.Request.URL.MarshalBinary()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.content_id + "/request.txt", data, os.ModePerm)
+}
+
 func (f *flags) do_read() error {
    data, err := os.ReadFile(f.content_id + "/request.txt")
    if err != nil {
@@ -39,14 +90,14 @@ func (f *flags) do_read() error {
             fmt.Print(&rep, "\n\n")
          }
       case rep.Id:
-         var app paramount.AppToken
+         var token paramount.AppToken
          // INTL does NOT allow anonymous key request, so if you are INTL you
          // will need to use US VPN until someone codes the INTL login
-         err := app.ComCbsApp()
+         err := token.ComCbsApp()
          if err != nil {
             return err
          }
-         f.s.Poster, err = app.Session(f.content_id)
+         f.s.Poster, err = token.Session(f.content_id)
          if err != nil {
             return err
          }
@@ -64,56 +115,4 @@ func (f *flags) do_read() error {
       }
    }
    return nil
-}
-
-func (f *flags) do_write() error {
-   os.Mkdir(f.content_id, os.ModePerm)
-   // item
-   var (
-      app paramount.AppToken
-      err error
-   )
-   if f.intl {
-      err = app.ComCbsCa()
-   } else {
-      err = app.ComCbsApp()
-   }
-   if err != nil {
-      return err
-   }
-   var data []byte
-   _, err = app.Item(f.content_id, &data)
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(f.content_id + "/item.txt", data, os.ModePerm)
-   if err != nil {
-      return err
-   }
-   // mpd
-   var item paramount.VideoItem
-   err = item.Unmarshal(data)
-   if err != nil {
-      return err
-   }
-   resp, err := http.Get(item.Mpd())
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   // Body
-   data, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(f.content_id + "/body.txt", data, os.ModePerm)
-   if err != nil {
-      return err
-   }
-   // Request
-   data, err = resp.Request.URL.MarshalBinary()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.content_id + "/request.txt", data, os.ModePerm)
 }

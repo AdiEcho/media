@@ -19,23 +19,23 @@ type Namer struct {
    Match *DiscoverMatch
 }
 
-func (n *Namer) Episode() int {
+func (n Namer) Episode() int {
    return n.Match.Index
 }
 
-func (n *Namer) Season() int {
+func (n Namer) Season() int {
    return n.Match.ParentIndex
 }
 
-func (n *Namer) Show() string {
+func (n Namer) Show() string {
    return n.Match.GrandparentTitle
 }
 
-func (n *Namer) Title() string {
+func (n Namer) Title() string {
    return n.Match.Title
 }
 
-func (n *Namer) Year() int {
+func (n Namer) Year() int {
    return n.Match.Year
 }
 
@@ -43,7 +43,7 @@ type Address struct {
    Path string
 }
 
-func (a Address) String() string {
+func (a *Address) String() string {
    return a.Path
 }
 
@@ -65,15 +65,15 @@ func (o *OnDemand) Dash() (*MediaPart, bool) {
    return nil, false
 }
 
-func (MediaPart) WrapRequest(b []byte) ([]byte, error) {
+func (*MediaPart) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (MediaPart) RequestHeader() (http.Header, error) {
+func (*MediaPart) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 
-func (MediaPart) UnwrapResponse(b []byte) ([]byte, error) {
+func (*MediaPart) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
