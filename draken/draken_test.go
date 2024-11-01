@@ -6,22 +6,26 @@ import (
    "encoding/base64"
    "fmt"
    "os"
+   "reflect"
    "strings"
    "testing"
    "time"
 )
 
-func TestLogin(t *testing.T) {
-   username, password, ok := strings.Cut(os.Getenv("draken"), ":")
-   if !ok {
-      t.Fatal("Getenv")
+func TestMovie(t *testing.T) {
+   for _, film := range films {
+      var movie FullMovie
+      if err := movie.New(film.custom_id); err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", movie)
+      name, err := text.Name(&Namer{movie})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(99 * time.Millisecond)
    }
-   var login AuthLogin
-   err := login.New(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("login.txt", login.Raw, os.ModePerm)
 }
 
 func TestLicense(t *testing.T) {
@@ -37,12 +41,13 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var login AuthLogin
-   login.Raw, err = os.ReadFile("login.txt")
+   data, err := os.ReadFile("login.txt")
    if err != nil {
       t.Fatal(err)
    }
-   if err = login.Unmarshal(); err != nil {
+   var login AuthLogin
+   err = login.Unmarshal(data)
+   if err != nil {
       t.Fatal(err)
    }
    for _, film := range films {
@@ -73,28 +78,12 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      key, err := module.Key(&Poster{&login, play}, pssh.KeyId)
+      key, err := module.Key(&Poster{login, play}, pssh.KeyId)
       if err != nil {
          t.Fatal(err)
       }
       fmt.Printf("%x\n", key)
       time.Sleep(time.Second)
-   }
-}
-
-func TestMovie(t *testing.T) {
-   for _, film := range films {
-      var movie FullMovie
-      if err := movie.New(film.custom_id); err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", movie)
-      name, err := text.Name(&Namer{&movie})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
-      time.Sleep(99 * time.Millisecond)
    }
 }
 
@@ -116,4 +105,36 @@ var films = []struct {
       key_id:     "ToV4wH2nlVZE8QYLmLywDg==",
       url:        "drakenfilm.se/film/the-card-counter",
    },
+}
+func TestLogin(t *testing.T) {
+   username, password, ok := strings.Cut(os.Getenv("draken"), ":")
+   if !ok {
+      t.Fatal("Getenv")
+   }
+   data, err := AuthLogin{}.Marshal(username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("login.txt", data, os.ModePerm)
+}
+
+func TestSize(t *testing.T) {
+   size := reflect.TypeOf(&struct{}{}).Size()
+   for _, test := range size_tests {
+      if reflect.TypeOf(test).Size() > size {
+         fmt.Printf("*%T\n", test)
+      } else {
+         fmt.Printf("%T\n", test)
+      }
+   }
+}
+
+var size_tests = []any{
+   AuthLogin{},
+   Entitlement{},
+   FullMovie{},
+   Namer{},
+   Playback{},
+   Poster{},
+   header{},
 }

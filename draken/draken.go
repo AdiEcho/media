@@ -97,30 +97,6 @@ func (f *FullMovie) New(custom_id string) error {
    return errors.New("ViewableCustomId")
 }
 
-func (n Namer) Title() string {
-   return n.Movie.Title
-}
-
-func (n Namer) Year() int {
-   return n.Movie.ProductionYear
-}
-
-type Namer struct {
-   Movie *FullMovie
-}
-
-func (Namer) Episode() int {
-   return 0
-}
-
-func (Namer) Season() int {
-   return 0
-}
-
-func (Namer) Show() string {
-   return ""
-}
-
 type FullMovie struct {
    DefaultPlayable struct {
       Id string
@@ -177,11 +153,6 @@ type Playback struct {
    Playlist string
 }
 
-type Poster struct {
-   Login *AuthLogin
-   Play *Playback
-}
-
 func (h *header) set(head http.Header) {
    head.Set(h.key, h.value)
 }
@@ -206,41 +177,6 @@ func (*Poster) UnwrapResponse(b []byte) ([]byte, error) {
 
 func (*Poster) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
-}
-
-func (a *AuthLogin) New(identity, key string, data *[]byte) error {
-   body, err := json.Marshal(map[string]string{
-      "accessKey": key,
-      "identity":  identity,
-   })
-   if err != nil {
-      return err
-   }
-   resp, err := http.Post(
-      "https://drakenfilm.se/api/auth/login", "application/json",
-      bytes.NewReader(body),
-   )
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   body, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   if data != nil {
-      *data = body
-      return nil
-   }
-   return a.Unmarshal(body)
-}
-
-type AuthLogin struct {
-   Token string
-}
-
-func (a *AuthLogin) Unmarshal(data []byte) error {
-   return json.Unmarshal(data, a)
 }
 
 func (a *AuthLogin) Playback(
@@ -277,4 +213,60 @@ func (a *AuthLogin) Playback(
       return nil, err
    }
    return play, nil
+}
+
+type AuthLogin struct {
+   Token string
+}
+
+func (a *AuthLogin) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, a)
+}
+
+func (AuthLogin) Marshal(identity, key string) ([]byte, error) {
+   data, err := json.Marshal(map[string]string{
+      "accessKey": key,
+      "identity":  identity,
+   })
+   if err != nil {
+      return nil, err
+   }
+   resp, err := http.Post(
+      "https://drakenfilm.se/api/auth/login", "application/json",
+      bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
+type Namer struct {
+   Movie FullMovie
+}
+
+type Poster struct {
+   Login AuthLogin
+   Play *Playback
+}
+
+func (n *Namer) Title() string {
+   return n.Movie.Title
+}
+
+func (n *Namer) Year() int {
+   return n.Movie.ProductionYear
+}
+
+func (*Namer) Episode() int {
+   return 0
+}
+
+func (*Namer) Season() int {
+   return 0
+}
+
+func (*Namer) Show() string {
+   return ""
 }

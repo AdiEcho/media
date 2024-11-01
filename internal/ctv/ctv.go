@@ -46,7 +46,7 @@ func (f *flags) download() error {
          if err != nil {
             return err
          }
-         f.s.Name = ctv.Namer{&media}
+         f.s.Name = &ctv.Namer{media}
          f.s.Poster = ctv.Poster{}
          return f.s.Download(rep)
       }
