@@ -11,60 +11,6 @@ import (
    "strings"
 )
 
-func (c *LinkCode) Authenticate() (*Authenticate, error) {
-   body, err := json.Marshal(map[string]string{"auth_token": c.AuthToken})
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(body),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header = http.Header{
-      "client": {client},
-      "client-country": {ClientCountry},
-      "content-type": {"application/json"},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   var auth Authenticate
-   auth.Raw, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   return &auth, nil
-}
-
-func (Authenticate) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-// final slash is needed
-func (Authenticate) RequestUrl() (string, bool) {
-   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
-}
-
-func (Authenticate) UnwrapResponse(b []byte) ([]byte, error) {
-   var data struct {
-      License []byte
-   }
-   err := json.Unmarshal(b, &data)
-   if err != nil {
-      return nil, err
-   }
-   return data.License, nil
-}
-
 func (a *Authenticate) RequestHeader() (http.Header, error) {
    text, err := json.Marshal(map[string]any{
       "merchant": "mubi",
@@ -113,14 +59,75 @@ func (a *Authenticate) Viewing(film *FilmResponse) error {
    return nil
 }
 
+func (*Authenticate) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+// final slash is needed
+func (*Authenticate) RequestUrl() (string, bool) {
+   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
+}
+
+func (*Authenticate) UnwrapResponse(b []byte) ([]byte, error) {
+   var data struct {
+      License []byte
+   }
+   err := json.Unmarshal(b, &data)
+   if err != nil {
+      return nil, err
+   }
+   return data.License, nil
+}
+
 type Authenticate struct {
    Token string
    User struct {
       Id int
    }
-   Raw []byte `json:"-"`
 }
 
-func (a *Authenticate) Unmarshal() error {
-   return json.Unmarshal(a.Raw, a)
+func (a *Authenticate) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, a)
+}
+
+func (c *LinkCode) Authenticate(data *[]byte) (*Authenticate, error) {
+   body, err := json.Marshal(map[string]string{"auth_token": c.AuthToken})
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(body),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "client": {client},
+      "client-country": {ClientCountry},
+      "content-type": {"application/json"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   body, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return nil, err
+   }
+   if data != nil {
+      *data = body
+      return nil, nil
+   }
+   var auth Authenticate
+   err = auth.Unmarshal(body)
+   if err != nil {
+      return nil, err
+   }
+   return &auth, nil
 }

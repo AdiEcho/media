@@ -28,18 +28,6 @@ func (a *Address) Set(text string) error {
    return nil
 }
 
-func (Namer) Episode() int {
-   return 0
-}
-
-func (Namer) Season() int {
-   return 0
-}
-
-func (Namer) Show() string {
-   return ""
-}
-
 type TextTrack struct {
    Id string
    Url string
@@ -92,6 +80,7 @@ func (a *Address) Film() (*FilmResponse, error) {
    }
    return film, nil
 }
+
 func (c *LinkCode) New() error {
    req, err := http.NewRequest("", "https://api.mubi.com/v3/link_code", nil)
    if err != nil {
@@ -136,4 +125,16 @@ type LinkCode struct {
 
 func (c *LinkCode) Unmarshal() error {
    return json.Unmarshal(c.Raw, c)
+}
+
+func (Namer) Episode() int {
+   return 0
+}
+
+func (Namer) Season() int {
+   return 0
+}
+
+func (Namer) Show() string {
+   return ""
 }
