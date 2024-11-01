@@ -9,40 +9,6 @@ import (
    "time"
 )
 
-func TestResolution(t *testing.T) {
-   for _, test := range tests {
-      content := &VideoContent{}
-      err := content.New(test.content_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      err = content.Unmarshal()
-      if err != nil {
-         t.Fatal(err)
-      }
-      if content.Episode() {
-         err := content.New(content.SeriesId)
-         if err != nil {
-            t.Fatal(err)
-         }
-         err = content.Unmarshal()
-         if err != nil {
-            t.Fatal(err)
-         }
-         var ok bool
-         content, ok = content.Get(test.content_id)
-         if !ok {
-            t.Fatal("VideoContent.Get")
-         }
-      }
-      fmt.Println(test.url)
-      for _, v := range content.VideoResources {
-         fmt.Println(v.Resolution, v.Type)
-      }
-      time.Sleep(time.Second)
-   }
-}
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -88,6 +54,32 @@ func TestLicense(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%x\n", key)
+      time.Sleep(time.Second)
+   }
+}
+
+func TestResolution(t *testing.T) {
+   for _, test := range tests {
+      content := &VideoContent{}
+      err := content.New(test.content_id, nil)
+      if err != nil {
+         t.Fatal(err)
+      }
+      if content.Episode() {
+         err := content.New(content.SeriesId, nil)
+         if err != nil {
+            t.Fatal(err)
+         }
+         var ok bool
+         content, ok = content.Get(test.content_id)
+         if !ok {
+            t.Fatal("VideoContent.Get")
+         }
+      }
+      fmt.Println(test.url)
+      for _, v := range content.VideoResources {
+         fmt.Println(v.Resolution, v.Type)
+      }
       time.Sleep(time.Second)
    }
 }

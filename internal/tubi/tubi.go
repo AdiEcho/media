@@ -13,7 +13,7 @@ import (
 
 func (f *flags) write_content() error {
    var data []byte
-   _, err := tubi.Video(f.tubi, &data)
+   err := (*tubi.VideoContent).New(nil, f.tubi, &data)
    if err != nil {
       return err
    }
@@ -23,7 +23,7 @@ func (f *flags) write_content() error {
       return err
    }
    if content.Episode() {
-      _, err = tubi.Video(content.SeriesId, &data)
+      err = (*tubi.VideoContent).New(nil, content.SeriesId, &data)
       if err != nil {
          return err
       }

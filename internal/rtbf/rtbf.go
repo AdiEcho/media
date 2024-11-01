@@ -11,7 +11,8 @@ import (
 )
 
 func (f *flags) authenticate() error {
-   data, err := (*rtbf.AuvioLogin).New(nil, f.email, f.password)
+   var data []byte
+   err := (*rtbf.AuvioLogin).New(nil, f.email, f.password, &data)
    if err != nil {
       return err
    }

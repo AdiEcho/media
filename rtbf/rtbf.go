@@ -137,33 +137,6 @@ type WebToken struct {
    IdToken      string `json:"id_token"`
 }
 
-///
-
-func (a *AuvioLogin) New(id, password string) ([]byte, error) {
-   resp, err := http.PostForm(
-      "https://login.auvio.rtbf.be/accounts.login", url.Values{
-         "APIKey":   {api_key},
-         "loginID":  {id},
-         "password": {password},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if a != nil {
-      err = a.Unmarshal(data)
-      if err != nil {
-         return nil, err
-      }
-   }
-   return data, nil
-}
-
 func (a Address) Page() (*AuvioPage, error) {
    resp, err := http.Get(
       "https://bff-service.rtbf.be/auvio/v1.23/pages" + a.Path,
@@ -286,24 +259,6 @@ func (a *AuvioAuth) Entitlement(asset_id string) (*Entitlement, error) {
    return title, nil
 }
 
-func (a *AuvioLogin) Unmarshal(data []byte) error {
-   err := json.Unmarshal(data, a)
-   if err != nil {
-      return err
-   }
-   if v := a.ErrorMessage; v != "" {
-      return errors.New(v)
-   }
-   return nil
-}
-
-type AuvioLogin struct {
-   ErrorMessage string
-   SessionInfo  struct {
-      CookieValue string
-   }
-}
-
 func (a *AuvioLogin) Token() (*WebToken, error) {
    resp, err := http.PostForm(
       "https://login.auvio.rtbf.be/accounts.getJWT", url.Values{
@@ -324,4 +279,45 @@ func (a *AuvioLogin) Token() (*WebToken, error) {
       return nil, errors.New(v)
    }
    return &web, nil
+}
+
+type AuvioLogin struct {
+   ErrorMessage string
+   SessionInfo  struct {
+      CookieValue string
+   }
+}
+
+func (a *AuvioLogin) Unmarshal(data []byte) error {
+   err := json.Unmarshal(data, a)
+   if err != nil {
+      return err
+   }
+   if v := a.ErrorMessage; v != "" {
+      return errors.New(v)
+   }
+   return nil
+}
+
+func (a *AuvioLogin) New(id, password string, data *[]byte) error {
+   resp, err := http.PostForm(
+      "https://login.auvio.rtbf.be/accounts.login", url.Values{
+         "APIKey":   {api_key},
+         "loginID":  {id},
+         "password": {password},
+      },
+   )
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   body, err := io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   if data != nil {
+      *data = body
+      return nil
+   }
+   return a.Unmarshal(body)
 }
