@@ -17,11 +17,11 @@ func (f *flags) do_login() error {
    }
    var token max.BoltToken
    token.St = string(data)
-   login, err := token.Login()
+   _, err = token.Login(&data)
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home+"/max.txt", login.RawToken, os.ModePerm)
+   return os.WriteFile(f.home+"/max.txt", data, os.ModePerm)
 }
 
 func (f *flags) download() error {
