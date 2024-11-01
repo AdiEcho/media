@@ -7,18 +7,6 @@ import (
    "net/http"
 )
 
-func (GizmoMovie) Show() string {
-   return ""
-}
-
-func (GizmoMovie) Season() int {
-   return 0
-}
-
-func (GizmoMovie) Episode() int {
-   return 0
-}
-
 type GizmoMovie struct {
    Data struct {
       Title string
@@ -79,21 +67,6 @@ type OnDemand struct {
    VideoType                string `json:"video_type"`
 }
 
-func (StreamInfo) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-// github.com/mitmproxy/mitmproxy/blob/main/mitmproxy/contentviews/protobuf.py
-func (StreamInfo) RequestHeader() (http.Header, error) {
-   head := http.Header{}
-   head.Set("content-type", "application/x-protobuf")
-   return head, nil
-}
-
-func (StreamInfo) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 type StreamInfo struct {
    LicenseUrl   string `json:"license_url"`
    Url          string
@@ -102,4 +75,31 @@ type StreamInfo struct {
 
 func (s *StreamInfo) RequestUrl() (string, bool) {
    return s.LicenseUrl, true
+}
+
+func (*GizmoMovie) Show() string {
+   return ""
+}
+
+func (*GizmoMovie) Season() int {
+   return 0
+}
+
+func (*GizmoMovie) Episode() int {
+   return 0
+}
+
+func (*StreamInfo) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+// github.com/mitmproxy/mitmproxy/blob/main/mitmproxy/contentviews/protobuf.py
+func (*StreamInfo) RequestHeader() (http.Header, error) {
+   head := http.Header{}
+   head.Set("content-type", "application/x-protobuf")
+   return head, nil
+}
+
+func (*StreamInfo) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
 }

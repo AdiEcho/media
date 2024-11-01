@@ -11,56 +11,6 @@ import (
    "sort"
 )
 
-func (f *flags) do_write() error {
-   os.Mkdir(f.content_id, os.ModePerm)
-   // item
-   var (
-      app paramount.AppToken
-      err error
-   )
-   if f.intl {
-      err = app.ComCbsCa()
-   } else {
-      err = app.ComCbsApp()
-   }
-   if err != nil {
-      return err
-   }
-   item, err := app.Item(f.content_id)
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(f.content_id + "/item.txt", item.Raw, os.ModePerm)
-   if err != nil {
-      return err
-   }
-   // mpd
-   err = item.Unmarshal()
-   if err != nil {
-      return err
-   }
-   resp, err := http.Get(item.Mpd())
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   // Body
-   data, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   err = os.WriteFile(f.content_id + "/body.txt", data, os.ModePerm)
-   if err != nil {
-      return err
-   }
-   // Request
-   data, err = resp.Request.URL.MarshalBinary()
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.content_id + "/request.txt", data, os.ModePerm)
-}
-
 func (f *flags) do_read() error {
    data, err := os.ReadFile(f.content_id + "/request.txt")
    if err != nil {
@@ -100,12 +50,12 @@ func (f *flags) do_read() error {
          if err != nil {
             return err
          }
-         var item paramount.VideoItem
-         item.Raw, err = os.ReadFile(f.content_id + "/item.txt")
+         data, err = os.ReadFile(f.content_id + "/item.txt")
          if err != nil {
             return err
          }
-         err = item.Unmarshal()
+         var item paramount.VideoItem
+         err = item.Unmarshal(data)
          if err != nil {
             return err
          }
@@ -114,4 +64,56 @@ func (f *flags) do_read() error {
       }
    }
    return nil
+}
+
+func (f *flags) do_write() error {
+   os.Mkdir(f.content_id, os.ModePerm)
+   // item
+   var (
+      app paramount.AppToken
+      err error
+   )
+   if f.intl {
+      err = app.ComCbsCa()
+   } else {
+      err = app.ComCbsApp()
+   }
+   if err != nil {
+      return err
+   }
+   var data []byte
+   _, err = app.Item(f.content_id, &data)
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(f.content_id + "/item.txt", data, os.ModePerm)
+   if err != nil {
+      return err
+   }
+   // mpd
+   var item paramount.VideoItem
+   err = item.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   resp, err := http.Get(item.Mpd())
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   // Body
+   data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   err = os.WriteFile(f.content_id + "/body.txt", data, os.ModePerm)
+   if err != nil {
+      return err
+   }
+   // Request
+   data, err = resp.Request.URL.MarshalBinary()
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.content_id + "/request.txt", data, os.ModePerm)
 }
