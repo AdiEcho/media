@@ -17,7 +17,7 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   match, err := user.Match(f.address)
+   match, err := user.Match(&f.address)
    if err != nil {
       return err
    }

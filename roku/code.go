@@ -27,14 +27,14 @@ func (a *AccountCode) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
 }
 
-func (a *AccountAuth) Code(data *[]byte) (*AccountCode, error) {
-   body, err := json.Marshal(map[string]string{"platform": "googletv"})
+func (AccountCode) Marshal(auth AccountAuth) ([]byte, error) {
+   data, err := json.Marshal(map[string]string{"platform": "googletv"})
    if err != nil {
       return nil, err
    }
    req, err := http.NewRequest(
       "POST", "https://googletv.web.roku.com/api/v1/account/activation",
-      bytes.NewReader(body),
+      bytes.NewReader(data),
    )
    if err != nil {
       return nil, err
@@ -42,25 +42,12 @@ func (a *AccountAuth) Code(data *[]byte) (*AccountCode, error) {
    req.Header = http.Header{
       "content-type":         {"application/json"},
       "user-agent":           {user_agent},
-      "x-roku-content-token": {a.AuthToken},
+      "x-roku-content-token": {auth.AuthToken},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return nil, err
    }
    defer resp.Body.Close()
-   body, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if data != nil {
-      *data = body
-      return nil, nil
-   }
-   var code AccountCode
-   err = code.Unmarshal(body)
-   if err != nil {
-      return nil, err
-   }
-   return &code, nil
+   return io.ReadAll(resp.Body)
 }

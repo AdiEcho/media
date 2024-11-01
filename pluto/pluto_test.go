@@ -11,6 +11,23 @@ import (
    "time"
 )
 
+func TestClip(t *testing.T) {
+   for _, test := range video_tests {
+      clip, err := OnDemand{Id: test.id}.Clip()
+      if err != nil {
+         t.Fatal(err)
+      }
+      manifest, ok := clip.Dash()
+      if !ok {
+         t.Fatal("EpisodeClip.Dash")
+      }
+      manifest.Scheme = Base[0].Scheme
+      manifest.Host = Base[0].Host
+      fmt.Printf("%+v\n", manifest)
+      time.Sleep(time.Second)
+   }
+}
+
 func TestSize(t *testing.T) {
    size := reflect.TypeOf(&struct{}{}).Size()
    for _, test := range size_tests {
@@ -91,23 +108,6 @@ func TestLicense(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%x\n", key)
-      time.Sleep(time.Second)
-   }
-}
-
-func TestClip(t *testing.T) {
-   for _, test := range video_tests {
-      clip, err := OnDemand{Id: test.id}.Clip()
-      if err != nil {
-         t.Fatal(err)
-      }
-      manifest, ok := clip.Dash()
-      if !ok {
-         t.Fatal("EpisodeClip.Dash")
-      }
-      manifest.Scheme = Base[0].Scheme
-      manifest.Host = Base[0].Host
-      fmt.Printf("%+v\n", manifest)
       time.Sleep(time.Second)
    }
 }

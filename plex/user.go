@@ -31,7 +31,7 @@ func (a *Anonymous) New() error {
    return json.NewDecoder(resp.Body).Decode(a)
 }
 
-func (a Anonymous) Match(web Address) (*DiscoverMatch, error) {
+func (a *Anonymous) Match(web *Address) (*DiscoverMatch, error) {
    req, err := http.NewRequest(
       "", "https://discover.provider.plex.tv/library/metadata/matches", nil,
    )
@@ -63,7 +63,7 @@ func (a Anonymous) Match(web Address) (*DiscoverMatch, error) {
    return &value.MediaContainer.Metadata[0], nil
 }
 
-func (a Anonymous) Video(
+func (a *Anonymous) Video(
    match *DiscoverMatch, forward string,
 ) (*OnDemand, error) {
    req, err := http.NewRequest("", "https://vod.provider.plex.tv", nil)

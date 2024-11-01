@@ -57,10 +57,10 @@ func (a *AccountAuth) Unmarshal(data []byte) error {
 }
 
 // token can be nil
-func (a *AccountAuth) New(token *AccountToken, data *[]byte) error {
+func (AccountAuth) Marshal(token *AccountToken) ([]byte, error) {
    req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
    if err != nil {
-      return err
+      return nil, err
    }
    req.URL.Path = "/api/v1/account/token"
    req.Header.Set("user-agent", user_agent)
@@ -69,16 +69,8 @@ func (a *AccountAuth) New(token *AccountToken, data *[]byte) error {
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   if data != nil {
-      *data = body
-      return nil
-   }
-   return a.Unmarshal(body)
+   return io.ReadAll(resp.Body)
 }

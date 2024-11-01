@@ -27,17 +27,20 @@ func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
 }
 
 type Url struct {
-   Url *url.URL
+   Url url.URL
 }
 
 func (u *Url) UnmarshalText(text []byte) error {
-   u.Url = &url.URL{}
    return u.Url.UnmarshalBinary(text)
 }
 
 type VideoSeason struct {
    Episodes []*OnDemand
    show     *OnDemand
+}
+
+type Namer struct {
+   Video *OnDemand
 }
 
 func (Namer) Season() int {
@@ -108,7 +111,7 @@ type EpisodeClip struct {
 func (e *EpisodeClip) Dash() (*url.URL, bool) {
    for _, source := range e.Sources {
       if source.Type == "DASH" {
-         return source.File.Url, true
+         return &source.File.Url, true
       }
    }
    return nil, false
@@ -126,10 +129,6 @@ type FileBase struct {
    Scheme string
    Host   string
    Status string
-}
-
-type Namer struct {
-   Video *OnDemand
 }
 
 func (a Address) Video(forward string) (*OnDemand, error) {

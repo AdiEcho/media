@@ -43,7 +43,7 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    for _, test := range watch_tests {
-      match, err := user.Match(Address{test.path})
+      match, err := user.Match(&Address{test.path})
       if err != nil {
          t.Fatal(err)
       }
