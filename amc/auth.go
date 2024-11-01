@@ -141,47 +141,23 @@ type Authorization struct {
    }
 }
 
-///
-
-func (a *Authorization) Refresh(data *[]byte) error {
-   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
-   if err != nil {
-      return err
-   }
-   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
-   req.Header.Set("authorization", "Bearer " + a.Data.RefreshToken)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return errors.New(resp.Status)
-   }
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   if data != nil {
-      *data = body
-      return nil
-   }
-   return a.Unmarshal(body)
+func (a *Authorization) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, a)
 }
 
-func (a *Authorization) Login(email, password string, data *[]byte) error {
-   body, err := json.Marshal(map[string]string{
+func (a *Authorization) Login(email, password string) ([]byte, error) {
+   data, err := json.Marshal(map[string]string{
       "email": email,
       "password": password,
    })
    if err != nil {
-      return err
+      return nil, err
    }
    req, err := http.NewRequest(
-      "POST", "https://gw.cds.amcn.com", bytes.NewReader(body),
+      "POST", "https://gw.cds.amcn.com", bytes.NewReader(data),
    )
    if err != nil {
-      return err
+      return nil, err
    }
    req.URL.Path = "/auth-orchestration-id/api/v1/login"
    req.Header = http.Header{
@@ -199,23 +175,29 @@ func (a *Authorization) Login(email, password string, data *[]byte) error {
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
    if resp.StatusCode != http.StatusOK {
-      return errors.New(resp.Status)
+      return nil, errors.New(resp.Status)
    }
-   body, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   if data != nil {
-      *data = body
-      return nil
-   }
-   return a.Unmarshal(body)
+   return io.ReadAll(resp.Body)
 }
 
-func (a *Authorization) Unmarshal(data []byte) error {
-   return json.Unmarshal(data, a)
+func (a *Authorization) Refresh() ([]byte, error) {
+   req, err := http.NewRequest("POST", "https://gw.cds.amcn.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/auth-orchestration-id/api/v1/refresh"
+   req.Header.Set("authorization", "Bearer " + a.Data.RefreshToken)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
+   }
+   return io.ReadAll(resp.Body)
 }

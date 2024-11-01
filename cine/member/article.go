@@ -9,33 +9,6 @@ import (
    "strings"
 )
 
-type OperationArticle struct {
-   Assets         []*ArticleAsset
-   CanonicalTitle string `json:"canonical_title"`
-   Id             int
-   Metas          []struct {
-      Key   string
-      Value string
-   }
-}
-
-func (o *OperationArticle) Unmarshal(data []byte) error {
-   var value struct {
-      Data struct {
-         Article OperationArticle
-      }
-   }
-   err := json.Unmarshal(data, &value)
-   if err != nil {
-      return err
-   }
-   *o = value.Data.Article
-   for _, asset := range o.Assets {
-      asset.article = o
-   }
-   return nil
-}
-
 // NO ANONYMOUS QUERY
 const query_article = `
 query Article($articleUrlSlug: String) {
@@ -119,14 +92,41 @@ func (*OperationArticle) Show() string {
    return ""
 }
 
-func (a *Address) Article(data *[]byte) (*OperationArticle, error) {
+type OperationArticle struct {
+   Assets         []*ArticleAsset
+   CanonicalTitle string `json:"canonical_title"`
+   Id             int
+   Metas          []struct {
+      Key   string
+      Value string
+   }
+}
+
+func (o *OperationArticle) Unmarshal(data []byte) error {
+   var value struct {
+      Data struct {
+         Article OperationArticle
+      }
+   }
+   err := json.Unmarshal(data, &value)
+   if err != nil {
+      return err
+   }
+   *o = value.Data.Article
+   for _, asset := range o.Assets {
+      asset.article = o
+   }
+   return nil
+}
+
+func (*OperationArticle) Marshal(web Address) ([]byte, error) {
    var value struct {
       Query     string `json:"query"`
       Variables struct {
          ArticleUrlSlug string `json:"articleUrlSlug"`
       } `json:"variables"`
    }
-   value.Variables.ArticleUrlSlug = a.Path
+   value.Variables.ArticleUrlSlug = web.Path
    value.Query = query_article
    body, err := json.Marshal(value)
    if err != nil {
@@ -140,18 +140,5 @@ func (a *Address) Article(data *[]byte) (*OperationArticle, error) {
       return nil, err
    }
    defer resp.Body.Close()
-   body, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return nil, err
-   }
-   if data != nil {
-      *data = body
-      return nil, nil
-   }
-   var article OperationArticle
-   err = article.Unmarshal(body)
-   if err != nil {
-      return nil, err
-   }
-   return &article, nil
+   return io.ReadAll(resp.Body)
 }
