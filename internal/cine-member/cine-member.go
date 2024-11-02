@@ -11,6 +11,14 @@ import (
    "path"
 )
 
+func (f *flags) write_user() error {
+   data, err := member.OperationUser{}.Marshal(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/cine-member.txt", data, os.ModePerm)
+}
+
 func (f *flags) write_play() error {
    os.Mkdir(f.base(), os.ModePerm)
    // 1. write OperationArticle
@@ -41,19 +49,11 @@ func (f *flags) write_play() error {
    if !ok {
       return errors.New("OperationArticle.Film")
    }
-   data, err = (*member.OperationPlay).Marshal(nil, &user, asset)
+   data, err = member.OperationPlay{}.Marshal(&user, asset)
    if err != nil {
       return err
    }
    return os.WriteFile(f.base() + "/play.txt", data, os.ModePerm)
-}
-
-func (f *flags) write_user() error {
-   data, err := (*member.OperationUser).Marshal(nil, f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/cine-member.txt", data, os.ModePerm)
 }
 
 func (f *flags) download() error {

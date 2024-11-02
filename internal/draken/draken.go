@@ -11,6 +11,14 @@ import (
    "sort"
 )
 
+func (f *flags) authenticate() error {
+   data, err := draken.AuthLogin{}.Marshal(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/draken.txt", data, os.ModePerm)
+}
+
 func (f *flags) download() error {
    data, err := os.ReadFile(f.home + "/draken.txt")
    if err != nil {
@@ -63,12 +71,4 @@ func (f *flags) download() error {
       }
    }
    return nil
-}
-
-func (f *flags) authenticate() error {
-   data, err := (*draken.AuthLogin).Marshal(nil, f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/draken.txt", data, os.ModePerm)
 }

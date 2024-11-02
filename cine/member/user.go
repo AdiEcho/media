@@ -7,7 +7,7 @@ import (
    "net/http"
 )
 
-func (*OperationUser) Marshal(email, password string) ([]byte, error) {
+func (OperationUser) Marshal(email, password string) ([]byte, error) {
    var value struct {
       Query     string `json:"query"`
       Variables struct {

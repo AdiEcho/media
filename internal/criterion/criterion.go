@@ -13,7 +13,7 @@ import (
 )
 
 func (f *flags) authenticate() error {
-   data, err := (*criterion.AuthToken).Marshal(nil, f.email, f.password)
+   data, err := criterion.AuthToken{}.Marshal(f.email, f.password)
    if err != nil {
       return err
    }

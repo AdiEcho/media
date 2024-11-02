@@ -9,6 +9,20 @@ import (
    "strings"
 )
 
+func (AuthToken) Marshal(username, password string) ([]byte, error) {
+   resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
+      "client_id":  {client_id},
+      "grant_type": {"password"},
+      "password":   {password},
+      "username":   {username},
+   })
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
 func (a *AuthToken) Video(slug string) (*EmbedItem, error) {
    req, err := http.NewRequest("", "https://api.vhx.com", nil)
    if err != nil {
@@ -131,20 +145,6 @@ type AuthToken struct {
 
 func (a *AuthToken) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
-}
-
-func (*AuthToken) Marshal(username, password string) ([]byte, error) {
-   resp, err := http.PostForm("https://auth.vhx.com/v1/oauth/token", url.Values{
-      "client_id":  {client_id},
-      "grant_type": {"password"},
-      "password":   {password},
-      "username":   {username},
-   })
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   return io.ReadAll(resp.Body)
 }
 
 func (v *VideoFiles) Dash() (*VideoFile, bool) {

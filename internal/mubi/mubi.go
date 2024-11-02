@@ -19,7 +19,7 @@ func (f *flags) write_auth() error {
    if err != nil {
       return err
    }
-   data, err = (*mubi.Authenticate).Marshal(nil, &code)
+   data, err = mubi.Authenticate{}.Marshal(&code)
    if err != nil {
       return err
    }

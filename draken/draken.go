@@ -9,7 +9,7 @@ import (
    "strings"
 )
 
-func (*AuthLogin) Marshal(identity, key string) ([]byte, error) {
+func (AuthLogin) Marshal(identity, key string) ([]byte, error) {
    data, err := json.Marshal(map[string]string{
       "accessKey": key,
       "identity":  identity,

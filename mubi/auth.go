@@ -11,6 +11,35 @@ import (
    "strings"
 )
 
+func (Authenticate) Marshal(code *LinkCode) ([]byte, error) {
+   data, err := json.Marshal(map[string]string{"auth_token": code.AuthToken})
+   if err != nil {
+      return nil, err
+   }
+   req, err := http.NewRequest(
+      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "client": {client},
+      "client-country": {ClientCountry},
+      "content-type": {"application/json"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b bytes.Buffer
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   return io.ReadAll(resp.Body)
+}
+
 func (a *Authenticate) RequestHeader() (http.Header, error) {
    text, err := json.Marshal(map[string]any{
       "merchant": "mubi",
@@ -88,33 +117,4 @@ type Authenticate struct {
 
 func (a *Authenticate) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
-}
-
-func (*Authenticate) Marshal(code *LinkCode) ([]byte, error) {
-   data, err := json.Marshal(map[string]string{"auth_token": code.AuthToken})
-   if err != nil {
-      return nil, err
-   }
-   req, err := http.NewRequest(
-      "POST", "https://api.mubi.com/v3/authenticate", bytes.NewReader(data),
-   )
-   if err != nil {
-      return nil, err
-   }
-   req.Header = http.Header{
-      "client": {client},
-      "client-country": {ClientCountry},
-      "content-type": {"application/json"},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b bytes.Buffer
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   return io.ReadAll(resp.Body)
 }

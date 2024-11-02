@@ -9,7 +9,7 @@ import (
 )
 
 // hard geo block
-func (*OperationPlay) Marshal(
+func (OperationPlay) Marshal(
    user *OperationUser, asset *ArticleAsset,
 ) ([]byte, error) {
    var value struct {

@@ -14,7 +14,7 @@ import (
 // you must
 // /authentication/linkDevice/initiate
 // first or this will always fail
-func (*LinkLogin) Marshal(token *BoltToken) ([]byte, error) {
+func (LinkLogin) Marshal(token *BoltToken) ([]byte, error) {
    req, err := http.NewRequest(
       "POST", prd_api + "/authentication/linkDevice/login", nil,
    )
