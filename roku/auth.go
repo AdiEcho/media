@@ -9,6 +9,25 @@ import (
    "strings"
 )
 
+// token can be nil
+func (*AccountAuth) Marshal(token *AccountToken) ([]byte, error) {
+   req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/api/v1/account/token"
+   req.Header.Set("user-agent", user_agent)
+   if token != nil {
+      req.Header.Set("x-roku-content-token", token.Token)
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
 func (a *AccountAuth) Playback(roku_id string) (*Playback, error) {
    body, err := json.Marshal(map[string]string{
       "mediaFormat": "DASH",
@@ -54,23 +73,4 @@ type AccountAuth struct {
 
 func (a *AccountAuth) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
-}
-
-// token can be nil
-func (AccountAuth) Marshal(token *AccountToken) ([]byte, error) {
-   req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/api/v1/account/token"
-   req.Header.Set("user-agent", user_agent)
-   if token != nil {
-      req.Header.Set("x-roku-content-token", token.Token)
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   return io.ReadAll(resp.Body)
 }

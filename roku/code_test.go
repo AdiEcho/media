@@ -1,12 +1,10 @@
 package roku
 
 import (
-   "41.neocities.org/text"
    "fmt"
    "os"
    "reflect"
    "testing"
-   "time"
 )
 
 func TestCode(t *testing.T) {
@@ -23,7 +21,7 @@ func TestCode(t *testing.T) {
    }
    // AccountCode
    var code AccountCode
-   data, err = code.Marshal(auth)
+   data, err = code.Marshal(&auth)
    if err != nil {
       t.Fatal(err)
    }

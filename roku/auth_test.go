@@ -10,6 +10,22 @@ import (
    "time"
 )
 
+func TestContent(t *testing.T) {
+   for _, test := range tests {
+      var home HomeScreen
+      err := home.New(test.id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      name, err := text.Name(&Namer{home})
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%q\n", name)
+      time.Sleep(time.Second)
+   }
+}
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -56,22 +72,6 @@ func TestLicense(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%x\n", key)
-      time.Sleep(time.Second)
-   }
-}
-
-func TestContent(t *testing.T) {
-   for _, test := range tests {
-      var home HomeScreen
-      err := home.New(test.id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      name, err := text.Name(Namer{home})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
 }

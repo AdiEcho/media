@@ -28,25 +28,31 @@ func TestTokenWrite(t *testing.T) {
       t.Fatal(err)
    }
    // AccountToken
-   token, err := auth.Token(&code)
+   data, err = (*AccountToken).Marshal(nil, &auth, &code)
    if err != nil {
       t.Fatal(err)
    }
-   os.WriteFile("token.txt", token.Raw, os.ModePerm)
+   os.WriteFile("token.txt", data, os.ModePerm)
 }
 
 func TestTokenRead(t *testing.T) {
-   var err error
    // AccountToken
-   var token AccountToken
-   token.Raw, err = os.ReadFile("token.txt")
+   data, err := os.ReadFile("token.txt")
    if err != nil {
       t.Fatal(err)
    }
-   token.Unmarshal()
+   var token AccountToken
+   err = token.Unmarshal(data)
+   if err != nil {
+      t.Fatal(err)
+   }
    // AccountAuth
    var auth AccountAuth
-   err = auth.New(&token)
+   data, err = auth.Marshal(&token)
+   if err != nil {
+      t.Fatal(err)
+   }
+   err = auth.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }

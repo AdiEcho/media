@@ -10,6 +10,26 @@ import (
    "time"
 )
 
+func (*AccountToken) Marshal(
+   auth *AccountAuth, code *AccountCode,
+) ([]byte, error) {
+   req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/api/v1/account/activation/" + code.Code
+   req.Header = http.Header{
+      "user-agent":           {user_agent},
+      "x-roku-content-token": {auth.AuthToken},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
 const user_agent = "trc-googletv; production; 0"
 
 type HomeScreen struct {
@@ -70,41 +90,6 @@ type Namer struct {
    Home HomeScreen
 }
 
-func (n Namer) Year() int {
-   return n.Home.ReleaseDate.Year()
-}
-
-func (n Namer) Season() int {
-   return n.Home.SeasonNumber
-}
-
-func (n Namer) Episode() int {
-   return n.Home.EpisodeNumber
-}
-
-func (n Namer) Title() string {
-   return n.Home.Title
-}
-
-func (n Namer) Show() string {
-   if v := n.Home.Series; v != nil {
-      return v.Title
-   }
-   return ""
-}
-
-func (Playback) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (Playback) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Playback) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 type Playback struct {
    Drm struct {
       Widevine struct {
@@ -126,20 +111,37 @@ func (a *AccountToken) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
 }
 
-func (AccountToken) Marshal(auth AccountAuth, code AccountCode) ([]byte, error) {
-   req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)
-   if err != nil {
-      return nil, err
+func (n *Namer) Year() int {
+   return n.Home.ReleaseDate.Year()
+}
+
+func (n *Namer) Season() int {
+   return n.Home.SeasonNumber
+}
+
+func (n *Namer) Episode() int {
+   return n.Home.EpisodeNumber
+}
+
+func (n *Namer) Title() string {
+   return n.Home.Title
+}
+
+func (n *Namer) Show() string {
+   if v := n.Home.Series; v != nil {
+      return v.Title
    }
-   req.URL.Path = "/api/v1/account/activation/" + code.Code
-   req.Header = http.Header{
-      "user-agent":           {user_agent},
-      "x-roku-content-token": {auth.AuthToken},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   return io.ReadAll(resp.Body)
+   return ""
+}
+
+func (*Playback) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (*Playback) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*Playback) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
 }

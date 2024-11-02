@@ -8,7 +8,7 @@ import (
    "strings"
 )
 
-func (AccountCode) Marshal(auth AccountAuth) ([]byte, error) {
+func (*AccountCode) Marshal(auth *AccountAuth) ([]byte, error) {
    data, err := json.Marshal(map[string]string{"platform": "googletv"})
    if err != nil {
       return nil, err
