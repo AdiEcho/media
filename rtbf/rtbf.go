@@ -11,6 +11,29 @@ import (
    "strings"
 )
 
+func (a Address) Page() (*AuvioPage, error) {
+   resp, err := http.Get(
+      "https://bff-service.rtbf.be/auvio/v1.23/pages" + a.Path,
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
+   }
+   var value struct {
+      Data struct {
+         Content AuvioPage
+      }
+   }
+   err = json.NewDecoder(resp.Body).Decode(&value)
+   if err != nil {
+      return nil, err
+   }
+   return &value.Data.Content, nil
+}
+
 func (a *Address) Set(s string) error {
    s = strings.TrimPrefix(s, "https://")
    a.Path = strings.TrimPrefix(s, "auvio.rtbf.be")
@@ -40,20 +63,6 @@ func (e *Entitlement) RequestUrl() (string, bool) {
       "ls_session": {e.PlayToken},
    }.Encode()
    return u.String(), true
-}
-
-func (Entitlement) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Entitlement) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Entitlement) RequestHeader() (http.Header, error) {
-   head := http.Header{}
-   head.Set("content-type", "application/x-protobuf")
-   return head, nil
 }
 
 type Entitlement struct {
@@ -137,29 +146,6 @@ type WebToken struct {
    IdToken      string `json:"id_token"`
 }
 
-func (a Address) Page() (*AuvioPage, error) {
-   resp, err := http.Get(
-      "https://bff-service.rtbf.be/auvio/v1.23/pages" + a.Path,
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      return nil, errors.New(resp.Status)
-   }
-   var value struct {
-      Data struct {
-         Content AuvioPage
-      }
-   }
-   err = json.NewDecoder(resp.Body).Decode(&value)
-   if err != nil {
-      return nil, err
-   }
-   return &value.Data.Content, nil
-}
-
 func (w *WebToken) Auth() (*AuvioAuth, error) {
    var value struct {
       Device struct {
@@ -170,7 +156,7 @@ func (w *WebToken) Auth() (*AuvioAuth, error) {
    }
    value.Device.Type = "WEB"
    value.Jwt = w.IdToken
-   body, err := json.Marshal(value)
+   data, err := json.Marshal(value)
    if err != nil {
       return nil, err
    }
@@ -181,7 +167,7 @@ func (w *WebToken) Auth() (*AuvioAuth, error) {
       return b.String()
    }
    resp, err := http.Post(
-      web(), "application/json", bytes.NewReader(body),
+      web(), "application/json", bytes.NewReader(data),
    )
    if err != nil {
       return nil, err
@@ -197,10 +183,6 @@ func (w *WebToken) Auth() (*AuvioAuth, error) {
 
 type Address struct {
    Path string
-}
-
-func (a Address) String() string {
-   return a.Path
 }
 
 // hard coded in JavaScript
@@ -299,7 +281,25 @@ func (a *AuvioLogin) Unmarshal(data []byte) error {
    return nil
 }
 
-func (AuvioLogin) Marshal(id, password string) ([]byte, error) {
+func (*Entitlement) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*Entitlement) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*Entitlement) RequestHeader() (http.Header, error) {
+   head := http.Header{}
+   head.Set("content-type", "application/x-protobuf")
+   return head, nil
+}
+
+func (a *Address) String() string {
+   return a.Path
+}
+
+func (*AuvioLogin) Marshal(id, password string) ([]byte, error) {
    resp, err := http.PostForm(
       "https://login.auvio.rtbf.be/accounts.login", url.Values{
          "APIKey":   {api_key},

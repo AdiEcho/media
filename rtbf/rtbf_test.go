@@ -12,6 +12,18 @@ import (
    "time"
 )
 
+func TestAccountsLogin(t *testing.T) {
+   username, password, ok := strings.Cut(os.Getenv("rtbf"), ":")
+   if !ok {
+      t.Fatal("Getenv")
+   }
+   data, err := (*AuvioLogin).Marshal(nil, username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("login.txt", data, os.ModePerm)
+}
+
 func TestWidevine(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -25,12 +37,12 @@ func TestWidevine(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var login AuvioLogin
-   login.Raw, err = os.ReadFile(home + "/rtbf.txt")
+   data, err := os.ReadFile(home + "/rtbf.txt")
    if err != nil {
       t.Fatal(err)
    }
-   err = login.Unmarshal()
+   var login AuvioLogin
+   err = login.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
@@ -72,40 +84,6 @@ func TestWidevine(t *testing.T) {
       fmt.Printf("%x\n", key)
       time.Sleep(time.Second)
    }
-}
-func TestAccountsLogin(t *testing.T) {
-   username, password, ok := strings.Cut(os.Getenv("rtbf"), ":")
-   if !ok {
-      t.Fatal("Getenv")
-   }
-   data, err := AuvioLogin{}.Marshal(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("login.txt", data, os.ModePerm)
-}
-
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
-   }
-}
-
-var size_tests = []any{
-   Address{},
-   AuvioAuth{},
-   AuvioLogin{},
-   AuvioPage{},
-   Entitlement{},
-   Namer{},
-   Subtitle{},
-   Title{},
-   WebToken{},
 }
 
 var tests = []struct{
@@ -192,4 +170,27 @@ func TestPage(t *testing.T) {
       fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
+}
+
+func TestSize(t *testing.T) {
+   size := reflect.TypeOf(&struct{}{}).Size()
+   for _, test := range size_tests {
+      if reflect.TypeOf(test).Size() > size {
+         fmt.Printf("*%T\n", test)
+      } else {
+         fmt.Printf("%T\n", test)
+      }
+   }
+}
+
+var size_tests = []any{
+   Address{},
+   AuvioAuth{},
+   AuvioLogin{},
+   AuvioPage{},
+   Entitlement{},
+   Namer{},
+   Subtitle{},
+   Title{},
+   WebToken{},
 }
