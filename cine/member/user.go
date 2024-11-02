@@ -7,6 +7,14 @@ import (
    "net/http"
 )
 
+const query_user = `
+mutation($email: String, $password: String) {
+   UserAuthenticate(email: $email, password: $password) {
+      access_token
+   }
+}
+`
+
 func (OperationUser) Marshal(email, password string) ([]byte, error) {
    var value struct {
       Query     string `json:"query"`
@@ -32,14 +40,6 @@ func (OperationUser) Marshal(email, password string) ([]byte, error) {
    defer resp.Body.Close()
    return io.ReadAll(resp.Body)
 }
-
-const query_user = `
-mutation($email: String, $password: String) {
-   UserAuthenticate(email: $email, password: $password) {
-      access_token
-   }
-}
-`
 
 type OperationUser struct {
    Data struct {

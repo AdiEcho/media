@@ -9,53 +9,13 @@ import (
    "time"
 )
 
-func TestLogin(t *testing.T) {
-   username, password, ok := strings.Cut(os.Getenv("amc"), ":")
-   if !ok {
-      t.Fatal("Getenv")
+func TestContent(t *testing.T) {
+   data, err := os.ReadFile("amc.txt")
+   if err != nil {
+      t.Fatal(err)
    }
    var auth Authorization
-   err := auth.Unauth()
-   if err != nil {
-      t.Fatal(err)
-   }
-   data, err := auth.Login(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("amc.txt", data, os.ModePerm)
-}
-
-func TestRefresh(t *testing.T) {
-   var (
-      auth Authorization
-      err error
-   )
-   auth.Raw, err = os.ReadFile("amc.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = auth.Unmarshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = auth.Refresh()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("amc.txt", auth.Raw, os.ModePerm)
-}
-
-func TestContent(t *testing.T) {
-   var (
-      auth Authorization
-      err error
-   )
-   auth.Raw, err = os.ReadFile("amc.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   err = auth.Unmarshal()
+   err = auth.Unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
@@ -80,4 +40,38 @@ func TestContent(t *testing.T) {
       fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
+}
+
+func TestRefresh(t *testing.T) {
+   data, err := os.ReadFile("amc.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var auth Authorization
+   err = auth.Unmarshal(data)
+   if err != nil {
+      t.Fatal(err)
+   }
+   data, err = auth.Refresh()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("amc.txt", data, os.ModePerm)
+}
+
+func TestLogin(t *testing.T) {
+   username, password, ok := strings.Cut(os.Getenv("amc"), ":")
+   if !ok {
+      t.Fatal("Getenv")
+   }
+   var auth Authorization
+   err := auth.Unauth()
+   if err != nil {
+      t.Fatal(err)
+   }
+   data, err := auth.Login(username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("amc.txt", data, os.ModePerm)
 }

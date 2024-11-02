@@ -8,6 +8,19 @@ import (
    "net/http"
 )
 
+const query_play = `
+mutation($article_id: Int, $asset_id: Int) {
+   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
+      entitlements {
+         ... on ArticleAssetPlayEntitlement {
+            manifest
+            protocol
+         }
+      }
+   }
+}
+`
+
 // hard geo block
 func (OperationPlay) Marshal(
    user *OperationUser, asset *ArticleAsset,
@@ -53,19 +66,6 @@ func (o *OperationPlay) Dash() (string, bool) {
    }
    return "", false
 }
-
-const query_play = `
-mutation($article_id: Int, $asset_id: Int) {
-   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
-      entitlements {
-         ... on ArticleAssetPlayEntitlement {
-            manifest
-            protocol
-         }
-      }
-   }
-}
-`
 
 type OperationPlay struct {
    Data struct {
