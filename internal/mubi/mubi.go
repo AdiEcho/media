@@ -9,6 +9,31 @@ import (
    "os"
 )
 
+func (f *flags) write_secure() error {
+   data, err := os.ReadFile(f.home + "/mubi.txt")
+   if err != nil {
+      return err
+   }
+   var auth mubi.Authenticate
+   err = auth.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   film, err := f.address.Film()
+   if err != nil {
+      return err
+   }
+   err = auth.Viewing(film)
+   if err != nil {
+      return err
+   }
+   data, err = mubi.SecureUrl{}.Marshal(&auth, film)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.address.String() + ".txt", data, os.ModePerm)
+}
+
 func (f *flags) write_auth() error {
    data, err := os.ReadFile("code.txt")
    if err != nil {
@@ -42,31 +67,6 @@ func write_code() error {
    }
    fmt.Println(code)
    return nil
-}
-
-func (f *flags) write_secure() error {
-   data, err := os.ReadFile(f.home + "/mubi.txt")
-   if err != nil {
-      return err
-   }
-   var auth mubi.Authenticate
-   err = auth.Unmarshal(data)
-   if err != nil {
-      return err
-   }
-   film, err := f.address.Film()
-   if err != nil {
-      return err
-   }
-   err = auth.Viewing(film)
-   if err != nil {
-      return err
-   }
-   data, err = (*mubi.SecureUrl).Marshal(nil, &auth, film)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.address.String() + ".txt", data, os.ModePerm)
 }
 
 func (f *flags) download() error {

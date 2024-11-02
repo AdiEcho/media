@@ -10,7 +10,7 @@ import (
    "time"
 )
 
-func (*AccountToken) Marshal(
+func (AccountToken) Marshal(
    auth *AccountAuth, code *AccountCode,
 ) ([]byte, error) {
    req, err := http.NewRequest("", "https://googletv.web.roku.com", nil)

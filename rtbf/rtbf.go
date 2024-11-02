@@ -11,6 +11,21 @@ import (
    "strings"
 )
 
+func (AuvioLogin) Marshal(id, password string) ([]byte, error) {
+   resp, err := http.PostForm(
+      "https://login.auvio.rtbf.be/accounts.login", url.Values{
+         "APIKey":   {api_key},
+         "loginID":  {id},
+         "password": {password},
+      },
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
 func (a Address) Page() (*AuvioPage, error) {
    resp, err := http.Get(
       "https://bff-service.rtbf.be/auvio/v1.23/pages" + a.Path,
@@ -297,19 +312,4 @@ func (*Entitlement) RequestHeader() (http.Header, error) {
 
 func (a *Address) String() string {
    return a.Path
-}
-
-func (*AuvioLogin) Marshal(id, password string) ([]byte, error) {
-   resp, err := http.PostForm(
-      "https://login.auvio.rtbf.be/accounts.login", url.Values{
-         "APIKey":   {api_key},
-         "loginID":  {id},
-         "password": {password},
-      },
-   )
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   return io.ReadAll(resp.Body)
 }

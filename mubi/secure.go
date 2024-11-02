@@ -9,16 +9,7 @@ import (
    "strings"
 )
 
-type SecureUrl struct {
-   TextTrackUrls []TextTrack `json:"text_track_urls"`
-   Url string
-}
-
-func (s *SecureUrl) Unmarshal(data []byte) error {
-   return json.Unmarshal(data, s)
-}
-
-func (*SecureUrl) Marshal(
+func (SecureUrl) Marshal(
    auth *Authenticate, film *FilmResponse,
 ) ([]byte, error) {
    req, err := http.NewRequest("", "https://api.mubi.com", nil)
@@ -47,4 +38,13 @@ func (*SecureUrl) Marshal(
       return nil, errors.New(b.String())
    }
    return io.ReadAll(resp.Body)
+}
+
+type SecureUrl struct {
+   TextTrackUrls []TextTrack `json:"text_track_urls"`
+   Url string
+}
+
+func (s *SecureUrl) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, s)
 }

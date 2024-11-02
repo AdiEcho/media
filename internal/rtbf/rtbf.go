@@ -11,7 +11,7 @@ import (
 )
 
 func (f *flags) authenticate() error {
-   data, err := (*rtbf.AuvioLogin).Marshal(nil, f.email, f.password)
+   data, err := rtbf.AuvioLogin{}.Marshal(f.email, f.password)
    if err != nil {
       return err
    }
