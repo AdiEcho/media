@@ -24,7 +24,11 @@ func (f *flags) download() error {
       }
    }
    var auth roku.AccountAuth
-   err := auth.New(token, nil)
+   data, err := auth.Marshal(token)
+   if err != nil {
+      return err
+   }
+   err = auth.Unmarshal(data)
    if err != nil {
       return err
    }
@@ -37,7 +41,7 @@ func (f *flags) download() error {
       return err
    }
    defer resp.Body.Close()
-   data, err := io.ReadAll(resp.Body)
+   data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
    }
@@ -58,7 +62,7 @@ func (f *flags) download() error {
          if err != nil {
             return err
          }
-         f.s.Name = roku.Namer{home}
+         f.s.Name = &roku.Namer{home}
          f.s.Poster = play
          return f.s.Download(rep)
       }

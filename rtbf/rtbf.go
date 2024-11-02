@@ -299,7 +299,7 @@ func (a *AuvioLogin) Unmarshal(data []byte) error {
    return nil
 }
 
-func (a *AuvioLogin) New(id, password string, data *[]byte) error {
+func (AuvioLogin) Marshal(id, password string) ([]byte, error) {
    resp, err := http.PostForm(
       "https://login.auvio.rtbf.be/accounts.login", url.Values{
          "APIKey":   {api_key},
@@ -308,16 +308,8 @@ func (a *AuvioLogin) New(id, password string, data *[]byte) error {
       },
    )
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   if data != nil {
-      *data = body
-      return nil
-   }
-   return a.Unmarshal(body)
+   return io.ReadAll(resp.Body)
 }
