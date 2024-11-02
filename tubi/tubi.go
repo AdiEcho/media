@@ -44,12 +44,6 @@ type Resolution struct {
    Int64 int64
 }
 
-func (r Resolution) MarshalText() ([]byte, error) {
-   b := []byte("VIDEO_RESOLUTION_")
-   b = strconv.AppendInt(b, r.Int64, 10)
-   return append(b, 'P'), nil
-}
-
 func (r *Resolution) UnmarshalText(text []byte) error {
    s := string(text)
    s = strings.TrimPrefix(s, "VIDEO_RESOLUTION_")
@@ -73,10 +67,6 @@ type VideoResource struct {
    Type       string
 }
 
-func (VideoResource) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
 func (v *VideoResource) RequestUrl() (string, bool) {
    if v.LicenseServer != nil {
       return v.LicenseServer.Url, true
@@ -84,10 +74,20 @@ func (v *VideoResource) RequestUrl() (string, bool) {
    return "", false
 }
 
-func (VideoResource) UnwrapResponse(b []byte) ([]byte, error) {
+func (r Resolution) MarshalText() ([]byte, error) {
+   b := []byte("VIDEO_RESOLUTION_")
+   b = strconv.AppendInt(b, r.Int64, 10)
+   return append(b, 'P'), nil
+}
+
+func (*VideoResource) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (*VideoResource) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (VideoResource) WrapRequest(b []byte) ([]byte, error) {
+func (*VideoResource) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }

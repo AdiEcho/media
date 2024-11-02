@@ -12,18 +12,17 @@ import (
 )
 
 func (f *flags) write_content() error {
-   var data []byte
-   err := (*tubi.VideoContent).New(nil, f.tubi, &data)
+   var content tubi.VideoContent
+   data, err := content.Marshal(f.tubi)
    if err != nil {
       return err
    }
-   var content tubi.VideoContent
    err = content.Unmarshal(data)
    if err != nil {
       return err
    }
    if content.Episode() {
-      err = (*tubi.VideoContent).New(nil, content.SeriesId, &data)
+      data, err = content.Marshal(content.SeriesId)
       if err != nil {
          return err
       }

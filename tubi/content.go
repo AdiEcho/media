@@ -69,10 +69,10 @@ func (v *VideoContent) Unmarshal(data []byte) error {
    return nil
 }
 
-func (v *VideoContent) New(id int, data *[]byte) error {
+func (*VideoContent) Marshal(id int) ([]byte, error) {
    req, err := http.NewRequest("", "https://uapi.adrise.tv/cms/content", nil)
    if err != nil {
-      return err
+      return nil, err
    }
    req.URL.RawQuery = url.Values{
       "content_id": {strconv.Itoa(id)},
@@ -85,16 +85,8 @@ func (v *VideoContent) New(id int, data *[]byte) error {
    }.Encode()
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
-   body, err := io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   if data != nil {
-      *data = body
-      return nil
-   }
-   return v.Unmarshal(body)
+   return io.ReadAll(resp.Body)
 }
