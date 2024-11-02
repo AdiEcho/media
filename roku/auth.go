@@ -29,7 +29,7 @@ func (*AccountAuth) Marshal(token *AccountToken) ([]byte, error) {
 }
 
 func (a *AccountAuth) Playback(roku_id string) (*Playback, error) {
-   body, err := json.Marshal(map[string]string{
+   data, err := json.Marshal(map[string]string{
       "mediaFormat": "DASH",
       "providerId":  "rokuavod",
       "rokuId":      roku_id,
@@ -39,7 +39,7 @@ func (a *AccountAuth) Playback(roku_id string) (*Playback, error) {
    }
    req, err := http.NewRequest(
       "POST", "https://googletv.web.roku.com/api/v3/playback",
-      bytes.NewReader(body),
+      bytes.NewReader(data),
    )
    if err != nil {
       return nil, err

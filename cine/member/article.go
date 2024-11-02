@@ -65,13 +65,13 @@ func (*OperationArticle) Marshal(web *Address) ([]byte, error) {
    }
    value.Variables.ArticleUrlSlug = web.Path
    value.Query = query_article
-   body, err := json.Marshal(value)
+   data, err := json.Marshal(value)
    if err != nil {
       return nil, err
    }
    resp, err := http.Post(
       "https://api.audienceplayer.com/graphql/2/user",
-      "application/json", bytes.NewReader(body),
+      "application/json", bytes.NewReader(data),
    )
    if err != nil {
       return nil, err

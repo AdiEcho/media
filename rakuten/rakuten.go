@@ -24,13 +24,13 @@ func (g *GizmoMovie) Year() int {
 
 // geo block
 func (o *OnDemand) Info() (*StreamInfo, error) {
-   body, err := json.Marshal(o)
+   data, err := json.Marshal(o)
    if err != nil {
       return nil, err
    }
    resp, err := http.Post(
       "https://gizmo.rakuten.tv/v3/avod/streamings",
-      "application/json", bytes.NewReader(body),
+      "application/json", bytes.NewReader(data),
    )
    if err != nil {
       return nil, err

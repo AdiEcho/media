@@ -33,12 +33,12 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      var auth Authorization
-      auth.Raw, err = os.ReadFile("amc.txt")
+      data, err := os.ReadFile("amc.txt")
       if err != nil {
          t.Fatal(err)
       }
-      err = auth.Unmarshal()
+      var auth Authorization
+      err = auth.Unmarshal(data)
       if err != nil {
          t.Fatal(err)
       }

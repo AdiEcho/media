@@ -19,15 +19,11 @@ func TestLogin(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   err = auth.Unmarshal()
+   data, err := auth.Login(username, password)
    if err != nil {
       t.Fatal(err)
    }
-   err = auth.Login(username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("amc.txt", auth.Raw, os.ModePerm)
+   os.WriteFile("amc.txt", data, os.ModePerm)
 }
 
 func TestRefresh(t *testing.T) {
