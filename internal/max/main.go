@@ -28,6 +28,7 @@ type flags struct {
    login          bool
    representation string
    s              internal.Stream
+   min_width uint64
    max_width uint64
 }
 
@@ -47,7 +48,8 @@ func main() {
    flag.BoolVar(
       &f.login, "login", false, "/authentication/linkDevice/login",
    )
-   flag.Uint64Var(&f.max_width, "m", 1280, "max width")
+   flag.Uint64Var(&f.max_width, "max", 1280, "max width")
+   flag.Uint64Var(&f.min_width, "min", 1024, "min width")
    flag.Parse()
    text.Transport{}.Set(true)
    switch {

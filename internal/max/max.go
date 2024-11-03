@@ -55,22 +55,29 @@ func (f *flags) download() error {
       return reps[i].Bandwidth < reps[j].Bandwidth
    })
    for _, rep := range reps {
-      if rep.Width <= f.max_width {
-         if rep.GetAdaptationSet().GetPeriod().Id == "0" {
-            switch f.representation {
-            case "":
-               if _, ok := rep.Ext(); ok {
-                  fmt.Print(&rep, "\n\n")
-               }
-            case rep.Id:
-               f.s.Name, err = login.Routes(&f.address)
-               if err != nil {
-                  return err
-               }
-               f.s.Poster = play
-               return f.s.Download(rep)
-            }
+      if rep.GetAdaptationSet().GetPeriod().Id != "0" {
+         continue
+      }
+      if rep.Width > f.max_width {
+         continue
+      }
+      if rep.Width < f.min_width {
+         if rep.MimeType == "video/mp4" {
+            continue
          }
+      }
+      switch f.representation {
+      case "":
+         if _, ok := rep.Ext(); ok {
+            fmt.Print(&rep, "\n\n")
+         }
+      case rep.Id:
+         f.s.Name, err = login.Routes(&f.address)
+         if err != nil {
+            return err
+         }
+         f.s.Poster = play
+         return f.s.Download(rep)
       }
    }
    return nil

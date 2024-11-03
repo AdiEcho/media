@@ -16,6 +16,7 @@ type flags struct {
    entity hulu.EntityId
    representation string
    password string
+   min_width uint64
 }
 
 func (f *flags) New() error {
@@ -37,11 +38,12 @@ func main() {
       panic(err)
    }
    flag.Var(&f.entity, "a", "address")
+   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.email, "e", "", "email")
    flag.StringVar(&f.representation, "i", "", "representation")
-   flag.StringVar(&f.password, "p", "", "password")
-   flag.StringVar(&f.s.ClientId, "c", f.s.ClientId, "client ID")
    flag.StringVar(&f.s.PrivateKey, "k", f.s.PrivateKey, "private key")
+   flag.StringVar(&f.password, "p", "", "password")
+   flag.Uint64Var(&f.min_width, "m", 1280, "min width")
    flag.Parse()
    text.Transport{}.Set(true)
    switch {
