@@ -117,7 +117,7 @@ func (f *flags) download() error {
    for _, rep := range reps {
       switch f.representation {
       case "":
-         fmt.Print(rep, "\n\n")
+         fmt.Print(&rep, "\n\n")
       case rep.Id:
          var home roku.HomeScreen
          err := home.New(f.roku)
