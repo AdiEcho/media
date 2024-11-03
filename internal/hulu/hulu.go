@@ -56,7 +56,7 @@ func (f *flags) download() error {
       if rep.GetAdaptationSet().GetPeriod().Id == "content-0" {
          switch f.representation {
          case "":
-            fmt.Print(rep, "\n\n")
+            fmt.Print(&rep, "\n\n")
          case rep.Id:
             f.s.Name, err = auth.Details(deep)
             if err != nil {
