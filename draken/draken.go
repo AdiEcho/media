@@ -9,6 +9,64 @@ import (
    "strings"
 )
 
+// NO ANONYMOUS QUERY
+const get_custom_id = `
+query GetCustomIdFullMovie($customId: ID!) {
+   viewer {
+      viewableCustomId(customId: $customId) {
+         ... on Movie {
+            defaultPlayable {
+               id
+            }
+            productionYear
+            title
+         }
+      }
+   }
+}
+`
+
+func graphql_compact(s string) string {
+   field := strings.Fields(s)
+   return strings.Join(field, " ")
+}
+
+func (a *AuthLogin) Playback(
+   movie *FullMovie, title *Entitlement,
+) (*Playback, error) {
+   req, err := http.NewRequest("POST", "https://client-api.magine.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/api/playback/v1/preflight/asset/" + movie.DefaultPlayable.Id
+   magine_accesstoken.set(req.Header)
+   magine_play_devicemodel.set(req.Header)
+   magine_play_deviceplatform.set(req.Header)
+   magine_play_devicetype.set(req.Header)
+   magine_play_drm.set(req.Header)
+   magine_play_protocol.set(req.Header)
+   req.Header.Set("authorization", "Bearer "+a.Token)
+   req.Header.Set("magine-play-deviceid", "!")
+   req.Header.Set("magine-play-entitlementid", title.Token)
+   x_forwarded_for.set(req.Header)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      var b strings.Builder
+      resp.Write(&b)
+      return nil, errors.New(b.String())
+   }
+   play := &Playback{}
+   err = json.NewDecoder(resp.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
+}
+
 func (AuthLogin) Marshal(identity, key string) ([]byte, error) {
    data, err := json.Marshal(map[string]string{
       "accessKey": key,
@@ -28,22 +86,13 @@ func (AuthLogin) Marshal(identity, key string) ([]byte, error) {
    return io.ReadAll(resp.Body)
 }
 
-// NO ANONYMOUS QUERY
-const get_custom_id = `
-query GetCustomIdFullMovie($customId: ID!) {
-   viewer {
-      viewableCustomId(customId: $customId) {
-         ... on Movie {
-            defaultPlayable {
-               id
-            }
-            productionYear
-            title
-         }
-      }
-   }
+type AuthLogin struct {
+   Token string
 }
-`
+
+func (a *AuthLogin) Unmarshal(data []byte) error {
+   return json.Unmarshal(data, a)
+}
 
 func (a *AuthLogin) Entitlement(movie *FullMovie) (*Entitlement, error) {
    req, err := http.NewRequest("POST", "https://client-api.magine.com", nil)
@@ -69,6 +118,10 @@ func (a *AuthLogin) Entitlement(movie *FullMovie) (*Entitlement, error) {
       return nil, err
    }
    return title, nil
+}
+
+type Entitlement struct {
+   Token string
 }
 
 func (f *FullMovie) New(custom_id string) error {
@@ -124,13 +177,60 @@ type FullMovie struct {
    Title          string
 }
 
-func graphql_compact(s string) string {
-   field := strings.Fields(s)
-   return strings.Join(field, " ")
+func (n *Namer) Title() string {
+   return n.Movie.Title
 }
 
-type Entitlement struct {
-   Token string
+func (n *Namer) Year() int {
+   return n.Movie.ProductionYear
+}
+
+func (*Namer) Episode() int {
+   return 0
+}
+
+func (*Namer) Season() int {
+   return 0
+}
+
+func (*Namer) Show() string {
+   return ""
+}
+
+type Namer struct {
+   Movie FullMovie
+}
+
+type Playback struct {
+   Headers  map[string]string
+   Playlist string
+}
+
+type Poster struct {
+   Login AuthLogin
+   Play *Playback
+}
+
+func (p *Poster) RequestHeader() (http.Header, error) {
+   head := http.Header{}
+   magine_accesstoken.set(head)
+   head.Set("authorization", "Bearer "+p.Login.Token)
+   for key, value := range p.Play.Headers {
+      head.Set(key, value)
+   }
+   return head, nil
+}
+
+func (*Poster) RequestUrl() (string, bool) {
+   return "https://client-api.magine.com/api/playback/v1/widevine/license", true
+}
+
+func (*Poster) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*Poster) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
 }
 
 type header struct {
@@ -167,106 +267,6 @@ var x_forwarded_for = header{
    "x-forwarded-for", "95.192.0.0",
 }
 
-type Playback struct {
-   Headers  map[string]string
-   Playlist string
-}
-
 func (h *header) set(head http.Header) {
    head.Set(h.key, h.value)
-}
-
-func (p *Poster) RequestHeader() (http.Header, error) {
-   head := http.Header{}
-   magine_accesstoken.set(head)
-   head.Set("authorization", "Bearer "+p.Login.Token)
-   for key, value := range p.Play.Headers {
-      head.Set(key, value)
-   }
-   return head, nil
-}
-
-func (*Poster) RequestUrl() (string, bool) {
-   return "https://client-api.magine.com/api/playback/v1/widevine/license", true
-}
-
-func (*Poster) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Poster) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (a *AuthLogin) Playback(
-   movie *FullMovie, title *Entitlement,
-) (*Playback, error) {
-   req, err := http.NewRequest("POST", "https://client-api.magine.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/api/playback/v1/preflight/asset/" + movie.DefaultPlayable.Id
-   magine_accesstoken.set(req.Header)
-   magine_play_devicemodel.set(req.Header)
-   magine_play_deviceplatform.set(req.Header)
-   magine_play_devicetype.set(req.Header)
-   magine_play_drm.set(req.Header)
-   magine_play_protocol.set(req.Header)
-   req.Header.Set("authorization", "Bearer "+a.Token)
-   req.Header.Set("magine-play-deviceid", "!")
-   req.Header.Set("magine-play-entitlementid", title.Token)
-   x_forwarded_for.set(req.Header)
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   if resp.StatusCode != http.StatusOK {
-      var b strings.Builder
-      resp.Write(&b)
-      return nil, errors.New(b.String())
-   }
-   play := &Playback{}
-   err = json.NewDecoder(resp.Body).Decode(play)
-   if err != nil {
-      return nil, err
-   }
-   return play, nil
-}
-
-type AuthLogin struct {
-   Token string
-}
-
-func (a *AuthLogin) Unmarshal(data []byte) error {
-   return json.Unmarshal(data, a)
-}
-
-func (n *Namer) Title() string {
-   return n.Movie.Title
-}
-
-func (n *Namer) Year() int {
-   return n.Movie.ProductionYear
-}
-
-func (*Namer) Episode() int {
-   return 0
-}
-
-func (*Namer) Season() int {
-   return 0
-}
-
-func (*Namer) Show() string {
-   return ""
-}
-
-type Namer struct {
-   Movie FullMovie
-}
-
-type Poster struct {
-   Login AuthLogin
-   Play *Playback
 }
