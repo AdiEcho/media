@@ -18,6 +18,9 @@ size = 39.62 megabyte
 version code = 60000337
 ~~~
 
+- https://apkmirror.com/apk/bell-media-inc/ctv
+- https://apkmirror.com/apk/bell-media-inc/ctv-android-tv
+
 ## movie
 
 ~~~
