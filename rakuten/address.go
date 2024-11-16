@@ -9,6 +9,19 @@ import (
    "strings"
 )
 
+var classification_id = map[string]int{
+   "dk": 283,
+   "fi": 284,
+   "fr": 23,
+   "ie": 41,
+   "it": 36,
+   "no": 286,
+   "pt": 64,
+   "se": 282,
+   "ua": 276,
+   "uk": 18,
+}
+
 func (a *Address) Set(s string) error {
    s = strings.TrimPrefix(s, "https://")
    s = strings.TrimPrefix(s, "www.")
@@ -36,19 +49,6 @@ func (a *Address) String() string {
       b.WriteString(a.ContentId)
    }
    return b.String()
-}
-
-var classification_id = map[string]int{
-   "dk": 283,
-   "fi": 284,
-   "fr": 23,
-   "ie": 41,
-   "it": 36,
-   "no": 286,
-   "pt": 64,
-   "se": 282,
-   "ua": 276,
-   "uk": 18,
 }
 
 func (a *Address) video(quality string) *OnDemand {
