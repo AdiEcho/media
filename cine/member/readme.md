@@ -7,7 +7,7 @@
 3. Start je proefperiode (start your trial)
 4. name
 5. e-mail
-   - 2024-7-27@mailsac.com
+   - mailsac.com
 6. password
 7. Verder (continue)
 8. MAANDABONNEMENT, Selecteer (monthly subscription, select)
