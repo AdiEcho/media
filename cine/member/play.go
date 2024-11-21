@@ -8,20 +8,6 @@ import (
    "net/http"
 )
 
-type OperationPlay struct {
-   Data struct {
-      ArticleAssetPlay struct {
-         Entitlements []struct {
-            Manifest string
-            Protocol string
-         }
-      }
-   }
-   Errors []struct {
-      Message string
-   }
-}
-
 const query_play = `
 mutation($article_id: Int, $asset_id: Int) {
    ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
@@ -34,6 +20,17 @@ mutation($article_id: Int, $asset_id: Int) {
    }
 }
 `
+
+type OperationPlay struct {
+   Data struct {
+      ArticleAssetPlay struct {
+         Entitlements []Entitlement
+      }
+   }
+   Errors []struct {
+      Message string
+   }
+}
 
 // hard geo block
 func (OperationPlay) Marshal(
@@ -72,15 +69,6 @@ func (OperationPlay) Marshal(
    return io.ReadAll(resp.Body)
 }
 
-func (o *OperationPlay) Dash() (string, bool) {
-   for _, title := range o.Data.ArticleAssetPlay.Entitlements {
-      if title.Protocol == "dash" {
-         return title.Manifest, true
-      }
-   }
-   return "", false
-}
-
 func (o *OperationPlay) Unmarshal(data []byte) error {
    err := json.Unmarshal(data, o)
    if err != nil {
@@ -90,4 +78,35 @@ func (o *OperationPlay) Unmarshal(data []byte) error {
       return errors.New(v[0].Message)
    }
    return nil
+}
+
+func (o *OperationPlay) Dash() (*Entitlement, bool) {
+   for _, title := range o.Data.ArticleAssetPlay.Entitlements {
+      if title.Protocol == "dash" {
+         return &title, true
+      }
+   }
+   return nil, false
+}
+
+func (e *Entitlement) RequestUrl() (string, bool) {
+   return e.KeyDeliveryUrl, true
+}
+
+func (*Entitlement) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (*Entitlement) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+type Entitlement struct {
+   KeyDeliveryUrl string `json:"key_delivery_url"`
+   Manifest string
+   Protocol string
+}
+
+func (*Entitlement) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
 }
