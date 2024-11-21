@@ -8,6 +8,20 @@ import (
    "net/http"
 )
 
+type OperationPlay struct {
+   Data struct {
+      ArticleAssetPlay struct {
+         Entitlements []struct {
+            Manifest string
+            Protocol string
+         }
+      }
+   }
+   Errors []struct {
+      Message string
+   }
+}
+
 const query_play = `
 mutation($article_id: Int, $asset_id: Int) {
    ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
@@ -65,20 +79,6 @@ func (o *OperationPlay) Dash() (string, bool) {
       }
    }
    return "", false
-}
-
-type OperationPlay struct {
-   Data struct {
-      ArticleAssetPlay struct {
-         Entitlements []struct {
-            Manifest string
-            Protocol string
-         }
-      }
-   }
-   Errors []struct {
-      Message string
-   }
 }
 
 func (o *OperationPlay) Unmarshal(data []byte) error {
