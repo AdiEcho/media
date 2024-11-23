@@ -8,19 +8,6 @@ import (
    "net/http"
 )
 
-const query_play = `
-mutation($article_id: Int, $asset_id: Int) {
-   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
-      entitlements {
-         ... on ArticleAssetPlayEntitlement {
-            manifest
-            protocol
-         }
-      }
-   }
-}
-`
-
 type OperationPlay struct {
    Data struct {
       ArticleAssetPlay struct {
@@ -101,12 +88,26 @@ func (*Entitlement) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
+func (*Entitlement) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
 type Entitlement struct {
    KeyDeliveryUrl string `json:"key_delivery_url"`
    Manifest string
    Protocol string
 }
 
-func (*Entitlement) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
+const query_play = `
+mutation($article_id: Int, $asset_id: Int) {
+   ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
+      entitlements {
+         ... on ArticleAssetPlayEntitlement {
+            key_delivery_url
+            manifest
+            protocol
+         }
+      }
+   }
 }
+`

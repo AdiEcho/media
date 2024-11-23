@@ -66,11 +66,11 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   address, ok := play.Dash()
+   title, ok := play.Dash()
    if !ok {
       return errors.New("OperationPlay.Dash")
    }
-   resp, err := http.Get(address)
+   resp, err := http.Get(title.Manifest)
    if err != nil {
       return err
    }
@@ -86,7 +86,7 @@ func (f *flags) download() error {
    for _, rep := range reps {
       switch f.representation {
       case "":
-         fmt.Print(rep, "\n\n")
+         fmt.Print(&rep, "\n\n")
       case rep.Id:
          data, err = os.ReadFile(f.base() + "/article.txt")
          if err != nil {
@@ -98,6 +98,7 @@ func (f *flags) download() error {
             return err
          }
          f.s.Name = &article
+         f.s.Poster = title
          return f.s.Download(rep)
       }
    }

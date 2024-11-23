@@ -21,6 +21,7 @@ func write_segment(data, key []byte) ([]byte, error) {
       return data, nil
    }
    var file container.File
+   // FAIL
    err := file.Read(data)
    if err != nil {
       return nil, err
