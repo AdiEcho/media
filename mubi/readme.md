@@ -4,11 +4,46 @@
 2. email address
    - email.ml
 3. get started
-4. enter code
-5. mubi
-6. next
-7. paypal
-8. start free trial
+4. mubi
+5. next
+6. cardholder name
+7. card number
+8. expiry date
+9. CVV
+10. zip code
+11. start free trial
+12. mubi.com/subscription/cancel
+13. other
+14. continue
+15. extend my free trial
+16. mubi.com/subscription/cancel
+17. other
+18. continue
+19. no thanks
+20. cancel subscription
+
+~~~
+Date: Sat, 23 Nov 2024 20:02:49 -0600
+Subject: mubi.com
+To: Privacy Support <support@privacy.com>
+
+I am not able to use my Privacy Mubi card on their site, it says
+
+Please check your card has sufficient funds to complete the purchase.
+
+even though the card has enough funds
+~~~
+
+also I cannot add Privacy card to PayPal:
+
+~~~json
+{
+  "error": {
+    "message": "We're sorry. We're not able to process your request right now. Please try again later.",
+    "name": "ISSUER_DECLINE"
+  }
+}
+~~~
 
 ## Android
 
