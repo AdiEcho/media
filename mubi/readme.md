@@ -1,15 +1,5 @@
 # Mubi
 
-1. mubi.com
-2. email address
-   - email.ml
-3. get started
-4. enter code
-5. mubi
-6. next
-7. paypal
-8. start free trial
-
 ## Android
 
 https://play.google.com/store/apps/details?id=com.mubi

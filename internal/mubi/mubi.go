@@ -65,7 +65,7 @@ func write_code() error {
    if err != nil {
       return err
    }
-   fmt.Println(code)
+   fmt.Println(&code)
    return nil
 }
 
