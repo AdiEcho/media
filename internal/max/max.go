@@ -58,11 +58,16 @@ func (f *flags) download() error {
       if rep.GetAdaptationSet().GetPeriod().Id != "0" {
          continue
       }
-      if rep.Width > f.max_width {
-         continue
+      if rep.MimeType == "video/mp4" {
+         if rep.Width < f.min_width {
+            continue
+         }
+         if rep.Width > f.max_width {
+            continue
+         }
       }
-      if rep.Width < f.min_width {
-         if rep.MimeType == "video/mp4" {
+      if rep.MimeType == "audio/mp4" {
+         if rep.GetAdaptationSet().Lang != f.lang {
             continue
          }
       }

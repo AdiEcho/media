@@ -1,7 +1,7 @@
 # Hulu
 
 1. signup.hulu.com/plans
-2. select (hulu)
+2. select (hulu, get first month free)
 3. email
    - mailsac.com
 4. password
