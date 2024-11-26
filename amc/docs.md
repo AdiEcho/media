@@ -6,30 +6,30 @@ package `amc`
 
 - [Types](#types)
   - [type Address](#type-address)
-    - [func (a *Address) Set(s string) error](#func-address-set)
-    - [func (a *Address) String() string](#func-address-string)
+    - [func (a \*Address) Set(s string) error](#func-address-set)
+    - [func (a \*Address) String() string](#func-address-string)
   - [type Authorization](#type-authorization)
-    - [func (a *Authorization) Content(path string) (*ContentCompiler, error)](#func-authorization-content)
-    - [func (a *Authorization) Login(email, password string) ([]byte, error)](#func-authorization-login)
-    - [func (a *Authorization) Playback(nid string) (*Playback, error)](#func-authorization-playback)
-    - [func (a *Authorization) Refresh() ([]byte, error)](#func-authorization-refresh)
-    - [func (a *Authorization) Unauth() error](#func-authorization-unauth)
-    - [func (a *Authorization) Unmarshal(data []byte) error](#func-authorization-unmarshal)
+    - [func (a \*Authorization) Content(path string) (\*ContentCompiler, error)](#func-authorization-content)
+    - [func (a \*Authorization) Login(email, password string) ([]byte, error)](#func-authorization-login)
+    - [func (a \*Authorization) Playback(nid string) (\*Playback, error)](#func-authorization-playback)
+    - [func (a \*Authorization) Refresh() ([]byte, error)](#func-authorization-refresh)
+    - [func (a \*Authorization) Unauth() error](#func-authorization-unauth)
+    - [func (a \*Authorization) Unmarshal(data []byte) error](#func-authorization-unmarshal)
   - [type ContentCompiler](#type-contentcompiler)
-    - [func (c *ContentCompiler) Video() (*CurrentVideo, bool)](#func-contentcompiler-video)
+    - [func (c \*ContentCompiler) Video() (\*CurrentVideo, bool)](#func-contentcompiler-video)
   - [type CurrentVideo](#type-currentvideo)
-    - [func (c *CurrentVideo) Episode() int](#func-currentvideo-episode)
-    - [func (c *CurrentVideo) Season() int](#func-currentvideo-season)
-    - [func (c *CurrentVideo) Show() string](#func-currentvideo-show)
-    - [func (c *CurrentVideo) Title() string](#func-currentvideo-title)
-    - [func (c *CurrentVideo) Year() int](#func-currentvideo-year)
+    - [func (c \*CurrentVideo) Episode() int](#func-currentvideo-episode)
+    - [func (c \*CurrentVideo) Season() int](#func-currentvideo-season)
+    - [func (c \*CurrentVideo) Show() string](#func-currentvideo-show)
+    - [func (c \*CurrentVideo) Title() string](#func-currentvideo-title)
+    - [func (c \*CurrentVideo) Year() int](#func-currentvideo-year)
   - [type DataSource](#type-datasource)
   - [type Playback](#type-playback)
-    - [func (p *Playback) Dash() (*DataSource, bool)](#func-playback-dash)
-    - [func (p *Playback) RequestHeader() (http.Header, error)](#func-playback-requestheader)
-    - [func (p *Playback) RequestUrl() (string, bool)](#func-playback-requesturl)
-    - [func (*Playback) UnwrapResponse(b []byte) ([]byte, error)](#func-playback-unwrapresponse)
-    - [func (*Playback) WrapRequest(b []byte) ([]byte, error)](#func-playback-wraprequest)
+    - [func (p \*Playback) Dash() (\*DataSource, bool)](#func-playback-dash)
+    - [func (p \*Playback) RequestHeader() (http.Header, error)](#func-playback-requestheader)
+    - [func (p \*Playback) RequestUrl() (string, bool)](#func-playback-requesturl)
+    - [func (\*Playback) UnwrapResponse(b []byte) ([]byte, error)](#func-playback-unwrapresponse)
+    - [func (\*Playback) WrapRequest(b []byte) ([]byte, error)](#func-playback-wraprequest)
 - [Source files](#source-files)
 
 ## Types
@@ -43,13 +43,13 @@ type Address struct {
 }
 ```
 
-### func (*Address) [Set](./amc.go#L15)
+### func (\*Address) [Set](./amc.go#L15)
 
 ```go
 func (a *Address) Set(s string) error
 ```
 
-### func (*Address) [String](./amc.go#L32)
+### func (\*Address) [String](./amc.go#L32)
 
 ```go
 func (a *Address) String() string
@@ -66,37 +66,37 @@ type Authorization struct {
 }
 ```
 
-### func (*Authorization) [Content](./auth.go#L12)
+### func (\*Authorization) [Content](./auth.go#L12)
 
 ```go
 func (a *Authorization) Content(path string) (*ContentCompiler, error)
 ```
 
-### func (*Authorization) [Login](./auth.go#L148)
+### func (\*Authorization) [Login](./auth.go#L148)
 
 ```go
 func (a *Authorization) Login(email, password string) ([]byte, error)
 ```
 
-### func (*Authorization) [Playback](./auth.go#L59)
+### func (\*Authorization) [Playback](./auth.go#L59)
 
 ```go
 func (a *Authorization) Playback(nid string) (*Playback, error)
 ```
 
-### func (*Authorization) [Refresh](./auth.go#L187)
+### func (\*Authorization) [Refresh](./auth.go#L187)
 
 ```go
 func (a *Authorization) Refresh() ([]byte, error)
 ```
 
-### func (*Authorization) [Unauth](./auth.go#L113)
+### func (\*Authorization) [Unauth](./auth.go#L113)
 
 ```go
 func (a *Authorization) Unauth() error
 ```
 
-### func (*Authorization) [Unmarshal](./auth.go#L144)
+### func (\*Authorization) [Unmarshal](./auth.go#L144)
 
 ```go
 func (a *Authorization) Unmarshal(data []byte) error
@@ -115,7 +115,7 @@ type ContentCompiler struct {
 }
 ```
 
-### func (*ContentCompiler) [Video](./amc.go#L45)
+### func (\*ContentCompiler) [Video](./amc.go#L45)
 
 ```go
 func (c *ContentCompiler) Video() (*CurrentVideo, bool)
@@ -137,31 +137,31 @@ type CurrentVideo struct {
 }
 ```
 
-### func (*CurrentVideo) [Episode](./amc.go#L74)
+### func (\*CurrentVideo) [Episode](./amc.go#L74)
 
 ```go
 func (c *CurrentVideo) Episode() int
 ```
 
-### func (*CurrentVideo) [Season](./amc.go#L82)
+### func (\*CurrentVideo) [Season](./amc.go#L82)
 
 ```go
 func (c *CurrentVideo) Season() int
 ```
 
-### func (*CurrentVideo) [Show](./amc.go#L78)
+### func (\*CurrentVideo) [Show](./amc.go#L78)
 
 ```go
 func (c *CurrentVideo) Show() string
 ```
 
-### func (*CurrentVideo) [Title](./amc.go#L66)
+### func (\*CurrentVideo) [Title](./amc.go#L66)
 
 ```go
 func (c *CurrentVideo) Title() string
 ```
 
-### func (*CurrentVideo) [Year](./amc.go#L70)
+### func (\*CurrentVideo) [Year](./amc.go#L70)
 
 ```go
 func (c *CurrentVideo) Year() int
@@ -194,31 +194,31 @@ type Playback struct {
 }
 ```
 
-### func (*Playback) [Dash](./amc.go#L96)
+### func (\*Playback) [Dash](./amc.go#L96)
 
 ```go
 func (p *Playback) Dash() (*DataSource, bool)
 ```
 
-### func (*Playback) [RequestHeader](./amc.go#L112)
+### func (\*Playback) [RequestHeader](./amc.go#L112)
 
 ```go
 func (p *Playback) RequestHeader() (http.Header, error)
 ```
 
-### func (*Playback) [RequestUrl](./amc.go#L105)
+### func (\*Playback) [RequestUrl](./amc.go#L105)
 
 ```go
 func (p *Playback) RequestUrl() (string, bool)
 ```
 
-### func (*Playback) [UnwrapResponse](./amc.go#L131)
+### func (\*Playback) [UnwrapResponse](./amc.go#L131)
 
 ```go
 func (*Playback) UnwrapResponse(b []byte) ([]byte, error)
 ```
 
-### func (*Playback) [WrapRequest](./amc.go#L127)
+### func (\*Playback) [WrapRequest](./amc.go#L127)
 
 ```go
 func (*Playback) WrapRequest(b []byte) ([]byte, error)
