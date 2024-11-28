@@ -6,7 +6,30 @@ import (
    "net/http"
 )
 
-func plays(video_id int) (*http.Response, error) {
+const x_version = "!/!/!/!"
+
+const user_agent = "!"
+
+func (v *video_plays) dash() (*video_manifest, bool) {
+   for _, manifest := range v.Manifests {
+      if manifest.ManifestType == "dash" {
+         return &manifest, true
+      }
+   }
+   return nil, false
+}
+
+type video_manifest struct {
+   DrmLicenseId string
+   ManifestType string
+   Url string
+}
+
+type video_plays struct {
+   Manifests []video_manifest
+}
+
+func (w *web_token) plays(video_id int) (*video_plays, error) {
    data, err := json.Marshal(map[string]int{
       "domainId": 2918,
       "userId": 8177465,
@@ -22,10 +45,20 @@ func plays(video_id int) (*http.Response, error) {
       return nil, err
    }
    req.Header = http.Header{
-      "Authorization": {"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVpZCI6IjgxNzc0NjUiLCJpZGVudGl0eV9pZCI6IjQxOTQ1NjkyOSIsInZpc2l0b3JfaWQiOiIxNzMyODIzODAzOTUzMDMxNzE5Iiwic2Vzc2lvbl9pZCI6IjE3MzI4MjM4MDM5NTMwODc0MDMiLCJjb25uZWN0aW9uX2lkIjoiMTczMjgyMzgwMzk1MzA4NzQwMyIsImt1aV91c2VyIjoxLCJyb2xlcyI6WyJjb21Vc2VyIl19LCJpYXQiOjE3MzI4MjM4MDMsImV4cCI6MjA0ODE4MzgwMywiaXNzIjoia2FwaSJ9.M6n5KPLzsLE1U8xuWc1tQ_gCAIUCFb4BtJXQDHd07m8"},
-      "Content-Type": {"application/json"},
-      "User-Agent": {"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0"},
-      "X-Version": {"web/prod/4.16.0/2024-11-07-14-23-23"},
+      "authorization": {"Bearer " + w.Jwt},
+      "content-type": {"application/json"},
+      "user-agent": {user_agent},
+      "x-version": {x_version},
    }
-   return http.DefaultClient.Do(req)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   play := &video_plays{}
+   err = json.NewDecoder(resp.Body).Decode(play)
+   if err != nil {
+      return nil, err
+   }
+   return play, nil
 }
