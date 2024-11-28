@@ -1,9 +1,8 @@
-package criterion
+package kanopy
 
 import (
-   "41.neocities.org/text"
    "41.neocities.org/widevine"
-   "encoding/hex"
+   "encoding/base64"
    "fmt"
    "os"
    "reflect"
@@ -11,7 +10,39 @@ import (
    "testing"
 )
 
+func TestSize(t *testing.T) {
+   size := reflect.TypeOf(&struct{}{}).Size()
+   for _, test := range size_tests {
+      if reflect.TypeOf(test).Size() > size {
+         fmt.Printf("*%T\n", test)
+      } else {
+         fmt.Printf("%T\n", test)
+      }
+   }
+}
+
+var size_tests = []any{
+   web_token{},
+}
+
+var test = struct{
+   key_id string
+   url string
+}{
+   key_id: "DUCS1DH4TB6Po1oEkG9xUA==",
+   url: "kanopy.com/en/product/13808102",
+}
+
 func TestLicense(t *testing.T) {
+   email, password, ok := strings.Cut(os.Getenv("kanopy"), ":")
+   if !ok {
+      t.Fatal("Getenv")
+   }
+   var web web_token
+   err := web.New(email, password)
+   if err != nil {
+      t.Fatal(err)
+   }
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -24,9 +55,8 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   
    var pssh widevine.Pssh
-   pssh.KeyId, err = hex.DecodeString(video_test.key_id)
+   pssh.KeyId, err = base64.StdEncoding.DecodeString(test.key_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -35,28 +65,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   data, err := os.ReadFile("token.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var token AuthToken
-   err = token.Unmarshal(data)
-   if err != nil {
-      t.Fatal(err)
-   }
-   item, err := token.Video(video_test.slug)
-   if err != nil {
-      t.Fatal(err)
-   }
-   files, err := token.Files(item)
-   if err != nil {
-      t.Fatal(err)
-   }
-   file, ok := files.Dash()
-   if !ok {
-      t.Fatal("VideoFiles.Dash")
-   }
-   key, err := module.Key(file, pssh.KeyId)
+   key, err := module.Key(&web, pssh.KeyId)
    if err != nil {
       t.Fatal(err)
    }
