@@ -37,6 +37,4 @@ Download media or send API requests
       <dd>https://discord.com/invite/rMFzDRQhSx</dd>
    <dt>PayPal</dt>
       <dd>https://paypal.com/donate?hosted_button_id=UEJBQQTU3VYDY</dd>
-   <dt>Ethereum</dt>
-      <dd>0xB614Ff822c8Df557dd4714f80Cd280Bc3887390F</dd>
 </dl>
