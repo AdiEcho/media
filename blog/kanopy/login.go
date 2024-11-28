@@ -3,14 +3,13 @@ package kanopy
 import (
    "bytes"
    "encoding/json"
+   "io"
    "net/http"
 )
 
-type web_token struct {
-   Jwt string
-}
+const user_agent = "!"
 
-func (w *web_token) New(email, password string) error {
+func (web_token) marshal(email, password string) ([]byte, error) {
    var value struct {
       CredentialType string `json:"credentialType"`
       User struct {
@@ -23,22 +22,31 @@ func (w *web_token) New(email, password string) error {
    value.User.Password = password
    data, err := json.Marshal(value)
    if err != nil {
-      return err
+      return nil, err
    }
    req, err := http.NewRequest(
       "POST", "https://www.kanopy.com/kapi/login", bytes.NewReader(data),
    )
    if err != nil {
-      return err
+      return nil, err
    }
    req.Header = http.Header{
       "content-type": {"application/json"},
-      "user-agent": {"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0"},
+      "user-agent": {user_agent},
    }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
-      return err
+      return nil, err
    }
    defer resp.Body.Close()
-   return json.NewDecoder(resp.Body).Decode(w)
+   return io.ReadAll(resp.Body)
+}
+
+// good for 10 years
+type web_token struct {
+   Jwt string
+}
+
+func (w *web_token) unmarshal(data []byte) error {
+   return json.Unmarshal(data, w)
 }

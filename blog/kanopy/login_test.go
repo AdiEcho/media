@@ -1,7 +1,6 @@
 package kanopy
 
 import (
-   "fmt"
    "os"
    "strings"
    "testing"
@@ -12,10 +11,9 @@ func TestLogin(t *testing.T) {
    if !ok {
       t.Fatal("Getenv")
    }
-   var web web_token
-   err := web.New(email, password)
+   data, err := web_token{}.marshal(email, password)
    if err != nil {
       t.Fatal(err)
    }
-   fmt.Printf("%+v\n", web)
+   os.WriteFile("token.txt", data, os.ModePerm)
 }

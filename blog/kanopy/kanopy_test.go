@@ -6,9 +6,18 @@ import (
    "fmt"
    "os"
    "reflect"
-   "strings"
    "testing"
 )
+
+var test = struct{
+   key_id string
+   url string
+   video_id int
+}{
+   key_id: "DUCS1DH4TB6Po1oEkG9xUA==",
+   url: "kanopy.com/en/product/13808102",
+   video_id: 13808102,
+}
 
 func TestSize(t *testing.T) {
    size := reflect.TypeOf(&struct{}{}).Size()
@@ -25,24 +34,7 @@ var size_tests = []any{
    web_token{},
 }
 
-var test = struct{
-   key_id string
-   url string
-}{
-   key_id: "DUCS1DH4TB6Po1oEkG9xUA==",
-   url: "kanopy.com/en/product/13808102",
-}
-
 func TestLicense(t *testing.T) {
-   email, password, ok := strings.Cut(os.Getenv("kanopy"), ":")
-   if !ok {
-      t.Fatal("Getenv")
-   }
-   var web web_token
-   err := web.New(email, password)
-   if err != nil {
-      t.Fatal(err)
-   }
    home, err := os.UserHomeDir()
    if err != nil {
       t.Fatal(err)
@@ -62,6 +54,15 @@ func TestLicense(t *testing.T) {
    }
    var module widevine.Cdm
    err = module.New(private_key, client_id, pssh.Marshal())
+   if err != nil {
+      t.Fatal(err)
+   }
+   data, err := os.ReadFile("token.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var web web_token
+   err = web.unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
