@@ -15,16 +15,13 @@ type web_token struct {
 }
 
 func (web_token) marshal(email, password string) ([]byte, error) {
-   var value struct {
-      CredentialType string `json:"credentialType"`
-      User struct {
-         Email    string `json:"email"`
-         Password string `json:"password"`
-      } `json:"emailUser"`
+   value := map[string]any{
+      "credentialType": "email",
+      "emailUser": map[string]string{
+         "email": email,
+         "password": password,
+      },
    }
-   value.CredentialType = "email"
-   value.User.Email = email
-   value.User.Password = password
    data, err := json.Marshal(value)
    if err != nil {
       return nil, err
