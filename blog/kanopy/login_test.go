@@ -9,16 +9,6 @@ import (
    "testing"
 )
 
-var test = struct{
-   key_id string
-   url string
-   video_id int
-}{
-   key_id: "DUCS1DH4TB6Po1oEkG9xUA==",
-   url: "kanopy.com/product/13808102",
-   video_id: 13808102,
-}
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -46,17 +36,36 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var web web_token
-   err = web.unmarshal(data)
+   var token web_token
+   err = token.unmarshal(data)
    if err != nil {
       t.Fatal(err)
    }
-   key, err := module.Key(&web, pssh.KeyId)
+   plays, err := token.plays(test.video_id)
+   if err != nil {
+      t.Fatal(err)
+   }
+   manifest, ok := plays.dash()
+   if !ok {
+      t.Fatal("video_plays.dash")
+   }
+   key, err := module.Key(&poster{manifest, &token}, pssh.KeyId)
    if err != nil {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
 }
+
+var test = struct{
+   key_id string
+   url string
+   video_id int
+}{
+   key_id: "DUCS1DH4TB6Po1oEkG9xUA==",
+   url: "kanopy.com/product/13808102",
+   video_id: 13808102,
+}
+
 func TestLogin(t *testing.T) {
    email, password, ok := strings.Cut(os.Getenv("kanopy"), ":")
    if !ok {

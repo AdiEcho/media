@@ -3,31 +3,9 @@ package kanopy
 import (
    "bytes"
    "encoding/json"
+   "errors"
    "net/http"
 )
-
-const x_version = "!/!/!/!"
-
-const user_agent = "!"
-
-func (v *video_plays) dash() (*video_manifest, bool) {
-   for _, manifest := range v.Manifests {
-      if manifest.ManifestType == "dash" {
-         return &manifest, true
-      }
-   }
-   return nil, false
-}
-
-type video_manifest struct {
-   DrmLicenseId string
-   ManifestType string
-   Url string
-}
-
-type video_plays struct {
-   Manifests []video_manifest
-}
 
 func (w *web_token) plays(video_id int) (*video_plays, error) {
    data, err := json.Marshal(map[string]int{
@@ -55,10 +33,36 @@ func (w *web_token) plays(video_id int) (*video_plays, error) {
       return nil, err
    }
    defer resp.Body.Close()
+   if resp.StatusCode != http.StatusOK {
+      return nil, errors.New(resp.Status)
+   }
    play := &video_plays{}
    err = json.NewDecoder(resp.Body).Decode(play)
    if err != nil {
       return nil, err
    }
    return play, nil
+}
+
+func (v *video_plays) dash() (*video_manifest, bool) {
+   for _, manifest := range v.Manifests {
+      if manifest.ManifestType == "dash" {
+         return &manifest, true
+      }
+   }
+   return nil, false
+}
+
+type video_manifest struct {
+   DrmLicenseId string
+   ManifestType string
+   Url string
+}
+
+const x_version = "!/!/!/!"
+
+const user_agent = "!"
+
+type video_plays struct {
+   Manifests []video_manifest
 }
