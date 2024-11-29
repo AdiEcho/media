@@ -41,7 +41,11 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   plays, err := token.plays(test.video_id)
+   member, err := token.membership()
+   if err != nil {
+      t.Fatal(err)
+   }
+   plays, err := token.plays(member, test.video_id)
    if err != nil {
       t.Fatal(err)
    }
@@ -54,16 +58,6 @@ func TestLicense(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%x\n", key)
-}
-
-var test = struct{
-   key_id string
-   url string
-   video_id int
-}{
-   key_id: "DUCS1DH4TB6Po1oEkG9xUA==",
-   url: "kanopy.com/product/13808102",
-   video_id: 13808102,
 }
 
 func TestLogin(t *testing.T) {

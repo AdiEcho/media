@@ -5,12 +5,69 @@ import (
    "encoding/json"
    "errors"
    "net/http"
+   "strconv"
 )
 
-func (w *web_token) plays(video_id int) (*video_plays, error) {
+type membership struct {
+   DomainId int
+}
+
+func (v *video_plays) dash() (*video_manifest, bool) {
+   for _, manifest := range v.Manifests {
+      if manifest.ManifestType == "dash" {
+         return &manifest, true
+      }
+   }
+   return nil, false
+}
+
+type video_manifest struct {
+   DrmLicenseId string
+   ManifestType string
+   Url string
+}
+
+const x_version = "!/!/!/!"
+
+const user_agent = "!"
+
+type video_plays struct {
+   Manifests []video_manifest
+}
+
+func (w *web_token) membership() (*membership, error) {
+   req, err := http.NewRequest("", "https://www.kanopy.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/kapi/memberships"
+   req.URL.RawQuery = "userId=" + strconv.Itoa(w.UserId)
+   req.Header = http.Header{
+      "authorization": {"Bearer " + w.Jwt},
+      "user-agent": {user_agent},
+      "x-version": {x_version},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var member struct {
+      List []membership
+   }
+   err = json.NewDecoder(resp.Body).Decode(&member)
+   if err != nil {
+      return nil, err
+   }
+   return &member.List[0], nil
+}
+
+func (w *web_token) plays(
+   member *membership, video_id int,
+) (*video_plays, error) {
    data, err := json.Marshal(map[string]int{
-      "domainId": 2918,
-      "userId": 8177465,
+      "domainId": member.DomainId,
+      "userId": w.UserId,
       "videoId": video_id,
    })
    if err != nil {
@@ -42,27 +99,4 @@ func (w *web_token) plays(video_id int) (*video_plays, error) {
       return nil, err
    }
    return play, nil
-}
-
-func (v *video_plays) dash() (*video_manifest, bool) {
-   for _, manifest := range v.Manifests {
-      if manifest.ManifestType == "dash" {
-         return &manifest, true
-      }
-   }
-   return nil, false
-}
-
-type video_manifest struct {
-   DrmLicenseId string
-   ManifestType string
-   Url string
-}
-
-const x_version = "!/!/!/!"
-
-const user_agent = "!"
-
-type video_plays struct {
-   Manifests []video_manifest
 }

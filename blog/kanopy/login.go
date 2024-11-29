@@ -8,6 +8,12 @@ import (
    "net/url"
 )
 
+// good for 10 years
+type web_token struct {
+   Jwt string
+   UserId int
+}
+
 func (web_token) marshal(email, password string) ([]byte, error) {
    var value struct {
       CredentialType string `json:"credentialType"`
@@ -39,11 +45,6 @@ func (web_token) marshal(email, password string) ([]byte, error) {
    }
    defer resp.Body.Close()
    return io.ReadAll(resp.Body)
-}
-
-// good for 10 years
-type web_token struct {
-   Jwt string
 }
 
 func (w *web_token) unmarshal(data []byte) error {

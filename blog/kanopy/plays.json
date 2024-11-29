@@ -1,0 +1,19 @@
+{
+  "list": [
+    {
+      "identityId": 419456929,
+      "domainId": 2918,
+      "userId": 8177465,
+      "creditAvailable": 5,
+      "status": "active",
+      "isDefault": true,
+      "sitename": "Irving Public Library",
+      "subdomain": "irving",
+      "maxCreditsPerMonth": 5,
+      "creditAvailableSeries": 5,
+      "maxCreditsPerMonthSeries": 5,
+      "ticketsAvailable": 15,
+      "maxTicketsPerMonth": 15
+    }
+  ]
+}
