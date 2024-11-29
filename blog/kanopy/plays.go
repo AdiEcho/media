@@ -9,7 +9,7 @@ import (
 )
 
 type membership struct {
-   DomainId int
+   DomainId int64
 }
 
 func (v *video_plays) dash() (*video_manifest, bool) {
@@ -41,7 +41,7 @@ func (w *web_token) membership() (*membership, error) {
       return nil, err
    }
    req.URL.Path = "/kapi/memberships"
-   req.URL.RawQuery = "userId=" + strconv.Itoa(w.UserId)
+   req.URL.RawQuery = "userId=" + strconv.FormatInt(w.UserId, 10)
    req.Header = http.Header{
       "authorization": {"Bearer " + w.Jwt},
       "user-agent": {user_agent},
@@ -63,9 +63,9 @@ func (w *web_token) membership() (*membership, error) {
 }
 
 func (w *web_token) plays(
-   member *membership, video_id int,
+   member *membership, video_id int64,
 ) (*video_plays, error) {
-   data, err := json.Marshal(map[string]int{
+   data, err := json.Marshal(map[string]int64{
       "domainId": member.DomainId,
       "userId": w.UserId,
       "videoId": video_id,

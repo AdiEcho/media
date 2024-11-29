@@ -1,17 +1,43 @@
 package kanopy
 
 import (
-   "net/http"
-   "net/url"
    "os"
    "testing"
 )
 
+var tests = []struct{
+   key_id string
+   url string
+   video_id int64
+}{
+   {
+      url: "kanopy.com/irving/video/14881163/14881167",
+      video_id: 14881163,
+   },
+   {
+      key_id: "DUCS1DH4TB6Po1oEkG9xUA==",
+      url: "kanopy.com/product/13808102",
+      video_id: 13808102,
+   },
+}
+
 func TestItems(t *testing.T) {
-   resp, err := items(14881163)
+   data, err := os.ReadFile("token.txt")
    if err != nil {
       t.Fatal(err)
    }
-   defer resp.Body.Close()
-   resp.Write(os.Stdout)
+   var token web_token
+   err = token.unmarshal(data)
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      resp, err := token.items(test.video_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      defer resp.Body.Close()
+      resp.Write(os.Stdout)
+      break
+   }
 }
