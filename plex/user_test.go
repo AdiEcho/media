@@ -8,6 +8,23 @@ import (
    "time"
 )
 
+var watch_tests = []struct{
+   key_id string
+   path string
+   url string
+}{
+   {
+      key_id: "4310a7c8094acab73fceab9d5494f36f",
+      path: "/movie/cruel-intentions",
+      url: "watch.plex.tv/movie/cruel-intentions",
+   },
+   {
+      key_id: "", // no DRM
+      path: "/show/broadchurch/season/3/episode/5",
+      url: "watch.plex.tv/show/broadchurch/season/3/episode/5",
+   },
+}
+
 func TestMatch(t *testing.T) {
    var user Anonymous
    err := user.New()
@@ -72,21 +89,4 @@ var size_tests = []any{
    Namer{},
    OnDemand{},
    Url{},
-}
-
-var watch_tests = []struct{
-   key_id string
-   path string
-   url string
-}{
-   {
-      key_id: "4310a7c8094acab73fceab9d5494f36f",
-      path: "/movie/cruel-intentions",
-      url: "watch.plex.tv/movie/cruel-intentions",
-   },
-   {
-      key_id: "", // no DRM
-      path: "/show/broadchurch/season/3/episode/5",
-      url: "watch.plex.tv/show/broadchurch/season/3/episode/5",
-   },
 }

@@ -6,6 +6,27 @@ import (
    "strings"
 )
 
+func (m *MediaPart) RequestUrl() (string, bool) {
+   return m.License.Url.String(), true
+}
+
+func (*MediaPart) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*MediaPart) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (*MediaPart) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+type MediaPart struct {
+   Key Url
+   License *Url
+}
+
 type DiscoverMatch struct {
    GrandparentTitle string
    Index int
@@ -65,18 +86,6 @@ func (o *OnDemand) Dash() (*MediaPart, bool) {
    return nil, false
 }
 
-func (*MediaPart) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*MediaPart) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (*MediaPart) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 type OnDemand struct {
    Media []struct {
       Part []MediaPart
@@ -97,13 +106,4 @@ func (u *Url) UnmarshalText(text []byte) error {
    u.Url.Scheme = "https"
    u.Url.Host = "vod.provider.plex.tv"
    return nil
-}
-
-type MediaPart struct {
-   Key Url
-   License *Url
-}
-
-func (m *MediaPart) RequestUrl() (string, bool) {
-   return m.License.Url.String(), true
 }
