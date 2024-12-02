@@ -3,6 +3,7 @@ package main
 import (
    "41.neocities.org/dash"
    "41.neocities.org/media/paramount"
+   "errors"
    "fmt"
    "io"
    "net/http"
@@ -45,7 +46,9 @@ func (f *flags) do_write() error {
       return err
    }
    defer resp.Body.Close()
-   // Body
+   if resp.StatusCode != http.StatusOK {
+      return errors.New(resp.Status)
+   }
    data, err = io.ReadAll(resp.Body)
    if err != nil {
       return err
