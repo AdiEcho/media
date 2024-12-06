@@ -206,30 +206,30 @@ type Playback struct {
    Playlist string
 }
 
-type Poster struct {
+type Client struct {
    Login AuthLogin
    Play *Playback
 }
 
-func (p *Poster) RequestHeader() (http.Header, error) {
+func (c *Client) RequestHeader() (http.Header, error) {
    head := http.Header{}
    magine_accesstoken.set(head)
-   head.Set("authorization", "Bearer "+p.Login.Token)
-   for key, value := range p.Play.Headers {
+   head.Set("authorization", "Bearer "+c.Login.Token)
+   for key, value := range c.Play.Headers {
       head.Set(key, value)
    }
    return head, nil
 }
 
-func (*Poster) RequestUrl() (string, bool) {
+func (*Client) RequestUrl() (string, bool) {
    return "https://client-api.magine.com/api/playback/v1/widevine/license", true
 }
 
-func (*Poster) UnwrapResponse(b []byte) ([]byte, error) {
+func (*Client) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (*Poster) WrapRequest(b []byte) ([]byte, error) {
+func (*Client) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 

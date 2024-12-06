@@ -49,7 +49,7 @@ func (m movie_test) license() ([]byte, error) {
    if err != nil {
       return nil, err
    }
-   var module widevine.Cdm
+   var module widevine.Module
    err = module.New(private_key, client_id, pssh.Marshal())
    if err != nil {
       return nil, err

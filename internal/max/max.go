@@ -81,7 +81,7 @@ func (f *flags) download() error {
          if err != nil {
             return err
          }
-         f.s.Poster = play
+         f.s.Client = play
          return f.s.Download(rep)
       }
    }

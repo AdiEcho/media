@@ -52,7 +52,7 @@ func (f *flags) download() error {
          fmt.Print(&rep, "\n\n")
       case rep.Id:
          f.s.Name = itv.Namer{discovery}
-         f.s.Poster = itv.Poster{}
+         f.s.Client = itv.Client{}
          return f.s.Download(rep)
       }
    }

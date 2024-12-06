@@ -12,29 +12,6 @@ import (
    "time"
 )
 
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
-   }
-}
-
-var size_tests = []any{
-   Authenticate{},
-   DeepLink{},
-   Details{},
-   EntityId{},
-   Playlist{},
-   codec_value{},
-   drm_value{},
-   playlist_request{},
-   segment_value{},
-}
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {

@@ -33,7 +33,7 @@ const query_discovery = `
 }
 `
 
-func (Poster) RequestUrl() (string, bool) {
+func (Client) RequestUrl() (string, bool) {
    var u url.URL
    u.Host = "itvpnp.live.ott.irdeto.com"
    u.Path = "/Widevine/getlicense"
@@ -182,17 +182,17 @@ type Playlist struct {
    }
 }
 
-type Poster struct{}
+type Client struct{}
 
-func (Poster) WrapRequest(b []byte) ([]byte, error) {
+func (Client) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
+func (Client) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Poster) RequestHeader() (http.Header, error) {
+func (Client) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 

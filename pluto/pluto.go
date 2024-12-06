@@ -8,21 +8,21 @@ import (
    "strings"
 )
 
-type Poster struct{}
+type Client struct{}
 
-func (Poster) RequestUrl() (string, bool) {
+func (Client) RequestUrl() (string, bool) {
    return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
 }
 
-func (Poster) RequestHeader() (http.Header, error) {
+func (Client) RequestHeader() (http.Header, error) {
    return http.Header{}, nil
 }
 
-func (Poster) WrapRequest(b []byte) ([]byte, error) {
+func (Client) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
 
-func (Poster) UnwrapResponse(b []byte) ([]byte, error) {
+func (Client) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }
 

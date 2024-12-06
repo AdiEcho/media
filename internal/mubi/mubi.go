@@ -121,7 +121,7 @@ func (f *flags) download() error {
          if err != nil {
             return err
          }
-         f.s.Poster = &auth
+         f.s.Client = &auth
          // github.com/golang/go/issues/18639
          os.Setenv("GODEBUG", "http2client=0")
          return f.s.Download(rep)

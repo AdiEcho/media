@@ -71,7 +71,7 @@ func (f *flags) download() error {
          fmt.Print(&rep, "\n\n")
       case rep.Id:
          f.s.Name = &rtbf.Namer{page}
-         f.s.Poster = title
+         f.s.Client = title
          return f.s.Download(rep)
       }
    }

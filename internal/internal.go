@@ -218,12 +218,12 @@ func (s *Stream) key() ([]byte, error) {
    if s.pssh == nil {
       s.pssh = widevine.Pssh{KeyId: s.key_id}.Marshal()
    }
-   var module widevine.Cdm
+   var module widevine.Module
    err = module.New(private_key, client_id, s.pssh)
    if err != nil {
       return nil, err
    }
-   key, err := module.Key(s.Poster, s.key_id)
+   key, err := module.Key(s.Client, s.key_id)
    if err != nil {
       return nil, err
    }
@@ -276,7 +276,7 @@ type Stream struct {
    ClientId string
    PrivateKey string
    Name text.Namer
-   Poster widevine.Poster
+   Client widevine.Client
    pssh []byte
    key_id []byte
 }

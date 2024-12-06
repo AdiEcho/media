@@ -66,7 +66,7 @@ func (f *flags) download() error {
          }
       case rep.Id:
          f.s.Name = item
-         f.s.Poster = file
+         f.s.Client = file
          return f.s.Download(rep)
       }
    }

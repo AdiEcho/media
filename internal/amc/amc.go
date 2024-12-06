@@ -61,7 +61,7 @@ func (f *flags) download() error {
             fmt.Print(&rep, "\n\n")
          }
       case rep.Id:
-         f.s.Poster = play
+         f.s.Client = play
          content, err := auth.Content(f.address.Path)
          if err != nil {
             return err

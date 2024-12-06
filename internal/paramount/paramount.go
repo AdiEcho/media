@@ -100,7 +100,7 @@ func (f *flags) do_read() error {
          if err != nil {
             return err
          }
-         f.s.Poster, err = token.Session(f.content_id)
+         f.s.Client, err = token.Session(f.content_id)
          if err != nil {
             return err
          }

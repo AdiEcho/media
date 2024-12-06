@@ -66,7 +66,7 @@ func (f *flags) download() error {
          }
       case rep.Id:
          f.s.Name = &draken.Namer{movie}
-         f.s.Poster = &draken.Poster{login, play}
+         f.s.Client = &draken.Client{login, play}
          return f.s.Download(rep)
       }
    }

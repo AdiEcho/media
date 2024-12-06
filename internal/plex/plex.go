@@ -60,7 +60,7 @@ func (f *flags) download() error {
          }
       case rep.Id:
          f.s.Name = &plex.Namer{match}
-         f.s.Poster = part
+         f.s.Client = part
          return f.s.Download(rep)
       }
    }

@@ -125,7 +125,7 @@ func (f *flags) download() error {
             return err
          }
          f.s.Name = &roku.Namer{home}
-         f.s.Poster = play
+         f.s.Client = play
          return f.s.Download(rep)
       }
    }

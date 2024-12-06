@@ -45,7 +45,7 @@ func (f *flags) download() error {
          f.s.Name = &meta
          var core nbc.CoreVideo
          core.New()
-         f.s.Poster = &core
+         f.s.Client = &core
          return f.s.Download(rep)
       }
    }

@@ -98,7 +98,7 @@ func (f *flags) download() error {
             return err
          }
          f.s.Name = &article
-         f.s.Poster = title
+         f.s.Client = title
          return f.s.Download(rep)
       }
    }
