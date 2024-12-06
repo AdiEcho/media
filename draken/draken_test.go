@@ -55,7 +55,7 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      var module widevine.Cdm
+      var module widevine.Module
       err = module.New(private_key, client_id, pssh.Marshal())
       if err != nil {
          t.Fatal(err)
@@ -73,7 +73,7 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      key, err := module.Key(&Poster{login, play}, pssh.KeyId)
+      key, err := module.Key(&Client{login, play}, pssh.KeyId)
       if err != nil {
          t.Fatal(err)
       }

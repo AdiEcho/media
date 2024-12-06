@@ -6,7 +6,6 @@ import (
    "encoding/base64"
    "fmt"
    "os"
-   "reflect"
    "testing"
    "time"
 )
@@ -67,27 +66,6 @@ func TestManifest(t *testing.T) {
    }
 }
 
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
-   }
-}
-
-var size_tests = []any{
-   Address{},
-   AxisContent{},
-   Date{},
-   MediaContent{},
-   Namer{},
-   Poster{},
-   ResolvePath{},
-}
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -106,7 +84,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var module widevine.Cdm
+   var module widevine.Module
    err = module.New(private_key, client_id, pssh.Marshal())
    if err != nil {
       t.Fatal(err)
@@ -115,7 +93,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   key, err := module.Key(Poster{}, key_id)
+   key, err := module.Key(Client{}, key_id)
    if err != nil {
       t.Fatal(err)
    }

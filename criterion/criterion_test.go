@@ -6,7 +6,6 @@ import (
    "encoding/hex"
    "fmt"
    "os"
-   "reflect"
    "strings"
    "testing"
 )
@@ -21,24 +20,6 @@ func TestToken(t *testing.T) {
       t.Fatal(err)
    }
    os.WriteFile("token.txt", data, os.ModePerm)
-}
-
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
-   }
-}
-
-var size_tests = []any{
-   AuthToken{},
-   EmbedItem{},
-   VideoFile{},
-   VideoFiles{},
 }
 
 func TestLicense(t *testing.T) {
@@ -59,7 +40,7 @@ func TestLicense(t *testing.T) {
    if err != nil {
       t.Fatal(err)
    }
-   var module widevine.Cdm
+   var module widevine.Module
    err = module.New(private_key, client_id, pssh.Marshal())
    if err != nil {
       t.Fatal(err)
