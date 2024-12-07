@@ -10,6 +10,18 @@ import (
    "time"
 )
 
+func TestLogin(t *testing.T) {
+   email, password, ok := strings.Cut(os.Getenv("kanopy"), ":")
+   if !ok {
+      t.Fatal("Getenv")
+   }
+   data, err := web_token{}.marshal(email, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("token.txt", data, os.ModePerm)
+}
+
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -42,7 +54,7 @@ func TestLicense(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      var module widevine.Cdm
+      var module widevine.Module
       err = module.New(private_key, client_id, pssh.Marshal())
       if err != nil {
          t.Fatal(err)
@@ -82,16 +94,4 @@ func TestVideos(t *testing.T) {
       fmt.Printf("%+v\n", video)
       time.Sleep(time.Second)
    }
-}
-
-func TestLogin(t *testing.T) {
-   email, password, ok := strings.Cut(os.Getenv("kanopy"), ":")
-   if !ok {
-      t.Fatal("Getenv")
-   }
-   data, err := web_token{}.marshal(email, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("token.txt", data, os.ModePerm)
 }
