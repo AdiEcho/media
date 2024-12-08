@@ -2,7 +2,7 @@ package main
 
 import (
    "41.neocities.org/dash"
-   "41.neocities.org/media/cine/member"
+   "41.neocities.org/media/cineMember"
    "errors"
    "fmt"
    "io"
@@ -12,17 +12,17 @@ import (
 )
 
 func (f *flags) write_user() error {
-   data, err := member.OperationUser{}.Marshal(f.email, f.password)
+   data, err := cineMember.OperationUser{}.Marshal(f.email, f.password)
    if err != nil {
       return err
    }
-   return os.WriteFile(f.home + "/cine-member.txt", data, os.ModePerm)
+   return os.WriteFile(f.home + "/cineMember.txt", data, os.ModePerm)
 }
 
 func (f *flags) write_play() error {
    os.Mkdir(f.base(), os.ModePerm)
    // 1. write OperationArticle
-   var article member.OperationArticle
+   var article cineMember.OperationArticle
    data, err := article.Marshal(&f.address)
    if err != nil {
       return err
@@ -36,11 +36,11 @@ func (f *flags) write_play() error {
       return err
    }
    // 2. write OperationPlay
-   data, err = os.ReadFile(f.home + "/cine-member.txt")
+   data, err = os.ReadFile(f.home + "/cineMember.txt")
    if err != nil {
       return err
    }
-   var user member.OperationUser
+   var user cineMember.OperationUser
    err = user.Unmarshal(data)
    if err != nil {
       return err
@@ -49,7 +49,7 @@ func (f *flags) write_play() error {
    if !ok {
       return errors.New("OperationArticle.Film")
    }
-   data, err = member.OperationPlay{}.Marshal(&user, asset)
+   data, err = cineMember.OperationPlay{}.Marshal(&user, asset)
    if err != nil {
       return err
    }
@@ -61,7 +61,7 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   var play member.OperationPlay
+   var play cineMember.OperationPlay
    err = play.Unmarshal(data)
    if err != nil {
       return err
@@ -92,7 +92,7 @@ func (f *flags) download() error {
          if err != nil {
             return err
          }
-         var article member.OperationArticle
+         var article cineMember.OperationArticle
          err = article.Unmarshal(data)
          if err != nil {
             return err

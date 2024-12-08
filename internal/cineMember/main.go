@@ -1,7 +1,7 @@
 package main
 
 import (
-   "41.neocities.org/media/cine/member"
+   "41.neocities.org/media/cineMember"
    "41.neocities.org/media/internal"
    "41.neocities.org/text"
    "flag"
@@ -66,5 +66,5 @@ type flags struct {
    representation string
    password string
    play bool
-   address member.Address
+   address cineMember.Address
 }

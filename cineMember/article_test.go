@@ -1,4 +1,4 @@
-package member
+package cineMember
 
 import (
    "41.neocities.org/text"

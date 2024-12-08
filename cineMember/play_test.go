@@ -1,4 +1,4 @@
-package member
+package cineMember
 
 import (
    "fmt"
