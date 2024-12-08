@@ -10,6 +10,26 @@ import (
    "time"
 )
 
+func TestVideos(t *testing.T) {
+   data, err := os.ReadFile("token.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var token web_token
+   err = token.unmarshal(data)
+   if err != nil {
+      t.Fatal(err)
+   }
+   for _, test := range tests {
+      video, err := token.videos(test.video_id)
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Printf("%+v\n", video)
+      time.Sleep(time.Second)
+   }
+}
+
 func TestLogin(t *testing.T) {
    email, password, ok := strings.Cut(os.Getenv("kanopy"), ":")
    if !ok {
@@ -72,26 +92,6 @@ func TestLicense(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%x\n", key)
-      time.Sleep(time.Second)
-   }
-}
-
-func TestVideos(t *testing.T) {
-   data, err := os.ReadFile("token.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var token web_token
-   err = token.unmarshal(data)
-   if err != nil {
-      t.Fatal(err)
-   }
-   for _, test := range tests {
-      video, err := token.videos(test.video_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%+v\n", video)
       time.Sleep(time.Second)
    }
 }

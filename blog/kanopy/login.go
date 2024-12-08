@@ -9,12 +9,6 @@ import (
    "strconv"
 )
 
-// good for 10 years
-type web_token struct {
-   Jwt string
-   UserId int64
-}
-
 func (w *web_token) videos(id int64) (*videos_response, error) {
    req, err := http.NewRequest("", "https://www.kanopy.com", nil)
    if err != nil {
@@ -37,6 +31,12 @@ func (w *web_token) videos(id int64) (*videos_response, error) {
       return nil, err
    }
    return videos, nil
+}
+
+// good for 10 years
+type web_token struct {
+   Jwt string
+   UserId int64
 }
 
 func (*videos_response) Show() string {

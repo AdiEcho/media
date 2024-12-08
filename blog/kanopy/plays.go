@@ -8,58 +8,14 @@ import (
    "strconv"
 )
 
-type membership struct {
-   DomainId int64
-}
-
-func (v *video_plays) dash() (*video_manifest, bool) {
-   for _, manifest := range v.Manifests {
-      if manifest.ManifestType == "dash" {
-         return &manifest, true
-      }
-   }
-   return nil, false
-}
-
 type video_manifest struct {
    DrmLicenseId string
    ManifestType string
    Url string
 }
 
-const x_version = "!/!/!/!"
-
-const user_agent = "!"
-
 type video_plays struct {
    Manifests []video_manifest
-}
-
-func (w *web_token) membership() (*membership, error) {
-   req, err := http.NewRequest("", "https://www.kanopy.com", nil)
-   if err != nil {
-      return nil, err
-   }
-   req.URL.Path = "/kapi/memberships"
-   req.URL.RawQuery = "userId=" + strconv.FormatInt(w.UserId, 10)
-   req.Header = http.Header{
-      "authorization": {"Bearer " + w.Jwt},
-      "user-agent": {user_agent},
-      "x-version": {x_version},
-   }
-   resp, err := http.DefaultClient.Do(req)
-   if err != nil {
-      return nil, err
-   }
-   defer resp.Body.Close()
-   var member struct {
-      List []membership
-   }
-   err = json.NewDecoder(resp.Body).Decode(&member)
-   if err != nil {
-      return nil, err
-   }
-   return &member.List[0], nil
 }
 
 func (w *web_token) plays(
@@ -100,3 +56,47 @@ func (w *web_token) plays(
    }
    return play, nil
 }
+
+func (w *web_token) membership() (*membership, error) {
+   req, err := http.NewRequest("", "https://www.kanopy.com", nil)
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/kapi/memberships"
+   req.URL.RawQuery = "userId=" + strconv.FormatInt(w.UserId, 10)
+   req.Header = http.Header{
+      "authorization": {"Bearer " + w.Jwt},
+      "user-agent": {user_agent},
+      "x-version": {x_version},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var member struct {
+      List []membership
+   }
+   err = json.NewDecoder(resp.Body).Decode(&member)
+   if err != nil {
+      return nil, err
+   }
+   return &member.List[0], nil
+}
+
+type membership struct {
+   DomainId int64
+}
+
+func (v *video_plays) dash() (*video_manifest, bool) {
+   for _, manifest := range v.Manifests {
+      if manifest.ManifestType == "dash" {
+         return &manifest, true
+      }
+   }
+   return nil, false
+}
+
+const x_version = "!/!/!/!"
+
+const user_agent = "!"
