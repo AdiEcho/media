@@ -6,6 +6,16 @@ import (
    "strconv"
 )
 
+type videos_response struct {
+   Playlist struct {
+      Title string
+   }
+   Video struct {
+      ProductionYear int
+      Title string
+   }
+}
+
 func (w *web_token) videos(id int64) (*videos_response, error) {
    req, err := http.NewRequest("", "https://www.kanopy.com", nil)
    if err != nil {
@@ -28,31 +38,4 @@ func (w *web_token) videos(id int64) (*videos_response, error) {
       return nil, err
    }
    return videos, nil
-}
-
-func (*videos_response) Show() string {
-   return ""
-}
-
-func (*videos_response) Season() int {
-   return 0
-}
-
-func (*videos_response) Episode() int {
-   return 0
-}
-
-func (v *videos_response) Title() string {
-   return v.Video.Title
-}
-
-type videos_response struct {
-   Video struct {
-      ProductionYear int
-      Title string
-   }
-}
-
-func (v *videos_response) Year() int {
-   return v.Video.ProductionYear
 }
