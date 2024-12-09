@@ -11,21 +11,6 @@ import (
    "time"
 )
 
-func TestPlaylist(t *testing.T) {
-   for _, test := range tests {
-      discovery, err := test.legacy_id.Discovery()
-      if err != nil {
-         t.Fatal(err)
-      }
-      play, err := discovery.Playlist()
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(play.Resolution720())
-      time.Sleep(time.Second)
-   }
-}
-
 var tests = []struct{
    content_id string
    key_id string
@@ -33,10 +18,10 @@ var tests = []struct{
    url string
 }{
    {
-      content_id: "MTAtMzQ2My0wMDAxLTAwMV8zNA==",
-      key_id: "6eD/jRQxQeW1Lvl/lCPIfA==",
-      legacy_id: LegacyId{"10", "3463", "0001"},
-      url: "itv.com/watch/pulp-fiction/10a3463",
+      content_id: "MS05MzU5LTAwMDEtMDA0XzM0",
+      key_id: "CqlTfeulS5mlu9fu81QtfQ==",
+      legacy_id: LegacyId{"1", "9359", "0001"},
+      url: "itv.com/watch/quantum-of-solace/1a9359",
    },
    {
       content_id: "MTAtMzkxNS0wMDAyLTAwMV8zNA==",
@@ -50,6 +35,21 @@ var tests = []struct{
       legacy_id: LegacyId{"10", "3918", "0001"},
       url: "itv.com/watch/joan/10a3918/10a3918a0001",
    },
+}
+
+func TestPlaylist(t *testing.T) {
+   for _, test := range tests {
+      discovery, err := test.legacy_id.Discovery()
+      if err != nil {
+         t.Fatal(err)
+      }
+      play, err := discovery.Playlist()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(play.Resolution720())
+      time.Sleep(time.Second)
+   }
 }
 
 func TestLegacyId(t *testing.T) {
@@ -69,10 +69,7 @@ func TestDiscovery(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := text.Name(Namer{discovery})
-      if err != nil {
-         t.Fatal(err)
-      }
+      name := text.Name(Namer{discovery})
       fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }
