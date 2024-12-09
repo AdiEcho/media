@@ -28,8 +28,8 @@ func write_segment(data, key []byte) ([]byte, error) {
    }
    track := file.Moof.Traf
    if senc := track.Senc; senc != nil {
-      for i, text := range file.Mdat.Data(&track) {
-         err = senc.Sample[i].DecryptCenc(text, key)
+      for i, data := range file.Mdat.Data(&track) {
+         err = senc.Sample[i].DecryptCenc(data, key)
          if err != nil {
             return nil, err
          }
@@ -264,11 +264,7 @@ func (s *Stream) Download(rep dash.Representation) error {
 }
 
 func (s *Stream) Create(ext string) (*os.File, error) {
-   name, err := text.Name(s.Name)
-   if err != nil {
-      return nil, err
-   }
-   return os.Create(text.Clean(name) + ext)
+   return os.Create(text.Clean(text.Name(s.Name)) + ext)
 }
 
 // wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP

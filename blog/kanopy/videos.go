@@ -7,10 +7,10 @@ import (
 )
 
 type videos_response struct {
-   Playlist struct {
+   Playlist *struct {
       Title string
    }
-   Video struct {
+   Video *struct {
       ProductionYear int
       Title string
    }

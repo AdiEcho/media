@@ -89,73 +89,6 @@ type Entitlement struct {
    }
 }
 
-type Namer struct {
-   Page *AuvioPage
-}
-
-// its just not available from what I can tell
-func (Namer) Year() int {
-   return 0
-}
-
-func (n Namer) Episode() int {
-   return n.Page.Subtitle.Episode
-}
-
-func (n Namer) Season() int {
-   return n.Page.Title.Season
-}
-
-func (n Namer) Show() string {
-   if v := n.Page.Title; v.Season >= 1 {
-      return v.Title
-   }
-   return ""
-}
-
-func (n Namer) Title() string {
-   if v := n.Page.Subtitle; v.Episode >= 1 {
-      return v.Subtitle
-   }
-   return n.Page.Title.Title
-}
-
-type Subtitle struct {
-   Episode  int
-   Subtitle string
-}
-
-// json.data.content.subtitle = "06 - Les ombres de la guerre";
-// json.data.content.subtitle = "Avec Rosamund Pike";
-func (s *Subtitle) UnmarshalText(text []byte) error {
-   s.Subtitle = string(text)
-   if before, after, ok := strings.Cut(s.Subtitle, " - "); ok {
-      if episode, err := strconv.Atoi(before); err == nil {
-         s.Episode = episode
-         s.Subtitle = after
-      }
-   }
-   return nil
-}
-
-type Title struct {
-   Season int
-   Title  string
-}
-
-// json.data.content.title = "Grantchester S01";
-// json.data.content.title = "I care a lot";
-func (t *Title) UnmarshalText(text []byte) error {
-   t.Title = string(text)
-   if before, after, ok := strings.Cut(t.Title, " S"); ok {
-      if season, err := strconv.Atoi(after); err == nil {
-         t.Title = before
-         t.Season = season
-      }
-   }
-   return nil
-}
-
 type WebToken struct {
    ErrorMessage string
    IdToken      string `json:"id_token"`
@@ -202,15 +135,6 @@ type Address struct {
 
 // hard coded in JavaScript
 const api_key = "4_Ml_fJ47GnBAW6FrPzMxh0w"
-
-type AuvioPage struct {
-   AssetId  string
-   Media *struct {
-      AssetId string
-   }
-   Subtitle Subtitle
-   Title    Title
-}
 
 func (a *AuvioPage) GetAssetId() (string, bool) {
    if v := a.AssetId; v != "" {
@@ -312,4 +236,82 @@ func (*Entitlement) RequestHeader() (http.Header, error) {
 
 func (a *Address) String() string {
    return a.Path
+}
+
+func (n Namer) Show() string {
+   if v := n.Page.Title; v.Season >= 1 {
+      return v.Title
+   }
+   return ""
+}
+
+func (n Namer) Title() string {
+   if v := n.Page.Subtitle; v.Episode >= 1 {
+      return v.Subtitle
+   }
+   return n.Page.Title.Title
+}
+
+// its just not available from what I can tell
+func (Namer) Year() int64 {
+   return 0
+}
+
+func (n Namer) Episode() int64 {
+   return n.Page.Subtitle.Episode
+}
+
+type Namer struct {
+   Page *AuvioPage
+}
+
+type AuvioPage struct {
+   AssetId  string
+   Media *struct {
+      AssetId string
+   }
+   Subtitle Subtitle
+   Title    Title
+}
+
+type Subtitle struct {
+   Episode  int64
+   Subtitle string
+}
+
+type Title struct {
+   Season int64
+   Title  string
+}
+
+func (n Namer) Season() int64 {
+   return n.Page.Title.Season
+}
+
+// json.data.content.subtitle = "06 - Les ombres de la guerre";
+// json.data.content.subtitle = "Avec Rosamund Pike";
+func (s *Subtitle) UnmarshalText(text []byte) error {
+   s.Subtitle = string(text)
+   if before, after, ok := strings.Cut(s.Subtitle, " - "); ok {
+      episode, err := strconv.ParseInt(before, 10, 64)
+      if err == nil {
+         s.Episode = episode
+         s.Subtitle = after
+      }
+   }
+   return nil
+}
+
+// json.data.content.title = "Grantchester S01";
+// json.data.content.title = "I care a lot";
+func (t *Title) UnmarshalText(text []byte) error {
+   t.Title = string(text)
+   if before, after, ok := strings.Cut(t.Title, " S"); ok {
+      season, err := strconv.ParseInt(after, 10, 64)
+      if err == nil {
+         t.Title = before
+         t.Season = season
+      }
+   }
+   return nil
 }
