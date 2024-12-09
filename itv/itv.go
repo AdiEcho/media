@@ -10,6 +10,53 @@ import (
    "strings"
 )
 
+func (Client) RequestUrl() (string, bool) {
+   var u url.URL
+   u.Host = "itvpnp.live.ott.irdeto.com"
+   u.Path = "/Widevine/getlicense"
+   u.RawQuery = "AccountId=itvpnp"
+   u.Scheme = "https"
+   return u.String(), true
+}
+
+type Client struct{}
+
+func (Client) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Client) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (Client) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+// this is better than strings.Replace and strings.ReplaceAll
+func graphql_compact(s string) string {
+   field := strings.Fields(s)
+   return strings.Join(field, " ")
+}
+
+func (p *Playlist) Resolution1080() (string, bool) {
+   for _, file := range p.Playlist.Video.MediaFiles {
+      if file.Resolution == "1080" {
+         return file.Href, true
+      }
+   }
+   return "", false
+}
+
+func (p *Playlist) Resolution720() (string, bool) {
+   for _, file := range p.Playlist.Video.MediaFiles {
+      if file.Resolution == "720" {
+         return file.Href, true
+      }
+   }
+   return "", false
+}
+
 // hard geo block
 func (d *DiscoveryTitle) Playlist() (*Playlist, error) {
    var value struct {
@@ -35,8 +82,9 @@ func (d *DiscoveryTitle) Playlist() (*Playlist, error) {
       "single-track",
       "widevine",
    }
-   value.VariantAvailability.PlatformTag = "ctv"
-   //value.VariantAvailability.PlatformTag = "dotcom"
+   value.VariantAvailability.PlatformTag = "dotcom"
+   // 1080p but need L1/SL3000
+   // value.VariantAvailability.PlatformTag = "ctv"
    data, err := json.MarshalIndent(value, "", " ")
    if err != nil {
       return nil, err
@@ -135,6 +183,7 @@ type DiscoveryTitle struct {
 func (n Namer) Year() int64 {
    return n.Discovery.ProductionYear
 }
+
 const query_discovery = `
 {
    titles(filter: {
@@ -157,15 +206,6 @@ const query_discovery = `
    }
 }
 `
-
-func (p *Playlist) Resolution720() (string, bool) {
-   for _, file := range p.Playlist.Video.MediaFiles {
-      if file.Resolution == "720" {
-         return file.Href, true
-      }
-   }
-   return "", false
-}
 
 func (i LegacyId) String() string {
    var b strings.Builder
@@ -204,33 +244,4 @@ type Playlist struct {
          }
       }
    }
-}
-
-type Client struct{}
-
-func (Client) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Client) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Client) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-// this is better than strings.Replace and strings.ReplaceAll
-func graphql_compact(s string) string {
-   field := strings.Fields(s)
-   return strings.Join(field, " ")
-}
-
-func (Client) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Host = "itvpnp.live.ott.irdeto.com"
-   u.Path = "/Widevine/getlicense"
-   u.RawQuery = "AccountId=itvpnp"
-   u.Scheme = "https"
-   return u.String(), true
 }
