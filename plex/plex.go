@@ -27,39 +27,6 @@ type MediaPart struct {
    License *Url
 }
 
-type DiscoverMatch struct {
-   GrandparentTitle string
-   Index int
-   ParentIndex int
-   RatingKey string
-   Title string
-   Year int
-}
-
-type Namer struct {
-   Match *DiscoverMatch
-}
-
-func (n Namer) Episode() int {
-   return n.Match.Index
-}
-
-func (n Namer) Season() int {
-   return n.Match.ParentIndex
-}
-
-func (n Namer) Show() string {
-   return n.Match.GrandparentTitle
-}
-
-func (n Namer) Title() string {
-   return n.Match.Title
-}
-
-func (n Namer) Year() int {
-   return n.Match.Year
-}
-
 type Address struct {
    Path string
 }
@@ -106,4 +73,37 @@ func (u *Url) UnmarshalText(text []byte) error {
    u.Url.Scheme = "https"
    u.Url.Host = "vod.provider.plex.tv"
    return nil
+}
+
+func (n Namer) Show() string {
+   return n.Match.GrandparentTitle
+}
+
+func (n Namer) Title() string {
+   return n.Match.Title
+}
+
+func (n Namer) Episode() int64 {
+   return n.Match.Index
+}
+
+func (n Namer) Season() int64 {
+   return n.Match.ParentIndex
+}
+
+type Namer struct {
+   Match *DiscoverMatch
+}
+
+type DiscoverMatch struct {
+   GrandparentTitle string
+   Index int64
+   ParentIndex int64
+   RatingKey string
+   Title string
+   Year int64
+}
+
+func (n Namer) Year() int64 {
+   return n.Match.Year
 }

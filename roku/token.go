@@ -32,16 +32,6 @@ func (AccountToken) Marshal(
 
 const user_agent = "trc-googletv; production; 0"
 
-type HomeScreen struct {
-   EpisodeNumber int       `json:",string"`
-   ReleaseDate   time.Time // 2007-01-01T000000Z
-   SeasonNumber  int       `json:",string"`
-   Series        *struct {
-      Title string
-   }
-   Title string
-}
-
 func (h *HomeScreen) New(id string) error {
    // outside of US this redirects to
    // therokuchannel.roku.com/enguard
@@ -86,10 +76,6 @@ func (h *HomeScreen) New(id string) error {
    return json.NewDecoder(resp.Body).Decode(h)
 }
 
-type Namer struct {
-   Home HomeScreen
-}
-
 type Playback struct {
    Drm struct {
       Widevine struct {
@@ -111,16 +97,16 @@ func (a *AccountToken) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
 }
 
-func (n *Namer) Year() int {
-   return n.Home.ReleaseDate.Year()
+func (*Playback) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
 }
 
-func (n *Namer) Season() int {
-   return n.Home.SeasonNumber
+func (*Playback) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
 }
 
-func (n *Namer) Episode() int {
-   return n.Home.EpisodeNumber
+func (*Playback) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
 }
 
 func (n *Namer) Title() string {
@@ -134,14 +120,28 @@ func (n *Namer) Show() string {
    return ""
 }
 
-func (*Playback) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
+func (n *Namer) Season() int64 {
+   return n.Home.SeasonNumber
 }
 
-func (*Playback) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
+func (n *Namer) Episode() int64 {
+   return n.Home.EpisodeNumber
 }
 
-func (*Playback) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
+type Namer struct {
+   Home HomeScreen
+}
+
+type HomeScreen struct {
+   EpisodeNumber int64       `json:",string"`
+   ReleaseDate   time.Time // 2007-01-01T000000Z
+   SeasonNumber  int64       `json:",string"`
+   Series        *struct {
+      Title string
+   }
+   Title string
+}
+
+func (n *Namer) Year() int64 {
+   return int64(n.Home.ReleaseDate.Year())
 }
