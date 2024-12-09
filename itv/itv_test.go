@@ -11,6 +11,21 @@ import (
    "time"
 )
 
+func TestPlaylist(t *testing.T) {
+   for _, test := range tests {
+      discovery, err := test.legacy_id.Discovery()
+      if err != nil {
+         t.Fatal(err)
+      }
+      play, err := discovery.Playlist()
+      if err != nil {
+         t.Fatal(err)
+      }
+      fmt.Println(play.Resolution720())
+      time.Sleep(time.Second)
+   }
+}
+
 var tests = []struct{
    content_id string
    key_id string
@@ -59,21 +74,6 @@ func TestDiscovery(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%q\n", name)
-      time.Sleep(time.Second)
-   }
-}
-
-func TestPlaylist(t *testing.T) {
-   for _, test := range tests {
-      discovery, err := test.legacy_id.Discovery()
-      if err != nil {
-         t.Fatal(err)
-      }
-      play, err := discovery.Playlist()
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(play.Resolution720())
       time.Sleep(time.Second)
    }
 }
