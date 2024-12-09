@@ -48,18 +48,6 @@ func (v *VideoContent) set(parent *VideoContent) {
    }
 }
 
-type VideoContent struct {
-   Children       []*VideoContent
-   DetailedType   string `json:"detailed_type"`
-   EpisodeNumber  int    `json:"episode_number,string"`
-   Id             int    `json:",string"`
-   SeriesId       int    `json:"series_id,string"`
-   Title          string
-   VideoResources []VideoResource `json:"video_resources"`
-   Year           int
-   parent         *VideoContent
-}
-
 func (v *VideoContent) Unmarshal(data []byte) error {
    err := json.Unmarshal(data, v)
    if err != nil {
@@ -67,6 +55,18 @@ func (v *VideoContent) Unmarshal(data []byte) error {
    }
    v.set(nil)
    return nil
+}
+
+type VideoContent struct {
+   Children       []*VideoContent
+   DetailedType   string `json:"detailed_type"`
+   EpisodeNumber  int64    `json:"episode_number,string"`
+   Id             int64    `json:",string"`
+   SeriesId       int    `json:"series_id,string"`
+   Title          string
+   VideoResources []VideoResource `json:"video_resources"`
+   Year           int64
+   parent         *VideoContent
 }
 
 func (*VideoContent) Marshal(id int) ([]byte, error) {

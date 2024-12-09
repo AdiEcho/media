@@ -39,33 +39,6 @@ type VideoSeason struct {
    show     *OnDemand
 }
 
-type Namer struct {
-   Video *OnDemand
-}
-
-func (Namer) Season() int {
-   return 0
-}
-
-func (Namer) Episode() int {
-   return 0
-}
-
-func (Namer) Year() int {
-   return 0
-}
-
-func (n Namer) Show() string {
-   if v := n.Video.season; v != nil {
-      return v.show.Name
-   }
-   return ""
-}
-
-func (n Namer) Title() string {
-   return n.Video.Slug
-}
-
 type OnDemand struct {
    Episode string `json:"_id"`
    Id      string
@@ -226,4 +199,31 @@ func (o OnDemand) Clip() (*EpisodeClip, error) {
       return nil, err
    }
    return &clips[0], nil
+}
+
+func (Namer) Season() int64 {
+   return 0
+}
+
+func (Namer) Episode() int64 {
+   return 0
+}
+
+func (Namer) Year() int64 {
+   return 0
+}
+
+type Namer struct {
+   Video *OnDemand
+}
+
+func (n Namer) Show() string {
+   if v := n.Video.season; v != nil {
+      return v.show.Name
+   }
+   return ""
+}
+
+func (n Namer) Title() string {
+   return n.Video.Slug
 }

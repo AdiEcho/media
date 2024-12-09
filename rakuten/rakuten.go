@@ -7,21 +7,6 @@ import (
    "net/http"
 )
 
-type GizmoMovie struct {
-   Data struct {
-      Title string
-      Year  int
-   }
-}
-
-func (g *GizmoMovie) Title() string {
-   return g.Data.Title
-}
-
-func (g *GizmoMovie) Year() int {
-   return g.Data.Year
-}
-
 // geo block
 func (o *OnDemand) Info() (*StreamInfo, error) {
    data, err := json.Marshal(o)
@@ -77,18 +62,6 @@ func (s *StreamInfo) RequestUrl() (string, bool) {
    return s.LicenseUrl, true
 }
 
-func (*GizmoMovie) Show() string {
-   return ""
-}
-
-func (*GizmoMovie) Season() int {
-   return 0
-}
-
-func (*GizmoMovie) Episode() int {
-   return 0
-}
-
 func (*StreamInfo) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -102,4 +75,31 @@ func (*StreamInfo) RequestHeader() (http.Header, error) {
 
 func (*StreamInfo) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
+}
+
+func (*GizmoMovie) Show() string {
+   return ""
+}
+
+func (g *GizmoMovie) Title() string {
+   return g.Data.Title
+}
+
+func (*GizmoMovie) Season() int64 {
+   return 0
+}
+
+func (*GizmoMovie) Episode() int64 {
+   return 0
+}
+
+type GizmoMovie struct {
+   Data struct {
+      Title string
+      Year  int64
+   }
+}
+
+func (g *GizmoMovie) Year() int64 {
+   return g.Data.Year
 }

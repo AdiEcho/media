@@ -6,40 +6,6 @@ import (
    "strings"
 )
 
-type Namer struct {
-   Content *VideoContent
-}
-
-func (n Namer) Episode() int {
-   return n.Content.EpisodeNumber
-}
-
-func (n Namer) Season() int {
-   if n.Content.parent != nil {
-      return n.Content.parent.Id
-   }
-   return 0
-}
-
-func (n Namer) Show() string {
-   if v := n.Content.parent; v != nil {
-      return v.parent.Title
-   }
-   return ""
-}
-
-// S01:E03 - Hell Hath No Fury
-func (n Namer) Title() string {
-   if _, v, ok := strings.Cut(n.Content.Title, " - "); ok {
-      return v
-   }
-   return n.Content.Title
-}
-
-func (n Namer) Year() int {
-   return n.Content.Year
-}
-
 type Resolution struct {
    Int64 int64
 }
@@ -90,4 +56,38 @@ func (*VideoResource) UnwrapResponse(b []byte) ([]byte, error) {
 
 func (*VideoResource) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
+}
+
+func (n Namer) Show() string {
+   if v := n.Content.parent; v != nil {
+      return v.parent.Title
+   }
+   return ""
+}
+
+// S01:E03 - Hell Hath No Fury
+func (n Namer) Title() string {
+   if _, v, ok := strings.Cut(n.Content.Title, " - "); ok {
+      return v
+   }
+   return n.Content.Title
+}
+
+type Namer struct {
+   Content *VideoContent
+}
+
+func (n Namer) Episode() int64 {
+   return n.Content.EpisodeNumber
+}
+
+func (n Namer) Year() int64 {
+   return n.Content.Year
+}
+
+func (n Namer) Season() int64 {
+   if n.Content.parent != nil {
+      return n.Content.parent.Id
+   }
+   return 0
 }
