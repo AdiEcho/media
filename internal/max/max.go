@@ -38,7 +38,7 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   resp, err := http.Get(play.Fallback.Manifest.Url.Url)
+   resp, err := http.Get(play.Fallback.Manifest.Url.Data)
    if err != nil {
       return err
    }

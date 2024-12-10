@@ -253,11 +253,11 @@ func (n Namer) Title() string {
 }
 
 // its just not available from what I can tell
-func (Namer) Year() int64 {
+func (Namer) Year() int {
    return 0
 }
 
-func (n Namer) Episode() int64 {
+func (n Namer) Episode() int {
    return n.Page.Subtitle.Episode
 }
 
@@ -274,43 +274,43 @@ type AuvioPage struct {
    Title    Title
 }
 
+func (n Namer) Season() int {
+   return n.Page.Title.Season
+}
+
 type Subtitle struct {
-   Episode  int64
+   Episode  int
    Subtitle string
 }
 
 type Title struct {
-   Season int64
+   Season int
    Title  string
 }
 
-func (n Namer) Season() int64 {
-   return n.Page.Title.Season
-}
-
-// json.data.content.subtitle = "06 - Les ombres de la guerre";
-// json.data.content.subtitle = "Avec Rosamund Pike";
-func (s *Subtitle) UnmarshalText(text []byte) error {
-   s.Subtitle = string(text)
-   if before, after, ok := strings.Cut(s.Subtitle, " - "); ok {
-      episode, err := strconv.ParseInt(before, 10, 64)
+// json.data.content.title = "Grantchester S01";
+// json.data.content.title = "I care a lot";
+func (t *Title) UnmarshalText(data []byte) error {
+   t.Title = string(data)
+   if before, after, ok := strings.Cut(t.Title, " S"); ok {
+      season, err := strconv.Atoi(after)
       if err == nil {
-         s.Episode = episode
-         s.Subtitle = after
+         t.Title = before
+         t.Season = season
       }
    }
    return nil
 }
 
-// json.data.content.title = "Grantchester S01";
-// json.data.content.title = "I care a lot";
-func (t *Title) UnmarshalText(text []byte) error {
-   t.Title = string(text)
-   if before, after, ok := strings.Cut(t.Title, " S"); ok {
-      season, err := strconv.ParseInt(after, 10, 64)
+// json.data.content.subtitle = "06 - Les ombres de la guerre";
+// json.data.content.subtitle = "Avec Rosamund Pike";
+func (s *Subtitle) UnmarshalText(data []byte) error {
+   s.Subtitle = string(data)
+   if before, after, ok := strings.Cut(s.Subtitle, " - "); ok {
+      episode, err := strconv.Atoi(before)
       if err == nil {
-         t.Title = before
-         t.Season = season
+         s.Episode = episode
+         s.Subtitle = after
       }
    }
    return nil

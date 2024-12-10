@@ -120,28 +120,28 @@ func (n *Namer) Show() string {
    return ""
 }
 
-func (n *Namer) Season() int64 {
-   return n.Home.SeasonNumber
-}
-
-func (n *Namer) Episode() int64 {
-   return n.Home.EpisodeNumber
-}
-
 type Namer struct {
    Home HomeScreen
 }
 
 type HomeScreen struct {
-   EpisodeNumber int64       `json:",string"`
+   EpisodeNumber int       `json:",string"`
    ReleaseDate   time.Time // 2007-01-01T000000Z
-   SeasonNumber  int64       `json:",string"`
+   SeasonNumber  int       `json:",string"`
    Series        *struct {
       Title string
    }
    Title string
 }
 
-func (n *Namer) Year() int64 {
-   return int64(n.Home.ReleaseDate.Year())
+func (n *Namer) Season() int {
+   return n.Home.SeasonNumber
+}
+
+func (n *Namer) Episode() int {
+   return n.Home.EpisodeNumber
+}
+
+func (n *Namer) Year() int {
+   return n.Home.ReleaseDate.Year()
 }

@@ -116,6 +116,7 @@ func (v *VideoItem) Year() int {
 
 func (n *Number) UnmarshalText(data []byte) error {
    if len(data) >= 1 {
+      var err error
       n.Data, err = strconv.Atoi(string(data))
       if err != nil {
          return err

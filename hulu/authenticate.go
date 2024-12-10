@@ -149,7 +149,7 @@ func (a *Authenticate) DeepLink(id *EntityId) (*DeepLink, error) {
    }
    req.URL.Path = "/content/v5/deeplink/playback"
    req.URL.RawQuery = url.Values{
-      "id": {id.Text},
+      "id": {id.Data},
       "namespace": {"entity"},
    }.Encode()
    req.Header.Set("authorization", "Bearer " + a.Data.UserToken)

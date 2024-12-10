@@ -74,17 +74,6 @@ func (d *DiscoveryTitle) Playlist() (*Playlist, error) {
    return play, nil
 }
 
-func (n Namer) Show() string {
-   if n.Discovery.Brand != nil {
-      return n.Discovery.Brand.Title
-   }
-   return ""
-}
-
-func (n Namer) Title() string {
-   return n.Discovery.Title
-}
-
 func (i LegacyId) Discovery() (*DiscoveryTitle, error) {
    req, err := http.NewRequest(
       "", "https://content-inventory.prd.oasvc.itv.com/discovery", nil,
@@ -116,35 +105,6 @@ func (i LegacyId) Discovery() (*DiscoveryTitle, error) {
       return nil, errors.New(v[0].Message)
    }
    return &value.Data.Titles[0], nil
-}
-
-func (n Namer) Episode() int64 {
-   return n.Discovery.EpisodeNumber
-}
-
-func (n Namer) Season() int64 {
-   return n.Discovery.SeriesNumber
-}
-
-type Namer struct {
-   Discovery *DiscoveryTitle
-}
-
-type DiscoveryTitle struct {
-   LatestAvailableVersion struct {
-      PlaylistUrl string
-   }
-   Brand *struct {
-      Title string
-   }
-   EpisodeNumber int64
-   ProductionYear int64
-   SeriesNumber int64
-   Title string
-}
-
-func (n Namer) Year() int64 {
-   return n.Discovery.ProductionYear
 }
 
 const query_discovery = `
@@ -239,4 +199,44 @@ type MediaFile struct {
 
 type Href struct {
    Data string
+}
+
+func (n Namer) Show() string {
+   if n.Discovery.Brand != nil {
+      return n.Discovery.Brand.Title
+   }
+   return ""
+}
+
+func (n Namer) Title() string {
+   return n.Discovery.Title
+}
+
+type Namer struct {
+   Discovery *DiscoveryTitle
+}
+
+type DiscoveryTitle struct {
+   LatestAvailableVersion struct {
+      PlaylistUrl string
+   }
+   Brand *struct {
+      Title string
+   }
+   EpisodeNumber int
+   ProductionYear int
+   SeriesNumber int
+   Title string
+}
+
+func (n Namer) Episode() int {
+   return n.Discovery.EpisodeNumber
+}
+
+func (n Namer) Season() int {
+   return n.Discovery.SeriesNumber
+}
+
+func (n Namer) Year() int {
+   return n.Discovery.ProductionYear
 }

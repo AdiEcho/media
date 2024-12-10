@@ -85,21 +85,21 @@ func (g *GizmoMovie) Title() string {
    return g.Data.Title
 }
 
-func (*GizmoMovie) Season() int64 {
+func (*GizmoMovie) Season() int {
    return 0
 }
 
-func (*GizmoMovie) Episode() int64 {
+func (*GizmoMovie) Episode() int {
    return 0
 }
 
 type GizmoMovie struct {
    Data struct {
       Title string
-      Year  int64
+      Year  int
    }
 }
 
-func (g *GizmoMovie) Year() int64 {
+func (g *GizmoMovie) Year() int {
    return g.Data.Year
 }

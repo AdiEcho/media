@@ -61,7 +61,7 @@ type VideoContent struct {
    Children       []*VideoContent
    DetailedType   string `json:"detailed_type"`
    EpisodeNumber  int64    `json:"episode_number,string"`
-   Id             int64    `json:",string"`
+   Id             int    `json:",string"`
    SeriesId       int    `json:"series_id,string"`
    Title          string
    VideoResources []VideoResource `json:"video_resources"`

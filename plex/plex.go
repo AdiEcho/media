@@ -64,9 +64,9 @@ type Url struct {
    Url *url.URL
 }
 
-func (u *Url) UnmarshalText(text []byte) error {
+func (u *Url) UnmarshalText(data []byte) error {
    u.Url = &url.URL{}
-   err := u.Url.UnmarshalBinary(text)
+   err := u.Url.UnmarshalBinary(data)
    if err != nil {
       return err
    }
@@ -83,27 +83,27 @@ func (n Namer) Title() string {
    return n.Match.Title
 }
 
-func (n Namer) Episode() int64 {
-   return n.Match.Index
-}
-
-func (n Namer) Season() int64 {
-   return n.Match.ParentIndex
-}
-
 type Namer struct {
    Match *DiscoverMatch
 }
 
 type DiscoverMatch struct {
    GrandparentTitle string
-   Index int64
-   ParentIndex int64
+   Index int
+   ParentIndex int
    RatingKey string
    Title string
-   Year int64
+   Year int
 }
 
-func (n Namer) Year() int64 {
+func (n Namer) Episode() int {
+   return n.Match.Index
+}
+
+func (n Namer) Season() int {
+   return n.Match.ParentIndex
+}
+
+func (n Namer) Year() int {
    return n.Match.Year
 }

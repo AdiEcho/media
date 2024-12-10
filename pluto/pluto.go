@@ -201,15 +201,15 @@ func (o OnDemand) Clip() (*EpisodeClip, error) {
    return &clips[0], nil
 }
 
-func (Namer) Season() int64 {
+func (Namer) Season() int {
    return 0
 }
 
-func (Namer) Episode() int64 {
+func (Namer) Episode() int {
    return 0
 }
 
-func (Namer) Year() int64 {
+func (Namer) Year() int {
    return 0
 }
 
