@@ -20,9 +20,5 @@ func TestArticle(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", article)
-   name, err := text.Name(&article)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%q\n", name)
+   fmt.Printf("%q\n", text.Name(&article))
 }

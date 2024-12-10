@@ -29,10 +29,7 @@ func TestMedia(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := text.Name(&Namer{media})
-      if err != nil {
-         t.Fatal(err)
-      }
+      name := text.Name(&Namer{media})
       fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }

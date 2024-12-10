@@ -83,11 +83,7 @@ func TestDetails(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", details)
-      name, err := text.Name(details)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
+      fmt.Printf("%q\n", text.Name(details))
       time.Sleep(time.Second)
    }
 }

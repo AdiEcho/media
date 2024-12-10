@@ -88,11 +88,7 @@ func TestVideo(t *testing.T) {
       t.Fatal(err)
    }
    fmt.Printf("%+v\n", item)
-   name, err := text.Name(item)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Printf("%q\n", name)
+   fmt.Printf("%q\n", text.Name(item))
 }
 
 var video_test = struct{

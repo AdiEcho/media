@@ -33,11 +33,7 @@ func TestContent(t *testing.T) {
       if !ok {
          t.Fatal("ContentCompiler.Video")
       }
-      name, err := text.Name(video)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
+      fmt.Printf("%q\n", text.Name(video))
       time.Sleep(time.Second)
    }
 }

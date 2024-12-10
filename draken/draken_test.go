@@ -89,10 +89,7 @@ func TestMovie(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", movie)
-      name, err := text.Name(&Namer{movie})
-      if err != nil {
-         t.Fatal(err)
-      }
+      name := text.Name(&Namer{movie})
       fmt.Printf("%q\n", name)
       time.Sleep(99 * time.Millisecond)
    }
