@@ -28,10 +28,13 @@ func main() {
    req.Header["X-Version"] = []string{"!/!/!/!"}
    req.URL = &url.URL{}
    req.URL.Host = "www.kanopy.com"
+   
    // show
    // req.URL.Path = "/kapi/videos/14881161"
+   
    // title
    req.URL.Path = "/kapi/videos/14881167"
+   
    req.URL.Scheme = "https"
    resp, err := http.DefaultClient.Do(&req)
    if err != nil {

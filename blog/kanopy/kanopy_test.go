@@ -10,22 +10,6 @@ import (
    "time"
 )
 
-var tests = []struct{
-   key_id string
-   url string
-   video_id int64
-}{
-   {
-      key_id: "DUCS1DH4TB6Po1oEkG9xUA==",
-      url: "kanopy.com/en/product/13808102",
-      video_id: 13808102,
-   },
-   {
-      url: "kanopy.com/en/product/14881167",
-      video_id: 14881167,
-   },
-}
-
 func TestLogin(t *testing.T) {
    email, password, ok := strings.Cut(os.Getenv("kanopy"), ":")
    if !ok {
