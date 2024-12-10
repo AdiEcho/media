@@ -163,10 +163,7 @@ func TestPage(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", page)
-      name, err := text.Name(&Namer{page})
-      if err != nil {
-         t.Fatal(err)
-      }
+      name := text.Name(&Namer{page})
       fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }

@@ -70,10 +70,7 @@ func TestVideo(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", video)
-      name, err := text.Name(Namer{video})
-      if err != nil {
-         t.Fatal(err)
-      }
+      name := text.Name(Namer{video})
       fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }

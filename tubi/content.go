@@ -22,7 +22,7 @@ func (v *VideoContent) Video() (*VideoResource, bool) {
    }
    a := v.VideoResources[0]
    for _, b := range v.VideoResources {
-      if b.Resolution.Int64 > a.Resolution.Int64 {
+      if b.Resolution.Data > a.Resolution.Data {
          a = b
       }
    }
@@ -60,12 +60,12 @@ func (v *VideoContent) Unmarshal(data []byte) error {
 type VideoContent struct {
    Children       []*VideoContent
    DetailedType   string `json:"detailed_type"`
-   EpisodeNumber  int64    `json:"episode_number,string"`
+   EpisodeNumber  int    `json:"episode_number,string"`
    Id             int    `json:",string"`
    SeriesId       int    `json:"series_id,string"`
    Title          string
    VideoResources []VideoResource `json:"video_resources"`
-   Year           int64
+   Year           int
    parent         *VideoContent
 }
 

@@ -77,15 +77,15 @@ type Namer struct {
    Content *VideoContent
 }
 
-func (n Namer) Episode() int64 {
+func (n Namer) Episode() int {
    return n.Content.EpisodeNumber
 }
 
-func (n Namer) Year() int64 {
+func (n Namer) Year() int {
    return n.Content.Year
 }
 
-func (n Namer) Season() int64 {
+func (n Namer) Season() int {
    if n.Content.parent != nil {
       return n.Content.parent.Id
    }

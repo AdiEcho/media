@@ -34,10 +34,7 @@ func TestContent(t *testing.T) {
             t.Fatal("VideoContent.Get")
          }
       }
-      name, err := text.Name(Namer{content})
-      if err != nil {
-         t.Fatal(err)
-      }
+      name := text.Name(Namer{content})
       fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }

@@ -36,11 +36,7 @@ func TestMatch(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := text.Name(&Namer{match})
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Println(name)
+      fmt.Println(text.Name(&Namer{match}))
       time.Sleep(time.Second)
    }
 }

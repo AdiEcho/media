@@ -70,11 +70,7 @@ func TestItemUsa(t *testing.T) {
          if err != nil {
             t.Fatal(err)
          }
-         name, err := text.Name(&item)
-         if err != nil {
-            t.Fatal(err)
-         }
-         fmt.Printf("%q\n", name)
+         fmt.Printf("%q\n", text.Name(&item))
          time.Sleep(time.Second)
       }
    }

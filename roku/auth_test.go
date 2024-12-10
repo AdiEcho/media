@@ -17,10 +17,7 @@ func TestContent(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := text.Name(&Namer{home})
-      if err != nil {
-         t.Fatal(err)
-      }
+      name := text.Name(&Namer{home})
       fmt.Printf("%q\n", name)
       time.Sleep(time.Second)
    }

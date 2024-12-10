@@ -90,11 +90,7 @@ func TestRoutes(t *testing.T) {
          t.Fatal(err)
       }
       fmt.Printf("%+v\n", routes)
-      name, err := text.Name(routes)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
+      fmt.Printf("%q\n", text.Name(routes))
       time.Sleep(time.Second)
    }
 }

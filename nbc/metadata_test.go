@@ -3,28 +3,9 @@ package nbc
 import (
    "41.neocities.org/text"
    "fmt"
-   "reflect"
    "testing"
    "time"
 )
-
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
-   }
-}
-
-var size_tests = []any{
-   CoreVideo{},
-   Metadata{},
-   OnDemand{},
-   page_request{},
-}
 
 func TestMetadata(t *testing.T) {
    for _, test := range tests {
@@ -33,11 +14,7 @@ func TestMetadata(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      name, err := text.Name(&meta)
-      if err != nil {
-         t.Fatal(err)
-      }
-      fmt.Printf("%q\n", name)
+      fmt.Printf("%q\n", text.Name(&meta))
       time.Sleep(time.Second)
    }
 }
