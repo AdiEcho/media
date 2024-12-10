@@ -7,7 +7,7 @@ import (
 )
 
 type Resolution struct {
-   Int64 int64
+   Data int64
 }
 
 func (r *Resolution) UnmarshalText(text []byte) error {
@@ -15,7 +15,7 @@ func (r *Resolution) UnmarshalText(text []byte) error {
    s = strings.TrimPrefix(s, "VIDEO_RESOLUTION_")
    s = strings.TrimSuffix(s, "P")
    var err error
-   r.Int64, err = strconv.ParseInt(s, 10, 64)
+   r.Data, err = strconv.ParseInt(s, 10, 64)
    if err != nil {
       return err
    }
@@ -42,7 +42,7 @@ func (v *VideoResource) RequestUrl() (string, bool) {
 
 func (r Resolution) MarshalText() ([]byte, error) {
    b := []byte("VIDEO_RESOLUTION_")
-   b = strconv.AppendInt(b, r.Int64, 10)
+   b = strconv.AppendInt(b, r.Data, 10)
    return append(b, 'P'), nil
 }
 

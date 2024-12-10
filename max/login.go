@@ -70,30 +70,6 @@ func (v *LinkLogin) Playback(web *Address) (*Playback, error) {
    return resp_body, nil
 }
 
-func (m *Manifest) UnmarshalText(text []byte) error {
-   m.Url = strings.Replace(string(text), "_fallback", "", 1)
-   return nil
-}
-
-type Manifest struct {
-   Url string
-}
-
-type Playback struct {
-   Drm struct {
-      Schemes struct {
-         Widevine struct {
-            LicenseUrl string
-         }
-      }
-   }
-   Fallback struct {
-      Manifest struct {
-         Url Manifest
-      }
-   }
-}
-
 func (*Playback) WrapRequest(b []byte) ([]byte, error) {
    return b, nil
 }
@@ -300,4 +276,28 @@ type LinkLogin struct {
 
 func (v *LinkLogin) Unmarshal(data []byte) error {
    return json.Unmarshal(data, v)
+}
+
+type Playback struct {
+   Drm struct {
+      Schemes struct {
+         Widevine struct {
+            LicenseUrl string
+         }
+      }
+   }
+   Fallback struct {
+      Manifest struct {
+         Url Url
+      }
+   }
+}
+
+type Url struct {
+   Data string
+}
+
+func (u *Url) UnmarshalText(text []byte) error {
+   u.Data = strings.Replace(string(text), "_fallback", "", 1)
+   return nil
 }

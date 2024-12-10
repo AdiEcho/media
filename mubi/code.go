@@ -38,12 +38,12 @@ var ClientCountry = "US"
 const client = "web"
 
 type Address struct {
-   Text string
+   Data string
 }
 
 func (a *Address) Set(text string) error {
    var ok bool
-   _, a.Text, ok = strings.Cut(text, "/films/")
+   _, a.Data, ok = strings.Cut(text, "/films/")
    if !ok {
       return errors.New("/films/")
    }
@@ -62,7 +62,7 @@ type FilmResponse struct {
 }
 
 func (a *Address) String() string {
-   return a.Text
+   return a.Data
 }
 
 type Namer struct {
@@ -86,7 +86,7 @@ func (a *Address) Film() (*FilmResponse, error) {
    if err != nil {
       return nil, err
    }
-   req.URL.Path = "/v3/films/" + a.Text
+   req.URL.Path = "/v3/films/" + a.Data
    req.Header = http.Header{
       "client": {client},
       "client-country": {ClientCountry},

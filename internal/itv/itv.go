@@ -25,15 +25,15 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   address, ok := play.Resolution720()
+   file, ok := play.Resolution1080()
    if !ok {
-      return errors.New("resolution 720")
+      return errors.New("resolution 1080")
    }
    http.DefaultClient.Jar, err = cookiejar.New(nil)
    if err != nil {
       return err
    }
-   resp, err := http.Get(address)
+   resp, err := http.Get(file.Href.Data)
    if err != nil {
       return err
    }
@@ -55,7 +55,7 @@ func (f *flags) download() error {
          fmt.Print(&rep, "\n\n")
       case rep.Id:
          f.s.Name = itv.Namer{discovery}
-         f.s.Client = itv.Client{}
+         f.s.Client = file
          return f.s.Download(rep)
       }
    }

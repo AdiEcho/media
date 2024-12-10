@@ -25,7 +25,7 @@ Download media or send API requests
 16. Draken Film
 17. CineMember
 
-[1]://f002.backblazeb2.com/file/ql8mlh/videos/Paint.It.Black.2016.mp4
+[1]://f002.backblazeb2.com/file/minerals/Paint.It.Black.2016.mp4
 
 ## Contact
 

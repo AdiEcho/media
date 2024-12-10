@@ -37,6 +37,7 @@ func (v *VideoItem) Mpd() string {
    b = append(b, "&formats=MPEG-DASH"...)
    return string(b)
 }
+
 func (v *VideoItem) asset_type() string {
    if v.MediaType == "Movie" {
       return "DASH_CENC_PRECON"
@@ -101,6 +102,28 @@ func (v *VideoItem) Show() string {
    return ""
 }
 
+func (v *VideoItem) Season() int {
+   return v.SeasonNum.Data
+}
+
+func (v *VideoItem) Episode() int {
+   return v.EpisodeNum.Data
+}
+
+func (v *VideoItem) Year() int {
+   return v.AirDateIso.Year()
+}
+
+func (n *Number) UnmarshalText(data []byte) error {
+   if len(data) >= 1 {
+      n.Data, err = strconv.Atoi(string(data))
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
+
 type VideoItem struct {
    AirDateIso time.Time `json:"_airDateISO"`
    CmsAccountId string
@@ -112,16 +135,10 @@ type VideoItem struct {
    SeriesTitle string
 }
 
-///
-
-func (v *VideoItem) Season() int {
-   return int(v.SeasonNum)
+type Number struct {
+   Data int
 }
 
-func (v *VideoItem) Episode() int {
-   return int(v.EpisodeNum)
-}
-
-func (v *VideoItem) Year() int {
-   return v.AirDateIso.Year()
+func (n Number) MarshalText() ([]byte, error) {
+   return strconv.AppendInt(nil, int64(n.Data), 10), nil
 }

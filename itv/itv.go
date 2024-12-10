@@ -10,51 +10,15 @@ import (
    "strings"
 )
 
-func (Client) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Host = "itvpnp.live.ott.irdeto.com"
-   u.Path = "/Widevine/getlicense"
-   u.RawQuery = "AccountId=itvpnp"
-   u.Scheme = "https"
-   return u.String(), true
-}
-
-type Client struct{}
-
-func (Client) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Client) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Client) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
+func (h *Href) UnmarshalText(data []byte) error {
+   h.Data = strings.Replace(string(data), "itvpnpctv", "itvpnpdotcom", 1)
+   return nil
 }
 
 // this is better than strings.Replace and strings.ReplaceAll
 func graphql_compact(s string) string {
    field := strings.Fields(s)
    return strings.Join(field, " ")
-}
-
-func (p *Playlist) Resolution1080() (string, bool) {
-   for _, file := range p.Playlist.Video.MediaFiles {
-      if file.Resolution == "1080" {
-         return file.Href, true
-      }
-   }
-   return "", false
-}
-
-func (p *Playlist) Resolution720() (string, bool) {
-   for _, file := range p.Playlist.Video.MediaFiles {
-      if file.Resolution == "720" {
-         return file.Href, true
-      }
-   }
-   return "", false
 }
 
 // hard geo block
@@ -82,9 +46,8 @@ func (d *DiscoveryTitle) Playlist() (*Playlist, error) {
       "single-track",
       "widevine",
    }
-   value.VariantAvailability.PlatformTag = "dotcom"
-   // 1080p but need L1/SL3000
-   // value.VariantAvailability.PlatformTag = "ctv"
+   // 1080p
+   value.VariantAvailability.PlatformTag = "ctv"
    data, err := json.MarshalIndent(value, "", " ")
    if err != nil {
       return nil, err
@@ -235,13 +198,45 @@ func (i *LegacyId) Set(text string) error {
 
 type LegacyId [3]string
 
+func (p *Playlist) Resolution1080() (*MediaFile, bool) {
+   for _, file := range p.Playlist.Video.MediaFiles {
+      if file.Resolution == "1080" {
+         return &file, true
+      }
+   }
+   return nil, false
+}
+
+func (*MediaFile) WrapRequest(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*MediaFile) UnwrapResponse(b []byte) ([]byte, error) {
+   return b, nil
+}
+
+func (*MediaFile) RequestHeader() (http.Header, error) {
+   return http.Header{}, nil
+}
+
+func (m *MediaFile) RequestUrl() (string, bool) {
+   return m.KeyServiceUrl, true
+}
+
 type Playlist struct {
    Playlist struct {
       Video struct {
-         MediaFiles []struct {
-            Href string
-            Resolution string
-         }
+         MediaFiles []MediaFile
       }
    }
+}
+
+type MediaFile struct {
+   Href Href
+   KeyServiceUrl string
+   Resolution string
+}
+
+type Href struct {
+   Data string
 }

@@ -94,23 +94,6 @@ func (a *AppToken) ComCbsCa() error {
    return a.New("c0b1d5d6ed27a3f6")
 }
 
-func (n Number) MarshalText() ([]byte, error) {
-   return strconv.AppendInt(nil, int64(n), 10), nil
-}
-
-func (n *Number) UnmarshalText(text []byte) error {
-   if len(text) >= 1 {
-      i, err := strconv.ParseInt(string(text), 10, 64)
-      if err != nil {
-         return err
-      }
-      *n = Number(i)
-   }
-   return nil
-}
-
-type Number int64
-
 func (*SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
    return b, nil
 }

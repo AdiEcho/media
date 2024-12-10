@@ -64,16 +64,16 @@ func (d *Details) Title() string {
 }
 
 type EntityId struct {
-   Text string
+   Data string
 }
 
 func (e *EntityId) String() string {
-   return e.Text
+   return e.Data
 }
 
 // hulu.com/watch/023c49bf-6a99-4c67-851c-4c9e7609cc1d
 func (e *EntityId) Set(s string) error {
-   e.Text = path.Base(s)
+   e.Data = path.Base(s)
    return nil
 }
 
