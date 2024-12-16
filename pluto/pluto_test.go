@@ -11,6 +11,20 @@ import (
    "time"
 )
 
+// the slug is useful as it sometimes contains the year, but its not worth
+// parsing since its sometimes missing
+var video_tests = []struct{
+   id     string
+   key_id string
+   url    string
+}{
+   {
+      id:     "675a0fa22678a50014690c3f",
+      key_id: "AAAAAGdaD6FuwTSRB/+yHg==",
+      url:    "pluto.tv/on-demand/movies/675a0fa22678a50014690c3f",
+   },
+}
+
 func TestClip(t *testing.T) {
    for _, test := range video_tests {
       clip, err := OnDemand{Id: test.id}.Clip()
@@ -107,28 +121,4 @@ func TestLicense(t *testing.T) {
       fmt.Printf("%x\n", key)
       time.Sleep(time.Second)
    }
-}
-
-// the slug is useful as it sometimes contains the year, but its not worth
-// parsing since its sometimes missing
-var video_tests = []struct {
-   id     string
-   key_id string
-   url    string
-}{
-   {
-      id:     "5c4bb2b308d10f9a25bbc6af",
-      key_id: "0000000066bfe3cd26602c92dc082e3b",
-      url:    "pluto.tv/on-demand/movies/bound-paramount-1-1",
-   },
-   {
-      id:     "66b3838317101c00130b411e",
-      key_id: "0000000066b3c161c1cee84ffce71de3",
-      url:    "pluto.tv/on-demand/movies/just-go-with-it-2011-1-1",
-   },
-   {
-      id:     "6356d14136d64a001450b121",
-      key_id: "000000006358c035248b647dad3c09ad",
-      url:    "pluto.tv/on-demand/series/frasier-cbs-tv/season/1/episode/space-quest-1992-1-2",
-   },
 }
