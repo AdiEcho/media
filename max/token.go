@@ -4,6 +4,7 @@ import "net/http"
 
 const (
    device_info = "!/!(!/!;!/!;!/!)"
+   disco_client = "!:!:beam:!"
    prd_api = "https://default.prd.api.discomax.com"
 )
 
@@ -16,7 +17,10 @@ func (b *BoltToken) New() error {
    if err != nil {
       return err
    }
-   req.Header.Set("x-device-info", device_info)
+   req.Header = http.Header{
+      "x-device-info": {device_info},
+      "x-disco-client": {disco_client},
+   }
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
       return err
