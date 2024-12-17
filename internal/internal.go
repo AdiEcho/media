@@ -16,6 +16,157 @@ import (
    "strings"
 )
 
+func (s *Stream) key() ([]byte, error) {
+   if s.key_id == nil {
+      return nil, nil
+   }
+   private_key, err := os.ReadFile(s.PrivateKey)
+   if err != nil {
+      return nil, err
+   }
+   client_id, err := os.ReadFile(s.ClientId)
+   if err != nil {
+      return nil, err
+   }
+   if s.pssh == nil {
+      s.pssh = widevine.Pssh{KeyId: s.key_id}.Marshal()
+   }
+   var module widevine.Module
+   err = module.New(private_key, client_id, s.pssh)
+   if err != nil {
+      return nil, err
+   }
+   key, err := module.Key(s.Client, s.key_id)
+   if err != nil {
+      return nil, err
+   }
+   slog.Info(
+      "CDM",
+      "PSSH", base64.StdEncoding.EncodeToString(s.pssh),
+      "key", base64.StdEncoding.EncodeToString(key),
+   )
+   return key, nil
+}
+
+func (s *Stream) Download(rep dash.Representation) error {
+   if data, ok := rep.Widevine(); ok {
+      var box pssh.Box
+      n, err := box.BoxHeader.Decode(data)
+      if err != nil {
+         return err
+      }
+      err = box.Read(data[n:])
+      if err != nil {
+         return err
+      }
+      s.pssh = box.Data
+   }
+   ext, ok := rep.Ext()
+   if !ok {
+      return errors.New("Representation.Ext")
+   }
+   base, ok := rep.GetBaseUrl()
+   if !ok {
+      return errors.New("Representation.GetBaseUrl")
+   }
+   if rep.SegmentBase != nil {
+      return s.segment_base(ext, base, rep.SegmentBase)
+   }
+   initial, _ := rep.Initialization()
+   return s.segment_template(ext, initial, base, rep.Media())
+}
+
+func (s *Stream) Create(ext string) (*os.File, error) {
+   return os.Create(text.Clean(text.Name(s.Name)) + ext)
+}
+
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type Stream struct {
+   ClientId string
+   PrivateKey string
+   Name text.Namer
+   Client widevine.Client
+   pssh []byte
+   key_id []byte
+}
+
+func (s *Stream) segment_template(
+   ext, initial string, base *dash.BaseUrl, media []string,
+) error {
+   file, err := s.Create(ext)
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   if initial != "" {
+      req, err := http.NewRequest("", initial, nil)
+      if err != nil {
+         return err
+      }
+      req.URL = base.Url.ResolveReference(req.URL)
+      resp, err := http.DefaultClient.Do(req)
+      if err != nil {
+         return err
+      }
+      defer resp.Body.Close()
+      if resp.StatusCode != http.StatusOK {
+         return errors.New(resp.Status)
+      }
+      data, err := io.ReadAll(resp.Body)
+      if err != nil {
+         return err
+      }
+      data, err = s.init_protect(data)
+      if err != nil {
+         return err
+      }
+      _, err = file.Write(data)
+      if err != nil {
+         return err
+      }
+   }
+   key, err := s.key()
+   if err != nil {
+      return err
+   }
+   var meter text.ProgressMeter
+   meter.Set(len(media))
+   var transport text.Transport
+   transport.Set(false)
+   defer transport.Set(true)
+   for _, medium := range media {
+      req, err := http.NewRequest("", medium, nil)
+      if err != nil {
+         return err
+      }
+      req.URL = base.Url.ResolveReference(req.URL)
+      data, err := func() ([]byte, error) {
+         resp, err := http.DefaultClient.Do(req)
+         if err != nil {
+            return nil, err
+         }
+         defer resp.Body.Close()
+         if resp.StatusCode != http.StatusOK {
+            var b strings.Builder
+            resp.Write(&b)
+            return nil, errors.New(b.String())
+         }
+         return io.ReadAll(meter.Reader(resp))
+      }()
+      if err != nil {
+         return err
+      }
+      data, err = write_segment(data, key)
+      if err != nil {
+         return err
+      }
+      _, err = file.Write(data)
+      if err != nil {
+         return err
+      }
+   }
+   return nil
+}
 func write_segment(data, key []byte) ([]byte, error) {
    if key == nil {
       return data, nil
@@ -201,156 +352,4 @@ func write_sidx(req *http.Request, index dash.Range) ([]sidx.Reference, error) {
       return nil, err
    }
    return file.Sidx.Reference, nil
-}
-
-func (s *Stream) key() ([]byte, error) {
-   if s.key_id == nil {
-      return nil, nil
-   }
-   private_key, err := os.ReadFile(s.PrivateKey)
-   if err != nil {
-      return nil, err
-   }
-   client_id, err := os.ReadFile(s.ClientId)
-   if err != nil {
-      return nil, err
-   }
-   if s.pssh == nil {
-      s.pssh = widevine.Pssh{KeyId: s.key_id}.Marshal()
-   }
-   var module widevine.Module
-   err = module.New(private_key, client_id, s.pssh)
-   if err != nil {
-      return nil, err
-   }
-   key, err := module.Key(s.Client, s.key_id)
-   if err != nil {
-      return nil, err
-   }
-   slog.Info(
-      "CDM",
-      "PSSH", base64.StdEncoding.EncodeToString(s.pssh),
-      "key", base64.StdEncoding.EncodeToString(key),
-   )
-   return key, nil
-}
-
-func (s *Stream) Download(rep dash.Representation) error {
-   if data, ok := rep.Widevine(); ok {
-      var box pssh.Box
-      n, err := box.BoxHeader.Decode(data)
-      if err != nil {
-         return err
-      }
-      err = box.Read(data[n:])
-      if err != nil {
-         return err
-      }
-      s.pssh = box.Data
-   }
-   ext, ok := rep.Ext()
-   if !ok {
-      return errors.New("Representation.Ext")
-   }
-   base, ok := rep.GetBaseUrl()
-   if !ok {
-      return errors.New("Representation.GetBaseUrl")
-   }
-   if rep.SegmentBase != nil {
-      return s.segment_base(ext, base, rep.SegmentBase)
-   }
-   initial, _ := rep.Initialization()
-   return s.segment_template(ext, initial, base, rep.Media())
-}
-
-func (s *Stream) Create(ext string) (*os.File, error) {
-   return os.Create(text.Clean(text.Name(s.Name)) + ext)
-}
-
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type Stream struct {
-   ClientId string
-   PrivateKey string
-   Name text.Namer
-   Client widevine.Client
-   pssh []byte
-   key_id []byte
-}
-
-func (s *Stream) segment_template(
-   ext, initial string, base *dash.BaseUrl, media []string,
-) error {
-   file, err := s.Create(ext)
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   if initial != "" {
-      req, err := http.NewRequest("", initial, nil)
-      if err != nil {
-         return err
-      }
-      req.URL = base.Url.ResolveReference(req.URL)
-      resp, err := http.DefaultClient.Do(req)
-      if err != nil {
-         return err
-      }
-      defer resp.Body.Close()
-      if resp.StatusCode != http.StatusOK {
-         return errors.New(resp.Status)
-      }
-      data, err := io.ReadAll(resp.Body)
-      if err != nil {
-         return err
-      }
-      data, err = s.init_protect(data)
-      if err != nil {
-         return err
-      }
-      _, err = file.Write(data)
-      if err != nil {
-         return err
-      }
-   }
-   key, err := s.key()
-   if err != nil {
-      return err
-   }
-   var meter text.ProgressMeter
-   meter.Set(len(media))
-   var transport text.Transport
-   transport.Set(false)
-   defer transport.Set(true)
-   for _, medium := range media {
-      req, err := http.NewRequest("", medium, nil)
-      if err != nil {
-         return err
-      }
-      req.URL = base.Url.ResolveReference(req.URL)
-      data, err := func() ([]byte, error) {
-         resp, err := http.DefaultClient.Do(req)
-         if err != nil {
-            return nil, err
-         }
-         defer resp.Body.Close()
-         if resp.StatusCode != http.StatusOK {
-            var b strings.Builder
-            resp.Write(&b)
-            return nil, errors.New(b.String())
-         }
-         return io.ReadAll(meter.Reader(resp))
-      }()
-      if err != nil {
-         return err
-      }
-      data, err = write_segment(data, key)
-      if err != nil {
-         return err
-      }
-      _, err = file.Write(data)
-      if err != nil {
-         return err
-      }
-   }
-   return nil
 }
