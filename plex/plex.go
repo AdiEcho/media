@@ -1,25 +1,24 @@
 package plex
 
 import (
+   "bytes"
+   "io"
    "net/http"
    "net/url"
    "strings"
 )
 
-func (m *MediaPart) RequestUrl() (string, bool) {
-   return m.License.Url.String(), true
-}
-
-func (*MediaPart) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*MediaPart) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (*MediaPart) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
+func (m *MediaPart) Wrap(data []byte) ([]byte, error) {
+   var req http.Request
+   req.Body = io.NopCloser(bytes.NewReader(data))
+   req.Method = "POST"
+   req.URL = m.License.Url
+   resp, err := http.DefaultClient.Do(&req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
 }
 
 type MediaPart struct {

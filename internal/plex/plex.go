@@ -59,8 +59,8 @@ func (f *flags) download() error {
             fmt.Print(rep, "\n\n")
          }
       case rep.Id:
-         f.s.Name = &plex.Namer{match}
-         f.s.Client = part
+         f.s.Namer = &plex.Namer{match}
+         f.s.Wrapper = part
          return f.s.Download(rep)
       }
    }

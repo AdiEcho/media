@@ -54,8 +54,8 @@ func (f *flags) download() error {
       case "":
          fmt.Print(&rep, "\n\n")
       case rep.Id:
-         f.s.Name = itv.Namer{discovery}
-         f.s.Client = file
+         f.s.Namer = itv.Namer{discovery}
+         f.s.Wrapper = file
          return f.s.Download(rep)
       }
    }

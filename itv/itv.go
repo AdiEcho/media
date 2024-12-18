@@ -5,10 +5,28 @@ import (
    "encoding/json"
    "errors"
    "fmt"
+   "io"
    "net/http"
    "net/url"
    "strings"
 )
+
+func (m *MediaFile) Wrap(data []byte) ([]byte, error) {
+   resp, err := http.Post(
+      m.KeyServiceUrl, "application/x-protobuf", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
+type MediaFile struct {
+   Href Href
+   KeyServiceUrl string
+   Resolution string
+}
 
 func (h *Href) UnmarshalText(data []byte) error {
    h.Data = strings.Replace(string(data), "itvpnpctv", "itvpnpdotcom", 1)
@@ -167,34 +185,12 @@ func (p *Playlist) Resolution1080() (*MediaFile, bool) {
    return nil, false
 }
 
-func (*MediaFile) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*MediaFile) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*MediaFile) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (m *MediaFile) RequestUrl() (string, bool) {
-   return m.KeyServiceUrl, true
-}
-
 type Playlist struct {
    Playlist struct {
       Video struct {
          MediaFiles []MediaFile
       }
    }
-}
-
-type MediaFile struct {
-   Href Href
-   KeyServiceUrl string
-   Resolution string
 }
 
 type Href struct {
