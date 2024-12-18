@@ -52,7 +52,7 @@ func (f *flags) download() error {
          fmt.Print(&rep, "\n\n")
       case rep.Id:
          f.s.Namer = pluto.Namer{video}
-         f.s.Wrapper = pluto.Client{}
+         f.s.Wrapper = pluto.Wrapper{}
          return f.s.Download(rep)
       }
    }
