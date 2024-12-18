@@ -11,25 +11,6 @@ import (
    "sort"
 )
 
-func (f *flags) write_content() error {
-   var content tubi.VideoContent
-   data, err := content.Marshal(f.tubi)
-   if err != nil {
-      return err
-   }
-   err = content.Unmarshal(data)
-   if err != nil {
-      return err
-   }
-   if content.Episode() {
-      data, err = content.Marshal(content.SeriesId)
-      if err != nil {
-         return err
-      }
-   }
-   return os.WriteFile(f.name(), data, os.ModePerm)
-}
-
 func (f *flags) download() error {
    data, err := os.ReadFile(f.name())
    if err != nil {
@@ -73,7 +54,7 @@ func (f *flags) download() error {
          fmt.Print(&rep, "\n\n")
       case rep.Id:
          f.s.Name = tubi.Namer{content}
-         f.s.Client = video
+         f.s.Wrapper = video
          return f.s.Download(rep)
       }
    }
@@ -82,4 +63,23 @@ func (f *flags) download() error {
 
 func (f *flags) name() string {
    return fmt.Sprint(f.tubi) + ".txt"
+}
+
+func (f *flags) write_content() error {
+   var content tubi.VideoContent
+   data, err := content.Marshal(f.tubi)
+   if err != nil {
+      return err
+   }
+   err = content.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   if content.Episode() {
+      data, err = content.Marshal(content.SeriesId)
+      if err != nil {
+         return err
+      }
+   }
+   return os.WriteFile(f.name(), data, os.ModePerm)
 }

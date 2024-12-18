@@ -4,8 +4,26 @@ import (
    "bytes"
    "encoding/json"
    "errors"
+   "io"
    "net/http"
 )
+
+func (s *StreamInfo) Wrap(data []byte) ([]byte, error) {
+   resp, err := http.Post(
+      s.LicenseUrl, "application/x-protobuf", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
+type StreamInfo struct {
+   LicenseUrl   string `json:"license_url"`
+   Url          string
+   VideoQuality string `json:"video_quality"`
+}
 
 // geo block
 func (o *OnDemand) Info() (*StreamInfo, error) {
@@ -50,31 +68,6 @@ type OnDemand struct {
    Player                   string `json:"player"`
    SubtitleLanguage         string `json:"subtitle_language"`
    VideoType                string `json:"video_type"`
-}
-
-type StreamInfo struct {
-   LicenseUrl   string `json:"license_url"`
-   Url          string
-   VideoQuality string `json:"video_quality"`
-}
-
-func (s *StreamInfo) RequestUrl() (string, bool) {
-   return s.LicenseUrl, true
-}
-
-func (*StreamInfo) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-// github.com/mitmproxy/mitmproxy/blob/main/mitmproxy/contentviews/protobuf.py
-func (*StreamInfo) RequestHeader() (http.Header, error) {
-   head := http.Header{}
-   head.Set("content-type", "application/x-protobuf")
-   return head, nil
-}
-
-func (*StreamInfo) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
 }
 
 func (*GizmoMovie) Show() string {

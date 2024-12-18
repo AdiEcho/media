@@ -1,10 +1,34 @@
 package tubi
 
 import (
+   "bytes"
+   "io"
    "net/http"
    "strconv"
    "strings"
 )
+
+func (v *VideoResource) Wrap(data []byte) ([]byte, error) {
+   resp, err := http.Post(
+      v.LicenseServer.Url, "application/x-protobuf", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
+type VideoResource struct {
+   LicenseServer *struct {
+      Url string
+   } `json:"license_server"`
+   Manifest struct {
+      Url string
+   }
+   Resolution Resolution
+   Type       string
+}
 
 type Resolution struct {
    Data int64
@@ -22,40 +46,10 @@ func (r *Resolution) UnmarshalText(text []byte) error {
    return nil
 }
 
-type VideoResource struct {
-   LicenseServer *struct {
-      Url string
-   } `json:"license_server"`
-   Manifest struct {
-      Url string
-   }
-   Resolution Resolution
-   Type       string
-}
-
-func (v *VideoResource) RequestUrl() (string, bool) {
-   if v.LicenseServer != nil {
-      return v.LicenseServer.Url, true
-   }
-   return "", false
-}
-
 func (r Resolution) MarshalText() ([]byte, error) {
    b := []byte("VIDEO_RESOLUTION_")
    b = strconv.AppendInt(b, r.Data, 10)
    return append(b, 'P'), nil
-}
-
-func (*VideoResource) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (*VideoResource) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*VideoResource) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
 }
 
 func (n Namer) Show() string {

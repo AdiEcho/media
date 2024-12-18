@@ -7,6 +7,7 @@ import (
    "41.neocities.org/sofia/sidx"
    "41.neocities.org/text"
    "41.neocities.org/widevine"
+   "bytes"
    "encoding/base64"
    "errors"
    "io"
@@ -15,6 +16,20 @@ import (
    "os"
    "strings"
 )
+
+// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
+type Stream struct {
+   ClientId string
+   PrivateKey string
+   key_id []byte
+   pssh []byte
+   Namer text.Namer
+   Wrapper Wrapper
+}
+
+type Wrapper interface {
+   Wrap([]byte) ([]byte, error)
+}
 
 func (s *Stream) key() ([]byte, error) {
    if s.key_id == nil {
@@ -29,23 +44,46 @@ func (s *Stream) key() ([]byte, error) {
       return nil, err
    }
    if s.pssh == nil {
-      s.pssh = widevine.Pssh{KeyId: s.key_id}.Marshal()
+      s.pssh = widevine.PsshData{KeyId: s.key_id}.Marshal()
    }
-   var module widevine.Module
+   var module widevine.Cdm
    err = module.New(private_key, client_id, s.pssh)
    if err != nil {
       return nil, err
    }
-   key, err := module.Key(s.Client, s.key_id)
+   data, err := module.RequestBody()
    if err != nil {
       return nil, err
    }
-   slog.Info(
-      "CDM",
-      "PSSH", base64.StdEncoding.EncodeToString(s.pssh),
-      "key", base64.StdEncoding.EncodeToString(key),
-   )
-   return key, nil
+   data, err = s.Wrapper.Wrap(data)
+   if err != nil {
+      return nil, err
+   }
+   var body widevine.ResponseBody
+   err = body.Unmarshal(data)
+   if err != nil {
+      return nil, err
+   }
+   block, err := module.Block(body)
+   if err != nil {
+      return nil, err
+   }
+   containers := body.Container()
+   for {
+      container, ok := containers()
+      if !ok {
+         return nil, errors.New("ResponseBody.Container")
+      }
+      if bytes.Equal(container.Id(), s.key_id) {
+         key := container.Decrypt(block)
+         slog.Info(
+            "CDM",
+            "PSSH", base64.StdEncoding.EncodeToString(s.pssh),
+            "key", base64.StdEncoding.EncodeToString(key),
+         )
+         return key, nil
+      }
+   }
 }
 
 func (s *Stream) Download(rep dash.Representation) error {
@@ -77,17 +115,7 @@ func (s *Stream) Download(rep dash.Representation) error {
 }
 
 func (s *Stream) Create(ext string) (*os.File, error) {
-   return os.Create(text.Clean(text.Name(s.Name)) + ext)
-}
-
-// wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP
-type Stream struct {
-   ClientId string
-   PrivateKey string
-   Name text.Namer
-   Client widevine.Client
-   pssh []byte
-   key_id []byte
+   return os.Create(text.Clean(text.Name(s.Namer)) + ext)
 }
 
 func (s *Stream) segment_template(
@@ -216,12 +244,10 @@ func (s *Stream) init_protect(data []byte) ([]byte, error) {
    return file.Append(nil)
 }
 
-type ForwardedFor struct {
+var Forward = []struct{
    Country string
-   IP string
-}
-
-var Forward = []ForwardedFor{
+   Ip string
+}{
 {"Argentina", "186.128.0.0"},
 {"Australia", "1.128.0.0"},
 {"Bolivia", "179.58.0.0"},

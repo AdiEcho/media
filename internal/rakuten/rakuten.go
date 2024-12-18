@@ -43,7 +43,7 @@ func (f *flags) download() error {
             return err
          }
          fhd.LicenseUrl = hd.LicenseUrl
-         f.s.Client = fhd
+         f.s.Wrapper = fhd
          return f.s.Download(rep)
       }
    }
