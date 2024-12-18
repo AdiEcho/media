@@ -24,11 +24,7 @@ type Stream struct {
    key_id []byte
    pssh []byte
    Namer text.Namer
-   Wrapper Wrapper
-}
-
-type Wrapper interface {
-   Wrap([]byte) ([]byte, error)
+   Wrapper widevine.Wrapper
 }
 
 func (s *Stream) key() ([]byte, error) {

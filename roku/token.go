@@ -1,6 +1,7 @@
 package roku
 
 import (
+   "bytes"
    "encoding/json"
    "errors"
    "io"
@@ -9,6 +10,27 @@ import (
    "strings"
    "time"
 )
+
+func (p *Playback) Wrap(data []byte) ([]byte, error) {
+   resp, err := http.Post(
+      p.Drm.Widevine.LicenseServer, "application/x-protobuf",
+      bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
+type Playback struct {
+   Drm struct {
+      Widevine struct {
+         LicenseServer string
+      }
+   }
+   Url string
+}
 
 func (AccountToken) Marshal(
    auth *AccountAuth, code *AccountCode,
@@ -76,37 +98,12 @@ func (h *HomeScreen) New(id string) error {
    return json.NewDecoder(resp.Body).Decode(h)
 }
 
-type Playback struct {
-   Drm struct {
-      Widevine struct {
-         LicenseServer string
-      }
-   }
-   Url string
-}
-
-func (p *Playback) RequestUrl() (string, bool) {
-   return p.Drm.Widevine.LicenseServer, true
-}
-
 type AccountToken struct {
    Token string
 }
 
 func (a *AccountToken) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
-}
-
-func (*Playback) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (*Playback) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Playback) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
 }
 
 func (n *Namer) Title() string {

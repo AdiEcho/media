@@ -51,8 +51,8 @@ func (f *flags) download() error {
       case "":
          fmt.Print(&rep, "\n\n")
       case rep.Id:
-         f.s.Name = pluto.Namer{video}
-         f.s.Client = pluto.Client{}
+         f.s.Namer = pluto.Namer{video}
+         f.s.Wrapper = pluto.Client{}
          return f.s.Download(rep)
       }
    }
@@ -61,6 +61,6 @@ func (f *flags) download() error {
 
 func get_forward() {
    for _, forward := range internal.Forward {
-      fmt.Println(forward.Country, forward.IP)
+      fmt.Println(forward.Country, forward.Ip)
    }
 }

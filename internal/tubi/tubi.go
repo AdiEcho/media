@@ -53,7 +53,7 @@ func (f *flags) download() error {
       case "":
          fmt.Print(&rep, "\n\n")
       case rep.Id:
-         f.s.Name = tubi.Namer{content}
+         f.s.Namer = tubi.Namer{content}
          f.s.Wrapper = video
          return f.s.Download(rep)
       }

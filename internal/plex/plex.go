@@ -69,6 +69,6 @@ func (f *flags) download() error {
 
 func get_forward() {
    for _, forward := range internal.Forward {
-      fmt.Println(forward.Country, forward.IP)
+      fmt.Println(forward.Country, forward.Ip)
    }
 }

@@ -10,6 +10,65 @@ import (
    "sort"
 )
 
+func (f *flags) download() error {
+   var token *roku.AccountToken
+   if f.token_read {
+      data, err := os.ReadFile(f.home + "/roku.txt")
+      if err != nil {
+         return err
+      }
+      token = &roku.AccountToken{}
+      err = token.Unmarshal(data)
+      if err != nil {
+         return err
+      }
+   }
+   var auth roku.AccountAuth
+   data, err := auth.Marshal(token)
+   if err != nil {
+      return err
+   }
+   err = auth.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   play, err := auth.Playback(f.roku)
+   if err != nil {
+      return err
+   }
+   resp, err := http.Get(play.Url)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
+   if err != nil {
+      return err
+   }
+   sort.Slice(reps, func(i, j int) bool {
+      return reps[i].Bandwidth < reps[j].Bandwidth
+   })
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         fmt.Print(&rep, "\n\n")
+      case rep.Id:
+         var home roku.HomeScreen
+         err := home.New(f.roku)
+         if err != nil {
+            return err
+         }
+         f.s.Namer = &roku.Namer{home}
+         f.s.Wrapper = play
+         return f.s.Download(rep)
+      }
+   }
+   return nil
+}
 func (f *flags) write_token() error {
    // AccountAuth
    data, err := os.ReadFile("auth.txt")
@@ -69,65 +128,5 @@ func write_code() error {
       return err
    }
    fmt.Println(code)
-   return nil
-}
-
-func (f *flags) download() error {
-   var token *roku.AccountToken
-   if f.token_read {
-      data, err := os.ReadFile(f.home + "/roku.txt")
-      if err != nil {
-         return err
-      }
-      token = &roku.AccountToken{}
-      err = token.Unmarshal(data)
-      if err != nil {
-         return err
-      }
-   }
-   var auth roku.AccountAuth
-   data, err := auth.Marshal(token)
-   if err != nil {
-      return err
-   }
-   err = auth.Unmarshal(data)
-   if err != nil {
-      return err
-   }
-   play, err := auth.Playback(f.roku)
-   if err != nil {
-      return err
-   }
-   resp, err := http.Get(play.Url)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   data, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   reps, err := dash.Unmarshal(data, resp.Request.URL)
-   if err != nil {
-      return err
-   }
-   sort.Slice(reps, func(i, j int) bool {
-      return reps[i].Bandwidth < reps[j].Bandwidth
-   })
-   for _, rep := range reps {
-      switch f.representation {
-      case "":
-         fmt.Print(&rep, "\n\n")
-      case rep.Id:
-         var home roku.HomeScreen
-         err := home.New(f.roku)
-         if err != nil {
-            return err
-         }
-         f.s.Name = &roku.Namer{home}
-         f.s.Client = play
-         return f.s.Download(rep)
-      }
-   }
    return nil
 }

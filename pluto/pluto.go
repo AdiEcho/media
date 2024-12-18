@@ -1,29 +1,27 @@
 package pluto
 
 import (
+   "bytes"
    "encoding/json"
    "errors"
+   "io"
    "net/http"
    "net/url"
    "strings"
 )
 
-type Client struct{}
+type Wrapper struct{}
 
-func (Client) RequestUrl() (string, bool) {
-   return "https://service-concierge.clusters.pluto.tv/v1/wv/alt", true
-}
-
-func (Client) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (Client) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Client) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
+func (Wrapper) Wrap(data []byte) ([]byte, error) {
+   resp, err := http.Post(
+      "https://service-concierge.clusters.pluto.tv/v1/wv/alt",
+      "application/x-protobuf", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
 }
 
 type Url struct {
