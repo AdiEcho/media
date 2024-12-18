@@ -11,6 +11,45 @@ import (
    "strings"
 )
 
+func (e *Entitlement) Wrap(data []byte) ([]byte, error) {
+   req, err := http.NewRequest(
+      "POST", "https://rbm-rtbf.live.ott.irdeto.com", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   req.URL.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
+   req.URL.RawQuery = url.Values{
+      "contentId":  {e.AssetId},
+      "ls_session": {e.PlayToken},
+   }.Encode()
+   req.Header.Set("content-type", "application/x-protobuf")
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
+func (e *Entitlement) Dash() (string, bool) {
+   for _, format := range e.Formats {
+      if format.Format == "DASH" {
+         return format.MediaLocator, true
+      }
+   }
+   return "", false
+}
+
+type Entitlement struct {
+   AssetId   string
+   PlayToken string
+   Formats   []struct {
+      Format       string
+      MediaLocator string
+   }
+}
+
 func (AuvioLogin) Marshal(id, password string) ([]byte, error) {
    resp, err := http.PostForm(
       "https://login.auvio.rtbf.be/accounts.login", url.Values{
@@ -57,36 +96,6 @@ func (a *Address) Set(s string) error {
 
 type AuvioAuth struct {
    SessionToken string
-}
-
-func (e *Entitlement) Dash() (string, bool) {
-   for _, format := range e.Formats {
-      if format.Format == "DASH" {
-         return format.MediaLocator, true
-      }
-   }
-   return "", false
-}
-
-func (e *Entitlement) RequestUrl() (string, bool) {
-   var u url.URL
-   u.Scheme = "https"
-   u.Host = "rbm-rtbf.live.ott.irdeto.com"
-   u.Path = "/licenseServer/widevine/v1/rbm-rtbf/license"
-   u.RawQuery = url.Values{
-      "contentId":  {e.AssetId},
-      "ls_session": {e.PlayToken},
-   }.Encode()
-   return u.String(), true
-}
-
-type Entitlement struct {
-   AssetId   string
-   PlayToken string
-   Formats   []struct {
-      Format       string
-      MediaLocator string
-   }
 }
 
 type WebToken struct {
@@ -218,20 +227,6 @@ func (a *AuvioLogin) Unmarshal(data []byte) error {
       return errors.New(v)
    }
    return nil
-}
-
-func (*Entitlement) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Entitlement) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Entitlement) RequestHeader() (http.Header, error) {
-   head := http.Header{}
-   head.Set("content-type", "application/x-protobuf")
-   return head, nil
 }
 
 func (a *Address) String() string {

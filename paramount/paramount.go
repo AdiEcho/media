@@ -1,16 +1,40 @@
 package paramount
 
 import (
+   "bytes"
    "crypto/aes"
    "crypto/cipher"
    "encoding/base64"
    "encoding/hex"
    "encoding/json"
    "errors"
+   "io"
    "net/http"
    "net/url"
    "strings"
 )
+
+func (s *SessionToken) Wrap(data []byte) ([]byte, error) {
+   req, err := http.NewRequest("POST", s.Url, bytes.NewReader(data))
+   if err != nil {
+      return nil, err
+   }
+   req.Header = http.Header{
+      "authorization": {"Bearer " + s.LsSession},
+      "content-type": {"application/x-protobuf"},
+   }
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
+type SessionToken struct {
+   LsSession string `json:"ls_session"`
+   Url string
+}
 
 const secret_key = "302a6a0d70a7e9b967f91d39fef3e387816e3095925ae4537bce96063311f9c5"
 
@@ -93,27 +117,3 @@ func (a *AppToken) ComCbsCa() error {
    return a.New("c0b1d5d6ed27a3f6")
 }
 
-func (*SessionToken) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*SessionToken) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (s *SessionToken) RequestUrl() (string, bool) {
-   return s.Url, true
-}
-
-type SessionToken struct {
-   LsSession string `json:"ls_session"`
-   Url string
-}
-
-func (s *SessionToken) RequestHeader() (http.Header, error) {
-   head := http.Header{
-      "authorization": {"Bearer " + s.LsSession},
-      "content-type": {"application/x-protobuf"},
-   }
-   return head, nil
-}

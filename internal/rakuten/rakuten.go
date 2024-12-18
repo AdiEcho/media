@@ -34,7 +34,7 @@ func (f *flags) download() error {
       case "":
          fmt.Print(&rep, "\n\n")
       case rep.Id:
-         f.s.Name, err = f.address.Movie()
+         f.s.Namer, err = f.address.Movie()
          if err != nil {
             return err
          }

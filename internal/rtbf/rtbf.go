@@ -10,14 +10,6 @@ import (
    "os"
 )
 
-func (f *flags) authenticate() error {
-   data, err := rtbf.AuvioLogin{}.Marshal(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/rtbf.txt", data, os.ModePerm)
-}
-
 func (f *flags) download() error {
    data, err := os.ReadFile(f.home + "/rtbf.txt")
    if err != nil {
@@ -70,10 +62,18 @@ func (f *flags) download() error {
       case "":
          fmt.Print(&rep, "\n\n")
       case rep.Id:
-         f.s.Name = &rtbf.Namer{page}
-         f.s.Client = title
+         f.s.Namer = &rtbf.Namer{page}
+         f.s.Wrapper = title
          return f.s.Download(rep)
       }
    }
    return nil
+}
+
+func (f *flags) authenticate() error {
+   data, err := rtbf.AuvioLogin{}.Marshal(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/rtbf.txt", data, os.ModePerm)
 }
