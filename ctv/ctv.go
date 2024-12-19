@@ -245,24 +245,6 @@ func (n *Namer) Title() string {
    return n.Media.Name
 }
 
-type Client struct{}
-
-func (Client) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (Client) RequestUrl() (string, bool) {
-   return "https://license.9c9media.ca/widevine", true
-}
-
-func (Client) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (Client) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
 func (r *ResolvePath) id() string {
    if r.FirstPlayableContent != nil {
       return r.FirstPlayableContent.Id
@@ -320,4 +302,18 @@ func (r *ResolvePath) Axis() (*AxisContent, error) {
       return nil, errors.New(v[0].Message)
    }
    return &resp_body.Data.AxisContent, nil
+}
+
+type Wrapper struct{}
+
+func (Wrapper) Wrap(data []byte) ([]byte, error) {
+   resp, err := http.Post(
+      "https://license.9c9media.ca/widevine", "application/x-protobuf",
+      bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
 }

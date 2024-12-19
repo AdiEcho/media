@@ -117,10 +117,15 @@ type EmbedItem struct {
    Name string
 }
 
-func (v *VideoFile) RequestUrl() (string, bool) {
-   b := []byte("https://drm.vhx.com/v2/widevine?token=")
-   b = append(b, v.DrmAuthorizationToken...)
-   return string(b), true
+type VideoFiles []VideoFile
+
+func (v VideoFiles) Dash() (*VideoFile, bool) {
+   for _, file := range v {
+      if file.Method == "dash" {
+         return &file, true
+      }
+   }
+   return nil, false
 }
 
 type VideoFile struct {
@@ -133,25 +138,18 @@ type VideoFile struct {
    Method string
 }
 
-func (*VideoFile) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (*VideoFile) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*VideoFile) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-type VideoFiles []VideoFile
-
-func (v *VideoFiles) Dash() (*VideoFile, bool) {
-   for _, file := range *v {
-      if file.Method == "dash" {
-         return &file, true
-      }
+func (v *VideoFile) Wrap(data []byte) ([]byte, error) {
+   req, err := http.NewRequest(
+      "POST", "https://drm.vhx.com/v2/widevine", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
    }
-   return nil, false
+   req.URL.RawQuery = "token=" + v.DrmAuthorizationToken
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
 }

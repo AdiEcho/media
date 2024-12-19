@@ -223,13 +223,3 @@ func (c *CurrentVideo) Show() string {
 func (c *CurrentVideo) Season() int {
    return c.Meta.Season
 }
-
-type DataSource struct {
-   KeySystems *struct {
-      Widevine struct {
-         LicenseUrl string `json:"license_url"`
-      } `json:"com.widevine.alpha"`
-   } `json:"key_systems"`
-   Src string
-   Type string
-}

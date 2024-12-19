@@ -4,6 +4,7 @@ import (
    "bytes"
    "encoding/json"
    "errors"
+   "io"
    "net/http"
    "strings"
 )
@@ -53,42 +54,61 @@ func (a *Authorization) Playback(nid string) (*Playback, error) {
       resp.Write(&b)
       return nil, errors.New(b.String())
    }
-   var play Playback
+   var play struct {
+      Data struct {
+         PlaybackJsonData struct {
+            Sources []DataSource
+         }
+      }
+   }
    err = json.NewDecoder(resp.Body).Decode(&play)
    if err != nil {
       return nil, err
    }
-   play.AmcnBcJwt = resp.Header.Get("x-amcn-bc-jwt")
-   return &play, nil
+   return &Playback{play.Data.PlaybackJsonData.Sources, resp.Header}, nil
 }
 
-func (p *Playback) Dash() (*DataSource, bool) {
-   for _, source := range p.Data.PlaybackJsonData.Sources {
+type Playback struct {
+   DataSource []DataSource
+   Header http.Header
+}
+
+func (p *Playback) Dash() (*Wrapper, bool) {
+   for _, source := range p.DataSource {
       if source.Type == "application/dash+xml" {
-         return &source, true
+         return &Wrapper{source, p.Header}, true
       }
    }
    return nil, false
 }
 
-func (p *Playback) RequestUrl() (string, bool) {
-   if v, ok := p.Dash(); ok {
-      return v.KeySystems.Widevine.LicenseUrl, true
-   }
-   return "", false
+type DataSource struct {
+   KeySystems *struct {
+      Widevine struct {
+         LicenseUrl string `json:"license_url"`
+      } `json:"com.widevine.alpha"`
+   } `json:"key_systems"`
+   Src string
+   Type string
 }
 
-func (p *Playback) RequestHeader() (http.Header, error) {
-   head := http.Header{}
-   head.Set("bcov-auth", p.AmcnBcJwt)
-   return head, nil
+type Wrapper struct {
+   DataSource DataSource
+   Header http.Header
 }
 
-type Playback struct {
-   AmcnBcJwt string `json:"-"`
-   Data struct {
-      PlaybackJsonData struct {
-         Sources []DataSource
-      }
+func (w *Wrapper) Wrap(data []byte) ([]byte, error) {
+   req, err := http.NewRequest(
+      "POST", w.DataSource.KeySystems.Widevine.LicenseUrl, bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
    }
+   req.Header.Set("bcov-auth", w.Header.Get("x-amcn-bc-jwt"))
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
 }

@@ -46,8 +46,8 @@ func (f *flags) download() error {
          if err != nil {
             return err
          }
-         f.s.Name = &ctv.Namer{media}
-         f.s.Client = ctv.Client{}
+         f.s.Namer = &ctv.Namer{media}
+         f.s.Wrapper = ctv.Wrapper{}
          return f.s.Download(rep)
       }
    }

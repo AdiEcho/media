@@ -52,8 +52,8 @@ func (f *flags) download() error {
          if err != nil {
             return err
          }
-         f.s.Name = &article
-         f.s.Client = title
+         f.s.Namer = &article
+         f.s.Wrapper = title
          return f.s.Download(rep)
       }
    }

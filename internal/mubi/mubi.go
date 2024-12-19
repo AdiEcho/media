@@ -9,6 +9,29 @@ import (
    "os"
 )
 
+func (f *flags) timed_text(url string) error {
+   resp, err := http.Get(url)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   film, err := f.address.Film()
+   if err != nil {
+      return err
+   }
+   f.s.Namer = &mubi.Namer{film}
+   file, err := f.s.Create(".vtt")
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   _, err = file.ReadFrom(resp.Body)
+   if err != nil {
+      return err
+   }
+   return nil
+}
+
 func (f *flags) download() error {
    data, err := os.ReadFile(f.address.String() + ".txt")
    if err != nil {
@@ -72,25 +95,6 @@ func (f *flags) download() error {
    return nil
 }
 
-func (f *flags) timed_text(url string) error {
-   resp, err := http.Get(url)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   film, err := f.address.Film()
-   if err != nil {
-      return err
-   }
-   f.s.Name = &mubi.Namer{film}
-   file, err := f.s.Create(".vtt")
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   file.ReadFrom(resp.Body)
-   return nil
-}
 func (f *flags) write_secure() error {
    data, err := os.ReadFile(f.home + "/mubi.txt")
    if err != nil {

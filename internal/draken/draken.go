@@ -58,11 +58,7 @@ func (f *flags) download() error {
          }
       case rep.Id:
          f.s.Namer = &draken.Namer{movie}
-         f.s.Wrapper = draken.Wrapper(
-            func() (*draken.AuthLogin, *draken.Playback) {
-               return &login, play
-            },
-         )
+         f.s.Wrapper = &draken.Wrapper{&login, play}
          return f.s.Download(rep)
       }
    }

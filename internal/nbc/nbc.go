@@ -45,7 +45,7 @@ func (f *flags) download() error {
          f.s.Namer = &meta
          var proxy nbc.DrmProxy
          proxy.New()
-         f.s.Client = &proxy
+         f.s.Wrapper = &proxy
          return f.s.Download(rep)
       }
    }
