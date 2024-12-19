@@ -3,6 +3,7 @@ package rtbf
 import (
    "41.neocities.org/text"
    "41.neocities.org/widevine"
+   "bytes"
    "encoding/base64"
    "fmt"
    "os"
