@@ -40,20 +40,6 @@ func (Authenticate) Marshal(code *LinkCode) ([]byte, error) {
    return io.ReadAll(resp.Body)
 }
 
-func (a *Authenticate) RequestHeader() (http.Header, error) {
-   text, err := json.Marshal(map[string]any{
-      "merchant": "mubi",
-      "sessionId": a.Token,
-      "userId": a.User.Id,
-   })
-   if err != nil {
-      return nil, err
-   }
-   head := http.Header{}
-   head.Set("dt-custom-data", base64.StdEncoding.EncodeToString(text))
-   return head, nil
-}
-
 // Mubi do this sneaky thing. you cannot download a video unless you have told
 // the API that you are watching it. so you have to call
 // `/v3/films/%v/viewing`, otherwise it wont let you get the MPD. if you have
@@ -88,26 +74,6 @@ func (a *Authenticate) Viewing(film *FilmResponse) error {
    return nil
 }
 
-func (*Authenticate) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-// final slash is needed
-func (*Authenticate) RequestUrl() (string, bool) {
-   return "https://lic.drmtoday.com/license-proxy-widevine/cenc/", true
-}
-
-func (*Authenticate) UnwrapResponse(b []byte) ([]byte, error) {
-   var data struct {
-      License []byte
-   }
-   err := json.Unmarshal(b, &data)
-   if err != nil {
-      return nil, err
-   }
-   return data.License, nil
-}
-
 type Authenticate struct {
    Token string
    User struct {
@@ -117,4 +83,34 @@ type Authenticate struct {
 
 func (a *Authenticate) Unmarshal(data []byte) error {
    return json.Unmarshal(data, a)
+}
+
+func (a *Authenticate) Wrap(data []byte) ([]byte, error) {
+   // final slash is needed
+   req, err := http.NewRequest(
+      "POST", "https://lic.drmtoday.com/license-proxy-widevine/cenc/",
+      bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   data, err = json.Marshal(map[string]any{
+      "merchant": "mubi",
+      "sessionId": a.Token,
+      "userId": a.User.Id,
+   })
+   req.Header.Set("dt-custom-data", base64.StdEncoding.EncodeToString(data))
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   var value struct {
+      License []byte
+   }
+   err = json.NewDecoder(resp.Body).Decode(&value)
+   if err != nil {
+      return nil, err
+   }
+   return value.License, nil
 }

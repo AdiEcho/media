@@ -70,22 +70,6 @@ func (v *LinkLogin) Playback(web *Address) (*Playback, error) {
    return resp_body, nil
 }
 
-func (*Playback) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Playback) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Playback) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (p *Playback) RequestUrl() (string, bool) {
-   return p.Drm.Schemes.Widevine.LicenseUrl, true
-}
-
 type RouteInclude struct {
    Attributes struct {
       AirDate       time.Time
@@ -278,6 +262,15 @@ func (v *LinkLogin) Unmarshal(data []byte) error {
    return json.Unmarshal(data, v)
 }
 
+type Url struct {
+   Data string
+}
+
+func (u *Url) UnmarshalText(text []byte) error {
+   u.Data = strings.Replace(string(text), "_fallback", "", 1)
+   return nil
+}
+
 type Playback struct {
    Drm struct {
       Schemes struct {
@@ -293,11 +286,14 @@ type Playback struct {
    }
 }
 
-type Url struct {
-   Data string
-}
-
-func (u *Url) UnmarshalText(text []byte) error {
-   u.Data = strings.Replace(string(text), "_fallback", "", 1)
-   return nil
+func (p *Playback) Wrap(data []byte) ([]byte, error) {
+   resp, err := http.Post(
+      p.Drm.Schemes.Widevine.LicenseUrl, "application/x-protobuf",
+      bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
 }

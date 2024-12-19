@@ -9,6 +9,88 @@ import (
    "os"
 )
 
+func (f *flags) download() error {
+   data, err := os.ReadFile(f.address.String() + ".txt")
+   if err != nil {
+      return err
+   }
+   var secure mubi.SecureUrl
+   err = secure.Unmarshal(data)
+   if err != nil {
+      return err
+   }
+   // github.com/golang/go/issues/18639
+   // we dont need this until later, but you have to call before the first
+   // request in the program
+   os.Setenv("GODEBUG", "http2client=0")
+   resp, err := http.Get(secure.Url)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   data, err = io.ReadAll(resp.Body)
+   if err != nil {
+      return err
+   }
+   reps, err := dash.Unmarshal(data, resp.Request.URL)
+   if err != nil {
+      return err
+   }
+   for _, rep := range secure.TextTrackUrls {
+      switch f.representation {
+      case "":
+         fmt.Print(&rep, "\n\n")
+      case rep.Id:
+         return f.timed_text(rep.Url)
+      }
+   }
+   for _, rep := range reps {
+      switch f.representation {
+      case "":
+         if _, ok := rep.Ext(); ok {
+            fmt.Print(&rep, "\n\n")
+         }
+      case rep.Id:
+         film, err := f.address.Film()
+         if err != nil {
+            return err
+         }
+         f.s.Namer = &mubi.Namer{film}
+         data, err = os.ReadFile(f.home + "/mubi.txt")
+         if err != nil {
+            return err
+         }
+         var auth mubi.Authenticate
+         err = auth.Unmarshal(data)
+         if err != nil {
+            return err
+         }
+         f.s.Wrapper = &auth
+         return f.s.Download(rep)
+      }
+   }
+   return nil
+}
+
+func (f *flags) timed_text(url string) error {
+   resp, err := http.Get(url)
+   if err != nil {
+      return err
+   }
+   defer resp.Body.Close()
+   film, err := f.address.Film()
+   if err != nil {
+      return err
+   }
+   f.s.Name = &mubi.Namer{film}
+   file, err := f.s.Create(".vtt")
+   if err != nil {
+      return err
+   }
+   defer file.Close()
+   file.ReadFrom(resp.Body)
+   return nil
+}
 func (f *flags) write_secure() error {
    data, err := os.ReadFile(f.home + "/mubi.txt")
    if err != nil {
@@ -66,88 +148,5 @@ func write_code() error {
       return err
    }
    fmt.Println(&code)
-   return nil
-}
-
-func (f *flags) download() error {
-   data, err := os.ReadFile(f.address.String() + ".txt")
-   if err != nil {
-      return err
-   }
-   var secure mubi.SecureUrl
-   err = secure.Unmarshal(data)
-   if err != nil {
-      return err
-   }
-   // github.com/golang/go/issues/18639
-   // we dont need this until later, but you have to call before the first
-   // request in the program
-   os.Setenv("GODEBUG", "http2client=0")
-   resp, err := http.Get(secure.Url)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   data, err = io.ReadAll(resp.Body)
-   if err != nil {
-      return err
-   }
-   reps, err := dash.Unmarshal(data, resp.Request.URL)
-   if err != nil {
-      return err
-   }
-   for _, rep := range secure.TextTrackUrls {
-      switch f.representation {
-      case "":
-         fmt.Print(&rep, "\n\n")
-      case rep.Id:
-         return f.timed_text(rep.Url)
-      }
-   }
-   for _, rep := range reps {
-      switch f.representation {
-      case "":
-         if _, ok := rep.Ext(); ok {
-            fmt.Print(&rep, "\n\n")
-         }
-      case rep.Id:
-         film, err := f.address.Film()
-         if err != nil {
-            return err
-         }
-         f.s.Name = &mubi.Namer{film}
-         data, err = os.ReadFile(f.home + "/mubi.txt")
-         if err != nil {
-            return err
-         }
-         var auth mubi.Authenticate
-         err = auth.Unmarshal(data)
-         if err != nil {
-            return err
-         }
-         f.s.Client = &auth
-         return f.s.Download(rep)
-      }
-   }
-   return nil
-}
-
-func (f *flags) timed_text(url string) error {
-   resp, err := http.Get(url)
-   if err != nil {
-      return err
-   }
-   defer resp.Body.Close()
-   film, err := f.address.Film()
-   if err != nil {
-      return err
-   }
-   f.s.Name = &mubi.Namer{film}
-   file, err := f.s.Create(".vtt")
-   if err != nil {
-      return err
-   }
-   defer file.Close()
-   file.ReadFrom(resp.Body)
    return nil
 }

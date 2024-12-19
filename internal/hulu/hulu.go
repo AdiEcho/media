@@ -10,14 +10,6 @@ import (
    "sort"
 )
 
-func (f *flags) authenticate() error {
-   data, err := hulu.Authenticate{}.Marshal(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/hulu.txt", data, os.ModePerm)
-}
-
 func (f *flags) download() error {
    data, err := os.ReadFile(f.home + "/hulu.txt")
    if err != nil {
@@ -65,13 +57,21 @@ func (f *flags) download() error {
       case "":
          fmt.Print(&rep, "\n\n")
       case rep.Id:
-         f.s.Name, err = auth.Details(deep)
+         f.s.Namer, err = auth.Details(deep)
          if err != nil {
             return err
          }
-         f.s.Client = play
+         f.s.Wrapper = play
          return f.s.Download(rep)
       }
    }
    return nil
+}
+
+func (f *flags) authenticate() error {
+   data, err := hulu.Authenticate{}.Marshal(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/hulu.txt", data, os.ModePerm)
 }

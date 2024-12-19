@@ -10,20 +10,6 @@ import (
    "sort"
 )
 
-func (f *flags) do_login() error {
-   data, err := os.ReadFile("token.txt")
-   if err != nil {
-      return err
-   }
-   var token max.BoltToken
-   token.St = string(data)
-   data, err = max.LinkLogin{}.Marshal(&token)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home+"/max.txt", data, os.ModePerm)
-}
-
 func (f *flags) download() error {
    data, err := os.ReadFile(f.home + "/max.txt")
    if err != nil {
@@ -77,11 +63,11 @@ func (f *flags) download() error {
             fmt.Print(&rep, "\n\n")
          }
       case rep.Id:
-         f.s.Name, err = login.Routes(&f.address)
+         f.s.Namer, err = login.Routes(&f.address)
          if err != nil {
             return err
          }
-         f.s.Client = play
+         f.s.Wrapper = play
          return f.s.Download(rep)
       }
    }
@@ -101,4 +87,17 @@ func (f *flags) do_initiate() error {
    }
    fmt.Printf("%+v\n", initiate)
    return nil
+}
+func (f *flags) do_login() error {
+   data, err := os.ReadFile("token.txt")
+   if err != nil {
+      return err
+   }
+   var token max.BoltToken
+   token.St = string(data)
+   data, err = max.LinkLogin{}.Marshal(&token)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home+"/max.txt", data, os.ModePerm)
 }

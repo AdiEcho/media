@@ -1,30 +1,27 @@
 package hulu
 
 import (
+   "bytes"
+   "io"
    "net/http"
    "path"
    "time"
 )
 
+func (p *Playlist) Wrap(data []byte) ([]byte, error) {
+   resp, err := http.Post(
+      p.WvServer, "application/x-protobuf", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}
+
 type Playlist struct {
    StreamUrl string `json:"stream_url"`
    WvServer string `json:"wv_server"`
-}
-
-func (p *Playlist) RequestUrl() (string, bool) {
-   return p.WvServer, true
-}
-
-func (*Playlist) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Playlist) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (*Playlist) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
 }
 
 type DeepLink struct {
