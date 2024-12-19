@@ -11,14 +11,6 @@ import (
    "sort"
 )
 
-func (f *flags) authenticate() error {
-   data, err := draken.AuthLogin{}.Marshal(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/draken.txt", data, os.ModePerm)
-}
-
 func (f *flags) download() error {
    data, err := os.ReadFile(f.home + "/draken.txt")
    if err != nil {
@@ -65,10 +57,22 @@ func (f *flags) download() error {
             fmt.Print(&rep, "\n\n")
          }
       case rep.Id:
-         f.s.Name = &draken.Namer{movie}
-         f.s.Client = &draken.Client{login, play}
+         f.s.Namer = &draken.Namer{movie}
+         f.s.Wrapper = draken.Wrapper(
+            func() (*draken.AuthLogin, *draken.Playback) {
+               return &login, play
+            },
+         )
          return f.s.Download(rep)
       }
    }
    return nil
+}
+
+func (f *flags) authenticate() error {
+   data, err := draken.AuthLogin{}.Marshal(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/draken.txt", data, os.ModePerm)
 }

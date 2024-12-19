@@ -76,28 +76,6 @@ func (o *OperationPlay) Dash() (*Entitlement, bool) {
    return nil, false
 }
 
-func (e *Entitlement) RequestUrl() (string, bool) {
-   return e.KeyDeliveryUrl, true
-}
-
-func (*Entitlement) RequestHeader() (http.Header, error) {
-   return http.Header{}, nil
-}
-
-func (*Entitlement) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Entitlement) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-type Entitlement struct {
-   KeyDeliveryUrl string `json:"key_delivery_url"`
-   Manifest string
-   Protocol string
-}
-
 const query_play = `
 mutation($article_id: Int, $asset_id: Int) {
    ArticleAssetPlay(article_id: $article_id asset_id: $asset_id) {
@@ -111,3 +89,20 @@ mutation($article_id: Int, $asset_id: Int) {
    }
 }
 `
+
+type Entitlement struct {
+   KeyDeliveryUrl string `json:"key_delivery_url"`
+   Manifest string
+   Protocol string
+}
+
+func (e *Entitlement) Wrap(data []byte) ([]byte, error) {
+   resp, err := http.Post(
+      e.KeyDeliveryUrl, "application/x-protobuf", bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
+}

@@ -1,30 +1,31 @@
 package draken
 
-import "net/http"
+import (
+   "bytes"
+   "io"
+   "net/http"
+)
 
-type Client struct {
-   Login AuthLogin
-   Play *Playback
-}
+type Wrapper func() (*AuthLogin, *Playback)
 
-func (c *Client) RequestHeader() (http.Header, error) {
-   head := http.Header{}
-   magine_accesstoken.set(head)
-   head.Set("authorization", "Bearer "+c.Login.Token)
-   for key, value := range c.Play.Headers {
-      head.Set(key, value)
+func (w Wrapper) Wrap(data []byte) ([]byte, error) {
+   auth, play := w()
+   req, err := http.NewRequest(
+      "POST", "https://client-api.magine.com/api/playback/v1/widevine/license",
+      bytes.NewReader(data),
+   )
+   if err != nil {
+      return nil, err
    }
-   return head, nil
-}
-
-func (*Client) RequestUrl() (string, bool) {
-   return "https://client-api.magine.com/api/playback/v1/widevine/license", true
-}
-
-func (*Client) UnwrapResponse(b []byte) ([]byte, error) {
-   return b, nil
-}
-
-func (*Client) WrapRequest(b []byte) ([]byte, error) {
-   return b, nil
+   magine_accesstoken.set(req.Header)
+   for key, value := range play.Headers {
+      req.Header.Set(key, value)
+   }
+   req.Header.Set("authorization", "Bearer " + auth.Token)
+   resp, err := http.DefaultClient.Do(req)
+   if err != nil {
+      return nil, err
+   }
+   defer resp.Body.Close()
+   return io.ReadAll(resp.Body)
 }

@@ -42,10 +42,10 @@ func (f *flags) download() error {
             fmt.Print(&rep, "\n\n")
          }
       case rep.Id:
-         f.s.Name = &meta
-         var core nbc.CoreVideo
-         core.New()
-         f.s.Client = &core
+         f.s.Namer = &meta
+         var proxy nbc.DrmProxy
+         proxy.New()
+         f.s.Client = &proxy
          return f.s.Download(rep)
       }
    }
