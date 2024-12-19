@@ -11,6 +11,15 @@ import (
    "time"
 )
 
+func (d *DrmProxy) New() {
+   d.Time = fmt.Sprint(time.Now().UnixMilli())
+   d.Hash = func() string {
+      hash := hmac.New(sha256.New, []byte(drm_proxy_secret))
+      fmt.Fprint(hash, d.Time, "widevine")
+      return fmt.Sprintf("%x", hash.Sum(nil))
+   }()
+}
+
 type DrmProxy struct {
    Hash string
    Time string
@@ -40,14 +49,3 @@ func (d *DrmProxy) Wrap(data []byte) ([]byte, error) {
    defer resp.Body.Close()
    return io.ReadAll(resp.Body)
 }
-
-func (d *DrmProxy) New() {
-   d.Time = fmt.Sprint(time.Now().UnixMilli())
-   d.Hash = func() string {
-      hash := hmac.New(sha256.New, []byte(drm_proxy_secret))
-      hash.Write([]byte(d.Time))
-      hash.Write([]byte("widevine"))
-      return fmt.Sprintf("%x", hash.Sum(nil))
-   }()
-}
-
