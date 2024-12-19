@@ -6,23 +6,10 @@ import (
    "encoding/base64"
    "fmt"
    "os"
-   "reflect"
    "strings"
    "testing"
    "time"
 )
-
-func TestAccountsLogin(t *testing.T) {
-   username, password, ok := strings.Cut(os.Getenv("rtbf"), ":")
-   if !ok {
-      t.Fatal("Getenv")
-   }
-   data, err := (*AuvioLogin).Marshal(nil, username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("login.txt", data, os.ModePerm)
-}
 
 func TestWidevine(t *testing.T) {
    home, err := os.UserHomeDir()
@@ -55,16 +42,6 @@ func TestWidevine(t *testing.T) {
       t.Fatal(err)
    }
    for _, test := range tests {
-      var pssh widevine.Pssh
-      pssh.KeyId, err = base64.StdEncoding.DecodeString(test.key_id)
-      if err != nil {
-         t.Fatal(err)
-      }
-      var module widevine.Module
-      err = module.New(private_key, client_id, pssh.Marshal())
-      if err != nil {
-         t.Fatal(err)
-      }
       page, err := Address{test.path}.Page()
       if err != nil {
          t.Fatal(err)
@@ -77,11 +54,43 @@ func TestWidevine(t *testing.T) {
       if err != nil {
          t.Fatal(err)
       }
-      key, err := module.Key(title, pssh.KeyId)
+      var pssh widevine.PsshData
+      pssh.KeyId, err = base64.StdEncoding.DecodeString(test.key_id)
       if err != nil {
          t.Fatal(err)
       }
-      fmt.Printf("%x\n", key)
+      var module widevine.Cdm
+      err = module.New(private_key, client_id, pssh.Marshal())
+      if err != nil {
+         t.Fatal(err)
+      }
+      data, err = module.RequestBody()
+      if err != nil {
+         t.Fatal(err)
+      }
+      data, err = title.Wrap(data)
+      if err != nil {
+         t.Fatal(err)
+      }
+      var body widevine.ResponseBody
+      err = body.Unmarshal(data)
+      if err != nil {
+         t.Fatal(err)
+      }
+      block, err := module.Block(body)
+      if err != nil {
+         t.Fatal(err)
+      }
+      containers := body.Container()
+      for {
+         container, ok := containers()
+         if !ok {
+            t.Fatal("ResponseBody.Container")
+         }
+         if bytes.Equal(container.Id(), pssh.KeyId) {
+            fmt.Printf("%x\n", container.Decrypt(block))
+         }
+      }
       time.Sleep(time.Second)
    }
 }
@@ -169,25 +178,14 @@ func TestPage(t *testing.T) {
    }
 }
 
-func TestSize(t *testing.T) {
-   size := reflect.TypeOf(&struct{}{}).Size()
-   for _, test := range size_tests {
-      if reflect.TypeOf(test).Size() > size {
-         fmt.Printf("*%T\n", test)
-      } else {
-         fmt.Printf("%T\n", test)
-      }
+func TestAccountsLogin(t *testing.T) {
+   username, password, ok := strings.Cut(os.Getenv("rtbf"), ":")
+   if !ok {
+      t.Fatal("Getenv")
    }
-}
-
-var size_tests = []any{
-   Address{},
-   AuvioAuth{},
-   AuvioLogin{},
-   AuvioPage{},
-   Entitlement{},
-   Namer{},
-   Subtitle{},
-   Title{},
-   WebToken{},
+   data, err := (*AuvioLogin).Marshal(nil, username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("login.txt", data, os.ModePerm)
 }

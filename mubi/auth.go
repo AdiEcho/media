@@ -99,6 +99,9 @@ func (a *Authenticate) Wrap(data []byte) ([]byte, error) {
       "sessionId": a.Token,
       "userId": a.User.Id,
    })
+   if err != nil {
+      return nil, err
+   }
    req.Header.Set("dt-custom-data", base64.StdEncoding.EncodeToString(data))
    resp, err := http.DefaultClient.Do(req)
    if err != nil {
