@@ -65,21 +65,12 @@ func (a *Authorization) Playback(nid string) (*Playback, error) {
    if err != nil {
       return nil, err
    }
-   return &Playback{play.Data.PlaybackJsonData.Sources, resp.Header}, nil
+   return &Playback{resp.Header, play.Data.PlaybackJsonData.Sources}, nil
 }
 
 type Playback struct {
-   DataSource []DataSource
    Header http.Header
-}
-
-func (p *Playback) Dash() (*Wrapper, bool) {
-   for _, source := range p.DataSource {
-      if source.Type == "application/dash+xml" {
-         return &Wrapper{source, p.Header}, true
-      }
-   }
-   return nil, false
+   Sources []DataSource
 }
 
 type DataSource struct {
@@ -93,13 +84,22 @@ type DataSource struct {
 }
 
 type Wrapper struct {
-   DataSource DataSource
    Header http.Header
+   Source DataSource
+}
+
+func (p *Playback) Dash() (*Wrapper, bool) {
+   for _, source := range p.Sources {
+      if source.Type == "application/dash+xml" {
+         return &Wrapper{p.Header, source}, true
+      }
+   }
+   return nil, false
 }
 
 func (w *Wrapper) Wrap(data []byte) ([]byte, error) {
    req, err := http.NewRequest(
-      "POST", w.DataSource.KeySystems.Widevine.LicenseUrl, bytes.NewReader(data),
+      "POST", w.Source.KeySystems.Widevine.LicenseUrl, bytes.NewReader(data),
    )
    if err != nil {
       return nil, err

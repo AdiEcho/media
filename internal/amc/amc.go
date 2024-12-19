@@ -34,11 +34,11 @@ func (f *flags) download() error {
    if err != nil {
       return err
    }
-   source, ok := play.Dash()
+   wrap, ok := play.Dash()
    if !ok {
       return errors.New("Playback.Dash")
    }
-   resp, err := http.Get(source.Src)
+   resp, err := http.Get(wrap.Source.Src)
    if err != nil {
       return err
    }
@@ -61,15 +61,15 @@ func (f *flags) download() error {
             fmt.Print(&rep, "\n\n")
          }
       case rep.Id:
-         f.s.Client = play
          content, err := auth.Content(f.address.Path)
          if err != nil {
             return err
          }
-         f.s.Name, ok = content.Video()
+         f.s.Namer, ok = content.Video()
          if !ok {
             return errors.New("ContentCompiler.Video")
          }
+         f.s.Wrapper = wrap
          return f.s.Download(rep)
       }
    }

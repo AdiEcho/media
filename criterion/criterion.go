@@ -1,6 +1,7 @@
 package criterion
 
 import (
+   "bytes"
    "encoding/json"
    "errors"
    "io"
