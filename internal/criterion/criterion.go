@@ -12,14 +12,6 @@ import (
    "sort"
 )
 
-func (f *flags) authenticate() error {
-   data, err := criterion.AuthToken{}.Marshal(f.email, f.password)
-   if err != nil {
-      return err
-   }
-   return os.WriteFile(f.home + "/criterion.txt", data, os.ModePerm)
-}
-
 func (f *flags) download() error {
    data, err := os.ReadFile(f.home + "/criterion.txt")
    if err != nil {
@@ -65,10 +57,18 @@ func (f *flags) download() error {
             fmt.Print(&rep, "\n\n")
          }
       case rep.Id:
-         f.s.Name = item
-         f.s.Client = file
+         f.s.Namer = item
+         f.s.Wrapper = file
          return f.s.Download(rep)
       }
    }
    return nil
+}
+
+func (f *flags) authenticate() error {
+   data, err := criterion.AuthToken{}.Marshal(f.email, f.password)
+   if err != nil {
+      return err
+   }
+   return os.WriteFile(f.home + "/criterion.txt", data, os.ModePerm)
 }
