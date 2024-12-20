@@ -9,20 +9,6 @@ import (
    "testing"
 )
 
-func TestCode(t *testing.T) {
-   var code LinkCode
-   data, err := code.Marshal()
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("code.txt", data, os.ModePerm)
-   err = code.Unmarshal(data)
-   if err != nil {
-      t.Fatal(err)
-   }
-   fmt.Println(code)
-}
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -100,4 +86,17 @@ var test = struct{
       "mubi.com/films/325455/player",
       "mubi.com/films/passages-2022",
    },
+}
+func TestCode(t *testing.T) {
+   var code LinkCode
+   data, err := code.Marshal()
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("code.txt", data, os.ModePerm)
+   err = code.Unmarshal(data)
+   if err != nil {
+      t.Fatal(err)
+   }
+   fmt.Println(code)
 }

@@ -10,20 +10,6 @@ import (
    "time"
 )
 
-func TestLogin(t *testing.T) {
-   data, err := os.ReadFile("token.txt")
-   if err != nil {
-      t.Fatal(err)
-   }
-   var token BoltToken
-   token.St = string(data)
-   data, err = (*LinkLogin).Marshal(nil, &token)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("login.txt", data, os.ModePerm)
-}
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -110,4 +96,17 @@ var tests = []struct {
       url:        "play.max.com/video/watch/d0938760-d3ca-4c59-aea2-74ecbed42d17/2e7d1db4-2fd7-47fb-a7c3-a65b7c2e5d6f",
       video_type: "EPISODE",
    },
+}
+func TestLogin(t *testing.T) {
+   data, err := os.ReadFile("token.txt")
+   if err != nil {
+      t.Fatal(err)
+   }
+   var token BoltToken
+   token.St = string(data)
+   data, err = (*LinkLogin).Marshal(nil, &token)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("login.txt", data, os.ModePerm)
 }
