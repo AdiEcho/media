@@ -10,18 +10,6 @@ import (
    "testing"
 )
 
-func TestToken(t *testing.T) {
-   username, password, ok := strings.Cut(os.Getenv("criterion"), ":")
-   if !ok {
-      t.Fatal("Getenv")
-   }
-   data, err := (*AuthToken).Marshal(nil, username, password)
-   if err != nil {
-      t.Fatal(err)
-   }
-   os.WriteFile("token.txt", data, os.ModePerm)
-}
-
 func TestLicense(t *testing.T) {
    home, err := os.UserHomeDir()
    if err != nil {
@@ -99,4 +87,15 @@ var video_test = struct{
    key_id: "e4576465a745213f336c1ef1bf5d513e",
    slug: "my-dinner-with-andre",
    url: "criterionchannel.com/videos/my-dinner-with-andre",
+}
+func TestToken(t *testing.T) {
+   username, password, ok := strings.Cut(os.Getenv("criterion"), ":")
+   if !ok {
+      t.Fatal("Getenv")
+   }
+   data, err := (*AuthToken).Marshal(nil, username, password)
+   if err != nil {
+      t.Fatal(err)
+   }
+   os.WriteFile("token.txt", data, os.ModePerm)
 }
