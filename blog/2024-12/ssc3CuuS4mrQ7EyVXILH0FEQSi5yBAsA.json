@@ -2,6 +2,8 @@
   "action": "queryVideoFeed",
   "itemList": [
     {
+      "mediaType": "Full Episode",
+      "assetType": "DASH_CENC_PRECON",
       "genre": "Kids and Family",
       "status": "PREMIUM",
       "_firstIngestDate": "03/19/22 10:45 EDT",
@@ -20,7 +22,6 @@
       "pubDate": 1647701101000,
       "label": "House of the Black Bird & House of Dares",
       "url": "shows/house-of-anubis/video/ssc3CuuS4mrQ7EyVXILH0FEQSi5yBAsA/house-of-anubis-house-of-the-black-bird-house-of-dares",
-      "assetType": "DASH_CENC_PRECON",
       "firstIngestDate": 1647701101000,
       "category": "",
       "topLevelCategory": "P-Plus International",
@@ -54,7 +55,6 @@
       "cmsAccountId": "dJ5BDC",
       "appleWatchListShowKey": "SHOW_61456901_House-of-Anubis",
       "isProtected": true,
-      "mediaType": "Full Episode",
       "excludeNielsenTracking": false,
       "endCreditsChapterTime": "",
       "thumbnailSet": [
