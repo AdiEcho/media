@@ -16,6 +16,13 @@ import (
    "time"
 )
 
+func (v *VideoItem) asset_type() string {
+   if v.MediaType == "Movie" {
+      return "DASH_CENC_PRECON"
+   }
+   return "DASH_CENC"
+}
+
 const encoding = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 func cms_account(id string) int64 {
@@ -42,13 +49,6 @@ func (v *VideoItem) Mpd() string {
    b = append(b, v.asset_type()...)
    b = append(b, "&formats=MPEG-DASH"...)
    return string(b)
-}
-
-func (v *VideoItem) asset_type() string {
-   if v.MediaType == "Movie" {
-      return "DASH_CENC_PRECON"
-   }
-   return "DASH_CENC"
 }
 
 func (v *VideoItem) Unmarshal(data []byte) error {
